@@ -271,12 +271,38 @@ export default function WorkerFeed() {
           <View style={{ gap: spacing.sm }}>
             {matchingJobs.map((job) => {
               const hasApplied = appsJobIds.has(job.id);
-              const timeModeLabel =
-                job.timeMode === 'fixed_time'
-                  ? 'Zeitgenau'
-                  : job.timeMode === 'hour_package'
-                  ? 'Stundenpaket'
-                  : 'Projekt';
+              
+              // Format date/time info based on job type
+              let timeDisplayParts: string[] = [];
+              
+              if (job.timeMode === 'fixed_time') {
+                const dateLabel = formatDateGerman(job.startAt);
+                const startTime = formatTime(job.startAt);
+                const endTime = formatTime(job.endAt);
+                
+                if (dateLabel) timeDisplayParts.push(dateLabel);
+                if (startTime && endTime) {
+                  timeDisplayParts.push(`${startTime}–${endTime}`);
+                } else if (startTime) {
+                  timeDisplayParts.push(startTime);
+                }
+                timeDisplayParts.push(formatTimeModeLabel(job.timeMode));
+              } else if (job.timeMode === 'hour_package') {
+                const dateLabel = formatDateGerman(job.startAt);
+                if (dateLabel) timeDisplayParts.push(dateLabel);
+                if (job.hours) {
+                  timeDisplayParts.push(`${job.hours} Stunden`);
+                }
+                timeDisplayParts.push(formatTimeModeLabel(job.timeMode));
+              } else if (job.timeMode === 'project') {
+                const dueLabel = formatDateGerman(job.dueAt);
+                if (dueLabel) {
+                  timeDisplayParts.push(`Bis ${dueLabel}`);
+                }
+                timeDisplayParts.push(formatTimeModeLabel(job.timeMode));
+              }
+              
+              const timeDisplay = timeDisplayParts.filter(Boolean).join(' · ');
 
               return (
                 <View
@@ -300,9 +326,11 @@ export default function WorkerFeed() {
                     <Text style={{ color: colors.gray700, fontSize: 14 }}>
                       🏷️ {job.category}
                     </Text>
-                    <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                      ⏱️ {timeModeLabel}
-                    </Text>
+                    {timeDisplay && (
+                      <Text style={{ color: colors.gray700, fontSize: 14 }}>
+                        ⏱️ {timeDisplay}
+                      </Text>
+                    )}
                   </View>
                   {job.description && (
                     <Text style={{ color: colors.gray600, fontSize: 13 }} numberOfLines={2}>
