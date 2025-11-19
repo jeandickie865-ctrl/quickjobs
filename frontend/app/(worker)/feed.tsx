@@ -205,9 +205,30 @@ export default function WorkerFeed() {
               Debug: {allJobsCount} Jobs insgesamt, {openJobsCount} offene Jobs, 0 passende Jobs für dein Profil.
             </Text>
             {profile && (
-              <Text style={{ color: colors.gray400, fontSize: 11, marginTop: 4, textAlign: 'center' }}>
-                Profil: {profile.categories.length} Kategorien, {profile.selectedTags.length} Tags
-              </Text>
+              <View style={{ marginTop: spacing.sm, width: '100%', gap: 4 }}>
+                <Text style={{ color: colors.gray400, fontSize: 11 }}>
+                  Profil: Kategorien = [{profile.categories.join(', ')}]
+                </Text>
+                <Text style={{ color: colors.gray400, fontSize: 11 }}>
+                  Profil: Tags = [{profile.selectedTags.slice(0, 10).join(', ')}{profile.selectedTags.length > 10 ? '...' : ''}]
+                </Text>
+                {debugInfos.slice(0, 3).map(info => (
+                  <View key={info.jobId} style={{ marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: colors.gray200 }}>
+                    <Text style={{ color: colors.gray500, fontSize: 11 }}>
+                      Job {info.jobId.substring(0, 12)}: Kategorie = {info.jobCategory}, categoryOk = {String(info.categoryOk)}
+                    </Text>
+                    <Text style={{ color: colors.gray500, fontSize: 11 }}>
+                      Pflicht-Tags Job = [{info.requiredAllJob.join(', ')}]
+                    </Text>
+                    <Text style={{ color: colors.gray500, fontSize: 11 }}>
+                      Fehlende Pflicht-Tags im Profil = [{info.missingRequiredAll.join(', ')}]
+                    </Text>
+                    <Text style={{ color: colors.gray500, fontSize: 11 }}>
+                      Any-Tags Job = [{info.requiredAnyJob.join(', ')}], Schnittmenge = [{info.anyIntersection.join(', ')}], requiredAnyOk = {String(info.requiredAnyOk)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             )}
           </View>
         ) : (
