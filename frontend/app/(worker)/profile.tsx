@@ -1,6 +1,7 @@
 // app/(worker)/profile.tsx
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, View, Text, TextInput, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { WorkerProfile } from '../../types/profile';
@@ -24,7 +25,8 @@ function createEmptyProfile(userId: string): WorkerProfile {
 
 export default function WorkerProfileScreen() {
   const { colors, spacing } = useTheme();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const router = useRouter();
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
