@@ -415,6 +415,14 @@ export default function JobDetailScreen() {
             variant="secondary"
             onPress={() => router.replace('/(employer)')}
           />
+          <Button
+            title="Logout"
+            variant="ghost"
+            onPress={async () => {
+              await signOut();
+              router.replace('/auth/start');
+            }}
+          />
         </View>
 
         <View style={{ height: spacing.xl }} />
