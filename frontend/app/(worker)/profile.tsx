@@ -15,7 +15,7 @@ function createEmptyProfile(userId: string): WorkerProfile {
   return {
     userId,
     categories: [],
-    tags: [],
+    selectedTags: [],
     radiusKm: DEFAULT_RADIUS_KM,
     homeAddress: '',
     homeLat: 0,
