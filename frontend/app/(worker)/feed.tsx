@@ -13,6 +13,42 @@ import { WorkerProfile } from '../../types/profile';
 import { Button } from '../../components/ui/Button';
 import { euro } from '../../utils/pricing';
 
+// Helper functions for German date/time formatting
+const formatDateGerman = (isoDate?: string) => {
+  if (!isoDate) return '';
+  const d = new Date(isoDate);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('de-DE', {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+};
+
+const formatTime = (isoDateTime?: string) => {
+  if (!isoDateTime) return '';
+  const d = new Date(isoDateTime);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleTimeString('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const formatTimeModeLabel = (mode?: string) => {
+  switch (mode) {
+    case 'fixed_time':
+      return 'Zeitgenauer Einsatz';
+    case 'hour_package':
+      return 'Stundenpaket';
+    case 'project':
+      return 'Projektarbeit';
+    default:
+      return '';
+  }
+};
+
 export default function WorkerFeed() {
   const { colors, spacing } = useTheme();
   const { user, isLoading: authLoading } = useAuth();
