@@ -1,4 +1,21 @@
 // types/profile.ts
+
+export type DocumentType = 
+  | 'fuehrungszeugnis'
+  | 'ausweis'
+  | 'qualifikation'
+  | 'arbeitserlaubnis'
+  | 'sonstiges';
+
+export type WorkerDocument = {
+  id: string;
+  type: DocumentType;
+  fileUri: string;
+  fileName: string;
+  uploadedAt: string;
+  mimeType?: string;
+};
+
 export type WorkerProfile = {
   userId: string;
   categories: string[];      // category keys aus taxonomy.json
@@ -7,6 +24,8 @@ export type WorkerProfile = {
   homeAddress: string;
   homeLat: number;
   homeLon: number;
+  profilePhotoUri?: string;  // Lokale URI zum Profilfoto
+  documents?: WorkerDocument[]; // Liste der Dokumente
 };
 
 export type Job = {
