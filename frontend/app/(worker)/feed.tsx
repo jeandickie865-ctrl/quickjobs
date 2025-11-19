@@ -322,7 +322,7 @@ export default function WorkerFeed() {
                   </Text>
                   <View style={{ gap: 4 }}>
                     <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                      📍 {job.address}
+                      📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
                     </Text>
                     <Text style={{ color: colors.gray700, fontSize: 14 }}>
                       🏷️ {job.category}
