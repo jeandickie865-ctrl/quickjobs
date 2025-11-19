@@ -1,8 +1,10 @@
+// types/profile.ts
 export type WorkerProfile = {
   userId: string;
-  categories: string[];
-  tags: string[];
+  categories: string[];   // category keys aus taxonomy.json
+  tags: string[];         // tag keys aus taxonomy.json
   radiusKm: number;
+  homeAddress: string;
   homeLat: number;
   homeLon: number;
 };

@@ -1,31 +1,16 @@
-import { storage } from './storage';
+// utils/profileStore.ts
 import { WorkerProfile } from '../types/profile';
+import { storage } from './storage';
 
 const PROFILE_KEY = '@shiftmatch:worker_profile';
 
-export async function getProfile(): Promise<WorkerProfile | null> {
-  try {
-    return await storage.getItem<WorkerProfile>(PROFILE_KEY);
-  } catch (error) {
-    console.error('Error getting profile:', error);
-    return null;
-  }
+export async function getWorkerProfile(userId: string): Promise<WorkerProfile | null> {
+  const stored = await storage.getItem<WorkerProfile>(PROFILE_KEY);
+  if (!stored) return null;
+  if (stored.userId !== userId) return null;
+  return stored;
 }
 
-export async function saveProfile(profile: WorkerProfile): Promise<void> {
-  try {
-    await storage.setItem(PROFILE_KEY, profile);
-  } catch (error) {
-    console.error('Error saving profile:', error);
-    throw error;
-  }
-}
-
-export async function clearProfile(): Promise<void> {
-  try {
-    await storage.removeItem(PROFILE_KEY);
-  } catch (error) {
-    console.error('Error clearing profile:', error);
-    throw error;
-  }
+export async function saveWorkerProfile(profile: WorkerProfile): Promise<void> {
+  await storage.setItem(PROFILE_KEY, profile);
 }
