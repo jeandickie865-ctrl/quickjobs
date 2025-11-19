@@ -9,5 +9,10 @@ export default function Index() {
     return <Redirect href="/onboarding/role" />;
   }
 
+  // Route based on user role
+  if (user.role === 'worker') {
+    return <Redirect href="/(worker)/profile" />;
+  }
+
   return <Redirect href="/taxonomy" />;
 }
