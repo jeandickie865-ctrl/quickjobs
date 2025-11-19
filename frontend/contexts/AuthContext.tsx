@@ -1,142 +1,149 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { storage } from '../utils/storage';
+// contexts/AuthContext.tsx
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode,
+} from 'react';
+import { getItem, setItem, removeItem } from '../utils/storage';
 
-type UserRole = 'worker' | 'employer';
+export type Role = 'worker' | 'employer';
 
-interface User {
+export type User = {
   id: string;
   email: string;
-  role?: UserRole;
-}
+  role?: Role;
+  accountType?: 'private' | 'business';
+} | null;
 
-interface AuthContextValue {
-  user: User | null;
+type AuthContextValue = {
+  user: User;
   isLoading: boolean;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  setRole: (role: UserRole) => Promise<void>;
-}
+  setRole: (role: Role) => Promise<void>;
+};
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const USER_KEY = '@shiftmatch:user';
-const AUTH_USERS_KEY = '@shiftmatch:auth_users';
+const CREDENTIALS_KEY = '@shiftmatch:auth_users';
 
-interface StoredAuthUser {
+type StoredUser = {
   id: string;
   email: string;
+  role?: Role;
+  accountType?: 'private' | 'business';
+};
+
+type StoredCredentials = {
+  email: string;
   password: string;
-  role?: UserRole;
+}[];
+
+async function loadCredentials(): Promise<StoredCredentials> {
+  const data = await getItem<StoredCredentials>(CREDENTIALS_KEY);
+  return data ?? [];
+}
+
+async function saveCredentials(creds: StoredCredentials): Promise<void> {
+  await setItem(CREDENTIALS_KEY, creds);
 }
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // beim Start User aus Storage holen
   useEffect(() => {
-    loadUser();
+    (async () => {
+      const stored = await getItem<StoredUser>(USER_KEY);
+      if (stored) {
+        setUser(stored);
+      }
+      setIsLoading(false);
+    })();
   }, []);
 
-  const loadUser = async () => {
-    try {
-      const storedUser = await storage.getItem<User>(USER_KEY);
-      setUser(storedUser);
-    } catch (error) {
-      console.error('Error loading user:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const value = useMemo<AuthContextValue>(() => {
+    return {
+      user,
+      isLoading,
 
-  const getAuthUsers = async (): Promise<StoredAuthUser[]> => {
-    const users = await storage.getItem<StoredAuthUser[]>(AUTH_USERS_KEY);
-    return users || [];
-  };
+      async signUp(email, password) {
+        const creds = await loadCredentials();
+        const exists = creds.find(c => c.email.toLowerCase() === email.toLowerCase());
+        if (exists) {
+          throw new Error('E-Mail ist bereits registriert');
+        }
 
-  const saveAuthUsers = async (users: StoredAuthUser[]): Promise<void> => {
-    await storage.setItem(AUTH_USERS_KEY, users);
-  };
+        const newUser: StoredUser = {
+          id: 'u-' + Date.now().toString(),
+          email,
+        };
 
-  const signUp = async (email: string, password: string): Promise<void> => {
-    const users = await getAuthUsers();
-    
-    // Check if email already exists
-    if (users.some(u => u.email === email)) {
-      throw new Error('E-Mail bereits registriert');
-    }
+        const nextCreds: StoredCredentials = [
+          ...creds,
+          { email: email.toLowerCase(), password },
+        ];
 
-    // Create new user
-    const newAuthUser: StoredAuthUser = {
-      id: `u-${Date.now()}`,
-      email,
-      password, // In production, hash this!
+        await saveCredentials(nextCreds);
+        await setItem(USER_KEY, newUser);
+        setUser(newUser);
+      },
+
+      async signIn(email, password) {
+        const creds = await loadCredentials();
+        const found = creds.find(c => c.email.toLowerCase() === email.toLowerCase());
+        if (!found || found.password !== password) {
+          throw new Error('E-Mail oder Passwort ist falsch');
+        }
+
+        // Wenn es schon einen gespeicherten User mit Rolle gibt, nutze ihn
+        const stored = await getItem<StoredUser>(USER_KEY);
+        if (stored && stored.email.toLowerCase() === email.toLowerCase()) {
+          setUser(stored);
+          return;
+        }
+
+        // Sonst neuen User ohne Rolle anlegen
+        const newUser: StoredUser = {
+          id: 'u-' + Date.now().toString(),
+          email,
+        };
+        await setItem(USER_KEY, newUser);
+        setUser(newUser);
+      },
+
+      async signOut() {
+        setUser(null);
+        await removeItem(USER_KEY);
+      },
+
+      async setRole(role) {
+        if (!user) return;
+        const updated: StoredUser = {
+          id: user.id,
+          email: user.email,
+          role,
+          accountType: user.accountType,
+        };
+        await setItem(USER_KEY, updated);
+        setUser(updated);
+      },
     };
+  }, [user, isLoading]);
 
-    users.push(newAuthUser);
-    await saveAuthUsers(users);
-
-    // Set current user (without role yet)
-    const currentUser: User = {
-      id: newAuthUser.id,
-      email: newAuthUser.email,
-    };
-    setUser(currentUser);
-    await storage.setItem(USER_KEY, currentUser);
-  };
-
-  const signIn = async (email: string, password: string): Promise<void> => {
-    const users = await getAuthUsers();
-    
-    const authUser = users.find(u => u.email === email && u.password === password);
-    if (!authUser) {
-      throw new Error('Falsche E-Mail oder Passwort');
-    }
-
-    const currentUser: User = {
-      id: authUser.id,
-      email: authUser.email,
-      role: authUser.role,
-    };
-    setUser(currentUser);
-    await storage.setItem(USER_KEY, currentUser);
-  };
-
-  const signOut = async (): Promise<void> => {
-    setUser(null);
-    await storage.removeItem(USER_KEY);
-  };
-
-  const setRole = async (role: UserRole): Promise<void> => {
-    if (!user) {
-      throw new Error('Kein User angemeldet');
-    }
-
-    // Update user in context
-    const updatedUser: User = { ...user, role };
-    setUser(updatedUser);
-    await storage.setItem(USER_KEY, updatedUser);
-
-    // Update auth users storage
-    const users = await getAuthUsers();
-    const index = users.findIndex(u => u.id === user.id);
-    if (index !== -1) {
-      users[index].role = role;
-      await saveAuthUsers(users);
-    }
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, isLoading, signUp, signIn, signOut, setRole }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = (): AuthContextValue => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+export function useAuth(): AuthContextValue {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error('AuthProvider fehlt');
   }
-  return context;
-};
+  return ctx;
+}
