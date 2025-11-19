@@ -11,7 +11,7 @@ import { euro } from '../../utils/pricing';
 
 export default function EmployerDashboard() {
   const { colors, spacing } = useTheme();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
