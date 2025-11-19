@@ -23,7 +23,7 @@ export type Job = {
   // project: z. B. "Hecke schneiden bis Freitag"
   dueAt?: string;
 
-  address: string;
+  address: Address;      // Strukturierte Adresse (statt string)
   lat: number;
   lon: number;
 
