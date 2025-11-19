@@ -10,23 +10,42 @@ async function loadJobs(): Promise<Job[]> {
 }
 
 // Internal helper: Save all jobs to storage
-async function saveJobs(jobs: Job[]): Promise<void> {
+async function saveJobsInternal(jobs: Job[]): Promise<void> {
   await setItem<Job[]>(JOBS_KEY, jobs);
 }
 
-export async function getAllJobs(): Promise<Job[]> {
+export async function addJob(job: Job): Promise<void> {
+  const jobs = await loadJobs();
+  await saveJobsInternal([...jobs, job]);
+}
+
+export async function getJobs(): Promise<Job[]> {
   return await loadJobs();
+}
+
+export async function updateJob(id: string, patch: Partial<Job>): Promise<void> {
+  const jobs = await loadJobs();
+  const next = jobs.map(j => (j.id === id ? { ...j, ...patch } : j));
+  await saveJobsInternal(next);
+}
+
+export async function clearJobs(): Promise<void> {
+  await removeItem(JOBS_KEY);
+}
+
+// Legacy/convenience functions
+export async function getAllJobs(): Promise<Job[]> {
+  return await getJobs();
 }
 
 export async function saveJob(job: Job): Promise<void> {
   const all = await loadJobs();
   const existing = all.findIndex(j => j.id === job.id);
   if (existing >= 0) {
-    all[existing] = job;
+    await updateJob(job.id, job);
   } else {
-    all.push(job);
+    await addJob(job);
   }
-  await saveJobs(all);
 }
 
 export async function getEmployerJobs(employerId: string): Promise<Job[]> {
@@ -42,8 +61,4 @@ export async function getOpenJobs(): Promise<Job[]> {
 export async function getJobById(id: string): Promise<Job | null> {
   const all = await loadJobs();
   return all.find(j => j.id === id) || null;
-}
-
-export async function clearJobs(): Promise<void> {
-  await removeItem(JOBS_KEY);
 }
