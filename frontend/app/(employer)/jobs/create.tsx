@@ -58,114 +58,112 @@ export default function CreateJob() {
     setWorkerAmountCents(Number.isFinite(num) && num >= 0 ? Math.round(num * 100) : 0);
   };
 
-  const handleSubmit = async () => {
+  const handlePublish = async () => {
     setError(null);
-    setIsSaving(true);
+
+    // User validation
+    if (!user || user.role !== 'employer') {
+      setError('Du musst als Arbeitgeber angemeldet sein.');
+      return;
+    }
+
+    // Basic validation
+    if (!title.trim()) {
+      setError('Bitte einen Jobtitel eingeben.');
+      return;
+    }
+
+    if (!category) {
+      setError('Bitte eine Kategorie auswählen.');
+      return;
+    }
+
+    if (!address.trim()) {
+      setError('Bitte eine Adresse eingeben.');
+      return;
+    }
+
+    if (workerAmountCents <= 0) {
+      setError('Bitte eine gültige Vergütung eingeben.');
+      return;
+    }
+
+    // Time mode validation & parsing
+    let startAtIso: string | undefined;
+    let endAtIso: string | undefined;
+    let hoursNumber: number | undefined;
+    let dueAtIso: string | undefined;
+
+    if (timeMode === 'fixed_time') {
+      if (!date.trim() || !startTime.trim() || !endTime.trim()) {
+        setError('Bitte Datum und Zeiten ausfüllen (Format: TT.MM.JJJJ und HH:MM)');
+        return;
+      }
+
+      startAtIso = parseGermanDateTime(date, startTime);
+      endAtIso = parseGermanDateTime(date, endTime);
+
+      if (!startAtIso || !endAtIso) {
+        setError('Ungültiges Datum oder Zeitformat. Bitte TT.MM.JJJJ und HH:MM verwenden.');
+        return;
+      }
+
+      if (new Date(endAtIso) <= new Date(startAtIso)) {
+        setError('Endzeit muss nach Startzeit liegen.');
+        return;
+      }
+    } else if (timeMode === 'hour_package') {
+      const h = parseFloat(hours);
+      if (!hours || isNaN(h) || h <= 0) {
+        setError('Bitte gültige Stundenanzahl eingeben.');
+        return;
+      }
+      hoursNumber = h;
+    } else if (timeMode === 'project') {
+      if (dueDate.trim()) {
+        dueAtIso = parseGermanDateTime(dueDate, '23:59');
+        if (!dueAtIso) {
+          setError('Ungültiges Fälligkeitsdatum. Bitte TT.MM.JJJJ verwenden.');
+          return;
+        }
+      }
+    }
+
+    // Convert Sets to Arrays
+    const requiredAllTags = Array.from(requiredAllSet);
+    const requiredAnyTags = Array.from(requiredAnySet);
+
+    // Create job object
+    const job: Job = {
+      id: 'job-' + Date.now().toString(),
+      employerId: user.id,
+      employerType: user.accountType === 'business' ? 'business' : 'private',
+      title: title.trim(),
+      description: description.trim() || '',
+      category,
+      timeMode,
+      startAt: startAtIso,
+      endAt: endAtIso,
+      hours: hoursNumber,
+      dueAt: dueAtIso,
+      address: address.trim(),
+      lat: 0,
+      lon: 0,
+      workerAmountCents,
+      paymentToWorker: paymentMethod,
+      required_all_tags: requiredAllTags,
+      required_any_tags: requiredAnyTags,
+      status: 'open',
+      createdAt: new Date().toISOString(),
+    };
 
     try {
-      // User validation
-      if (!user || user.role !== 'employer') {
-        setError('Du musst als Arbeitgeber angemeldet sein.');
-        return;
-      }
-
-      // Basic validation
-      if (!title.trim()) {
-        setError('Bitte einen Jobtitel eingeben.');
-        return;
-      }
-
-      if (!category) {
-        setError('Bitte eine Kategorie auswählen.');
-        return;
-      }
-
-      if (!address.trim()) {
-        setError('Bitte eine Adresse eingeben.');
-        return;
-      }
-
-      if (workerAmountCents <= 0) {
-        setError('Bitte eine gültige Vergütung eingeben.');
-        return;
-      }
-
-      // Time mode validation & parsing
-      let startAtISO: string | undefined;
-      let endAtISO: string | undefined;
-      let hoursNum: number | undefined;
-      let dueAtISO: string | undefined;
-
-      if (timeMode === 'fixed_time') {
-        if (!date.trim() || !startTime.trim() || !endTime.trim()) {
-          setError('Bitte Datum und Zeiten ausfüllen (Format: TT.MM.JJJJ und HH:MM)');
-          return;
-        }
-
-        startAtISO = parseGermanDateTime(date, startTime);
-        endAtISO = parseGermanDateTime(date, endTime);
-
-        if (!startAtISO || !endAtISO) {
-          setError('Ungültiges Datum oder Zeitformat. Bitte TT.MM.JJJJ und HH:MM verwenden.');
-          return;
-        }
-
-        if (new Date(endAtISO) <= new Date(startAtISO)) {
-          setError('Endzeit muss nach Startzeit liegen.');
-          return;
-        }
-      } else if (timeMode === 'hour_package') {
-        const h = parseFloat(hours);
-        if (!hours || isNaN(h) || h <= 0) {
-          setError('Bitte gültige Stundenanzahl eingeben.');
-          return;
-        }
-        hoursNum = h;
-      } else if (timeMode === 'project') {
-        if (dueDate.trim()) {
-          dueAtISO = parseGermanDateTime(dueDate, '23:59');
-          if (!dueAtISO) {
-            setError('Ungültiges Fälligkeitsdatum. Bitte TT.MM.JJJJ verwenden.');
-            return;
-          }
-        }
-      }
-
-      // Create job object
-      const job: Job = {
-        id: 'job-' + Date.now().toString(),
-        employerId: user.id,
-        employerType: user.accountType === 'business' ? 'business' : 'private',
-        title: title.trim(),
-        description: description.trim() || undefined,
-        category,
-        timeMode,
-        startAt: startAtISO,
-        endAt: endAtISO,
-        hours: hoursNum,
-        dueAt: dueAtISO,
-        address: address.trim(),
-        lat: 51.2277, // Demo: Düsseldorf Eller
-        lon: 6.7735,
-        workerAmountCents,
-        paymentToWorker: paymentMethod,
-        required_all_tags: requiredAllTags,
-        required_any_tags: requiredAnyTags,
-        status: 'open',
-        createdAt: new Date().toISOString(),
-      };
-
+      setIsSaving(true);
       await addJob(job);
-      
-      Alert.alert('Erfolg', 'Job wurde erfolgreich veröffentlicht!', [
-        { 
-          text: 'OK', 
-          onPress: () => router.replace('/(employer)') 
-        }
-      ]);
-    } catch (err) {
-      console.error('Error creating job:', err);
-      setError('Fehler beim Speichern des Jobs. Bitte erneut versuchen.');
+      router.replace('/(employer)');
+    } catch (e) {
+      console.log('Job publish error:', e);
+      setError('Job konnte nicht gespeichert werden.');
     } finally {
       setIsSaving(false);
     }
