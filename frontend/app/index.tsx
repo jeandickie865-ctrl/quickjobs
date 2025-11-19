@@ -19,7 +19,7 @@ export default function Index() {
     return <Redirect href="/onboarding/role" />;
   }
 
-  return <Redirect href="/test-taxonomy" />;
+  return <Redirect href="/test/taxonomy" />;
 }
 
 const styles = StyleSheet.create({
