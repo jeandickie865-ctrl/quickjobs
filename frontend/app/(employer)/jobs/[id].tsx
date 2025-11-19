@@ -381,14 +381,27 @@ export default function JobDetailScreen() {
                     )}
 
                     {isAccepted && (
-                      <View style={{
-                        padding: spacing.sm,
-                        backgroundColor: colors.beige100,
-                        borderRadius: 6,
-                      }}>
-                        <Text style={{ color: colors.black, fontWeight: '700', fontSize: 14 }}>
-                          ✓ Dieser Kandidat ist ausgewählt. Kontaktdaten sind freigeschaltet.
-                        </Text>
+                      <View style={{ gap: spacing.sm }}>
+                        <View style={{
+                          padding: spacing.sm,
+                          backgroundColor: colors.beige100,
+                          borderRadius: 6,
+                        }}>
+                          <Text style={{ color: colors.black, fontWeight: '700', fontSize: 14 }}>
+                            ✓ Dieser Kandidat ist ausgewählt. Kontaktdaten sind freigeschaltet.
+                          </Text>
+                        </View>
+                        
+                        <Button
+                          title="💬 Chat öffnen"
+                          variant="secondary"
+                          onPress={() =>
+                            router.push({
+                              pathname: '/chat/[applicationId]',
+                              params: { applicationId: app.id },
+                            })
+                          }
+                        />
                       </View>
                     )}
                   </View>
