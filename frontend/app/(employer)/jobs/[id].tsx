@@ -24,6 +24,13 @@ export default function JobDetailScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Applications
+  const [applications, setApplications] = useState<JobApplication[]>([]);
+  const [applicants, setApplicants] = useState<{ app: JobApplication; profile: WorkerProfile | null }[]>([]);
+  const [isLoadingApps, setIsLoadingApps] = useState(true);
+  const [appsError, setAppsError] = useState<string | null>(null);
+  const [isAcceptingId, setIsAcceptingId] = useState<string | null>(null);
+
   useEffect(() => {
     if (isLoading || !user) return;
     
