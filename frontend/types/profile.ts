@@ -1,5 +1,7 @@
 // types/profile.ts
 
+import { Address } from './address';
+
 export type DocumentType = 
   | 'fuehrungszeugnis'
   | 'ausweis'
@@ -21,7 +23,7 @@ export type WorkerProfile = {
   categories: string[];      // category keys aus taxonomy.json
   selectedTags: string[];    // tag keys aus taxonomy.json
   radiusKm: number;
-  homeAddress: string;
+  homeAddress: Address;      // Strukturierte Adresse (statt string)
   homeLat: number;
   homeLon: number;
   profilePhotoUri?: string;  // Lokale URI zum Profilfoto
