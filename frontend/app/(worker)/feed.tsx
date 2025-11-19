@@ -7,7 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
 import { getJobs } from '../../utils/jobStore';
 import { addApplication, getApplicationsForWorker } from '../../utils/applicationStore';
-import { jobMatchesWorker } from '../../utils/matching';
+import { jobMatchesWorker, jobMatchesWorkerWithDebug, MatchDebug } from '../../utils/matching';
 import { Job } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Button } from '../../components/ui/Button';
@@ -29,6 +29,7 @@ export default function WorkerFeed() {
   // Debug counters
   const [allJobsCount, setAllJobsCount] = useState(0);
   const [openJobsCount, setOpenJobsCount] = useState(0);
+  const [debugInfos, setDebugInfos] = useState<MatchDebug[]>([]);
 
   const loadData = async () => {
     if (!user) return;
