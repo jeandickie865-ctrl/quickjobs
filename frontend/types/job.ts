@@ -11,25 +11,27 @@ export type Job = {
 
   timeMode: JobTimeMode;
 
-  // fixed_time
+  // fixed_time: z. B. "heute 19–23 Uhr"
   startAt?: string;  // ISO
   endAt?: string;    // ISO
 
-  // hour_package
+  // hour_package: z. B. "6 Stunden Lagerarbeit"
   hours?: number;
 
-  // project
+  // project: z. B. "Hecke schneiden bis Freitag"
   dueAt?: string;
 
   address: string;
   lat: number;
   lon: number;
 
-  workerAmountCents: number;
+  workerAmountCents: number; // Gesamtbetrag für den Arbeitnehmer
   paymentToWorker: 'cash' | 'bank' | 'paypal';
 
-  required_all_tags: string[];
-  required_any_tags: string[];
+  required_all_tags: string[]; // müssen im Worker-Profil vorhanden sein
+  required_any_tags: string[]; // mindestens einer davon sollte vorhanden sein
 
-  status: 'open' | 'matched' | 'done' | 'canceled';
+  status: 'draft' | 'open' | 'matched' | 'done' | 'canceled';
+
+  createdAt: string;
 };
