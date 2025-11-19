@@ -21,7 +21,7 @@ export default function Start() {
 
   // Rolle gesetzt → in den jeweiligen Bereich
   if (user.role === 'worker') {
-    return <Redirect href="/(worker)/profile" />;
+    return <Redirect href="/(worker)/feed" />;
   }
 
   if (user.role === 'employer') {
