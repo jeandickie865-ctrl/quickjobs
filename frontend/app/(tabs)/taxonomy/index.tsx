@@ -24,7 +24,7 @@ export default function TaxonomyList() {
       {cats.map(c => {
         const tagCount = getCategory(c.key).tags.length;
         return (
-          <Link key={c.key} href={`/test/taxonomy/${c.key}`} asChild>
+          <Link key={c.key} href={`/(tabs)/taxonomy/${c.key}`} asChild>
             <Pressable
               role="button"
               style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
