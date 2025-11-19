@@ -52,6 +52,59 @@ export default function JobDetailScreen() {
     })();
   }, [id, user, isLoading]);
 
+  // Load applications when job is loaded
+  useEffect(() => {
+    if (!job || !user) return;
+
+    (async () => {
+      setIsLoadingApps(true);
+      try {
+        const apps = await getApplicationsForJob(job.id);
+        setApplications(apps);
+        const withProfiles: { app: JobApplication; profile: WorkerProfile | null }[] = [];
+        for (const app of apps) {
+          const p = await getWorkerProfile(app.workerId);
+          withProfiles.push({ app, profile: p });
+        }
+        setApplicants(withProfiles);
+        setAppsError(null);
+      } catch (e) {
+        console.error('Error loading applicants:', e);
+        setAppsError('Bewerber konnten nicht geladen werden.');
+      } finally {
+        setIsLoadingApps(false);
+      }
+    })();
+  }, [job?.id, user?.id]);
+
+  async function handleAccept(appId: string) {
+    if (!job) return;
+    try {
+      setIsAcceptingId(appId);
+      await acceptApplication(job.id, appId);
+      await updateJob(job.id, { status: 'matched' });
+      
+      // Reload applications
+      const apps = await getApplicationsForJob(job.id);
+      setApplications(apps);
+      const withProfiles: { app: JobApplication; profile: WorkerProfile | null }[] = [];
+      for (const app of apps) {
+        const p = await getWorkerProfile(app.workerId);
+        withProfiles.push({ app, profile: p });
+      }
+      setApplicants(withProfiles);
+      
+      // Update local job status
+      setJob(prev => (prev ? { ...prev, status: 'matched' } : prev));
+      setAppsError(null);
+    } catch (e) {
+      console.error('Error accepting applicant:', e);
+      setAppsError('Kandidat konnte nicht ausgewählt werden.');
+    } finally {
+      setIsAcceptingId(null);
+    }
+  }
+
   async function handleDelete() {
     if (!job) return;
     Alert.alert(
