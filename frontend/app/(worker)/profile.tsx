@@ -147,6 +147,41 @@ export default function WorkerProfileScreen() {
     >
       <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>Dein Profil</Text>
 
+      {/* Profilfoto */}
+      <View
+        style={{
+          backgroundColor: colors.white,
+          borderRadius: 12,
+          padding: spacing.md,
+          borderWidth: 1,
+          borderColor: colors.gray200,
+        }}
+      >
+        <ProfilePhoto
+          photoUri={profile.profilePhotoUri}
+          userName={user.email}
+          onPhotoSelected={handlePhotoSelected}
+          onPhotoRemove={handlePhotoRemove}
+        />
+      </View>
+
+      {/* Dokumente */}
+      <View
+        style={{
+          backgroundColor: colors.white,
+          borderRadius: 12,
+          padding: spacing.md,
+          borderWidth: 1,
+          borderColor: colors.gray200,
+        }}
+      >
+        <DocumentManager
+          documents={profile.documents || []}
+          onDocumentAdd={handleDocumentAdd}
+          onDocumentRemove={handleDocumentRemove}
+        />
+      </View>
+
       {/* Adresse */}
       <View style={{ gap: 8 }}>
         <Text style={{ color: colors.black, fontWeight: '600' }}>Adresse (für Radius)</Text>
