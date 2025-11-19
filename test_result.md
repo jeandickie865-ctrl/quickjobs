@@ -183,12 +183,15 @@ frontend:
     working: true
     file: "utils/matching.ts"
     stuck_count: 0
-    priority: "high"
+    priority: "critical"
     needs_retesting: true
     status_history:
       - working: true
         agent: "main"
         comment: "Matching Logic mit Haversine-Distanz, Tag-Matching und Score-Berechnung implementiert"
+      - working: true
+        agent: "main"
+        comment: "Distance filtering deaktiviert für MVP-Phase: jobWithinRadius gibt jetzt immer true zurück. Nur Kategorie- und Tag-Matching aktiv. radiusOk aus Debug entfernt."
 
   - task: "Worker Feed Screen"
     implemented: true
