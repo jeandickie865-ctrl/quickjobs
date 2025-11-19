@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Alert } from 'react-native';
+import { View, Text, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getJobById, deleteJob } from '../../../utils/jobStore';
+import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
+import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
+import { getWorkerProfile } from '../../../utils/profileStore';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import { Job } from '../../../types/job';
+import { JobApplication } from '../../../types/application';
+import { WorkerProfile } from '../../../types/profile';
 import { Button } from '../../../components/ui/Button';
 
 export default function JobDetailScreen() {
