@@ -14,30 +14,11 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 }
 
 /**
- * Check if a job matches a worker's profile
- * 
- * Matching criteria:
- * 1. Job category must be in worker's selected categories
- * 2. Job location must be within worker's search radius
- * 3. Worker must have ALL tags from required_all_tags
- * 4. Worker must have AT LEAST ONE tag from required_any_tags (if any are specified)
+ * Legacy function - now redirects to new implementation
+ * @deprecated Use jobMatchesWorker instead
  */
 export function isMatch(job: Job, profile: WorkerProfile): boolean {
-  // Check category
-  if (!profile.categories.includes(job.category)) return false;
-
-  // Check required_all_tags
-  const have = new Set(profile.tags);
-  if (!job.required_all_tags.every(t => have.has(t))) return false;
-
-  // Check required_any_tags
-  if (job.required_any_tags.length > 0 && !job.required_any_tags.some(t => have.has(t))) return false;
-
-  // Check distance
-  const dist = haversineKm(profile.homeLat, profile.homeLon, job.lat, job.lon);
-  if (dist > profile.radiusKm) return false;
-
-  return true;
+  return jobMatchesWorker(job, profile);
 }
 
 export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -48,7 +29,7 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
  * Filter jobs that match the worker profile
  */
 export function filterMatchingJobs(jobs: Job[], profile: WorkerProfile): Job[] {
-  return jobs.filter(job => isMatch(job, profile));
+  return jobs.filter(job => jobMatchesWorker(job, profile));
 }
 
 /**
