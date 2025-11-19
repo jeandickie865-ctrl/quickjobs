@@ -273,27 +273,33 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      Implementierung abgeschlossen:
+      **Bug Fix: Signup-Screen Crash behoben**
       
-      **Neue Features:**
-      1. Employer Dashboard mit Job-Liste
-      2. Job Storage in AsyncStorage
-      3. Job Creation speichert jetzt tatsächlich Jobs
-      4. Matching Logic mit Distanz-, Kategorie- und Tag-Matching
-      5. Worker Feed zeigt passende Jobs mit Scoring
-      6. Navigation aktualisiert für beide Rollen
+      **Problem:**
+      - Signup-Screen stürzte ab mit: "undefined is not an object (evaluating 'parsed.error.errors[0]')"
+      - Ursache: Verwendung der veralteten Zod-API (result.error.errors) statt der aktuellen (result.error.issues)
+      
+      **Durchgeführte Änderungen:**
+      1. **app/auth/signup.tsx** - Komplette Überarbeitung:
+         - Korrekte Zod v3+ API: `result.error.issues` statt `result.error.errors`
+         - Verwendet jetzt `Input` Komponente wie Login-Screen
+         - `SafeAreaView` und `KeyboardAvoidingView` für bessere mobile UX
+         - Feld-spezifische Fehleranzeige (errors.email, errors.password, errors.confirm)
+         - Konsistentes Styling mit Login-Screen
+      
+      2. **app/auth/login.tsx** - API-Update:
+         - Ebenfalls auf `result.error.issues` aktualisiert für Konsistenz
+      
+      **Test-Szenarien für Testing Agent:**
+      1. Signup mit invalider E-Mail → Sollte Fehler "Ungültige E-Mail-Adresse" zeigen
+      2. Signup mit zu kurzem Passwort (< 6 Zeichen) → Fehler anzeigen
+      3. Signup mit nicht-übereinstimmenden Passwörtern → Fehler bei "confirm" Feld
+      4. Erfolgreiche Registrierung → Redirect zu /start
+      5. Login mit existierenden Credentials testen
       
       **Nächste Schritte:**
-      - Testing der kompletten User Journey
-      - Employer: Registrierung → Login → Job erstellen
-      - Worker: Registrierung → Login → Profil erstellen → Jobs ansehen
-      
-      **Test-Szenarien:**
-      1. Als Employer einloggen und Job erstellen
-      2. Als Worker einloggen, Profil erstellen mit Kategorien
-      3. Worker Feed öffnen und prüfen ob Jobs angezeigt werden
-      4. Matching überprüfen (Jobs sollten nur bei passender Kategorie/Radius erscheinen)
-      5. Cost Breakdown mit 20% Fee überprüfen
+      - Backend Testing (bereits erfolgreich)
+      - Frontend Testing der Auth-Flows
 
   - agent: "testing"
     message: |
