@@ -108,8 +108,8 @@ export default function CreateJob() {
       lon: 6.7735,
       workerAmountCents,
       paymentToWorker: paymentMethod,
-      required_all_tags: [],
-      required_any_tags: [],
+      required_all_tags: requiredAllTags,
+      required_any_tags: requiredAnyTags,
       status: 'open' as const,
       createdAt: new Date().toISOString(),
     };
