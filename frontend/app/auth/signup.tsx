@@ -1,24 +1,28 @@
-import { z } from 'zod';
 import React, { useState } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
+import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
+import { z } from 'zod';
 
 const signupSchema = z
   .object({
     email: z
       .string()
-      .min(1, 'Bitte eine E-Mail-Adresse eingeben.')
-      .email('Bitte eine gültige E-Mail-Adresse eingeben.'),
+      .min(1, 'E-Mail erforderlich')
+      .email('Ungültige E-Mail-Adresse'),
     password: z
       .string()
-      .min(6, 'Das Passwort muss mindestens 6 Zeichen lang sein.'),
-    confirm: z.string().min(1, 'Bitte das Passwort bestätigen.'),
+      .min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
+    confirm: z
+      .string()
+      .min(1, 'Passwort-Bestätigung erforderlich'),
   })
   .refine((data) => data.password === data.confirm, {
-    message: 'Die Passwörter stimmen nicht überein.',
+    message: 'Die Passwörter stimmen nicht überein',
     path: ['confirm'],
   });
 
@@ -30,39 +34,35 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit() {
-    setError(null);
+  const handleSignup = async () => {
+    setErrors({});
 
+    // Validate with safeParse
     const result = signupSchema.safeParse({ email, password, confirm });
-
+    
     if (!result.success) {
-      // Robust: Zod v3/v4 compatibility
-      // Try both 'issues' (v4) and 'errors' (v3)
-      const issues = (result.error as any).issues || (result.error as any).errors || [];
-      
-      const firstIssue = issues.length > 0 ? issues[0] : null;
-      const message = firstIssue?.message ?? 'Bitte Eingaben überprüfen.';
-
-      setError(message);
-      console.log('Signup validation error:', result.error);
+      // Use correct Zod v3+ API: result.error.issues
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          fieldErrors[issue.path[0] as string] = issue.message;
+        }
+      });
+      setErrors(fieldErrors);
       return;
     }
 
+    setLoading(true);
     try {
-      setIsSubmitting(true);
       await signUp(result.data.email, result.data.password);
       router.replace('/start');
-    } catch (e: any) {
-      console.log('Signup error:', e);
-      setError(
-        e?.message ??
-          'Registrierung fehlgeschlagen. Bitte später erneut versuchen.'
-      );
+    } catch (error: any) {
+      Alert.alert('Fehler', error.message || 'Registrierung fehlgeschlagen');
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   }
 
