@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { router } from 'expo-router';
@@ -11,26 +11,18 @@ export default function RoleSelection() {
   const { colors, spacing } = useTheme();
   const { setUser } = useAuth();
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleRoleSelect = async (role: Role) => {
+  const handleRoleSelect = (role: Role) => {
     setSelectedRole(role);
-    setLoading(true);
-
-    try {
-      await setUser({
-        id: `temp-${Date.now()}`,
-        email: 'temp@example.com',
-        role,
-      });
-      
-      setTimeout(() => {
-        router.replace('/');
-      }, 100);
-    } catch (error) {
-      console.error('Error setting role:', error);
-      setLoading(false);
-    }
+    setUser({
+      id: `temp-${Date.now()}`,
+      email: 'temp@example.com',
+      role,
+    });
+    
+    setTimeout(() => {
+      router.replace('/(tabs)/taxonomy');
+    }, 100);
   };
 
   return (
@@ -61,9 +53,8 @@ export default function RoleSelection() {
                 marginBottom: spacing.md,
               },
             ]}
-            onPress={() => !loading && handleRoleSelect('worker')}
+            onPress={() => handleRoleSelect('worker')}
             activeOpacity={0.7}
-            disabled={loading}
           >
             <Text
               style={[
@@ -91,9 +82,8 @@ export default function RoleSelection() {
                 borderColor: selectedRole === 'employer' ? colors.black : colors.beige300,
               },
             ]}
-            onPress={() => !loading && handleRoleSelect('employer')}
+            onPress={() => handleRoleSelect('employer')}
             activeOpacity={0.7}
-            disabled={loading}
           >
             <Text
               style={[
@@ -113,12 +103,6 @@ export default function RoleSelection() {
             </Text>
           </TouchableOpacity>
         </View>
-
-        {loading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.black} />
-          </View>
-        )}
       </View>
     </SafeAreaView>
   );
@@ -168,9 +152,5 @@ const styles = StyleSheet.create({
   roleDescription: {
     fontSize: 14,
     fontWeight: '400',
-  },
-  loadingContainer: {
-    marginTop: 24,
-    alignItems: 'center',
   },
 });

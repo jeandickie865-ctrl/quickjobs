@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { storage } from '../utils/storage';
+import React, { createContext, useContext, useMemo, useState, ReactNode } from 'react';
 
 type UserRole = 'worker' | 'employer';
 
@@ -11,57 +10,16 @@ interface User {
 
 interface AuthContextValue {
   user: User | null;
-  isLoading: boolean;
-  setUser: (user: User | null) => Promise<void>;
-  logout: () => Promise<void>;
+  setUser: (user: User | null) => void;
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
-
-const AUTH_STORAGE_KEY = '@shiftmatch:user';
+const AuthContext = createContext<AuthContextValue | null>(null);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUserState] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    loadUser();
-  }, []);
-
-  const loadUser = async () => {
-    try {
-      const storedUser = await storage.getItem<User>(AUTH_STORAGE_KEY);
-      setUserState(storedUser);
-    } catch (error) {
-      console.error('Error loading user:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const setUser = async (newUser: User | null) => {
-    try {
-      if (newUser) {
-        await storage.setItem(AUTH_STORAGE_KEY, newUser);
-      } else {
-        await storage.removeItem(AUTH_STORAGE_KEY);
-      }
-      setUserState(newUser);
-    } catch (error) {
-      console.error('Error setting user:', error);
-      throw error;
-    }
-  };
-
-  const logout = async () => {
-    await setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, isLoading, setUser, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const [user, setUser] = useState<User | null>(null);
+  const value = useMemo(() => ({ user, setUser }), [user]);
+  
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextValue => {
