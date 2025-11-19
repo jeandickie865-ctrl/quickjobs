@@ -246,17 +246,20 @@ export default function CreateJob() {
         {/* Tags - nur wenn Kategorie gewählt */}
         {category && (() => {
           const groups = groupTagsByType(category as CategoryKey);
-          const allTags = [
-            ...groups.qual,
+          
+          // Separate mandatory tags from vehicle tags
+          const mandatoryTags = [
             ...groups.role,
+            ...groups.qual,
             ...groups.license,
             ...groups.doc,
             ...groups.skill,
-            ...groups.vehicle,
-            ...groups.tool
+            ...groups.tool,
           ];
           
-          if (allTags.length === 0) return null;
+          const vehicleTags = groups.vehicle;
+          
+          if (mandatoryTags.length === 0 && vehicleTags.length === 0) return null;
           
           return (
             <View style={{ 
@@ -271,51 +274,67 @@ export default function CreateJob() {
                 Anforderungen (optional)
               </Text>
               
-              <View style={{ gap: 8 }}>
-                <Text style={{ color: colors.gray700, fontSize: 13 }}>
-                  Alle diese Tags erforderlich:
-                </Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {allTags.map(tag => (
-                    <Chip
-                      key={tag.key}
-                      label={tag.label}
-                      selected={requiredAllTags.includes(tag.key)}
-                      onPress={() => {
-                        if (requiredAllTags.includes(tag.key)) {
-                          setRequiredAllTags(requiredAllTags.filter(t => t !== tag.key));
-                        } else {
-                          setRequiredAllTags([...requiredAllTags, tag.key]);
-                          // Remove from "any" if in "all"
-                          setRequiredAnyTags(requiredAnyTags.filter(t => t !== tag.key));
-                        }
-                      }}
-                    />
-                  ))}
+              {/* Pflicht-Tags */}
+              {mandatoryTags.length > 0 && (
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: colors.gray700, fontSize: 13 }}>
+                    Diese Tags sind erforderlich:
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                    {mandatoryTags.map(tag => (
+                      <Chip
+                        key={tag.key}
+                        label={tag.label}
+                        selected={requiredAllSet.has(tag.key)}
+                        onPress={() => {
+                          const nextAll = new Set(requiredAllSet);
+                          if (nextAll.has(tag.key)) {
+                            nextAll.delete(tag.key);
+                          } else {
+                            nextAll.add(tag.key);
+                            // Ensure tag is not in vehicle set
+                            const nextAny = new Set(requiredAnySet);
+                            nextAny.delete(tag.key);
+                            setRequiredAnySet(nextAny);
+                          }
+                          setRequiredAllSet(nextAll);
+                        }}
+                      />
+                    ))}
+                  </View>
                 </View>
-              </View>
+              )}
 
-              <View style={{ gap: 8 }}>
-                <Text style={{ color: colors.gray700, fontSize: 13 }}>
-                  Mindestens einer dieser Tags:
-                </Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {allTags.filter(t => !requiredAllTags.includes(t.key)).map(tag => (
-                    <Chip
-                      key={tag.key}
-                      label={tag.label}
-                      selected={requiredAnyTags.includes(tag.key)}
-                      onPress={() => {
-                        if (requiredAnyTags.includes(tag.key)) {
-                          setRequiredAnyTags(requiredAnyTags.filter(t => t !== tag.key));
-                        } else {
-                          setRequiredAnyTags([...requiredAnyTags, tag.key]);
-                        }
-                      }}
-                    />
-                  ))}
+              {/* Fahrzeug-Tags */}
+              {vehicleTags.length > 0 && (
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: colors.gray700, fontSize: 13 }}>
+                    Akzeptierte Fahrzeuge:
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                    {vehicleTags.map(tag => (
+                      <Chip
+                        key={tag.key}
+                        label={tag.label}
+                        selected={requiredAnySet.has(tag.key)}
+                        onPress={() => {
+                          const nextAny = new Set(requiredAnySet);
+                          if (nextAny.has(tag.key)) {
+                            nextAny.delete(tag.key);
+                          } else {
+                            nextAny.add(tag.key);
+                            // Ensure tag is not in mandatory set
+                            const nextAll = new Set(requiredAllSet);
+                            nextAll.delete(tag.key);
+                            setRequiredAllSet(nextAll);
+                          }
+                          setRequiredAnySet(nextAny);
+                        }}
+                      />
+                    ))}
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           );
         })()}
