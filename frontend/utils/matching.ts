@@ -1,5 +1,5 @@
 import { WorkerProfile } from '../types/profile';
-import { Job } from '../types/profile';
+import { Job } from '../types/job';
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
@@ -13,27 +13,29 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return R * c;
 }
 
-export function isMatch(
-  worker: { categories: string[]; tags: string[]; homeLat: number; homeLon: number; radiusKm: number },
-  job: { category: string; required_all_tags: string[]; required_any_tags: string[]; locationLat: number; locationLon: number; startAt: string; endAt: string }
-): boolean {
+/**
+ * Check if a job matches a worker's profile
+ * 
+ * Matching criteria:
+ * 1. Job category must be in worker's selected categories
+ * 2. Job location must be within worker's search radius
+ * 3. Worker must have ALL tags from required_all_tags
+ * 4. Worker must have AT LEAST ONE tag from required_any_tags (if any are specified)
+ */
+export function isMatch(job: Job, profile: WorkerProfile): boolean {
   // Check category
-  if (!worker.categories.includes(job.category)) return false;
+  if (!profile.categories.includes(job.category)) return false;
 
   // Check required_all_tags
-  const have = new Set(worker.tags);
+  const have = new Set(profile.tags);
   if (!job.required_all_tags.every(t => have.has(t))) return false;
 
   // Check required_any_tags
   if (job.required_any_tags.length > 0 && !job.required_any_tags.some(t => have.has(t))) return false;
 
   // Check distance
-  const dist = haversineKm(worker.homeLat, worker.homeLon, job.locationLat, job.locationLon);
-  if (dist > worker.radiusKm) return false;
-
-  // Check time
-  const now = new Date();
-  if (new Date(job.endAt) <= now) return false;
+  const dist = haversineKm(profile.homeLat, profile.homeLon, job.lat, job.lon);
+  if (dist > profile.radiusKm) return false;
 
   return true;
 }
@@ -42,19 +44,51 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
   return haversineKm(lat1, lon1, lat2, lon2);
 }
 
-export function sortJobsByDistanceAndTime(
+/**
+ * Filter jobs that match the worker profile
+ */
+export function filterMatchingJobs(jobs: Job[], profile: WorkerProfile): Job[] {
+  return jobs.filter(job => isMatch(job, profile));
+}
+
+/**
+ * Calculate match score (0-100) for sorting
+ * Higher score = better match
+ */
+export function calculateMatchScore(job: Job, profile: WorkerProfile): number {
+  let score = 0;
+
+  // Distance score (closer = better): max 40 points
+  const distance = calculateDistance(profile.homeLat, profile.homeLon, job.lat, job.lon);
+  const distanceScore = Math.max(0, 40 * (1 - distance / profile.radiusKm));
+  score += distanceScore;
+
+  // Tag match score: max 40 points
+  const workerTagSet = new Set(profile.tags);
+  const allJobTags = [...job.required_all_tags, ...job.required_any_tags];
+  const matchingTags = allJobTags.filter(tag => workerTagSet.has(tag));
+  if (allJobTags.length > 0) {
+    const tagMatchRatio = matchingTags.length / allJobTags.length;
+    score += 40 * tagMatchRatio;
+  } else {
+    // No specific tags required = bonus
+    score += 20;
+  }
+
+  // Pay score: max 20 points (higher pay = higher score)
+  const payScore = Math.min(20, (job.workerAmountCents / 10000) * 20);
+  score += payScore;
+
+  return Math.round(score);
+}
+
+export function sortJobsByMatch(
   jobs: Job[],
-  workerLat: number,
-  workerLon: number
+  profile: WorkerProfile
 ): Job[] {
   return jobs.sort((a, b) => {
-    const distA = calculateDistance(workerLat, workerLon, a.locationLat, a.locationLon);
-    const distB = calculateDistance(workerLat, workerLon, b.locationLat, b.locationLon);
-    
-    if (Math.abs(distA - distB) > 0.1) {
-      return distA - distB;
-    }
-    
-    return new Date(a.startAt).getTime() - new Date(b.startAt).getTime();
+    const scoreA = calculateMatchScore(a, profile);
+    const scoreB = calculateMatchScore(b, profile);
+    return scoreB - scoreA; // Higher score first
   });
 }
