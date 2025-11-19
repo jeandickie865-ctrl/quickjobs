@@ -1,41 +1,21 @@
+// utils/storage.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const storage = {
-  async setItem(key: string, value: any): Promise<void> {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem(key, jsonValue);
-    } catch (error) {
-      console.error(`Error setting storage key "${key}":`, error);
-      throw error;
-    }
-  },
+export async function getItem<T>(key: string): Promise<T | null> {
+  const raw = await AsyncStorage.getItem(key);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
 
-  async getItem<T>(key: string): Promise<T | null> {
-    try {
-      const jsonValue = await AsyncStorage.getItem(key);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (error) {
-      console.error(`Error getting storage key "${key}":`, error);
-      return null;
-    }
-  },
+export async function setItem<T>(key: string, value: T): Promise<void> {
+  const raw = JSON.stringify(value);
+  await AsyncStorage.setItem(key, raw);
+}
 
-  async removeItem(key: string): Promise<void> {
-    try {
-      await AsyncStorage.removeItem(key);
-    } catch (error) {
-      console.error(`Error removing storage key "${key}":`, error);
-      throw error;
-    }
-  },
-
-  async clear(): Promise<void> {
-    try {
-      await AsyncStorage.clear();
-    } catch (error) {
-      console.error('Error clearing storage:', error);
-      throw error;
-    }
-  },
-};
+export async function removeItem(key: string): Promise<void> {
+  await AsyncStorage.removeItem(key);
+}
