@@ -400,9 +400,9 @@ export default function CreateJob() {
             <View style={{ gap: 6 }}>
               <Text style={{ color: colors.black, fontWeight: '600' }}>Datum</Text>
               <TextInput
-                value={startDate}
-                onChangeText={setStartDate}
-                placeholder="2024-12-20"
+                value={date}
+                onChangeText={setDate}
+                placeholder="TT.MM.JJJJ"
                 placeholderTextColor={colors.gray400}
                 style={{
                   borderWidth: 1,
