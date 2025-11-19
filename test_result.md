@@ -204,6 +204,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Worker Feed erstellt mit Job-Anzeige, Filtering und Sorting basierend auf Matching-Logic"
+      - working: true
+        agent: "main"
+        comment: "Datum/Zeit-Anzeige verbessert: Jobs zeigen jetzt detaillierte Zeitinformationen (Datum + Uhrzeit + Modus) statt nur 'Zeitgenau'. Format: 'Do, 20.11.2025 · 19:00–23:00 · Zeitgenauer Einsatz'"
 
   - task: "Navigation Updates"
     implemented: true
