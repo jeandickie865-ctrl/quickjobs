@@ -26,6 +26,13 @@ export type WorkerProfile = {
   homeLon: number;
   profilePhotoUri?: string;  // Lokale URI zum Profilfoto
   documents?: WorkerDocument[]; // Liste der Dokumente
+  
+  // Steckbrief und Kontaktdaten (neu)
+  firstName?: string;        // Vorname für persönliche Ansprache
+  lastName?: string;         // Nachname
+  shortBio?: string;         // Kurzer Steckbrief, vor Match sichtbar
+  contactPhone?: string;     // Telefonnummer, nur nach Match sichtbar
+  contactEmail?: string;     // Kontakt-E-Mail, nur nach Match sichtbar
 };
 
 export type Job = {
