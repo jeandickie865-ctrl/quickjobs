@@ -331,7 +331,7 @@ export default function WorkerProfileScreen() {
       {/* kleine Zusammenfassung für Debug */}
       <View style={{ marginTop: spacing.sm }}>
         <Text style={{ color: colors.gray700, fontSize: 12 }}>
-          {profile.tags.length} ausgewählte Qualifikationen und Tätigkeiten
+          {profile.selectedTags.length} ausgewählte Qualifikationen und Tätigkeiten
         </Text>
       </View>
     </ScrollView>
