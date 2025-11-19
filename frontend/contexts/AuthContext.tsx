@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // beim Start User aus Storage holen
   useEffect(() => {
     (async () => {
-      const stored = await getItem<StoredUser>(USER_KEY);
+      const stored = await storage.getItem<StoredUser>(USER_KEY);
       if (stored) {
         setUser(stored);
       }
