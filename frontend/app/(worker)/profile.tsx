@@ -302,8 +302,30 @@ export default function WorkerProfileScreen() {
         );
       })}
 
-      <View style={{ marginTop: spacing.lg }}>
-        <Button title={isSaving ? 'Speichern…' : 'Profil speichern'} onPress={handleSave} disabled={isSaving} />
+      <View style={{ marginTop: spacing.lg, gap: spacing.sm }}>
+        <Button 
+          title={isSaving ? 'Speichern…' : 'Profil speichern'} 
+          onPress={handleSave} 
+          disabled={isSaving} 
+        />
+        <Button
+          title={isSaving ? 'Speichern…' : 'Speichern und weiter'}
+          variant="secondary"
+          onPress={async () => {
+            if (isSaving) return;
+            await handleSave();
+            router.replace('/(worker)/feed');
+          }}
+          disabled={isSaving}
+        />
+        <Button
+          title="Logout"
+          variant="ghost"
+          onPress={async () => {
+            await signOut();
+            router.replace('/auth/start');
+          }}
+        />
       </View>
 
       {/* kleine Zusammenfassung für Debug */}
