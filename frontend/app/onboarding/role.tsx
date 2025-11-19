@@ -21,7 +21,7 @@ export default function RoleSelection() {
     });
     
     setTimeout(() => {
-      router.replace('/(tabs)/taxonomy');
+      router.replace('/taxonomy');
     }, 100);
   };
 
@@ -153,4 +153,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
   },
-});
+});}
