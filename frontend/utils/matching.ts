@@ -105,9 +105,76 @@ export function jobWithinRadius(job: Job, profile: WorkerProfile): boolean {
 }
 
 /**
+ * Debug information for job matching
+ */
+export type MatchDebug = {
+  ok: boolean;
+  jobId: string;
+  jobCategory: string;
+  profileCategories: string[];
+  requiredAllJob: string[];
+  requiredAnyJob: string[];
+  profileTags: string[];
+  missingRequiredAll: string[];
+  anyIntersection: string[];
+  categoryOk: boolean;
+  requiredAllOk: boolean;
+  requiredAnyOk: boolean;
+};
+
+/**
+ * Check if job matches worker with detailed debug information
+ */
+export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): MatchDebug {
+  const categories = profile.categories ?? [];
+  const tagKeys = profile.selectedTags ?? [];
+
+  const categoryOk = categories.includes(job.category);
+
+  const workerTags = new Set(tagKeys);
+  const requiredAllJob = job.required_all_tags ?? [];
+  const requiredAnyJob = job.required_any_tags ?? [];
+
+  const missingRequiredAll = requiredAllJob.filter(t => !workerTags.has(t));
+
+  const requiredAllOk = missingRequiredAll.length === 0;
+
+  let anyIntersection: string[] = [];
+  let requiredAnyOk = true;
+  if (requiredAnyJob.length > 0) {
+    anyIntersection = requiredAnyJob.filter(t => workerTags.has(t));
+    requiredAnyOk = anyIntersection.length > 0;
+  }
+
+  const radiusOk = jobWithinRadius(job, profile);
+
+  const ok = categoryOk && requiredAllOk && requiredAnyOk && radiusOk;
+
+  return {
+    ok,
+    jobId: job.id,
+    jobCategory: job.category,
+    profileCategories: categories,
+    requiredAllJob,
+    requiredAnyJob,
+    profileTags: tagKeys,
+    missingRequiredAll,
+    anyIntersection,
+    categoryOk,
+    requiredAllOk,
+    requiredAnyOk,
+  };
+}
+
+/**
  * Check if job matches worker profile (using new field names)
  */
 export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
+  return jobMatchesWorkerWithDebug(job, profile).ok;
+}
+
+// Legacy implementation (kept for reference, now uses debug function)
+function jobMatchesWorkerLegacy(job: Job, profile: WorkerProfile): boolean {
   const categoryKeys = profile.categories ?? [];
   const tagKeys = profile.selectedTags ?? [];
 
