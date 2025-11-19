@@ -120,7 +120,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       async signOut() {
         setUser(null);
-        await removeItem(USER_KEY);
+        await storage.removeItem(USER_KEY);
       },
 
       async setRole(role) {
@@ -131,7 +131,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           role,
           accountType: user.accountType,
         };
-        await setItem(USER_KEY, updated);
+        await storage.setItem(USER_KEY, updated);
         setUser(updated);
       },
     };
