@@ -92,3 +92,21 @@ export function sortJobsByMatch(
     return scoreB - scoreA; // Higher score first
   });
 }
+
+/**
+ * Check if job is within worker's radius
+ */
+export function jobWithinRadius(job: Job, profile: WorkerProfile): boolean {
+  if (!profile.radiusKm || profile.radiusKm <= 0) return true;
+  if (job.lat === undefined || job.lon === undefined) return true;
+  if (profile.homeLat === undefined || profile.homeLon === undefined) return true;
+  const distance = haversineKm(profile.homeLat, profile.homeLon, job.lat, job.lon);
+  return distance <= profile.radiusKm;
+}
+
+/**
+ * Alias for isMatch - check if job matches worker profile
+ */
+export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
+  return isMatch(job, profile);
+}
