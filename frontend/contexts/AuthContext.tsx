@@ -7,7 +7,7 @@ import React, {
   useState,
   ReactNode,
 } from 'react';
-import { getItem, setItem, removeItem } from '../utils/storage';
+import { storage } from '../utils/storage';
 
 export type Role = 'worker' | 'employer';
 
