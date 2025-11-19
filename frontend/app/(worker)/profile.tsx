@@ -21,7 +21,9 @@ function createEmptyProfile(userId: string): WorkerProfile {
     radiusKm: DEFAULT_RADIUS_KM,
     homeAddress: '',
     homeLat: 0,
-    homeLon: 0
+    homeLon: 0,
+    profilePhotoUri: undefined,
+    documents: [],
   };
 }
 
