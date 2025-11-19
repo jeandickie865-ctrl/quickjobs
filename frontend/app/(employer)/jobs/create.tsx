@@ -79,8 +79,8 @@ export default function CreateJob() {
       return;
     }
 
-    if (!address.trim()) {
-      setError('Bitte eine Adresse eingeben.');
+    if (!address.street && !address.postalCode && !address.city) {
+      setError('Bitte mindestens ein Adressfeld ausfüllen.');
       return;
     }
 
