@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../theme/ThemeProvider';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -11,7 +11,7 @@ export default function RootLayout() {
       <ThemeProvider>
         <AuthProvider>
           <StatusBar style="dark" />
-          <Stack screenOptions={{ headerShown: false }} />
+          <Slot />
         </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>
