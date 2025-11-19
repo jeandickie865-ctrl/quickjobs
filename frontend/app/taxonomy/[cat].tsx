@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, Pressable } from 'react-native';
-import { useLocalSearchParams, Stack } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Card } from '../../components/ui/Card';
 import { getCategory, groupTagsByType, CategoryKey } from '../../src/taxonomy';
@@ -42,7 +42,6 @@ export default function CategoryDetail() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
-      <Stack.Screen options={{ title: category.label, headerShown: true }} />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: spacing.md }}
