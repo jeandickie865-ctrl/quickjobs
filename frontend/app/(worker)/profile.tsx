@@ -63,7 +63,7 @@ export default function WorkerProfileScreen() {
   }
 
   function toggleCategory(key: string) {
-    const next = new Set(profile.categories);
+    const next = new Set(profile.categories ?? []);
     if (next.has(key)) {
       next.delete(key);
       // Tags der Kategorie rausschmeißen
@@ -77,7 +77,7 @@ export default function WorkerProfileScreen() {
         ...allTags.skill,
         ...allTags.tool
       ].map(t => t.key);
-      const newTags = profile.selectedTags.filter(t => !keysToRemove.includes(t));
+      const newTags = (profile.selectedTags ?? []).filter(t => !keysToRemove.includes(t));
       setProfile({ ...profile, categories: Array.from(next), selectedTags: newTags });
     } else {
       next.add(key);
