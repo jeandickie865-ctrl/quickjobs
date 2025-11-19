@@ -1,112 +1,129 @@
-diff --git a/frontend/types/job.ts b/frontend/types/job.ts
-index 1d4e68e..eb2c7f5 100644
---- a/frontend/types/job.ts
-+++ b/frontend/types/job.ts
-@@ -1,3 +1,5 @@
-+import { Address } from './address';
-+
- export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
+diff --git a/frontend/app/(worker)/feed.tsx b/frontend/app/(worker)/feed.tsx
+index 4c38744..5088842 100644
+--- a/frontend/app/(worker)/feed.tsx
++++ b/frontend/app/(worker)/feed.tsx
+@@ -12,6 +12,7 @@ import { Job } from '../../types/job';
+ import { WorkerProfile } from '../../types/profile';
+ import { Button } from '../../components/ui/Button';
+ import { euro } from '../../utils/pricing';
++import { formatAddress } from '../../types/address';
  
- export type Job = {
-@@ -21,7 +23,7 @@ export type Job = {
-   // project: z. B. "Hecke schneiden bis Freitag"
-   dueAt?: string;
- 
--  address: string;
-+  address: Address;      // Strukturierte Adresse (statt string)
-   lat: number;
-   lon: number;
- 
+ // Helper functions for German date/time formatting
+ const formatDateGerman = (isoDate?: string) => {
 diff --git a/model.patch b/model.patch
-index fde3a5e..e69de29 100644
+index b032a81..e69de29 100644
 --- a/model.patch
 +++ b/model.patch
-@@ -1,88 +0,0 @@
+@@ -1,112 +0,0 @@
+-diff --git a/frontend/types/job.ts b/frontend/types/job.ts
+-index 1d4e68e..eb2c7f5 100644
+---- a/frontend/types/job.ts
+-+++ b/frontend/types/job.ts
+-@@ -1,3 +1,5 @@
+-+import { Address } from './address';
+-+
+- export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
+- 
+- export type Job = {
+-@@ -21,7 +23,7 @@ export type Job = {
+-   // project: z. B. "Hecke schneiden bis Freitag"
+-   dueAt?: string;
+- 
+--  address: string;
+-+  address: Address;      // Strukturierte Adresse (statt string)
+-   lat: number;
+-   lon: number;
+- 
 -diff --git a/model.patch b/model.patch
--index 528f2c8..e69de29 100644
+-index fde3a5e..e69de29 100644
 ---- a/model.patch
 -+++ b/model.patch
--@@ -1,48 +0,0 @@
+-@@ -1,88 +0,0 @@
+--diff --git a/model.patch b/model.patch
+--index 528f2c8..e69de29 100644
+----- a/model.patch
+--+++ b/model.patch
+--@@ -1,48 +0,0 @@
+---diff --git a/test_result.md b/test_result.md
+---index e5a221c..36ff488 100644
+------ a/test_result.md
+---+++ b/test_result.md
+---@@ -214,8 +214,8 @@ frontend:
+--- backend:
+---   - task: "Backend API"
+---     implemented: false
+----    working: "NA"
+----    file: ""
+---+    working: true
+---+    file: "backend/server.py"
+---     stuck_count: 0
+---     priority: "low"
+---     needs_retesting: false
+---@@ -223,6 +223,9 @@ backend:
+---       - working: "NA"
+---         agent: "main"
+---         comment: "Noch nicht implementiert - App nutzt AsyncStorage für MVP"
+---+      - working: true
+---+        agent: "testing"
+---+        comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
+--- 
+--- metadata:
+---   created_by: "main_agent"
+---@@ -263,4 +266,19 @@ agent_communication:
+---       2. Als Worker einloggen, Profil erstellen mit Kategorien
+---       3. Worker Feed öffnen und prüfen ob Jobs angezeigt werden
+---       4. Matching überprüfen (Jobs sollten nur bei passender Kategorie/Radius erscheinen)
+----      5. Cost Breakdown mit 20% Fee überprüfen
+---\ No newline at end of file
+---+      5. Cost Breakdown mit 20% Fee überprüfen
+---+
+---+  - agent: "testing"
+---+    message: |
+---+      **Backend Testing Abgeschlossen:**
+---+      
+---+      ✅ **Backend Service Status:** RUNNING (pid 554, uptime 0:04:21)
+---+      ✅ **Backend Health Check:** Erfolgreich - GET /api/ funktioniert
+---+      ✅ **Standard Endpoints:** POST/GET /api/status funktionieren korrekt
+---+      ✅ **MongoDB Verbindung:** Erfolgreich - Datenbank erreichbar
+---+      ✅ **CORS Konfiguration:** Korrekt eingerichtet
+---+      ✅ **Keine Fehler in Backend Logs:** Service läuft stabil
+---+      
+---+      **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
+---+      
+---+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
+---\ No newline at end of file
 --diff --git a/test_result.md b/test_result.md
---index e5a221c..36ff488 100644
+--index 2a11b47..338c2ce 100644
 ----- a/test_result.md
 --+++ b/test_result.md
---@@ -214,8 +214,8 @@ frontend:
--- backend:
---   - task: "Backend API"
---     implemented: false
----    working: "NA"
----    file: ""
---+    working: true
---+    file: "backend/server.py"
---     stuck_count: 0
---     priority: "low"
---     needs_retesting: false
---@@ -223,6 +223,9 @@ backend:
---       - working: "NA"
---         agent: "main"
---         comment: "Noch nicht implementiert - App nutzt AsyncStorage für MVP"
+--@@ -253,6 +253,9 @@ backend:
+--       - working: true
+--         agent: "testing"
+--         comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
 --+      - working: true
 --+        agent: "testing"
---+        comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
+--+        comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
 -- 
 -- metadata:
 --   created_by: "main_agent"
---@@ -263,4 +266,19 @@ agent_communication:
---       2. Als Worker einloggen, Profil erstellen mit Kategorien
---       3. Worker Feed öffnen und prüfen ob Jobs angezeigt werden
---       4. Matching überprüfen (Jobs sollten nur bei passender Kategorie/Radius erscheinen)
----      5. Cost Breakdown mit 20% Fee überprüfen
+--@@ -314,4 +317,17 @@ agent_communication:
+--       
+--       **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
+--       
+---      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
 --\ No newline at end of file
---+      5. Cost Breakdown mit 20% Fee überprüfen
+--+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
 --+
 --+  - agent: "testing"
 --+    message: |
---+      **Backend Testing Abgeschlossen:**
+--+      **Backend Re-Verification Abgeschlossen (nach Signup Bug Fix):**
 --+      
---+      ✅ **Backend Service Status:** RUNNING (pid 554, uptime 0:04:21)
---+      ✅ **Backend Health Check:** Erfolgreich - GET /api/ funktioniert
---+      ✅ **Standard Endpoints:** POST/GET /api/status funktionieren korrekt
---+      ✅ **MongoDB Verbindung:** Erfolgreich - Datenbank erreichbar
---+      ✅ **CORS Konfiguration:** Korrekt eingerichtet
---+      ✅ **Keine Fehler in Backend Logs:** Service läuft stabil
+--+      ✅ **Backend Service Status:** RUNNING (pid 490, uptime 0:05:31) - Stabil
+--+      ✅ **Health Check:** GET /api/ → {"message": "Hello World"} ✅
+--+      ✅ **Status Endpoints:** POST/GET /api/status funktionieren einwandfrei
+--+      ✅ **MongoDB Verbindung:** Erfolgreich - 2 documents in status_checks collection
+--+      ✅ **CORS Headers:** Korrekt konfiguriert
+--+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
 --+      
---+      **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
---+      
---+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
+--+      **Bestätigung:** Backend Infrastructure ist vollständig funktionsfähig. Wie erwartet für MVP mit AsyncStorage - keine ShiftMatch-spezifischen Endpoints nötig. System bereit für weitere Entwicklung.
 --\ No newline at end of file
--diff --git a/test_result.md b/test_result.md
--index 2a11b47..338c2ce 100644
----- a/test_result.md
--+++ b/test_result.md
--@@ -253,6 +253,9 @@ backend:
--       - working: true
--         agent: "testing"
--         comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
--+      - working: true
--+        agent: "testing"
--+        comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
-- 
-- metadata:
--   created_by: "main_agent"
--@@ -314,4 +317,17 @@ agent_communication:
--       
--       **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
--       
---      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
--\ No newline at end of file
--+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
--+
--+  - agent: "testing"
--+    message: |
--+      **Backend Re-Verification Abgeschlossen (nach Signup Bug Fix):**
--+      
--+      ✅ **Backend Service Status:** RUNNING (pid 490, uptime 0:05:31) - Stabil
--+      ✅ **Health Check:** GET /api/ → {"message": "Hello World"} ✅
--+      ✅ **Status Endpoints:** POST/GET /api/status funktionieren einwandfrei
--+      ✅ **MongoDB Verbindung:** Erfolgreich - 2 documents in status_checks collection
--+      ✅ **CORS Headers:** Korrekt konfiguriert
--+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
--+      
--+      **Bestätigung:** Backend Infrastructure ist vollständig funktionsfähig. Wie erwartet für MVP mit AsyncStorage - keine ShiftMatch-spezifischen Endpoints nötig. System bereit für weitere Entwicklung.
--\ No newline at end of file
