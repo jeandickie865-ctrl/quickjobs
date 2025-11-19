@@ -1,0 +1,79 @@
+<analysis>
+The trajectory documents the incremental development and debugging of a React Native ShiftMatch application. The process involved building core features from detailed user prompts in German, followed by extensive debugging and refactoring cycles.
+
+Initially, the focus was on establishing the employer-side functionality. A comprehensive job creation screen () was built and iterated upon, incorporating features like different timing models, a 20% platform fee calculation (), and taxonomy-based tag selection.
+
+A significant part of the work involved addressing critical runtime errors. A major refactoring of the  wrapper () was undertaken to resolve crashes related to incorrect function imports and double JSON serialization across the app, particularly in  and data stores (, ).
+
+Subsequently, the full job matching and application lifecycle was implemented. This included creating an application store (), implementing distance and tag-based matching logic (), building the worker's job feed () to display and apply for jobs, and enhancing the employer's job detail view () to show and accept applicants.
+
+The final phase focused on bug fixing. A persistent matching issue was diagnosed by adding detailed debug output to the UI, revealing a legacy, incorrect matching function that was subsequently removed. The very last task initiated was a complete refactor of the  screen to fix a Zod validation crash () by adopting a more robust  implementation.
+
+The user's primary language is German; all future interactions should be in German.
+</analysis>
+<product_requirements>
+The goal is to build ShiftMatch, a React Native mobile app connecting Arbeitgeber (Employers) and Arbeitnehmer (Workers) for short-term jobs.
+
+**Core Features:**
+*   **Dual Roles & Auth:** Users sign up with email/password and choose a role (Worker or Employer). App sections are protected based on the selected role.
+*   **Worker Profile:** Workers create a profile with their skills and qualifications by selecting from predefined job categories and tags, defined in a central .
+*   **Employer Job Creation:** Employers post jobs by specifying a title, description, category, and requirements (tags). The system supports three timing models:  (specific start/end),  (set number of hours), and  (deadline).
+*   **Fee Structure:** The app automatically calculates a 20% platform fee on top of the worker's compensation. The UI must clearly break down the worker's pay, the fee, and the employer's total cost during job creation.
+*   **Matching & Application:** The system matches jobs to workers based on category and tag requirements. Workers can see and apply for matched jobs. Employers can view a list of applicants for their jobs and select a candidate, which moves the job status to matched.
+</product_requirements>
+<key_technical_concepts>
+- **React Native & Expo:** Core mobile development framework.
+- **Expo Router:** File-based navigation.
+- **TypeScript:** For static typing throughout the application.
+- **React Context API:** Used for global state management (, ).
+- **AsyncStorage:** Client-side data persistence for user sessions, profiles, and jobs, managed via a custom wrapper in .
+- **Zod:** Used for schema declaration and robust validation of user input, particularly in authentication forms.
+</key_technical_concepts>
+<code_architecture>
+The application uses a standard Expo Router structure, with screens in  and shared logic in component/utility directories.
+
+
+
+- ****:
+    - **Importance**: The primary interface for employers to post jobs. It's a complex, multi-section form.
+    - **Changes**: This file was heavily refactored to include robust Zod-based validation, state management for various job parameters, German date formatting using a new  helper, and an improved UI to differentiate between mandatory tags and accepted vehicles. The submission logic () was made more resilient with clear error messaging.
+
+- ****:
+    - **Importance**: The main screen for workers, displaying jobs that match their profile.
+    - **Changes**: Initially created to show a list of jobs, it was completely rebuilt to integrate the real matching logic from . It now fetches the worker's profile and all open jobs, filters them, and allows the worker to apply. A detailed debug-info section was added to diagnose matching failures, which was crucial for finding a major bug.
+
+- ****:
+    - **Importance**: The dynamic route for viewing a single job's details.
+    - **Changes**: Created from scratch. It was later significantly enhanced to fetch and display a list of applicants from , allowing the employer to accept a candidate and change the job's status to .
+
+- ****:
+    - **Importance**: A critical wrapper for  to unify data persistence.
+    - **Changes**: Completely refactored to export both named functions (, ) and a default  object. This resolved critical app-wide crashes caused by inconsistent imports and usage patterns. It now handles JSON serialization/deserialization internally.
+
+- ****:
+    - **Importance**: Contains the core business logic for matching jobs to worker profiles.
+    - **Changes**: This file was the source of a major bug. It was cleaned up by removing a faulty, legacy  function that used incorrect profile fields. It now contains a single, reliable  function (powered by a  variant) that correctly checks for category, required tags, optional tags, and radius.
+
+- ****:
+    - **Importance**: The user registration screen.
+    - **Changes**: Identified as the source of a crash due to incorrect Zod error handling. The last action was to begin a complete rewrite of this file to use a robust  validation, handle errors correctly, and align its UI with the login screen.
+</code_architecture>
+<pending_tasks>
+- **Geocoding Implementation**: Convert user-entered addresses into latitude/longitude coordinates to enable accurate radius-based job matching. This is mentioned in requirements but not yet implemented.
+- **Backend Integration**: Replace the entire client-side mocked data layer (using  via , , ) with real API calls to a persistent backend.
+</pending_tasks>
+<current_work>
+The AI engineer was in the process of fixing a critical crash on the **Signup screen** (). The error, , was triggered by incorrect error handling of the Zod validation library.
+
+Following a detailed user request (), the task is to completely rewrite this screen. The plan is to:
+1.  Define a new, robust  using Zod's  for password confirmation.
+2.  Implement a  function that uses  for validation.
+3.  Correctly handle validation failures by accessing  instead of the legacy .
+4.  Rebuild the JSX to be stylistically consistent with the existing login screen (), using the shared  component and  styles.
+5.  Ensure proper error display and loading states.
+
+The last actions taken were creating a temporary file  with the new implementation and then replacing the original  with its content, effectively starting the replacement process. The work is to finalize and verify this new implementation.
+</current_work>
+<optional_next_step>
+Complete the implementation of  by fully populating it with the robust code structure and logic specified in the user's last detailed request ().
+</optional_next_step>
