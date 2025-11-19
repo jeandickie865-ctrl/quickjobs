@@ -8,8 +8,9 @@ import { Button } from '../../../components/ui/Button';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import Chip from '../../../components/ui/Chip';
 import { listCategories, CategoryKey, groupTagsByType } from '../../../src/taxonomy';
-import { JobTimeMode } from '../../../types/job';
+import { JobTimeMode, Job } from '../../../types/job';
 import { addJob } from '../../../utils/jobStore';
+import { parseGermanDateTime } from '../../../utils/date';
 
 export default function CreateJob() {
   const { colors, spacing } = useTheme();
@@ -30,21 +31,25 @@ export default function CreateJob() {
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
   
-  // fixed_time
-  const [startDate, setStartDate] = useState('');
+  // fixed_time (deutsches Format TT.MM.JJJJ)
+  const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   
   // hour_package
   const [hours, setHours] = useState('');
   
-  // project
+  // project (deutsches Format TT.MM.JJJJ)
   const [dueDate, setDueDate] = useState('');
 
   // Payment
   const [workerAmountInput, setWorkerAmountInput] = useState('');
   const [workerAmountCents, setWorkerAmountCents] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'bank' | 'paypal'>('cash');
+
+  // Error & Loading
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleWorkerAmountChange = (text: string) => {
     setWorkerAmountInput(text);
