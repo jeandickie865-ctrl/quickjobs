@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         ];
 
         await saveCredentials(nextCreds);
-        await storage.setItem(USER_KEY, newUser);
+        await setItem(USER_KEY, newUser);
         setUser(newUser);
       },
 
