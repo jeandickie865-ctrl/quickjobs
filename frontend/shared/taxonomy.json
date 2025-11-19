@@ -6,6 +6,12 @@
       "key": "sicherheit",
       "label": "Sicherheit",
       "tags": [
+        { "key": "sicherheit.rolle_bewachung", "label": "Bewachung", "type": "role" },
+        { "key": "sicherheit.rolle_kaufhausdetektiv", "label": "Kaufhausdetektiv", "type": "role" },
+        { "key": "sicherheit.rolle_doorman", "label": "Doorman", "type": "role" },
+        { "key": "sicherheit.rolle_event_security", "label": "Event Security", "type": "role" },
+        { "key": "sicherheit.rolle_revierdienst", "label": "Revierdienst", "type": "role" },
+        { "key": "sicherheit.rolle_brandsicherheitswache", "label": "Brandsicherheitswache", "type": "role" },
         { "key": "sicherheit.sachkunde_34a", "label": "§34a Sachkunde", "type": "qual" },
         { "key": "sicherheit.unterrichtung_34a", "label": "§34a Unterrichtung", "type": "qual" },
         { "key": "sicherheit.bewacher_id", "label": "Bewacher-ID", "type": "doc" },
