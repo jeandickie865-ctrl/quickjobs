@@ -1,131 +1,136 @@
+// app/auth/signup.tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TextInput } from 'react-native';
+import { useRouter } from 'expo-router';
+import { z } from 'zod';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
-import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-import { z } from 'zod';
 
-const signupSchema = z.object({
-  email: z.string().email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(8, 'Passwort muss mindestens 8 Zeichen haben'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
+const schema = z.object({
+  email: z.string().email('Bitte gültige E-Mail eingeben'),
+  password: z.string().min(8, 'Passwort mindestens 8 Zeichen'),
+  confirm: z.string().min(8, 'Passwort mindestens 8 Zeichen')
+}).refine(v => v.password === v.confirm, {
   message: 'Passwörter stimmen nicht überein',
-  path: ['confirmPassword'],
+  path: ['confirm']
 });
 
-export default function SignupScreen() {
+export default function Signup() {
   const { colors, spacing } = useTheme();
   const { signUp } = useAuth();
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSignup = async () => {
-    setErrors({});
-    
-    // Validate
-    const result = signupSchema.safeParse({ email, password, confirmPassword });
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
+  async function handleSubmit() {
+    setError(null);
+
+    // 1. Lokale Validierung
+    const parsed = schema.safeParse({ email, password, confirm });
+    if (!parsed.success) {
+      const first = parsed.error.errors[0];
+      setError(first.message);
+      console.log('Signup validation error:', first);
       return;
     }
 
-    setLoading(true);
     try {
-      await signUp(email, password);
-      // Redirect happens automatically via start.tsx
-      router.replace('/onboarding/role');
-    } catch (error: any) {
-      Alert.alert('Fehler', error.message || 'Registrierung fehlgeschlagen');
+      setIsSubmitting(true);
+      console.log('Signup start for:', email);
+
+      // 2. Aufruf deines AuthContext
+      await signUp(parsed.data.email, parsed.data.password);
+
+      console.log('Signup success, redirect to /start');
+
+      // 3. WICHTIG: Hierhin weiterleiten
+      router.replace('/start');
+    } catch (e: any) {
+      console.log('Signup error:', e);
+      setError(e?.message || 'Fehler bei der Registrierung');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
-  };
+  }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-      >
-        <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
-          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
-            Registrieren
-          </Text>
+    <View style={{ flex: 1, backgroundColor: colors.beige50, padding: spacing.md, justifyContent: 'center' }}>
+      <View style={{ gap: spacing.sm }}>
+        <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>Registrierung</Text>
 
-          <Input
-            label="E-Mail"
+        <View style={{ gap: 6 }}>
+          <Text style={{ color: colors.black, fontWeight: '600' }}>E-Mail</Text>
+          <TextInput
             value={email}
             onChangeText={setEmail}
-            placeholder="deine@email.de"
             keyboardType="email-address"
             autoCapitalize="none"
-            error={errors.email}
-            containerStyle={{ marginBottom: spacing.md }}
-          />
-
-          <Input
-            label="Passwort"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Mindestens 8 Zeichen"
-            secureTextEntry
-            error={errors.password}
-            containerStyle={{ marginBottom: spacing.md }}
-          />
-
-          <Input
-            label="Passwort wiederholen"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Passwort bestätigen"
-            secureTextEntry
-            error={errors.confirmPassword}
-            containerStyle={{ marginBottom: spacing.xl }}
-          />
-
-          <Button
-            title="Registrieren"
-            onPress={handleSignup}
-            loading={loading}
-            disabled={loading}
-          />
-
-          <Button
-            title="Zurück zum Login"
-            onPress={() => router.back()}
-            variant="ghost"
-            style={{ marginTop: spacing.md }}
+            autoCorrect={false}
+            style={{
+              borderWidth: 1,
+              borderColor: colors.gray200,
+              borderRadius: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              backgroundColor: colors.white,
+              color: colors.black
+            }}
           />
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+        <View style={{ gap: 6 }}>
+          <Text style={{ color: colors.black, fontWeight: '600' }}>Passwort</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={{
+              borderWidth: 1,
+              borderColor: colors.gray200,
+              borderRadius: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              backgroundColor: colors.white,
+              color: colors.black
+            }}
+          />
+        </View>
+
+        <View style={{ gap: 6 }}>
+          <Text style={{ color: colors.black, fontWeight: '600' }}>Passwort wiederholen</Text>
+          <TextInput
+            value={confirm}
+            onChangeText={setConfirm}
+            secureTextEntry
+            style={{
+              borderWidth: 1,
+              borderColor: colors.gray200,
+              borderRadius: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              backgroundColor: colors.white,
+              color: colors.black
+            }}
+          />
+        </View>
+
+        {error && (
+          <Text style={{ color: 'red', fontSize: 13 }}>
+            {error}
+          </Text>
+        )}
+
+        <Button
+          title={isSubmitting ? 'Registriere…' : 'Registrieren'}
+          onPress={handleSubmit}
+          disabled={isSubmitting}
+        />
+      </View>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-});
