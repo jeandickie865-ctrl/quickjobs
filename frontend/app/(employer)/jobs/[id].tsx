@@ -295,6 +295,23 @@ export default function JobDetailScreen() {
             Vergütung
           </Text>
           <CostBreakdown workerAmountCents={job.workerAmountCents} />
+          
+          {/* Provision-Hinweis bei Match */}
+          {job.status === 'matched' && (
+            <View style={{
+              backgroundColor: colors.beige50,
+              borderRadius: 8,
+              padding: spacing.sm,
+              borderLeftWidth: 3,
+              borderLeftColor: colors.black,
+            }}>
+              <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
+                💡 <Text style={{ fontWeight: '600' }}>Hinweis:</Text> Für diesen Job wurde ein Match gefunden. 
+                Die Plattformgebühr von 20 % ist jetzt fällig.
+              </Text>
+            </View>
+          )}
+          
           <View style={{ gap: 4, marginTop: 4 }}>
             <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
               ZAHLUNG AN ARBEITNEHMER
