@@ -25,6 +25,10 @@ export default function WorkerFeed() {
   const [error, setError] = useState<string | null>(null);
   const [isApplyingJobId, setIsApplyingJobId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Debug counters
+  const [allJobsCount, setAllJobsCount] = useState(0);
+  const [openJobsCount, setOpenJobsCount] = useState(0);
 
   const loadData = async () => {
     if (!user) return;
