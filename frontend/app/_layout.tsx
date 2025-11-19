@@ -11,22 +11,24 @@ export default function RootLayout() {
       <ThemeProvider>
         <AuthProvider>
           <StatusBar style="dark" />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="onboarding/role" />
-            <Stack.Screen name="test-taxonomy" />
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="onboarding/role" options={{ headerShown: false }} />
+            <Stack.Screen name="test-taxonomy" options={{ headerShown: false }} />
             <Stack.Screen 
               name="test/taxonomy/index" 
               options={{ 
                 headerShown: true, 
-                title: 'Taxonomie Test' 
+                title: 'Taxonomie Test',
+                headerBackTitle: 'Zurück'
               }} 
             />
             <Stack.Screen 
               name="test/taxonomy/[cat]" 
               options={{ 
                 headerShown: true, 
-                title: 'Kategorie' 
+                title: 'Kategorie',
+                headerBackTitle: 'Zurück'
               }} 
             />
           </Stack>
