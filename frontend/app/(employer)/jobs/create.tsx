@@ -115,10 +115,10 @@ export default function CreateJob() {
     };
 
     try {
-      await saveJob(job);
+      await addJob(job);
       console.log('Job created:', job);
       Alert.alert('Erfolg', 'Job wurde erstellt!', [
-        { text: 'OK', onPress: () => router.push('/(employer)') }
+        { text: 'OK', onPress: () => router.replace('/(employer)') }
       ]);
     } catch (error) {
       Alert.alert('Fehler', 'Job konnte nicht gespeichert werden');
