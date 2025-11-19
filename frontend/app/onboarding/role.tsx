@@ -1,32 +1,33 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { router, Redirect } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Role = 'worker' | 'employer';
 
 export default function RoleSelection() {
   const { colors, spacing } = useTheme();
-  const { setUser } = useAuth();
+  const { user, setRole } = useAuth();
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleRoleSelect = (role: Role) => {
+  if (!user) {
+    return <Redirect href="/auth/start" />;
+  }
+
+  const handleRoleSelect = async (role: Role) => {
     setSelectedRole(role);
-    setUser({
-      id: `temp-${Date.now()}`,
-      email: 'temp@example.com',
-      role,
-    });
-    
-    setTimeout(() => {
-      if (role === 'worker') {
-        router.replace('/(worker)/profile');
-      } else {
-        router.replace('/taxonomy');
-      }
-    }, 100);
+    setLoading(true);
+
+    try {
+      await setRole(role);
+      router.replace('/start');
+    } catch (error) {
+      console.error('Error setting role:', error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,8 +58,9 @@ export default function RoleSelection() {
                 marginBottom: spacing.md,
               },
             ]}
-            onPress={() => handleRoleSelect('worker')}
+            onPress={() => !loading && handleRoleSelect('worker')}
             activeOpacity={0.7}
+            disabled={loading}
           >
             <Text
               style={[
@@ -86,8 +88,9 @@ export default function RoleSelection() {
                 borderColor: selectedRole === 'employer' ? colors.black : colors.beige300,
               },
             ]}
-            onPress={() => handleRoleSelect('employer')}
+            onPress={() => !loading && handleRoleSelect('employer')}
             activeOpacity={0.7}
+            disabled={loading}
           >
             <Text
               style={[
