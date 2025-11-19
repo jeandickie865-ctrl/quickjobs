@@ -189,11 +189,93 @@ export default function CreateJob() {
                 key={cat.key}
                 label={cat.label}
                 selected={category === cat.key}
-                onPress={() => setCategory(cat.key)}
+                onPress={() => {
+                  setCategory(cat.key);
+                  // Reset tags when category changes
+                  setRequiredAllTags([]);
+                  setRequiredAnyTags([]);
+                }}
               />
             ))}
           </View>
         </View>
+
+        {/* Tags - nur wenn Kategorie gewählt */}
+        {category && (() => {
+          const groups = groupTagsByType(category as CategoryKey);
+          const allTags = [
+            ...groups.qual,
+            ...groups.role,
+            ...groups.license,
+            ...groups.doc,
+            ...groups.skill,
+            ...groups.vehicle,
+            ...groups.tool
+          ];
+          
+          if (allTags.length === 0) return null;
+          
+          return (
+            <View style={{ 
+              borderWidth: 1, 
+              borderColor: colors.gray200, 
+              borderRadius: 12, 
+              padding: spacing.md, 
+              gap: 12,
+              backgroundColor: colors.white 
+            }}>
+              <Text style={{ color: colors.black, fontWeight: '600' }}>
+                Anforderungen (optional)
+              </Text>
+              
+              <View style={{ gap: 8 }}>
+                <Text style={{ color: colors.gray700, fontSize: 13 }}>
+                  Alle diese Tags erforderlich:
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                  {allTags.map(tag => (
+                    <Chip
+                      key={tag.key}
+                      label={tag.label}
+                      selected={requiredAllTags.includes(tag.key)}
+                      onPress={() => {
+                        if (requiredAllTags.includes(tag.key)) {
+                          setRequiredAllTags(requiredAllTags.filter(t => t !== tag.key));
+                        } else {
+                          setRequiredAllTags([...requiredAllTags, tag.key]);
+                          // Remove from "any" if in "all"
+                          setRequiredAnyTags(requiredAnyTags.filter(t => t !== tag.key));
+                        }
+                      }}
+                    />
+                  ))}
+                </View>
+              </View>
+
+              <View style={{ gap: 8 }}>
+                <Text style={{ color: colors.gray700, fontSize: 13 }}>
+                  Mindestens einer dieser Tags:
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                  {allTags.filter(t => !requiredAllTags.includes(t.key)).map(tag => (
+                    <Chip
+                      key={tag.key}
+                      label={tag.label}
+                      selected={requiredAnyTags.includes(tag.key)}
+                      onPress={() => {
+                        if (requiredAnyTags.includes(tag.key)) {
+                          setRequiredAnyTags(requiredAnyTags.filter(t => t !== tag.key));
+                        } else {
+                          setRequiredAnyTags([...requiredAnyTags, tag.key]);
+                        }
+                      }}
+                    />
+                  ))}
+                </View>
+              </View>
+            </View>
+          );
+        })()}
 
         {/* Time Mode */}
         <View style={{ gap: 6 }}>
