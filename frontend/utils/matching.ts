@@ -76,13 +76,13 @@ export function sortJobsByMatch(
 
 /**
  * Check if job is within worker's radius
+ * NOTE: Distance filtering temporarily disabled for MVP phase.
+ * All jobs are considered within radius.
  */
 export function jobWithinRadius(job: Job, profile: WorkerProfile): boolean {
-  if (!profile.radiusKm || profile.radiusKm <= 0) return true;
-  if (job.lat === undefined || job.lon === undefined) return true;
-  if (profile.homeLat === undefined || profile.homeLon === undefined) return true;
-  const distance = haversineKm(profile.homeLat, profile.homeLon, job.lat, job.lon);
-  return distance <= profile.radiusKm;
+  // Distance filtering vorübergehend deaktiviert.
+  // Alle Jobs gelten als innerhalb des Radius.
+  return true;
 }
 
 /**
