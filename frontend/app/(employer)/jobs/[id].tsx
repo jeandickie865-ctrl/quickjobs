@@ -227,7 +227,7 @@ export default function JobDetailScreen() {
               STANDORT
             </Text>
             <Text style={{ color: colors.black, fontSize: 16 }}>
-              📍 {job.address}
+              📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
             </Text>
           </View>
         </View>
