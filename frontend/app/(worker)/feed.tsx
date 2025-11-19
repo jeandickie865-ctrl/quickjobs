@@ -194,6 +194,14 @@ export default function WorkerFeed() {
             <Text style={{ color: colors.gray500, fontSize: 14, textAlign: 'center' }}>
               Aktuell gibt es keine Jobs, die zu deinem Profil passen. Schau später wieder vorbei oder passe dein Profil an.
             </Text>
+            <Text style={{ color: colors.gray400, fontSize: 12, marginTop: 8, textAlign: 'center' }}>
+              Debug: {allJobsCount} Jobs insgesamt, {openJobsCount} offene Jobs, 0 passende Jobs für dein Profil.
+            </Text>
+            {profile && (
+              <Text style={{ color: colors.gray400, fontSize: 11, marginTop: 4, textAlign: 'center' }}>
+                Profil: {profile.categories.length} Kategorien, {profile.selectedTags.length} Tags
+              </Text>
+            )}
           </View>
         ) : (
           <View style={{ gap: spacing.sm }}>
