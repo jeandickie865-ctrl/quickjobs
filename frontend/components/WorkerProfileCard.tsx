@@ -65,7 +65,7 @@ export const WorkerProfileCard: React.FC<WorkerProfileCardProps> = ({
             {getDisplayName()}
           </Text>
           <Text style={[styles.location, { color: colors.gray600 }]}>
-            {profile.homeAddress || 'Standort nicht angegeben'}
+            {formatAddress(profile.homeAddress, true) || 'Standort nicht angegeben'}
           </Text>
         </View>
       </View>
