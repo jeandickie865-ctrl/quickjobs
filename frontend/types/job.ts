@@ -1,3 +1,5 @@
+import { Address } from './address';
+
 export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
 
 export type Job = {
