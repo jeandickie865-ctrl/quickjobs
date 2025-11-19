@@ -658,10 +658,16 @@ export default function CreateJob() {
 
         {/* Submit Button */}
         <Button
-          title={isSaving ? 'Wird veröffentlicht...' : 'Job veröffentlichen'}
-          onPress={handleSubmit}
+          title={isSaving ? 'Veröffentliche…' : 'Job veröffentlichen'}
+          onPress={handlePublish}
           disabled={isSaving}
         />
+
+        {error && (
+          <Text style={{ color: 'red', fontSize: 13, marginTop: 8, textAlign: 'center' }}>
+            {error}
+          </Text>
+        )}
 
         <View style={{ height: spacing.xl }} />
       </ScrollView>
