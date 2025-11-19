@@ -4,12 +4,14 @@ import { ScrollView, View, Text, TextInput, ActivityIndicator } from 'react-nati
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
-import { WorkerProfile } from '../../types/profile';
+import { WorkerProfile, WorkerDocument } from '../../types/profile';
 import { getWorkerProfile, saveWorkerProfile } from '../../utils/profileStore';
 import { RADIUS_OPTIONS_KM, DEFAULT_RADIUS_KM } from '../../constants/radius';
 import { listCategories, groupTagsByType, CategoryKey, Tag } from '../../src/taxonomy';
 import Chip from '../../components/ui/Chip';
 import { Button } from '../../components/ui/Button';
+import { ProfilePhoto } from '../../components/ProfilePhoto';
+import { DocumentManager } from '../../components/DocumentManager';
 
 function createEmptyProfile(userId: string): WorkerProfile {
   return {
