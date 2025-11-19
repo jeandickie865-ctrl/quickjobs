@@ -103,7 +103,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         // Wenn es schon einen gespeicherten User mit Rolle gibt, nutze ihn
-        const stored = await getItem<StoredUser>(USER_KEY);
+        const stored = await storage.getItem<StoredUser>(USER_KEY);
         if (stored && stored.email.toLowerCase() === email.toLowerCase()) {
           setUser(stored);
           return;
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           id: 'u-' + Date.now().toString(),
           email,
         };
-        await setItem(USER_KEY, newUser);
+        await storage.setItem(USER_KEY, newUser);
         setUser(newUser);
       },
 
