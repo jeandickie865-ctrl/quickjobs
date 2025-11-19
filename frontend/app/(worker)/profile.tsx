@@ -98,6 +98,33 @@ export default function WorkerProfileScreen() {
     setProfile({ ...profile, selectedTags: Array.from(set) });
   }
 
+  function handlePhotoSelected(uri: string) {
+    setProfile({ ...profile, profilePhotoUri: uri });
+  }
+
+  function handlePhotoRemove() {
+    setProfile({ ...profile, profilePhotoUri: undefined });
+  }
+
+  function handleDocumentAdd(doc: Omit<WorkerDocument, 'id' | 'uploadedAt'>) {
+    const newDoc: WorkerDocument = {
+      ...doc,
+      id: Date.now().toString(),
+      uploadedAt: new Date().toISOString(),
+    };
+    setProfile({
+      ...profile,
+      documents: [...(profile.documents || []), newDoc],
+    });
+  }
+
+  function handleDocumentRemove(documentId: string) {
+    setProfile({
+      ...profile,
+      documents: (profile.documents || []).filter((d) => d.id !== documentId),
+    });
+  }
+
   async function handleSave() {
     setIsSaving(true);
     try {
