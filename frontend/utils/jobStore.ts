@@ -5,9 +5,8 @@ const JOBS_KEY = 'shiftmatch_jobs';
 
 export async function getAllJobs(): Promise<Job[]> {
   try {
-    const raw = await getItem(JOBS_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw);
+    const jobs = await getItem<Job[]>(JOBS_KEY);
+    return jobs || [];
   } catch {
     return [];
   }
@@ -21,7 +20,7 @@ export async function saveJob(job: Job): Promise<void> {
   } else {
     all.push(job);
   }
-  await setItem(JOBS_KEY, JSON.stringify(all));
+  await setItem(JOBS_KEY, all);
 }
 
 export async function getEmployerJobs(employerId: string): Promise<Job[]> {
