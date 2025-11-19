@@ -222,15 +222,18 @@ frontend:
 
   - task: "Worker Profile"
     implemented: true
-    working: "NA"
+    working: true
     file: "app/(worker)/profile.tsx"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
         comment: "Bereits implementiert, keine Änderungen"
+      - working: true
+        agent: "main"
+        comment: "Profilfoto und Dokument-Upload hinzugefügt: Workers können jetzt Profilfoto und bis zu 5 Dokumenttypen hochladen (lokal, nur URIs). expo-image-picker und expo-document-picker integriert."
 
   - task: "Authentication Flow"
     implemented: true
