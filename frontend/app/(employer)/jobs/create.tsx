@@ -7,7 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { Button } from '../../../components/ui/Button';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import Chip from '../../../components/ui/Chip';
-import { listCategories, CategoryKey } from '../../../src/taxonomy';
+import { listCategories, CategoryKey, groupTagsByType } from '../../../src/taxonomy';
 import { JobTimeMode } from '../../../types/job';
 import { saveJob } from '../../../utils/jobStore';
 
@@ -22,6 +22,10 @@ export default function CreateJob() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<string>('');
   const [address, setAddress] = useState('');
+  
+  // Tags
+  const [requiredAllTags, setRequiredAllTags] = useState<string[]>([]);
+  const [requiredAnyTags, setRequiredAnyTags] = useState<string[]>([]);
 
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
