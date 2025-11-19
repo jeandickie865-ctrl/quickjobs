@@ -51,6 +51,12 @@ export default function WorkerFeed() {
       setOpenJobsCount(openJobs.length);
       setJobs(openJobs);
 
+      // Generate debug info for all open jobs
+      if (workerProfile) {
+        const infos = openJobs.map(job => jobMatchesWorkerWithDebug(job, workerProfile));
+        setDebugInfos(infos);
+      }
+
       const applications = await getApplicationsForWorker(user.id);
       const jobIdsSet = new Set(applications.map(app => app.jobId));
       setAppsJobIds(jobIdsSet);
