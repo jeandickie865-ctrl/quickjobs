@@ -107,6 +107,7 @@ export default function CreateJob() {
       required_all_tags: [],
       required_any_tags: [],
       status: 'open' as const,
+      createdAt: new Date().toISOString(),
     };
 
     try {
