@@ -127,9 +127,8 @@ export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): Mat
     requiredAnyOk = anyIntersection.length > 0;
   }
 
-  const radiusOk = jobWithinRadius(job, profile);
-
-  const ok = categoryOk && requiredAllOk && requiredAnyOk && radiusOk;
+  // Radius check removed - distance filtering disabled for MVP
+  const ok = categoryOk && requiredAllOk && requiredAnyOk;
 
   return {
     ok,
