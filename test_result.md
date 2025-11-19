@@ -307,6 +307,33 @@ agent_communication:
       - Backend Testing (bereits erfolgreich)
       - Frontend Testing der Auth-Flows
 
+  - agent: "main"
+    message: |
+      **Feature-Änderung: Distance Filtering deaktiviert für MVP**
+      
+      **Problem:**
+      Worker-Feed zeigte keine Jobs an, obwohl Kategorie- und Tag-Matching funktionierten.
+      Der Distanzfilter blockierte alle Treffer.
+      
+      **Lösung - utils/matching.ts:**
+      1. **jobWithinRadius()** gibt jetzt immer `true` zurück
+         - Keine Haversine-Berechnungen mehr
+         - Kommentar hinzugefügt: "Distance filtering temporarily disabled for MVP phase"
+      
+      2. **jobMatchesWorkerWithDebug()** angepasst:
+         - `radiusOk` Variable entfernt
+         - Matching-Logik: `ok = categoryOk && requiredAllOk && requiredAnyOk`
+         - Nur noch Kategorie- und Tag-Checks aktiv
+      
+      **Erwartetes Verhalten:**
+      - Jobs mit passender Kategorie + Tags werden jetzt angezeigt
+      - Entfernung spielt keine Rolle mehr
+      - Worker-Feed sollte nun passende Jobs zeigen mit "Ich habe Zeit" Button
+      
+      **Nächste Schritte:**
+      - Test mit Worker-Profil (Kategorie "sicherheit" + Tags) und passendem Job
+      - Verifizierung, dass Feed nicht mehr "0 passende Jobs" zeigt
+
   - agent: "testing"
     message: |
       **Backend Testing Abgeschlossen:**
