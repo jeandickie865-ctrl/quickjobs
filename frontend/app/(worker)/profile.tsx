@@ -44,7 +44,7 @@ export default function WorkerProfileScreen() {
 
   const categories = useMemo(() => listCategories(), []);
   const selectedCategories = profile?.categories ?? [];
-  const selectedTags = new Set(profile?.tags ?? []);
+  const selectedTagsSet = new Set(profile?.selectedTags ?? []);
 
   if (!user) {
     return (
