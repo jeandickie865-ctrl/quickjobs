@@ -53,7 +53,7 @@ export default function CreateJob() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Validation
     if (!title.trim()) {
       Alert.alert('Fehler', 'Bitte Titel eingeben');
@@ -109,10 +109,16 @@ export default function CreateJob() {
       status: 'open' as const,
     };
 
-    console.log('Job created:', job);
-    Alert.alert('Erfolg', 'Job wurde erstellt!', [
-      { text: 'OK', onPress: () => router.back() }
-    ]);
+    try {
+      await saveJob(job);
+      console.log('Job created:', job);
+      Alert.alert('Erfolg', 'Job wurde erstellt!', [
+        { text: 'OK', onPress: () => router.push('/(employer)') }
+      ]);
+    } catch (error) {
+      Alert.alert('Fehler', 'Job konnte nicht gespeichert werden');
+      console.error('Error saving job:', error);
+    }
   };
 
   return (
