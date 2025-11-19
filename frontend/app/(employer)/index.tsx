@@ -127,6 +127,27 @@ export default function EmployerDashboard() {
             ))}
           </View>
         )}
+
+        {/* Account Section */}
+        <View style={{ 
+          marginTop: spacing.xl, 
+          borderTopWidth: 1, 
+          borderTopColor: colors.gray200, 
+          paddingTop: spacing.md,
+          gap: spacing.sm
+        }}>
+          <Text style={{ color: colors.gray700, fontSize: 14, fontWeight: '600' }}>
+            Account
+          </Text>
+          <Button
+            title="Logout"
+            variant="secondary"
+            onPress={async () => {
+              await signOut();
+              router.replace('/auth/start');
+            }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
