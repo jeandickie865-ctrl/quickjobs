@@ -24,5 +24,9 @@ export default function Start() {
     return <Redirect href="/(worker)/profile" />;
   }
 
+  if (user.role === 'employer') {
+    return <Redirect href="/(employer)" />;
+  }
+
   return <Redirect href="/taxonomy" />;
 }
