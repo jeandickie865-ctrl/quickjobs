@@ -195,7 +195,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
@@ -211,7 +211,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
@@ -227,7 +227,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
@@ -243,7 +243,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
@@ -259,7 +259,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
@@ -275,7 +275,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
@@ -291,7 +291,7 @@ export default function WorkerProfileScreen() {
                     <Chip
                       key={t.key}
                       label={t.label}
-                      selected={selectedTags.has(t.key)}
+                      selected={selectedTagsSet.has(t.key)}
                       onPress={() => toggleTag(catKey as CategoryKey, t)}
                     />
                   ))}
