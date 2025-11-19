@@ -76,9 +76,7 @@ export default function EmployerDashboard() {
                   borderColor: colors.gray200,
                   gap: 8
                 }}
-                onPress={() => {
-                  // TODO: Job-Detail-Screen
-                }}
+                onPress={() => router.push(`/(employer)/jobs/${job.id}`)}
               >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <Text style={{ color: colors.black, fontSize: 16, fontWeight: '700', flex: 1 }}>
