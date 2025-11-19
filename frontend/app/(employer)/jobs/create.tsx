@@ -641,21 +641,6 @@ export default function CreateJob() {
           </View>
         </View>
 
-        {/* Error Display */}
-        {error && (
-          <View style={{
-            padding: spacing.md,
-            backgroundColor: '#fee',
-            borderRadius: 12,
-            borderWidth: 1,
-            borderColor: '#f88'
-          }}>
-            <Text style={{ color: '#c00', fontSize: 14 }}>
-              {error}
-            </Text>
-          </View>
-        )}
-
         {/* Submit Button */}
         <Button
           title={isSaving ? 'Veröffentliche…' : 'Job veröffentlichen'}
