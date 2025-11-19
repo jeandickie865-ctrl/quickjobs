@@ -520,10 +520,11 @@ export default function CreateJob() {
         {/* Address */}
         <View style={{ gap: 6 }}>
           <Text style={{ color: colors.black, fontWeight: '600' }}>Adresse</Text>
+          
           <TextInput
-            value={address}
-            onChangeText={setAddress}
-            placeholder="Straße, PLZ, Ort"
+            value={address.street || ''}
+            onChangeText={text => setAddress({ ...address, street: text })}
+            placeholder="Straße und Hausnummer"
             placeholderTextColor={colors.gray400}
             style={{
               borderWidth: 1,
@@ -535,6 +536,44 @@ export default function CreateJob() {
               color: colors.black
             }}
           />
+          
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <TextInput
+              value={address.postalCode || ''}
+              onChangeText={text => setAddress({ ...address, postalCode: text })}
+              placeholder="PLZ"
+              placeholderTextColor={colors.gray400}
+              keyboardType="number-pad"
+              maxLength={5}
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: colors.gray200,
+                borderRadius: 12,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                backgroundColor: colors.white,
+                color: colors.black
+              }}
+            />
+            
+            <TextInput
+              value={address.city || ''}
+              onChangeText={text => setAddress({ ...address, city: text })}
+              placeholder="Stadt"
+              placeholderTextColor={colors.gray400}
+              style={{
+                flex: 2,
+                borderWidth: 1,
+                borderColor: colors.gray200,
+                borderRadius: 12,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                backgroundColor: colors.white,
+                color: colors.black
+              }}
+            />
+          </View>
         </View>
 
         {/* Worker Amount */}
