@@ -36,7 +36,7 @@ export default function WorkerFeed() {
     try {
       const workerProfile = await getWorkerProfile(user.id);
       
-      if (!workerProfile || !workerProfile.categories || workerProfile.categories.length === 0 || !workerProfile.tags || workerProfile.tags.length === 0) {
+      if (!workerProfile || !workerProfile.categories || workerProfile.categories.length === 0 || !workerProfile.selectedTags || workerProfile.selectedTags.length === 0) {
         setError('Bitte zuerst dein Profil ausfüllen.');
         setIsLoading(false);
         return;
@@ -45,7 +45,10 @@ export default function WorkerFeed() {
       setProfile(workerProfile);
 
       const allJobs = await getJobs();
-      setJobs(allJobs);
+      setAllJobsCount(allJobs.length);
+      const openJobs = allJobs.filter(j => j.status === 'open');
+      setOpenJobsCount(openJobs.length);
+      setJobs(openJobs);
 
       const applications = await getApplicationsForWorker(user.id);
       const jobIdsSet = new Set(applications.map(app => app.jobId));
