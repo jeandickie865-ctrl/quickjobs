@@ -9,6 +9,7 @@ import { CostBreakdown } from '../../../components/CostBreakdown';
 import Chip from '../../../components/ui/Chip';
 import { listCategories, CategoryKey } from '../../../src/taxonomy';
 import { JobTimeMode } from '../../../types/job';
+import { saveJob } from '../../../utils/jobStore';
 
 export default function CreateJob() {
   const { colors, spacing } = useTheme();
