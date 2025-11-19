@@ -67,119 +67,80 @@ export default function SignupScreen() {
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.beige50 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        padding: spacing.lg,
-        justifyContent: 'center',
-        gap: spacing.md,
-      }}
-    >
-      <View style={{ gap: spacing.sm }}>
-        <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
-          Registrieren
-        </Text>
-        <Text style={{ color: colors.gray700 }}>
-          Erstelle deinen Account für kurzfristige Jobs.
-        </Text>
-      </View>
-
-      <View style={{ gap: spacing.sm }}>
-        <Text style={{ color: colors.black, fontWeight: '600' }}>E-Mail</Text>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          placeholder="deine@email.de"
-          placeholderTextColor={colors.gray400}
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            borderWidth: 1,
-            borderColor: colors.gray200,
-            color: colors.black,
-            fontSize: 16,
-          }}
-        />
-      </View>
-
-      <View style={{ gap: spacing.sm }}>
-        <Text style={{ color: colors.black, fontWeight: '600' }}>Passwort</Text>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoCapitalize="none"
-          placeholder="Mindestens 6 Zeichen"
-          placeholderTextColor={colors.gray400}
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            borderWidth: 1,
-            borderColor: colors.gray200,
-            color: colors.black,
-            fontSize: 16,
-          }}
-        />
-      </View>
-
-      <View style={{ gap: spacing.sm }}>
-        <Text style={{ color: colors.black, fontWeight: '600' }}>
-          Passwort bestätigen
-        </Text>
-        <TextInput
-          value={confirm}
-          onChangeText={setConfirm}
-          secureTextEntry
-          autoCapitalize="none"
-          placeholder="Passwort wiederholen"
-          placeholderTextColor={colors.gray400}
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            borderWidth: 1,
-            borderColor: colors.gray200,
-            color: colors.black,
-            fontSize: 16,
-          }}
-        />
-      </View>
-
-      {error && (
-        <View style={{
-          padding: spacing.sm,
-          backgroundColor: '#fee',
-          borderRadius: 8,
-          borderWidth: 1,
-          borderColor: '#f88',
-        }}>
-          <Text style={{ color: '#c00', fontSize: 13 }}>
-            {error}
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
+          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
+            Registrieren
           </Text>
-        </View>
-      )}
 
-      <View style={{ marginTop: spacing.md, gap: spacing.sm }}>
-        <Button
-          title={isSubmitting ? 'Registriere…' : 'Registrieren'}
-          onPress={handleSubmit}
-          disabled={isSubmitting}
-        />
-        <Button
-          title="Ich habe schon einen Account"
-          variant="secondary"
-          onPress={() => router.replace('/auth/login')}
-        />
-      </View>
-    </ScrollView>
+          <Input
+            label="E-Mail"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="deine@email.de"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            error={errors.email}
+            containerStyle={{ marginBottom: spacing.md }}
+          />
+
+          <Input
+            label="Passwort"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Mindestens 6 Zeichen"
+            secureTextEntry
+            autoCapitalize="none"
+            error={errors.password}
+            containerStyle={{ marginBottom: spacing.md }}
+          />
+
+          <Input
+            label="Passwort bestätigen"
+            value={confirm}
+            onChangeText={setConfirm}
+            placeholder="Passwort wiederholen"
+            secureTextEntry
+            autoCapitalize="none"
+            error={errors.confirm}
+            containerStyle={{ marginBottom: spacing.xl }}
+          />
+
+          <Button
+            title="Registrieren"
+            onPress={handleSignup}
+            loading={loading}
+            disabled={loading}
+          />
+
+          <Button
+            title="Ich habe schon einen Account"
+            onPress={() => router.replace('/auth/login')}
+            variant="ghost"
+            style={{ marginTop: spacing.md }}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+});
