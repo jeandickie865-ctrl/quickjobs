@@ -68,15 +68,23 @@ export default function EmployerDashboard() {
             {jobs.map((job) => (
               <Pressable
                 key={job.id}
-                style={{
-                  backgroundColor: colors.white,
-                  borderRadius: 12,
-                  padding: spacing.md,
-                  borderWidth: 1,
-                  borderColor: colors.gray200,
-                  gap: 8
-                }}
-                onPress={() => router.push(`/(employer)/jobs/${job.id}`)}
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: colors.white,
+                    borderRadius: 12,
+                    padding: spacing.md,
+                    borderWidth: 1,
+                    borderColor: colors.gray200,
+                    gap: 8,
+                  },
+                  pressed && { opacity: 0.85 },
+                ]}
+                onPress={() =>
+                  router.push({
+                    pathname: '/(employer)/jobs/[id]',
+                    params: { id: job.id },
+                  })
+                }
               >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <Text style={{ color: colors.black, fontSize: 16, fontWeight: '700', flex: 1 }}>
