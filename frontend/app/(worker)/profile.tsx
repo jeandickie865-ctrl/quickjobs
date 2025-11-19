@@ -288,11 +288,18 @@ export default function WorkerProfileScreen() {
       {/* Adresse */}
       <View style={{ gap: 8 }}>
         <Text style={{ color: colors.black, fontWeight: '600' }}>Adresse (für Radius)</Text>
+        <Text style={{ color: colors.gray600, fontSize: 13 }}>
+          Deine Heimatadresse wird für spätere Entfernungsberechnungen verwendet.
+        </Text>
+        
         <TextInput
-          placeholder="Straße, PLZ, Ort"
+          placeholder="Straße und Hausnummer"
           placeholderTextColor={colors.gray400}
-          value={profile.homeAddress}
-          onChangeText={text => setProfile({ ...profile, homeAddress: text })}
+          value={profile.homeAddress.street || ''}
+          onChangeText={text => setProfile({ 
+            ...profile, 
+            homeAddress: { ...profile.homeAddress, street: text }
+          })}
           style={{
             borderWidth: 1,
             borderColor: colors.gray200,
@@ -303,7 +310,50 @@ export default function WorkerProfileScreen() {
             color: colors.black
           }}
         />
-        {/* Optional: lat/lon Felder fürs Debugging */}
+        
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          <TextInput
+            placeholder="PLZ"
+            placeholderTextColor={colors.gray400}
+            value={profile.homeAddress.postalCode || ''}
+            onChangeText={text => setProfile({ 
+              ...profile, 
+              homeAddress: { ...profile.homeAddress, postalCode: text }
+            })}
+            keyboardType="number-pad"
+            maxLength={5}
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              borderColor: colors.gray200,
+              borderRadius: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              backgroundColor: colors.white,
+              color: colors.black
+            }}
+          />
+          
+          <TextInput
+            placeholder="Stadt"
+            placeholderTextColor={colors.gray400}
+            value={profile.homeAddress.city || ''}
+            onChangeText={text => setProfile({ 
+              ...profile, 
+              homeAddress: { ...profile.homeAddress, city: text }
+            })}
+            style={{
+              flex: 2,
+              borderWidth: 1,
+              borderColor: colors.gray200,
+              borderRadius: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              backgroundColor: colors.white,
+              color: colors.black
+            }}
+          />
+        </View>
       </View>
 
       {/* Radius */}
