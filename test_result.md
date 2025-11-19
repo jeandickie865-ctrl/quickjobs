@@ -214,8 +214,8 @@ frontend:
 backend:
   - task: "Backend API"
     implemented: false
-    working: "NA"
-    file: ""
+    working: true
+    file: "backend/server.py"
     stuck_count: 0
     priority: "low"
     needs_retesting: false
@@ -223,6 +223,9 @@ backend:
       - working: "NA"
         agent: "main"
         comment: "Noch nicht implementiert - App nutzt AsyncStorage für MVP"
+      - working: true
+        agent: "testing"
+        comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
 
 metadata:
   created_by: "main_agent"
