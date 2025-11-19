@@ -235,8 +235,8 @@ export default function CreateJob() {
                 onPress={() => {
                   setCategory(cat.key);
                   // Reset tags when category changes
-                  setRequiredAllTags([]);
-                  setRequiredAnyTags([]);
+                  setRequiredAllSet(new Set());
+                  setRequiredAnySet(new Set());
                 }}
               />
             ))}
