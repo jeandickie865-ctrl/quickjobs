@@ -45,12 +45,12 @@ type StoredCredentials = {
 }[];
 
 async function loadCredentials(): Promise<StoredCredentials> {
-  const data = await storage.getItem<StoredCredentials>(CREDENTIALS_KEY);
+  const data = await getItem<StoredCredentials>(CREDENTIALS_KEY);
   return data ?? [];
 }
 
 async function saveCredentials(creds: StoredCredentials): Promise<void> {
-  await storage.setItem(CREDENTIALS_KEY, creds);
+  await setItem(CREDENTIALS_KEY, creds);
 }
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
