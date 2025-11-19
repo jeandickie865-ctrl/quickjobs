@@ -24,9 +24,9 @@ export default function CreateJob() {
   const [category, setCategory] = useState<string>('');
   const [address, setAddress] = useState('');
   
-  // Tags
-  const [requiredAllTags, setRequiredAllTags] = useState<string[]>([]);
-  const [requiredAnyTags, setRequiredAnyTags] = useState<string[]>([]);
+  // Tags (using Sets for easier management)
+  const [requiredAllSet, setRequiredAllSet] = useState<Set<string>>(new Set());
+  const [requiredAnySet, setRequiredAnySet] = useState<Set<string>>(new Set());
 
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
