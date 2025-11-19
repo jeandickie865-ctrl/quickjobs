@@ -182,6 +182,109 @@ export default function WorkerProfileScreen() {
         />
       </View>
 
+      {/* Persönliche Daten */}
+      <View style={{ gap: 8 }}>
+        <Text style={{ color: colors.black, fontWeight: '600' }}>Persönliche Daten</Text>
+        <TextInput
+          placeholder="Vorname"
+          placeholderTextColor={colors.gray400}
+          value={profile.firstName || ''}
+          onChangeText={text => setProfile({ ...profile, firstName: text })}
+          style={{
+            borderWidth: 1,
+            borderColor: colors.gray200,
+            borderRadius: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            backgroundColor: colors.white,
+            color: colors.black
+          }}
+        />
+        <TextInput
+          placeholder="Nachname"
+          placeholderTextColor={colors.gray400}
+          value={profile.lastName || ''}
+          onChangeText={text => setProfile({ ...profile, lastName: text })}
+          style={{
+            borderWidth: 1,
+            borderColor: colors.gray200,
+            borderRadius: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            backgroundColor: colors.white,
+            color: colors.black
+          }}
+        />
+      </View>
+
+      {/* Steckbrief */}
+      <View style={{ gap: 8 }}>
+        <Text style={{ color: colors.black, fontWeight: '600' }}>Steckbrief</Text>
+        <Text style={{ color: colors.gray600, fontSize: 13 }}>
+          Beschreibe dich kurz. Dieser Text wird Arbeitgebern vor dem Match angezeigt.
+        </Text>
+        <TextInput
+          placeholder="z.B. Erfahrener Sicherheitsmitarbeiter mit 5 Jahren Erfahrung..."
+          placeholderTextColor={colors.gray400}
+          value={profile.shortBio || ''}
+          onChangeText={text => setProfile({ ...profile, shortBio: text })}
+          multiline
+          numberOfLines={4}
+          style={{
+            borderWidth: 1,
+            borderColor: colors.gray200,
+            borderRadius: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            backgroundColor: colors.white,
+            color: colors.black,
+            minHeight: 100,
+            textAlignVertical: 'top'
+          }}
+        />
+      </View>
+
+      {/* Kontaktdaten */}
+      <View style={{ gap: 8 }}>
+        <Text style={{ color: colors.black, fontWeight: '600' }}>Kontaktdaten</Text>
+        <Text style={{ color: colors.gray600, fontSize: 13 }}>
+          Diese Daten werden nur nach einem Match freigegeben.
+        </Text>
+        <TextInput
+          placeholder="Telefonnummer"
+          placeholderTextColor={colors.gray400}
+          value={profile.contactPhone || ''}
+          onChangeText={text => setProfile({ ...profile, contactPhone: text })}
+          keyboardType="phone-pad"
+          style={{
+            borderWidth: 1,
+            borderColor: colors.gray200,
+            borderRadius: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            backgroundColor: colors.white,
+            color: colors.black
+          }}
+        />
+        <TextInput
+          placeholder="Kontakt-E-Mail"
+          placeholderTextColor={colors.gray400}
+          value={profile.contactEmail || ''}
+          onChangeText={text => setProfile({ ...profile, contactEmail: text })}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={{
+            borderWidth: 1,
+            borderColor: colors.gray200,
+            borderRadius: 12,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            backgroundColor: colors.white,
+            color: colors.black
+          }}
+        />
+      </View>
+
       {/* Adresse */}
       <View style={{ gap: 8 }}>
         <Text style={{ color: colors.black, fontWeight: '600' }}>Adresse (für Radius)</Text>
