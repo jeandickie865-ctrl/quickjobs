@@ -88,7 +88,7 @@ export default function WorkerProfileScreen() {
   function toggleTag(catKey: CategoryKey, tag: Tag) {
     // nur wenn Kategorie auch gewählt ist
     if (!profile.categories.includes(catKey)) return;
-    const set = new Set(profile.selectedTags);
+    const set = new Set(profile.selectedTags ?? []);
     if (set.has(tag.key)) set.delete(tag.key);
     else set.add(tag.key);
     setProfile({ ...profile, selectedTags: Array.from(set) });
