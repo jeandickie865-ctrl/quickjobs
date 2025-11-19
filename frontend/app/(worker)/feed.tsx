@@ -12,6 +12,7 @@ import { Job } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Button } from '../../components/ui/Button';
 import { euro } from '../../utils/pricing';
+import { formatAddress } from '../../types/address';
 
 // Helper functions for German date/time formatting
 const formatDateGerman = (isoDate?: string) => {
