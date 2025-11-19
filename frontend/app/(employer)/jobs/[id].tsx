@@ -8,6 +8,7 @@ import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { CostBreakdown } from '../../../components/CostBreakdown';
+import { WorkerProfileCard } from '../../../components/WorkerProfileCard';
 import { Job } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
