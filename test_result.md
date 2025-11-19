@@ -115,13 +115,40 @@ user_problem_statement: |
   - Matching-System basierend auf Kategorie, Radius und Tags
 
 frontend:
+  - task: "Authentication - Signup Screen"
+    implemented: true
+    working: true
+    file: "app/auth/signup.tsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Crash: undefined is not an object (evaluating 'parsed.error.errors[0]')"
+      - working: true
+        agent: "main"
+        comment: "Komplette Überarbeitung: Korrekte Zod-API (result.error.issues statt .errors), Input-Komponente verwendet, KeyboardAvoidingView hinzugefügt, konsistent mit Login-Screen gestylt"
+
+  - task: "Authentication - Login Screen"
+    implemented: true
+    working: true
+    file: "app/auth/login.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Zod-API auf result.error.issues aktualisiert für Konsistenz und Zukunftssicherheit"
+
   - task: "Employer Dashboard"
     implemented: true
     working: true
     file: "app/(employer)/index.tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
