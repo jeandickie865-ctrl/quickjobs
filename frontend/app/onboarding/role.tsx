@@ -21,7 +21,11 @@ export default function RoleSelection() {
     });
     
     setTimeout(() => {
-      router.replace('/taxonomy');
+      if (role === 'worker') {
+        router.replace('/(worker)/profile');
+      } else {
+        router.replace('/taxonomy');
+      }
     }, 100);
   };
 
