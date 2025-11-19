@@ -1,36 +1,28 @@
-import React from 'react';
+// app/start.tsx
 import { Redirect } from 'expo-router';
 import { useAuth } from '../contexts/AuthContext';
-import { View, ActivityIndicator } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
 
 export default function Start() {
   const { user, isLoading } = useAuth();
-  const { colors } = useTheme();
 
   if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.white }}>
-        <ActivityIndicator size="large" color={colors.black} />
-      </View>
-    );
+    return null;
   }
 
+  // Niemand eingeloggt → zum Auth-Start
   if (!user) {
     return <Redirect href="/auth/start" />;
   }
 
+  // Eingeloggt, aber noch keine Rolle → Rollenwahl
   if (!user.role) {
     return <Redirect href="/onboarding/role" />;
   }
 
+  // Rolle gesetzt → in den jeweiligen Bereich
   if (user.role === 'worker') {
     return <Redirect href="/(worker)/profile" />;
   }
 
-  if (user.role === 'employer') {
-    return <Redirect href="/taxonomy" />;
-  }
-
-  return <Redirect href="/auth/start" />;
+  return <Redirect href="/taxonomy" />;
 }
