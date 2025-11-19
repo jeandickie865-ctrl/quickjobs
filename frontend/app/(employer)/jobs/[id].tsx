@@ -306,20 +306,100 @@ export default function JobDetailScreen() {
           </View>
         </View>
 
-        {/* Bewerber / Matches Placeholder */}
+        {/* Bewerber / Matches */}
         <View style={{
           backgroundColor: colors.white,
           borderRadius: 12,
           padding: spacing.md,
-          gap: 6
+          gap: 12
         }}>
           <Text style={{ fontWeight: '700', color: colors.black, fontSize: 16 }}>
             Bewerber / Matches
           </Text>
-          <Text style={{ color: colors.gray500, fontSize: 14 }}>
-            Das Matching und Bewerbungen werden im nächsten Schritt implementiert. 
-            Aktuell gibt es hier noch keine Liste.
-          </Text>
+
+          {isLoadingApps ? (
+            <View style={{ paddingVertical: spacing.md, alignItems: 'center' }}>
+              <ActivityIndicator color={colors.black} />
+              <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 8 }}>
+                Lade Bewerber…
+              </Text>
+            </View>
+          ) : appsError ? (
+            <Text style={{ color: '#c00', fontSize: 14 }}>
+              {appsError}
+            </Text>
+          ) : applicants.length === 0 ? (
+            <Text style={{ color: colors.gray500, fontSize: 14 }}>
+              Noch keine Bewerbungen.
+            </Text>
+          ) : (
+            <View style={{ gap: 8 }}>
+              {applicants.map(({ app, profile }) => {
+                const isAccepted = app.status === 'accepted';
+                const isRejected = app.status === 'rejected';
+                const label =
+                  profile?.homeAddress ||
+                  `Worker ${app.workerId.substring(0, 8)}`;
+
+                const statusLabel =
+                  app.status === 'pending' ? 'Offen' :
+                  app.status === 'accepted' ? 'Ausgewählt' :
+                  app.status === 'rejected' ? 'Abgelehnt' :
+                  'Storniert';
+
+                return (
+                  <View
+                    key={app.id}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomWidth: 1,
+                      borderBottomColor: colors.gray200,
+                      gap: 6
+                    }}
+                  >
+                    <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>
+                      {label}
+                    </Text>
+                    {profile && (
+                      <View style={{ gap: 2 }}>
+                        <Text style={{ color: colors.gray600, fontSize: 13 }}>
+                          Kategorien: {profile.categories.join(', ')}
+                        </Text>
+                        <Text style={{ color: colors.gray600, fontSize: 13 }}>
+                          Radius: {profile.radiusKm} km
+                        </Text>
+                      </View>
+                    )}
+                    <Text style={{ color: colors.gray700, fontSize: 12, marginTop: 2 }}>
+                      Status: {statusLabel}
+                    </Text>
+
+                    {app.status === 'pending' && job.status === 'open' && (
+                      <Button
+                        title={isAcceptingId === app.id ? 'Wähle…' : 'Kandidat auswählen'}
+                        onPress={() => handleAccept(app.id)}
+                        disabled={isAcceptingId === app.id}
+                        variant="secondary"
+                      />
+                    )}
+
+                    {isAccepted && (
+                      <View style={{
+                        padding: spacing.sm,
+                        backgroundColor: colors.beige100,
+                        borderRadius: 6,
+                        marginTop: 4
+                      }}>
+                        <Text style={{ color: colors.black, fontWeight: '700', fontSize: 14 }}>
+                          ✓ Dieser Kandidat ist ausgewählt.
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+          )}
         </View>
 
         {/* Actions */}
