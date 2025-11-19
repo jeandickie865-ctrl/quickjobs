@@ -484,7 +484,7 @@ export default function CreateJob() {
             <TextInput
               value={dueDate}
               onChangeText={setDueDate}
-              placeholder="2024-12-31"
+              placeholder="TT.MM.JJJJ"
               placeholderTextColor={colors.gray400}
               style={{
                 borderWidth: 1,
