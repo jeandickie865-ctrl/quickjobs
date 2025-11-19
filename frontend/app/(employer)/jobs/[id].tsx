@@ -13,6 +13,7 @@ import { Job } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
 import { Button } from '../../../components/ui/Button';
+import { formatAddress } from '../../../types/address';
 
 export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
