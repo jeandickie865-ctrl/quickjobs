@@ -148,44 +148,9 @@ export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): Mat
 }
 
 /**
- * Check if job matches worker profile (using new field names)
+ * Check if job matches worker profile
+ * Uses the debug function internally to ensure consistency
  */
 export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
   return jobMatchesWorkerWithDebug(job, profile).ok;
-}
-
-// Legacy implementation (kept for reference, now uses debug function)
-function jobMatchesWorkerLegacy(job: Job, profile: WorkerProfile): boolean {
-  const categoryKeys = profile.categories ?? [];
-  const tagKeys = profile.selectedTags ?? [];
-
-  if (categoryKeys.length === 0 || tagKeys.length === 0) {
-    return false;
-  }
-
-  // Kategorie-Match: Job-Category-Key muss in den Profil-Kategorien vorhanden sein
-  if (!categoryKeys.includes(job.category)) {
-    return false;
-  }
-
-  const workerTags = new Set(tagKeys);
-
-  // Alle Pflicht-Tags müssen vorhanden sein
-  for (const tag of job.required_all_tags || []) {
-    if (!workerTags.has(tag)) return false;
-  }
-
-  // Mindestens einer der optionalen Tags (wenn definiert)
-  const anyTags = job.required_any_tags || [];
-  if (anyTags.length > 0) {
-    const hasOverlap = anyTags.some(t => workerTags.has(t));
-    if (!hasOverlap) return false;
-  }
-
-  // Radius check
-  if (!jobWithinRadius(job, profile)) {
-    return false;
-  }
-
-  return true;
 }
