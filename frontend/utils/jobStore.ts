@@ -62,3 +62,9 @@ export async function getJobById(id: string): Promise<Job | null> {
   const all = await loadJobs();
   return all.find(j => j.id === id) || null;
 }
+
+export async function deleteJob(id: string): Promise<void> {
+  const jobs = await loadJobs();
+  const next = jobs.filter(j => j.id !== id);
+  await saveJobsInternal(next);
+}
