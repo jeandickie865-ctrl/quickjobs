@@ -16,7 +16,7 @@ import { Button } from '../../../components/ui/Button';
 export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, spacing } = useTheme();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, signOut } = useAuth();
   const router = useRouter();
 
   const [job, setJob] = useState<Job | null>(null);
