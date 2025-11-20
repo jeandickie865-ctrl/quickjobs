@@ -79,28 +79,6 @@ export default function WorkerMatchesScreen() {
     loadMatches();
   };
 
-  const formatDateGerman = (isoDate?: string) => {
-    if (!isoDate) return '';
-    const d = new Date(isoDate);
-    if (Number.isNaN(d.getTime())) return '';
-    return d.toLocaleDateString('de-DE', {
-      weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-
-  const formatTime = (isoDateTime?: string) => {
-    if (!isoDateTime) return '';
-    const d = new Date(isoDateTime);
-    if (Number.isNaN(d.getTime())) return '';
-    return d.toLocaleTimeString('de-DE', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   if (authLoading) {
     return null;
   }
