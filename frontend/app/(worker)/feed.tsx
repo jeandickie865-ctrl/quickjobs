@@ -438,12 +438,31 @@ export default function WorkerFeed() {
                         ✓ Du hast dich schon für diesen Job gemeldet.
                       </Text>
                     </View>
-                  ) : (
+                  ) : canApply ? (
                     <Button
                       title={isApplyingJobId === job.id ? 'Melde dich…' : 'Ich habe Zeit'}
                       onPress={() => handleApply(job.id, job.employerId)}
                       disabled={isApplyingJobId === job.id}
                     />
+                  ) : (
+                    <View style={{ gap: spacing.xs }}>
+                      <Button
+                        title="Ich habe Zeit"
+                        onPress={() => {}}
+                        disabled={true}
+                      />
+                      <View style={{
+                        padding: spacing.sm,
+                        backgroundColor: '#fef3cd',
+                        borderRadius: 8,
+                        borderLeftWidth: 3,
+                        borderLeftColor: '#f0ad4e',
+                      }}>
+                        <Text style={{ color: '#8a6d3b', fontSize: 12, lineHeight: 16 }}>
+                          ⚠️ Für diesen Job brauchst du Pflicht-Qualifikationen, die du nicht hinterlegt hast.
+                        </Text>
+                      </View>
+                    </View>
                   )}
                 </View>
               );
