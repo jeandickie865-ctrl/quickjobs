@@ -25,6 +25,8 @@ export default function CreateJob() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<string>('');
   const [address, setAddress] = useState<Address>({});
+  const [lat, setLat] = useState<number | undefined>(undefined);
+  const [lon, setLon] = useState<number | undefined>(undefined);
   
   // Tags (using Sets for easier management)
   const [requiredAllSet, setRequiredAllSet] = useState<Set<string>>(new Set());
