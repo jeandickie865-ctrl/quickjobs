@@ -107,6 +107,19 @@ export default function WorkerFeed() {
     return true;
   };
 
+  // Hilfsfunktion: Distanz zwischen zwei Punkten berechnen
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Erdradius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
   // Passende Jobs - mit Matching-Filter
   const matchingJobs = useMemo(
     () =>
@@ -119,18 +132,36 @@ export default function WorkerFeed() {
     [jobs, profile]
   );
 
-  // Alle Jobs im Umkreis - nur Status-Filter, kein Matching
-  const allJobsInRadius = useMemo(
-    () =>
-      profile
-        ? jobs
-            .filter(j => j.status === 'open')
-            // Hier könnte später Radius-Filter hinzugefügt werden
-            // .filter(j => jobWithinRadius(j, profile))
-            .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))
-        : [],
-    [jobs, profile]
-  );
+  // Alle Jobs im Umkreis - mit Radius-Filter, aber ohne Profil-Matching
+  const allJobsInRadius = useMemo(() => {
+    if (!profile) return [];
+
+    const openJobs = jobs.filter(j => j.status === 'open');
+
+    // Filter nach Radius
+    return openJobs.filter(job => {
+      // Wenn Job keine Koordinaten hat: Im Zweifel anzeigen
+      if (job.lat == null || job.lon == null || isNaN(job.lat) || isNaN(job.lon)) {
+        console.log('📍 Job ohne Koordinaten wird angezeigt:', job.id);
+        return true;
+      }
+
+      // Wenn Worker keine Koordinaten hat: Alle Jobs anzeigen
+      if (profile.homeLat == null || profile.homeLon == null || 
+          isNaN(profile.homeLat) || isNaN(profile.homeLon)) {
+        console.log('📍 Worker ohne Koordinaten, zeige alle Jobs');
+        return true;
+      }
+
+      // Distanz berechnen
+      const distance = calculateDistance(profile.homeLat, profile.homeLon, job.lat, job.lon);
+      const withinRadius = distance <= profile.radiusKm;
+      
+      console.log(`📍 Job ${job.id}: ${distance.toFixed(1)} km entfernt, Radius ${profile.radiusKm} km, ${withinRadius ? 'ANGEZEIGT' : 'AUSGEBLENDET'}`);
+      
+      return withinRadius;
+    }).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  }, [jobs, profile]);
 
   // Aktive Job-Liste basierend auf Tab
   const activeJobs = activeTab === 'matching' ? matchingJobs : allJobsInRadius;
