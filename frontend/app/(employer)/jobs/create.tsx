@@ -244,7 +244,7 @@ export default function CreateJob() {
             {categories.map(cat => (
               <Chip
                 key={cat.key}
-                label={cat.label}
+                label={cat.title}
                 selected={category === cat.key}
                 onPress={() => {
                   setCategory(cat.key);
