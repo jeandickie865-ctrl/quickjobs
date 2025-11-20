@@ -41,8 +41,16 @@ export default function WorkerProfileScreen() {
     if (!user) return;
     (async () => {
       const stored = await getWorkerProfile(user.id);
-      if (stored) setProfile(stored);
-      else setProfile(createEmptyProfile(user.id));
+      if (stored) {
+        // Normalize categories to remove invalid/old keys
+        const normalizedCategories = normalizeCategories(stored.categories ?? []);
+        if (normalizedCategories.length !== (stored.categories ?? []).length) {
+          console.log('🔧 Normalized categories:', stored.categories, '→', normalizedCategories);
+        }
+        setProfile({ ...stored, categories: normalizedCategories });
+      } else {
+        setProfile(createEmptyProfile(user.id));
+      }
       setIsLoading(false);
     })();
   }, [user]);
