@@ -274,6 +274,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
+      - working: true
+        agent: "testing"
+        comment: "Backend Infrastructure Test nach Taxonomie-Überarbeitung: Service RUNNING (pid 452, uptime 0:04:47), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status funktionieren), MongoDB ✅ (3 documents persistent gespeichert), CORS ✅ (Headers konfiguriert), Backend Logs ✅ (keine Fehler). Alle 3/3 Tests bestanden. System vollständig stabil nach Frontend-Änderungen."
 
 metadata:
   created_by: "main_agent"
