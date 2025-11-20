@@ -129,9 +129,34 @@ export default function EmployerDashboard() {
           </View>
         )}
 
+        {/* Rechtliches */}
+        <View
+          style={{
+            marginTop: spacing.xl,
+            padding: spacing.md,
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.gray200,
+          }}
+        >
+          <Text
+            style={{ fontSize: 14, color: colors.gray700, textDecorationLine: 'underline' }}
+            onPress={() => router.push('/legal')}
+          >
+            <Text style={{ fontSize: 16, fontWeight: '700', color: colors.black }}>
+              Rechtliches
+            </Text>
+            {'\n'}
+            <Text style={{ fontSize: 13, color: colors.gray600 }}>
+              Alles zu AGB, Datenschutz und Betreiber.
+            </Text>
+          </Text>
+        </View>
+
         {/* Account Section */}
         <View style={{ 
-          marginTop: spacing.xl, 
+          marginTop: spacing.md, 
           borderTopWidth: 1, 
           borderTopColor: colors.gray200, 
           paddingTop: spacing.md,
