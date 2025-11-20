@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Button } from '../../components/ui/Button';
