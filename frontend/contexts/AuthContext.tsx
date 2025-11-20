@@ -99,12 +99,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           email,
         };
 
+        // Speichere Credentials
         const nextCreds: StoredCredentials = [
           ...creds,
           { email: email.toLowerCase(), password },
         ];
-
         await saveCredentials(nextCreds);
+
+        // Speichere User in der Datenbank
+        const usersDb = await loadUsersDatabase();
+        usersDb[email.toLowerCase()] = newUser;
+        await saveUsersDatabase(usersDb);
+
+        // Setze als aktuellen User
         await setItem(USER_KEY, newUser);
         setUser(newUser);
       },
