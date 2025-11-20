@@ -231,12 +231,20 @@ export default function WorkerFeed() {
           <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
             Jobs für dich
           </Text>
-          <Text
-            style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
-            onPress={() => router.push('/(worker)/profile')}
-          >
-            ⚙️ Profil
-          </Text>
+          <View style={{ flexDirection: 'row', gap: spacing.md }}>
+            <Text
+              style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
+              onPress={() => router.push('/(worker)/matches')}
+            >
+              🎯 Matches
+            </Text>
+            <Text
+              style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
+              onPress={() => router.push('/(worker)/profile')}
+            >
+              ⚙️ Profil
+            </Text>
+          </View>
         </View>
 
         {error && (
