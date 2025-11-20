@@ -234,6 +234,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Profilfoto und Dokument-Upload hinzugefügt: Workers können jetzt Profilfoto und bis zu 5 Dokumenttypen hochladen (lokal, nur URIs). expo-image-picker und expo-document-picker integriert."
+      - working: true
+        agent: "main"
+        comment: "Taxonomie-Fix: toggleTag Funktion angepasst für String-basierte Tags (statt Tag-Objekte). Alte license-Rendering-Logik entfernt. Kompatibel mit neuer workerData.ts Struktur (nur activities + qualifications)."
 
   - task: "Authentication Flow"
     implemented: true
