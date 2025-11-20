@@ -11,6 +11,7 @@ import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
 import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
+import { formatJobTimeDisplay } from '../../utils/date';
 
 type Match = {
   job: Job;
