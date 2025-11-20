@@ -12,20 +12,29 @@ async function saveApplications(apps: JobApplication[]): Promise<void> {
   await setItem<JobApplication[]>(APPLICATIONS_KEY, apps);
 }
 
-export async function addApplication(jobId: string, workerId: string): Promise<JobApplication> {
+export async function addApplication(
+  jobId: string, 
+  workerId: string,
+  employerId: string
+): Promise<JobApplication> {
   const apps = await loadApplications();
   const existing = apps.find(a => a.jobId === jobId && a.workerId === workerId);
-  if (existing) return existing;
+  if (existing) {
+    console.log('📋 Application already exists', { jobId, workerId, appId: existing.id });
+    return existing;
+  }
 
   const app: JobApplication = {
     id: 'app-' + Date.now().toString() + '-' + Math.random().toString(36).slice(2),
     jobId,
     workerId,
+    employerId,
     createdAt: new Date().toISOString(),
     status: 'pending',
   };
   const next = [...apps, app];
   await saveApplications(next);
+  console.log('✅ New application created', { appId: app.id, jobId, workerId, employerId });
   return app;
 }
 
