@@ -7,4 +7,7 @@ export type JobApplication = {
   employerId: string;  // Owner of the job
   createdAt: string;
   status: ApplicationStatus;
+  // Legal confirmation flags (set after match, before contact data)
+  employerConfirmedLegal?: boolean;
+  workerConfirmedLegal?: boolean;
 };
