@@ -427,19 +427,19 @@ export default function WorkerProfileScreen() {
         return (
           <View key={catKey} style={{ borderWidth: 1, borderColor: colors.gray200, borderRadius: 12, padding: spacing.sm, gap: 8, backgroundColor: colors.white }}>
             <Text style={{ color: colors.black, fontWeight: '700' }}>
-              {categories.find(c => c.key === catKey)?.label}
+              {categories.find(c => c.key === catKey)?.title}
             </Text>
 
             {groups.activities.length > 0 && (
               <View style={{ gap: 6 }}>
                 <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>Tätigkeiten</Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {groups.activities.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
+                  {groups.activities.sort((a, b) => a.localeCompare(b)).map(tagLabel => (
                     <Chip
-                      key={t.key}
-                      label={t.label}
-                      selected={selectedTagsSet.has(t.key)}
-                      onPress={() => toggleTag(catKey as CategoryKey, t)}
+                      key={tagLabel}
+                      label={tagLabel}
+                      selected={selectedTagsSet.has(tagLabel)}
+                      onPress={() => toggleTag(catKey as CategoryKey, tagLabel)}
                     />
                   ))}
                 </View>
@@ -450,12 +450,12 @@ export default function WorkerProfileScreen() {
               <View style={{ gap: 6 }}>
                 <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>Qualifikationen</Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {groups.qualifications.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
+                  {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagLabel => (
                     <Chip
-                      key={t.key}
-                      label={t.label}
-                      selected={selectedTagsSet.has(t.key)}
-                      onPress={() => toggleTag(catKey as CategoryKey, t)}
+                      key={tagLabel}
+                      label={tagLabel}
+                      selected={selectedTagsSet.has(tagLabel)}
+                      onPress={() => toggleTag(catKey as CategoryKey, tagLabel)}
                     />
                   ))}
                 </View>
