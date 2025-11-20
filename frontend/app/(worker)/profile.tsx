@@ -537,39 +537,28 @@ export default function WorkerProfileScreen() {
       })}
 
       {/* Rechtliches */}
-      <View style={{
-        marginTop: spacing.xl,
-        padding: spacing.md,
-        backgroundColor: colors.white,
-        borderRadius: 12,
-        gap: spacing.sm,
-      }}>
-        <Text style={{ fontSize: 16, fontWeight: '700', color: colors.black }}>
-          Rechtliches
+      <View
+        style={{
+          marginTop: spacing.xl,
+          padding: spacing.md,
+          backgroundColor: colors.white,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: colors.gray200,
+        }}
+      >
+        <Text
+          style={{ fontSize: 14, color: colors.gray700, textDecorationLine: 'underline' }}
+          onPress={() => router.push('/legal')}
+        >
+          <Text style={{ fontSize: 16, fontWeight: '700', color: colors.black }}>
+            Rechtliches
+          </Text>
+          {'\n'}
+          <Text style={{ fontSize: 13, color: colors.gray600 }}>
+            Alles zu AGB, Datenschutz und Betreiber.
+          </Text>
         </Text>
-        <View style={{ gap: spacing.xs }}>
-          <Text
-            style={{ fontSize: 14, color: colors.gray700, textDecorationLine: 'underline' }}
-            onPress={() => router.push('/legal/agb')}
-          >
-            AGB
-          </Text>
-          <Text
-            style={{ fontSize: 14, color: colors.gray700, textDecorationLine: 'underline' }}
-            onPress={() => router.push('/legal/privacy')}
-          >
-            Datenschutzerklärung
-          </Text>
-          <Text
-            style={{ fontSize: 14, color: colors.gray700, textDecorationLine: 'underline' }}
-            onPress={() => router.push('/legal/guidelines')}
-          >
-            Grundsätze
-          </Text>
-          <Text style={{ fontSize: 12, color: colors.gray500, marginTop: spacing.xs }}>
-            So nutzen wir diese Plattform miteinander.
-          </Text>
-        </View>
       </View>
 
       <View style={{ marginTop: spacing.lg, gap: spacing.sm }}>
