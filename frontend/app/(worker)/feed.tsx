@@ -232,6 +232,7 @@ export default function WorkerFeed() {
           />
         }
       >
+        {/* Header mit Navigation */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
             Jobs für dich
@@ -250,6 +251,42 @@ export default function WorkerFeed() {
               ⚙️ Profil
             </Text>
           </View>
+        </View>
+
+        {/* Tab-Buttons */}
+        <View style={{ flexDirection: 'row', gap: spacing.xs, backgroundColor: colors.white, borderRadius: 12, padding: 4 }}>
+          <Text
+            onPress={() => setActiveTab('matching')}
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              paddingVertical: spacing.sm,
+              paddingHorizontal: spacing.md,
+              borderRadius: 8,
+              fontWeight: '700',
+              fontSize: 14,
+              backgroundColor: activeTab === 'matching' ? colors.black : 'transparent',
+              color: activeTab === 'matching' ? colors.white : colors.gray700,
+            }}
+          >
+            Passende Jobs
+          </Text>
+          <Text
+            onPress={() => setActiveTab('all')}
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              paddingVertical: spacing.sm,
+              paddingHorizontal: spacing.md,
+              borderRadius: 8,
+              fontWeight: '700',
+              fontSize: 14,
+              backgroundColor: activeTab === 'all' ? colors.black : 'transparent',
+              color: activeTab === 'all' ? colors.white : colors.gray700,
+            }}
+          >
+            Alle Jobs im Umkreis
+          </Text>
         </View>
 
         {error && (
