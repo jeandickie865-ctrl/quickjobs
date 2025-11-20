@@ -283,10 +283,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Employer Dashboard"
+    - "Worker Profile"
     - "Job Creation mit Speicherung"
     - "Worker Feed Screen"
-    - "Matching Logic"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
