@@ -290,26 +290,34 @@ export default function WorkerProfileScreen() {
       <View style={{ gap: 8 }}>
         <Text style={{ color: colors.black, fontWeight: '600' }}>Adresse (für Radius)</Text>
         <Text style={{ color: colors.gray600, fontSize: 13 }}>
-          Deine Heimatadresse wird für spätere Entfernungsberechnungen verwendet.
+          Deine Heimatadresse wird für spätere Entfernungsberechnungen verwendet. Tippe mindestens 3 Buchstaben für Vorschläge.
         </Text>
         
-        <TextInput
-          placeholder="Straße und Hausnummer"
-          placeholderTextColor={colors.gray400}
-          value={profile.homeAddress.street || ''}
-          onChangeText={text => setProfile({ 
-            ...profile, 
-            homeAddress: { ...profile.homeAddress, street: text }
-          })}
-          style={{
-            borderWidth: 1,
-            borderColor: colors.gray200,
-            borderRadius: 12,
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-            backgroundColor: colors.white,
-            color: colors.black
+        <AddressAutocompleteInput
+          street={profile.homeAddress.street || ''}
+          postalCode={profile.homeAddress.postalCode}
+          city={profile.homeAddress.city}
+          onStreetChange={(value) => {
+            setProfile({
+              ...profile,
+              homeAddress: { ...profile.homeAddress, street: value },
+              homeLat: 0, // Reset coordinates when manually changing
+              homeLon: 0,
+            });
           }}
+          onSuggestionSelected={(sugg) => {
+            setProfile({
+              ...profile,
+              homeAddress: {
+                street: sugg.street || profile.homeAddress.street || '',
+                postalCode: profile.homeAddress.postalCode || sugg.postalCode,
+                city: profile.homeAddress.city || sugg.city,
+              },
+              homeLat: sugg.lat,
+              homeLon: sugg.lon,
+            });
+          }}
+          placeholder="Straße und Hausnummer"
         />
         
         <View style={{ flexDirection: 'row', gap: 8 }}>
