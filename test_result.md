@@ -370,3 +370,50 @@ agent_communication:
       ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
       
       **Bestätigung:** Backend Infrastructure ist vollständig funktionsfähig. Wie erwartet für MVP mit AsyncStorage - keine ShiftMatch-spezifischen Endpoints nötig. System bereit für weitere Entwicklung.
+
+  - agent: "main"
+    message: |
+      **Feature: Persistente Authentifizierung implementiert**
+      
+      **Problem:**
+      - Benutzer wurden bei jedem App-Start abgemeldet
+      - User mussten sich immer wieder neu anmelden
+      - Gewählte Rollen (Worker/Employer) gingen verloren
+      
+      **Implementierte Lösung - contexts/AuthContext.tsx:**
+      
+      1. **User-Datenbank System eingeführt:**
+         - Neuer Storage Key: `@shiftmatch:users_database`
+         - Speichert alle registrierten User mit ihren Profildaten (ID, Email, Rolle)
+         - Ermöglicht Multi-User-Management
+      
+      2. **signUp aktualisiert:**
+         - Speichert neue User sowohl in Credentials als auch in Users-Datenbank
+         - Prüft weiterhin auf Duplikate (Email bereits registriert)
+      
+      3. **signIn verbessert:**
+         - Lädt User aus der Users-Datenbank (inkl. persistierter Rolle)
+         - Falls User bereits Rolle gewählt hat, wird diese wiederhergestellt
+         - Fallback für alte Accounts ohne DB-Eintrag
+      
+      4. **setRole aktualisiert:**
+         - Speichert Rolle nicht nur im aktuellen User (USER_KEY)
+         - Sondern auch persistent in der Users-Datenbank
+         - Rolle bleibt bei erneutem Login erhalten
+      
+      5. **Startup-Loading bereits vorhanden:**
+         - useEffect lädt User beim App-Start aus AsyncStorage
+         - isLoading State verhindert Flackern
+         - start.tsx routet korrekt basierend auf User-Status und Rolle
+      
+      **Erwartetes Verhalten:**
+      - User registriert sich → wählt Rolle (Worker/Employer) → App schließen
+      - App öffnen → User ist eingeloggt → landet direkt im richtigen Dashboard
+      - Logout funktioniert weiterhin (removeItem USER_KEY)
+      - Mehrere User können sich abwechselnd anmelden, jeder behält seine Rolle
+      
+      **Test-Szenarien:**
+      1. Als Worker registrieren → Rolle wählen → App neu laden → sollte im Feed landen
+      2. Als Employer registrieren → Rolle wählen → App neu laden → sollte im Employer Dashboard landen
+      3. Logout → erneut Login mit gleicher Email → Rolle sollte erhalten bleiben
+      4. Mehrere Accounts testen (User A Worker, User B Employer) → Rollenwechsel korrekt
