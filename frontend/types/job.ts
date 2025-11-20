@@ -24,8 +24,8 @@ export type Job = {
   dueAt?: string;
 
   address: Address;      // Strukturierte Adresse (statt string)
-  lat: number;
-  lon: number;
+  lat?: number;
+  lon?: number;
 
   workerAmountCents: number; // Gesamtbetrag für den Arbeitnehmer
   paymentToWorker: 'cash' | 'bank' | 'paypal';
