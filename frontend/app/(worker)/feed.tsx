@@ -358,7 +358,7 @@ export default function WorkerFeed() {
                   ) : (
                     <Button
                       title={isApplyingJobId === job.id ? 'Melde dich…' : 'Ich habe Zeit'}
-                      onPress={() => handleApply(job.id)}
+                      onPress={() => handleApply(job.id, job.employerId)}
                       disabled={isApplyingJobId === job.id}
                     />
                   )}
