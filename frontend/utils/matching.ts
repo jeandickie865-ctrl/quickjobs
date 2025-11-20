@@ -81,8 +81,20 @@ export function sortJobsByMatch(
  */
 export function jobWithinRadius(job: Job, profile: WorkerProfile): boolean {
   // Distance filtering vorübergehend deaktiviert.
-  // Alle Jobs gelten als innerhalb des Radius.
-  return true;
+  // Wenn aktiviert: prüfen, dass keine undefined/null Koordinaten als 0 behandelt werden
+  
+  // Für zukünftige Aktivierung vorbereitet:
+  // const jobLat = typeof job.lat === 'number' ? job.lat : null;
+  // const jobLon = typeof job.lon === 'number' ? job.lon : null;
+  // const homeLat = typeof profile.homeLat === 'number' ? profile.homeLat : null;
+  // const homeLon = typeof profile.homeLon === 'number' ? profile.homeLon : null;
+  // if (jobLat == null || jobLon == null || homeLat == null || homeLon == null) {
+  //   return true; // Fehlende Koordinaten = kein Filter
+  // }
+  // const distance = haversineKm(homeLat, homeLon, jobLat, jobLon);
+  // return distance <= profile.radiusKm;
+  
+  return true; // Alle Jobs gelten als innerhalb des Radius
 }
 
 /**
