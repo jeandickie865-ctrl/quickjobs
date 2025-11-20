@@ -303,7 +303,7 @@ export default function WorkerFeed() {
           </View>
         )}
 
-        {matchingJobs.length === 0 ? (
+        {activeJobs.length === 0 ? (
           <View style={{
             padding: spacing.xl,
             backgroundColor: colors.white,
@@ -312,13 +312,17 @@ export default function WorkerFeed() {
             gap: spacing.sm
           }}>
             <Text style={{ color: colors.gray700, fontSize: 16, textAlign: 'center', fontWeight: '600' }}>
-              Keine passenden Jobs gefunden
+              {activeTab === 'matching' 
+                ? 'Keine passenden Jobs gefunden'
+                : 'Keine Jobs im Umkreis gefunden'}
             </Text>
             <Text style={{ color: colors.gray500, fontSize: 14, textAlign: 'center' }}>
-              Aktuell gibt es keine Jobs, die zu deinem Profil passen. Schau später wieder vorbei oder passe dein Profil an.
+              {activeTab === 'matching'
+                ? 'Aktuell gibt es keine Jobs, die zu deinem Profil passen. Schau später wieder vorbei oder passe dein Profil an.'
+                : 'Aktuell gibt es keine offenen Jobs in deiner Nähe. Schau später wieder vorbei.'}
             </Text>
             <Text style={{ color: colors.gray400, fontSize: 12, marginTop: 8, textAlign: 'center' }}>
-              Debug: {allJobsCount} Jobs insgesamt, {openJobsCount} offene Jobs, 0 passende Jobs für dein Profil.
+              Debug: {allJobsCount} Jobs insgesamt, {openJobsCount} offene Jobs, {matchingJobs.length} passende Jobs für dein Profil.
             </Text>
             {profile && (
               <View style={{ marginTop: spacing.sm, width: '100%', gap: 4 }}>
