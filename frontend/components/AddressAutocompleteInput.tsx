@@ -8,7 +8,10 @@ type AddressAutocompleteInputProps = {
   postalCode?: string;
   city?: string;
   onStreetChange: (value: string) => void;
-  onSuggestionSelected: (suggestion: AddressSuggestion) => void;
+  onPostalCodeChange?: (value: string) => void;
+  onCityChange?: (value: string) => void;
+  onLatChange?: (value: number) => void;
+  onLonChange?: (value: number) => void;
   placeholder?: string;
   disabled?: boolean;
 };
