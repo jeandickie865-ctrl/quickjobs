@@ -12,6 +12,7 @@ import Chip from '../../components/ui/Chip';
 import { Button } from '../../components/ui/Button';
 import { ProfilePhoto } from '../../components/ProfilePhoto';
 import { DocumentManager } from '../../components/DocumentManager';
+import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 
 function createEmptyProfile(userId: string): WorkerProfile {
   return {
