@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, TextInput, Text, Pressable, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { searchAddress, AddressSuggestion } from '../services/geocoding';
 
