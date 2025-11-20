@@ -28,6 +28,7 @@ export default function WorkerFeed() {
   const [error, setError] = useState<string | null>(null);
   const [isApplyingJobId, setIsApplyingJobId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'matching' | 'all'>('matching');
   
   // Debug counters
   const [allJobsCount, setAllJobsCount] = useState(0);
