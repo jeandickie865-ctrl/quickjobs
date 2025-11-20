@@ -98,12 +98,12 @@ export default function WorkerProfileScreen() {
     }
   }
 
-  function toggleTag(catKey: CategoryKey, tag: Tag) {
+  function toggleTag(catKey: CategoryKey, tagKey: string) {
     // nur wenn Kategorie auch gewählt ist
     if (!profile.categories.includes(catKey)) return;
     const set = new Set(profile.selectedTags ?? []);
-    if (set.has(tag.key)) set.delete(tag.key);
-    else set.add(tag.key);
+    if (set.has(tagKey)) set.delete(tagKey);
+    else set.add(tagKey);
     setProfile({ ...profile, selectedTags: Array.from(set) });
   }
 
