@@ -540,13 +540,10 @@ export default function CreateJob() {
             postalCode={address.postalCode}
             city={address.city}
             onStreetChange={(value) => setAddress({ ...address, street: value })}
-            onSuggestionSelected={(sugg) => {
-              setAddress({
-                street: sugg.street || address.street || '',
-                postalCode: address.postalCode || sugg.postalCode,
-                city: address.city || sugg.city,
-              });
-            }}
+            onPostalCodeChange={(value) => setAddress({ ...address, postalCode: value })}
+            onCityChange={(value) => setAddress({ ...address, city: value })}
+            onLatChange={(value) => setLat(value)}
+            onLonChange={(value) => setLon(value)}
             placeholder="Straße und Hausnummer"
           />
           
