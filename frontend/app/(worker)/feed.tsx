@@ -130,12 +130,12 @@ export default function WorkerFeed() {
     [jobs, profile]
   );
 
-  async function handleApply(jobId: string) {
+  async function handleApply(jobId: string, employerId: string) {
     if (!profile || !user) return;
     try {
       setIsApplyingJobId(jobId);
-      console.log('🚀 Worker applies for job', { jobId, workerId: user.id });
-      await addApplication(jobId, user.id);
+      console.log('🚀 Worker applies for job', { jobId, workerId: user.id, employerId });
+      await addApplication(jobId, user.id, employerId);
       const updated = new Set(appsJobIds);
       updated.add(jobId);
       setAppsJobIds(updated);
