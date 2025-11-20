@@ -378,6 +378,48 @@ agent_communication:
 
   - agent: "main"
     message: |
+      **Taxonomie-Überholung: Profile & Job Creation Screens aktualisiert**
+      
+      **Problem:**
+      - Worker Profile Screen stürzte ab wegen Inkompatibilität mit neuer workerData.ts Struktur
+      - Job Creation Screen verwendete alte Tag-Typen (role, qual, license, doc, skill, tool, vehicle)
+      - toggleTag Funktion erwartete Tag-Objekte, bekam aber Strings
+      
+      **Durchgeführte Änderungen:**
+      
+      1. **app/(worker)/profile.tsx:**
+         - toggleTag Signatur geändert: `(catKey, tag: Tag)` → `(catKey, tagKey: string)`
+         - Alte license-Rendering-Logik vollständig entfernt
+         - Import von "Tag" Type entfernt (nicht mehr benötigt)
+         - Funktioniert jetzt mit String-Arrays (activities, qualifications)
+      
+      2. **app/(employer)/jobs/create.tsx:**
+         - Komplette Überarbeitung der Tag-Auswahl-Sektion
+         - Alte Struktur entfernt: role, qual, license, doc, skill, tool, vehicle
+         - Neue Struktur: nur activities und qualifications
+         - Drei Auswahlbereiche implementiert:
+           * "Erforderliche Tätigkeiten" (required_all)
+           * "Erforderliche Qualifikationen" (required_all)
+           * "Alternative Qualifikationen" (required_any mit outline tone)
+         - lat/lon States hinzugefügt für Geocoding
+         - cat.label → cat.title korrigiert
+      
+      3. **Beide Screens:**
+         - Verwenden jetzt groupTagsByType() das { activities: string[], qualifications: string[] } zurückgibt
+         - Keine Tag-Objekte mehr, nur noch einfache Strings
+         - Kompatibel mit constants/workerData.ts und src/taxonomy/index.ts
+      
+      **Erwartetes Verhalten:**
+      - Worker können Profile ohne Crash bearbeiten
+      - Employer können Jobs mit neuer Taxonomie erstellen
+      - Tags werden korrekt als required_all oder required_any gespeichert
+      
+      **Nächste Schritte:**
+      - Backend Testing (grundlegende Infrastructure)
+      - Dann User fragen ob Frontend-Testing gewünscht ist
+
+  - agent: "main"
+    message: |
       **Feature: Persistente Authentifizierung implementiert**
       
       **Problem:**
