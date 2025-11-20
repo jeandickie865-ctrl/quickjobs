@@ -131,19 +131,40 @@ export default function WorkerFeed() {
   );
 
   async function handleApply(jobId: string, employerId: string) {
-    if (!profile || !user) return;
+    if (!user) {
+      console.log('❌ handleApply: no user');
+      setError('Du bist nicht eingeloggt.');
+      return;
+    }
+
+    if (!profile) {
+      console.log('❌ handleApply: no profile');
+      setError('Profil nicht gefunden.');
+      return;
+    }
+
     try {
       setIsApplyingJobId(jobId);
-      console.log('🚀 Worker applies for job', { jobId, workerId: user.id, employerId });
+      console.log('🚀 handleApply: start', {
+        jobId,
+        workerId: user.id,
+        employerId: employerId ?? 'UNDEFINED',
+      });
+
       await applyForJob(jobId, user.id, employerId);
+
+      console.log('✅ handleApply: success');
       const updated = new Set(appsJobIds);
       updated.add(jobId);
       setAppsJobIds(updated);
       setError(null);
-      console.log('✅ Application submitted successfully');
     } catch (e) {
-      console.error('❌ Error applying:', e);
-      setError('Bewerbung konnte nicht gespeichert werden.');
+      console.log('❌ handleApply: ERROR', e);
+      const msg =
+        e instanceof Error
+          ? e.message
+          : 'Unbekannter Fehler beim Bewerben.';
+      setError('Bewerbung konnte nicht gespeichert werden: ' + msg);
     } finally {
       setIsApplyingJobId(null);
     }
