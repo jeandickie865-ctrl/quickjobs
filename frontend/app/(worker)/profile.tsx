@@ -301,8 +301,8 @@ export default function WorkerProfileScreen() {
             setProfile({
               ...profile,
               homeAddress: { ...profile.homeAddress, street: value },
-              homeLat: 0, // Reset coordinates when manually changing
-              homeLon: 0,
+              homeLat: undefined, // Reset coordinates when manually changing
+              homeLon: undefined,
             });
           }}
           onSuggestionSelected={(sugg) => {
