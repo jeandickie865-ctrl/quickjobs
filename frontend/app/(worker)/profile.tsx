@@ -471,6 +471,10 @@ export default function WorkerProfileScreen() {
             )}
           </View>
         );
+        } catch (error) {
+          console.error(`❌ Error rendering tags for category ${catKey}:`, error);
+          return null;
+        }
       })}
 
       {/* Rechtliches */}
