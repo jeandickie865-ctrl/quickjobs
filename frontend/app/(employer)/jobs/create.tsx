@@ -12,6 +12,7 @@ import { JobTimeMode, Job } from '../../../types/job';
 import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
+import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
 
 export default function CreateJob() {
   const { colors, spacing } = useTheme();
