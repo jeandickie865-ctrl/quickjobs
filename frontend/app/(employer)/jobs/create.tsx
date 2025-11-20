@@ -134,6 +134,13 @@ export default function CreateJob() {
     const requiredAllTags = Array.from(requiredAllSet);
     const requiredAnyTags = Array.from(requiredAnySet);
 
+    // Build structured address
+    const location: Address = {
+      street: address.street?.trim() || undefined,
+      postalCode: address.postalCode?.trim() || undefined,
+      city: address.city?.trim() || undefined,
+    };
+
     // Create job object
     const job: Job = {
       id: 'job-' + Date.now().toString(),
@@ -147,7 +154,7 @@ export default function CreateJob() {
       endAt: endAtIso,
       hours: hoursNumber,
       dueAt: dueAtIso,
-      address: address.trim(),
+      address: location,  // Strukturierte Adresse statt String
       lat: 0,
       lon: 0,
       workerAmountCents,
