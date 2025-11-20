@@ -163,6 +163,7 @@ export default function CreateJob() {
       required_all_tags: requiredAllTags,
       required_any_tags: requiredAnyTags,
       status: 'open',
+      matchedWorkerId: undefined,  // Set when application is accepted
       createdAt: new Date().toISOString(),
     };
 
