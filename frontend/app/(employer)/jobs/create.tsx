@@ -158,8 +158,8 @@ export default function CreateJob() {
       hours: hoursNumber,
       dueAt: dueAtIso,
       address: location,  // Strukturierte Adresse statt String
-      lat: undefined,  // Keine Dummy-Koordinaten setzen
-      lon: undefined,  // Nur echte Werte wenn aus Geocoder
+      lat: lat,  // Koordinaten aus Geocoder (falls vorhanden)
+      lon: lon,  // Koordinaten aus Geocoder (falls vorhanden)
       workerAmountCents,
       paymentToWorker: paymentMethod,
       required_all_tags: requiredAllTags,
