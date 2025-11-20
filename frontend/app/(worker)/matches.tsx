@@ -1,0 +1,308 @@
+import React, { useEffect, useState } from 'react';
+import { ScrollView, View, Text, ActivityIndicator, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter, Redirect } from 'expo-router';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useAuth } from '../../contexts/AuthContext';
+import { getApplicationsForWorker } from '../../utils/applicationStore';
+import { getJobs } from '../../utils/jobStore';
+import { Job } from '../../types/job';
+import { JobApplication } from '../../types/application';
+import { Button } from '../../components/ui/Button';
+import { euro } from '../../utils/pricing';
+import { formatAddress } from '../../types/address';
+
+type Match = {
+  job: Job;
+  application: JobApplication;
+};
+
+export default function WorkerMatchesScreen() {
+  const { user, isLoading: authLoading } = useAuth();
+  const { colors, spacing } = useTheme();
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadMatches = async () => {
+    if (!user) return;
+
+    try {
+      setError(null);
+      console.log('📋 Loading matches for worker', user.id);
+
+      // 1. Alle Bewerbungen des Workers holen
+      const apps = await getApplicationsForWorker(user.id);
+      console.log('✅ Found applications', apps.length);
+
+      // 2. Nur akzeptierte Bewerbungen
+      const acceptedApps = apps.filter((a) => a.status === 'accepted');
+      console.log('✅ Accepted applications', acceptedApps.length);
+
+      // 3. Jobs laden
+      const allJobs = await getJobs();
+
+      const combined: Match[] = [];
+
+      for (const app of acceptedApps) {
+        const job = allJobs.find((j) => j.id === app.jobId);
+        if (job) {
+          combined.push({ job, application: app });
+        } else {
+          console.warn('⚠️ Job not found for application', app.jobId);
+        }
+      }
+
+      console.log('✅ Matches loaded', combined.length);
+      setMatches(combined);
+    } catch (e) {
+      console.error('❌ Error loading matches:', e);
+      setError('Matches konnten nicht geladen werden.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      loadMatches();
+    }
+  }, [user, authLoading]);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    loadMatches();
+  };
+
+  const formatDateGerman = (isoDate?: string) => {
+    if (!isoDate) return '';
+    const d = new Date(isoDate);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('de-DE', {
+      weekday: 'short',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
+  const formatTime = (isoDateTime?: string) => {
+    if (!isoDateTime) return '';
+    const d = new Date(isoDateTime);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  if (authLoading) {
+    return null;
+  }
+
+  if (!user || user.role !== 'worker') {
+    return <Redirect href="/start" />;
+  }
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color={colors.black} />
+          <Text style={{ color: colors.gray700, marginTop: spacing.sm }}>
+            Lade deine Matches…
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.black}
+          />
+        }
+      >
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
+            Meine Matches
+          </Text>
+          <Text
+            style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
+            onPress={() => router.push('/(worker)/feed')}
+          >
+            🔎 Jobs
+          </Text>
+        </View>
+
+        {error && (
+          <View style={{
+            padding: spacing.md,
+            backgroundColor: '#fee',
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: '#f88'
+          }}>
+            <Text style={{ color: '#c00', fontSize: 14 }}>
+              {error}
+            </Text>
+          </View>
+        )}
+
+        {matches.length === 0 ? (
+          <View style={{
+            padding: spacing.xl,
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            alignItems: 'center',
+            gap: spacing.sm
+          }}>
+            <Text style={{ fontSize: 32, marginBottom: spacing.sm }}>
+              🎯
+            </Text>
+            <Text style={{ color: colors.black, fontSize: 18, fontWeight: '700', textAlign: 'center' }}>
+              Noch keine Matches
+            </Text>
+            <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
+              Sobald ein Arbeitgeber deine Bewerbung annimmt, erscheint der Job hier.
+            </Text>
+            <Button
+              title="Jobs ansehen"
+              onPress={() => router.push('/(worker)/feed')}
+              style={{ marginTop: spacing.md }}
+            />
+          </View>
+        ) : (
+          <View style={{ gap: spacing.sm }}>
+            {matches.map(({ job, application }) => {
+              // Format time display
+              let timeDisplayParts: string[] = [];
+              
+              if (job.timeMode === 'fixed_time') {
+                const dateLabel = formatDateGerman(job.startAt);
+                const startTime = formatTime(job.startAt);
+                const endTime = formatTime(job.endAt);
+                
+                if (dateLabel) timeDisplayParts.push(dateLabel);
+                if (startTime && endTime) {
+                  timeDisplayParts.push(`${startTime}–${endTime}`);
+                }
+              } else if (job.timeMode === 'hour_package') {
+                const dateLabel = formatDateGerman(job.startAt);
+                if (dateLabel) timeDisplayParts.push(dateLabel);
+                if (job.hours) {
+                  timeDisplayParts.push(`${job.hours} Stunden`);
+                }
+              } else if (job.timeMode === 'project') {
+                const dueLabel = formatDateGerman(job.dueAt);
+                if (dueLabel) {
+                  timeDisplayParts.push(`Bis ${dueLabel}`);
+                }
+              }
+              
+              const timeDisplay = timeDisplayParts.filter(Boolean).join(' · ');
+
+              return (
+                <View
+                  key={application.id}
+                  style={{
+                    backgroundColor: colors.white,
+                    borderRadius: 12,
+                    padding: spacing.md,
+                    gap: 12,
+                    borderWidth: 2,
+                    borderColor: colors.beige300,
+                  }}
+                >
+                  {/* Match Badge */}
+                  <View style={{
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    backgroundColor: colors.beige100,
+                    borderRadius: 8,
+                    alignSelf: 'flex-start'
+                  }}>
+                    <Text style={{ color: colors.black, fontSize: 12, fontWeight: '700' }}>
+                      ✓ GEMATCHT
+                    </Text>
+                  </View>
+
+                  {/* Job Info */}
+                  <View style={{ gap: 8 }}>
+                    <Text style={{ fontWeight: '800', fontSize: 18, color: colors.black }}>
+                      {job.title}
+                    </Text>
+                    <View style={{ gap: 4 }}>
+                      <Text style={{ color: colors.gray700, fontSize: 14 }}>
+                        📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
+                      </Text>
+                      <Text style={{ color: colors.gray700, fontSize: 14 }}>
+                        🏷️ {job.category}
+                      </Text>
+                      {timeDisplay && (
+                        <Text style={{ color: colors.gray700, fontSize: 14 }}>
+                          ⏱️ {timeDisplay}
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+
+                  {/* Description */}
+                  {job.description && (
+                    <Text style={{ color: colors.gray600, fontSize: 13 }} numberOfLines={2}>
+                      {job.description}
+                    </Text>
+                  )}
+
+                  {/* Payment */}
+                  <Text style={{ color: colors.black, fontWeight: '700', fontSize: 17 }}>
+                    Lohn: {euro(job.workerAmountCents)}
+                  </Text>
+
+                  {/* Info Box */}
+                  <View style={{
+                    padding: spacing.sm,
+                    backgroundColor: colors.beige50,
+                    borderRadius: 8,
+                    borderLeftWidth: 3,
+                    borderLeftColor: colors.black,
+                  }}>
+                    <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
+                      🎉 <Text style={{ fontWeight: '600' }}>Glückwunsch!</Text> Der Arbeitgeber hat dich für diesen Job ausgewählt. 
+                      Ihr könnt jetzt Details besprechen.
+                    </Text>
+                  </View>
+
+                  {/* Chat Button */}
+                  <Button
+                    title="💬 Zum Chat"
+                    onPress={() => {
+                      console.log('🚀 Opening chat for application', application.id);
+                      router.push({
+                        pathname: '/chat/[applicationId]',
+                        params: { applicationId: application.id },
+                      });
+                    }}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        <View style={{ height: spacing.xl }} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
