@@ -237,15 +237,18 @@ frontend:
 
   - task: "Authentication Flow"
     implemented: true
-    working: "NA"
+    working: true
     file: "contexts/AuthContext.tsx"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "critical"
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
         comment: "Bereits implementiert, keine Änderungen"
+      - working: true
+        agent: "main"
+        comment: "Persistente Authentifizierung implementiert: User-Datenbank System eingeführt (@shiftmatch:users_database), das alle User mit ihren Rollen speichert. signUp speichert User in DB, signIn lädt User inkl. Rolle aus DB, setRole aktualisiert User in DB. User bleiben nun zwischen App-Neustarts eingeloggt mit ihrer gewählten Rolle."
 
 backend:
   - task: "Backend API"
