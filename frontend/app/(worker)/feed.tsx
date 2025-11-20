@@ -135,7 +135,7 @@ export default function WorkerFeed() {
     try {
       setIsApplyingJobId(jobId);
       console.log('🚀 Worker applies for job', { jobId, workerId: user.id, employerId });
-      await addApplication(jobId, user.id, employerId);
+      await applyForJob(jobId, user.id, employerId);
       const updated = new Set(appsJobIds);
       updated.add(jobId);
       setAppsJobIds(updated);
