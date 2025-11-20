@@ -123,22 +123,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           throw new Error('E-Mail oder Passwort ist falsch');
         }
 
-        // Lade den gespeicherten User für diese Email
-        const stored = await getItem<StoredUser>(USER_KEY);
+        // Lade User aus der Datenbank (mit persistierter Rolle falls vorhanden)
+        const usersDb = await loadUsersDatabase();
+        const userFromDb = usersDb[email.toLowerCase()];
         
-        // Wenn gespeicherter User mit dieser Email existiert, nutze ihn (mit Rolle falls vorhanden)
-        if (stored && stored.email.toLowerCase() === email.toLowerCase()) {
-          setUser(stored);
-          return;
+        if (userFromDb) {
+          // User existiert bereits in Datenbank - nutze seine Daten (inkl. Rolle)
+          await setItem(USER_KEY, userFromDb);
+          setUser(userFromDb);
+        } else {
+          // Fallback: User existiert noch nicht in Datenbank (alte Accounts)
+          // Erstelle neuen User ohne Rolle
+          const newUser: StoredUser = {
+            id: 'u-' + Date.now().toString(),
+            email,
+          };
+          
+          usersDb[email.toLowerCase()] = newUser;
+          await saveUsersDatabase(usersDb);
+          await setItem(USER_KEY, newUser);
+          setUser(newUser);
         }
-
-        // Falls kein gespeicherter User existiert, erstelle einen neuen ohne Rolle
-        const newUser: StoredUser = {
-          id: 'u-' + Date.now().toString(),
-          email,
-        };
-        await setItem(USER_KEY, newUser);
-        setUser(newUser);
       },
 
       async signOut() {
