@@ -280,37 +280,14 @@ export default function WorkerFeed() {
             {matchingJobs.map((job) => {
               const hasApplied = appsJobIds.has(job.id);
               
-              // Format date/time info based on job type
-              let timeDisplayParts: string[] = [];
-              
-              if (job.timeMode === 'fixed_time') {
-                const dateLabel = formatDateGerman(job.startAt);
-                const startTime = formatTime(job.startAt);
-                const endTime = formatTime(job.endAt);
-                
-                if (dateLabel) timeDisplayParts.push(dateLabel);
-                if (startTime && endTime) {
-                  timeDisplayParts.push(`${startTime}–${endTime}`);
-                } else if (startTime) {
-                  timeDisplayParts.push(startTime);
-                }
-                timeDisplayParts.push(formatTimeModeLabel(job.timeMode));
-              } else if (job.timeMode === 'hour_package') {
-                const dateLabel = formatDateGerman(job.startAt);
-                if (dateLabel) timeDisplayParts.push(dateLabel);
-                if (job.hours) {
-                  timeDisplayParts.push(`${job.hours} Stunden`);
-                }
-                timeDisplayParts.push(formatTimeModeLabel(job.timeMode));
-              } else if (job.timeMode === 'project') {
-                const dueLabel = formatDateGerman(job.dueAt);
-                if (dueLabel) {
-                  timeDisplayParts.push(`Bis ${dueLabel}`);
-                }
-                timeDisplayParts.push(formatTimeModeLabel(job.timeMode));
-              }
-              
-              const timeDisplay = timeDisplayParts.filter(Boolean).join(' · ');
+              // Format date/time info using centralized function
+              const timeDisplay = formatJobTimeDisplay(
+                job.startAt,
+                job.endAt,
+                job.timeMode,
+                job.hours,
+                job.dueAt
+              );
 
               return (
                 <View
