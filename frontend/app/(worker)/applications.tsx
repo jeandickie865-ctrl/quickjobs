@@ -269,21 +269,33 @@ export default function WorkerApplicationsScreen() {
 
               {/* Matched Info */}
               {isMatched && (
-                <View
-                  style={[
-                    styles.matchedInfo,
-                    {
-                      backgroundColor: colors.beige100,
-                      borderLeftColor: colors.black,
-                      padding: spacing.sm,
-                      marginTop: spacing.sm,
-                    },
-                  ]}
-                >
-                  <Text style={[styles.matchedText, { color: colors.black }]}>
-                    ✓ Du wurdest ausgewählt!{'\n'}
-                    Nutze die Kontaktdaten aus der Jobansicht.
-                  </Text>
+                <View style={{ marginTop: spacing.sm, gap: spacing.sm }}>
+                  <View
+                    style={[
+                      styles.matchedInfo,
+                      {
+                        backgroundColor: colors.beige100,
+                        borderLeftColor: colors.black,
+                        padding: spacing.sm,
+                      },
+                    ]}
+                  >
+                    <Text style={[styles.matchedText, { color: colors.black }]}>
+                      ✓ Du wurdest ausgewählt!{'\n'}
+                      Nutze den Chat, um Details zu besprechen.
+                    </Text>
+                  </View>
+                  
+                  <Button
+                    title="💬 Chat mit Arbeitgeber"
+                    variant="secondary"
+                    onPress={() =>
+                      router.push({
+                        pathname: '/chat/[applicationId]',
+                        params: { applicationId: app.id },
+                      })
+                    }
+                  />
                 </View>
               )}
 
