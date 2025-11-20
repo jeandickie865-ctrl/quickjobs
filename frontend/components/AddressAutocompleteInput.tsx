@@ -34,6 +34,18 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
       return;
     }
 
+    // Nur suchen, wenn wir mindestens Stadt oder PLZ haben
+    const hasLocationContext =
+      (postalCode && postalCode.trim().length > 0) ||
+      (city && city.trim().length > 0);
+
+    if (!hasLocationContext) {
+      // Keine Suche ohne Kontext → Dropdown bleibt leer
+      setSuggestions([]);
+      setShowDropdown(false);
+      return;
+    }
+
     let active = true;
     const timeout = setTimeout(async () => {
       try {
