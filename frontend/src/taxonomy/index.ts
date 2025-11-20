@@ -36,27 +36,46 @@ export function getCategory(key: CategoryKey): TaxonomyCategory | null {
 }
 
 export function listTagsByCategory(key: CategoryKey): Tag[] {
-  const cat = getCategory(key);
-  if (!cat) return [];
-  
-  // Combine activities and qualifications into a single Tag array
-  const tags: Tag[] = [
-    ...(cat.activities || []).map(t => ({ key: t.key, label: t.label, type: 'activity' as TagType })),
-    ...(cat.qualifications || []).map(t => ({ key: t.key, label: t.label, type: 'qualification' as TagType })),
-  ];
-  
-  console.log(`📋 Tags for category ${key}:`, tags.length);
-  return tags;
+  try {
+    const cat = getCategory(key);
+    if (!cat) {
+      console.warn(`⚠️ listTagsByCategory: Category not found for key "${key}"`);
+      return [];
+    }
+    
+    // Combine activities and qualifications into a single Tag array
+    const tags: Tag[] = [
+      ...(cat.activities || []).map(t => ({ key: t.key, label: t.label, type: 'activity' as TagType })),
+      ...(cat.qualifications || []).map(t => ({ key: t.key, label: t.label, type: 'qualification' as TagType })),
+    ];
+    
+    console.log(`📋 Tags for category ${key}:`, tags.length);
+    return tags;
+  } catch (error) {
+    console.error(`❌ Error in listTagsByCategory for "${key}":`, error);
+    return [];
+  }
 }
 
 export function groupTagsByType(key: CategoryKey): { activities: Tag[]; qualifications: Tag[] } {
-  const cat = getCategory(key);
-  if (!cat) return { activities: [], qualifications: [] };
-  
-  return {
-    activities: (cat.activities || []).map(t => ({ key: t.key, label: t.label, type: 'activity' as TagType })),
-    qualifications: (cat.qualifications || []).map(t => ({ key: t.key, label: t.label, type: 'qualification' as TagType })),
-  };
+  try {
+    const cat = getCategory(key);
+    if (!cat) {
+      console.warn(`⚠️ groupTagsByType: Category not found for key "${key}"`);
+      return { activities: [], qualifications: [] };
+    }
+    
+    const result = {
+      activities: (cat.activities || []).map(t => ({ key: t.key, label: t.label, type: 'activity' as TagType })),
+      qualifications: (cat.qualifications || []).map(t => ({ key: t.key, label: t.label, type: 'qualification' as TagType })),
+    };
+    
+    console.log(`📋 groupTagsByType for "${key}": ${result.activities.length} activities, ${result.qualifications.length} qualifications`);
+    return result;
+  } catch (error) {
+    console.error(`❌ Error in groupTagsByType for "${key}":`, error);
+    return { activities: [], qualifications: [] };
+  }
 }
 
 export function isTagAllowedForCategory(key: CategoryKey, tagKey: TagKey): boolean {
