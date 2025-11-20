@@ -404,14 +404,7 @@ export default function WorkerProfileScreen() {
       {/* Tags pro gewählter Kategorie */}
       {selectedCategories.map(catKey => {
         const groups = groupTagsByType(catKey as CategoryKey);
-        const hasAny =
-          groups.role.length ||
-          groups.qual.length ||
-          groups.license.length ||
-          groups.doc.length ||
-          groups.skill.length ||
-          groups.vehicle.length ||
-          groups.tool.length;
+        const hasAny = groups.activities.length > 0 || groups.qualifications.length > 0;
 
         if (!hasAny) return null;
 
@@ -421,11 +414,11 @@ export default function WorkerProfileScreen() {
               {categories.find(c => c.key === catKey)?.label}
             </Text>
 
-            {groups.role.length > 0 && (
+            {groups.activities.length > 0 && (
               <View style={{ gap: 6 }}>
                 <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>Tätigkeiten</Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {groups.role.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
+                  {groups.activities.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
                     <Chip
                       key={t.key}
                       label={t.label}
@@ -437,11 +430,11 @@ export default function WorkerProfileScreen() {
               </View>
             )}
 
-            {groups.qual.length > 0 && (
+            {groups.qualifications.length > 0 && (
               <View style={{ gap: 6 }}>
                 <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>Qualifikationen</Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {groups.qual.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
+                  {groups.qualifications.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
                     <Chip
                       key={t.key}
                       label={t.label}
