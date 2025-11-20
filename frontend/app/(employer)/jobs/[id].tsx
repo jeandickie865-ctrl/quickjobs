@@ -61,7 +61,9 @@ export default function JobDetailScreen() {
     (async () => {
       setIsLoadingApps(true);
       try {
+        console.log('📋 Loading applications for job', job.id);
         const apps = await getApplicationsForJob(job.id);
+        console.log('✅ Found applications', apps.length, apps);
         setApplications(apps);
         const withProfiles: { app: JobApplication; profile: WorkerProfile | null }[] = [];
         for (const app of apps) {
@@ -69,6 +71,7 @@ export default function JobDetailScreen() {
           withProfiles.push({ app, profile: p });
         }
         setApplicants(withProfiles);
+        console.log('👥 Applicants with profiles loaded', withProfiles.length);
         setAppsError(null);
       } catch (e) {
         console.error('Error loading applicants:', e);
