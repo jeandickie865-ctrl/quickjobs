@@ -6,7 +6,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
 import { getJobs } from '../../utils/jobStore';
-import { addApplication, getApplicationsForWorker } from '../../utils/applicationStore';
+import { applyForJob, getApplicationsForWorker } from '../../utils/applicationStore';
 import { jobMatchesWorker, jobMatchesWorkerWithDebug, MatchDebug } from '../../utils/matching';
 import { Job } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
