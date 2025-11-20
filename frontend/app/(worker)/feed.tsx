@@ -408,6 +408,29 @@ export default function WorkerFeed() {
           </View>
         )}
 
+        {/* Info: Akzeptierte Jobs sind unter Matches */}
+        {acceptedJobsCount > 0 && (
+          <View style={{
+            padding: spacing.md,
+            backgroundColor: colors.beige100,
+            borderRadius: 12,
+            borderLeftWidth: 3,
+            borderLeftColor: colors.black,
+          }}>
+            <Text style={{ color: colors.black, fontSize: 14, lineHeight: 20 }}>
+              🎉 <Text style={{ fontWeight: '700' }}>Du hast {acceptedJobsCount} {acceptedJobsCount === 1 ? 'Match' : 'Matches'}!</Text>
+              {'\n'}
+              Arbeitgeber haben deine Bewerbungen angenommen. Du findest sie unter{' '}
+              <Text
+                style={{ fontWeight: '700', textDecorationLine: 'underline' }}
+                onPress={() => router.push('/(worker)/matches')}
+              >
+                Matches
+              </Text>.
+            </Text>
+          </View>
+        )}
+
         <View style={{ height: spacing.xl }} />
       </ScrollView>
     </SafeAreaView>
