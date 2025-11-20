@@ -130,7 +130,7 @@ export default function WorkerFeed() {
     [jobs, profile]
   );
 
-  async function handleApply(jobId: string, employerId: string) {
+  async function handleApply(jobId: string, employerId: string | undefined) {
     if (!user) {
       console.log('❌ handleApply: no user');
       setError('Du bist nicht eingeloggt.');
@@ -143,12 +143,18 @@ export default function WorkerFeed() {
       return;
     }
 
+    if (!employerId) {
+      console.log('❌ handleApply: employerId is missing from job');
+      setError('Dieser Job hat keinen Arbeitgeber zugewiesen. Bitte lade die Seite neu.');
+      return;
+    }
+
     try {
       setIsApplyingJobId(jobId);
       console.log('🚀 handleApply: start', {
         jobId,
         workerId: user.id,
-        employerId: employerId ?? 'UNDEFINED',
+        employerId,
       });
 
       await applyForJob(jobId, user.id, employerId);
