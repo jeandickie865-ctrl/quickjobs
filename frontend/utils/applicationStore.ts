@@ -68,3 +68,26 @@ export async function updateApplicationStatus(id: string, status: ApplicationSta
   const next = apps.map(app => (app.id === id ? { ...app, status } : app));
   await saveApplications(next);
 }
+
+// Alias für addApplication mit erweiterten Logs
+export async function applyForJob(
+  jobId: string,
+  workerId: string,
+  employerId: string,
+): Promise<JobApplication> {
+  try {
+    console.log('🔍 applyForJob called', { jobId, workerId, employerId });
+
+    if (!employerId) {
+      console.log('❌ applyForJob: employerId fehlt beim Bewerben');
+      throw new Error('employerId fehlt beim Bewerben.');
+    }
+
+    const result = await addApplication(jobId, workerId, employerId);
+    console.log('✅ applyForJob: success', result);
+    return result;
+  } catch (e) {
+    console.log('❌ applyForJob: ERROR', e);
+    throw e;
+  }
+}
