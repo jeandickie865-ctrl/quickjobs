@@ -146,18 +146,22 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
             },
           ]}
         >
-          <FlatList
-            data={suggestions}
-            keyExtractor={(item, index) => `suggestion-${index}`}
-            renderItem={({ item }) => (
-              <TouchableOpacity
+          <ScrollView 
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled={true}
+            style={styles.scrollView}
+          >
+            {suggestions.map((item, index) => (
+              <Pressable
+                key={`suggestion-${index}`}
                 onPress={() => handleSuggestionPress(item)}
-                style={[
+                style={({ pressed }) => [
                   styles.suggestionItem,
                   {
                     paddingHorizontal: spacing.md,
                     paddingVertical: spacing.sm,
                     borderBottomColor: colors.gray100,
+                    backgroundColor: pressed ? colors.gray50 : 'transparent',
                   },
                 ]}
               >
@@ -167,12 +171,9 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
                 <Text style={[styles.suggestionSecondary, { color: colors.gray600 }]}>
                   {[item.postalCode, item.city].filter(Boolean).join(' ')}
                 </Text>
-              </TouchableOpacity>
-            )}
-            scrollEnabled={true}
-            nestedScrollEnabled={true}
-            style={styles.flatList}
-          />
+              </Pressable>
+            ))}
+          </ScrollView>
         </View>
       )}
     </View>
