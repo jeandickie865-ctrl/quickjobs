@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button';
 
 export default function AuthStart() {
   const { colors, spacing } = useTheme();
+  const router = useRouter();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
@@ -34,6 +35,26 @@ export default function AuthStart() {
           <Link href="/auth/login" asChild>
             <Button title="Login" onPress={() => {}} variant="secondary" />
           </Link>
+
+          {/* Rechtliche Links */}
+          <View style={{ marginTop: spacing.xl, alignItems: 'center', gap: spacing.sm }}>
+            <Text style={{ fontSize: 12, color: colors.gray600, textAlign: 'center', lineHeight: 18 }}>
+              Mit der Nutzung der App erkennst du unsere AGB{'\n'}und die Datenschutzerklärung an.
+            </Text>
+            <View style={{ flexDirection: 'row', gap: spacing.md }}>
+              <Pressable onPress={() => router.push('/legal/agb')}>
+                <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
+                  AGB lesen
+                </Text>
+              </Pressable>
+              <Text style={{ fontSize: 12, color: colors.gray400 }}>•</Text>
+              <Pressable onPress={() => router.push('/legal/privacy')}>
+                <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
+                  Datenschutz lesen
+                </Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
       </View>
     </SafeAreaView>
