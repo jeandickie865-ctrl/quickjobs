@@ -90,6 +90,23 @@ export default function WorkerFeed() {
     loadData();
   };
 
+  // Prüfen, ob Worker sich für einen Job bewerben kann
+  const canApplyToJob = (job: Job, workerProfile: WorkerProfile | null): boolean => {
+    if (!workerProfile) return false;
+
+    // Spezialfall: Sicherheit - Pflicht-Tags prüfen
+    if (job.category.toLowerCase() === 'sicherheit') {
+      const securityRequiredTags = ['34a', 'bewacher-id', 'führungszeugnis'];
+      const workerTags = new Set(workerProfile.selectedTags.map(t => t.toLowerCase()));
+      
+      // Alle Pflicht-Tags müssen vorhanden sein
+      return securityRequiredTags.every(tag => workerTags.has(tag));
+    }
+
+    // Für andere Kategorien: Immer erlaubt
+    return true;
+  };
+
   // Passende Jobs - mit Matching-Filter
   const matchingJobs = useMemo(
     () =>
