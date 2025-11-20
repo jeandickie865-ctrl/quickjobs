@@ -39,18 +39,24 @@ export default function AuthStart() {
           {/* Rechtliche Links */}
           <View style={{ marginTop: spacing.xl, alignItems: 'center', gap: spacing.sm }}>
             <Text style={{ fontSize: 12, color: colors.gray600, textAlign: 'center', lineHeight: 18 }}>
-              Mit der Nutzung der App erkennst du unsere AGB{'\n'}und die Datenschutzerklärung an.
+              Mit deiner Nutzung akzeptierst du unsere AGB,{'\n'}die Datenschutzerklärung und die Grundsätze.
             </Text>
-            <View style={{ flexDirection: 'row', gap: spacing.md }}>
+            <View style={{ flexDirection: 'row', gap: spacing.md, flexWrap: 'wrap', justifyContent: 'center' }}>
               <Pressable onPress={() => router.push('/legal/agb')}>
                 <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
-                  AGB lesen
+                  AGB
                 </Text>
               </Pressable>
               <Text style={{ fontSize: 12, color: colors.gray400 }}>•</Text>
               <Pressable onPress={() => router.push('/legal/privacy')}>
                 <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
-                  Datenschutz lesen
+                  Datenschutz
+                </Text>
+              </Pressable>
+              <Text style={{ fontSize: 12, color: colors.gray400 }}>•</Text>
+              <Pressable onPress={() => router.push('/legal/guidelines')}>
+                <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
+                  Grundsätze
                 </Text>
               </Pressable>
             </View>
