@@ -461,22 +461,6 @@ export default function WorkerProfileScreen() {
                 </View>
               </View>
             )}
-
-            {groups.license.length > 0 && (
-              <View style={{ gap: 6 }}>
-                <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>Lizenzen</Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {groups.license.sort((a, b) => a.label.localeCompare(b.label)).map(t => (
-                    <Chip
-                      key={t.key}
-                      label={t.label}
-                      selected={selectedTagsSet.has(t.key)}
-                      onPress={() => toggleTag(catKey as CategoryKey, t)}
-                    />
-                  ))}
-                </View>
-              </View>
-            )}
           </View>
         );
         } catch (error) {
