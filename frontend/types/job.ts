@@ -34,6 +34,7 @@ export type Job = {
   required_any_tags: string[]; // mindestens einer davon sollte vorhanden sein
 
   status: 'draft' | 'open' | 'matched' | 'done' | 'canceled';
+  matchedWorkerId?: string;  // Set when an application is accepted
 
   createdAt: string;
 };
