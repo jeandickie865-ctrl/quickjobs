@@ -30,6 +30,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const USER_KEY = '@shiftmatch:user';
+const USERS_DATABASE_KEY = '@shiftmatch:users_database';
 const CREDENTIALS_KEY = '@shiftmatch:auth_users';
 
 type StoredUser = {
@@ -44,6 +45,10 @@ type StoredCredentials = {
   password: string;
 }[];
 
+type UsersDatabase = {
+  [email: string]: StoredUser;
+};
+
 async function loadCredentials(): Promise<StoredCredentials> {
   const data = await getItem<StoredCredentials>(CREDENTIALS_KEY);
   return data ?? [];
@@ -51,6 +56,15 @@ async function loadCredentials(): Promise<StoredCredentials> {
 
 async function saveCredentials(creds: StoredCredentials): Promise<void> {
   await setItem(CREDENTIALS_KEY, creds);
+}
+
+async function loadUsersDatabase(): Promise<UsersDatabase> {
+  const data = await getItem<UsersDatabase>(USERS_DATABASE_KEY);
+  return data ?? {};
+}
+
+async function saveUsersDatabase(db: UsersDatabase): Promise<void> {
+  await setItem(USERS_DATABASE_KEY, db);
 }
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
