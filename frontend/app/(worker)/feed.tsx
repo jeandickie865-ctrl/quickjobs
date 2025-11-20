@@ -134,13 +134,15 @@ export default function WorkerFeed() {
     if (!profile || !user) return;
     try {
       setIsApplyingJobId(jobId);
+      console.log('🚀 Worker applies for job', { jobId, workerId: user.id });
       await addApplication(jobId, user.id);
       const updated = new Set(appsJobIds);
       updated.add(jobId);
       setAppsJobIds(updated);
       setError(null);
+      console.log('✅ Application submitted successfully');
     } catch (e) {
-      console.error('Error applying:', e);
+      console.error('❌ Error applying:', e);
       setError('Bewerbung konnte nicht gespeichert werden.');
     } finally {
       setIsApplyingJobId(null);
