@@ -353,7 +353,7 @@ export default function WorkerFeed() {
           </View>
         ) : (
           <View style={{ gap: spacing.sm }}>
-            {matchingJobs.map((job) => {
+            {activeJobs.map((job) => {
               const hasApplied = appsJobIds.has(job.id);
               
               // Format date/time info using centralized function
@@ -364,6 +364,12 @@ export default function WorkerFeed() {
                 job.hours,
                 job.dueAt
               );
+
+              // Prüfen, ob Job zum Profil passt (für Chip-Anzeige)
+              const matchesProfile = profile ? jobMatchesWorker(job, profile) : false;
+              
+              // Prüfen, ob Worker sich bewerben kann (Pflicht-Qualifikationen)
+              const canApply = canApplyToJob(job, profile);
 
               return (
                 <View
@@ -380,6 +386,25 @@ export default function WorkerFeed() {
                   <Text style={{ fontWeight: '800', fontSize: 18, color: colors.black }}>
                     {job.title}
                   </Text>
+
+                  {/* Profil-Match-Chip (nur im "Alle Jobs" Tab) */}
+                  {activeTab === 'all' && (
+                    <View style={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 5,
+                      borderRadius: 8,
+                      alignSelf: 'flex-start',
+                      backgroundColor: matchesProfile ? colors.beige200 : colors.gray100,
+                    }}>
+                      <Text style={{
+                        fontSize: 11,
+                        fontWeight: '600',
+                        color: matchesProfile ? colors.black : colors.gray600,
+                      }}>
+                        {matchesProfile ? '✓ passt zu deinem Profil' : '○ außerhalb deines Profils'}
+                      </Text>
+                    </View>
+                  )}
                   <View style={{ gap: 4 }}>
                     <Text style={{ color: colors.gray700, fontSize: 14 }}>
                       📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
