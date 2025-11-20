@@ -259,19 +259,12 @@ export default function CreateJob() {
         {category && (() => {
           const groups = groupTagsByType(category as CategoryKey);
           
-          // Separate mandatory tags from vehicle tags
-          const mandatoryTags = [
-            ...groups.role,
-            ...groups.qual,
-            ...groups.license,
-            ...groups.doc,
-            ...groups.skill,
-            ...groups.tool,
+          const allTags = [
+            ...groups.activities,
+            ...groups.qualifications,
           ];
           
-          const vehicleTags = groups.vehicle;
-          
-          if (mandatoryTags.length === 0 && vehicleTags.length === 0) return null;
+          if (allTags.length === 0) return null;
           
           return (
             <View style={{ 
@@ -285,65 +278,98 @@ export default function CreateJob() {
               <Text style={{ color: colors.black, fontWeight: '600' }}>
                 Anforderungen (optional)
               </Text>
+              <Text style={{ color: colors.gray600, fontSize: 13 }}>
+                Wähle Anforderungen aus. Klicke einmal für "mindestens eine erforderlich" (grau), zweimal für "Pflicht" (schwarz).
+              </Text>
               
-              {/* Pflicht-Tags */}
-              {mandatoryTags.length > 0 && (
+              {/* Tätigkeiten */}
+              {groups.activities.length > 0 && (
                 <View style={{ gap: 8 }}>
-                  <Text style={{ color: colors.gray700, fontSize: 13 }}>
-                    Diese Tags sind erforderlich:
+                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
+                    Tätigkeiten
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {mandatoryTags.map(tag => (
-                      <Chip
-                        key={tag.key}
-                        label={tag.label}
-                        selected={requiredAllSet.has(tag.key)}
-                        onPress={() => {
-                          const nextAll = new Set(requiredAllSet);
-                          if (nextAll.has(tag.key)) {
-                            nextAll.delete(tag.key);
-                          } else {
-                            nextAll.add(tag.key);
-                            // Ensure tag is not in vehicle set
-                            const nextAny = new Set(requiredAnySet);
-                            nextAny.delete(tag.key);
-                            setRequiredAnySet(nextAny);
-                          }
-                          setRequiredAllSet(nextAll);
-                        }}
-                      />
-                    ))}
+                    {groups.activities.sort((a, b) => a.localeCompare(b)).map(tagKey => {
+                      const isRequiredAll = requiredAllSet.has(tagKey);
+                      const isRequiredAny = requiredAnySet.has(tagKey);
+                      
+                      return (
+                        <Chip
+                          key={tagKey}
+                          label={tagKey}
+                          selected={isRequiredAll || isRequiredAny}
+                          variant={isRequiredAll ? 'primary' : isRequiredAny ? 'secondary' : 'default'}
+                          onPress={() => {
+                            if (isRequiredAll) {
+                              // Von "Pflicht" zu "nicht ausgewählt"
+                              const nextAll = new Set(requiredAllSet);
+                              nextAll.delete(tagKey);
+                              setRequiredAllSet(nextAll);
+                            } else if (isRequiredAny) {
+                              // Von "mindestens eine" zu "Pflicht"
+                              const nextAny = new Set(requiredAnySet);
+                              nextAny.delete(tagKey);
+                              setRequiredAnySet(nextAny);
+                              
+                              const nextAll = new Set(requiredAllSet);
+                              nextAll.add(tagKey);
+                              setRequiredAllSet(nextAll);
+                            } else {
+                              // Von "nicht ausgewählt" zu "mindestens eine"
+                              const nextAny = new Set(requiredAnySet);
+                              nextAny.add(tagKey);
+                              setRequiredAnySet(nextAny);
+                            }
+                          }}
+                        />
+                      );
+                    })}
                   </View>
                 </View>
               )}
 
-              {/* Fahrzeug-Tags */}
-              {vehicleTags.length > 0 && (
+              {/* Qualifikationen */}
+              {groups.qualifications.length > 0 && (
                 <View style={{ gap: 8 }}>
-                  <Text style={{ color: colors.gray700, fontSize: 13 }}>
-                    Akzeptierte Fahrzeuge:
+                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
+                    Qualifikationen
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {vehicleTags.map(tag => (
-                      <Chip
-                        key={tag.key}
-                        label={tag.label}
-                        selected={requiredAnySet.has(tag.key)}
-                        onPress={() => {
-                          const nextAny = new Set(requiredAnySet);
-                          if (nextAny.has(tag.key)) {
-                            nextAny.delete(tag.key);
-                          } else {
-                            nextAny.add(tag.key);
-                            // Ensure tag is not in mandatory set
-                            const nextAll = new Set(requiredAllSet);
-                            nextAll.delete(tag.key);
-                            setRequiredAllSet(nextAll);
-                          }
-                          setRequiredAnySet(nextAny);
-                        }}
-                      />
-                    ))}
+                    {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => {
+                      const isRequiredAll = requiredAllSet.has(tagKey);
+                      const isRequiredAny = requiredAnySet.has(tagKey);
+                      
+                      return (
+                        <Chip
+                          key={tagKey}
+                          label={tagKey}
+                          selected={isRequiredAll || isRequiredAny}
+                          variant={isRequiredAll ? 'primary' : isRequiredAny ? 'secondary' : 'default'}
+                          onPress={() => {
+                            if (isRequiredAll) {
+                              // Von "Pflicht" zu "nicht ausgewählt"
+                              const nextAll = new Set(requiredAllSet);
+                              nextAll.delete(tagKey);
+                              setRequiredAllSet(nextAll);
+                            } else if (isRequiredAny) {
+                              // Von "mindestens eine" zu "Pflicht"
+                              const nextAny = new Set(requiredAnySet);
+                              nextAny.delete(tagKey);
+                              setRequiredAnySet(nextAny);
+                              
+                              const nextAll = new Set(requiredAllSet);
+                              nextAll.add(tagKey);
+                              setRequiredAllSet(nextAll);
+                            } else {
+                              // Von "nicht ausgewählt" zu "mindestens eine"
+                              const nextAny = new Set(requiredAnySet);
+                              nextAny.add(tagKey);
+                              setRequiredAnySet(nextAny);
+                            }
+                          }}
+                        />
+                      );
+                    })}
                   </View>
                 </View>
               )}
