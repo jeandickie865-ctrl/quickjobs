@@ -83,7 +83,21 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
 
   const handleSuggestionPress = (suggestion: AddressSuggestion) => {
     console.log('📍 Suggestion selected:', suggestion);
-    onSuggestionSelected(suggestion);
+    
+    // NUR PLZ, Ort und Koordinaten setzen - Straße NICHT überschreiben!
+    if (suggestion.postalCode && onPostalCodeChange) {
+      onPostalCodeChange(suggestion.postalCode);
+    }
+    if (suggestion.city && onCityChange) {
+      onCityChange(suggestion.city);
+    }
+    if (typeof suggestion.lat === 'number' && onLatChange) {
+      onLatChange(suggestion.lat);
+    }
+    if (typeof suggestion.lon === 'number' && onLonChange) {
+      onLonChange(suggestion.lon);
+    }
+    
     setShowDropdown(false);
     setSuggestions([]);
   };
