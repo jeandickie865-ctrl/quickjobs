@@ -102,14 +102,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           throw new Error('E-Mail oder Passwort ist falsch');
         }
 
-        // Wenn es schon einen gespeicherten User mit Rolle gibt, nutze ihn
+        // Lade den gespeicherten User für diese Email
         const stored = await getItem<StoredUser>(USER_KEY);
+        
+        // Wenn gespeicherter User mit dieser Email existiert, nutze ihn (mit Rolle falls vorhanden)
         if (stored && stored.email.toLowerCase() === email.toLowerCase()) {
           setUser(stored);
           return;
         }
 
-        // Sonst neuen User ohne Rolle anlegen
+        // Falls kein gespeicherter User existiert, erstelle einen neuen ohne Rolle
         const newUser: StoredUser = {
           id: 'u-' + Date.now().toString(),
           email,
