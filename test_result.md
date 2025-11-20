@@ -177,6 +177,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Job Creation Screen aktualisiert um Jobs tatsächlich zu speichern"
+      - working: true
+        agent: "main"
+        comment: "Taxonomie-Fix: Komplette Überarbeitung der Tag-Auswahl-Logik. Alte Strukturen (role, qual, license, doc, skill, tool, vehicle) entfernt. Neue einfache Struktur: activities und qualifications. Lat/Lon States hinzugefügt. cat.label → cat.title korrigiert."
 
   - task: "Matching Logic"
     implemented: true
