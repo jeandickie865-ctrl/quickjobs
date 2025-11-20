@@ -528,21 +528,23 @@ export default function CreateJob() {
         {/* Address */}
         <View style={{ gap: 6 }}>
           <Text style={{ color: colors.black, fontWeight: '600' }}>Adresse</Text>
+          <Text style={{ color: colors.gray600, fontSize: 13 }}>
+            Tippe mindestens 3 Buchstaben für Vorschläge.
+          </Text>
           
-          <TextInput
-            value={address.street || ''}
-            onChangeText={text => setAddress({ ...address, street: text })}
-            placeholder="Straße und Hausnummer"
-            placeholderTextColor={colors.gray400}
-            style={{
-              borderWidth: 1,
-              borderColor: colors.gray200,
-              borderRadius: 12,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              backgroundColor: colors.white,
-              color: colors.black
+          <AddressAutocompleteInput
+            street={address.street || ''}
+            postalCode={address.postalCode}
+            city={address.city}
+            onStreetChange={(value) => setAddress({ ...address, street: value })}
+            onSuggestionSelected={(sugg) => {
+              setAddress({
+                street: sugg.street || address.street || '',
+                postalCode: address.postalCode || sugg.postalCode,
+                city: address.city || sugg.city,
+              });
             }}
+            placeholder="Straße und Hausnummer"
           />
           
           <View style={{ flexDirection: 'row', gap: 8 }}>
