@@ -169,10 +169,12 @@ export default function CreateJob() {
 
     try {
       setIsSaving(true);
+      console.log('📝 createJob: newJob', { id: job.id, title: job.title, employerId: job.employerId });
       await addJob(job);
+      console.log('✅ createJob: Job saved successfully');
       router.replace('/(employer)');
     } catch (e) {
-      console.log('Job publish error:', e);
+      console.log('❌ createJob: Job publish error:', e);
       setError('Job konnte nicht gespeichert werden.');
     } finally {
       setIsSaving(false);
