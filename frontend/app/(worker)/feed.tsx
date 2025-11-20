@@ -470,6 +470,24 @@ export default function WorkerFeed() {
           </View>
         )}
 
+        {/* Hinweis: Jobs außerhalb des Profils (nur im "Alle Jobs" Tab) */}
+        {activeTab === 'all' && activeJobs.length > 0 && profile && (() => {
+          const jobsOutsideProfile = activeJobs.filter(job => !jobMatchesWorker(job, profile));
+          return jobsOutsideProfile.length > 0;
+        })() && (
+          <View style={{
+            padding: spacing.md,
+            backgroundColor: '#fef3cd',
+            borderRadius: 12,
+            borderLeftWidth: 3,
+            borderLeftColor: '#f0ad4e',
+          }}>
+            <Text style={{ color: '#8a6d3b', fontSize: 13, lineHeight: 18 }}>
+              💡 Einige Jobs liegen außerhalb deines Profils. Bewirb dich nur, wenn du die Tätigkeit sicher ausführen kannst.
+            </Text>
+          </View>
+        )}
+
         {/* Info: Akzeptierte Jobs sind unter Matches */}
         {acceptedJobsCount > 0 && (
           <View style={{
