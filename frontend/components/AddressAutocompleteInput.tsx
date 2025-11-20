@@ -21,7 +21,10 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   postalCode,
   city,
   onStreetChange,
-  onSuggestionSelected,
+  onPostalCodeChange,
+  onCityChange,
+  onLatChange,
+  onLonChange,
   placeholder = 'Straße und Hausnummer',
   disabled = false,
 }) => {
