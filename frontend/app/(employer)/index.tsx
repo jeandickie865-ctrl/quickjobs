@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button';
 import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { euro } from '../../utils/pricing';
+import { formatAddress } from '../../types/address';
 
 export default function EmployerDashboard() {
   const { colors, spacing } = useTheme();
