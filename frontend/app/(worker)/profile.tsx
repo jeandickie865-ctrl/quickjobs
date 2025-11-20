@@ -21,8 +21,8 @@ function createEmptyProfile(userId: string): WorkerProfile {
     selectedTags: [],
     radiusKm: DEFAULT_RADIUS_KM,
     homeAddress: {},  // Leeres Address-Objekt statt leerer String
-    homeLat: 0,
-    homeLon: 0,
+    homeLat: undefined,  // Keine Dummy-Koordinaten
+    homeLon: undefined,  // Nur echte Werte
     profilePhotoUri: undefined,
     documents: [],
   };
