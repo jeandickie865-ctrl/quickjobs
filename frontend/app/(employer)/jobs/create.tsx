@@ -279,97 +279,95 @@ export default function CreateJob() {
                 Anforderungen (optional)
               </Text>
               <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                Wähle Anforderungen aus. Klicke einmal für "mindestens eine erforderlich" (grau), zweimal für "Pflicht" (schwarz).
+                Wähle Qualifikationen und Tätigkeiten, die für diesen Job erforderlich sind.
               </Text>
               
               {/* Tätigkeiten */}
               {groups.activities.length > 0 && (
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Tätigkeiten
+                    Erforderliche Tätigkeiten (Pflicht für alle)
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {groups.activities.sort((a, b) => a.localeCompare(b)).map(tagKey => {
-                      const isRequiredAll = requiredAllSet.has(tagKey);
-                      const isRequiredAny = requiredAnySet.has(tagKey);
-                      
-                      return (
-                        <Chip
-                          key={tagKey}
-                          label={tagKey}
-                          selected={isRequiredAll || isRequiredAny}
-                          variant={isRequiredAll ? 'primary' : isRequiredAny ? 'secondary' : 'default'}
-                          onPress={() => {
-                            if (isRequiredAll) {
-                              // Von "Pflicht" zu "nicht ausgewählt"
-                              const nextAll = new Set(requiredAllSet);
-                              nextAll.delete(tagKey);
-                              setRequiredAllSet(nextAll);
-                            } else if (isRequiredAny) {
-                              // Von "mindestens eine" zu "Pflicht"
-                              const nextAny = new Set(requiredAnySet);
-                              nextAny.delete(tagKey);
-                              setRequiredAnySet(nextAny);
-                              
-                              const nextAll = new Set(requiredAllSet);
-                              nextAll.add(tagKey);
-                              setRequiredAllSet(nextAll);
-                            } else {
-                              // Von "nicht ausgewählt" zu "mindestens eine"
-                              const nextAny = new Set(requiredAnySet);
-                              nextAny.add(tagKey);
-                              setRequiredAnySet(nextAny);
-                            }
-                          }}
-                        />
-                      );
-                    })}
+                    {groups.activities.sort((a, b) => a.localeCompare(b)).map(tagKey => (
+                      <Chip
+                        key={tagKey}
+                        label={tagKey}
+                        selected={requiredAllSet.has(tagKey)}
+                        onPress={() => {
+                          const nextAll = new Set(requiredAllSet);
+                          if (nextAll.has(tagKey)) {
+                            nextAll.delete(tagKey);
+                          } else {
+                            nextAll.add(tagKey);
+                          }
+                          setRequiredAllSet(nextAll);
+                        }}
+                      />
+                    ))}
                   </View>
                 </View>
               )}
 
-              {/* Qualifikationen */}
+              {/* Qualifikationen - Required All */}
               {groups.qualifications.length > 0 && (
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Qualifikationen
+                    Erforderliche Qualifikationen (Pflicht für alle)
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => {
-                      const isRequiredAll = requiredAllSet.has(tagKey);
-                      const isRequiredAny = requiredAnySet.has(tagKey);
-                      
-                      return (
-                        <Chip
-                          key={tagKey}
-                          label={tagKey}
-                          selected={isRequiredAll || isRequiredAny}
-                          variant={isRequiredAll ? 'primary' : isRequiredAny ? 'secondary' : 'default'}
-                          onPress={() => {
-                            if (isRequiredAll) {
-                              // Von "Pflicht" zu "nicht ausgewählt"
-                              const nextAll = new Set(requiredAllSet);
-                              nextAll.delete(tagKey);
-                              setRequiredAllSet(nextAll);
-                            } else if (isRequiredAny) {
-                              // Von "mindestens eine" zu "Pflicht"
-                              const nextAny = new Set(requiredAnySet);
-                              nextAny.delete(tagKey);
-                              setRequiredAnySet(nextAny);
-                              
-                              const nextAll = new Set(requiredAllSet);
-                              nextAll.add(tagKey);
-                              setRequiredAllSet(nextAll);
-                            } else {
-                              // Von "nicht ausgewählt" zu "mindestens eine"
-                              const nextAny = new Set(requiredAnySet);
-                              nextAny.add(tagKey);
-                              setRequiredAnySet(nextAny);
-                            }
-                          }}
-                        />
-                      );
-                    })}
+                    {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => (
+                      <Chip
+                        key={tagKey}
+                        label={tagKey}
+                        selected={requiredAllSet.has(tagKey)}
+                        onPress={() => {
+                          const nextAll = new Set(requiredAllSet);
+                          if (nextAll.has(tagKey)) {
+                            nextAll.delete(tagKey);
+                          } else {
+                            nextAll.add(tagKey);
+                            // Remove from "any" if it was there
+                            const nextAny = new Set(requiredAnySet);
+                            nextAny.delete(tagKey);
+                            setRequiredAnySet(nextAny);
+                          }
+                          setRequiredAllSet(nextAll);
+                        }}
+                      />
+                    ))}
+                  </View>
+                </View>
+              )}
+
+              {/* Qualifikationen - Required Any (mindestens eine) */}
+              {groups.qualifications.length > 0 && (
+                <View style={{ gap: 8 }}>
+                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
+                    Alternative Qualifikationen (mindestens eine erforderlich)
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                    {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => (
+                      <Chip
+                        key={`any-${tagKey}`}
+                        label={tagKey}
+                        selected={requiredAnySet.has(tagKey)}
+                        tone="outline"
+                        onPress={() => {
+                          const nextAny = new Set(requiredAnySet);
+                          if (nextAny.has(tagKey)) {
+                            nextAny.delete(tagKey);
+                          } else {
+                            nextAny.add(tagKey);
+                            // Remove from "all" if it was there
+                            const nextAll = new Set(requiredAllSet);
+                            nextAll.delete(tagKey);
+                            setRequiredAllSet(nextAll);
+                          }
+                          setRequiredAnySet(nextAny);
+                        }}
+                      />
+                    ))}
                   </View>
                 </View>
               )}
