@@ -99,6 +99,10 @@ export default function WorkerFeed() {
       const jobIdsSet = new Set(applications.map(app => app.jobId));
       setAppsJobIds(jobIdsSet);
 
+      // Count accepted applications for info box
+      const acceptedApps = applications.filter(app => app.status === 'accepted');
+      setAcceptedJobsCount(acceptedApps.length);
+
       setError(null);
     } catch (e) {
       console.error('Error loading feed:', e);
