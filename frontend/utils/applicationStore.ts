@@ -91,3 +91,33 @@ export async function applyForJob(
     throw e;
   }
 }
+
+// Set employer legal confirmation for a match
+export async function setEmployerLegalConfirmation(applicationId: string, confirmed: boolean): Promise<void> {
+  const apps = await loadApplications();
+  const next = apps.map(app => 
+    app.id === applicationId 
+      ? { ...app, employerConfirmedLegal: confirmed } 
+      : app
+  );
+  await saveApplications(next);
+  console.log('✅ Employer legal confirmation set:', { applicationId, confirmed });
+}
+
+// Set worker legal confirmation for a match
+export async function setWorkerLegalConfirmation(applicationId: string, confirmed: boolean): Promise<void> {
+  const apps = await loadApplications();
+  const next = apps.map(app => 
+    app.id === applicationId 
+      ? { ...app, workerConfirmedLegal: confirmed } 
+      : app
+  );
+  await saveApplications(next);
+  console.log('✅ Worker legal confirmation set:', { applicationId, confirmed });
+}
+
+// Get a single application by ID
+export async function getApplicationById(applicationId: string): Promise<JobApplication | null> {
+  const apps = await loadApplications();
+  return apps.find(app => app.id === applicationId) || null;
+}
