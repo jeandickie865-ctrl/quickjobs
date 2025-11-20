@@ -159,6 +159,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           role,
           accountType: user.accountType,
         };
+        
+        // Speichere in der User-Datenbank
+        const usersDb = await loadUsersDatabase();
+        usersDb[user.email.toLowerCase()] = updated;
+        await saveUsersDatabase(usersDb);
+        
+        // Setze als aktuellen User
         await setItem(USER_KEY, updated);
         setUser(updated);
       },
