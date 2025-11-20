@@ -83,8 +83,22 @@ export default function JobDetailScreen() {
     if (!job) return;
     try {
       setIsAcceptingId(appId);
+      
+      // Find the accepted application to get workerId
+      const acceptedApp = applications.find(a => a.id === appId);
+      if (!acceptedApp) return;
+      
+      console.log('✅ Accepting application', { appId, workerId: acceptedApp.workerId, jobId: job.id });
+      
       await acceptApplication(job.id, appId);
-      await updateJob(job.id, { status: 'matched' });
+      await updateJob(job.id, { 
+        status: 'matched',
+        matchedWorkerId: acceptedApp.workerId  // Set matched worker for chat
+      });
+      
+      // Reload job to reflect changes
+      const updatedJob = await getJobById(job.id);
+      if (updatedJob) setJob(updatedJob);
       
       // Reload applications
       const apps = await getApplicationsForJob(job.id);
