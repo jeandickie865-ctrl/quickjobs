@@ -90,6 +90,7 @@ export default function WorkerFeed() {
     loadData();
   };
 
+  // Passende Jobs - mit Matching-Filter
   const matchingJobs = useMemo(
     () =>
       profile
@@ -100,6 +101,22 @@ export default function WorkerFeed() {
         : [],
     [jobs, profile]
   );
+
+  // Alle Jobs im Umkreis - nur Status-Filter, kein Matching
+  const allJobsInRadius = useMemo(
+    () =>
+      profile
+        ? jobs
+            .filter(j => j.status === 'open')
+            // Hier könnte später Radius-Filter hinzugefügt werden
+            // .filter(j => jobWithinRadius(j, profile))
+            .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))
+        : [],
+    [jobs, profile]
+  );
+
+  // Aktive Job-Liste basierend auf Tab
+  const activeJobs = activeTab === 'matching' ? matchingJobs : allJobsInRadius;
 
   async function handleApply(jobId: string, employerId: string | undefined) {
     if (!user) {
