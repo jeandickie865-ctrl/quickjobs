@@ -165,32 +165,14 @@ export default function WorkerMatchesScreen() {
         ) : (
           <View style={{ gap: spacing.sm }}>
             {matches.map(({ job, application }) => {
-              // Format time display
-              let timeDisplayParts: string[] = [];
-              
-              if (job.timeMode === 'fixed_time') {
-                const dateLabel = formatDateGerman(job.startAt);
-                const startTime = formatTime(job.startAt);
-                const endTime = formatTime(job.endAt);
-                
-                if (dateLabel) timeDisplayParts.push(dateLabel);
-                if (startTime && endTime) {
-                  timeDisplayParts.push(`${startTime}–${endTime}`);
-                }
-              } else if (job.timeMode === 'hour_package') {
-                const dateLabel = formatDateGerman(job.startAt);
-                if (dateLabel) timeDisplayParts.push(dateLabel);
-                if (job.hours) {
-                  timeDisplayParts.push(`${job.hours} Stunden`);
-                }
-              } else if (job.timeMode === 'project') {
-                const dueLabel = formatDateGerman(job.dueAt);
-                if (dueLabel) {
-                  timeDisplayParts.push(`Bis ${dueLabel}`);
-                }
-              }
-              
-              const timeDisplay = timeDisplayParts.filter(Boolean).join(' · ');
+              // Format time display using centralized function
+              const timeDisplay = formatJobTimeDisplay(
+                job.startAt,
+                job.endAt,
+                job.timeMode,
+                job.hours,
+                job.dueAt
+              );
 
               return (
                 <View
