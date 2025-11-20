@@ -403,10 +403,18 @@ export default function WorkerProfileScreen() {
 
       {/* Tags pro gewählter Kategorie */}
       {selectedCategories.map(catKey => {
-        const groups = groupTagsByType(catKey as CategoryKey);
-        const hasAny = groups.activities.length > 0 || groups.qualifications.length > 0;
+        try {
+          const groups = groupTagsByType(catKey as CategoryKey);
+          
+          // Safety check
+          if (!groups || (!groups.activities && !groups.qualifications)) {
+            console.warn(`⚠️ No groups returned for category: ${catKey}`);
+            return null;
+          }
+          
+          const hasAny = groups.activities.length > 0 || groups.qualifications.length > 0;
 
-        if (!hasAny) return null;
+          if (!hasAny) return null;
 
         return (
           <View key={catKey} style={{ borderWidth: 1, borderColor: colors.gray200, borderRadius: 12, padding: spacing.sm, gap: 8, backgroundColor: colors.white }}>
