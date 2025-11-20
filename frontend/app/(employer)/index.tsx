@@ -111,7 +111,7 @@ export default function EmployerDashboard() {
 
                 <View style={{ flexDirection: 'row', gap: 16 }}>
                   <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                    📍 {job.address}
+                    📍 {formatAddress(job.address) || 'Keine Adresse'}
                   </Text>
                 </View>
 
