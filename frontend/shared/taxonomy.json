@@ -1,191 +1,248 @@
 {
-  "version": 2,
+  "version": 3,
   "radiusStepsKm": [5, 15, 20, 50, 100],
   "categories": [
     {
-      "key": "sicherheit",
-      "label": "Sicherheit",
-      "tags": [
-        { "key": "sicherheit.rolle_bewachung", "label": "Bewachung", "type": "role" },
-        { "key": "sicherheit.rolle_kaufhausdetektiv", "label": "Kaufhausdetektiv", "type": "role" },
-        { "key": "sicherheit.rolle_doorman", "label": "Doorman", "type": "role" },
-        { "key": "sicherheit.rolle_event_security", "label": "Event Security", "type": "role" },
-        { "key": "sicherheit.rolle_revierdienst", "label": "Revierdienst", "type": "role" },
-        { "key": "sicherheit.rolle_brandsicherheitswache", "label": "Brandsicherheitswache", "type": "role" },
-        { "key": "sicherheit.sachkunde_34a", "label": "§34a Sachkunde", "type": "qual" },
-        { "key": "sicherheit.unterrichtung_34a", "label": "§34a Unterrichtung", "type": "qual" },
-        { "key": "sicherheit.bewacher_id", "label": "Bewacher-ID", "type": "doc" },
-        { "key": "sicherheit.fuehrungszeugnis", "label": "Führungszeugnis", "type": "doc" }
-      ]
-    },
-    {
-      "key": "gastro",
-      "label": "Gastro",
-      "tags": [
-        { "key": "gastro.spueler", "label": "Spüler", "type": "role" },
-        { "key": "gastro.servicekraft", "label": "Servicekraft", "type": "role" },
-        { "key": "gastro.koch", "label": "Koch", "type": "role" },
-        { "key": "gastro.bar", "label": "Bar", "type": "role" },
-        { "key": "gastro.haccp", "label": "Hygiene HACCP", "type": "qual" }
-      ]
-    },
-    {
       "key": "lieferservice",
-      "label": "Lieferservice",
-      "tags": [
-        { "key": "lieferservice.fuehrerschein_b", "label": "Führerschein B", "type": "license" },
-        { "key": "lieferservice.eigener_pkw", "label": "Eigener PKW", "type": "vehicle" },
-        { "key": "lieferservice.fahrrad", "label": "Fahrrad", "type": "vehicle" },
-        { "key": "lieferservice.roller", "label": "Roller", "type": "vehicle" },
-        { "key": "lieferservice.e_bike", "label": "E-Bike", "type": "vehicle" }
+      "label": "Lieferservice & Kurier",
+      "activities": [
+        { "key": "essenslieferung", "label": "Essenslieferung" },
+        { "key": "paketlieferung", "label": "Paketlieferung" },
+        { "key": "kurier_auto", "label": "Kurierfahrten Auto" },
+        { "key": "kurier_fahrrad", "label": "Kurierfahrten Fahrrad" },
+        { "key": "kurier_roller", "label": "Kurierfahrten Roller / Moped" }
+      ],
+      "qualifications": [
+        { "key": "fuehrerschein_b", "label": "Führerschein Klasse B" },
+        { "key": "fuehrerschein_am", "label": "Führerschein AM/A1/A2" },
+        { "key": "eigener_pkw", "label": "eigener Pkw" },
+        { "key": "eigenes_fahrrad", "label": "eigenes Fahrrad" },
+        { "key": "eigener_roller", "label": "eigener Roller / Moped" },
+        { "key": "eigener_escooter", "label": "eigener E-Scooter" },
+        { "key": "eigener_transporter", "label": "eigener Transporter" }
+      ]
+    },
+    {
+      "key": "gastronomie",
+      "label": "Gastronomie & Service",
+      "activities": [
+        { "key": "service_kellner", "label": "Servicekraft / Kellner" },
+        { "key": "thekenkraft", "label": "Thekenkraft" },
+        { "key": "bar", "label": "Bar / Getränke" },
+        { "key": "kuechenhilfe", "label": "Küchenhilfe" },
+        { "key": "spuelkraft", "label": "Spülkraft" },
+        { "key": "koch", "label": "Koch / Köchin" },
+        { "key": "buffet", "label": "Buffet / Ausgabe" },
+        { "key": "kasse_restaurant", "label": "Kasse im Restaurant" }
+      ],
+      "qualifications": [
+        { "key": "erfahrung_service", "label": "Erfahrung im Service" },
+        { "key": "erfahrung_kueche", "label": "Erfahrung in der Küche" },
+        { "key": "kassenerfahrung", "label": "Kassenerfahrung" },
+        { "key": "gesundheitsausweis", "label": "Gesundheitsausweis / Hygieneschulung" },
+        { "key": "deutsch_b1", "label": "Deutsch mind. B1" },
+        { "key": "weitere_sprache", "label": "weitere Sprache" }
       ]
     },
     {
       "key": "lager_logistik",
-      "label": "Lager und Logistik",
-      "tags": [
-        { "key": "lager_logistik.staplerschein", "label": "Staplerschein", "type": "qual" },
-        { "key": "lager_logistik.kommissionierung", "label": "Kommissionierung", "type": "skill" },
-        { "key": "lager_logistik.handscanner", "label": "Handscanner", "type": "tool" }
-      ]
-    },
-    {
-      "key": "einzelhandel",
-      "label": "Einzelhandel",
-      "tags": [
-        { "key": "einzelhandel.kasse", "label": "Kasse", "type": "role" },
-        { "key": "einzelhandel.inventur", "label": "Inventur", "type": "skill" },
-        { "key": "einzelhandel.regalpflege", "label": "Regalpflege", "type": "skill" }
+      "label": "Lager & Logistik",
+      "activities": [
+        { "key": "kommissionierung", "label": "Kommissionierung" },
+        { "key": "wareneingang", "label": "Wareneingang / Warenausgang" },
+        { "key": "verpackung", "label": "Verpackung" },
+        { "key": "versandvorbereitung", "label": "Versandvorbereitung" },
+        { "key": "stapler_fahren", "label": "Stapler fahren" }
+      ],
+      "qualifications": [
+        { "key": "staplerschein", "label": "Staplerschein" },
+        { "key": "handscanner", "label": "Erfahrung mit Handscanner" },
+        { "key": "koerperlich_belastbar", "label": "körperlich belastbar" }
       ]
     },
     {
       "key": "event_messe",
-      "label": "Event und Messe",
-      "tags": [
-        { "key": "event_messe.host_hostess", "label": "Host, Hostess", "type": "role" },
-        { "key": "event_messe.aufbau_abbau", "label": "Aufbau, Abbau", "type": "role" },
-        { "key": "event_messe.promotion", "label": "Promotion", "type": "role" }
+      "label": "Event & Messe",
+      "activities": [
+        { "key": "aufbau_abbau", "label": "Auf- und Abbau" },
+        { "key": "stagehand", "label": "Stagehand" },
+        { "key": "garderobe", "label": "Garderobe" },
+        { "key": "einlasskontrolle", "label": "Einlasskontrolle (ohne Security-Funktion)" },
+        { "key": "getraenkeverkauf", "label": "Getränkeverkauf" },
+        { "key": "imbiss_foodtruck", "label": "Imbiss / Foodtruck" },
+        { "key": "messehost", "label": "Messehost / Hostess" },
+        { "key": "kasse_event", "label": "Kassenkraft Event" }
+      ],
+      "qualifications": [
+        { "key": "event_erfahrung", "label": "Event-Erfahrung" },
+        { "key": "gastro_erfahrung", "label": "Gastro-Erfahrung" },
+        { "key": "kasse_erfahrung", "label": "Erfahrung Kasse" },
+        { "key": "deutsch_b1", "label": "Deutsch mind. B1" },
+        { "key": "gepflegtes_auftreten", "label": "gepflegtes Auftreten" }
+      ]
+    },
+    {
+      "key": "promotion_verkauf",
+      "label": "Promotion & Verkauf",
+      "activities": [
+        { "key": "promo_stand", "label": "Promo-Stand betreuen" },
+        { "key": "flyer", "label": "Flyer verteilen" },
+        { "key": "sampling", "label": "Produkt-Sampling" },
+        { "key": "produktberatung", "label": "Produktberatung im Laden" },
+        { "key": "verkauf_shop", "label": "Verkauf im Shop" },
+        { "key": "kundenservice_telefon", "label": "Telefonischer Kundenservice (leichte Tätigkeiten)" }
+      ],
+      "qualifications": [
+        { "key": "verkaufserfahrung", "label": "Verkaufserfahrung" },
+        { "key": "promotion_erfahrung", "label": "Promotion-Erfahrung" },
+        { "key": "kassenerfahrung", "label": "Kassenerfahrung" },
+        { "key": "deutsch_b2", "label": "Deutsch mind. B2" },
+        { "key": "weitere_sprache", "label": "weitere Sprache" }
+      ]
+    },
+    {
+      "key": "sicherheit",
+      "label": "Sicherheit",
+      "activities": [
+        { "key": "einlasskontrolle_34a", "label": "Einlasskontrolle mit 34a" },
+        { "key": "veranstaltungsschutz", "label": "Veranstaltungsschutz" },
+        { "key": "objektschutz", "label": "Objektschutz" },
+        { "key": "revierdienst", "label": "Revierdienst" },
+        { "key": "kaufhausdetektiv", "label": "Kaufhausdetektiv" },
+        { "key": "parkplatzaufsicht", "label": "Parkplatzaufsicht" }
+      ],
+      "qualifications": [
+        { "key": "34a_unterrichtung", "label": "34a Unterrichtung" },
+        { "key": "34a_sachkunde", "label": "34a Sachkunde" },
+        { "key": "bewacher_id", "label": "Bewacher-ID" },
+        { "key": "fuehrungszeugnis", "label": "aktuelles Führungszeugnis" },
+        { "key": "erfahrung_sicherheit", "label": "Erfahrung im Sicherheitsdienst" },
+        { "key": "deutsch_b1", "label": "Deutsch mind. B1" },
+        { "key": "nachtschicht_bereitschaft", "label": "Nachtschicht-Bereitschaft" },
+        { "key": "fuehrerschein_b", "label": "Führerschein Klasse B" }
+      ]
+    },
+    {
+      "key": "haus_garten",
+      "label": "Haus & Garten",
+      "activities": [
+        { "key": "rasen_maehen", "label": "Rasen mähen" },
+        { "key": "hecke_schneiden", "label": "Hecke schneiden" },
+        { "key": "unkraut_entfernen", "label": "Unkraut entfernen" },
+        { "key": "laubarbeiten", "label": "Laubarbeiten" },
+        { "key": "maler_einfach", "label": "einfache Malerarbeiten" },
+        { "key": "moebel_aufbauen", "label": "Möbel aufbauen" },
+        { "key": "montage_bilder", "label": "Bilder / Regale montieren" },
+        { "key": "umzugshilfe", "label": "Umzugshilfe" },
+        { "key": "entruempelung", "label": "Entrümpelung" }
+      ],
+      "qualifications": [
+        { "key": "erfahrung_haus_garten", "label": "Erfahrung Haus & Garten" },
+        { "key": "werkzeug", "label": "Umgang mit Werkzeug" },
+        { "key": "koerperlich_belastbar", "label": "körperlich belastbar" },
+        { "key": "eigener_pkw_transporter", "label": "eigener Pkw / Transporter" }
       ]
     },
     {
       "key": "reinigung",
       "label": "Reinigung",
-      "tags": [
-        { "key": "reinigung.unterhaltsreinigung", "label": "Unterhalt", "type": "role" },
-        { "key": "reinigung.glasreinigung", "label": "Glas", "type": "role" },
-        { "key": "reinigung.maschinenfuehrung", "label": "Maschinenführung", "type": "skill" }
+      "activities": [
+        { "key": "haushaltsreinigung", "label": "Haushaltsreinigung" },
+        { "key": "bueroreinigung", "label": "Büroreinigung" },
+        { "key": "treppenhausreinigung", "label": "Treppenhausreinigung" },
+        { "key": "fensterreinigung", "label": "Fensterreinigung" },
+        { "key": "endreinigung", "label": "Endreinigung / Auszug" }
+      ],
+      "qualifications": [
+        { "key": "erfahrung_reinigung", "label": "Erfahrung in der Reinigung" },
+        { "key": "reinigungsmittel", "label": "Umgang mit Reinigungsmitteln" }
       ]
     },
     {
-      "key": "bau_helfer",
-      "label": "Bau und Helfer",
-      "tags": [
-        { "key": "bau_helfer.ppe", "label": "PSA vorhanden", "type": "qual" },
-        { "key": "bau_helfer.maler_klein", "label": "Maler klein", "type": "skill" },
-        { "key": "bau_helfer.arbeiten_hoehe", "label": "Arbeiten in Höhe", "type": "skill" }
+      "key": "kinderbetreuung",
+      "label": "Kinderbetreuung",
+      "activities": [
+        { "key": "babysitting", "label": "Babysitting" },
+        { "key": "betreuung_zuhause", "label": "Kinderbetreuung zu Hause" },
+        { "key": "hausaufgaben", "label": "Hausaufgabenbetreuung" },
+        { "key": "fahrdienst", "label": "Fahrdienst für Kinder" },
+        { "key": "ferienbetreuung", "label": "Ferienbetreuung" }
+      ],
+      "qualifications": [
+        { "key": "erfahrung_kinder", "label": "Erfahrung mit Kindern" },
+        { "key": "babysitterkurs", "label": "Babysitterkurs / pädagogische Erfahrung" },
+        { "key": "erste_hilfe_kind", "label": "Erste Hilfe am Kind" },
+        { "key": "fuehrungszeugnis", "label": "polizeiliches Führungszeugnis" },
+        { "key": "eigener_pkw", "label": "eigener Pkw (für Fahrdienst)" }
       ]
     },
     {
-      "key": "haus_garten",
-      "label": "Haus und Garten",
-      "tags": [
-        { "key": "haus_garten.gaertner_helfer", "label": "Gärtner Helfer", "type": "role" },
-        { "key": "haus_garten.rasenmaehen", "label": "Rasen mähen", "type": "skill" },
-        { "key": "haus_garten.heckenschnitt", "label": "Heckenschnitt", "type": "skill" },
-        { "key": "haus_garten.moebel_aufbau", "label": "Möbelaufbau", "type": "skill" }
+      "key": "seniorenhilfe",
+      "label": "Seniorenhilfe & Alltagshilfe",
+      "activities": [
+        { "key": "einkaufen", "label": "Einkaufen gehen" },
+        { "key": "begleitung_termine", "label": "Begleitung zu Terminen" },
+        { "key": "haushaltshilfe", "label": "Haushaltshilfe" },
+        { "key": "gesellschaft", "label": "Gespräche / Gesellschaft" },
+        { "key": "alltag_unterstuetzung", "label": "leichte Unterstützung im Alltag" }
+      ],
+      "qualifications": [
+        { "key": "erfahrung_senioren", "label": "Erfahrung mit älteren Menschen" },
+        { "key": "ruhiges_auftreten", "label": "ruhiges Auftreten" },
+        { "key": "deutsch_b1", "label": "Deutsch mind. B1" }
       ]
     },
     {
-      "key": "babysitting_kinder",
-      "label": "Babysitting und Kinder",
-      "tags": [
-        { "key": "babysitting_kinder.babysitter", "label": "Babysitter", "type": "role" },
-        { "key": "babysitting_kinder.erste_hilfe_kind", "label": "Erste Hilfe Kind", "type": "qual" },
-        { "key": "babysitting_kinder.fuehrungszeugnis_erweitert", "label": "Erweitertes Führungszeugnis", "type": "doc" }
+      "key": "nachhilfe_unterricht",
+      "label": "Nachhilfe & Unterricht",
+      "activities": [
+        { "key": "nachhilfe_mathe", "label": "Nachhilfe Mathe" },
+        { "key": "nachhilfe_deutsch", "label": "Nachhilfe Deutsch" },
+        { "key": "nachhilfe_englisch", "label": "Nachhilfe Englisch" },
+        { "key": "nachhilfe_weitere", "label": "Nachhilfe weitere Fächer" },
+        { "key": "sprachunterricht", "label": "Sprachunterricht" },
+        { "key": "musikunterricht", "label": "Musikunterricht" }
+      ],
+      "qualifications": [
+        { "key": "abitur_fach", "label": "Abitur in diesem Fach" },
+        { "key": "studium_fach", "label": "Studium in diesem Fach" },
+        { "key": "lehramt", "label": "Lehramtserfahrung / pädagogische Erfahrung" },
+        { "key": "nachhilfe_erfahrung", "label": "Erfahrung mit Nachhilfe oder Unterricht" }
       ]
     },
     {
-      "key": "kleinstreparaturen_handwerk",
-      "label": "Kleinstreparaturen",
-      "tags": [
-        { "key": "kleinstreparaturen_handwerk.allrounder", "label": "Allrounder", "type": "role" },
-        { "key": "kleinstreparaturen_handwerk.elektro_klein", "label": "Elektro klein", "type": "skill" },
-        { "key": "kleinstreparaturen_handwerk.moebel_aufbau", "label": "Möbelaufbau", "type": "skill" },
-        { "key": "kleinstreparaturen_handwerk.werkzeug_set", "label": "Eigenes Werkzeug", "type": "tool" }
+      "key": "buero_kundenservice",
+      "label": "Büro & Kundenservice",
+      "activities": [
+        { "key": "datenerfassung", "label": "Datenerfassung" },
+        { "key": "sachbearbeitung", "label": "einfache Sachbearbeitung" },
+        { "key": "empfang", "label": "Empfang" },
+        { "key": "telefonservice", "label": "Telefonservice / Kundenhotline" },
+        { "key": "email_support", "label": "E-Mail-Support" },
+        { "key": "terminorganisation", "label": "Terminorganisation" }
+      ],
+      "qualifications": [
+        { "key": "office_kenntnisse", "label": "Computerkenntnisse (Office)" },
+        { "key": "tastatur", "label": "sicher an der Tastatur" },
+        { "key": "deutsch_b2", "label": "Deutsch mind. B2" },
+        { "key": "weitere_sprache", "label": "weitere Sprache" }
       ]
     },
     {
-      "key": "haustiere",
-      "label": "Haustiere",
-      "tags": [
-        { "key": "haustiere.gassi_service", "label": "Gassi Service", "type": "role" },
-        { "key": "haustiere.catsitting", "label": "Catsitting", "type": "role" },
-        { "key": "haustiere.medikamentengabe", "label": "Medikamentengabe", "type": "skill" }
-      ]
-    },
-    {
-      "key": "umzug_transport",
-      "label": "Umzug und Transport",
-      "tags": [
-        { "key": "umzug_transport.traeger", "label": "Träger", "type": "role" },
-        { "key": "umzug_transport.fahrer_b", "label": "Fahrer B", "type": "role" },
-        { "key": "umzug_transport.fuehrerschein_b", "label": "Führerschein B", "type": "license" },
-        { "key": "umzug_transport.schweres_heben", "label": "Schweres Heben", "type": "skill" }
-      ]
-    },
-    {
-      "key": "buero_service",
-      "label": "Büro und Service",
-      "tags": [
-        { "key": "buero_service.datenerfassung", "label": "Datenerfassung", "type": "role" },
-        { "key": "buero_service.telefonservice", "label": "Telefonservice", "type": "role" },
-        { "key": "buero_service.ms_office", "label": "MS Office", "type": "skill" }
-      ]
-    },
-    {
-      "key": "it_support",
-      "label": "IT Support",
-      "tags": [
-        { "key": "it_support.helpdesk", "label": "Helpdesk", "type": "role" },
-        { "key": "it_support.hardware_setup", "label": "Hardware Setup", "type": "role" },
-        { "key": "it_support.netzwerk_grundlagen", "label": "Netzwerk Grundlagen", "type": "skill" }
-      ]
-    },
-    {
-      "key": "foto_video",
-      "label": "Foto und Video",
-      "tags": [
-        { "key": "foto_video.fotograf", "label": "Fotograf", "type": "role" },
-        { "key": "foto_video.videograf", "label": "Videograf", "type": "role" },
-        { "key": "foto_video.dslr", "label": "DSLR", "type": "tool" }
-      ]
-    },
-    {
-      "key": "nachhilfe",
-      "label": "Nachhilfe",
-      "tags": [
-        { "key": "nachhilfe.mathe", "label": "Mathe", "type": "role" },
-        { "key": "nachhilfe.deutsch", "label": "Deutsch", "type": "role" },
-        { "key": "nachhilfe.englisch", "label": "Englisch", "type": "role" },
-        { "key": "nachhilfe.abitur", "label": "Abitur", "type": "qual" }
-      ]
-    },
-    {
-      "key": "fahrdienst",
-      "label": "Fahrdienst",
-      "tags": [
-        { "key": "fahrdienst.shuttle_fahrer", "label": "Shuttle Fahrer", "type": "role" },
-        { "key": "fahrdienst.fuehrerschein_b", "label": "Führerschein B", "type": "license" },
-        { "key": "fahrdienst.p_schein", "label": "P-Schein", "type": "license" }
-      ]
-    },
-    {
-      "key": "hauswirtschaft",
-      "label": "Hauswirtschaft",
-      "tags": [
-        { "key": "hauswirtschaft.waesche", "label": "Wäsche", "type": "role" },
-        { "key": "hauswirtschaft.buegeln", "label": "Bügeln", "type": "role" },
-        { "key": "hauswirtschaft.einkaufen", "label": "Einkaufen", "type": "role" }
+      "key": "inventur",
+      "label": "Inventur & Zähljobs",
+      "activities": [
+        { "key": "inventur_supermarkt", "label": "Inventur im Supermarkt" },
+        { "key": "inventur_lager", "label": "Inventur im Lager" },
+        { "key": "inventur_mode", "label": "Inventur im Modegeschäft / Einzelhandel" },
+        { "key": "mhd_kontrolle", "label": "Mindesthaltbarkeitskontrolle" },
+        { "key": "preisetiketten", "label": "Preisetiketten prüfen" }
+      ],
+      "qualifications": [
+        { "key": "inventur_erfahrung", "label": "Erfahrung Inventur" },
+        { "key": "sicher_zaehlen", "label": "sicher im Zählen" },
+        { "key": "handscanner", "label": "Erfahrung mit Handscanner" },
+        { "key": "koerperlich_belastbar", "label": "körperlich belastbar" }
       ]
     }
   ]
