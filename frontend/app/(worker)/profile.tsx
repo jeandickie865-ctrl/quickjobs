@@ -305,17 +305,23 @@ export default function WorkerProfileScreen() {
               homeLon: undefined,
             });
           }}
-          onSuggestionSelected={(sugg) => {
+          onPostalCodeChange={(value) => {
             setProfile({
               ...profile,
-              homeAddress: {
-                street: sugg.street || profile.homeAddress.street || '',
-                postalCode: profile.homeAddress.postalCode || sugg.postalCode,
-                city: profile.homeAddress.city || sugg.city,
-              },
-              homeLat: sugg.lat,
-              homeLon: sugg.lon,
+              homeAddress: { ...profile.homeAddress, postalCode: value },
             });
+          }}
+          onCityChange={(value) => {
+            setProfile({
+              ...profile,
+              homeAddress: { ...profile.homeAddress, city: value },
+            });
+          }}
+          onLatChange={(value) => {
+            setProfile({ ...profile, homeLat: value });
+          }}
+          onLonChange={(value) => {
+            setProfile({ ...profile, homeLon: value });
           }}
           placeholder="Straße und Hausnummer"
         />
