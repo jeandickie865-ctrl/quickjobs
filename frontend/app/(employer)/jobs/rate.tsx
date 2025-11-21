@@ -76,15 +76,25 @@ export default function RateWorkerScreen() {
 
       await addReview(review);
 
+      console.log('✅ Review saved successfully', review);
+
+      // Bestätigungs-Modal mit verbessertem Text
       Alert.alert(
-        'Bewertung gespeichert',
-        'Vielen Dank für dein Feedback!',
+        'Vielen Dank für deine Bewertung!',
+        'Dein Feedback wurde erfolgreich gespeichert.',
         [
           {
             text: 'OK',
-            onPress: () => router.back(),
+            onPress: () => {
+              // Navigation zurück zum Job-Detail
+              router.push({
+                pathname: '/(employer)/jobs/[id]',
+                params: { id: params.jobId },
+              });
+            },
           },
-        ]
+        ],
+        { cancelable: false }
       );
     } catch (error) {
       console.error('Error saving review:', error);
