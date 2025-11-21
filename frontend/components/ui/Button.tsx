@@ -1,5 +1,6 @@
+// components/ui/Button.tsx - Green Modern Minimal
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import { TouchableOpacity, Text, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -23,25 +24,24 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
 }) => {
-  const { colors, spacing, radius } = useTheme();
+  const { colors, spacing } = useTheme();
 
   const getButtonStyle = (): ViewStyle => {
     const base: ViewStyle = {
-      paddingVertical: 14,
-      paddingHorizontal: spacing.xl,
-      borderRadius: 10,
+      paddingVertical: 16,
+      paddingHorizontal: spacing.lg,
+      borderRadius: 14,
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: 48,
+      minHeight: 52,
     };
 
     if (disabled || loading) {
       return { 
         ...base, 
-        backgroundColor: colors.disabledBg,
-        borderWidth: variant === 'secondary' ? 1 : 0,
-        borderColor: colors.disabled,
-        opacity: 0.6,
+        backgroundColor: colors.gray200,
+        borderWidth: 0,
+        opacity: 0.5,
       };
     }
 
@@ -50,38 +50,33 @@ export const Button: React.FC<ButtonProps> = ({
         return { 
           ...base, 
           backgroundColor: colors.primary,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.08,
-          shadowRadius: 3,
+          shadowColor: colors.black,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
           elevation: 2,
         };
       case 'secondary':
         return {
           ...base,
           backgroundColor: colors.white,
-          borderWidth: 1.5,
+          borderWidth: 2,
           borderColor: colors.primary,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.05,
-          shadowRadius: 2,
-          elevation: 1,
         };
       case 'ghost':
         return { 
           ...base, 
           backgroundColor: 'transparent',
-          paddingVertical: spacing.sm,
+          paddingVertical: spacing.md,
         };
       case 'danger':
         return {
           ...base,
           backgroundColor: colors.error,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.08,
-          shadowRadius: 3,
+          shadowColor: colors.black,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
           elevation: 2,
         };
       default:
@@ -93,11 +88,11 @@ export const Button: React.FC<ButtonProps> = ({
     const base: TextStyle = {
       fontSize: 16,
       fontWeight: '700',
-      letterSpacing: 0,
+      letterSpacing: 0.2,
     };
 
     if (disabled || loading) {
-      return { ...base, color: colors.disabled };
+      return { ...base, color: colors.gray600 };
     }
 
     switch (variant) {
@@ -116,7 +111,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const getActiveOpacity = (): number => {
     if (disabled || loading) return 1;
-    return variant === 'ghost' ? 0.5 : 0.7;
+    return variant === 'ghost' ? 0.6 : 0.8;
   };
 
   const getLoadingColor = (): string => {
