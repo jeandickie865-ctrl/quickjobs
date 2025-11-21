@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { WorkerProfile } from '../types/profile';
 import { formatAddress } from '../types/address';
+import { getReviewsForWorker, calculateAverageRating } from '../utils/reviewStore';
+import { StarRating } from './StarRating';
 
 type WorkerProfileCardProps = {
   profile: WorkerProfile;
