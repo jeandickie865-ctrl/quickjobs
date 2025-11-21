@@ -456,82 +456,16 @@ export default function EmployerProfileScreen() {
               RECHNUNGSADRESSE
             </Text>
 
-            {/* Straße */}
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>
-                Straße & Hausnummer *
-              </Text>
-              <View style={{
-                backgroundColor: COLORS.white,
-                borderRadius: 16,
-                borderWidth: 2,
-                borderColor: focusedField === 'street' ? COLORS.neon : 'transparent',
-                paddingHorizontal: 16,
-                paddingVertical: 14,
-              }}>
-                <TextInput
-                  value={street}
-                  onChangeText={setStreet}
-                  placeholder="Musterstr. 123"
-                  placeholderTextColor="#999"
-                  onFocus={() => setFocusedField('street')}
-                  onBlur={() => setFocusedField(null)}
-                  style={{ fontSize: 16, color: COLORS.black }}
-                />
-              </View>
-            </View>
-
-            {/* PLZ & Stadt */}
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>
-                  PLZ *
-                </Text>
-                <View style={{
-                  backgroundColor: COLORS.white,
-                  borderRadius: 16,
-                  borderWidth: 2,
-                  borderColor: focusedField === 'postalCode' ? COLORS.neon : 'transparent',
-                  paddingHorizontal: 16,
-                  paddingVertical: 14,
-                }}>
-                  <TextInput
-                    value={postalCode}
-                    onChangeText={setPostalCode}
-                    placeholder="12345"
-                    placeholderTextColor="#999"
-                    keyboardType="number-pad"
-                    onFocus={() => setFocusedField('postalCode')}
-                    onBlur={() => setFocusedField(null)}
-                    style={{ fontSize: 16, color: COLORS.black }}
-                  />
-                </View>
-              </View>
-
-              <View style={{ flex: 2 }}>
-                <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>
-                  Stadt *
-                </Text>
-                <View style={{
-                  backgroundColor: COLORS.white,
-                  borderRadius: 16,
-                  borderWidth: 2,
-                  borderColor: focusedField === 'city' ? COLORS.neon : 'transparent',
-                  paddingHorizontal: 16,
-                  paddingVertical: 14,
-                }}>
-                  <TextInput
-                    value={city}
-                    onChangeText={setCity}
-                    placeholder="Berlin"
-                    placeholderTextColor="#999"
-                    onFocus={() => setFocusedField('city')}
-                    onBlur={() => setFocusedField(null)}
-                    style={{ fontSize: 16, color: COLORS.black }}
-                  />
-                </View>
-              </View>
-            </View>
+            <AddressAutocompleteInput
+              street={street}
+              postalCode={postalCode}
+              city={city}
+              onStreetChange={setStreet}
+              onPostalCodeChange={setPostalCode}
+              onCityChange={setCity}
+              onLatChange={setLat}
+              onLonChange={setLon}
+            />
           </View>
 
           {/* Zahlungsdaten */}
