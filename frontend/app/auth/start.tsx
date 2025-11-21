@@ -160,20 +160,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Logo Container - Goldenes Quadrat
+  // Logo Container - Schwarz-Weiß Design
   logoContainer: {
     marginTop: 80,
     width: 240,
     height: 240,
-    backgroundColor: COLORS.gold,
+    backgroundColor: '#000000',
     borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'rgba(0,0,0,0.08)',
-    shadowRadius: 14,
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    shadowColor: 'rgba(0,0,0,0.15)',
+    shadowRadius: 16,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
   },
   logoImage: {
     width: 200,
