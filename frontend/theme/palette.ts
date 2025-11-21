@@ -62,7 +62,8 @@ export const spacing = {
 };
 
 export const radius = {
-  default: 12,
+  default: 14,
+  card: 16,
 };
 
 export type Palette = typeof palette;
