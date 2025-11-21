@@ -94,6 +94,8 @@ export default function EmployerProfileScreen() {
         setStreet(stored.street || '');
         setPostalCode(stored.postalCode || '');
         setCity(stored.city || '');
+        setLat(stored.lat);
+        setLon(stored.lon);
         setPaymentMethod(stored.paymentMethod || null);
         setShortBio(stored.shortBio || '');
         setProfilePhotoUri(stored.profilePhotoUri);
