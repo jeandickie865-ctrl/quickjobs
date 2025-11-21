@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, TextInput, Text, Pressable, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { searchAddress, AddressSuggestion } from '../services/geocoding';
@@ -12,6 +12,7 @@ type AddressAutocompleteInputProps = {
   onCityChange?: (value: string) => void;
   onLatChange?: (value: number) => void;
   onLonChange?: (value: number) => void;
+  onGeocodingError?: (error: string) => void;
   placeholder?: string;
   disabled?: boolean;
 };
