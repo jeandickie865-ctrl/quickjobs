@@ -1,48 +1,56 @@
 export const palette = {
-  // Basic colors
-  black: '#0B0B0B',
+  // ===== URBAN NEUTRAL STYLE =====
+  
+  // Primary Green (Urban Neutral)
+  primary: '#4A7C59',
+  primaryDark: '#3C6648',
+  primaryLight: '#DDE8E1',
+  primaryUltraLight: '#F5F6F4',
+  
+  // Neutrals
+  black: '#1A1A1A',
   white: '#FFFFFF',
-  
-  // Grays
-  gray50: '#FAFAFA',
+  gray900: '#333333',
+  gray700: '#6F6F6F',
+  gray500: '#9E9E9E',
+  gray300: '#CECECE',
+  gray200: '#E8E8E8',
   gray100: '#F5F5F5',
-  gray200: '#E5E5E5',
-  gray300: '#D4D4D4',
-  gray400: '#A3A3A3',
-  gray500: '#737373',
-  gray600: '#525252',
-  gray700: '#404040',
-  gray900: '#171717',
   
-  // Beige (neutral, warm)
-  beige50: '#F8F6F2',
-  beige100: '#F2EDE5',
-  beige200: '#E8E2D6',
-  beige300: '#D6CBBE',
+  // Accent (warm-neutral, sparsam)
+  accent: '#D95F59',
+  accentLight: '#F7E8E6',
   
-  // Primary (Blau)
-  primary: '#0066FF',
-  primaryDark: '#0052CC',
-  primaryLight: '#3384FF',
+  // State Colors
+  success: '#4A7C59',        // Gleich wie primary, einheitlich
+  successLight: '#E5EFE9',
+  warning: '#E0A63E',
+  warningLight: '#FFF5D9',
+  error: '#D9534F',
+  errorLight: '#FFE8E8',
   
-  // Status colors
-  success: '#10B981',      // Grün für "Akzeptiert"
-  successLight: '#D1FAE5',
-  warning: '#F59E0B',      // Gelb/Orange für "Beworben"
-  warningLight: '#FEF3C7',
-  error: '#EF4444',        // Rot für Fehler
-  errorLight: '#FEE2E2',
-  info: '#3B82F6',         // Blau für Info
-  infoLight: '#DBEAFE',
+  // Backgrounds
+  background: '#F5F6F4',
+  card: '#FFFFFF',
+  
+  // Beige (backward compatibility)
+  beige50: '#F5F6F4',
+  beige100: '#DDE8E1',
+  beige200: '#E8E8E8',
+  beige300: '#CECECE',
+  
+  // Info (für Notifications)
+  info: '#4A7C59',
+  infoLight: '#E5EFE9',
   
   // Match strength
-  matchPerfect: '#10B981',    // Grün
-  matchGood: '#3B82F6',       // Blau
-  matchBasic: '#8B5CF6',      // Lila
+  matchPerfect: '#4A7C59',
+  matchGood: '#4A7C59',
+  matchBasic: '#6F6F6F',
   
   // Disabled
-  disabled: '#9CA3AF',
-  disabledBg: '#F3F4F6',
+  disabled: '#9E9E9E',
+  disabledBg: '#F5F5F5',
 };
 
 export const spacing = {
