@@ -1,16 +1,33 @@
 import { WorkerProfile } from '../types/profile';
 import { Job } from '../types/job';
+import { calculateDistance } from './distance';
 
-function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+// Low-Skill-Kategorien (keine Pflicht-Qualifikationen erforderlich)
+const LOW_SKILL_CATEGORIES = [
+  "Gastronomie & Service - Küchenhilfe",
+  "Gastronomie & Service - Spülkraft",
+  "Lager & Logistik",
+  "Reinigung",
+  "Haus & Garten"
+];
+
+// Special Security Tag
+const SPECIAL_SECURITY = "Sachkunde nach § 34a GewO";
+
+/**
+ * Check if worker has ALL required tags
+ */
+function workerHasAll(workerSkills: string[], requiredList: string[]): boolean {
+  if (!requiredList || requiredList.length === 0) return true;
+  return requiredList.every(tag => workerSkills.includes(tag));
+}
+
+/**
+ * Check if worker has at least ONE of the alternative tags
+ */
+function workerHasOne(workerSkills: string[], alternatives: string[]): boolean {
+  if (!alternatives || alternatives.length === 0) return true;
+  return alternatives.some(tag => workerSkills.includes(tag));
 }
 
 /**
@@ -19,10 +36,6 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
  */
 export function isMatch(job: Job, profile: WorkerProfile): boolean {
   return jobMatchesWorker(job, profile);
-}
-
-export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  return haversineKm(lat1, lon1, lat2, lon2);
 }
 
 /**
