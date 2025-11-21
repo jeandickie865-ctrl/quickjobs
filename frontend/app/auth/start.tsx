@@ -53,10 +53,10 @@ export default function AuthStart() {
 
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
-          {/* Top Spacer */}
-          <View style={{ height: 80 }} />
+          {/* Top Spacer - erhöht um 25px */}
+          <View style={{ height: 105 }} />
 
-          {/* Logo auf Neon-Lime Quadrat mit Purple Glow */}
+          {/* Logo auf Neon-Lime Quadrat mit Purple Glow - optimiert */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
             <View style={styles.logoGlowContainer}>
               <View style={styles.logoContainer}>
