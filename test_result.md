@@ -486,3 +486,31 @@ agent_communication:
       **Test-Ergebnisse:** 3/3 Tests bestanden
       
       **Bestätigung:** Backend Infrastructure ist vollständig stabil nach den Frontend-Taxonomie-Änderungen. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP. System bereit für weitere Entwicklung oder Frontend-Testing falls gewünscht.
+
+  - agent: "main"
+    message: |
+      **KRITISCHER FIX: expo-crypto Abhängigkeit installiert - App läuft wieder!**
+      
+      **Problem:**
+      User meldete: "Die Seite ist fehlerhaft"
+      
+      **Root Cause:**
+      - AuthContext.tsx importierte `expo-crypto` (Zeile 4: `import * as Crypto from 'expo-crypto';`)
+      - Aber `expo-crypto` war NICHT in package.json installiert
+      - Dies führte zu einem Module-Resolution-Error beim App-Start
+      - App konnte nicht geladen werden
+      
+      **Durchgeführte Schritte:**
+      1. ✅ **expo-crypto@15.0.7 installiert** via `yarn add expo-crypto`
+      2. ✅ **Expo Server neu gestartet** via `sudo supervisorctl restart expo`
+      3. ✅ **App getestet** - Willkommens-Screen lädt korrekt
+      4. ✅ **Signup-Screen geladen** - Formular wird angezeigt
+      
+      **Verifizierung:**
+      - Frontend URL: https://worklink-staging.preview.emergentagent.com/
+      - Screenshot bestätigt: "Willkommen bei BCKP" Screen mit Registrieren/Login Buttons
+      - Keine Module-Resolution-Errors mehr in den Logs
+      
+      **Nächste Schritte:**
+      - Backend Testing für grundlegende Infrastructure
+      - Dann Funktionstest der neuen Passwort-Hashing-Logik (Registrierung + Login)
