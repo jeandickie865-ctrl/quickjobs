@@ -214,27 +214,22 @@ export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
     }
   }
 
-  // 3. Low-Skill categories: skip qualification requirements
+  // 3. Low-Skill categories: skip ALL qualification requirements (except 34a already checked)
   const isLowSkill = LOW_SKILL_CATEGORIES.includes(job.category);
   
   if (!isLowSkill) {
-    // Check all required qualifications/tasks
+    // High-skill jobs: Check all required qualifications/tasks
     if (!workerHasAll(workerSkills, requiredAllTags)) {
       return false;
     }
-  } else {
-    // For low-skill: only check non-34a tags
-    const nonSecurityRequired = requiredAllTags.filter(t => t !== SPECIAL_SECURITY);
-    if (!workerHasAll(workerSkills, nonSecurityRequired)) {
+    
+    // High-skill jobs: Check alternative qualifications
+    const requiredAnyTags = job.required_any_tags ?? [];
+    if (!workerHasOne(workerSkills, requiredAnyTags)) {
       return false;
     }
   }
-
-  // 4. Alternative qualifications (required_any_tags)
-  const requiredAnyTags = job.required_any_tags ?? [];
-  if (!workerHasOne(workerSkills, requiredAnyTags)) {
-    return false;
-  }
+  // Low-skill jobs: No further qualification checks needed (§34a already checked above)
 
   // 5. Radius check (if both have coordinates)
   if (profile.homeLat && profile.homeLon && job.lat && job.lon) {
