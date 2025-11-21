@@ -1,4 +1,4 @@
-// app/auth/login.tsx - STIL 1: Modern, Ruhig, Clean, Apple-ähnlich
+// app/auth/login.tsx - VIVID BLUE-PURPLE & NEON LIME
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -6,17 +6,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
-// STIL 1 Brand Colors
+// VIVID BLUE-PURPLE & NEON LIME Colors
 const COLORS = {
-  primary: '#2F4F3A',
-  background: '#F9FAF8',
+  primary: '#5941FF',
+  accent: '#C8FF16',
+  accentDark: '#B3E612',
+  background: '#F8F8F8',
   text: '#111111',
   textSecondary: '#666666',
-  border: '#A8B5A9',
+  border: '#D0D0D0',
   placeholder: '#999999',
   white: '#FFFFFF',
-  errorBg: '#FDE5E5',
-  errorBorder: '#C94040',
+  errorBg: '#FBECEC',
+  errorBorder: '#E34242',
   errorText: '#A62828',
 };
 
