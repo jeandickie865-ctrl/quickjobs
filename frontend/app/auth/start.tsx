@@ -65,7 +65,7 @@ export default function AuthStart() {
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
             <View style={styles.logoContainer}>
               <Image
-                source={require('../../assets/logo-backup.png')}
+                source={require('../../assets/logo.jpeg')}
                 style={styles.logo}
                 resizeMode="contain"
               />
