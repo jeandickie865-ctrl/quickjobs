@@ -172,12 +172,81 @@ export default function WorkerProfileScreen() {
     }
   }
 
+  const averageRating = reviews.length > 0 ? calculateAverageRating(reviews) : 0;
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.beige50 }}
       contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xl, gap: spacing.md }}
     >
       <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>Dein Profil</Text>
+
+      {/* Bewertungen */}
+      {!reviewsLoading && (
+        <View
+          style={{
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            padding: spacing.md,
+            borderWidth: 1,
+            borderColor: colors.gray200,
+            gap: spacing.sm,
+          }}
+        >
+          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 16 }}>
+            Bewertungen
+          </Text>
+
+          {reviews.length > 0 ? (
+            <>
+              {/* Durchschnittsbewertung */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <StarRating rating={averageRating} size={20} />
+                <Text style={{ color: colors.black, fontSize: 16, fontWeight: '600' }}>
+                  {averageRating.toFixed(1)} von 5
+                </Text>
+                <Text style={{ color: colors.gray600, fontSize: 14 }}>
+                  · {reviews.length} {reviews.length === 1 ? 'Bewertung' : 'Bewertungen'}
+                </Text>
+              </View>
+
+              {/* Letzte 3 Bewertungen */}
+              <View style={{ gap: spacing.sm, marginTop: spacing.sm }}>
+                {reviews
+                  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                  .slice(0, 3)
+                  .map((review) => (
+                    <View
+                      key={review.id}
+                      style={{
+                        backgroundColor: colors.beige50,
+                        padding: spacing.sm,
+                        borderRadius: 8,
+                        gap: 4,
+                      }}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <StarRating rating={review.rating} size={14} />
+                        <Text style={{ color: colors.gray600, fontSize: 12 }}>
+                          {new Date(review.createdAt).toLocaleDateString('de-DE')}
+                        </Text>
+                      </View>
+                      {review.comment && (
+                        <Text style={{ color: colors.gray700, fontSize: 14, lineHeight: 20 }}>
+                          "{review.comment}"
+                        </Text>
+                      )}
+                    </View>
+                  ))}
+              </View>
+            </>
+          ) : (
+            <Text style={{ color: colors.gray500, fontSize: 14 }}>
+              Noch keine Bewertungen.
+            </Text>
+          )}
+        </View>
+      )}
 
       {/* Profilfoto */}
       <View
