@@ -189,6 +189,10 @@ export default function WorkerMatchesScreen() {
                 job.dueAt
               );
 
+              // Check if match is new (within 24 hours)
+              const matchTimestamp = application.respondedAt || application.createdAt;
+              const isNew = matchTimestamp && isWithinLast24Hours(matchTimestamp);
+
               return (
                 <View
                   key={application.id}
@@ -203,22 +207,37 @@ export default function WorkerMatchesScreen() {
                     shadowRadius: 8,
                     elevation: 3,
                     borderLeftWidth: 4,
-                    borderLeftColor: colors.success,
+                    borderLeftColor: isNew ? colors.primary : colors.success,
                   }}
                 >
-                  {/* Match Badge */}
-                  <View style={{
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                    backgroundColor: colors.successLight,
-                    borderRadius: 8,
-                    alignSelf: 'flex-start',
-                    borderWidth: 1,
-                    borderColor: colors.success,
-                  }}>
-                    <Text style={{ color: colors.success, fontSize: 12, fontWeight: '700' }}>
-                      ✓ MATCH BESTÄTIGT
-                    </Text>
+                  {/* Match Badges */}
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <View style={{
+                      paddingHorizontal: 12,
+                      paddingVertical: 6,
+                      backgroundColor: colors.successLight,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: colors.success,
+                    }}>
+                      <Text style={{ color: colors.success, fontSize: 12, fontWeight: '700' }}>
+                        ✓ MATCH BESTÄTIGT
+                      </Text>
+                    </View>
+                    
+                    {/* NEU Badge if within 24 hours */}
+                    {isNew && (
+                      <View style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 6,
+                        backgroundColor: colors.primary,
+                        borderRadius: 8,
+                      }}>
+                        <Text style={{ color: colors.white, fontSize: 11, fontWeight: '800' }}>
+                          🆕 NEU
+                        </Text>
+                      </View>
+                    )}
                   </View>
 
                   {/* Job Info */}
