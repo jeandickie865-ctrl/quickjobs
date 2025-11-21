@@ -531,7 +531,7 @@ export default function JobDetailScreen() {
                     {app.status === 'pending' && job.status === 'open' && (
                       <Button
                         title={isAcceptingId === app.id ? 'Wähle…' : 'Kandidat auswählen'}
-                        onPress={() => handleAccept(app.id)}
+                        onPress={() => handleAcceptClick(app.id)}
                         disabled={isAcceptingId === app.id}
                         variant="secondary"
                       />
