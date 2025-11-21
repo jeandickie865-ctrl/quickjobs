@@ -33,6 +33,10 @@ export default function JobDetailScreen() {
   const [isLoadingApps, setIsLoadingApps] = useState(true);
   const [appsError, setAppsError] = useState<string | null>(null);
   const [isAcceptingId, setIsAcceptingId] = useState<string | null>(null);
+  
+  // Review state
+  const [hasReview, setHasReview] = useState(false);
+  const [checkingReview, setCheckingReview] = useState(false);
 
   useEffect(() => {
     if (isLoading || !user) return;
