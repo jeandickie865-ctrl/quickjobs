@@ -38,6 +38,10 @@ export const palette = {
   danger: '#E34242',
   error: '#E34242',
   errorLight: '#FBECEC',
+  info: '#5941FF',
+  infoLight: '#E8E4FF',
+  disabled: '#999999',
+  disabledBg: '#F0F0F0',
   
   // Transparency
   overlay: 'rgba(0, 0, 0, 0.75)',
