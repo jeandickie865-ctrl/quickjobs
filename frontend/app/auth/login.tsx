@@ -101,9 +101,9 @@ export default function LoginScreen() {
             flexDirection: 'row',
             alignItems: 'center',
             borderWidth: 1,
-            borderColor: colors.gray300,
-            borderRadius: 10,
-            backgroundColor: colors.beige100,
+            borderColor: colors.gray200,
+            borderRadius: 14,
+            backgroundColor: colors.white,
           }}
         >
           <TextInput
