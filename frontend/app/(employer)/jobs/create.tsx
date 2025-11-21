@@ -247,8 +247,15 @@ export default function CreateJob() {
         </View>
 
         {/* Category */}
-        <View style={{ gap: 6 }}>
-          <Text style={{ color: colors.black, fontWeight: '600' }}>Kategorie</Text>
+        <View style={{ 
+          gap: spacing.sm,
+          backgroundColor: colors.white,
+          padding: spacing.md,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: colors.gray200,
+        }}>
+          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>Kategorie *</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {categories.map(cat => (
               <Chip
