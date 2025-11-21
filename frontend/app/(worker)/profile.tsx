@@ -219,19 +219,45 @@ export default function WorkerProfileScreen() {
       // === VALIDATION PASSED ===
       console.log('✅ Profile validation passed');
 
-      // Save without modifications
+      // *** KORREKTES SPEICHERN - ALLE FELDER ÜBERNEHMEN ***
+      // KEINE Dummy-Werte wie 0 setzen!
       const profileToSave: WorkerProfile = {
-        ...profile,
-        // Ensure arrays are never undefined
+        userId: profile.userId,
+        
+        // Arrays - sicherstellen dass sie nie undefined sind
         categories: profile.categories ?? [],
         selectedTags: profile.selectedTags ?? [],
+        
+        // Radius
+        radiusKm: profile.radiusKm,
+        
+        // Adresse - komplettes Objekt
+        homeAddress: profile.homeAddress,
+        
+        // Koordinaten - NIEMALS 0 als Fallback, nur echte Werte oder null
+        homeLat: profile.homeLat ?? null,
+        homeLon: profile.homeLon ?? null,
+        
+        // Optionale Felder - alle übernehmen
+        profilePhotoUri: profile.profilePhotoUri,
+        documents: profile.documents ?? [],
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        shortBio: profile.shortBio,
+        contactPhone: profile.contactPhone,
+        contactEmail: profile.contactEmail,
+        pushToken: profile.pushToken,
       };
 
-      console.log('💾 Saving profile', profileToSave);
+      console.log('💾 Saving profile with all fields', profileToSave);
       
       await saveWorkerProfile(profileToSave);
       
       console.log('✅ Profile saved successfully');
+      
+      // Verify save by reloading
+      const reloadedProfile = await getWorkerProfile(user.id);
+      console.log('🔄 Profile reloaded for verification', reloadedProfile);
       
       // Show success toast
       alert('✅ Profil gespeichert');
