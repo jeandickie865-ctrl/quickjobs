@@ -17,10 +17,12 @@ export async function addApplication(
   workerId: string,
   employerId: string
 ): Promise<JobApplication> {
+  console.log('➕ addApplication called', { jobId, workerId, employerId });
+  
   const apps = await loadApplications();
   const existing = apps.find(a => a.jobId === jobId && a.workerId === workerId);
   if (existing) {
-    console.log('📋 Application already exists', { jobId, workerId, appId: existing.id });
+    console.log('📋 addApplication: Application already exists', { jobId, workerId, appId: existing.id });
     return existing;
   }
 
@@ -34,7 +36,7 @@ export async function addApplication(
   };
   const next = [...apps, app];
   await saveApplications(next);
-  console.log('✅ New application created', { appId: app.id, jobId, workerId, employerId });
+  console.log('✅ addApplication: New application created', { appId: app.id, jobId, workerId, employerId });
   return app;
 }
 
