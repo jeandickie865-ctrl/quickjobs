@@ -1,4 +1,4 @@
-// app/(employer)/index.tsx - Green Modern Minimal (Auftraggeber Dashboard)
+// app/(employer)/index.tsx - VIVID BLUE-PURPLE & NEON LIME (Auftraggeber Dashboard)
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
