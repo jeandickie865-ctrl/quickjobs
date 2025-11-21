@@ -26,6 +26,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   onCityChange,
   onLatChange,
   onLonChange,
+  onGeocodingError,
   placeholder = 'Straße und Hausnummer',
   disabled = false,
 }) => {
@@ -33,6 +34,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const geocodingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!street || street.trim().length < 3) {
