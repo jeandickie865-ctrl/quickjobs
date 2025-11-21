@@ -1,4 +1,4 @@
-// utils/matching.ts - MATCHING 2.0 FINAL
+// utils/matching.ts - MATCHING 2.2 (Extended Branchen-Support)
 import { WorkerProfile } from '../types/profile';
 import { Job } from '../types/job';
 import { calculateDistance } from './distance';
@@ -26,8 +26,45 @@ export const LOW_SKILL = [
   "Sortierung - einfache Sortierung"
 ];
 
-// Special Security Tag
-const SPECIAL_SECURITY = "Sachkunde nach § 34a GewO";
+// ===== MATCHING 2.2: Branchen-spezifische Tags =====
+
+// Security Tags (Hard-Checks)
+const SECURITY_SACHKUNDE = "Sachkunde nach § 34a GewO";
+const SECURITY_UNTERRICHTUNG = "Unterrichtung nach § 34a GewO";
+const SECURITY_BEWACHER_ID = "Bewacher-ID";
+const SECURITY_FUEHRUNGSZEUGNIS = "Polizeiliches Führungszeugnis";
+
+// Delivery Vehicle Tags
+const VEHICLE_PKW = "Führerschein Klasse B";
+const VEHICLE_ROLLER = "Führerschein AM";
+const VEHICLE_125CCM = "Führerschein A1";
+const VEHICLE_OWN_PKW = "eigener Pkw";
+const VEHICLE_OWN_ROLLER = "eigener Roller / Moped";
+const VEHICLE_OWN_FAHRRAD = "eigenes Fahrrad";
+const VEHICLE_OWN_EBIKE = "eigenes E-Bike";
+const VEHICLE_OWN_125CCM = "eigener 125ccm";
+
+// Inventur Tags
+const INVENTUR_SCANNER = "Scanner-Erfahrung";
+
+// Nachhilfe Tags (Mindestens einer erforderlich)
+const NACHHILFE_REQUIRED_SKILLS = [
+  "Nachhilfe-Erfahrung",
+  "Pädagogische Erfahrung",
+  "Fach Mathe",
+  "Fach Englisch",
+  "Fach Deutsch",
+  "Fach Physik",
+  "Fach Chemie",
+  "Fach Biologie"
+];
+
+// Nachhilfe Optional Skills (blockieren nicht)
+const NACHHILFE_OPTIONAL_SKILLS = [
+  "Geduldig",
+  "Kommunikativ",
+  "Strukturiert"
+];
 
 /**
  * Check if worker has ALL required tags
