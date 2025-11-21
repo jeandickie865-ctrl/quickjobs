@@ -233,42 +233,70 @@ function checkNachhilfeRequirements(jobCategory: string, jobTags: string[], work
 }
 
 /**
- * Main matching function - Matching 2.0
+ * Main matching function - MATCHING 2.2 (Extended Branchen-Support)
+ * 
+ * Reihenfolge:
+ * 1. Category-Pass
+ * 2. Security Hard-Checks (alle Branchen)
+ * 3. Delivery Fahrzeug/Führerschein Checks
+ * 4. Inventur Pflicht-Checks
+ * 5. Nachhilfe Pflicht-Checks
+ * 6. Low-Skill Bypass für einfache Tätigkeiten
+ * 7. Required-All (nur High-Skill)
+ * 8. Required-Any (nur High-Skill)
+ * 9. Radius
+ * 10. Status
+ * 11. Kein Doppelmatch
  */
 export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
   if (!job || !worker) return false;
 
   const workerSkills = worker.selectedTags || [];
   const workerCategories = worker.categories || [];
+  const requiredAllTags = job.required_all_tags || [];
+  const requiredAnyTags = job.required_any_tags || [];
 
   // 1. Category match
   if (!workerCategories.includes(job.category)) {
     return false;
   }
 
-  // 2. Sicherheitsbereich (34a must have)
-  const requiredAllTags = job.required_all_tags || [];
-  if (requiredAllTags.includes(SPECIAL_SECURITY)) {
-    if (!workerSkills.includes(SPECIAL_SECURITY)) {
-      return false;
-    }
-  }
-
-  // 3. Low-skill Jobs: keine Pflicht-Qualifikationen (außer 34a)
-  const isLow = LOW_SKILL.includes(job.category);
-  if (!isLow) {
-    if (!workerHasAll(workerSkills, requiredAllTags)) {
-      return false;
-    }
-  }
-
-  // 4. Alternative Qualifikationen (required_any_tags)
-  const requiredAnyTags = job.required_any_tags || [];
-  if (!workerHasOne(workerSkills, requiredAnyTags)) {
+  // 2. Security Hard-Checks (IMMER, alle Branchen)
+  if (!checkSecurityRequirements(requiredAllTags, workerSkills)) {
     return false;
   }
 
-  // 5. Radius check
+  // 3. Delivery Fahrzeug/Führerschein Checks
+  if (!checkDeliveryVehicleRequirements(requiredAllTags, workerSkills)) {
+    return false;
+  }
+
+  // 4. Inventur Pflicht-Checks
+  if (!checkInventurRequirements(job.category, requiredAllTags, workerSkills)) {
+    return false;
+  }
+
+  // 5. Nachhilfe Pflicht-Checks
+  if (!checkNachhilfeRequirements(job.category, requiredAllTags, workerSkills)) {
+    return false;
+  }
+
+  // 6. Low-skill Bypass
+  const isLow = LOW_SKILL.includes(job.category);
+  
+  if (!isLow) {
+    // 7. High-Skill: Required-All
+    if (!workerHasAll(workerSkills, requiredAllTags)) {
+      return false;
+    }
+    
+    // 8. High-Skill: Required-Any
+    if (!workerHasOne(workerSkills, requiredAnyTags)) {
+      return false;
+    }
+  }
+
+  // 9. Radius check
   if (worker.homeLat && worker.homeLon && job.lat && job.lon) {
     const distance = calculateDistance(
       { lat: job.lat, lon: job.lon },
@@ -279,12 +307,12 @@ export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
     }
   }
 
-  // 6. Status check
+  // 10. Status check
   if (!['open', 'pending'].includes(job.status)) {
     return false;
   }
 
-  // 7. Kein Doppelmatch
+  // 11. Kein Doppelmatch
   if (job.matchedWorkerId) {
     return false;
   }
