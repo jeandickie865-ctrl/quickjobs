@@ -230,7 +230,7 @@ export default function WorkerFeed() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
