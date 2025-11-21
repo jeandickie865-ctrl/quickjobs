@@ -101,3 +101,16 @@ export async function deleteJob(id: string): Promise<void> {
   const next = jobs.filter(j => j.id !== id);
   await saveJobsInternal(next);
 }
+
+// COMPATIBILITY ALIASES - For backwards compatibility
+// (in case old code or sed replacements created these function calls)
+export async function getEmployerAufträge(employerId: string): Promise<Job[]> {
+  console.warn('⚠️ Deprecated: getEmployerAufträge() is deprecated. Use getEmployerJobs() instead.');
+  return await getEmployerJobs(employerId);
+}
+
+export async function getEmployerAuftraege(employerId: string): Promise<Job[]> {
+  console.warn('⚠️ Deprecated: getEmployerAuftraege() is deprecated. Use getEmployerJobs() instead.');
+  return await getEmployerJobs(employerId);
+}
+
