@@ -28,70 +28,125 @@ export default function LoginScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-      >
-        <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
-          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
-            Login
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.white,
+        padding: spacing.lg,
+        justifyContent: 'center',
+      }}
+    >
+
+      {/* Header */}
+      <View style={{ marginBottom: spacing.xl }}>
+        <Text style={{ fontSize: 30, fontWeight: '900', color: colors.black }}>
+          Willkommen zurück
+        </Text>
+        <Text style={{ marginTop: 6, color: colors.gray600, fontSize: 15 }}>
+          Logge dich mit deiner E-Mail und deinem Passwort ein.
+        </Text>
+      </View>
+
+      {/* Error Message */}
+      {errorMsg ? (
+        <View
+          style={{
+            backgroundColor: colors.errorLight,
+            padding: spacing.sm,
+            borderRadius: 8,
+            marginBottom: spacing.md,
+          }}
+        >
+          <Text style={{ color: colors.error, fontWeight: '600' }}>
+            {errorMsg}
           </Text>
+        </View>
+      ) : null}
 
-          <Input
-            label="E-Mail"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="deine@email.de"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            error={errors.email}
-            containerStyle={{ marginBottom: spacing.md }}
-          />
+      {/* Email Input */}
+      <View style={{ marginBottom: spacing.md }}>
+        <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6 }}>
+          E-Mail
+        </Text>
+        <TextInput
+          autoCapitalize="none"
+          keyboardType="email-address"
+          placeholder="name@email.de"
+          placeholderTextColor={colors.gray400}
+          value={email}
+          onChangeText={setEmail}
+          style={{
+            borderWidth: 1,
+            borderColor: colors.gray300,
+            borderRadius: 10,
+            padding: 14,
+            backgroundColor: colors.beige100,
+            color: colors.black,
+          }}
+        />
+      </View>
 
-          <Input
-            label="Passwort"
+      {/* Password Input */}
+      <View style={{ marginBottom: spacing.xl }}>
+        <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6 }}>
+          Passwort
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: colors.gray300,
+            borderRadius: 10,
+            backgroundColor: colors.beige100,
+          }}
+        >
+          <TextInput
+            placeholder="******"
+            placeholderTextColor={colors.gray400}
+            secureTextEntry={!showPw}
             value={password}
             onChangeText={setPassword}
-            placeholder="Dein Passwort"
-            secureTextEntry
-            error={errors.password}
-            containerStyle={{ marginBottom: spacing.xl }}
+            style={{
+              flex: 1,
+              padding: 14,
+              color: colors.black,
+            }}
           />
 
-          <Button
-            title="Login"
-            onPress={handleLogin}
-            loading={loading}
-            disabled={loading}
-          />
-
-          <Button
-            title="Zurück"
-            onPress={() => router.back()}
-            variant="ghost"
-            style={{ marginTop: spacing.md }}
-          />
+          <Pressable onPress={() => setShowPw(!showPw)} style={{ padding: 12 }}>
+            {showPw ? (
+              <EyeOff size={20} color={colors.gray600} />
+            ) : (
+              <Eye size={20} color={colors.gray600} />
+            )}
+          </Pressable>
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </View>
+
+      {/* Login Button */}
+      <Button
+        title={loading ? 'Lädt…' : 'Einloggen'}
+        onPress={handleLogin}
+        disabled={loading}
+      />
+
+      {/* Link zu Signup */}
+      <Pressable
+        onPress={() => router.push('/auth/signup')}
+        style={{ marginTop: spacing.lg }}
+      >
+        <Text style={{ color: colors.black, textAlign: 'center', fontSize: 15 }}>
+          Noch keinen Account?{' '}
+          <Text style={{ fontWeight: '700', color: colors.primary }}>
+            Registrieren
+          </Text>
+        </Text>
+      </Pressable>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-});
