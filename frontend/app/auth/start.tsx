@@ -1,21 +1,17 @@
-// app/auth/start.tsx - FANCY MINIMAL (Mint/Lila/Gold) - Expo Web Safe
+// app/auth/start.tsx - VIVID BLUE-PURPLE & NEON LIME
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FancyButton from '../../components/FancyButton';
 
-// BCKP Fancy Minimal Colors
+// VIVID BLUE-PURPLE & NEON LIME Colors
 const COLORS = {
-  mint: '#72BC81',         // Primary Mint
-  mintPressed: '#5CA870',  // Pressed Mint
-  mintOutline: '#4F9E63',  // Outlined Mint (darker)
-  gold: '#B2892D',         // BCKP-Gold (Slogan)
-  purple: '#C576FF',       // Purple Accent (dezent)
-  offWhite: '#FAFAF8',     // Hintergrund
-  white: '#FFFFFF',        // Logo Card
-  black: '#000000',        // Haupttitel
-  footerGray: '#C1C1C1',   // Footer Links
+  vividPurple: '#5941FF',
+  neonLime: '#C8FF16',
+  black: '#000000',
+  white: '#FFFFFF',
+  whiteFooter: 'rgba(255,255,255,0.6)',
 };
 
 export default function AuthStart() {
@@ -23,25 +19,25 @@ export default function AuthStart() {
 
   // Animation values
   const screenOpacity = useRef(new Animated.Value(0)).current;
-  const logoScale = useRef(new Animated.Value(0.95)).current;
+  const logoScale = useRef(new Animated.Value(0.92)).current;
   const contentOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.sequence([
       Animated.timing(screenOpacity, {
         toValue: 1,
-        duration: 400,
+        duration: 500,
         useNativeDriver: true,
       }),
       Animated.spring(logoScale, {
         toValue: 1,
-        tension: 50,
+        tension: 40,
         friction: 7,
         useNativeDriver: true,
       }),
       Animated.timing(contentOpacity, {
         toValue: 1,
-        duration: 500,
+        duration: 600,
         useNativeDriver: true,
       }),
     ]).start();
@@ -49,38 +45,41 @@ export default function AuthStart() {
 
   return (
     <Animated.View style={[styles.container, { opacity: screenOpacity }]}>
-      {/* Background mit radialem Mint-Glow */}
-      <View style={styles.background}>
-        <View style={styles.mintGlow} />
-      </View>
+      {/* Vivid Purple Background */}
+      <View style={styles.purpleBackground} />
+
+      {/* Neon Lime Bubble (optional) */}
+      <View style={styles.limeBubble} />
 
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
           {/* Top Spacer */}
-          <View style={{ height: 60 }} />
+          <View style={{ height: 80 }} />
 
-          {/* Logo - Goldenes Quadrat mit echtem BCKP Logo */}
+          {/* Logo auf Neon-Lime Quadrat mit Purple Glow */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
-            <View style={styles.logoContainer}>
-              <Image
-                source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
-                style={styles.logoImage}
-                resizeMode="contain"
-              />
+            <View style={styles.logoGlowContainer}>
+              <View style={styles.logoContainer}>
+                <Image
+                  source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
+                  style={styles.logoImage}
+                  resizeMode="contain"
+                />
+              </View>
             </View>
           </Animated.View>
 
-          {/* Slogan mit Purple Accent */}
+          {/* Slogan mit Neon-Lime Bullet */}
           <Animated.View style={[styles.sloganContainer, { opacity: contentOpacity }]}>
-            <View style={styles.purpleDot} />
+            <View style={styles.limeBullet} />
             <Text style={styles.slogan}>
               wenn’s jetzt passieren muss.
             </Text>
           </Animated.View>
 
-          {/* Haupttitel */}
+          {/* Headline - Weiß, 900, zentriert */}
           <Animated.View style={{ opacity: contentOpacity }}>
-            <Text style={styles.title}>
+            <Text style={styles.headline}>
               Willkommen bei BACKUP
             </Text>
           </Animated.View>
@@ -93,16 +92,21 @@ export default function AuthStart() {
             <FancyButton
               title="Registrieren"
               type="primary"
-              colors={{ primary: COLORS.mint, primaryDark: COLORS.mintPressed }}
+              colors={{ 
+                primary: COLORS.neonLime, 
+                primaryDark: '#B3E612' 
+              }}
               onPress={() => router.push('/auth/signup')}
             />
 
-            <FancyButton
-              title="Login"
-              type="secondary"
-              colors={{ primary: COLORS.mint, primaryDark: COLORS.mintPressed }}
+            <View style={{ height: 16 }} />
+
+            <Pressable
               onPress={() => router.push('/auth/login')}
-            />
+              style={styles.secondaryButton}
+            >
+              <Text style={styles.secondaryButtonText}>Login</Text>
+            </Pressable>
           </Animated.View>
 
           {/* Footer */}
@@ -114,11 +118,11 @@ export default function AuthStart() {
               <Pressable onPress={() => router.push('/legal/agb')}>
                 <Text style={styles.footerLink}>AGB</Text>
               </Pressable>
-              <Text style={styles.goldDot}>•</Text>
+              <Text style={styles.limeDot}>•</Text>
               <Pressable onPress={() => router.push('/legal/privacy')}>
                 <Text style={styles.footerLink}>Datenschutz</Text>
               </Pressable>
-              <Text style={styles.goldDot}>•</Text>
+              <Text style={styles.limeDot}>•</Text>
               <Pressable onPress={() => router.push('/legal/guidelines')}>
                 <Text style={styles.footerLink}>Grundsätze</Text>
               </Pressable>
@@ -137,19 +141,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  background: {
+  purpleBackground: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: COLORS.offWhite,
+    backgroundColor: COLORS.vividPurple,
   },
-  mintGlow: {
+  limeBubble: {
     position: 'absolute',
-    top: 200,
-    left: 45,
+    top: -80,
+    left: -80,
     width: 300,
     height: 300,
     borderRadius: 150,
-    backgroundColor: COLORS.mint,
-    opacity: 0.05,
+    backgroundColor: COLORS.neonLime,
+    opacity: 0.18,
   },
   safeArea: {
     flex: 1,
@@ -160,98 +164,74 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Logo Container - Schwarz-Weiß Design
+  // Logo mit Purple Glow
+  logoGlowContainer: {
+    shadowColor: COLORS.vividPurple,
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+  },
   logoContainer: {
-    marginTop: 80,
-    width: 240,
-    height: 240,
-    backgroundColor: '#000000',
-    borderRadius: 26,
+    width: 220,
+    height: 220,
+    backgroundColor: COLORS.neonLime,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'rgba(0,0,0,0.15)',
-    shadowRadius: 16,
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
   },
   logoImage: {
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
   },
-  // Slogan - 12px Abstand zum Logo
+
+  // Slogan mit Neon-Lime Bullet
   sloganContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 20,
     gap: 8,
   },
-  purpleDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: COLORS.purple,
+  limeBullet: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: COLORS.neonLime,
   },
   slogan: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
-    color: COLORS.gold,
-    letterSpacing: 0.4,
+    color: COLORS.black,
+    letterSpacing: 0.5,
   },
 
-  // Titel - 42px Abstand zum Slogan
-  title: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: COLORS.black,
+  // Headline - Weiß, 900
+  headline: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: COLORS.white,
     textAlign: 'center',
-    marginTop: 42,
+    marginTop: 32,
   },
 
   // Buttons
   buttonsContainer: {
     width: '100%',
-    gap: 18,
-  },
-  primaryButton: {
-    backgroundColor: COLORS.mint,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: COLORS.mint,
-    shadowOpacity: 0.18,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  primaryButtonPressed: {
-    backgroundColor: COLORS.mintPressed,
-  },
-  primaryButtonText: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: COLORS.white,
   },
   secondaryButton: {
-    backgroundColor: COLORS.white,
-    height: 54,
-    borderRadius: 14,
+    width: '100%',
+    height: 56,
+    backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: COLORS.mint,
+    borderColor: COLORS.neonLime,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  secondaryButtonPressed: {
-    borderColor: COLORS.mintOutline,
   },
   secondaryButtonText: {
     fontSize: 17,
-    fontWeight: '600',
-    color: COLORS.mint,
-  },
-  secondaryButtonTextPressed: {
-    color: COLORS.mintOutline,
+    fontWeight: '700',
+    color: COLORS.neonLime,
   },
 
   // Footer
@@ -260,8 +240,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    fontSize: 12,
-    color: COLORS.footerGray,
+    fontSize: 11,
+    color: COLORS.whiteFooter,
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -271,11 +251,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerLink: {
-    fontSize: 12,
-    color: COLORS.footerGray,
+    fontSize: 11,
+    color: COLORS.whiteFooter,
   },
-  goldDot: {
-    fontSize: 12,
-    color: COLORS.gold,
+  limeDot: {
+    fontSize: 11,
+    color: COLORS.neonLime,
   },
 });
