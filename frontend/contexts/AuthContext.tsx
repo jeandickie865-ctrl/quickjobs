@@ -23,141 +23,114 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const USER_KEY = '@shiftmatch:user';
 const USER_DB_KEY = '@shiftmatch:users_database';
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
 
-  // beim Start User aus Storage holen
+  // App Start → Benutzer laden
   useEffect(() => {
     (async () => {
-      const stored = await getItem<StoredUser>(USER_KEY);
-      if (stored) {
-        setUser(stored);
-      }
-      setIsLoading(false);
+      const stored = await AsyncStorage.getItem(USER_KEY);
+      if (stored) setUser(JSON.parse(stored));
     })();
   }, []);
 
-  const value = useMemo<AuthContextValue>(() => {
-    return {
-      user,
-      isLoading,
+  // -----------------------------
+  // Hilfsfunktionen
+  // -----------------------------
 
-      async signUp(email, password) {
-        const emailNormalized = email.toLowerCase().trim();
-        console.log('🔐 signUp called with email:', emailNormalized);
-        
-        const creds = await loadCredentials();
-        console.log('📋 Current credentials:', creds.map(c => c.email));
-        
-        const exists = creds.find(c => c.email === emailNormalized);
-        if (exists) {
-          console.log('❌ Email already registered:', emailNormalized);
-          throw new Error('Diese E-Mail ist bereits registriert. Bitte einloggen.');
-        }
+  const normalizeEmail = (email: string) => {
+    return email.trim().toLowerCase();
+  };
 
-        const newUser: StoredUser = {
-          id: 'u-' + Date.now().toString(),
-          email: emailNormalized,
-        };
+  const loadUserDB = async (): Promise<Record<string, User>> => {
+    const stored = await AsyncStorage.getItem(USER_DB_KEY);
+    return stored ? JSON.parse(stored) : {};
+  };
 
-        // Speichere Credentials
-        const nextCreds: StoredCredentials = [
-          ...creds,
-          { email: emailNormalized, password },
-        ];
-        await saveCredentials(nextCreds);
-        console.log('✅ Credentials saved');
+  const saveUserDB = async (db: Record<string, User>) => {
+    await AsyncStorage.setItem(USER_DB_KEY, JSON.stringify(db));
+  };
 
-        // Speichere User in der Datenbank
-        const usersDb = await loadUsersDatabase();
-        usersDb[emailNormalized] = newUser;
-        await saveUsersDatabase(usersDb);
-        console.log('✅ User saved to database');
+  // -----------------------------
+  // SIGN IN (LOGIN)
+  // -----------------------------
+  const signIn = async (email: string, password: string): Promise<User> => {
+    const normalized = normalizeEmail(email);
+    const db = await loadUserDB();
 
-        // Setze als aktuellen User
-        await setItem(USER_KEY, newUser);
-        setUser(newUser);
-        console.log('✅ signUp successful, user set:', newUser);
-      },
+    const existing = db[normalized];
 
-      async signIn(email, password) {
-        const emailNormalized = email.toLowerCase().trim();
-        console.log('🔐 signIn called with email:', emailNormalized);
-        
-        const creds = await loadCredentials();
-        console.log('📋 Current credentials:', creds.map(c => c.email));
-        
-        const found = creds.find(c => c.email === emailNormalized);
-        if (!found) {
-          console.log('❌ User not found');
-          throw new Error('E-Mail oder Passwort ist falsch');
-        }
-        
-        if (found.password !== password) {
-          console.log('❌ Wrong password');
-          throw new Error('E-Mail oder Passwort ist falsch');
-        }
-        
-        console.log('✅ Credentials valid');
+    if (!existing) {
+      throw new Error('Diese E-Mail ist nicht registriert.');
+    }
 
-        // Lade User aus der Datenbank (mit persistierter Rolle falls vorhanden)
-        const usersDb = await loadUsersDatabase();
-        console.log('📋 Users database:', Object.keys(usersDb));
-        
-        const userFromDb = usersDb[emailNormalized];
-        
-        if (userFromDb) {
-          // User existiert bereits in Datenbank - nutze seine Daten (inkl. Rolle)
-          console.log('✅ Found user in database:', userFromDb);
-          await setItem(USER_KEY, userFromDb);
-          setUser(userFromDb);
-        } else {
-          // Fallback: User existiert noch nicht in Datenbank (alte Accounts)
-          // Erstelle neuen User ohne Rolle
-          console.log('⚠️ User not in database, creating entry');
-          const newUser: StoredUser = {
-            id: 'u-' + Date.now().toString(),
-            email: emailNormalized,
-          };
-          
-          usersDb[emailNormalized] = newUser;
-          await saveUsersDatabase(usersDb);
-          await setItem(USER_KEY, newUser);
-          setUser(newUser);
-          console.log('✅ User created and set:', newUser);
-        }
-        
-        console.log('✅ signIn successful');
-      },
+    if (existing.password !== password) {
+      throw new Error('E-Mail oder Passwort falsch.');
+    }
 
-      async signOut() {
-        setUser(null);
-        await removeItem(USER_KEY);
-      },
+    // Login OK
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
+    setUser(existing);
 
-      async setRole(role) {
-        if (!user) return;
-        const updated: StoredUser = {
-          id: user.id,
-          email: user.email,
-          role,
-          accountType: user.accountType,
-        };
-        
-        // Speichere in der User-Datenbank
-        const usersDb = await loadUsersDatabase();
-        usersDb[user.email.toLowerCase()] = updated;
-        await saveUsersDatabase(usersDb);
-        
-        // Setze als aktuellen User
-        await setItem(USER_KEY, updated);
-        setUser(updated);
-      },
+    return existing;
+  };
+
+  // -----------------------------
+  // SIGN UP (REGISTRIEREN)
+  // -----------------------------
+  const signUp = async (email: string, password: string): Promise<User> => {
+    const normalized = normalizeEmail(email);
+    const db = await loadUserDB();
+
+    if (db[normalized]) {
+      throw new Error('Diese E-Mail ist bereits registriert. Bitte logge dich ein.');
+    }
+
+    const newUser: User = {
+      id: 'u-' + Date.now().toString(),
+      email: normalized,
+      password,
     };
-  }, [user, isLoading]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    db[normalized] = newUser;
+    await saveUserDB(db);
+
+    // Direkt einloggen
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
+    setUser(newUser);
+
+    return newUser;
+  };
+
+  // -----------------------------
+  // ROLLE SPEICHERN
+  // -----------------------------
+  const setRole = async (role: 'worker' | 'employer') => {
+    if (!user) return;
+
+    const updated = { ...user, role };
+
+    const db = await loadUserDB();
+    db[user.email] = updated;
+    await saveUserDB(db);
+
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
+    setUser(updated);
+  };
+
+  // -----------------------------
+  // LOGOUT
+  // -----------------------------
+  const signOut = async () => {
+    await AsyncStorage.removeItem(USER_KEY);
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, signIn, signUp, signOut, setRole }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export function useAuth(): AuthContextValue {
