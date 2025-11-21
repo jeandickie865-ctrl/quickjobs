@@ -4,11 +4,25 @@ import { calculateDistance } from './distance';
 
 // Low-Skill-Kategorien (keine Pflicht-Qualifikationen erforderlich)
 const LOW_SKILL_CATEGORIES = [
-  "Gastronomie & Service - Küchenhilfe",
-  "Gastronomie & Service - Spülkraft",
-  "Lager & Logistik",
-  "Reinigung",
-  "Haus & Garten"
+  "Gastronomie - Küchenhilfe",
+  "Gastronomie - Spülkraft",
+  "Gastronomie - Buffet",
+  "Gastronomie - Runner",
+  "Lager & Logistik - Helfer",
+  "Lager & Logistik - Inventur",
+  "Lager & Logistik - Warenverräumung",
+  "Reinigung - Gebäudereinigung",
+  "Reinigung - Haushaltshilfe",
+  "Haus & Garten - Gartenpflege",
+  "Haus & Garten - Umzugshilfe",
+  "Event - Aufbau",
+  "Event - Abbau",
+  "Event - Helfer",
+  "Event - Garderobe",
+  "Event - Ticketkontrolle",
+  "Produktion - einfache Tätigkeiten",
+  "Montage - leichte Montage",
+  "Sortierung - einfache Sortierung"
 ];
 
 // Special Security Tag
