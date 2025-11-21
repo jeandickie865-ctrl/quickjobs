@@ -175,11 +175,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  logoText: {
-    fontSize: 90,
-    fontWeight: '900',
-    color: COLORS.white,
-    letterSpacing: -2,
+  logoImage: {
+    width: 200,
+    height: 200,
   },
   // Slogan - 12px Abstand zum Logo
   sloganContainer: {
