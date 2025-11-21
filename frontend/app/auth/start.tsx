@@ -1,23 +1,21 @@
-// app/auth/start.tsx - EXACT DESIGN SPECIFICATIONS
+// app/auth/start.tsx - FANCY MINIMAL (Mint/Lila/Gold)
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity, Animated } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
-// Exact Brand Colors (fix definiert)
+// BCKP Fancy Minimal Colors
 const COLORS = {
-  primary: '#3D5C47',      // Brand Green
-  secondary: '#F7F4EF',    // Sand / Light Beige
-  accent: '#DDE7EF',       // Soft Blue
-  text: '#111111',         // Text Schwarz
-  gray: '#6F6F6F',         // Grau für Untertitel
-  error: '#D9534F',        // Fehlerfarbe
-  bgTop: '#FAF9F7',        // Hintergrund oben
-  bgBottom: '#FFFFFF',     // Hintergrund unten
-  logoContainer: '#F7F6F4', // Logo Container
-  footerText: '#8C8C8C',   // Footer Text
-  white: '#FFFFFF',
+  mint: '#72BC81',         // Primary Mint
+  mintPressed: '#5CA870',  // Pressed Mint
+  mintOutline: '#4F9E63',  // Outlined Mint (darker)
+  gold: '#B2892D',         // BCKP-Gold (Slogan)
+  purple: '#C576FF',       // Purple Accent (dezent)
+  offWhite: '#FAFAF8',     // Hintergrund
+  white: '#FFFFFF',        // Logo Card
+  black: '#000000',        // Haupttitel
+  footerGray: '#C1C1C1',   // Footer Links
 };
 
 export default function AuthStart() {
