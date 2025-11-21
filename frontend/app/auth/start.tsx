@@ -49,8 +49,8 @@ export default function AuthStart() {
 
           {/* Rechtliche Links */}
           <View style={{ marginTop: spacing.xxl, alignItems: 'center', gap: spacing.xs }}>
-            <Text style={{ fontSize: 13, color: colors.gray700, textAlign: 'center', lineHeight: 19 }}>
-              Mit deiner Nutzung akzeptierst du unsere AGB,{' \n'}die Datenschutzerklärung und die Grundsätze.
+            <Text style={{ fontSize: 12, color: colors.textMuted, textAlign: 'center', lineHeight: 18 }}>
+              Mit deiner Nutzung akzeptierst du unsere
             </Text>
             <View style={{ flexDirection: 'row', gap: spacing.md, flexWrap: 'wrap', justifyContent: 'center' }}>
               <Pressable onPress={() => router.push('/legal/agb')}>
