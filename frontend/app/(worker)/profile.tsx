@@ -62,6 +62,22 @@ export default function WorkerProfileScreen() {
     })();
   }, [user]);
 
+  // Reviews laden
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      setReviewsLoading(true);
+      try {
+        const workerReviews = await getReviewsForWorker(user.id);
+        setReviews(workerReviews);
+      } catch (error) {
+        console.error('Error loading reviews:', error);
+      } finally {
+        setReviewsLoading(false);
+      }
+    })();
+  }, [user]);
+
   const categories = useMemo(() => listCategories(), []);
   const selectedCategories = profile?.categories ?? [];
   const selectedTagsSet = new Set(profile?.selectedTags ?? []);
