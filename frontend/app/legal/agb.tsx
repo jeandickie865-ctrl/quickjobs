@@ -45,7 +45,7 @@ export default function AGBScreen() {
             Der vollständige rechtliche Text wird später von der Rechtsabteilung ergänzt.
           </Text>
           <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-            Diese Plattform bringt Arbeitgeber und Arbeitnehmer für kurzfristige Jobs zusammen.
+            Diese Plattform bringt Auftraggeber und Aufträgetarter für kurzfristige Aufträge zusammen.
             Die rechtliche Verantwortung für Anmeldung, Abrechnung, Steuern und Versicherung liegt
             bei den Vertragspartnern selbst.
           </Text>

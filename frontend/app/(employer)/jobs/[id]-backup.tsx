@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
+import { getJobById, deleteJob, updateAuftrag } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { CostBreakdown } from '../../../components/CostBreakdown';
-import { Job } from '../../../types/job';
+import { Auftrag } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
 import { Button } from '../../../components/ui/Button';
@@ -19,7 +19,7 @@ export default function JobDetailScreen() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
 
-  const [job, setJob] = useState<Job | null>(null);
+  const [job, setJob] = useState<Auftrag | null>(null);
   const [loadingJob, setLoadingJob] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -42,9 +42,9 @@ export default function JobDetailScreen() {
       }
       const found = await getJobById(String(id));
       if (!found) {
-        setError('Job nicht gefunden');
+        setError('Auftrag nicht gefunden');
       } else if (found.employerId !== user.id) {
-        setError('Du kannst nur deine eigenen Jobs ansehen');
+        setError('Du kannst nur deine eigenen Aufträge ansehen');
       } else {
         setJob(found);
       }
@@ -55,8 +55,8 @@ export default function JobDetailScreen() {
   async function handleDelete() {
     if (!job) return;
     Alert.alert(
-      'Job löschen',
-      'Möchtest du diesen Job wirklich löschen?',
+      'Auftrag löschen',
+      'Möchtest du diesen Auftrag wirklich löschen?',
       [
         { text: 'Abbrechen', style: 'cancel' },
         {
@@ -68,7 +68,7 @@ export default function JobDetailScreen() {
               await deleteJob(job.id);
               router.replace('/(employer)');
             } catch (e) {
-              setError('Job konnte nicht gelöscht werden.');
+              setError('Auftrag konnte nicht gelöscht werden.');
             } finally {
               setIsDeleting(false);
             }
@@ -101,7 +101,7 @@ export default function JobDetailScreen() {
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.md, gap: spacing.md }}>
           <Text style={{ color: colors.black, fontSize: 16, textAlign: 'center' }}>
-            {error ?? 'Job nicht gefunden'}
+            {error ?? 'Auftrag nicht gefunden'}
           </Text>
           <Button title="Zurück" onPress={() => router.replace('/(employer)')} />
         </View>
@@ -272,7 +272,7 @@ export default function JobDetailScreen() {
         {/* Actions */}
         <View style={{ gap: spacing.sm, marginTop: spacing.md }}>
           <Button
-            title={isDeleting ? 'Lösche…' : 'Job löschen'}
+            title={isDeleting ? 'Lösche…' : 'Auftrag löschen'}
             onPress={handleDelete}
             disabled={isDeleting}
             variant="ghost"

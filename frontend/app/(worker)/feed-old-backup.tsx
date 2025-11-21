@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
-import { Job } from '../../types/job';
+import { Auftrag } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { getWorkerProfile } from '../../utils/profileStore';
-import { getOpenJobs } from '../../utils/jobStore';
-import { filterMatchingJobs, sortJobsByMatch, calculateDistance } from '../../utils/matching';
+import { getOpenAufträge } from '../../utils/jobStore';
+import { filterMatchingAufträge, sortAufträgeByMatch, calculateDistance } from '../../utils/matching';
 import { euro } from '../../utils/pricing';
 import { listCategories } from '../../src/taxonomy';
 
@@ -17,8 +17,8 @@ export default function WorkerFeed() {
   const { user } = useAuth();
   const router = useRouter();
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
-  const [allJobs, setAllJobs] = useState<Job[]>([]);
-  const [matchingJobs, setMatchingJobs] = useState<Job[]>([]);
+  const [allAufträge, setAllAufträge] = useState<Job[]>([]);
+  const [matchingAufträge, setMatchingAufträge] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -26,18 +26,18 @@ export default function WorkerFeed() {
     if (!user) return;
     
     try {
-      const [workerProfile, openJobs] = await Promise.all([
+      const [workerProfile, openAufträge] = await Promise.all([
         getWorkerProfile(user.id),
-        getOpenJobs()
+        getOpenAufträge()
       ]);
 
       setProfile(workerProfile);
-      setAllJobs(openJobs);
+      setAllAufträge(openAufträge);
 
       if (workerProfile) {
-        const matches = filterMatchingJobs(openJobs, workerProfile);
-        const sorted = sortJobsByMatch(matches, workerProfile);
-        setMatchingJobs(sorted);
+        const matches = filterMatchingAufträge(openAufträge, workerProfile);
+        const sorted = sortAufträgeByMatch(matches, workerProfile);
+        setMatchingAufträge(sorted);
       }
     } catch (error) {
       console.error('Error loading feed:', error);
@@ -76,7 +76,7 @@ export default function WorkerFeed() {
             Profil vervollständigen
           </Text>
           <Text style={{ color: colors.gray600, fontSize: 15, textAlign: 'center' }}>
-            Bitte ergänze dein Profil mit Kategorien und Qualifikationen, um passende Jobs zu sehen.
+            Bitte ergänze dein Profil mit Kategorien und Qualifikationen, um passende Aufträge zu sehen.
           </Text>
           <Pressable
             onPress={() => router.push('/(worker)/profile')}
@@ -117,14 +117,14 @@ export default function WorkerFeed() {
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>
-            Jobs für dich
+            Aufträge für dich
           </Text>
           <Pressable onPress={() => router.push('/(worker)/profile')}>
             <Text style={{ color: colors.gray700, fontSize: 14 }}>⚙️ Profil</Text>
           </Pressable>
         </View>
 
-        {matchingJobs.length === 0 ? (
+        {matchingAufträge.length === 0 ? (
           <View style={{
             padding: spacing.xl,
             backgroundColor: colors.white,
@@ -133,13 +133,13 @@ export default function WorkerFeed() {
             gap: 8
           }}>
             <Text style={{ color: colors.gray700, fontSize: 16, textAlign: 'center' }}>
-              {allJobs.length === 0 
-                ? 'Noch keine Jobs verfügbar'
-                : 'Keine passenden Jobs gefunden'
+              {allAufträge.length === 0 
+                ? 'Noch keine Aufträge verfügbar'
+                : 'Keine passenden Aufträge gefunden'
               }
             </Text>
             <Text style={{ color: colors.gray500, fontSize: 14, textAlign: 'center' }}>
-              {allJobs.length === 0
+              {allAufträge.length === 0
                 ? 'Schau später nochmal vorbei'
                 : 'Versuche deinen Radius oder deine Kategorien anzupassen'
               }
@@ -147,7 +147,7 @@ export default function WorkerFeed() {
           </View>
         ) : (
           <View style={{ gap: spacing.sm }}>
-            {matchingJobs.map((job) => {
+            {matchingAufträge.map((job) => {
               const distance = profile ? calculateDistance(profile.homeLat, profile.homeLon, job.lat, job.lon) : 0;
               
               return (

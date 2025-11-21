@@ -6,15 +6,15 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getApplicationsForWorker } from '../../utils/applicationStore';
 import { getJobById } from '../../utils/jobStore';
-import { Job } from '../../types/job';
+import { Auftrag } from '../../types/job';
 import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
 import { formatAddress } from '../../types/address';
 import { euro } from '../../utils/pricing';
 
-type ApplicationWithJob = {
+type ApplicationWithAuftrag = {
   app: JobApplication;
-  job: Job | null;
+  job: Auftrag | null;
 };
 
 export default function WorkerApplicationsScreen() {
@@ -129,7 +129,7 @@ export default function WorkerApplicationsScreen() {
             Meine Bewerbungen
           </Text>
           <Text style={[styles.subtitle, { color: colors.gray700, marginTop: 4 }]}>
-            Alle Jobs, für die du dich gemeldet hast
+            Alle Aufträge, für die du dich gemeldet hast
           </Text>
         </View>
 
@@ -176,11 +176,11 @@ export default function WorkerApplicationsScreen() {
               Noch keine Bewerbungen
             </Text>
             <Text style={[styles.emptyText, { color: colors.gray600, marginTop: spacing.xs }]}>
-              Du hast dich bisher für keine Jobs gemeldet.{'\n'}
-              Schau im Feed nach passenden Jobs!
+              Du hast dich bisher für keine Aufträge gemeldet.{'\n'}
+              Schau im Feed nach passenden Aufträge!
             </Text>
             <Button
-              title="Jobs ansehen"
+              title="Aufträge ansehen"
               onPress={() => router.push('/(worker)/feed')}
               style={{ marginTop: spacing.md }}
             />
@@ -192,7 +192,7 @@ export default function WorkerApplicationsScreen() {
           const statusLabel = getStatusLabel(app.status);
           const statusColor = getStatusColor(app.status);
           const jobStatusLabel = getJobStatusLabel(job?.status);
-          const title = job?.title ?? 'Job nicht mehr verfügbar';
+          const title = job?.title ?? 'Auftrag nicht mehr verfügbar';
           const address = job?.address ? formatAddress(job.address) : 'Adresse nicht verfügbar';
           const category = job?.category ?? '';
           const workerAmount = job?.workerAmountCents ? euro(job.workerAmountCents) : '';
@@ -214,12 +214,12 @@ export default function WorkerApplicationsScreen() {
                 },
               ]}
             >
-              {/* Job Title */}
+              {/* Auftrag Title */}
               <Text style={[styles.jobTitle, { color: colors.black }]}>
                 {title}
               </Text>
 
-              {/* Job Details */}
+              {/* Auftrag Details */}
               <View style={{ gap: 4, marginTop: spacing.xs }}>
                 {!!category && (
                   <Text style={[styles.jobDetail, { color: colors.gray700 }]}>
@@ -287,7 +287,7 @@ export default function WorkerApplicationsScreen() {
                   </View>
                   
                   <Button
-                    title="💬 Chat mit Arbeitgeber"
+                    title="💬 Chat mit Auftraggeber"
                     variant="secondary"
                     onPress={() =>
                       router.push({

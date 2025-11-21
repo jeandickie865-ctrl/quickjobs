@@ -19,7 +19,7 @@ import { Button } from '../../../components/ui/Button';
 import { getJobById } from '../../../utils/jobStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { addReview } from '../../../utils/reviewStore';
-import { Job } from '../../../types/job';
+import { Auftrag } from '../../../types/job';
 import { WorkerProfile } from '../../../types/profile';
 
 export default function RateWorkerScreen() {
@@ -28,7 +28,7 @@ export default function RateWorkerScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ jobId: string; workerId: string }>();
 
-  const [job, setJob] = useState<Job | null>(null);
+  const [job, setJob] = useState<Auftrag | null>(null);
   const [worker, setWorker] = useState<WorkerProfile | null>(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -146,7 +146,7 @@ export default function RateWorkerScreen() {
             </Text>
           </View>
 
-          {/* Job Info */}
+          {/* Auftrag Info */}
           <View
             style={{
               backgroundColor: colors.white,
@@ -178,7 +178,7 @@ export default function RateWorkerScreen() {
             }}
           >
             <Text style={{ color: colors.gray700, fontSize: 13, marginBottom: 4 }}>
-              Arbeitnehmer
+              Aufträgetarter
             </Text>
             <Text style={{ color: colors.black, fontSize: 16, fontWeight: '600' }}>
               {worker.firstName && worker.lastName

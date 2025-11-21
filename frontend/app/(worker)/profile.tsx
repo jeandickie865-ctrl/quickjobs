@@ -677,7 +677,7 @@ export default function WorkerProfileScreen() {
           }}
         >
           <Text style={{ color: colors.gray700, fontSize: 14, textAlign: 'center' }}>
-            👆 Wähle mindestens eine Kategorie aus, um passende Jobs zu finden
+            👆 Wähle mindestens eine Kategorie aus, um passende Aufträge zu finden
           </Text>
         </View>
       )}

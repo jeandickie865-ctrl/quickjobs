@@ -192,7 +192,7 @@ export default function MatchLegalScreen() {
 
           {!isEmployer && (
             <Text style={{ fontSize: 12, color: colors.gray500, marginTop: spacing.xs, marginLeft: 32 }}>
-              {employerChecked ? 'Arbeitgeber hat bestätigt ✓' : 'Warte auf Bestätigung des Arbeitgebers...'}
+              {employerChecked ? 'Auftraggeber hat bestätigt ✓' : 'Warte auf Bestätigung des Auftraggebers...'}
             </Text>
           )}
         </View>
@@ -209,7 +209,7 @@ export default function MatchLegalScreen() {
           }}
         >
           <Text style={{ fontSize: 16, fontWeight: '700', color: colors.black, marginBottom: spacing.sm }}>
-            Für Arbeitnehmer
+            Für Aufträgetarter
           </Text>
           
           <Pressable
@@ -245,7 +245,7 @@ export default function MatchLegalScreen() {
 
           {!isWorker && (
             <Text style={{ fontSize: 12, color: colors.gray500, marginTop: spacing.xs, marginLeft: 32 }}>
-              {workerChecked ? 'Arbeitnehmer hat bestätigt ✓' : 'Warte auf Bestätigung des Arbeitnehmers...'}
+              {workerChecked ? 'Aufträgetarter hat bestätigt ✓' : 'Warte auf Bestätigung des Aufträgetarters...'}
             </Text>
           )}
         </View>

@@ -46,7 +46,7 @@ export default function GuidelinesScreen() {
               So nutzen wir diese Plattform miteinander
             </Text>
             <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-              ShiftMatch bringt Arbeitgeber und Arbeitnehmer für kurzfristige Jobs zusammen.
+              ShiftMatch bringt Auftraggeber und Aufträgetarter für kurzfristige Aufträge zusammen.
               Damit das fair und transparent funktioniert, gelten diese Grundsätze:
             </Text>
           </View>
@@ -64,10 +64,10 @@ export default function GuidelinesScreen() {
             </Text>
             <View style={{ gap: spacing.xs }}>
               <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-                • Jobs für kurzfristige Einsätze anbieten und annehmen
+                • Aufträge für kurzfristige Einsätze anbieten und annehmen
               </Text>
               <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-                • Faire Bezahlung direkt zwischen Arbeitgeber und Arbeitnehmer vereinbaren
+                • Faire Bezahlung direkt zwischen Auftraggeber und Aufträgetarter vereinbaren
               </Text>
               <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
                 • Ehrliche und vollständige Profile erstellen
@@ -122,7 +122,7 @@ export default function GuidelinesScreen() {
               Wichtig zu wissen
             </Text>
             <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-              ShiftMatch ist eine Vermittlungsplattform. Wir sind nicht Arbeitgeber und übernehmen keine
+              ShiftMatch ist eine Vermittlungsplattform. Wir sind nicht Auftraggeber und übernehmen keine
               rechtliche Verantwortung für die Verträge zwischen den Parteien.
             </Text>
             <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>

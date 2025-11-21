@@ -5,8 +5,8 @@ import { useRouter, Redirect } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getApplicationsForWorker } from '../../utils/applicationStore';
-import { getJobs } from '../../utils/jobStore';
-import { Job } from '../../types/job';
+import { getAufträge } from '../../utils/jobStore';
+import { Auftrag } from '../../types/job';
 import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
 import { euro } from '../../utils/pricing';
@@ -45,17 +45,17 @@ export default function WorkerMatchesScreen() {
       const acceptedApps = apps.filter((a) => a.status === 'accepted');
       console.log('✅ loadMatches: Accepted applications', acceptedApps.length);
 
-      // 3. Jobs laden
-      const allJobs = await getJobs();
+      // 3. Aufträge laden
+      const allAufträge = await getAufträge();
 
       const combined: Match[] = [];
 
       for (const app of acceptedApps) {
-        const job = allJobs.find((j) => j.id === app.jobId);
+        const job = allAufträge.find((j) => j.id === app.jobId);
         if (job) {
           combined.push({ job, application: app });
         } else {
-          console.warn('⚠️ loadMatches: Job not found for application', app.jobId);
+          console.warn('⚠️ loadMatches: Auftrag not found for application', app.jobId);
         }
       }
 
@@ -132,7 +132,7 @@ export default function WorkerMatchesScreen() {
               style={{ color: colors.primary, fontSize: 15, fontWeight: '600', paddingHorizontal: spacing.sm, paddingVertical: 4 }}
               onPress={() => router.push('/(worker)/feed')}
             >
-              🔎 Jobs
+              🔎 Aufträge
             </Text>
           </View>
           <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
@@ -169,10 +169,10 @@ export default function WorkerMatchesScreen() {
               Noch keine Matches
             </Text>
             <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
-              Sobald ein Auftraggeber deine Bewerbung annimmt, erscheint der Job hier.
+              Sobald ein Auftraggeber deine Bewerbung annimmt, erscheint der Auftrag hier.
             </Text>
             <Button
-              title="Jobs ansehen"
+              title="Aufträge ansehen"
               onPress={() => router.push('/(worker)/feed')}
               style={{ marginTop: spacing.md }}
             />
@@ -240,7 +240,7 @@ export default function WorkerMatchesScreen() {
                     )}
                   </View>
 
-                  {/* Job Info */}
+                  {/* Auftrag Info */}
                   <View style={{ gap: 8 }}>
                     <Text style={{ fontWeight: '800', fontSize: 18, color: colors.black }}>
                       {job.title}
@@ -300,7 +300,7 @@ export default function WorkerMatchesScreen() {
                     borderLeftColor: colors.black,
                   }}>
                     <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
-                      🎉 <Text style={{ fontWeight: '600' }}>Glückwunsch!</Text> Der Auftraggeber hat dich für diesen Job ausgewählt. 
+                      🎉 <Text style={{ fontWeight: '600' }}>Glückwunsch!</Text> Der Auftraggeber hat dich für diesen Auftrag ausgewählt. 
                       Ihr könnt jetzt Details besprechen.
                     </Text>
                   </View>

@@ -1,4 +1,4 @@
-// app/onboarding/role.tsx - Green Modern Minimal (Auftraggeber/Jobstarter)
+// app/onboarding/role.tsx - Green Modern Minimal (Auftraggeber/Aufträgetarter)
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -107,7 +107,7 @@ export default function RoleSelectionScreen() {
 
         <RoleCard
           role="worker"
-          title="Jobstarter"
+          title="Aufträgetarter"
           description="Finde schnelle Aufträge in deiner Nähe und starte direkt."
           icon="worker"
         />

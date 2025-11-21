@@ -49,8 +49,8 @@ export default function PrivacyScreen() {
             vertraulich behandelt und gemäß der geltenden Datenschutzbestimmungen gespeichert.
           </Text>
           <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-            Diese Plattform speichert nur die Daten, die für die Vermittlung zwischen Arbeitgebern
-            und Arbeitnehmern notwendig sind.
+            Diese Plattform speichert nur die Daten, die für die Vermittlung zwischen Auftraggebern
+            und Aufträgetartern notwendig sind.
           </Text>
         </View>
 

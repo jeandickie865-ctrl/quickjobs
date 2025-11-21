@@ -8,9 +8,9 @@ import { Button } from '../../../components/ui/Button';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import Chip from '../../../components/ui/Chip';
 import { listCategories, CategoryKey, groupTagsByType } from '../../../src/taxonomy';
-import { JobTimeMode, Job } from '../../../types/job';
+import { JobTimeMode, Auftrag } from '../../../types/job';
 import { Address } from '../../../types/address';
-import { addJob } from '../../../utils/jobStore';
+import { addAuftrag } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
 import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
 
@@ -67,7 +67,7 @@ export default function CreateJob() {
 
     // User validation
     if (!user || user.role !== 'employer') {
-      setError('Du musst als Arbeitgeber angemeldet sein.');
+      setError('Du musst als Auftraggeber angemeldet sein.');
       return;
     }
 
@@ -145,7 +145,7 @@ export default function CreateJob() {
     };
 
     // Create job object
-    const job: Job = {
+    const job: Auftrag = {
       id: 'job-' + Date.now().toString(),
       employerId: user.id,
       employerType: user.accountType === 'business' ? 'business' : 'private',
@@ -173,11 +173,11 @@ export default function CreateJob() {
       setIsSaving(true);
       console.log('📝 createJob: newJob', { id: job.id, title: job.title, employerId: job.employerId });
       await addJob(job);
-      console.log('✅ createJob: Job saved successfully');
+      console.log('✅ createJob: Auftrag saved successfully');
       router.replace('/(employer)');
     } catch (e) {
-      console.log('❌ createJob: Job publish error:', e);
-      setError('Job konnte nicht gespeichert werden.');
+      console.log('❌ createJob: Auftrag publish error:', e);
+      setError('Auftrag konnte nicht gespeichert werden.');
     } finally {
       setIsSaving(false);
     }
@@ -192,7 +192,7 @@ export default function CreateJob() {
         {/* Header */}
         <View style={{ marginBottom: spacing.xs }}>
           <Text style={{ color: colors.black, fontSize: 28, fontWeight: '900', letterSpacing: -0.5 }}>
-            Job erstellen
+            Auftrag erstellen
           </Text>
           <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
             Erstelle ein neues Jobangebot für dein Team
@@ -297,7 +297,7 @@ export default function CreateJob() {
                 Anforderungen (optional)
               </Text>
               <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                Wähle Tätigkeiten und Qualifikationen, die für diesen Job wichtig sind. Für einfache Hilfstätigkeiten kannst du dies leer lassen.
+                Wähle Tätigkeiten und Qualifikationen, die für diesen Auftrag wichtig sind. Für einfache Hilfstätigkeiten kannst du dies leer lassen.
               </Text>
               
               {/* Tätigkeiten */}
@@ -631,7 +631,7 @@ export default function CreateJob() {
         {/* Worker Amount */}
         <View style={{ gap: 6 }}>
           <Text style={{ color: colors.black, fontWeight: '600' }}>
-            Gesamtlohn für Arbeitnehmer (€)
+            Gesamtlohn für Aufträgetarter (€)
           </Text>
           <TextInput
             value={workerAmountInput}
@@ -666,7 +666,7 @@ export default function CreateJob() {
 
         {/* Payment Method */}
         <View style={{ gap: 6 }}>
-          <Text style={{ color: colors.black, fontWeight: '600' }}>Zahlung an Arbeitnehmer</Text>
+          <Text style={{ color: colors.black, fontWeight: '600' }}>Zahlung an Aufträgetarter</Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Pressable
               onPress={() => setPaymentMethod('cash')}
@@ -735,7 +735,7 @@ export default function CreateJob() {
 
         {/* Submit Button */}
         <Button
-          title={isSaving ? 'Veröffentliche…' : 'Job veröffentlichen'}
+          title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
           onPress={handlePublish}
           disabled={isSaving}
         />

@@ -5,11 +5,11 @@ import { useRouter, Redirect } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
-import { getJobs } from '../../utils/jobStore';
+import { getAufträge } from '../../utils/jobStore';
 import { applyForJob, getApplicationsForWorker } from '../../utils/applicationStore';
 import { jobMatchesWorker, jobMatchesWorkerWithDebug, MatchDebug } from '../../utils/matching';
-import { nearbyJobs, NearbyJob } from '../../utils/nearbyJobs';
-import { Job } from '../../types/job';
+import { nearbyAufträge, NearbyAuftrag } from '../../utils/nearbyAufträge';
+import { Auftrag } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Button } from '../../components/ui/Button';
 import { euro } from '../../utils/pricing';
@@ -22,9 +22,9 @@ export default function WorkerFeed() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobs, setAufträge] = useState<Job[]>([]);
   const [appsJobIds, setAppsJobIds] = useState<Set<string>>(new Set());
-  const [acceptedJobsCount, setAcceptedJobsCount] = useState(0);
+  const [acceptedAufträgeCount, setAcceptedAufträgeCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isApplyingJobId, setIsApplyingJobId] = useState<string | null>(null);
@@ -32,8 +32,8 @@ export default function WorkerFeed() {
   const [activeTab, setActiveTab] = useState<'matching' | 'all'>('matching');
   
   // Debug counters
-  const [allJobsCount, setAllJobsCount] = useState(0);
-  const [openJobsCount, setOpenJobsCount] = useState(0);
+  const [allAufträgeCount, setAllAufträgeCount] = useState(0);
+  const [openAufträgeCount, setOpenAufträgeCount] = useState(0);
   const [debugInfos, setDebugInfos] = useState<MatchDebug[]>([]);
 
   const loadData = async () => {
@@ -51,15 +51,15 @@ export default function WorkerFeed() {
 
       setProfile(workerProfile);
 
-      const allJobs = await getJobs();
-      setAllJobsCount(allJobs.length);
-      const openJobs = allJobs.filter(j => j.status === 'open');
-      setOpenJobsCount(openJobs.length);
-      setJobs(openJobs);
+      const allAufträge = await getAufträge();
+      setAllAufträgeCount(allAufträge.length);
+      const openAufträge = allAufträge.filter(j => j.status === 'open');
+      setOpenAufträgeCount(openAufträge.length);
+      setAufträge(openAufträge);
 
       // Generate debug info for all open jobs
       if (workerProfile) {
-        const infos = openJobs.map(job => jobMatchesWorkerWithDebug(job, workerProfile));
+        const infos = openAufträge.map(job => jobMatchesWorkerWithDebug(job, workerProfile));
         setDebugInfos(infos);
       }
 
@@ -69,12 +69,12 @@ export default function WorkerFeed() {
 
       // Count accepted applications for info box
       const acceptedApps = applications.filter(app => app.status === 'accepted');
-      setAcceptedJobsCount(acceptedApps.length);
+      setAcceptedAufträgeCount(acceptedApps.length);
 
       setError(null);
     } catch (e) {
       console.error('Error loading feed:', e);
-      setError('Fehler beim Laden der Jobs.');
+      setError('Fehler beim Laden der Aufträge.');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -92,8 +92,8 @@ export default function WorkerFeed() {
     loadData();
   };
 
-  // Prüfen, ob Worker sich für einen Job starten kann
-  const canApplyToJob = (job: Job, workerProfile: WorkerProfile | null): boolean => {
+  // Prüfen, ob Worker sich für einen Auftrag starten kann
+  const canApplyToAuftrag = (job: Job, workerProfile: WorkerProfile | null): boolean => {
     if (!workerProfile) return false;
 
     // Spezialfall: Sicherheit - Pflicht-Tags prüfen
@@ -122,8 +122,8 @@ export default function WorkerFeed() {
     return R * c;
   };
 
-  // Passende Jobs - mit Matching-Filter
-  const matchingJobs = useMemo(
+  // Passende Aufträge - mit Matching-Filter
+  const matchingAufträge = useMemo(
     () =>
       profile
         ? jobs
@@ -134,16 +134,16 @@ export default function WorkerFeed() {
     [jobs, profile]
   );
 
-  // Alle Jobs im Umkreis - mit Radius-Filter und Distanz-Info
-  const allJobsInRadius: NearbyJob[] = useMemo(() => {
+  // Alle Aufträge im Umkreis - mit Radius-Filter und Distanz-Info
+  const allAufträgeInRadius: NearbyJob[] = useMemo(() => {
     if (!profile) return [];
 
-    const openJobs = jobs.filter(j => j.status === 'open');
-    return nearbyJobs(openJobs, profile);
+    const openAufträge = jobs.filter(j => j.status === 'open');
+    return nearbyAufträge(openAufträge, profile);
   }, [jobs, profile]);
 
   // Aktive Job-Liste basierend auf Tab
-  const activeJobs = activeTab === 'matching' ? matchingJobs : allJobsInRadius;
+  const activeAufträge = activeTab === 'matching' ? matchingAufträge : allAufträgeInRadius;
 
   async function handleApply(jobId: string, employerId: string | undefined) {
     if (!user) {
@@ -160,7 +160,7 @@ export default function WorkerFeed() {
 
     if (!employerId) {
       console.log('❌ handleApply: employerId is missing from job');
-      setError('Dieser Job hat keinen Auftraggeber zugewiesen. Bitte lade die Seite neu.');
+      setError('Dieser Auftrag hat keinen Auftraggeber zugewiesen. Bitte lade die Seite neu.');
       return;
     }
 
@@ -204,7 +204,7 @@ export default function WorkerFeed() {
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={colors.black} />
-          <Text style={{ color: colors.gray700, marginTop: spacing.sm }}>Lade Jobs…</Text>
+          <Text style={{ color: colors.gray700, marginTop: spacing.sm }}>Lade Aufträge…</Text>
         </View>
       </SafeAreaView>
     );
@@ -218,7 +218,7 @@ export default function WorkerFeed() {
             Profil vervollständigen
           </Text>
           <Text style={{ color: colors.gray700, fontSize: 15, textAlign: 'center' }}>
-            Bitte wähle mindestens eine Kategorie in deinem Profil, um Jobs zu sehen.
+            Bitte wähle mindestens eine Kategorie in deinem Profil, um Aufträge zu sehen.
           </Text>
           <Button
             title="Zum Profil"
@@ -246,7 +246,7 @@ export default function WorkerFeed() {
         <View style={{ marginBottom: spacing.xs }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text style={{ fontSize: 28, fontWeight: '900', color: colors.black, letterSpacing: -0.5 }}>
-              Jobs für dich
+              Aufträge für dich
             </Text>
             <View style={{ flexDirection: 'row', gap: spacing.sm }}>
               {/* Prominent Matches Button */}
@@ -330,7 +330,7 @@ export default function WorkerFeed() {
               elevation: activeTab === 'matching' ? 2 : 0,
             }}
           >
-            ✓ Passende Jobs
+            ✓ Passende Aufträge
           </Text>
           <Text
             onPress={() => setActiveTab('all')}
@@ -369,7 +369,7 @@ export default function WorkerFeed() {
           </View>
         )}
 
-        {activeJobs.length === 0 ? (
+        {activeAufträge.length === 0 ? (
           <View style={{
             padding: spacing.xl,
             backgroundColor: colors.white,
@@ -379,16 +379,16 @@ export default function WorkerFeed() {
           }}>
             <Text style={{ color: colors.gray700, fontSize: 16, textAlign: 'center', fontWeight: '600' }}>
               {activeTab === 'matching' 
-                ? 'Keine passenden Jobs gefunden'
-                : 'Keine Jobs im Umkreis gefunden'}
+                ? 'Keine passenden Aufträge gefunden'
+                : 'Keine Aufträge im Umkreis gefunden'}
             </Text>
             <Text style={{ color: colors.gray500, fontSize: 14, textAlign: 'center' }}>
               {activeTab === 'matching'
-                ? 'Aktuell gibt es keine Jobs, die zu deinem Profil passen. Schau später wieder vorbei oder passe dein Profil an.'
-                : 'Aktuell gibt es keine offenen Jobs in deiner Nähe. Schau später wieder vorbei.'}
+                ? 'Aktuell gibt es keine Aufträge, die zu deinem Profil passen. Schau später wieder vorbei oder passe dein Profil an.'
+                : 'Aktuell gibt es keine offenen Aufträge in deiner Nähe. Schau später wieder vorbei.'}
             </Text>
             <Text style={{ color: colors.gray400, fontSize: 12, marginTop: 8, textAlign: 'center' }}>
-              Debug: {allJobsCount} Jobs insgesamt, {openJobsCount} offene Jobs, {matchingJobs.length} passende Jobs für dein Profil.
+              Debug: {allAufträgeCount} Aufträge insgesamt, {openAufträgeCount} offene Aufträge, {matchingAufträge.length} passende Aufträge für dein Profil.
             </Text>
             {profile && (
               <View style={{ marginTop: spacing.sm, width: '100%', gap: 4 }}>
@@ -401,16 +401,16 @@ export default function WorkerFeed() {
                 {debugInfos.slice(0, 3).map(info => (
                   <View key={info.jobId} style={{ marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: colors.gray200 }}>
                     <Text style={{ color: colors.gray500, fontSize: 11 }}>
-                      Job {info.jobId.substring(0, 12)}: Kategorie = {info.jobCategory}, categoryOk = {String(info.categoryOk)}
+                      Auftrag {info.jobId.substring(0, 12)}: Kategorie = {info.jobCategory}, categoryOk = {String(info.categoryOk)}
                     </Text>
                     <Text style={{ color: colors.gray500, fontSize: 11 }}>
-                      Pflicht-Tags Job = [{info.requiredAllJob.join(', ')}]
+                      Pflicht-Tags Auftrag = [{info.requiredAllJob.join(', ')}]
                     </Text>
                     <Text style={{ color: colors.gray500, fontSize: 11 }}>
                       Fehlende Pflicht-Tags im Profil = [{info.missingRequiredAll.join(', ')}]
                     </Text>
                     <Text style={{ color: colors.gray500, fontSize: 11 }}>
-                      Any-Tags Job = [{info.requiredAnyJob.join(', ')}], Schnittmenge = [{info.anyIntersection.join(', ')}], requiredAnyOk = {String(info.requiredAnyOk)}
+                      Any-Tags Auftrag = [{info.requiredAnyJob.join(', ')}], Schnittmenge = [{info.anyIntersection.join(', ')}], requiredAnyOk = {String(info.requiredAnyOk)}
                     </Text>
                   </View>
                 ))}
@@ -419,7 +419,7 @@ export default function WorkerFeed() {
           </View>
         ) : (
           <View style={{ gap: spacing.sm }}>
-            {activeJobs.map((job) => {
+            {activeAufträge.map((job) => {
               const hasApplied = appsJobIds.has(job.id);
               
               // Format date/time info using centralized function
@@ -431,15 +431,15 @@ export default function WorkerFeed() {
                 job.dueAt
               );
 
-              // Prüfen, ob Job zum Profil passt (für Chip-Anzeige)
+              // Prüfen, ob Auftrag zum Profil passt (für Chip-Anzeige)
               const matchesProfile = profile ? jobMatchesWorker(job, profile) : false;
               
               // Prüfen, ob Worker sich starten kann (Pflicht-Qualifikationen)
               const canApply = canApplyToJob(job, profile);
 
-              // Check if this is a NearbyJob with distance info
-              const isNearbyJob = activeTab === 'all' && 'distance' in job;
-              const nearbyJobData = isNearbyJob ? (job as NearbyJob) : null;
+              // Check if this is a NearbyAuftrag with distance info
+              const isNearbyAuftrag = activeTab === 'all' && 'distance' in job;
+              const nearbyJobData = isNearbyAuftrag ? (job as NearbyJob) : null;
 
               return (
                 <View
@@ -470,7 +470,7 @@ export default function WorkerFeed() {
                       {job.title}
                     </Text>
                     
-                    {/* Match-Strength-Chip (nur "Passende Jobs" Tab) */}
+                    {/* Match-Strength-Chip (nur "Passende Aufträge" Tab) */}
                     {activeTab === 'matching' && matchesProfile && (
                       <View style={{
                         paddingHorizontal: 8,
@@ -651,7 +651,7 @@ export default function WorkerFeed() {
                         borderLeftColor: '#f0ad4e',
                       }}>
                         <Text style={{ color: '#8a6d3b', fontSize: 12, lineHeight: 16 }}>
-                          ⚠️ Für diesen Job brauchst du Pflicht-Qualifikationen, die du nicht hinterlegt hast.
+                          ⚠️ Für diesen Auftrag brauchst du Pflicht-Qualifikationen, die du nicht hinterlegt hast.
                         </Text>
                       </View>
                     </View>
@@ -662,9 +662,9 @@ export default function WorkerFeed() {
           </View>
         )}
 
-        {/* Hinweis: Jobs außerhalb des Profils (nur im "Alle Jobs" Tab) */}
-        {activeTab === 'all' && activeJobs.length > 0 && profile && (() => {
-          const jobsOutsideProfile = activeJobs.filter(job => !jobMatchesWorker(job, profile));
+        {/* Hinweis: Aufträge außerhalb des Profils (nur im "Alle Aufträge" Tab) */}
+        {activeTab === 'all' && activeAufträge.length > 0 && profile && (() => {
+          const jobsOutsideProfile = activeAufträge.filter(job => !jobMatchesWorker(job, profile));
           return jobsOutsideProfile.length > 0;
         })() && (
           <View style={{
@@ -675,13 +675,13 @@ export default function WorkerFeed() {
             borderLeftColor: '#f0ad4e',
           }}>
             <Text style={{ color: '#8a6d3b', fontSize: 13, lineHeight: 18 }}>
-              💡 Einige Jobs liegen außerhalb deines Profils. Bewirb dich nur, wenn du die Tätigkeit sicher ausführen kannst.
+              💡 Einige Aufträge liegen außerhalb deines Profils. Bewirb dich nur, wenn du die Tätigkeit sicher ausführen kannst.
             </Text>
           </View>
         )}
 
-        {/* Info: Akzeptierte Jobs sind unter Matches */}
-        {acceptedJobsCount > 0 && (
+        {/* Info: Akzeptierte Aufträge sind unter Matches */}
+        {acceptedAufträgeCount > 0 && (
           <View style={{
             padding: spacing.md,
             backgroundColor: colors.beige100,
@@ -690,7 +690,7 @@ export default function WorkerFeed() {
             borderLeftColor: colors.black,
           }}>
             <Text style={{ color: colors.black, fontSize: 14, lineHeight: 20 }}>
-              🎉 <Text style={{ fontWeight: '700' }}>Du hast {acceptedJobsCount} {acceptedJobsCount === 1 ? 'Match' : 'Matches'}!</Text>
+              🎉 <Text style={{ fontWeight: '700' }}>Du hast {acceptedAufträgeCount} {acceptedAufträgeCount === 1 ? 'Match' : 'Matches'}!</Text>
               {'\n'}
               Auftraggeber haben deine Startanfrageen angenommen. Du findest sie unter{' '}
               <Text

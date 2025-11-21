@@ -7,8 +7,8 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
-import { Job } from '../../types/job';
-import { getEmployerJobs } from '../../utils/jobStore';
+import { Auftrag } from '../../types/job';
+import { getEmployerAufträge } from '../../utils/jobStore';
 import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 
@@ -16,14 +16,14 @@ export default function EmployerDashboard() {
   const { colors, spacing } = useTheme();
   const { user, signOut } = useAuth();
   const router = useRouter();
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobs, setAufträge] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const employerJobs = await getEmployerJobs(user.id);
-      setJobs(employerJobs);
+      const employerAufträge = await getEmployerAufträge(user.id);
+      setAufträge(employerAufträge);
       setIsLoading(false);
     })();
   }, [user]);
@@ -41,7 +41,7 @@ export default function EmployerDashboard() {
             Meine Aufträge
           </Text>
           <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 4 }}>
-            Verwalte deine Aufträge und finde Jobstarter
+            Verwalte deine Aufträge und finde Aufträgetarter
           </Text>
         </View>
 
@@ -60,7 +60,7 @@ export default function EmployerDashboard() {
               Noch keine Aufträge erstellt
             </Text>
             <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
-              Erstelle deinen ersten Auftrag, um Jobstarter zu finden
+              Erstelle deinen ersten Auftrag, um Aufträgetarter zu finden
             </Text>
           </Card>
         ) : (
