@@ -92,7 +92,7 @@ export default function WorkerFeed() {
     loadData();
   };
 
-  // Prüfen, ob Worker sich für einen Job bewerben kann
+  // Prüfen, ob Worker sich für einen Job starten kann
   const canApplyToJob = (job: Job, workerProfile: WorkerProfile | null): boolean => {
     if (!workerProfile) return false;
 
@@ -184,8 +184,8 @@ export default function WorkerFeed() {
       const msg =
         e instanceof Error
           ? e.message
-          : 'Unbekannter Fehler beim Bewerben.';
-      setError('Bewerbung konnte nicht gespeichert werden: ' + msg);
+          : 'Unbekannter Fehler beim Jetzt starten.';
+      setError('Startanfrage konnte nicht gespeichert werden: ' + msg);
     } finally {
       setIsApplyingJobId(null);
     }
@@ -434,7 +434,7 @@ export default function WorkerFeed() {
               // Prüfen, ob Job zum Profil passt (für Chip-Anzeige)
               const matchesProfile = profile ? jobMatchesWorker(job, profile) : false;
               
-              // Prüfen, ob Worker sich bewerben kann (Pflicht-Qualifikationen)
+              // Prüfen, ob Worker sich starten kann (Pflicht-Qualifikationen)
               const canApply = canApplyToJob(job, profile);
 
               // Check if this is a NearbyJob with distance info
@@ -592,7 +592,7 @@ export default function WorkerFeed() {
                     </Text>
                   </View>
 
-                  {/* Bewerbungs-Status & Button */}
+                  {/* Startanfrages-Status & Button */}
                   {hasApplied ? (
                     <View style={{
                       paddingVertical: 12,
@@ -631,7 +631,7 @@ export default function WorkerFeed() {
                     </View>
                   ) : canApply ? (
                     <Button
-                      title={isApplyingJobId === job.id ? '⏳ Melde dich…' : '✋ Ich habe Zeit!'}
+                      title={isApplyingJobId === job.id ? '⏳ Melde dich…' : '✋ Jetzt starten!'}
                       onPress={() => handleApply(job.id, job.employerId)}
                       disabled={isApplyingJobId === job.id}
                       variant="primary"
@@ -639,7 +639,7 @@ export default function WorkerFeed() {
                   ) : (
                     <View style={{ gap: spacing.xs }}>
                       <Button
-                        title="Ich habe Zeit"
+                        title="Jetzt starten"
                         onPress={() => {}}
                         disabled={true}
                       />
@@ -692,7 +692,7 @@ export default function WorkerFeed() {
             <Text style={{ color: colors.black, fontSize: 14, lineHeight: 20 }}>
               🎉 <Text style={{ fontWeight: '700' }}>Du hast {acceptedJobsCount} {acceptedJobsCount === 1 ? 'Match' : 'Matches'}!</Text>
               {'\n'}
-              Arbeitgeber haben deine Bewerbungen angenommen. Du findest sie unter{' '}
+              Arbeitgeber haben deine Startanfrageen angenommen. Du findest sie unter{' '}
               <Text
                 style={{ fontWeight: '700', textDecorationLine: 'underline' }}
                 onPress={() => router.push('/(worker)/matches')}
