@@ -1,19 +1,22 @@
-// app/auth/start.tsx - MODERN PREMIUM MINIMAL
+// app/auth/start.tsx - EXACT DESIGN SPECIFICATIONS
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity, Animated } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
-// Modern Premium Brand Colors
+// Exact Brand Colors (fix definiert)
 const COLORS = {
-  primary: '#2F4F3A',
-  primaryDark: '#254231',
-  softBeige: '#FAF8F5',
-  offWhite: '#FEFEFE',
-  softGray: '#6A6A6A',
-  text: '#111111',
-  legalText: '#999999',
+  primary: '#3D5C47',      // Brand Green
+  secondary: '#F7F4EF',    // Sand / Light Beige
+  accent: '#DDE7EF',       // Soft Blue
+  text: '#111111',         // Text Schwarz
+  gray: '#6F6F6F',         // Grau für Untertitel
+  error: '#D9534F',        // Fehlerfarbe
+  bgTop: '#FAF9F7',        // Hintergrund oben
+  bgBottom: '#FFFFFF',     // Hintergrund unten
+  logoContainer: '#F7F6F4', // Logo Container
+  footerText: '#8C8C8C',   // Footer Text
   white: '#FFFFFF',
 };
 
