@@ -83,7 +83,7 @@ export default function AuthStart() {
           {/* Haupttitel */}
           <Animated.View style={{ opacity: contentOpacity }}>
             <Text style={styles.title}>
-              Willkommen bei BCKP
+              Willkommen bei BACKUP
             </Text>
           </Animated.View>
 
