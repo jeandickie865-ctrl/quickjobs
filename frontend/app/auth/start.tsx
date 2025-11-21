@@ -103,8 +103,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
+    fontSize: 32,
+    fontWeight: '800',
     textAlign: 'center',
+    letterSpacing: -0.5,
   },
 });
