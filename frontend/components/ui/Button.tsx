@@ -92,8 +92,8 @@ export const Button: React.FC<ButtonProps> = ({
   const getTextStyle = (): TextStyle => {
     const base: TextStyle = {
       fontSize: 16,
-      fontWeight: '600',
-      letterSpacing: 0.2,
+      fontWeight: '700',
+      letterSpacing: 0,
     };
 
     if (disabled || loading) {
@@ -104,9 +104,9 @@ export const Button: React.FC<ButtonProps> = ({
       case 'primary':
         return { ...base, color: colors.white };
       case 'secondary':
-        return { ...base, color: colors.black };
+        return { ...base, color: colors.primary };
       case 'ghost':
-        return { ...base, color: colors.primary, fontWeight: '500' };
+        return { ...base, color: colors.primary, fontWeight: '600' };
       case 'danger':
         return { ...base, color: colors.white };
       default:
