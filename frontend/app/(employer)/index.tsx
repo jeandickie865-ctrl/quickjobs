@@ -16,7 +16,7 @@ export default function EmployerDashboard() {
   const { colors, spacing } = useTheme();
   const { user, signOut } = useAuth();
   const router = useRouter();
-  const [jobs, setAufträge] = useState<Job[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
