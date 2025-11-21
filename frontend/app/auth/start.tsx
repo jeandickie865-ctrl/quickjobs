@@ -54,19 +54,19 @@ export default function AuthStart() {
             </Text>
             <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               <Pressable onPress={() => router.push('/legal/agb')}>
-                <Text style={{ fontSize: 13, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
+                <Text style={{ fontSize: 12, color: colors.textMuted }}>
                   AGB
                 </Text>
               </Pressable>
-              <Text style={{ fontSize: 13, color: colors.gray300 }}>•</Text>
+              <Text style={{ fontSize: 12, color: colors.gray300 }}>•</Text>
               <Pressable onPress={() => router.push('/legal/privacy')}>
-                <Text style={{ fontSize: 13, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
+                <Text style={{ fontSize: 12, color: colors.textMuted }}>
                   Datenschutz
                 </Text>
               </Pressable>
-              <Text style={{ fontSize: 13, color: colors.gray300 }}>•</Text>
+              <Text style={{ fontSize: 12, color: colors.gray300 }}>•</Text>
               <Pressable onPress={() => router.push('/legal/guidelines')}>
-                <Text style={{ fontSize: 13, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
+                <Text style={{ fontSize: 12, color: colors.textMuted }}>
                   Grundsätze
                 </Text>
               </Pressable>
