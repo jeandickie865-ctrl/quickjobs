@@ -1,19 +1,20 @@
+// app/(worker)/matches.tsx - Green Modern Minimal
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, ActivityIndicator, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, ActivityIndicator, RefreshControl, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getApplicationsForWorker } from '../../utils/applicationStore';
-import { getAufträge } from '../../utils/jobStore';
-import { Auftrag } from '../../types/job';
+import { getJobs } from '../../utils/jobStore';
+import { Job } from '../../types/job';
 import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 import { formatJobTimeDisplay } from '../../utils/date';
 import { isWithinLast24Hours } from '../../utils/stringHelpers';
-import { getInitials } from '../../utils/stringHelpers';
 
 type Match = {
   job: Job;
@@ -35,41 +36,29 @@ export default function WorkerMatchesScreen() {
 
     try {
       setError(null);
-      console.log('📋 loadMatches: Loading matches for worker', user.id);
 
-      // 1. Alle Bewerbungen des Workers holen
       const apps = await getApplicationsForWorker(user.id);
-      console.log('✅ loadMatches: Found applications', apps.length);
-
-      // 2. Nur akzeptierte Bewerbungen
       const acceptedApps = apps.filter((a) => a.status === 'accepted');
-      console.log('✅ loadMatches: Accepted applications', acceptedApps.length);
-
-      // 3. Aufträge laden
-      const allAufträge = await getAufträge();
+      const allJobs = await getJobs();
 
       const combined: Match[] = [];
 
       for (const app of acceptedApps) {
-        const job = allAufträge.find((j) => j.id === app.jobId);
+        const job = allJobs.find((j) => j.id === app.jobId);
         if (job) {
           combined.push({ job, application: app });
-        } else {
-          console.warn('⚠️ loadMatches: Auftrag not found for application', app.jobId);
         }
       }
 
-      // 4. Sort by respondedAt DESC (neueste zuerst)
       combined.sort((a, b) => {
         const dateA = a.application.respondedAt || a.application.createdAt;
         const dateB = b.application.respondedAt || b.application.createdAt;
         return new Date(dateB).getTime() - new Date(dateA).getTime();
       });
 
-      console.log('✅ loadMatches: Matches loaded and sorted', combined.length);
       setMatches(combined);
     } catch (e) {
-      console.error('❌ loadMatches: Error loading matches:', e);
+      console.error('Error loading matches:', e);
       setError('Matches konnten nicht geladen werden.');
     } finally {
       setLoading(false);
@@ -88,242 +77,112 @@ export default function WorkerMatchesScreen() {
     loadMatches();
   };
 
-  if (authLoading) {
-    return null;
-  }
-
-  if (!user || user.role !== 'worker') {
-    return <Redirect href="/start" />;
-  }
+  if (authLoading) return null;
+  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator color={colors.black} />
-          <Text style={{ color: colors.gray700, marginTop: spacing.sm }}>
-            Lade deine Matches…
-          </Text>
-        </View>
-      </SafeAreaView>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primaryUltraLight }}>
+        <ActivityIndicator color={colors.primary} size="large" />
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryUltraLight }}>
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
+        contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            tintColor={colors.black}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={colors.primary} />
         }
       >
-        {/* Header */}
-        <View style={{ marginBottom: spacing.xs }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ fontSize: 28, fontWeight: '900', color: colors.black, letterSpacing: -0.5 }}>
-              Meine Matches
-            </Text>
-            <Text
-              style={{ color: colors.primary, fontSize: 15, fontWeight: '600', paddingHorizontal: spacing.sm, paddingVertical: 4 }}
-              onPress={() => router.push('/(worker)/feed')}
-            >
-              🔎 Aufträge
-            </Text>
-          </View>
-          <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
-            {matches.length} {matches.length === 1 ? 'akzeptierte Bewerbung' : 'akzeptierte Bewerbungen'}
+        <View style={{ marginBottom: spacing.md }}>
+          <Text style={{ fontSize: 28, fontWeight: '800', color: colors.black }}>
+            Meine Matches
+          </Text>
+          <Text style={{ fontSize: 14, color: colors.gray600, marginTop: 4 }}>
+            {matches.length} {matches.length === 1 ? 'Auftrag' : 'Aufträge'}
           </Text>
         </View>
 
         {error && (
-          <View style={{
-            padding: spacing.md,
-            backgroundColor: colors.errorLight,
-            borderRadius: 12,
-            borderLeftWidth: 4,
-            borderLeftColor: colors.error,
-          }}>
-            <Text style={{ color: colors.error, fontSize: 14, fontWeight: '600' }}>
-              ⚠️ {error}
-            </Text>
-          </View>
+          <Card>
+            <Text style={{ color: colors.error, textAlign: 'center' }}>{error}</Text>
+          </Card>
         )}
 
         {matches.length === 0 ? (
-          <View style={{
-            padding: spacing.xl,
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            alignItems: 'center',
-            gap: spacing.sm
-          }}>
-            <Text style={{ fontSize: 32, marginBottom: spacing.sm }}>
-              🎯
-            </Text>
-            <Text style={{ color: colors.black, fontSize: 18, fontWeight: '700', textAlign: 'center' }}>
+          <Card padding={spacing.xl}>
+            <Text style={{ fontSize: 16, fontWeight: '600', color: colors.black, textAlign: 'center', marginBottom: 8 }}>
               Noch keine Matches
             </Text>
-            <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
-              Sobald ein Auftraggeber deine Bewerbung annimmt, erscheint der Auftrag hier.
+            <Text style={{ fontSize: 14, color: colors.gray600, textAlign: 'center' }}>
+              Bewirb dich auf Aufträge im Feed, um hier deine Matches zu sehen.
             </Text>
-            <Button
-              title="Aufträge ansehen"
-              onPress={() => router.push('/(worker)/feed')}
-              style={{ marginTop: spacing.md }}
-            />
-          </View>
+          </Card>
         ) : (
-          <View style={{ gap: spacing.sm }}>
-            {matches.map(({ job, application }) => {
-              // Format time display using centralized function
-              const timeDisplay = formatJobTimeDisplay(
-                job.startAt,
-                job.endAt,
-                job.timeMode,
-                job.hours,
-                job.dueAt
-              );
+          matches.map(({ job, application }) => {
+            const isNew = application.respondedAt && isWithinLast24Hours(application.respondedAt);
 
-              // Check if match is new (within 24 hours)
-              const matchTimestamp = application.respondedAt || application.createdAt;
-              const isNew = matchTimestamp && isWithinLast24Hours(matchTimestamp);
-
-              return (
-                <View
-                  key={application.id}
-                  style={{
-                    backgroundColor: colors.white,
-                    borderRadius: 16,
-                    padding: spacing.md,
-                    gap: spacing.sm,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.08,
-                    shadowRadius: 8,
-                    elevation: 3,
-                    borderLeftWidth: 4,
-                    borderLeftColor: isNew ? colors.primary : colors.success,
-                  }}
-                >
-                  {/* Match Badges */}
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <View style={{
-                      paddingHorizontal: 12,
-                      paddingVertical: 6,
-                      backgroundColor: colors.successLight,
-                      borderRadius: 8,
-                      borderWidth: 1,
-                      borderColor: colors.success,
-                    }}>
-                      <Text style={{ color: colors.success, fontSize: 12, fontWeight: '700' }}>
-                        ✓ MATCH BESTÄTIGT
-                      </Text>
-                    </View>
-                    
-                    {/* NEU Badge if within 24 hours */}
+            return (
+              <Pressable
+                key={job.id}
+                onPress={() =>
+                  router.push({
+                    pathname: '/chat/[applicationId]',
+                    params: { applicationId: application.id },
+                  })
+                }
+              >
+                <Card>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: spacing.sm }}>
+                    <Text style={{ fontSize: 17, fontWeight: '700', color: colors.black, flex: 1 }}>
+                      {job.title}
+                    </Text>
                     {isNew && (
                       <View style={{
-                        paddingHorizontal: 10,
-                        paddingVertical: 6,
                         backgroundColor: colors.primary,
-                        borderRadius: 8,
+                        paddingHorizontal: 8,
+                        paddingVertical: 4,
+                        borderRadius: 6,
                       }}>
-                        <Text style={{ color: colors.white, fontSize: 11, fontWeight: '800' }}>
-                          🆕 NEU
-                        </Text>
+                        <Text style={{ color: colors.white, fontSize: 11, fontWeight: '700' }}>NEU</Text>
                       </View>
                     )}
                   </View>
 
-                  {/* Auftrag Info */}
-                  <View style={{ gap: 8 }}>
-                    <Text style={{ fontWeight: '800', fontSize: 18, color: colors.black }}>
-                      {job.title}
-                    </Text>
-                    <View style={{ gap: 4 }}>
-                      {/* Auftraggeber Info */}
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <View style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: 16,
-                          backgroundColor: colors.primary,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                          <Text style={{ color: colors.white, fontSize: 13, fontWeight: '700' }}>
-                            AG
-                          </Text>
-                        </View>
-                        <Text style={{ color: colors.gray700, fontSize: 14, fontWeight: '600' }}>
-                          Auftraggeber
-                        </Text>
-                      </View>
-                      
-                      <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                        📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
-                      </Text>
-                      <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                        🏷️ {job.category}
-                      </Text>
-                      {timeDisplay && (
-                        <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                          ⏱️ {timeDisplay}
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-
-                  {/* Description */}
-                  {job.description && (
-                    <Text style={{ color: colors.gray600, fontSize: 13 }} numberOfLines={2}>
-                      {job.description}
-                    </Text>
-                  )}
-
-                  {/* Payment */}
-                  <Text style={{ color: colors.black, fontWeight: '700', fontSize: 17 }}>
-                    Lohn: {euro(job.workerAmountCents)}
+                  <Text style={{ fontSize: 14, color: colors.gray600, marginBottom: spacing.xs }}>
+                    {job.category}
                   </Text>
 
-                  {/* Info Box */}
-                  <View style={{
-                    padding: spacing.sm,
-                    backgroundColor: colors.beige50,
-                    borderRadius: 8,
-                    borderLeftWidth: 3,
-                    borderLeftColor: colors.black,
-                  }}>
-                    <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
-                      🎉 <Text style={{ fontWeight: '600' }}>Glückwunsch!</Text> Der Auftraggeber hat dich für diesen Auftrag ausgewählt. 
-                      Ihr könnt jetzt Details besprechen.
+                  <Text style={{ fontSize: 13, color: colors.gray600, marginBottom: spacing.xs }}>
+                    📍 {formatAddress(job.address)}
+                  </Text>
+
+                  <Text style={{ fontSize: 13, color: colors.gray600, marginBottom: spacing.md }}>
+                    {formatJobTimeDisplay(job)}
+                  </Text>
+
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: colors.primary }}>
+                      {euro(job.workerAmountCents)}
                     </Text>
+                    <Button
+                      title="Zum Chat"
+                      onPress={() =>
+                        router.push({
+                          pathname: '/chat/[applicationId]',
+                          params: { applicationId: application.id },
+                        })
+                      }
+                      style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}
+                    />
                   </View>
-
-                  {/* Chat Button - Prominent */}
-                  <Button
-                    title="💬 Zum Chat"
-                    onPress={() => {
-                      console.log('🚀 matches: Opening chat for application', application.id);
-                      router.push({
-                        pathname: '/chat/[applicationId]',
-                        params: { applicationId: application.id },
-                      });
-                    }}
-                    variant="primary"
-                  />
-                </View>
-              );
-            })}
-          </View>
+                </Card>
+              </Pressable>
+            );
+          })
         )}
-
-        <View style={{ height: spacing.xl }} />
       </ScrollView>
     </SafeAreaView>
   );
