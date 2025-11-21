@@ -27,7 +27,7 @@ export default function AuthStart() {
 
         {/* Title & Buttons */}
         <View style={styles.buttonsContainer}>
-          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
+          <Text style={[styles.title, { color: colors.text, marginBottom: spacing.xxl }]}>
             Willkommen bei BCKP
           </Text>
 
