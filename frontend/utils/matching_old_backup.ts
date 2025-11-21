@@ -124,7 +124,72 @@ export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
  * Filter jobs that match the worker profile
  */
 export function filterMatchingJobs(jobs: Job[], profile: WorkerProfile): Job[] {
-  return jobs.filter(job => matchJobToWorker(job, profile));
+  return jobs.filter(job => jobMatchesWorker(job, profile));
+}
+
+/**
+ * Calculate match score (0-100) for sorting
+ * Higher score = better match
+ */
+export function calculateMatchScore(job: Job, profile: WorkerProfile): number {
+  let score = 0;
+
+  // Distance score (closer = better): max 40 points
+  const distance = calculateDistance(profile.homeLat, profile.homeLon, job.lat, job.lon);
+  const distanceScore = Math.max(0, 40 * (1 - distance / profile.radiusKm));
+  score += distanceScore;
+
+  // Tag match score: max 40 points
+  const workerTagSet = new Set(profile.tags);
+  const allJobTags = [...job.required_all_tags, ...job.required_any_tags];
+  const matchingTags = allJobTags.filter(tag => workerTagSet.has(tag));
+  if (allJobTags.length > 0) {
+    const tagMatchRatio = matchingTags.length / allJobTags.length;
+    score += 40 * tagMatchRatio;
+  } else {
+    // No specific tags required = bonus
+    score += 20;
+  }
+
+  // Pay score: max 20 points (higher pay = higher score)
+  const payScore = Math.min(20, (job.workerAmountCents / 10000) * 20);
+  score += payScore;
+
+  return Math.round(score);
+}
+
+export function sortJobsByMatch(
+  jobs: Job[],
+  profile: WorkerProfile
+): Job[] {
+  return jobs.sort((a, b) => {
+    const scoreA = calculateMatchScore(a, profile);
+    const scoreB = calculateMatchScore(b, profile);
+    return scoreB - scoreA; // Higher score first
+  });
+}
+
+/**
+ * Check if job is within worker's radius
+ * NOTE: Distance filtering temporarily disabled for MVP phase.
+ * All jobs are considered within radius.
+ */
+export function jobWithinRadius(job: Job, profile: WorkerProfile): boolean {
+  // Distance filtering vorübergehend deaktiviert.
+  // Wenn aktiviert: prüfen, dass keine undefined/null Koordinaten als 0 behandelt werden
+  
+  // Für zukünftige Aktivierung vorbereitet:
+  // const jobLat = typeof job.lat === 'number' ? job.lat : null;
+  // const jobLon = typeof job.lon === 'number' ? job.lon : null;
+  // const homeLat = typeof profile.homeLat === 'number' ? profile.homeLat : null;
+  // const homeLon = typeof profile.homeLon === 'number' ? profile.homeLon : null;
+  // if (jobLat == null || jobLon == null || homeLat == null || homeLon == null) {
+  //   return true; // Fehlende Koordinaten = kein Filter
+  // }
+  // const distance = haversineKm(homeLat, homeLon, jobLat, jobLon);
+  // return distance <= profile.radiusKm;
+  
+  return true; // Alle Jobs gelten als innerhalb des Radius
 }
 
 /**
@@ -147,7 +212,6 @@ export type MatchDebug = {
 
 /**
  * Check if job matches worker with detailed debug information
- * Uses the new Matching 2.0 logic
  */
 export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): MatchDebug {
   const categories = profile.categories ?? [];
@@ -170,8 +234,8 @@ export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): Mat
     requiredAnyOk = anyIntersection.length > 0;
   }
 
-  // Use the main matching function for final result
-  const ok = matchJobToWorker(job, profile);
+  // Radius check removed - distance filtering disabled for MVP
+  const ok = categoryOk && requiredAllOk && requiredAnyOk;
 
   return {
     ok,
@@ -187,4 +251,84 @@ export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): Mat
     requiredAllOk,
     requiredAnyOk,
   };
+}
+
+/**
+ * Check if job matches worker profile (Matching 2.0)
+ * Includes:
+ * - Hard-Skill Security check (34a)
+ * - Low-Skill categories bypass qualification requirements
+ * - Required tasks check
+ * - Alternative qualifications check  
+ * - Radius check
+ * - Job status check
+ */
+export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
+  if (!job || !profile) return false;
+
+  const workerSkills = profile.selectedTags ?? [];
+  const workerCategories = profile.categories ?? [];
+
+  // 1. Category match
+  if (!workerCategories.includes(job.category)) {
+    return false;
+  }
+
+  // 2. Hard-Skill Security check (34a must have)
+  const requiredAllTags = job.required_all_tags ?? [];
+  if (requiredAllTags.includes(SPECIAL_SECURITY)) {
+    if (!workerSkills.includes(SPECIAL_SECURITY)) {
+      return false;
+    }
+  }
+
+  // 3. Low-Skill categories: skip ALL qualification requirements (except 34a already checked)
+  const isLowSkill = LOW_SKILL_CATEGORIES.includes(job.category);
+  
+  if (!isLowSkill) {
+    // High-skill jobs: Check all required qualifications/tasks
+    if (!workerHasAll(workerSkills, requiredAllTags)) {
+      return false;
+    }
+    
+    // High-skill jobs: Check alternative qualifications
+    const requiredAnyTags = job.required_any_tags ?? [];
+    if (!workerHasOne(workerSkills, requiredAnyTags)) {
+      return false;
+    }
+  }
+  // Low-skill jobs: No further qualification checks needed (§34a already checked above)
+
+  // 5. Radius check (if both have coordinates)
+  if (profile.homeLat && profile.homeLon && job.lat && job.lon) {
+    const distance = calculateDistance(
+      { lat: job.lat, lon: job.lon },
+      { lat: profile.homeLat, lon: profile.homeLon }
+    );
+    
+    const workerRadius = profile.radiusKm ?? 30; // Default 30km
+    if (distance > workerRadius) {
+      return false;
+    }
+  }
+
+  // 6. Job status check
+  if (!['open', 'pending'].includes(job.status)) {
+    return false;
+  }
+
+  // 7. No double match
+  if (job.matchedWorkerId) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Legacy compatibility function
+ * Uses the debug function internally to ensure consistency
+ */
+export function jobMatchesWorkerLegacy(job: Job, profile: WorkerProfile): boolean {
+  return jobMatchesWorkerWithDebug(job, profile).ok;
 }
