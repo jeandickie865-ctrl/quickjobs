@@ -41,7 +41,15 @@ export const Button: React.FC<ButtonProps> = ({
 
     switch (variant) {
       case 'primary':
-        return { ...base, backgroundColor: colors.black };
+        return { 
+          ...base, 
+          backgroundColor: colors.primary,
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.2,
+          shadowRadius: 4,
+          elevation: 2,
+        };
       case 'secondary':
         return {
           ...base,
