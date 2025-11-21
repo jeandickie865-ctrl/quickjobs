@@ -1,6 +1,6 @@
 // app/auth/start.tsx - FANCY MINIMAL (Mint/Lila/Gold) - Expo Web Safe
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Animated } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FancyButton from '../../components/FancyButton';
