@@ -147,6 +147,8 @@ export default function EmployerProfileScreen() {
         street: street.trim(),
         postalCode: postalCode.trim(),
         city: city.trim(),
+        lat,
+        lon,
         paymentMethod,
         shortBio: shortBio.trim() || undefined,
         profilePhotoUri,
