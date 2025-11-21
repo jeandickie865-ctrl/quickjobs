@@ -82,6 +82,156 @@ function workerHasOne(skills: string[], alternatives: string[]): boolean {
   return alternatives.some(tag => skills.includes(tag));
 }
 
+// ===== MATCHING 2.2: Branchen-Check-Funktionen =====
+
+/**
+ * Security Hard-Checks
+ */
+function checkSecurityRequirements(jobTags: string[], workerSkills: string[]): boolean {
+  // Sachkunde §34a - MUSS haben
+  if (jobTags.includes(SECURITY_SACHKUNDE)) {
+    if (!workerSkills.includes(SECURITY_SACHKUNDE)) {
+      return false;
+    }
+  }
+
+  // Unterrichtung §34a - MUSS haben (oder Sachkunde)
+  if (jobTags.includes(SECURITY_UNTERRICHTUNG)) {
+    const hasUnterrichtung = workerSkills.includes(SECURITY_UNTERRICHTUNG);
+    const hasSachkunde = workerSkills.includes(SECURITY_SACHKUNDE);
+    if (!hasUnterrichtung && !hasSachkunde) {
+      return false;
+    }
+  }
+
+  // Bewacher-ID - MUSS haben
+  if (jobTags.includes(SECURITY_BEWACHER_ID)) {
+    if (!workerSkills.includes(SECURITY_BEWACHER_ID)) {
+      return false;
+    }
+  }
+
+  // Polizeiliches Führungszeugnis - MUSS haben
+  if (jobTags.includes(SECURITY_FUEHRUNGSZEUGNIS)) {
+    if (!workerSkills.includes(SECURITY_FUEHRUNGSZEUGNIS)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Delivery Vehicle Checks
+ * Prüft ob Worker Fahrzeug-Anforderungen erfüllt
+ */
+function checkDeliveryVehicleRequirements(jobTags: string[], workerSkills: string[]): boolean {
+  // Fahrzeug gestellt → keine Checks nötig
+  const vehicleProvided = jobTags.some(tag => 
+    tag.toLowerCase().includes('fahrzeug gestellt') || 
+    tag.toLowerCase().includes('vehicle provided')
+  );
+  if (vehicleProvided) return true;
+
+  // PKW erforderlich
+  const needsPkw = jobTags.some(tag => 
+    tag.toLowerCase().includes('pkw') || 
+    tag.toLowerCase().includes('auto')
+  );
+  if (needsPkw) {
+    const hasPkwLicense = workerSkills.includes(VEHICLE_PKW);
+    const hasOwnPkw = workerSkills.includes(VEHICLE_OWN_PKW);
+    if (!hasPkwLicense && !hasOwnPkw) {
+      return false;
+    }
+  }
+
+  // Roller/Moped erforderlich
+  const needsRoller = jobTags.some(tag => 
+    tag.toLowerCase().includes('roller') || 
+    tag.toLowerCase().includes('moped')
+  );
+  if (needsRoller) {
+    const hasRollerLicense = workerSkills.includes(VEHICLE_ROLLER);
+    const hasOwnRoller = workerSkills.includes(VEHICLE_OWN_ROLLER);
+    if (!hasRollerLicense && !hasOwnRoller) {
+      return false;
+    }
+  }
+
+  // 125ccm erforderlich
+  const needs125 = jobTags.some(tag => tag.toLowerCase().includes('125ccm'));
+  if (needs125) {
+    const has125License = workerSkills.includes(VEHICLE_125CCM);
+    const hasOwn125 = workerSkills.includes(VEHICLE_OWN_125CCM);
+    if (!has125License && !hasOwn125) {
+      return false;
+    }
+  }
+
+  // Fahrrad erforderlich
+  const needsBike = jobTags.some(tag => tag.toLowerCase().includes('fahrrad'));
+  if (needsBike) {
+    if (!workerSkills.includes(VEHICLE_OWN_FAHRRAD)) {
+      return false;
+    }
+  }
+
+  // E-Bike erforderlich
+  const needsEbike = jobTags.some(tag => 
+    tag.toLowerCase().includes('e-bike') || 
+    tag.toLowerCase().includes('ebike')
+  );
+  if (needsEbike) {
+    if (!workerSkills.includes(VEHICLE_OWN_EBIKE)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Inventur Checks
+ */
+function checkInventurRequirements(jobCategory: string, jobTags: string[], workerSkills: string[]): boolean {
+  if (jobCategory.toLowerCase().includes('inventur')) {
+    // Scanner-Erfahrung ist Pflicht wenn gefordert
+    if (jobTags.includes(INVENTUR_SCANNER)) {
+      if (!workerSkills.includes(INVENTUR_SCANNER)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/**
+ * Nachhilfe Checks
+ * Mindestens EINE der erforderlichen Qualifikationen muss vorhanden sein
+ */
+function checkNachhilfeRequirements(jobCategory: string, jobTags: string[], workerSkills: string[]): boolean {
+  if (jobCategory.toLowerCase().includes('nachhilfe')) {
+    // Prüfe ob mindestens ein Required Skill vorhanden ist
+    const hasRequiredSkill = NACHHILFE_REQUIRED_SKILLS.some(skill => 
+      workerSkills.includes(skill)
+    );
+    
+    if (!hasRequiredSkill) {
+      return false;
+    }
+
+    // Wenn Job ein spezifisches Fach verlangt, MUSS Worker dieses haben
+    const requiredFaecher = jobTags.filter(tag => tag.startsWith('Fach '));
+    for (const fach of requiredFaecher) {
+      if (!workerSkills.includes(fach)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 /**
  * Main matching function - Matching 2.0
  */
