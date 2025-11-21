@@ -236,8 +236,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   logo: {
-    width: 140,
-    height: 140,
+    width: 150,
+    height: 150,
   },
   claim: {
     fontSize: 14,
