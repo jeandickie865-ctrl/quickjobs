@@ -16,6 +16,19 @@ export const WorkerProfileCard: React.FC<WorkerProfileCardProps> = ({
   isMatched,
 }) => {
   const { colors, spacing } = useTheme();
+  
+  const [reviewCount, setReviewCount] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const reviews = await getReviewsForWorker(profile.userId);
+      setReviewCount(reviews.length);
+      if (reviews.length > 0) {
+        setAverageRating(calculateAverageRating(reviews));
+      }
+    })();
+  }, [profile.userId]);
 
   const getInitials = () => {
     if (profile.firstName && profile.lastName) {
