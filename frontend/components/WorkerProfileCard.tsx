@@ -5,6 +5,7 @@ import { WorkerProfile } from '../types/profile';
 import { formatAddress } from '../types/address';
 import { getReviewsForWorker, calculateAverageRating } from '../utils/reviewStore';
 import { StarRating } from './StarRating';
+import { getInitials } from '../utils/stringHelpers';
 
 type WorkerProfileCardProps = {
   profile: WorkerProfile;
@@ -30,7 +31,7 @@ export const WorkerProfileCard: React.FC<WorkerProfileCardProps> = ({
     })();
   }, [profile.userId]);
 
-  const getInitials = () => {
+  const getAvatarInitials = () => {
     if (profile.firstName && profile.lastName) {
       return (profile.firstName[0] + profile.lastName[0]).toUpperCase();
     }
@@ -41,6 +42,12 @@ export const WorkerProfileCard: React.FC<WorkerProfileCardProps> = ({
   };
 
   const getDisplayName = () => {
+    // VOR Match: Nur Initialen anzeigen
+    if (!isMatched) {
+      return getInitials(profile.firstName, profile.lastName);
+    }
+    
+    // NACH Match: Voller Name
     if (profile.firstName && profile.lastName) {
       return `${profile.firstName} ${profile.lastName}`;
     }
