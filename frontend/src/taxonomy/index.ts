@@ -1,6 +1,6 @@
-import { TAXONOMY, CategoryKey, TaxonomyCategory, listCategories as listCategoriesFromData } from '../constants/workerData';
+import { TAXONOMY, CategoryKey, TaxonomyCategory, listCategories as listCategoriesFromData } from '../../constants/workerData';
 
-export type { CategoryKey, TaxonomyCategory } from '../constants/workerData';
+export type { CategoryKey, TaxonomyCategory } from '../../constants/workerData';
 
 // Re-export for convenience
 export function listCategories(): { key: CategoryKey; title: string }[] {
