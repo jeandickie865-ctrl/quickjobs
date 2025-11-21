@@ -1,4 +1,4 @@
-// components/ui/Button.tsx - BCKP Style
+// components/ui/Button.tsx - BCKP BOLD STARTUP
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -28,12 +28,12 @@ export const Button: React.FC<ButtonProps> = ({
 
   const getButtonStyle = (): ViewStyle => {
     const base: ViewStyle = {
-      paddingVertical: 16,
+      paddingVertical: 18,
       paddingHorizontal: 24,
-      borderRadius: 12,
+      borderRadius: 14,
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: 52,
+      minHeight: 54,
     };
 
     if (disabled || loading) {
@@ -49,12 +49,17 @@ export const Button: React.FC<ButtonProps> = ({
         return { 
           ...base, 
           backgroundColor: colors.primary,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.12,
+          shadowRadius: 8,
+          elevation: 3,
         };
       case 'secondary':
         return {
           ...base,
           backgroundColor: colors.white,
-          borderWidth: 1.3,
+          borderWidth: 2,
           borderColor: colors.primary,
         };
       case 'ghost':
@@ -66,7 +71,12 @@ export const Button: React.FC<ButtonProps> = ({
       case 'danger':
         return {
           ...base,
-          backgroundColor: colors.error,
+          backgroundColor: colors.danger,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.12,
+          shadowRadius: 8,
+          elevation: 3,
         };
       default:
         return base;
@@ -76,8 +86,8 @@ export const Button: React.FC<ButtonProps> = ({
   const getTextStyle = (): TextStyle => {
     const base: TextStyle = {
       fontSize: 16,
-      fontWeight: '600',
-      letterSpacing: 0,
+      fontWeight: '700',
+      letterSpacing: 0.3,
     };
 
     if (disabled || loading) {
@@ -90,7 +100,7 @@ export const Button: React.FC<ButtonProps> = ({
       case 'secondary':
         return { ...base, color: colors.primary };
       case 'ghost':
-        return { ...base, color: colors.primary, fontWeight: '500' };
+        return { ...base, color: colors.primary, fontWeight: '600' };
       case 'danger':
         return { ...base, color: colors.white };
       default:
@@ -100,7 +110,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const getActiveOpacity = (): number => {
     if (disabled || loading) return 1;
-    return 0.7;
+    return 0.8;
   };
 
   const getLoadingColor = (): string => {
