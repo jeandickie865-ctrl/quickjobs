@@ -96,8 +96,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
         const exists = creds.find(c => c.email === emailNormalized);
         if (exists) {
-          console.log('❌ Email already registered');
-          throw new Error('Es gibt bereits ein Konto mit dieser E-Mail-Adresse.');
+          console.log('❌ Email already registered:', emailNormalized);
+          throw new Error('Diese E-Mail ist bereits registriert. Bitte einloggen.');
         }
 
         const newUser: StoredUser = {
