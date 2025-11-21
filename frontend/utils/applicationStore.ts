@@ -48,19 +48,55 @@ export async function getApplicationsForWorker(workerId: string): Promise<JobApp
   return apps.filter(a => a.workerId === workerId);
 }
 
-export async function acceptApplication(jobId: string, applicationId: string): Promise<void> {
+export async function acceptApplication(
+  jobId: string, 
+  applicationId: string,
+  employerConfirmedLegal: boolean = true
+): Promise<void> {
+  console.log('🎯 acceptApplication called', { jobId, applicationId, employerConfirmedLegal });
+  
   const apps = await loadApplications();
+  const acceptedApp = apps.find(app => app.id === applicationId);
+  
+  if (!acceptedApp) {
+    console.error('❌ acceptApplication: Application not found', { applicationId });
+    throw new Error('Application not found');
+  }
+  
   const next = apps.map(app => {
     if (app.jobId !== jobId) return app;
     if (app.id === applicationId) {
-      return { ...app, status: 'accepted' as ApplicationStatus };
+      const updated = { 
+        ...app, 
+        status: 'accepted' as ApplicationStatus,
+        respondedAt: new Date().toISOString(),
+        employerConfirmedLegal,
+        workerConfirmedLegal: false,
+      };
+      console.log('✅ acceptApplication: Application accepted', updated);
+      return updated;
     }
     if (app.status === 'pending') {
+      console.log('❌ acceptApplication: Rejecting other pending application', app.id);
       return { ...app, status: 'rejected' as ApplicationStatus };
     }
     return app;
   });
+  
   await saveApplications(next);
+  console.log('💾 acceptApplication: All applications saved');
+  
+  // Send notification to worker (local notification for now)
+  try {
+    const { sendMatchNotification } = await import('./notifications');
+    await sendMatchNotification('Job Match', 'Arbeitgeber');
+    console.log('📬 acceptApplication: Match notification sent to worker');
+  } catch (error) {
+    console.error('⚠️ acceptApplication: Could not send notification', error);
+  }
+  
+  // TODO: Send email notification (will be replaced by backend later)
+  // await sendEmailNotification(workerEmail, jobTitle);
 }
 
 export async function updateApplicationStatus(id: string, status: ApplicationStatus): Promise<void> {
