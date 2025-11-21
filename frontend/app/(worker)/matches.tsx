@@ -185,23 +185,30 @@ export default function WorkerMatchesScreen() {
                   key={application.id}
                   style={{
                     backgroundColor: colors.white,
-                    borderRadius: 12,
+                    borderRadius: 16,
                     padding: spacing.md,
-                    gap: 12,
-                    borderWidth: 2,
-                    borderColor: colors.beige300,
+                    gap: spacing.sm,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 8,
+                    elevation: 3,
+                    borderLeftWidth: 4,
+                    borderLeftColor: colors.success,
                   }}
                 >
                   {/* Match Badge */}
                   <View style={{
                     paddingHorizontal: 12,
                     paddingVertical: 6,
-                    backgroundColor: colors.beige100,
+                    backgroundColor: colors.successLight,
                     borderRadius: 8,
-                    alignSelf: 'flex-start'
+                    alignSelf: 'flex-start',
+                    borderWidth: 1,
+                    borderColor: colors.success,
                   }}>
-                    <Text style={{ color: colors.black, fontSize: 12, fontWeight: '700' }}>
-                      ✓ GEMATCHT
+                    <Text style={{ color: colors.success, fontSize: 12, fontWeight: '700' }}>
+                      ✓ MATCH BESTÄTIGT
                     </Text>
                   </View>
 
