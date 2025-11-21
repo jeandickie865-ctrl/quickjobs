@@ -305,16 +305,17 @@ export default function WorkerMatchesScreen() {
                     </Text>
                   </View>
 
-                  {/* Chat Button */}
+                  {/* Chat Button - Prominent */}
                   <Button
                     title="💬 Zum Chat"
                     onPress={() => {
-                      console.log('🚀 Opening chat for application', application.id);
+                      console.log('🚀 matches: Opening chat for application', application.id);
                       router.push({
                         pathname: '/chat/[applicationId]',
                         params: { applicationId: application.id },
                       });
                     }}
+                    variant="primary"
                   />
                 </View>
               );
