@@ -20,7 +20,7 @@ export default function AuthStart() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={[styles.slogan, { color: colors.gray700, marginTop: spacing.md }]}>
+          <Text style={[styles.slogan, { color: colors.textMuted, marginTop: spacing.md }]}>
             wenn’s jetzt passieren muss.
           </Text>
         </View>
