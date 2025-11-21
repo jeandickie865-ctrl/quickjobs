@@ -13,6 +13,8 @@ export interface EmployerProfile {
   street: string;
   postalCode: string;
   city: string;
+  lat?: number;
+  lon?: number;
   paymentMethod: 'card' | 'paypal' | null;
   shortBio?: string;
   profilePhotoUri?: string;
