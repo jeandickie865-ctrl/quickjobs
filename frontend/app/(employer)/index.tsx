@@ -1,3 +1,4 @@
+// app/(employer)/index.tsx - Green Modern Minimal (Auftraggeber Dashboard)
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -5,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { euro } from '../../utils/pricing';
@@ -29,57 +31,43 @@ export default function EmployerDashboard() {
   if (!user) return null;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryUltraLight }}>
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
+        contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}
       >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>
-            Meine Jobs
+        <View style={{ marginBottom: spacing.md }}>
+          <Text style={{ color: colors.black, fontSize: 28, fontWeight: '800' }}>
+            Meine Aufträge
+          </Text>
+          <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 4 }}>
+            Verwalte deine Aufträge und finde Jobstarter
           </Text>
         </View>
 
         <Button
-          title="+ Neuen Job erstellen"
+          title="+ Neuen Auftrag erstellen"
           onPress={() => router.push('/(employer)/jobs/create')}
         />
 
         {isLoading ? (
           <View style={{ paddingVertical: spacing.xl, alignItems: 'center' }}>
-            <ActivityIndicator color={colors.black} />
+            <ActivityIndicator color={colors.primary} />
           </View>
         ) : jobs.length === 0 ? (
-          <View style={{
-            padding: spacing.xl,
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            alignItems: 'center',
-            gap: 8
-          }}>
-            <Text style={{ color: colors.gray700, fontSize: 16, textAlign: 'center' }}>
-              Noch keine Jobs erstellt
+          <Card padding={spacing.xl}>
+            <Text style={{ color: colors.black, fontSize: 16, fontWeight: '600', textAlign: 'center', marginBottom: 8 }}>
+              Noch keine Aufträge erstellt
             </Text>
-            <Text style={{ color: colors.gray500, fontSize: 14, textAlign: 'center' }}>
-              Erstelle deinen ersten Job, um Arbeitnehmer zu finden
+            <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
+              Erstelle deinen ersten Auftrag, um Jobstarter zu finden
             </Text>
-          </View>
+          </Card>
         ) : (
-          <View style={{ gap: spacing.sm }}>
+          <View style={{ gap: spacing.md }}>
             {jobs.map((job) => (
               <Pressable
                 key={job.id}
-                style={({ pressed }) => [
-                  {
-                    backgroundColor: colors.white,
-                    borderRadius: 12,
-                    padding: spacing.md,
-                    borderWidth: 1,
-                    borderColor: colors.gray200,
-                    gap: 8,
-                  },
-                  pressed && { opacity: 0.85 },
-                ]}
                 onPress={() =>
                   router.push({
                     pathname: '/(employer)/jobs/[id]',
@@ -87,87 +75,54 @@ export default function EmployerDashboard() {
                   })
                 }
               >
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <Text style={{ color: colors.black, fontSize: 16, fontWeight: '700', flex: 1 }}>
-                    {job.title}
+                <Card>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: spacing.sm }}>
+                    <Text style={{ color: colors.black, fontSize: 17, fontWeight: '700', flex: 1 }}>
+                      {job.title}
+                    </Text>
+                    <View style={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 4,
+                      backgroundColor: job.status === 'open' ? colors.primaryLight : colors.gray200,
+                      borderRadius: 8
+                    }}>
+                      <Text style={{ color: job.status === 'open' ? colors.primary : colors.gray600, fontSize: 11, fontWeight: '600' }}>
+                        {job.status === 'open' ? 'Offen' : 
+                         job.status === 'matched' ? 'Vergeben' : 
+                         job.status === 'done' ? 'Erledigt' : 'Abgesagt'}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Text style={{ color: colors.gray600, fontSize: 14, marginBottom: spacing.xs }}>
+                    {job.category}
                   </Text>
-                  <View style={{
-                    paddingHorizontal: 8,
-                    paddingVertical: 4,
-                    backgroundColor: job.status === 'open' ? colors.beige100 : colors.gray200,
-                    borderRadius: 6
-                  }}>
-                    <Text style={{ color: colors.black, fontSize: 11, fontWeight: '600' }}>
-                      {job.status === 'open' ? 'Offen' : 
-                       job.status === 'matched' ? 'Vergeben' : 
-                       job.status === 'done' ? 'Erledigt' : 'Abgesagt'}
+
+                  <View style={{ flexDirection: 'row', gap: 16, marginBottom: spacing.xs }}>
+                    <Text style={{ color: colors.gray600, fontSize: 13 }}>
+                      📍 {formatAddress(job.address) || 'Keine Adresse'}
                     </Text>
                   </View>
-                </View>
 
-                <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                  {job.category}
-                </Text>
-
-                <View style={{ flexDirection: 'row', gap: 16 }}>
-                  <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                    📍 {formatAddress(job.address) || 'Keine Adresse'}
-                  </Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                  <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                    {job.timeMode === 'fixed_time' ? '⏱ Zeitgenau' :
-                     job.timeMode === 'hour_package' ? `⏱ ${job.hours}h` : '⏱ Projekt'}
-                  </Text>
-                  <Text style={{ color: colors.black, fontSize: 15, fontWeight: '700' }}>
-                    {euro(job.workerAmountCents)}
-                  </Text>
-                </View>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                    <Text style={{ color: colors.gray600, fontSize: 13 }}>
+                      {job.timeMode === 'fixed_time' ? '⏱ Zeitgenau' :
+                       job.timeMode === 'hour_package' ? `⏱ ${job.hours}h` : '⏱ Projekt'}
+                    </Text>
+                    <Text style={{ color: colors.primary, fontSize: 16, fontWeight: '700' }}>
+                      {euro(job.workerAmountCents)}
+                    </Text>
+                  </View>
+                </Card>
               </Pressable>
             ))}
           </View>
         )}
 
-        {/* Rechtliches */}
-        <View
-          style={{
-            marginTop: spacing.xl,
-            padding: spacing.md,
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            borderWidth: 1,
-            borderColor: colors.gray200,
-          }}
-        >
-          <Text
-            style={{ fontSize: 14, color: colors.gray700, textDecorationLine: 'underline' }}
-            onPress={() => router.push('/legal')}
-          >
-            <Text style={{ fontSize: 16, fontWeight: '700', color: colors.black }}>
-              Rechtliches
-            </Text>
-            {'\n'}
-            <Text style={{ fontSize: 13, color: colors.gray600 }}>
-              Alles zu AGB, Datenschutz und Betreiber.
-            </Text>
-          </Text>
-        </View>
-
-        {/* Account Section */}
-        <View style={{ 
-          marginTop: spacing.md, 
-          borderTopWidth: 1, 
-          borderTopColor: colors.gray200, 
-          paddingTop: spacing.md,
-          gap: spacing.sm
-        }}>
-          <Text style={{ color: colors.gray700, fontSize: 14, fontWeight: '600' }}>
-            Account
-          </Text>
+        <View style={{ marginTop: spacing.xl, gap: spacing.sm }}>
           <Button
             title="Logout"
-            variant="secondary"
+            variant="ghost"
             onPress={async () => {
               await signOut();
               router.replace('/auth/start');
