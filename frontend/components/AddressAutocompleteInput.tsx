@@ -85,9 +85,11 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   }, [street, postalCode, city]);
 
   const handleSuggestionPress = (suggestion: AddressSuggestion) => {
-    console.log('📍 Suggestion selected:', suggestion);
+    console.log('🎯 Selected suggestion', suggestion);
     
-    // NUR PLZ, Ort und Koordinaten setzen - Straße NICHT überschreiben!
+    if (suggestion.street && onStreetChange) {
+      onStreetChange(suggestion.street);
+    }
     if (suggestion.postalCode && onPostalCodeChange) {
       onPostalCodeChange(suggestion.postalCode);
     }
@@ -96,13 +98,102 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
     }
     if (typeof suggestion.lat === 'number' && onLatChange) {
       onLatChange(suggestion.lat);
+      console.log('📍 Address geocoded - Lat:', suggestion.lat);
     }
     if (typeof suggestion.lon === 'number' && onLonChange) {
       onLonChange(suggestion.lon);
+      console.log('📍 Address geocoded - Lon:', suggestion.lon);
     }
     
     setShowDropdown(false);
     setSuggestions([]);
+  };
+
+  // Auto-geocode when user stops typing or blurs
+  const triggerAutoGeocode = async () => {
+    console.log('🔄 Auto-geocoding triggered', { street, postalCode, city });
+    
+    // Clear any existing timer
+    if (geocodingTimerRef.current) {
+      clearTimeout(geocodingTimerRef.current);
+    }
+
+    // Need all address components
+    if (!street || !postalCode || !city) {
+      console.log('⚠️ Auto-geocoding skipped - missing address components');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const results = await searchAddress(street.trim(), postalCode, city);
+      
+      if (results.length === 0) {
+        console.log('❌ Auto-geocoding - no results found');
+        if (onGeocodingError) {
+          onGeocodingError('Adresse konnte nicht gefunden werden. Bitte aus Vorschlägen auswählen.');
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // If exactly one match, auto-set coordinates
+      if (results.length === 1) {
+        const match = results[0];
+        console.log('✅ Auto-geocoding success (1 match)', match);
+        
+        if (typeof match.lat === 'number' && onLatChange) {
+          onLatChange(match.lat);
+          console.log('📍 Address geocoded - Lat:', match.lat);
+        }
+        if (typeof match.lon === 'number' && onLonChange) {
+          onLonChange(match.lon);
+          console.log('📍 Address geocoded - Lon:', match.lon);
+        }
+      } else {
+        // Multiple matches - show dropdown
+        console.log(`⚠️ Auto-geocoding - ${results.length} matches, showing dropdown`);
+        setSuggestions(results);
+        setShowDropdown(true);
+      }
+      
+      setIsLoading(false);
+    } catch (error) {
+      console.error('❌ Auto-geocoding error', error);
+      if (onGeocodingError) {
+        onGeocodingError('Fehler beim Geocoding. Bitte erneut versuchen.');
+      }
+      setIsLoading(false);
+    }
+  };
+
+  const handleBlur = () => {
+    // Close dropdown after a delay to allow suggestion clicks
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 200);
+    
+    // Trigger auto-geocode
+    triggerAutoGeocode();
+  };
+
+  const handleChangeWithAutoGeocode = (text: string) => {
+    onStreetChange(text);
+    
+    if (text.length < 3) {
+      setShowDropdown(false);
+      return;
+    }
+
+    // Clear existing timer
+    if (geocodingTimerRef.current) {
+      clearTimeout(geocodingTimerRef.current);
+    }
+
+    // Set new timer for auto-geocode after 600ms
+    geocodingTimerRef.current = setTimeout(() => {
+      triggerAutoGeocode();
+    }, 600);
   };
 
   return (
