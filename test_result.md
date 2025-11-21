@@ -289,9 +289,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Worker Profile"
-    - "Job Creation mit Speicherung"
-    - "Worker Feed Screen"
+    - "Authentication Flow"
+    - "Authentication - Signup Screen"
+    - "Authentication - Login Screen"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
