@@ -430,16 +430,16 @@ export default function WorkerFeed() {
                   key={job.id}
                   style={{
                     backgroundColor: nearbyJobData?.disabled ? colors.disabledBg : colors.white,
-                    borderRadius: 12,
+                    borderRadius: 16,
                     padding: spacing.md,
-                    gap: 8,
-                    borderWidth: 1,
-                    borderColor: nearbyJobData?.disabled ? colors.gray300 : colors.gray200,
+                    gap: spacing.sm,
+                    borderWidth: nearbyJobData?.disabled ? 1 : 0,
+                    borderColor: nearbyJobData?.disabled ? colors.gray300 : 'transparent',
                     shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 1 },
-                    shadowOpacity: 0.05,
-                    shadowRadius: 2,
-                    elevation: 1,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: nearbyJobData?.disabled ? 0.02 : 0.08,
+                    shadowRadius: 8,
+                    elevation: nearbyJobData?.disabled ? 0 : 3,
                   }}
                 >
                   {/* Header: Titel + Match-Chip */}
