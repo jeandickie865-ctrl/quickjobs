@@ -1,4 +1,4 @@
-// app/onboarding/role.tsx - Green Modern Minimal (Auftraggeber/Aufträgetarter)
+// app/onboarding/role.tsx - Überarbeitet: Arbeitskraft & Auftraggeber
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -50,30 +50,35 @@ export default function RoleSelectionScreen() {
         style={[
           styles.card,
           {
-            backgroundColor: isSelected ? colors.primaryLight : colors.white,
+            backgroundColor: colors.white,
             borderColor: isSelected ? colors.primary : colors.gray300,
-            borderWidth: 2,
+            borderWidth: isSelected ? 3 : 2,
+            shadowColor: colors.black,
+            shadowOffset: { width: 0, height: isSelected ? 4 : 2 },
+            shadowOpacity: isSelected ? 0.15 : 0.08,
+            shadowRadius: isSelected ? 6 : 3,
+            elevation: isSelected ? 4 : 2,
           }
         ]}
       >
-        <View style={{ marginBottom: spacing.md }}>
+        <View style={{ marginBottom: spacing.md, alignItems: 'center' }}>
           {icon === 'employer' ? (
-            <Briefcase size={36} color={isSelected ? colors.primary : colors.gray600} />
+            <Briefcase size={48} color={isSelected ? colors.primary : colors.gray600} />
           ) : (
-            <UserCheck size={36} color={isSelected ? colors.primary : colors.gray600} />
+            <UserCheck size={48} color={isSelected ? colors.primary : colors.gray600} />
           )}
         </View>
 
         <Text style={[
           styles.cardTitle,
-          { color: colors.black, marginBottom: spacing.sm }
+          { color: colors.black, marginBottom: spacing.sm, textAlign: 'center' }
         ]}>
           {title}
         </Text>
 
         <Text style={[
           styles.cardDescription,
-          { color: colors.gray600 }
+          { color: colors.gray600, textAlign: 'center' }
         ]}>
           {description}
         </Text>
@@ -86,33 +91,35 @@ export default function RoleSelectionScreen() {
       <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.xl }}>
         <Text style={[
           styles.title,
-          { color: colors.black, marginBottom: spacing.md }
+          { color: colors.black, marginBottom: spacing.md, textAlign: 'center' }
         ]}>
-          Wähle deine Rolle
+          Wie möchtest du die App nutzen?
         </Text>
 
         <Text style={[
           styles.subtitle,
-          { color: colors.gray600, marginBottom: spacing.xxl }
+          { color: colors.gray600, marginBottom: spacing.xxl, textAlign: 'center' }
         ]}>
           Du kannst später zwischen den Rollen wechseln.
         </Text>
 
-        <RoleCard
-          role="employer"
-          title="Auftraggeber"
-          description="Erstelle Aufträge und finde schnelle Hilfe – privat oder geschäftlich."
-          icon="employer"
-        />
+        <View style={{ gap: spacing.lg }}>
+          <RoleCard
+            role="worker"
+            title="Arbeitskraft"
+            description="Finde Aufträge in deiner Nähe und verdiene Geld."
+            icon="worker"
+          />
 
-        <RoleCard
-          role="worker"
-          title="Aufträgetarter"
-          description="Finde schnelle Aufträge in deiner Nähe und starte direkt."
-          icon="worker"
-        />
+          <RoleCard
+            role="employer"
+            title="Auftraggeber"
+            description="Erstelle Aufträge und finde schnelle Hilfe – privat oder geschäftlich."
+            icon="employer"
+          />
+        </View>
 
-        <View style={{ marginTop: 'auto' }}>
+        <View style={{ marginTop: 'auto', paddingTop: spacing.xl }}>
           <Button
             title={loading ? 'Lädt...' : 'Weiter'}
             onPress={handleContinue}
@@ -127,23 +134,22 @@ export default function RoleSelectionScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: '800',
   },
   subtitle: {
     fontSize: 15,
   },
   card: {
-    borderRadius: 14,
-    padding: 20,
-    marginBottom: 16,
+    borderRadius: 16,
+    padding: 24,
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
   },
   cardDescription: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
   },
 });
