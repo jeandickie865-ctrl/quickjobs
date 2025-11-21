@@ -82,6 +82,19 @@ export const WorkerProfileCard: React.FC<WorkerProfileCardProps> = ({
           <Text style={[styles.location, { color: colors.gray600 }]}>
             {formatAddress(profile.homeAddress, true) || 'Standort nicht angegeben'}
           </Text>
+          
+          {/* Rating */}
+          {reviewCount > 0 && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+              <StarRating rating={averageRating} size={14} />
+              <Text style={{ color: colors.gray700, fontSize: 13, fontWeight: '600' }}>
+                {averageRating.toFixed(1)}
+              </Text>
+              <Text style={{ color: colors.gray500, fontSize: 12 }}>
+                ({reviewCount})
+              </Text>
+            </View>
+          )}
         </View>
       </View>
 
