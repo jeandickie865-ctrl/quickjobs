@@ -23,7 +23,7 @@ export default function EmployerDashboard() {
     if (!user) return;
     (async () => {
       const employerJobs = await getEmployerJobs(user.id);
-      setAufträge(employerJobs);
+      setJobs(employerJobs);
       setIsLoading(false);
     })();
   }, [user]);
