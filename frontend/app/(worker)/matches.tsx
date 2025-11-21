@@ -113,28 +113,34 @@ export default function WorkerMatchesScreen() {
           />
         }
       >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
-            Meine Matches
-          </Text>
-          <Text
-            style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
-            onPress={() => router.push('/(worker)/feed')}
-          >
-            🔎 Jobs
+        {/* Header */}
+        <View style={{ marginBottom: spacing.xs }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ fontSize: 28, fontWeight: '900', color: colors.black, letterSpacing: -0.5 }}>
+              Meine Matches
+            </Text>
+            <Text
+              style={{ color: colors.primary, fontSize: 15, fontWeight: '600', paddingHorizontal: spacing.sm, paddingVertical: 4 }}
+              onPress={() => router.push('/(worker)/feed')}
+            >
+              🔎 Jobs
+            </Text>
+          </View>
+          <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
+            {matches.length} {matches.length === 1 ? 'akzeptierte Bewerbung' : 'akzeptierte Bewerbungen'}
           </Text>
         </View>
 
         {error && (
           <View style={{
             padding: spacing.md,
-            backgroundColor: '#fee',
+            backgroundColor: colors.errorLight,
             borderRadius: 12,
-            borderWidth: 1,
-            borderColor: '#f88'
+            borderLeftWidth: 4,
+            borderLeftColor: colors.error,
           }}>
-            <Text style={{ color: '#c00', fontSize: 14 }}>
-              {error}
+            <Text style={{ color: colors.error, fontSize: 14, fontWeight: '600' }}>
+              ⚠️ {error}
             </Text>
           </View>
         )}
