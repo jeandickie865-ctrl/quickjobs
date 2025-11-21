@@ -8,7 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Auftrag } from '../../types/job';
-import { getEmployerAufträge } from '../../utils/jobStore';
+import { getEmployerJobs } from '../../utils/jobStore';
 import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 
