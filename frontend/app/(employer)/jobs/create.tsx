@@ -189,9 +189,15 @@ export default function CreateJob() {
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
       >
-        <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>
-          Job erstellen
-        </Text>
+        {/* Header */}
+        <View style={{ marginBottom: spacing.xs }}>
+          <Text style={{ color: colors.black, fontSize: 28, fontWeight: '900', letterSpacing: -0.5 }}>
+            Job erstellen
+          </Text>
+          <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
+            Erstelle ein neues Jobangebot für dein Team
+          </Text>
+        </View>
 
         {/* Title */}
         <View style={{ gap: 6 }}>
