@@ -133,35 +133,12 @@ export default function WorkerFeed() {
     [jobs, profile]
   );
 
-  // Alle Jobs im Umkreis - mit Radius-Filter, aber ohne Profil-Matching
-  const allJobsInRadius = useMemo(() => {
+  // Alle Jobs im Umkreis - mit Radius-Filter und Distanz-Info
+  const allJobsInRadius: NearbyJob[] = useMemo(() => {
     if (!profile) return [];
 
     const openJobs = jobs.filter(j => j.status === 'open');
-
-    // Filter nach Radius
-    return openJobs.filter(job => {
-      // Wenn Job keine Koordinaten hat: Im Zweifel anzeigen
-      if (job.lat == null || job.lon == null || isNaN(job.lat) || isNaN(job.lon)) {
-        console.log('📍 Job ohne Koordinaten wird angezeigt:', job.id);
-        return true;
-      }
-
-      // Wenn Worker keine Koordinaten hat: Alle Jobs anzeigen
-      if (profile.homeLat == null || profile.homeLon == null || 
-          isNaN(profile.homeLat) || isNaN(profile.homeLon)) {
-        console.log('📍 Worker ohne Koordinaten, zeige alle Jobs');
-        return true;
-      }
-
-      // Distanz berechnen
-      const distance = calculateDistance(profile.homeLat, profile.homeLon, job.lat, job.lon);
-      const withinRadius = distance <= profile.radiusKm;
-      
-      console.log(`📍 Job ${job.id}: ${distance.toFixed(1)} km entfernt, Radius ${profile.radiusKm} km, ${withinRadius ? 'ANGEZEIGT' : 'AUSGEBLENDET'}`);
-      
-      return withinRadius;
-    }).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    return nearbyJobs(openJobs, profile);
   }, [jobs, profile]);
 
   // Aktive Job-Liste basierend auf Tab
