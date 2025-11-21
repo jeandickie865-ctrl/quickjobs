@@ -281,7 +281,7 @@ export default function CreateJob() {
                 Anforderungen (optional)
               </Text>
               <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                Wähle Qualifikationen und Tätigkeiten, die für diesen Job erforderlich sind.
+                Wähle Tätigkeiten und Qualifikationen, die für diesen Job wichtig sind. Für einfache Hilfstätigkeiten kannst du dies leer lassen.
               </Text>
               
               {/* Tätigkeiten */}
