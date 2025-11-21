@@ -27,9 +27,9 @@ export const Button: React.FC<ButtonProps> = ({
 
   const getButtonStyle = (): ViewStyle => {
     const base: ViewStyle = {
-      paddingVertical: spacing.md,
+      paddingVertical: 14,
       paddingHorizontal: spacing.xl,
-      borderRadius: radius.default,
+      borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
       minHeight: 48,
@@ -41,6 +41,7 @@ export const Button: React.FC<ButtonProps> = ({
         backgroundColor: colors.disabledBg,
         borderWidth: variant === 'secondary' ? 1 : 0,
         borderColor: colors.disabled,
+        opacity: 0.6,
       };
     }
 
@@ -49,19 +50,19 @@ export const Button: React.FC<ButtonProps> = ({
         return { 
           ...base, 
           backgroundColor: colors.primary,
-          shadowColor: colors.primary,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.25,
-          shadowRadius: 4,
-          elevation: 3,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.08,
+          shadowRadius: 3,
+          elevation: 2,
         };
       case 'secondary':
         return {
           ...base,
-          backgroundColor: colors.primaryLight,
+          backgroundColor: colors.white,
           borderWidth: 1.5,
           borderColor: colors.primary,
-          shadowColor: colors.black,
+          shadowColor: '#000',
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.05,
           shadowRadius: 2,
@@ -77,10 +78,10 @@ export const Button: React.FC<ButtonProps> = ({
         return {
           ...base,
           backgroundColor: colors.error,
-          shadowColor: colors.error,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.08,
+          shadowRadius: 3,
           elevation: 2,
         };
       default:
