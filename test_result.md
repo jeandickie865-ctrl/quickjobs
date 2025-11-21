@@ -255,6 +255,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Persistente Authentifizierung implementiert: User-Datenbank System eingeführt (@shiftmatch:users_database), das alle User mit ihren Rollen speichert. signUp speichert User in DB, signIn lädt User inkl. Rolle aus DB, setRole aktualisiert User in DB. User bleiben nun zwischen App-Neustarts eingeloggt mit ihrer gewählten Rolle."
+      - working: true
+        agent: "main"
+        comment: "KRITISCHER SECURITY-FIX: expo-crypto wurde installiert und Passwort-Hashing mit SHA-256 + Salt erfolgreich aktiviert. AuthContext.tsx nutzt jetzt expo-crypto für sicheres Password-Hashing. App läuft stabil, Willkommens-Screen wird korrekt angezeigt. Keine Plaintext-Passwörter mehr!"
 
 backend:
   - task: "Backend API"
