@@ -69,8 +69,11 @@ export const spacing = {
 };
 
 export const radius = {
-  default: 14,
-  card: 16,
+  default: 10,    // Buttons
+  card: 16,       // Job Cards
+  input: 12,      // Form Inputs
+  modal: 20,      // Modals/Popups
+  badge: 8,       // Match Badges
 };
 
 export type Palette = typeof palette;
