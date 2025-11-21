@@ -22,8 +22,8 @@ export default function EmployerDashboard() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const employerAufträge = await getEmployerAufträge(user.id);
-      setAufträge(employerAufträge);
+      const employerJobs = await getEmployerJobs(user.id);
+      setAufträge(employerJobs);
       setIsLoading(false);
     })();
   }, [user]);
