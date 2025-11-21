@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Logo mit Purple Glow
+  // Logo mit Purple Glow - OPTIMIERT
   logoGlowContainer: {
     shadowColor: COLORS.vividPurple,
     shadowOpacity: 0.4,
@@ -173,16 +173,17 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   logoContainer: {
-    width: 220,
-    height: 220,
+    width: 180,
+    height: 180,
     backgroundColor: COLORS.neonLime,
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   logoImage: {
-    width: 180,
-    height: 180,
+    width: 140,
+    height: 140,
   },
 
   // Slogan mit Neon-Lime Bullet
