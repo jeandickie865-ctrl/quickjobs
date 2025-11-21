@@ -75,16 +75,17 @@ export default function LoginScreen() {
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder="name@email.de"
-          placeholderTextColor={colors.gray400}
+          placeholderTextColor={colors.gray500}
           value={email}
           onChangeText={setEmail}
           style={{
             borderWidth: 1,
-            borderColor: colors.gray300,
-            borderRadius: 10,
+            borderColor: colors.gray200,
+            borderRadius: 14,
             padding: 14,
-            backgroundColor: colors.beige100,
+            backgroundColor: colors.white,
             color: colors.black,
+            fontSize: 16,
           }}
         />
       </View>
