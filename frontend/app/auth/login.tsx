@@ -108,7 +108,7 @@ export default function LoginScreen() {
         >
           <TextInput
             placeholder="******"
-            placeholderTextColor={colors.gray400}
+            placeholderTextColor={colors.gray500}
             secureTextEntry={!showPw}
             value={password}
             onChangeText={setPassword}
@@ -116,6 +116,7 @@ export default function LoginScreen() {
               flex: 1,
               padding: 14,
               color: colors.black,
+              fontSize: 16,
             }}
           />
 
