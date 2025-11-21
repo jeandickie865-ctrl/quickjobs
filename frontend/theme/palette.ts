@@ -14,6 +14,9 @@ export const palette = {
   background: '#F8F8F8',
   card: '#FFFFFF',
   white: '#FFFFFF',
+  primaryUltraLight: '#F8F8F8',
+  beige50: '#F8F8F8',
+  beige100: '#EFEFEF',
   
   // Text
   text: '#000000',
