@@ -280,6 +280,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Backend Infrastructure Test nach Taxonomie-Überarbeitung: Service RUNNING (pid 452, uptime 0:04:47), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status funktionieren), MongoDB ✅ (3 documents persistent gespeichert), CORS ✅ (Headers konfiguriert), Backend Logs ✅ (keine Fehler). Alle 3/3 Tests bestanden. System vollständig stabil nach Frontend-Änderungen."
+      - working: true
+        agent: "testing"
+        comment: "Backend Infrastructure Test nach expo-crypto Installation: Service RUNNING (pid 310, uptime 0:08:32), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status beide funktionsfähig), MongoDB ✅ (4 documents persistent, Verbindung erfolgreich), CORS ✅ (Middleware konfiguriert), Backend Logs ✅ (keine Fehler, nur normale HTTP-Requests). Alle 3/3 Tests bestanden. Backend Infrastructure vollständig stabil nach expo-crypto Fix."
 
 metadata:
   created_by: "main_agent"
