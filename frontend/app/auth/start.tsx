@@ -1,18 +1,19 @@
-// app/auth/start.tsx - STIL 1: Modern, Ruhig, Clean, Apple-ähnlich
-import React from 'react';
-import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity } from 'react-native';
+// app/auth/start.tsx - MODERN PREMIUM MINIMAL
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity, Animated } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 
-// STIL 1 Brand Colors
+// Modern Premium Brand Colors
 const COLORS = {
   primary: '#2F4F3A',
-  highlight: '#3C6348',
-  background: '#F9FAF8',
+  primaryDark: '#254231',
+  softBeige: '#FAF8F5',
+  offWhite: '#FEFEFE',
+  softGray: '#6A6A6A',
   text: '#111111',
-  textSecondary: '#444444',
-  border: '#A8B5A9',
-  legalText: '#6A716A',
+  legalText: '#999999',
   white: '#FFFFFF',
 };
 
