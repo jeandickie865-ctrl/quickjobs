@@ -25,7 +25,10 @@ export default function LoginScreen() {
     setErrors({});
     
     // Validate with safeParse
-    const result = loginSchema.safeParse({ email, password });
+    const result = loginSchema.safeParse({ 
+      email: email.trim(), 
+      password 
+    });
     if (!result.success) {
       // Use correct Zod v3+ API: result.error.issues
       const fieldErrors: Record<string, string> = {};
@@ -40,11 +43,11 @@ export default function LoginScreen() {
 
     setLoading(true);
     try {
-      await signIn(email, password);
+      await signIn(result.data.email, result.data.password);
       // Redirect happens automatically via start.tsx
       router.replace('/start');
     } catch (error: any) {
-      Alert.alert('Fehler', error.message || 'Login fehlgeschlagen');
+      Alert.alert('Login fehlgeschlagen', error.message || 'Ein unbekannter Fehler ist aufgetreten');
     } finally {
       setLoading(false);
     }
