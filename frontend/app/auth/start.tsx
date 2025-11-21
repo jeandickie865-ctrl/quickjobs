@@ -322,13 +322,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   legalLink: {
-    fontSize: 11,
+    fontSize: 12,
     color: COLORS.legalText,
     letterSpacing: 0.2,
-    textDecorationLine: 'underline',
   },
   legalDot: {
-    fontSize: 11,
+    fontSize: 12,
     color: COLORS.legalText,
   },
 });
