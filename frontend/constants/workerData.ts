@@ -270,10 +270,10 @@ export const TAXONOMY: TaxonomyCategory[] = [
       "Preisetiketten prüfen",
     ],
     qualifications: [
-      "Erfahrung Inventur",
-      "sicher im Zählen",
-      "Erfahrung mit Handscanner",
-      "körperlich belastbar",
+      "Scanner-Erfahrung",
+      "Inventur-Erfahrung",
+      "Zahlen-Affinität",
+      "Körperlich belastbar",
     ],
   },
 ];
