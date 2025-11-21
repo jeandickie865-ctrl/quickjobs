@@ -1,9 +1,10 @@
-// utils/nearbyJobs.ts
+// utils/nearbyJobs.ts - MATCHING 2.0 FINAL
 import { Job } from '../types/job';
 import { WorkerProfile } from '../types/profile';
 import { calculateDistance } from './distance';
 import { normalizeAddress } from './normalizeAddress';
 import { formatAddress } from '../types/address';
+import { LOW_SKILL } from './matching';
 
 const SPECIAL_SECURITY = "Sachkunde nach § 34a GewO";
 
@@ -16,20 +17,13 @@ export type NearbyJob = Job & {
 
 /**
  * Get jobs near the worker with distance info and disabled state
- * @param jobs All jobs
- * @param worker Worker profile
- * @param maxDistanceKm Optional max distance (defaults to worker's radius or 30km)
- * @returns Sorted list of jobs with distance and disabled state
+ * MATCHING 2.0 - Simple nearby jobs view
  */
 export function nearbyJobs(
   jobs: Job[],
-  worker: WorkerProfile,
-  maxDistanceKm?: number
+  worker: WorkerProfile
 ): NearbyJob[] {
-  const workerRadius = worker.radiusKm ?? 30;
-  const maxDistance = maxDistanceKm ?? workerRadius;
-  
-  const workerSkills = worker.selectedTags ?? [];
+  const workerSkills = worker.selectedTags || [];
 
   return jobs
     .map(job => {
@@ -45,14 +39,12 @@ export function nearbyJobs(
         !workerSkills.includes(SPECIAL_SECURITY);
 
       // Determine disabled state and reason
-      let disabled = false;
-      let disabledReason: string | undefined;
+      const disabled = distance > worker.radiusKm || requires34a;
 
-      if (distance > maxDistance) {
-        disabled = true;
+      let disabledReason: string | undefined;
+      if (distance > worker.radiusKm) {
         disabledReason = "Außerhalb deines Radius";
       } else if (requires34a) {
-        disabled = true;
         disabledReason = "Erfordert Sachkunde § 34a";
       }
 
