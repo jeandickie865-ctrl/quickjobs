@@ -1,53 +1,30 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '../../theme/ThemeProvider';
+import { View, Text, TextInput, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { Input } from '../../components/ui/Input';
+import { useTheme } from '../../theme/ThemeProvider';
 import { Button } from '../../components/ui/Button';
-import { z } from 'zod';
-
-const loginSchema = z.object({
-  email: z.string().min(1, 'E-Mail erforderlich').email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(1, 'Passwort erforderlich'),
-});
+import { Eye, EyeOff } from 'lucide-react-native';
 
 export default function LoginScreen() {
-  const { colors, spacing } = useTheme();
+  const router = useRouter();
   const { signIn } = useAuth();
+  const { colors, spacing } = useTheme();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleLogin = async () => {
-    setErrors({});
-    
-    // Validate with safeParse
-    const result = loginSchema.safeParse({ 
-      email: email.trim(), 
-      password 
-    });
-    if (!result.success) {
-      // Use correct Zod v3+ API: result.error.issues
-      const fieldErrors: Record<string, string> = {};
-      result.error.issues.forEach((issue) => {
-        if (issue.path[0]) {
-          fieldErrors[issue.path[0] as string] = issue.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
+  async function handleLogin() {
+    setErrorMsg('');
     setLoading(true);
     try {
-      await signIn(result.data.email, result.data.password);
-      // Redirect happens automatically via start.tsx
+      await signIn(email.trim().toLowerCase(), password);
       router.replace('/start');
-    } catch (error: any) {
-      Alert.alert('Login fehlgeschlagen', error.message || 'Ein unbekannter Fehler ist aufgetreten');
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Login fehlgeschlagen');
     } finally {
       setLoading(false);
     }
