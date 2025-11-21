@@ -198,11 +198,11 @@ const styles = StyleSheet.create({
     width: 220,
     height: 220,
   },
-  // Slogan
+  // Slogan - 12px Abstand zum Logo
   sloganContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: 12,
     gap: 8,
   },
   purpleDot: {
@@ -218,13 +218,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
   },
 
-  // Titel
+  // Titel - 42px Abstand zum Slogan
   title: {
     fontSize: 26,
     fontWeight: '800',
     color: COLORS.black,
     textAlign: 'center',
-    marginTop: 28,
+    marginTop: 42,
   },
 
   // Buttons
