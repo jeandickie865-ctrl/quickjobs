@@ -8,6 +8,7 @@ import { getWorkerProfile } from '../../utils/profileStore';
 import { getJobs } from '../../utils/jobStore';
 import { applyForJob, getApplicationsForWorker } from '../../utils/applicationStore';
 import { jobMatchesWorker, jobMatchesWorkerWithDebug, MatchDebug } from '../../utils/matching';
+import { nearbyJobs, NearbyJob } from '../../utils/nearbyJobs';
 import { Job } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Button } from '../../components/ui/Button';
