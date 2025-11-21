@@ -1,11 +1,16 @@
 // contexts/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Crypto from 'expo-crypto';
 
+// ----------------------
+// TYPES
+// ----------------------
 type User = {
   id: string;
   email: string;
-  password: string;
+  passwordHash: string; // <-- WICHTIG: nicht mehr das Klartext-Passwort
+  salt: string;
   role?: 'worker' | 'employer';
 };
 
@@ -19,98 +24,124 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Keys
+// ----------------------
+// STORAGE KEYS
+// ----------------------
 const USER_KEY = '@shiftmatch:user';
 const USER_DB_KEY = '@shiftmatch:users_database';
 
+// ----------------------
+// HELPERS
+// ----------------------
+async function hashPassword(password: string, salt: string): Promise<string> {
+  return await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    password + salt
+  );
+}
+
+function generateSalt(): string {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+async function loadUserDB(): Promise<Record<string, User>> {
+  const stored = await AsyncStorage.getItem(USER_DB_KEY);
+  if (!stored) return {};
+  try {
+    return JSON.parse(stored);
+  } catch {
+    console.log('❌ UserDB corrupted — resetting...');
+    return {};
+  }
+}
+
+async function saveUserDB(db: Record<string, User>) {
+  await AsyncStorage.setItem(USER_DB_KEY, JSON.stringify(db));
+}
+
+// ----------------------
+// PROVIDER
+// ----------------------
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // App Start → Benutzer laden
+  // Benutzer bei App-Start laden
   useEffect(() => {
     (async () => {
       const stored = await AsyncStorage.getItem(USER_KEY);
-      if (stored) setUser(JSON.parse(stored));
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch {
+          console.log('❌ Fehler beim Laden des Benutzers');
+        }
+      }
     })();
   }, []);
 
-  // -----------------------------
-  // Hilfsfunktionen
-  // -----------------------------
-
-  const normalizeEmail = (email: string) => {
-    return email.trim().toLowerCase();
-  };
-
-  const loadUserDB = async (): Promise<Record<string, User>> => {
-    const stored = await AsyncStorage.getItem(USER_DB_KEY);
-    return stored ? JSON.parse(stored) : {};
-  };
-
-  const saveUserDB = async (db: Record<string, User>) => {
-    await AsyncStorage.setItem(USER_DB_KEY, JSON.stringify(db));
-  };
-
-  // -----------------------------
-  // SIGN IN (LOGIN)
-  // -----------------------------
-  const signIn = async (email: string, password: string): Promise<User> => {
-    const normalized = normalizeEmail(email);
-    const db = await loadUserDB();
-
-    const existing = db[normalized];
-
-    if (!existing) {
-      throw new Error('Diese E-Mail ist nicht registriert.');
-    }
-
-    if (existing.password !== password) {
-      throw new Error('E-Mail oder Passwort falsch.');
-    }
-
-    // Login OK
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
-    setUser(existing);
-
-    return existing;
-  };
-
-  // -----------------------------
-  // SIGN UP (REGISTRIEREN)
-  // -----------------------------
+  // -----------------------------------------------------
+  // SIGN UP (REGISTRIERUNG)
+  // -----------------------------------------------------
   const signUp = async (email: string, password: string): Promise<User> => {
     const normalized = normalizeEmail(email);
     const db = await loadUserDB();
 
     if (db[normalized]) {
-      throw new Error('Diese E-Mail ist bereits registriert. Bitte logge dich ein.');
+      throw new Error('Diese E-Mail ist bereits registriert.');
     }
+
+    const salt = generateSalt();
+    const passwordHash = await hashPassword(password, salt);
 
     const newUser: User = {
       id: 'u-' + Date.now().toString(),
       email: normalized,
-      password,
+      passwordHash,
+      salt,
     };
 
     db[normalized] = newUser;
     await saveUserDB(db);
 
-    // Direkt einloggen
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
     setUser(newUser);
 
     return newUser;
   };
 
-  // -----------------------------
-  // ROLLE SPEICHERN
-  // -----------------------------
+  // -----------------------------------------------------
+  // SIGN IN (LOGIN)
+  // -----------------------------------------------------
+  const signIn = async (email: string, password: string): Promise<User> => {
+    const normalized = normalizeEmail(email);
+    const db = await loadUserDB();
+
+    const existing = db[normalized];
+    if (!existing) throw new Error('Diese E-Mail ist nicht registriert.');
+
+    const hashed = await hashPassword(password, existing.salt);
+
+    if (hashed !== existing.passwordHash) {
+      throw new Error('E-Mail oder Passwort falsch.');
+    }
+
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
+    setUser(existing);
+
+    return existing;
+  };
+
+  // -----------------------------------------------------
+  // SET ROLE
+  // -----------------------------------------------------
   const setRole = async (role: 'worker' | 'employer') => {
     if (!user) return;
 
     const updated = { ...user, role };
-
     const db = await loadUserDB();
+
     db[user.email] = updated;
     await saveUserDB(db);
 
@@ -118,9 +149,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(updated);
   };
 
-  // -----------------------------
-  // LOGOUT
-  // -----------------------------
+  // -----------------------------------------------------
+  // SIGN OUT
+  // -----------------------------------------------------
   const signOut = async () => {
     await AsyncStorage.removeItem(USER_KEY);
     setUser(null);
