@@ -1,6 +1,6 @@
 // app/(worker)/profile.tsx
 import React, { useEffect, useMemo, useState } from 'react';
-import { ScrollView, View, Text, TextInput, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Text, TextInput, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
