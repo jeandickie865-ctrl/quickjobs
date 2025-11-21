@@ -309,11 +309,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   footerText: {
-    fontSize: 11,
+    fontSize: 12,
     color: COLORS.legalText,
     textAlign: 'center',
-    lineHeight: 16,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   legalLinksRow: {
     flexDirection: 'row',
