@@ -136,10 +136,10 @@ export const TAXONOMY: TaxonomyCategory[] = [
       "Parkplatzaufsicht",
     ],
     qualifications: [
-      "34a Unterrichtung",
-      "34a Sachkunde",
+      "Sachkunde nach § 34a GewO",
+      "Unterrichtung nach § 34a GewO",
       "Bewacher-ID",
-      "aktuelles Führungszeugnis",
+      "Polizeiliches Führungszeugnis",
       "Erfahrung im Sicherheitsdienst",
       "Deutsch mind. B1",
       "Nachtschicht-Bereitschaft",
