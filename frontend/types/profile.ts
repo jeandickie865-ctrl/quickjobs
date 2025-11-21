@@ -35,6 +35,9 @@ export type WorkerProfile = {
   shortBio?: string;         // Kurzer Steckbrief, vor Match sichtbar
   contactPhone?: string;     // Telefonnummer, nur nach Match sichtbar
   contactEmail?: string;     // Kontakt-E-Mail, nur nach Match sichtbar
+  
+  // Push Notifications
+  pushToken?: string;        // Expo Push Token für Benachrichtigungen
 };
 
 export type Job = {
