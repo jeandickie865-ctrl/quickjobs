@@ -201,12 +201,8 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
       <View style={styles.inputContainer}>
         <TextInput
           value={street}
-          onChangeText={(text) => {
-            onStreetChange(text);
-            if (text.length < 3) {
-              setShowDropdown(false);
-            }
-          }}
+          onChangeText={handleChangeWithAutoGeocode}
+          onBlur={handleBlur}
           placeholder={placeholder}
           placeholderTextColor={colors.gray400}
           editable={!disabled}
