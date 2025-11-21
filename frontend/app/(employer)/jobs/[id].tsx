@@ -593,6 +593,18 @@ export default function JobDetailScreen() {
 
         <View style={{ height: spacing.xl }} />
       </ScrollView>
+      
+      {/* Legal Confirmation Modal */}
+      <LegalConfirmationModal
+        visible={showLegalModal}
+        onConfirm={handleAccept}
+        onCancel={() => {
+          setShowLegalModal(false);
+          setSelectedApplicationId(null);
+          setSelectedWorkerName('');
+        }}
+        workerName={selectedWorkerName}
+      />
     </SafeAreaView>
   );
 }
