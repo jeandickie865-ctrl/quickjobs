@@ -354,6 +354,38 @@ export default function JobDetailScreen() {
               </Text>
             </View>
           )}
+
+          {/* Bewertungs-Button */}
+          {job.status === 'matched' && job.matchedWorkerId && !hasReview && !checkingReview && (
+            <Button
+              title="⭐ Job abschließen & bewerten"
+              onPress={() => {
+                router.push({
+                  pathname: '/(employer)/jobs/rate',
+                  params: {
+                    jobId: job.id,
+                    workerId: job.matchedWorkerId!,
+                  },
+                });
+              }}
+              variant="secondary"
+            />
+          )}
+
+          {/* Bewertung bereits abgegeben */}
+          {job.status === 'matched' && hasReview && (
+            <View style={{
+              backgroundColor: colors.beige100,
+              borderRadius: 8,
+              padding: spacing.sm,
+              borderLeftWidth: 3,
+              borderLeftColor: colors.black,
+            }}>
+              <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
+                ✅ Du hast diese Arbeitskraft bereits bewertet.
+              </Text>
+            </View>
+          )}
           
           <View style={{ gap: 4, marginTop: 4 }}>
             <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
