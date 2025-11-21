@@ -342,13 +342,13 @@ export default function WorkerFeed() {
         {error && (
           <View style={{
             padding: spacing.md,
-            backgroundColor: '#fee',
+            backgroundColor: colors.errorLight,
             borderRadius: 12,
-            borderWidth: 1,
-            borderColor: '#f88'
+            borderLeftWidth: 4,
+            borderLeftColor: colors.error,
           }}>
-            <Text style={{ color: '#c00', fontSize: 14 }}>
-              {error}
+            <Text style={{ color: colors.error, fontSize: 14, fontWeight: '600' }}>
+              ⚠️ {error}
             </Text>
           </View>
         )}
