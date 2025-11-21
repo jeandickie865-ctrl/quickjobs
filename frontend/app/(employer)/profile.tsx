@@ -36,6 +36,8 @@ export default function EmployerProfileScreen() {
   const [street, setStreet] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
+  const [lat, setLat] = useState<number | undefined>(undefined);
+  const [lon, setLon] = useState<number | undefined>(undefined);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | null>(null);
   const [shortBio, setShortBio] = useState('');
   const [profilePhotoUri, setProfilePhotoUri] = useState<string | undefined>(undefined);
