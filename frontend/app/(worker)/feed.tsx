@@ -5,10 +5,10 @@ import { useRouter, Redirect } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
-import { getAufträge } from '../../utils/jobStore';
+import { getJobs } from '../../utils/jobStore';
 import { applyForJob, getApplicationsForWorker } from '../../utils/applicationStore';
 import { jobMatchesWorker, jobMatchesWorkerWithDebug, MatchDebug } from '../../utils/matching';
-import { nearbyAufträge, NearbyAuftrag } from '../../utils/nearbyAufträge';
+import { nearbyJobs, NearbyAuftrag } from '../../utils/nearbyJobs';
 import { Auftrag } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Button } from '../../components/ui/Button';
@@ -51,7 +51,7 @@ export default function WorkerFeed() {
 
       setProfile(workerProfile);
 
-      const allAufträge = await getAufträge();
+      const allAufträge = await getJobs();
       setAllAufträgeCount(allAufträge.length);
       const openAufträge = allAufträge.filter(j => j.status === 'open');
       setOpenAufträgeCount(openAufträge.length);
@@ -139,7 +139,7 @@ export default function WorkerFeed() {
     if (!profile) return [];
 
     const openAufträge = jobs.filter(j => j.status === 'open');
-    return nearbyAufträge(openAufträge, profile);
+    return nearbyJobs(openAufträge, profile);
   }, [jobs, profile]);
 
   // Aktive Job-Liste basierend auf Tab
