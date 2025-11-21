@@ -179,22 +179,33 @@ export default function WorkerProfileScreen() {
       style={{ flex: 1, backgroundColor: colors.beige50 }}
       contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xl, gap: spacing.md }}
     >
-      <Text style={{ color: colors.black, fontSize: 22, fontWeight: '800' }}>Dein Profil</Text>
+      {/* Header */}
+      <View style={{ marginBottom: spacing.xs }}>
+        <Text style={{ color: colors.black, fontSize: 28, fontWeight: '900', letterSpacing: -0.5 }}>
+          Dein Profil
+        </Text>
+        <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
+          Verwalte deine Kategorien, Skills und Verfügbarkeit
+        </Text>
+      </View>
 
       {/* Bewertungen */}
       {!reviewsLoading && (
         <View
           style={{
             backgroundColor: colors.white,
-            borderRadius: 12,
+            borderRadius: 16,
             padding: spacing.md,
-            borderWidth: 1,
-            borderColor: colors.gray200,
             gap: spacing.sm,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
+            elevation: 3,
           }}
         >
-          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 16 }}>
-            Bewertungen
+          <Text style={{ color: colors.black, fontWeight: '700', fontSize: 17 }}>
+            ⭐ Bewertungen
           </Text>
 
           {reviews.length > 0 ? (
