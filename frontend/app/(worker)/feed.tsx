@@ -389,49 +389,62 @@ export default function WorkerFeed() {
                 <View
                   key={job.id}
                   style={{
-                    backgroundColor: colors.white,
+                    backgroundColor: nearbyJobData?.disabled ? colors.disabledBg : colors.white,
                     borderRadius: 12,
                     padding: spacing.md,
-                    gap: 10,
+                    gap: 8,
                     borderWidth: 1,
-                    borderColor: colors.gray200,
-                    opacity: nearbyJobData?.disabled ? 0.5 : 1,
+                    borderColor: nearbyJobData?.disabled ? colors.gray300 : colors.gray200,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.05,
+                    shadowRadius: 2,
+                    elevation: 1,
                   }}
                 >
-                  <Text style={{ fontWeight: '800', fontSize: 18, color: colors.black }}>
-                    {job.title}
-                  </Text>
-
-                  {/* Profil-Match-Chip (nur im "Alle Jobs" Tab) */}
-                  {activeTab === 'all' && (
-                    <View style={{
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      borderRadius: 8,
-                      alignSelf: 'flex-start',
-                      backgroundColor: matchesProfile ? colors.beige200 : colors.gray100,
+                  {/* Header: Titel + Match-Chip */}
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                    <Text style={{ 
+                      flex: 1,
+                      fontWeight: '700', 
+                      fontSize: 17, 
+                      color: nearbyJobData?.disabled ? colors.disabled : colors.black,
+                      lineHeight: 22,
                     }}>
-                      <Text style={{
-                        fontSize: 11,
-                        fontWeight: '600',
-                        color: matchesProfile ? colors.black : colors.gray600,
+                      {job.title}
+                    </Text>
+                    
+                    {/* Match-Strength-Chip (nur "Passende Jobs" Tab) */}
+                    {activeTab === 'matching' && matchesProfile && (
+                      <View style={{
+                        paddingHorizontal: 8,
+                        paddingVertical: 4,
+                        borderRadius: 6,
+                        backgroundColor: colors.successLight,
                       }}>
-                        {matchesProfile ? '✓ passt zu deinem Profil' : '○ außerhalb deines Profils'}
-                      </Text>
-                    </View>
-                  )}
+                        <Text style={{
+                          fontSize: 11,
+                          fontWeight: '600',
+                          color: colors.success,
+                        }}>
+                          ✓ Match
+                        </Text>
+                      </View>
+                    )}
+                  </View>
 
-                  {/* Disabled-Hinweis */}
+                  {/* Disabled-Hinweis prominent */}
                   {nearbyJobData?.disabled && nearbyJobData.disabledReason && (
                     <View style={{
                       paddingHorizontal: 10,
-                      paddingVertical: 5,
+                      paddingVertical: 6,
                       borderRadius: 8,
-                      alignSelf: 'flex-start',
-                      backgroundColor: colors.gray200,
+                      backgroundColor: colors.warningLight,
+                      borderLeftWidth: 3,
+                      borderLeftColor: colors.warning,
                     }}>
                       <Text style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: '600',
                         color: colors.gray700,
                       }}>
