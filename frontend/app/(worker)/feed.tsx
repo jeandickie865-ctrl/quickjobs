@@ -218,7 +218,7 @@ export default function WorkerFeed() {
             Profil vervollständigen
           </Text>
           <Text style={{ color: colors.gray700, fontSize: 15, textAlign: 'center' }}>
-            Bitte zuerst dein Profil ausfüllen, um passende Jobs zu sehen.
+            Bitte wähle mindestens eine Kategorie in deinem Profil, um Jobs zu sehen.
           </Text>
           <Button
             title="Zum Profil"
