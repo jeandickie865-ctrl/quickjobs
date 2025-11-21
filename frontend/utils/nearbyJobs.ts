@@ -37,19 +37,43 @@ export function nearbyJobs(
         { lat: worker.homeLat, lon: worker.homeLon }
       );
 
-      // Check if job requires 34a and worker doesn't have it
-      const requires34a =
-        job.required_all_tags?.includes(SPECIAL_SECURITY) &&
-        !workerSkills.includes(SPECIAL_SECURITY);
+      // Check all security requirements (MATCHING 2.2)
+      const jobTags = job.required_all_tags || [];
+      
+      let missingSecuritySkill: string | undefined;
+      
+      // Sachkunde §34a
+      if (jobTags.includes(SECURITY_SACHKUNDE) && !workerSkills.includes(SECURITY_SACHKUNDE)) {
+        missingSecuritySkill = "Sachkunde § 34a";
+      }
+      
+      // Unterrichtung §34a (oder Sachkunde)
+      if (jobTags.includes(SECURITY_UNTERRICHTUNG)) {
+        const hasUnterrichtung = workerSkills.includes(SECURITY_UNTERRICHTUNG);
+        const hasSachkunde = workerSkills.includes(SECURITY_SACHKUNDE);
+        if (!hasUnterrichtung && !hasSachkunde) {
+          missingSecuritySkill = "Unterrichtung § 34a";
+        }
+      }
+      
+      // Bewacher-ID
+      if (jobTags.includes(SECURITY_BEWACHER_ID) && !workerSkills.includes(SECURITY_BEWACHER_ID)) {
+        missingSecuritySkill = "Bewacher-ID";
+      }
+      
+      // Polizeiliches Führungszeugnis
+      if (jobTags.includes(SECURITY_FUEHRUNGSZEUGNIS) && !workerSkills.includes(SECURITY_FUEHRUNGSZEUGNIS)) {
+        missingSecuritySkill = "Polizeiliches Führungszeugnis";
+      }
 
       // Determine disabled state and reason
-      const disabled = distance > worker.radiusKm || requires34a;
+      const disabled = distance > worker.radiusKm || !!missingSecuritySkill;
 
       let disabledReason: string | undefined;
       if (distance > worker.radiusKm) {
         disabledReason = "Außerhalb deines Radius";
-      } else if (requires34a) {
-        disabledReason = "Erfordert Sachkunde § 34a";
+      } else if (missingSecuritySkill) {
+        disabledReason = `Erfordert ${missingSecuritySkill}`;
       }
 
       // Normalize address
