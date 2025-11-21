@@ -76,7 +76,7 @@ export const WorkerProfileCard: React.FC<WorkerProfileCardProps> = ({
           ) : (
             <View style={[styles.placeholder, { backgroundColor: colors.gray300 }]}>
               <Text style={[styles.initials, { color: colors.black }]}>
-                {getInitials()}
+                {getAvatarInitials()}
               </Text>
             </View>
           )}
