@@ -38,6 +38,10 @@ export default function WorkerProfileScreen() {
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Reviews
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
 
   // initial laden
   useEffect(() => {
