@@ -183,22 +183,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Logo Container
+  // Logo Container - EXAKT NACH SPEZIFIKATION
   logoContainer: {
-    backgroundColor: COLORS.white,
-    borderRadius: 22,
-    padding: 20,
+    marginTop: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
+    shadowColor: 'rgba(0,0,0,0.08)',
+    shadowRadius: 14,
+    shadowOpacity: 0.12,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    elevation: 3,
   },
   logo: {
-    width: 180,
-    height: 180,
+    width: 220,
+    height: 220,
   },
   // Slogan
   sloganContainer: {
