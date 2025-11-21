@@ -282,39 +282,60 @@ export default function WorkerFeed() {
           )}
         </View>
 
-        {/* Tab-Buttons */}
-        <View style={{ flexDirection: 'row', gap: spacing.xs, backgroundColor: colors.white, borderRadius: 12, padding: 4 }}>
+        {/* Tab-Buttons - Modern Segmented Control */}
+        <View style={{ 
+          flexDirection: 'row', 
+          gap: 4, 
+          backgroundColor: colors.gray100, 
+          borderRadius: 10, 
+          padding: 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.05,
+          shadowRadius: 2,
+          elevation: 1,
+        }}>
           <Text
             onPress={() => setActiveTab('matching')}
             style={{
               flex: 1,
               textAlign: 'center',
-              paddingVertical: spacing.sm,
+              paddingVertical: 12,
               paddingHorizontal: spacing.md,
               borderRadius: 8,
-              fontWeight: '700',
+              fontWeight: activeTab === 'matching' ? '700' : '600',
               fontSize: 14,
-              backgroundColor: activeTab === 'matching' ? colors.black : 'transparent',
-              color: activeTab === 'matching' ? colors.white : colors.gray700,
+              backgroundColor: activeTab === 'matching' ? colors.white : 'transparent',
+              color: activeTab === 'matching' ? colors.black : colors.gray600,
+              shadowColor: activeTab === 'matching' ? '#000' : 'transparent',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: activeTab === 'matching' ? 0.1 : 0,
+              shadowRadius: 2,
+              elevation: activeTab === 'matching' ? 2 : 0,
             }}
           >
-            Passende Jobs
+            ✓ Passende Jobs
           </Text>
           <Text
             onPress={() => setActiveTab('all')}
             style={{
               flex: 1,
               textAlign: 'center',
-              paddingVertical: spacing.sm,
+              paddingVertical: 12,
               paddingHorizontal: spacing.md,
               borderRadius: 8,
-              fontWeight: '700',
+              fontWeight: activeTab === 'all' ? '700' : '600',
               fontSize: 14,
-              backgroundColor: activeTab === 'all' ? colors.black : 'transparent',
-              color: activeTab === 'all' ? colors.white : colors.gray700,
+              backgroundColor: activeTab === 'all' ? colors.white : 'transparent',
+              color: activeTab === 'all' ? colors.black : colors.gray600,
+              shadowColor: activeTab === 'all' ? '#000' : 'transparent',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: activeTab === 'all' ? 0.1 : 0,
+              shadowRadius: 2,
+              elevation: activeTab === 'all' ? 2 : 0,
             }}
           >
-            Alle Jobs im Umkreis
+            📍 Alle im Umkreis
           </Text>
         </View>
 
