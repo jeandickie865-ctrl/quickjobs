@@ -107,15 +107,12 @@ export function LegalConfirmationModal({
                 lineHeight: 24,
               }}
             >
-              <Text style={{ fontWeight: '700' }}>Bitte beachte:</Text> Als kurzfristig
-              beschäftigte Aushilfe bist du für die steuerliche Behandlung deiner Einnahmen
-              selbst verantwortlich.
-              {'\n\n'}
-              Stelle sicher, dass du die relevanten steuerlichen und sozialversicherungsrechtlichen
-              Pflichten kennst und erfüllst.
+              <Text style={{ fontWeight: '700' }}>Bitte denke daran:</Text> Wenn du jemanden 
+              matchst, bist du rechtlich verpflichtet dich an die gesetzlichen Regeln für 
+              kurzfristige Beschäftigungen und Arbeitsrecht zu halten.
               {'\n\n'}
               <Text style={{ fontStyle: 'italic', color: colors.gray600 }}>
-                Diese Information ersetzt keine steuerliche oder rechtliche Beratung.
+                Diese Information ersetzt keine rechtliche Beratung.
               </Text>
             </Text>
 
