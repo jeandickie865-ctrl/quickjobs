@@ -61,7 +61,7 @@ export default function AuthStart() {
           {/* Top Spacer */}
           <View style={{ height: 60 }} />
 
-          {/* Logo Card */}
+          {/* Logo - NEUES DESIGN */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
             <View style={styles.logoContainer}>
               <Image
