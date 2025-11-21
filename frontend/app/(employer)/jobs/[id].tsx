@@ -114,22 +114,44 @@ export default function JobDetailScreen() {
     })();
   }, [job?.id, job?.status, job?.matchedWorkerId, user?.id]);
 
-  async function handleAccept(appId: string) {
-    if (!job) return;
+  // Show legal confirmation modal before accepting
+  function handleAcceptClick(appId: string) {
+    const acceptedApp = applications.find(a => a.id === appId);
+    if (!acceptedApp) return;
+    
+    const applicant = applicants.find(a => a.app.id === appId);
+    const workerName = applicant?.profile 
+      ? getInitials(applicant.profile.firstName, applicant.profile.lastName)
+      : 'Kandidat';
+    
+    setSelectedApplicationId(appId);
+    setSelectedWorkerName(workerName);
+    setShowLegalModal(true);
+  }
+  
+  // Actually accept application after legal confirmation
+  async function handleAccept() {
+    if (!job || !selectedApplicationId) return;
+    
+    const appId = selectedApplicationId;
+    
     try {
       setIsAcceptingId(appId);
+      setShowLegalModal(false);
       
       // Find the accepted application to get workerId
       const acceptedApp = applications.find(a => a.id === appId);
       if (!acceptedApp) return;
       
-      console.log('✅ Accepting application', { appId, workerId: acceptedApp.workerId, jobId: job.id });
+      console.log('✅ handleAccept: Accepting application', { appId, workerId: acceptedApp.workerId, jobId: job.id });
       
-      await acceptApplication(job.id, appId);
+      await acceptApplication(job.id, appId, true); // true = employerConfirmedLegal
       await updateJob(job.id, { 
         status: 'matched',
         matchedWorkerId: acceptedApp.workerId  // Set matched worker for chat
       });
+      
+      console.log('✅ handleAccept: Application accepted and job status updated');
       
       // Reload job to reflect changes
       const updatedJob = await getJobById(job.id);
