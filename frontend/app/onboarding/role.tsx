@@ -1,114 +1,124 @@
+// app/onboarding/role.tsx - Green Modern Minimal (Auftraggeber/Jobstarter)
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { router, Redirect } from 'expo-router';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
+import { Button } from '../../components/ui/Button';
+import { Briefcase, UserCheck } from '../../components/Icons';
 
-type Role = 'worker' | 'employer';
+type Role = 'employer' | 'worker';
 
-export default function RoleSelection() {
+export default function RoleSelectionScreen() {
   const { colors, spacing } = useTheme();
-  const { user, setRole } = useAuth();
+  const { setRole } = useAuth();
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(false);
 
-  if (!user) {
-    return <Redirect href="/auth/start" />;
-  }
+  const handleContinue = async () => {
+    if (!selectedRole) return;
 
-  const handleRoleSelect = async (role: Role) => {
-    setSelectedRole(role);
     setLoading(true);
-
     try {
-      await setRole(role);
+      await setRole(selectedRole);
       router.replace('/start');
     } catch (error) {
-      console.error('Error setting role:', error);
+      console.error('Fehler beim Setzen der Rolle:', error);
+    } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
-      <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('../../assets/logo.jpeg')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-          <Text style={[styles.slogan, { color: colors.gray700, marginTop: spacing.sm }]}>
-            wenn's jetzt passieren muss
-          </Text>
+  const RoleCard = ({ 
+    role, 
+    title, 
+    description, 
+    icon 
+  }: { 
+    role: Role; 
+    title: string; 
+    description: string; 
+    icon: 'employer' | 'worker' 
+  }) => {
+    const isSelected = selectedRole === role;
+
+    return (
+      <Pressable
+        onPress={() => setSelectedRole(role)}
+        style={[
+          styles.card,
+          {
+            backgroundColor: isSelected ? colors.primaryLight : colors.white,
+            borderColor: isSelected ? colors.primary : colors.gray300,
+            borderWidth: 2,
+          }
+        ]}
+      >
+        <View style={{ marginBottom: spacing.md }}>
+          {icon === 'employer' ? (
+            <Briefcase size={36} color={isSelected ? colors.primary : colors.gray600} />
+          ) : (
+            <UserCheck size={36} color={isSelected ? colors.primary : colors.gray600} />
+          )}
         </View>
 
-        <View style={styles.rolesContainer}>
-          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
-            Wie möchten Sie BCKP nutzen?
-          </Text>
+        <Text style={[
+          styles.cardTitle,
+          { color: colors.black, marginBottom: spacing.sm }
+        ]}>
+          {title}
+        </Text>
 
-          <TouchableOpacity
-            style={[
-              styles.roleCard,
-              {
-                backgroundColor: selectedRole === 'worker' ? colors.black : colors.beige50,
-                borderColor: selectedRole === 'worker' ? colors.black : colors.beige300,
-                marginBottom: spacing.md,
-              },
-            ]}
-            onPress={() => !loading && handleRoleSelect('worker')}
-            activeOpacity={0.7}
-            disabled={loading}
-          >
-            <Text
-              style={[
-                styles.roleTitle,
-                { color: selectedRole === 'worker' ? colors.white : colors.black },
-              ]}
-            >
-              Arbeitnehmer
-            </Text>
-            <Text
-              style={[
-                styles.roleDescription,
-                { color: selectedRole === 'worker' ? colors.gray100 : colors.gray700 },
-              ]}
-            >
-              Ich suche kurzfristige Jobs
-            </Text>
-          </TouchableOpacity>
+        <Text style={[
+          styles.cardDescription,
+          { color: colors.gray600 }
+        ]}>
+          {description}
+        </Text>
+      </Pressable>
+    );
+  };
 
-          <TouchableOpacity
-            style={[
-              styles.roleCard,
-              {
-                backgroundColor: selectedRole === 'employer' ? colors.black : colors.beige50,
-                borderColor: selectedRole === 'employer' ? colors.black : colors.beige300,
-              },
-            ]}
-            onPress={() => !loading && handleRoleSelect('employer')}
-            activeOpacity={0.7}
-            disabled={loading}
-          >
-            <Text
-              style={[
-                styles.roleTitle,
-                { color: selectedRole === 'employer' ? colors.white : colors.black },
-              ]}
-            >
-              Arbeitgeber
-            </Text>
-            <Text
-              style={[
-                styles.roleDescription,
-                { color: selectedRole === 'employer' ? colors.gray100 : colors.gray700 },
-              ]}
-            >
-              Ich suche kurzfristig Arbeitskräfte
-            </Text>
-          </TouchableOpacity>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+      <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.xl }}>
+        <Text style={[
+          styles.title,
+          { color: colors.black, marginBottom: spacing.md }
+        ]}>
+          Wähle deine Rolle
+        </Text>
+
+        <Text style={[
+          styles.subtitle,
+          { color: colors.gray600, marginBottom: spacing.xxl }
+        ]}>
+          Du kannst später zwischen den Rollen wechseln.
+        </Text>
+
+        <RoleCard
+          role="employer"
+          title="Auftraggeber"
+          description="Erstelle Aufträge und finde schnelle Hilfe – privat oder geschäftlich."
+          icon="employer"
+        />
+
+        <RoleCard
+          role="worker"
+          title="Jobstarter"
+          description="Finde schnelle Aufträge in deiner Nähe und starte direkt."
+          icon="worker"
+        />
+
+        <View style={{ marginTop: 'auto' }}>
+          <Button
+            title={loading ? 'Lädt...' : 'Weiter'}
+            onPress={handleContinue}
+            disabled={!selectedRole || loading}
+            loading={loading}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -116,48 +126,24 @@ export default function RoleSelection() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: 48,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-  },
-  slogan: {
-    fontSize: 14,
-    fontWeight: '400',
-    textAlign: 'center',
-  },
-  rolesContainer: {
-    width: '100%',
-  },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: '800',
   },
-  roleCard: {
-    borderRadius: 12,
-    borderWidth: 2,
-    padding: 24,
-    minHeight: 120,
-    justifyContent: 'center',
+  subtitle: {
+    fontSize: 15,
   },
-  roleTitle: {
+  card: {
+    borderRadius: 14,
+    padding: 20,
+    marginBottom: 16,
+  },
+  cardTitle: {
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 8,
   },
-  roleDescription: {
+  cardDescription: {
     fontSize: 14,
-    fontWeight: '400',
+    lineHeight: 20,
   },
 });

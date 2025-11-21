@@ -1,5 +1,6 @@
+// app/auth/signup.tsx - Green Modern Minimal
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -40,7 +41,6 @@ export default function SignupScreen() {
   const handleSignup = async () => {
     setErrors({});
 
-    // Validate with safeParse
     const result = signupSchema.safeParse({ 
       email: email.trim(), 
       password, 
@@ -48,7 +48,6 @@ export default function SignupScreen() {
     });
     
     if (!result.success) {
-      // Use correct Zod v3+ API: result.error.issues
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
         if (issue.path[0]) {
@@ -64,21 +63,26 @@ export default function SignupScreen() {
       await signUp(result.data.email, result.data.password);
       router.replace('/start');
     } catch (error: any) {
-      Alert.alert('Registrierung fehlgeschlagen', error.message || 'Ein unbekannter Fehler ist aufgetreten');
+      setErrors({ email: error.message || 'Registrierung fehlgeschlagen' });
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryUltraLight }}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
-          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.xl, justifyContent: 'center' }}
+        >
+          <Text style={{ fontSize: 30, fontWeight: '800', color: colors.black, marginBottom: spacing.md }}>
             Registrieren
+          </Text>
+          <Text style={{ fontSize: 15, color: colors.gray600, marginBottom: spacing.xl }}>
+            Erstelle deinen Account und starte durch.
           </Text>
 
           <Input
@@ -90,7 +94,6 @@ export default function SignupScreen() {
             autoCapitalize="none"
             autoCorrect={false}
             error={errors.email}
-            containerStyle={{ marginBottom: spacing.md }}
           />
 
           <Input
@@ -98,10 +101,8 @@ export default function SignupScreen() {
             value={password}
             onChangeText={setPassword}
             placeholder="Mindestens 6 Zeichen"
-            secureTextEntry
-            autoCapitalize="none"
+            showPasswordToggle
             error={errors.password}
-            containerStyle={{ marginBottom: spacing.md }}
           />
 
           <Input
@@ -109,42 +110,31 @@ export default function SignupScreen() {
             value={confirm}
             onChangeText={setConfirm}
             placeholder="Passwort wiederholen"
-            secureTextEntry
-            autoCapitalize="none"
+            showPasswordToggle
             error={errors.confirm}
-            containerStyle={{ marginBottom: spacing.xl }}
           />
 
           <Button
-            title="Registrieren"
+            title={loading ? 'Wird registriert...' : 'Registrieren'}
             onPress={handleSignup}
             loading={loading}
             disabled={loading}
-          />
-
-          <Button
-            title="Ich habe schon einen Account"
-            onPress={() => router.replace('/auth/login')}
-            variant="ghost"
             style={{ marginTop: spacing.md }}
           />
-        </View>
+
+          <Pressable
+            onPress={() => router.push('/auth/login')}
+            style={{ marginTop: spacing.lg }}
+          >
+            <Text style={{ color: colors.black, textAlign: 'center', fontSize: 15 }}>
+              Ich habe schon einen Account{' '}
+              <Text style={{ fontWeight: '700', color: colors.primary }}>
+                Login
+              </Text>
+            </Text>
+          </Pressable>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-});
