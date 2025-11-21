@@ -228,24 +228,46 @@ export default function JobDetailScreen() {
         contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
       >
         {/* Header */}
-        <View style={{ gap: 4 }}>
-          <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
+        <View style={{ gap: 8, marginBottom: spacing.xs }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: colors.black, letterSpacing: -0.5 }}>
             {job.title}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
             <View style={{
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              backgroundColor: job.status === 'open' ? colors.beige100 : colors.gray200,
-              borderRadius: 6
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+              backgroundColor: job.status === 'open' ? colors.successLight : 
+                               job.status === 'matched' ? colors.infoLight :
+                               job.status === 'done' ? colors.gray200 :
+                               colors.errorLight,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: job.status === 'open' ? colors.success : 
+                           job.status === 'matched' ? colors.info :
+                           job.status === 'done' ? colors.gray400 :
+                           colors.error,
             }}>
-              <Text style={{ color: colors.black, fontSize: 12, fontWeight: '600' }}>
+              <Text style={{ 
+                color: job.status === 'open' ? colors.success : 
+                       job.status === 'matched' ? colors.info :
+                       job.status === 'done' ? colors.gray700 :
+                       colors.error, 
+                fontSize: 13, 
+                fontWeight: '700' 
+              }}>
                 {statusLabel}
               </Text>
             </View>
-            <Text style={{ color: colors.gray600, fontSize: 14 }}>
-              • {timeModeLabel}
-            </Text>
+            <View style={{
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+              backgroundColor: colors.beige100,
+              borderRadius: 8,
+            }}>
+              <Text style={{ color: colors.gray700, fontSize: 13, fontWeight: '600' }}>
+                {timeModeLabel}
+              </Text>
+            </View>
           </View>
         </View>
 
