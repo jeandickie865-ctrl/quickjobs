@@ -88,32 +88,41 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isLoading,
 
       async signUp(email, password) {
+        const emailNormalized = email.toLowerCase().trim();
+        console.log('🔐 signUp called with email:', emailNormalized);
+        
         const creds = await loadCredentials();
-        const exists = creds.find(c => c.email.toLowerCase() === email.toLowerCase());
+        console.log('📋 Current credentials:', creds.map(c => c.email));
+        
+        const exists = creds.find(c => c.email === emailNormalized);
         if (exists) {
-          throw new Error('E-Mail ist bereits registriert');
+          console.log('❌ Email already registered');
+          throw new Error('Es gibt bereits ein Konto mit dieser E-Mail-Adresse.');
         }
 
         const newUser: StoredUser = {
           id: 'u-' + Date.now().toString(),
-          email,
+          email: emailNormalized,
         };
 
         // Speichere Credentials
         const nextCreds: StoredCredentials = [
           ...creds,
-          { email: email.toLowerCase(), password },
+          { email: emailNormalized, password },
         ];
         await saveCredentials(nextCreds);
+        console.log('✅ Credentials saved');
 
         // Speichere User in der Datenbank
         const usersDb = await loadUsersDatabase();
-        usersDb[email.toLowerCase()] = newUser;
+        usersDb[emailNormalized] = newUser;
         await saveUsersDatabase(usersDb);
+        console.log('✅ User saved to database');
 
         // Setze als aktuellen User
         await setItem(USER_KEY, newUser);
         setUser(newUser);
+        console.log('✅ signUp successful, user set:', newUser);
       },
 
       async signIn(email, password) {
