@@ -1,4 +1,4 @@
-// components/ui/Card.tsx - BCKP BOLD STARTUP
+// components/ui/Card.tsx - VIVID BLUE-PURPLE & NEON LIME
 import React, { ReactNode } from 'react';
 import { View, ViewStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -13,14 +13,14 @@ export const Card: React.FC<CardProps> = ({ children, style, padding }) => {
   const { colors, spacing } = useTheme();
 
   const cardStyle: ViewStyle = {
-    backgroundColor: colors.card,
-    borderRadius: 18,
-    padding: padding !== undefined ? padding : 20,
+    backgroundColor: colors.white,
+    borderRadius: 22,
+    padding: padding !== undefined ? padding : 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 4,
   };
 
   return <View style={[cardStyle, style]}>{children}</View>;
