@@ -249,30 +249,46 @@ export default function WorkerFeed() {
               Jobs für dich
             </Text>
             <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-              <Text
-                style={{ 
-                  color: colors.primary, 
-                  fontSize: 15, 
-                  fontWeight: '600',
-                  paddingHorizontal: spacing.sm,
-                  paddingVertical: 4,
-                }}
+              {/* Prominent Matches Button */}
+              <Pressable
                 onPress={() => router.push('/(worker)/matches')}
-              >
-                🎯 Matches
-              </Text>
-              <Text
-                style={{ 
-                  color: colors.gray600, 
-                  fontSize: 15, 
-                  fontWeight: '600',
-                  paddingHorizontal: spacing.sm,
-                  paddingVertical: 4,
+                style={{
+                  backgroundColor: colors.primary,
+                  paddingHorizontal: spacing.md,
+                  paddingVertical: 8,
+                  borderRadius: 8,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 2,
                 }}
-                onPress={() => router.push('/(worker)/profile')}
               >
-                ⚙️ Profil
-              </Text>
+                <Text style={{ 
+                  color: colors.white, 
+                  fontSize: 14, 
+                  fontWeight: '700',
+                }}>
+                  🎯 Matches
+                </Text>
+              </Pressable>
+              
+              {/* Profile Link */}
+              <Pressable
+                onPress={() => router.push('/(worker)/profile')}
+                style={{
+                  paddingHorizontal: spacing.sm,
+                  paddingVertical: 8,
+                }}
+              >
+                <Text style={{ 
+                  color: colors.gray600, 
+                  fontSize: 14, 
+                  fontWeight: '600',
+                }}>
+                  ⚙️ Profil
+                </Text>
+              </Pressable>
             </View>
           </View>
           {profile && (
