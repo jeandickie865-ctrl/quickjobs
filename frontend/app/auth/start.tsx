@@ -90,42 +90,21 @@ export default function AuthStart() {
           {/* Spacer */}
           <View style={{ flex: 1 }} />
 
-          {/* Buttons */}
+          {/* Buttons - Expo Web Safe */}
           <Animated.View style={[styles.buttonsContainer, { opacity: contentOpacity }]}>
-            {/* Primary Button - Registrieren */}
-            <Link href="/auth/signup" asChild>
-              <TouchableOpacity
-                style={[
-                  styles.primaryButton,
-                  primaryPressed && styles.primaryButtonPressed
-                ]}
-                onPressIn={() => setPrimaryPressed(true)}
-                onPressOut={() => setPrimaryPressed(false)}
-                activeOpacity={1}
-              >
-                <Text style={styles.primaryButtonText}>Registrieren</Text>
-              </TouchableOpacity>
-            </Link>
+            <FancyButton
+              title="Registrieren"
+              type="primary"
+              colors={{ primary: COLORS.mint, primaryDark: COLORS.mintPressed }}
+              onPress={() => router.push('/auth/signup')}
+            />
 
-            {/* Secondary Button - Login */}
-            <Link href="/auth/login" asChild>
-              <TouchableOpacity
-                style={[
-                  styles.secondaryButton,
-                  secondaryPressed && styles.secondaryButtonPressed
-                ]}
-                onPressIn={() => setSecondaryPressed(true)}
-                onPressOut={() => setSecondaryPressed(false)}
-                activeOpacity={1}
-              >
-                <Text style={[
-                  styles.secondaryButtonText,
-                  secondaryPressed && styles.secondaryButtonTextPressed
-                ]}>
-                  Login
-                </Text>
-              </TouchableOpacity>
-            </Link>
+            <FancyButton
+              title="Login"
+              type="secondary"
+              colors={{ primary: COLORS.mint, primaryDark: COLORS.mintPressed }}
+              onPress={() => router.push('/auth/login')}
+            />
           </Animated.View>
 
           {/* Footer */}
