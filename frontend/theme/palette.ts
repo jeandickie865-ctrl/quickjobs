@@ -1,56 +1,63 @@
 export const palette = {
-  // ===== URBAN NEUTRAL STYLE =====
+  // ===== STIL 1: MODERN, KLAR, HOCHWERTIG, VC-READY =====
   
-  // Primary Green (Urban Neutral)
-  primary: '#4A7C59',
-  primaryDark: '#3C6648',
-  primaryLight: '#DDE8E1',
-  primaryUltraLight: '#F5F6F4',
+  // Primary (Markenfarbe)
+  primary: '#3F6F3D',           // Primary Green
+  primaryDark: '#2F5A32',       // Primary Green Dark
+  primaryLight: '#E9F3EB',      // Primary Light
+  primaryUltraLight: '#F5FAF6', // Primary Very Light
   
-  // Neutrals
-  black: '#1A1A1A',
+  // Neutral
+  black: '#111111',
   white: '#FFFFFF',
-  gray900: '#333333',
-  gray700: '#6F6F6F',
-  gray500: '#9E9E9E',
-  gray300: '#CECECE',
-  gray200: '#E8E8E8',
+  gray900: '#1A1A1A',
+  gray700: '#4A4A4A',
+  gray500: '#7A7A7A',
+  gray300: '#D7D7D7',
+  gray200: '#EAEAEA',
   gray100: '#F5F5F5',
   
-  // Accent (warm-neutral, sparsam)
-  accent: '#D95F59',
-  accentLight: '#F7E8E6',
-  
-  // State Colors
-  success: '#4A7C59',        // Gleich wie primary, einheitlich
-  successLight: '#E5EFE9',
-  warning: '#E0A63E',
-  warningLight: '#FFF5D9',
-  error: '#D9534F',
+  // System Colors
+  success: '#0E9F6E',
+  successLight: '#E9F3EB',
+  warning: '#F7C948',
+  warningLight: '#FFF8E5',
+  warningBorder: '#F1E3B8',
+  warningText: '#6F5D2A',
+  error: '#E53E3E',
   errorLight: '#FFE8E8',
+  info: '#3182CE',
+  infoLight: '#E6F4FF',
   
   // Backgrounds
-  background: '#F5F6F4',
-  card: '#FFFFFF',
+  background: '#FAFAF7',        // App Background
+  card: '#FFFFFF',              // Card Background
   
-  // Beige (backward compatibility)
-  beige50: '#F5F6F4',
-  beige100: '#DDE8E1',
-  beige200: '#E8E8E8',
-  beige300: '#CECECE',
+  // Backward compatibility
+  beige50: '#F5FAF6',
+  beige100: '#E9F3EB',
+  beige200: '#EAEAEA',
+  beige300: '#D7D7D7',
+  accent: '#3F6F3D',
+  accentLight: '#E9F3EB',
   
-  // Info (für Notifications)
-  info: '#4A7C59',
-  infoLight: '#E5EFE9',
-  
-  // Match strength
-  matchPerfect: '#4A7C59',
-  matchGood: '#4A7C59',
-  matchBasic: '#6F6F6F',
+  // Match & Rating
+  matchPerfect: '#0E9F6E',
+  matchGood: '#3F6F3D',
+  matchBasic: '#7A7A7A',
+  ratingGold: '#F7C948',
   
   // Disabled
-  disabled: '#9E9E9E',
+  disabled: '#7A7A7A',
   disabledBg: '#F5F5F5',
+  
+  // Borders
+  border: '#EBEBEB',
+  borderLight: '#D7D7D7',
+  
+  // Rating Background
+  ratingBg: '#F5FAF6',
+  ratingBorder: '#E1EDE3',
 };
 
 export const spacing = {
