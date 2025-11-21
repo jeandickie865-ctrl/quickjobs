@@ -494,57 +494,107 @@ export default function WorkerFeed() {
                         {job.category}
                       </Text>
                     </View>
+                    
+                    {/* Zeit */}
                     {timeDisplay && (
-                      <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                        ⏱️ {timeDisplay}
-                      </Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <Text style={{ fontSize: 16 }}>⏰</Text>
+                        <Text style={{ 
+                          color: colors.gray600, 
+                          fontSize: 13,
+                        }}>
+                          {timeDisplay}
+                        </Text>
+                      </View>
                     )}
                   </View>
+
+                  {/* Beschreibung (optional, maximal 2 Zeilen) */}
                   {job.description && (
-                    <Text style={{ color: colors.gray600, fontSize: 13 }} numberOfLines={2}>
+                    <Text style={{ color: colors.gray600, fontSize: 13, lineHeight: 18 }} numberOfLines={2}>
                       {job.description}
                     </Text>
                   )}
-                  <Text style={{ color: colors.black, fontWeight: '700', fontSize: 17, marginTop: 4 }}>
-                    Lohn: {euro(job.workerAmountCents)}
-                  </Text>
 
+                  {/* Lohn prominent */}
+                  <View style={{
+                    paddingVertical: 8,
+                    paddingHorizontal: 12,
+                    backgroundColor: colors.beige100,
+                    borderRadius: 8,
+                    borderLeftWidth: 4,
+                    borderLeftColor: colors.primary,
+                  }}>
+                    <Text style={{ 
+                      color: colors.black, 
+                      fontWeight: '700', 
+                      fontSize: 18,
+                    }}>
+                      💰 {euro(job.workerAmountCents)}
+                    </Text>
+                  </View>
+
+                  {/* Bewerbungs-Status & Button */}
                   {hasApplied ? (
                     <View style={{
-                      padding: spacing.sm,
-                      backgroundColor: colors.beige100,
-                      borderRadius: 8,
-                      marginTop: 4
+                      paddingVertical: 12,
+                      paddingHorizontal: 16,
+                      backgroundColor: colors.warningLight,
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      borderColor: colors.warning,
                     }}>
-                      <Text style={{ color: colors.gray700, textAlign: 'center', fontSize: 14 }}>
-                        ✓ Du hast dich schon für diesen Job gemeldet.
+                      <Text style={{ 
+                        color: colors.gray900, 
+                        textAlign: 'center', 
+                        fontSize: 14,
+                        fontWeight: '600',
+                      }}>
+                        ✓ Beworben – Warte auf Rückmeldung
                       </Text>
                     </View>
                   ) : nearbyJobData?.disabled ? (
-                    <View style={{ gap: spacing.xs }}>
-                      <Button
-                        title="Ich habe Zeit"
-                        onPress={() => {}}
-                        disabled={true}
-                      />
-                      <View style={{
-                        padding: spacing.sm,
-                        backgroundColor: '#f3f4f6',
-                        borderRadius: 8,
-                        borderLeftWidth: 3,
-                        borderLeftColor: colors.gray400,
+                    <View style={{
+                      paddingVertical: 12,
+                      paddingHorizontal: 16,
+                      backgroundColor: colors.disabledBg,
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      borderColor: colors.gray300,
+                    }}>
+                      <Text style={{ 
+                        color: colors.disabled, 
+                        textAlign: 'center', 
+                        fontSize: 14,
+                        fontWeight: '600',
                       }}>
-                        <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 16 }}>
-                          🔒 {nearbyJobData.disabledReason || 'Dieser Job steht dir aktuell nicht zur Verfügung.'}
-                        </Text>
-                      </View>
+                        🔒 Nicht verfügbar
+                      </Text>
                     </View>
                   ) : canApply ? (
-                    <Button
-                      title={isApplyingJobId === job.id ? 'Melde dich…' : 'Ich habe Zeit'}
-                      onPress={() => handleApply(job.id, job.employerId)}
-                      disabled={isApplyingJobId === job.id}
-                    />
+                    <View style={{
+                      backgroundColor: colors.primary,
+                      borderRadius: 10,
+                      paddingVertical: 14,
+                      paddingHorizontal: 20,
+                      alignItems: 'center',
+                      shadowColor: colors.primary,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.2,
+                      shadowRadius: 4,
+                      elevation: 3,
+                    }}>
+                      <Text 
+                        style={{ 
+                          color: colors.white, 
+                          fontSize: 16, 
+                          fontWeight: '700',
+                        }}
+                        onPress={() => handleApply(job.id, job.employerId)}
+                      >
+                        {isApplyingJobId === job.id ? '⏳ Melde dich…' : '✋ Ich habe Zeit!'}
+                      </Text>
+                    </View>
                   ) : (
                     <View style={{ gap: spacing.xs }}>
                       <Button
