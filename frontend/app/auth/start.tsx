@@ -177,7 +177,6 @@ const styles = StyleSheet.create({
     borderRadius: 150,
     backgroundColor: COLORS.mint,
     opacity: 0.05,
-    filter: 'blur(80px)',
   },
   safeArea: {
     flex: 1,
