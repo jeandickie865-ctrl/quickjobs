@@ -35,15 +35,15 @@ export default function WorkerMatchesScreen() {
 
     try {
       setError(null);
-      console.log('📋 Loading matches for worker', user.id);
+      console.log('📋 loadMatches: Loading matches for worker', user.id);
 
       // 1. Alle Bewerbungen des Workers holen
       const apps = await getApplicationsForWorker(user.id);
-      console.log('✅ Found applications', apps.length);
+      console.log('✅ loadMatches: Found applications', apps.length);
 
       // 2. Nur akzeptierte Bewerbungen
       const acceptedApps = apps.filter((a) => a.status === 'accepted');
-      console.log('✅ Accepted applications', acceptedApps.length);
+      console.log('✅ loadMatches: Accepted applications', acceptedApps.length);
 
       // 3. Jobs laden
       const allJobs = await getJobs();
@@ -55,14 +55,21 @@ export default function WorkerMatchesScreen() {
         if (job) {
           combined.push({ job, application: app });
         } else {
-          console.warn('⚠️ Job not found for application', app.jobId);
+          console.warn('⚠️ loadMatches: Job not found for application', app.jobId);
         }
       }
 
-      console.log('✅ Matches loaded', combined.length);
+      // 4. Sort by respondedAt DESC (neueste zuerst)
+      combined.sort((a, b) => {
+        const dateA = a.application.respondedAt || a.application.createdAt;
+        const dateB = b.application.respondedAt || b.application.createdAt;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      });
+
+      console.log('✅ loadMatches: Matches loaded and sorted', combined.length);
       setMatches(combined);
     } catch (e) {
-      console.error('❌ Error loading matches:', e);
+      console.error('❌ loadMatches: Error loading matches:', e);
       setError('Matches konnten nicht geladen werden.');
     } finally {
       setLoading(false);
