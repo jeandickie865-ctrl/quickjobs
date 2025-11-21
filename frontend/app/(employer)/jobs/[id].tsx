@@ -39,6 +39,11 @@ export default function JobDetailScreen() {
   // Review state
   const [hasReview, setHasReview] = useState(false);
   const [checkingReview, setCheckingReview] = useState(false);
+  
+  // Legal confirmation modal
+  const [showLegalModal, setShowLegalModal] = useState(false);
+  const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
+  const [selectedWorkerName, setSelectedWorkerName] = useState<string>('');
 
   useEffect(() => {
     if (isLoading || !user) return;
