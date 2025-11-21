@@ -8,6 +8,7 @@ import { getEmployerProfile, saveEmployerProfile, EmployerProfile } from '../../
 import { ProfilePhoto } from '../../components/ProfilePhoto';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { Ionicons } from '@expo/vector-icons';
+import { TextInput } from 'react-native';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
