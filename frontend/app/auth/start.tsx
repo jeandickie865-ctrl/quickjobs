@@ -11,7 +11,7 @@ export default function AuthStart() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
         {/* Logo */}
         <View style={styles.logoContainer}>
