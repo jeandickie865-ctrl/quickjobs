@@ -59,10 +59,14 @@ export default function AuthStart() {
           {/* Top Spacer */}
           <View style={{ height: 60 }} />
 
-          {/* Logo - Goldenes Quadrat mit weißem BCKP */}
+          {/* Logo - Goldenes Quadrat mit echtem BCKP Logo */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
             <View style={styles.logoContainer}>
-              <Text style={styles.logoText}>BCKP</Text>
+              <Image
+                source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
             </View>
           </Animated.View>
 
