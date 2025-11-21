@@ -63,14 +63,12 @@ export default function AuthStart() {
 
           {/* Logo Card */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
-            <View style={styles.logoCard}>
+            <View style={styles.logoContainer}>
               <Image
-                source={{ uri: 'https://customer-assets.emergentagent.com/job_quickjobs-10/artifacts/sce5x6fk_Image.jpeg' }}
+                source={require('../../assets/logo-backup.png')}
                 style={styles.logo}
                 resizeMode="contain"
               />
-              {/* Purple Glow-Linie unter Logo */}
-              <View style={styles.purpleGlowLine} />
             </View>
           </Animated.View>
 
