@@ -346,7 +346,7 @@ export default function CreateJob() {
               {groups.qualifications.length > 0 && (
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Alternative Qualifikationen (mindestens eine erforderlich)
+                    Qualifikationen - Mindestens eine (optional)
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                     {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => (
