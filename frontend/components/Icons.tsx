@@ -9,3 +9,15 @@ export const Eye = ({ size = 20, color = '#000' }: { size?: number; color?: stri
 export const EyeOff = ({ size = 20, color = '#000' }: { size?: number; color?: string }) => (
   <Text style={{ fontSize: size }}>🙈</Text>
 );
+
+export const Briefcase = ({ size = 24, color = '#000' }: { size?: number; color?: string }) => (
+  <Text style={{ fontSize: size }}>💼</Text>
+);
+
+export const UserCheck = ({ size = 24, color = '#000' }: { size?: number; color?: string }) => (
+  <Text style={{ fontSize: size }}>✅</Text>
+);
+
+export const Home = ({ size = 24, color = '#000' }: { size?: number; color?: string }) => (
+  <Text style={{ fontSize: size }}>🏠</Text>
+);
