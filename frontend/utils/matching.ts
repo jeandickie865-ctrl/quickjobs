@@ -172,9 +172,86 @@ export function jobMatchesWorkerWithDebug(job: Job, profile: WorkerProfile): Mat
 }
 
 /**
- * Check if job matches worker profile
- * Uses the debug function internally to ensure consistency
+ * Check if job matches worker profile (Matching 2.0)
+ * Includes:
+ * - Hard-Skill Security check (34a)
+ * - Low-Skill categories bypass qualification requirements
+ * - Required tasks check
+ * - Alternative qualifications check  
+ * - Radius check
+ * - Job status check
  */
 export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
+  if (!job || !profile) return false;
+
+  const workerSkills = profile.selectedTags ?? [];
+  const workerCategories = profile.categories ?? [];
+
+  // 1. Category match
+  if (!workerCategories.includes(job.category)) {
+    return false;
+  }
+
+  // 2. Hard-Skill Security check (34a must have)
+  const requiredAllTags = job.required_all_tags ?? [];
+  if (requiredAllTags.includes(SPECIAL_SECURITY)) {
+    if (!workerSkills.includes(SPECIAL_SECURITY)) {
+      return false;
+    }
+  }
+
+  // 3. Low-Skill categories: skip qualification requirements
+  const isLowSkill = LOW_SKILL_CATEGORIES.includes(job.category);
+  
+  if (!isLowSkill) {
+    // Check all required qualifications/tasks
+    if (!workerHasAll(workerSkills, requiredAllTags)) {
+      return false;
+    }
+  } else {
+    // For low-skill: only check non-34a tags
+    const nonSecurityRequired = requiredAllTags.filter(t => t !== SPECIAL_SECURITY);
+    if (!workerHasAll(workerSkills, nonSecurityRequired)) {
+      return false;
+    }
+  }
+
+  // 4. Alternative qualifications (required_any_tags)
+  const requiredAnyTags = job.required_any_tags ?? [];
+  if (!workerHasOne(workerSkills, requiredAnyTags)) {
+    return false;
+  }
+
+  // 5. Radius check (if both have coordinates)
+  if (profile.homeLat && profile.homeLon && job.lat && job.lon) {
+    const distance = calculateDistance(
+      { lat: job.lat, lon: job.lon },
+      { lat: profile.homeLat, lon: profile.homeLon }
+    );
+    
+    const workerRadius = profile.radiusKm ?? 30; // Default 30km
+    if (distance > workerRadius) {
+      return false;
+    }
+  }
+
+  // 6. Job status check
+  if (!['open', 'pending'].includes(job.status)) {
+    return false;
+  }
+
+  // 7. No double match
+  if (job.matchedWorkerId) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Legacy compatibility function
+ * Uses the debug function internally to ensure consistency
+ */
+export function jobMatchesWorkerLegacy(job: Job, profile: WorkerProfile): boolean {
   return jobMatchesWorkerWithDebug(job, profile).ok;
 }
