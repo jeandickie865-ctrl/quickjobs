@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Logo Card
-  logoCard: {
+  // Logo Container
+  logoContainer: {
     backgroundColor: COLORS.white,
     borderRadius: 22,
     padding: 20,
