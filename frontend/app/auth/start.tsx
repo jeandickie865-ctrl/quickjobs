@@ -20,8 +20,6 @@ const COLORS = {
 
 export default function AuthStart() {
   const router = useRouter();
-  const [primaryPressed, setPrimaryPressed] = React.useState(false);
-  const [secondaryPressed, setSecondaryPressed] = React.useState(false);
 
   // Animation values
   const screenOpacity = useRef(new Animated.Value(0)).current;
