@@ -1,3 +1,4 @@
+// app/auth/start.tsx - Green Modern Minimal
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { Link, useRouter } from 'expo-router';
@@ -18,8 +19,8 @@ export default function AuthStart() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={[styles.slogan, { color: colors.gray700, marginTop: spacing.sm }]}>
-            wenn's jetzt passieren muss
+          <Text style={[styles.slogan, { color: colors.gray600, marginTop: spacing.md }]}>
+            wenn's jetzt passieren muss.
           </Text>
         </View>
 
@@ -29,33 +30,41 @@ export default function AuthStart() {
           </Text>
 
           <Link href="/auth/signup" asChild>
-            <Button title="Registrieren" onPress={() => {}} style={{ marginBottom: spacing.md }} />
+            <Button 
+              title="Registrieren" 
+              onPress={() => {}} 
+              style={{ marginBottom: spacing.md }} 
+            />
           </Link>
 
           <Link href="/auth/login" asChild>
-            <Button title="Login" onPress={() => {}} variant="secondary" />
+            <Button 
+              title="Login" 
+              onPress={() => {}} 
+              variant="secondary" 
+            />
           </Link>
 
           {/* Rechtliche Links */}
-          <View style={{ marginTop: spacing.xl, alignItems: 'center', gap: spacing.sm }}>
+          <View style={{ marginTop: spacing.xxl, alignItems: 'center', gap: spacing.sm }}>
             <Text style={{ fontSize: 12, color: colors.gray600, textAlign: 'center', lineHeight: 18 }}>
               Mit deiner Nutzung akzeptierst du unsere AGB,{'\n'}die Datenschutzerklärung und die Grundsätze.
             </Text>
             <View style={{ flexDirection: 'row', gap: spacing.md, flexWrap: 'wrap', justifyContent: 'center' }}>
               <Pressable onPress={() => router.push('/legal/agb')}>
-                <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
+                <Text style={{ fontSize: 12, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
                   AGB
                 </Text>
               </Pressable>
-              <Text style={{ fontSize: 12, color: colors.gray400 }}>•</Text>
+              <Text style={{ fontSize: 12, color: colors.gray300 }}>•</Text>
               <Pressable onPress={() => router.push('/legal/privacy')}>
-                <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
+                <Text style={{ fontSize: 12, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
                   Datenschutz
                 </Text>
               </Pressable>
-              <Text style={{ fontSize: 12, color: colors.gray400 }}>•</Text>
+              <Text style={{ fontSize: 12, color: colors.gray300 }}>•</Text>
               <Pressable onPress={() => router.push('/legal/guidelines')}>
-                <Text style={{ fontSize: 12, color: colors.gray700, textDecorationLine: 'underline' }}>
+                <Text style={{ fontSize: 12, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
                   Grundsätze
                 </Text>
               </Pressable>
@@ -77,14 +86,14 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 48,
+    marginBottom: 64,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 140,
+    height: 140,
   },
   slogan: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '400',
     textAlign: 'center',
   },
@@ -92,8 +101,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 26,
+    fontWeight: '800',
     textAlign: 'center',
   },
 });
