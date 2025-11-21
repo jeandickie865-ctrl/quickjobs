@@ -1,9 +1,10 @@
+// utils/matching.ts - MATCHING 2.0 FINAL
 import { WorkerProfile } from '../types/profile';
 import { Job } from '../types/job';
 import { calculateDistance } from './distance';
 
 // Low-Skill-Kategorien (keine Pflicht-Qualifikationen erforderlich)
-const LOW_SKILL_CATEGORIES = [
+export const LOW_SKILL = [
   "Gastronomie - Küchenhilfe",
   "Gastronomie - Spülkraft",
   "Gastronomie - Buffet",
@@ -31,25 +32,92 @@ const SPECIAL_SECURITY = "Sachkunde nach § 34a GewO";
 /**
  * Check if worker has ALL required tags
  */
-function workerHasAll(workerSkills: string[], requiredList: string[]): boolean {
-  if (!requiredList || requiredList.length === 0) return true;
-  return requiredList.every(tag => workerSkills.includes(tag));
+function workerHasAll(skills: string[], required: string[]): boolean {
+  if (!required || required.length === 0) return true;
+  return required.every(tag => skills.includes(tag));
 }
 
 /**
  * Check if worker has at least ONE of the alternative tags
  */
-function workerHasOne(workerSkills: string[], alternatives: string[]): boolean {
+function workerHasOne(skills: string[], alternatives: string[]): boolean {
   if (!alternatives || alternatives.length === 0) return true;
-  return alternatives.some(tag => workerSkills.includes(tag));
+  return alternatives.some(tag => skills.includes(tag));
 }
 
 /**
- * Legacy function - now redirects to new implementation
- * @deprecated Use jobMatchesWorker instead
+ * Main matching function - Matching 2.0
+ */
+export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
+  if (!job || !worker) return false;
+
+  const workerSkills = worker.selectedTags || [];
+  const workerCategories = worker.categories || [];
+
+  // 1. Category match
+  if (!workerCategories.includes(job.category)) {
+    return false;
+  }
+
+  // 2. Sicherheitsbereich (34a must have)
+  const requiredAllTags = job.required_all_tags || [];
+  if (requiredAllTags.includes(SPECIAL_SECURITY)) {
+    if (!workerSkills.includes(SPECIAL_SECURITY)) {
+      return false;
+    }
+  }
+
+  // 3. Low-skill Jobs: keine Pflicht-Qualifikationen (außer 34a)
+  const isLow = LOW_SKILL.includes(job.category);
+  if (!isLow) {
+    if (!workerHasAll(workerSkills, requiredAllTags)) {
+      return false;
+    }
+  }
+
+  // 4. Alternative Qualifikationen (required_any_tags)
+  const requiredAnyTags = job.required_any_tags || [];
+  if (!workerHasOne(workerSkills, requiredAnyTags)) {
+    return false;
+  }
+
+  // 5. Radius check
+  if (worker.homeLat && worker.homeLon && job.lat && job.lon) {
+    const distance = calculateDistance(
+      { lat: job.lat, lon: job.lon },
+      { lat: worker.homeLat, lon: worker.homeLon }
+    );
+    if (distance > worker.radiusKm) {
+      return false;
+    }
+  }
+
+  // 6. Status check
+  if (!['open', 'pending'].includes(job.status)) {
+    return false;
+  }
+
+  // 7. Kein Doppelmatch
+  if (job.matchedWorkerId) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Legacy function - redirects to new implementation
+ * @deprecated Use matchJobToWorker instead
  */
 export function isMatch(job: Job, profile: WorkerProfile): boolean {
-  return jobMatchesWorker(job, profile);
+  return matchJobToWorker(job, profile);
+}
+
+/**
+ * Alias for consistency with existing code
+ */
+export function jobMatchesWorker(job: Job, profile: WorkerProfile): boolean {
+  return matchJobToWorker(job, profile);
 }
 
 /**
