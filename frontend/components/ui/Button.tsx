@@ -58,9 +58,9 @@ export const Button: React.FC<ButtonProps> = ({
       case 'secondary':
         return {
           ...base,
-          backgroundColor: colors.white,
+          backgroundColor: colors.primaryLight,
           borderWidth: 1.5,
-          borderColor: colors.gray300,
+          borderColor: colors.primary,
           shadowColor: colors.black,
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.05,
