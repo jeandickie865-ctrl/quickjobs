@@ -34,7 +34,7 @@ export default function LoginScreen() {
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: colors.primaryUltraLight,
         padding: spacing.lg,
         justifyContent: 'center',
       }}
