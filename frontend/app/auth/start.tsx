@@ -1,4 +1,4 @@
-// app/auth/start.tsx - BCKP Style
+// app/auth/start.tsx - BCKP BOLD STARTUP (OPTION B)
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { Link, useRouter } from 'expo-router';
