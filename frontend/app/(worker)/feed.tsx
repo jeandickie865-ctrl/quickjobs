@@ -380,6 +380,10 @@ export default function WorkerFeed() {
               // Prüfen, ob Worker sich bewerben kann (Pflicht-Qualifikationen)
               const canApply = canApplyToJob(job, profile);
 
+              // Check if this is a NearbyJob with distance info
+              const isNearbyJob = activeTab === 'all' && 'distance' in job;
+              const nearbyJobData = isNearbyJob ? (job as NearbyJob) : null;
+
               return (
                 <View
                   key={job.id}
@@ -390,6 +394,7 @@ export default function WorkerFeed() {
                     gap: 10,
                     borderWidth: 1,
                     borderColor: colors.gray200,
+                    opacity: nearbyJobData?.disabled ? 0.5 : 1,
                   }}
                 >
                   <Text style={{ fontWeight: '800', fontSize: 18, color: colors.black }}>
@@ -414,9 +419,34 @@ export default function WorkerFeed() {
                       </Text>
                     </View>
                   )}
+
+                  {/* Disabled-Hinweis */}
+                  {nearbyJobData?.disabled && nearbyJobData.disabledReason && (
+                    <View style={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 5,
+                      borderRadius: 8,
+                      alignSelf: 'flex-start',
+                      backgroundColor: colors.gray200,
+                    }}>
+                      <Text style={{
+                        fontSize: 11,
+                        fontWeight: '600',
+                        color: colors.gray700,
+                      }}>
+                        🔒 {nearbyJobData.disabledReason}
+                      </Text>
+                    </View>
+                  )}
+
                   <View style={{ gap: 4 }}>
                     <Text style={{ color: colors.gray700, fontSize: 14 }}>
                       📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
+                      {nearbyJobData && nearbyJobData.distance !== Infinity && (
+                        <Text style={{ color: colors.gray500, fontSize: 13 }}>
+                          {' '}· {nearbyJobData.distance.toFixed(1)} km entfernt
+                        </Text>
+                      )}
                     </Text>
                     <Text style={{ color: colors.gray700, fontSize: 14 }}>
                       🏷️ {job.category}
