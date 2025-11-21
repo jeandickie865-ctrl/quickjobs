@@ -12,6 +12,8 @@ import { Button } from '../../components/ui/Button';
 import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 import { formatJobTimeDisplay } from '../../utils/date';
+import { isWithinLast24Hours } from '../../utils/stringHelpers';
+import { getInitials } from '../../utils/stringHelpers';
 
 type Match = {
   job: Job;
