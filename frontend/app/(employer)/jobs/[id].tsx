@@ -87,6 +87,26 @@ export default function JobDetailScreen() {
     })();
   }, [job?.id, user?.id]);
 
+  // Check if review exists for matched worker
+  useEffect(() => {
+    if (!job || !user || job.status !== 'matched' || !job.matchedWorkerId) {
+      setHasReview(false);
+      return;
+    }
+
+    (async () => {
+      setCheckingReview(true);
+      try {
+        const review = await getReviewForJob(job.id, job.matchedWorkerId!, user.id);
+        setHasReview(!!review);
+      } catch (error) {
+        console.error('Error checking review:', error);
+      } finally {
+        setCheckingReview(false);
+      }
+    })();
+  }, [job?.id, job?.status, job?.matchedWorkerId, user?.id]);
+
   async function handleAccept(appId: string) {
     if (!job) return;
     try {
