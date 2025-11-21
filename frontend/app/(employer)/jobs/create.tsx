@@ -201,27 +201,29 @@ export default function CreateJob() {
 
         {/* Title */}
         <View style={{ gap: 6 }}>
-          <Text style={{ color: colors.black, fontWeight: '600' }}>Titel</Text>
+          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>Titel *</Text>
           <TextInput
             value={title}
             onChangeText={setTitle}
             placeholder="z.B. Lieferfahrer heute Abend"
             placeholderTextColor={colors.gray400}
             style={{
-              borderWidth: 1,
-              borderColor: colors.gray200,
+              borderWidth: 1.5,
+              borderColor: colors.gray300,
               borderRadius: 12,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
+              paddingHorizontal: spacing.md,
+              paddingVertical: spacing.sm,
               backgroundColor: colors.white,
-              color: colors.black
+              color: colors.black,
+              fontSize: 16,
+              fontWeight: '500',
             }}
           />
         </View>
 
         {/* Description */}
         <View style={{ gap: 6 }}>
-          <Text style={{ color: colors.black, fontWeight: '600' }}>Beschreibung (optional)</Text>
+          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>Beschreibung (optional)</Text>
           <TextInput
             value={description}
             onChangeText={setDescription}
@@ -230,15 +232,16 @@ export default function CreateJob() {
             multiline
             numberOfLines={3}
             style={{
-              borderWidth: 1,
-              borderColor: colors.gray200,
+              borderWidth: 1.5,
+              borderColor: colors.gray300,
               borderRadius: 12,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
+              paddingHorizontal: spacing.md,
+              paddingVertical: spacing.sm,
               backgroundColor: colors.white,
               color: colors.black,
-              minHeight: 80,
-              textAlignVertical: 'top'
+              minHeight: 100,
+              textAlignVertical: 'top',
+              fontSize: 15,
             }}
           />
         </View>
