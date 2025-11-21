@@ -41,7 +41,11 @@ export default function SignupScreen() {
     setErrors({});
 
     // Validate with safeParse
-    const result = signupSchema.safeParse({ email, password, confirm });
+    const result = signupSchema.safeParse({ 
+      email: email.trim(), 
+      password, 
+      confirm 
+    });
     
     if (!result.success) {
       // Use correct Zod v3+ API: result.error.issues
@@ -60,7 +64,7 @@ export default function SignupScreen() {
       await signUp(result.data.email, result.data.password);
       router.replace('/start');
     } catch (error: any) {
-      Alert.alert('Fehler', error.message || 'Registrierung fehlgeschlagen');
+      Alert.alert('Registrierung fehlgeschlagen', error.message || 'Ein unbekannter Fehler ist aufgetreten');
     } finally {
       setLoading(false);
     }
