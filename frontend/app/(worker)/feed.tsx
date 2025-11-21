@@ -558,17 +558,19 @@ export default function WorkerFeed() {
 
                   {/* Lohn prominent */}
                   <View style={{
-                    paddingVertical: 8,
-                    paddingHorizontal: 12,
-                    backgroundColor: colors.beige100,
-                    borderRadius: 8,
-                    borderLeftWidth: 4,
-                    borderLeftColor: colors.primary,
+                    paddingVertical: spacing.sm,
+                    paddingHorizontal: spacing.md,
+                    backgroundColor: colors.successLight,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: colors.success,
+                    alignItems: 'center',
                   }}>
                     <Text style={{ 
-                      color: colors.black, 
-                      fontWeight: '700', 
-                      fontSize: 18,
+                      color: colors.success, 
+                      fontWeight: '800', 
+                      fontSize: 20,
+                      letterSpacing: 0.3,
                     }}>
                       💰 {euro(job.workerAmountCents)}
                     </Text>
