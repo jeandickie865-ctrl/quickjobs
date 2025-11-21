@@ -41,8 +41,11 @@ export async function addApplication(
 }
 
 export async function getApplicationsForJob(jobId: string): Promise<JobApplication[]> {
+  console.log('🔍 getApplicationsForJob called', { jobId });
   const apps = await loadApplications();
-  return apps.filter(a => a.jobId === jobId);
+  const filtered = apps.filter(a => a.jobId === jobId);
+  console.log('📋 getApplicationsForJob: Found', filtered.length, 'applications for job', jobId);
+  return filtered;
 }
 
 export async function getApplicationsForWorker(workerId: string): Promise<JobApplication[]> {
