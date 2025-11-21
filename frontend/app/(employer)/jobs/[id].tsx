@@ -1,30 +1,40 @@
+// app/(employer)/jobs/[id].tsx - FINAL NEON-TECH DESIGN
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Alert, ActivityIndicator, Pressable, LinearGradient } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
-import { useTheme } from '../../../theme/ThemeProvider';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getJobById, deleteJob, updateAuftrag } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { getReviewForAuftrag } from '../../../utils/reviewStore';
-import { CostBreakdown } from '../../../components/CostBreakdown';
-import { WorkerProfileCard } from '../../../components/WorkerProfileCard';
-import { LegalConfirmationModal } from '../../../components/LegalConfirmationModal';
-import { Auftrag } from '../../../types/job';
+import { Job } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
-import { Button } from '../../../components/ui/Button';
 import { formatAddress } from '../../../types/address';
 import { getInitials } from '../../../utils/stringHelpers';
+import { euro } from '../../../utils/pricing';
+import { Ionicons } from '@expo/vector-icons';
+
+// BACKUP NEON-TECH COLORS
+const COLORS = {
+  purple: '#5941FF',
+  purpleDark: '#3E2DD9',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  darkGray: '#333333',
+  neonTransparent20: 'rgba(200,255,22,0.2)',
+  neonShadow: 'rgba(200,255,22,0.15)',
+  error: '#FF4D4D',
+};
 
 export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { colors, spacing } = useTheme();
-  const { user, isLoading, signOut } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
 
-  const [job, setJob] = useState<Auftrag | null>(null);
+  const [job, setJob] = useState<Job | null>(null);
   const [loadingJob, setLoadingJob] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -33,17 +43,10 @@ export default function JobDetailScreen() {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [applicants, setApplicants] = useState<{ app: JobApplication; profile: WorkerProfile | null }[]>([]);
   const [isLoadingApps, setIsLoadingApps] = useState(true);
-  const [appsError, setAppsError] = useState<string | null>(null);
   const [isAcceptingId, setIsAcceptingId] = useState<string | null>(null);
-  
+
   // Review state
   const [hasReview, setHasReview] = useState(false);
-  const [checkingReview, setCheckingReview] = useState(false);
-  
-  // Legal confirmation modal
-  const [showLegalModal, setShowLegalModal] = useState(false);
-  const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
-  const [selectedWorkerName, setSelectedWorkerName] = useState<string>('');
 
   useEffect(() => {
     if (isLoading || !user) return;
@@ -66,16 +69,14 @@ export default function JobDetailScreen() {
     })();
   }, [id, user, isLoading]);
 
-  // Load applications when job is loaded
+  // Load applications
   useEffect(() => {
     if (!job || !user) return;
 
     (async () => {
       setIsLoadingApps(true);
       try {
-        console.log('📋 Loading applications for job', job.id);
         const apps = await getApplicationsForJob(job.id);
-        console.log('✅ Found applications', apps.length, apps);
         setApplications(apps);
         const withProfiles: { app: JobApplication; profile: WorkerProfile | null }[] = [];
         for (const app of apps) {
@@ -83,96 +84,41 @@ export default function JobDetailScreen() {
           withProfiles.push({ app, profile: p });
         }
         setApplicants(withProfiles);
-        console.log('👥 Applicants with profiles loaded', withProfiles.length);
-        setAppsError(null);
       } catch (e) {
         console.error('Error loading applicants:', e);
-        setAppsError('Bewerber konnten nicht geladen werden.');
       } finally {
         setIsLoadingApps(false);
       }
     })();
   }, [job?.id, user?.id]);
 
-  // Check if review exists for matched worker
+  // Check review
   useEffect(() => {
     if (!job || !user || job.status !== 'matched' || !job.matchedWorkerId) {
       setHasReview(false);
       return;
     }
-
     (async () => {
-      setCheckingReview(true);
-      try {
-        const review = await getReviewForJob(job.id, job.matchedWorkerId!, user.id);
-        setHasReview(!!review);
-      } catch (error) {
-        console.error('Error checking review:', error);
-      } finally {
-        setCheckingReview(false);
-      }
+      const review = await getReviewForAuftrag(job.id);
+      setHasReview(!!review);
     })();
   }, [job?.id, job?.status, job?.matchedWorkerId, user?.id]);
 
-  // Show legal confirmation modal before accepting
-  function handleAcceptClick(appId: string) {
-    const acceptedApp = applications.find(a => a.id === appId);
-    if (!acceptedApp) return;
-    
-    const applicant = applicants.find(a => a.app.id === appId);
-    const workerName = applicant?.profile 
-      ? getInitials(applicant.profile.firstName, applicant.profile.lastName)
-      : 'Kandidat';
-    
-    setSelectedApplicationId(appId);
-    setSelectedWorkerName(workerName);
-    setShowLegalModal(true);
-  }
-  
-  // Actually accept application after legal confirmation
-  async function handleAccept() {
-    if (!job || !selectedApplicationId) return;
-    
-    const appId = selectedApplicationId;
-    
+  async function handleAcceptApplication(appId: string, workerId: string, workerName: string) {
+    if (!job || !user) return;
+
     try {
       setIsAcceptingId(appId);
-      setShowLegalModal(false);
+      await acceptApplication(appId);
+      await updateAuftrag(job.id, { status: 'matched', matchedWorkerId: workerId });
       
-      // Find the accepted application to get workerId
-      const acceptedApp = applications.find(a => a.id === appId);
-      if (!acceptedApp) return;
-      
-      console.log('✅ handleAccept: Accepting application', { appId, workerId: acceptedApp.workerId, jobId: job.id });
-      
-      await acceptApplication(job.id, appId, true); // true = employerConfirmedLegal
-      await updateJob(job.id, { 
-        status: 'matched',
-        matchedWorkerId: acceptedApp.workerId  // Set matched worker for chat
-      });
-      
-      console.log('✅ handleAccept: Application accepted and job status updated');
-      
-      // Reload job to reflect changes
-      const updatedAuftrag = await getJobById(job.id);
-      if (updatedJob) setJob(updatedJob);
-      
-      // Reload applications
-      const apps = await getApplicationsForJob(job.id);
-      setApplications(apps);
-      const withProfiles: { app: JobApplication; profile: WorkerProfile | null }[] = [];
-      for (const app of apps) {
-        const p = await getWorkerProfile(app.workerId);
-        withProfiles.push({ app, profile: p });
-      }
-      setApplicants(withProfiles);
-      
-      // Update local job status
-      setJob(prev => (prev ? { ...prev, status: 'matched' } : prev));
-      setAppsError(null);
+      Alert.alert(
+        'Match erfolgreich!',
+        `${workerName} wurde ausgewählt. Du kannst jetzt chatten.`,
+        [{ text: 'OK', onPress: () => router.replace('/(employer)') }]
+      );
     } catch (e) {
-      console.error('Error accepting applicant:', e);
-      setAppsError('Kandidat konnte nicht ausgewählt werden.');
+      Alert.alert('Fehler', 'Match konnte nicht erstellt werden.');
     } finally {
       setIsAcceptingId(null);
     }
@@ -180,9 +126,10 @@ export default function JobDetailScreen() {
 
   async function handleDelete() {
     if (!job) return;
+
     Alert.alert(
-      'Auftrag löschen',
-      'Möchtest du diesen Auftrag wirklich löschen?',
+      'Auftrag löschen?',
+      'Diese Aktion kann nicht rückgängig gemacht werden.',
       [
         { text: 'Abbrechen', style: 'cancel' },
         {
@@ -194,7 +141,7 @@ export default function JobDetailScreen() {
               await deleteJob(job.id);
               router.replace('/(employer)');
             } catch (e) {
-              setError('Auftrag konnte nicht gelöscht werden.');
+              Alert.alert('Fehler', 'Auftrag konnte nicht gelöscht werden.');
             } finally {
               setIsDeleting(false);
             }
@@ -204,9 +151,7 @@ export default function JobDetailScreen() {
     );
   }
 
-  if (isLoading) {
-    return null;
-  }
+  if (isLoading) return null;
 
   if (!user || user.role !== 'employer') {
     return <Redirect href="/start" />;
@@ -214,35 +159,40 @@ export default function JobDetailScreen() {
 
   if (loadingJob) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: colors.gray700 }}>Lädt...</Text>
-        </View>
-      </SafeAreaView>
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color={COLORS.neon} size="large" />
+          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt...</Text>
+        </SafeAreaView>
+      </View>
     );
   }
 
   if (error || !job) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.md, gap: spacing.md }}>
-          <Text style={{ color: colors.black, fontSize: 16, textAlign: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 24 }}>
             {error ?? 'Auftrag nicht gefunden'}
           </Text>
-          <Button title="Zurück" onPress={() => router.replace('/(employer)')} />
-        </View>
-      </SafeAreaView>
+          <Pressable
+            onPress={() => router.replace('/(employer)')}
+            style={{
+              backgroundColor: COLORS.neon,
+              paddingHorizontal: 24,
+              paddingVertical: 16,
+              borderRadius: 16,
+            }}
+          >
+            <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '700' }}>
+              Zurück
+            </Text>
+          </Pressable>
+        </SafeAreaView>
+      </View>
     );
   }
 
-  // Hilfstexte für Anzeige
-  const timeModeLabel =
-    job.timeMode === 'fixed_time'
-      ? 'Zeitgenau'
-      : job.timeMode === 'hour_package'
-      ? 'Stundenpaket'
-      : 'Projekt';
-  
   const statusLabel = 
     job.status === 'open' ? 'Offen' : 
     job.status === 'matched' ? 'Vergeben' :
@@ -251,360 +201,307 @@ export default function JobDetailScreen() {
     job.status;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
-      <ScrollView 
-        style={{ flex: 1 }} 
-        contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}
+    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      {/* Gradient Background */}
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: COLORS.purpleDark,
+      }} />
+
+      {/* Optional Glow */}
+      <View style={{
+        position: 'absolute',
+        top: -60,
+        left: -40,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        backgroundColor: COLORS.neon,
+        opacity: 0.1,
+        blur: 60,
+      }} />
+
+      {/* Top Bar */}
+      <SafeAreaView edges={['top']}>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 20,
+          paddingVertical: 16,
+        }}>
+          <Pressable onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+          </Pressable>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
+            Job-Details
+          </Text>
+          <Pressable onPress={handleDelete} disabled={isDeleting}>
+            <Ionicons name="trash-outline" size={24} color={COLORS.error} />
+          </Pressable>
+        </View>
+      </SafeAreaView>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 20, gap: 16 }}
       >
-        {/* Header */}
-        <View style={{ gap: 8, marginBottom: spacing.xs }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: colors.black, letterSpacing: -0.5 }}>
+        {/* Job Header Card */}
+        <View style={{
+          backgroundColor: COLORS.white,
+          borderRadius: 18,
+          padding: 20,
+          shadowColor: COLORS.neon,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.2,
+          shadowRadius: 16,
+          elevation: 6,
+        }}>
+          <Text style={{ 
+            fontSize: 24, 
+            fontWeight: '700', 
+            color: COLORS.purple,
+            marginBottom: 12,
+          }}>
             {job.title}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-            <View style={{
-              paddingHorizontal: 10,
-              paddingVertical: 6,
-              backgroundColor: job.status === 'open' ? colors.successLight : 
-                               job.status === 'matched' ? colors.infoLight :
-                               job.status === 'done' ? colors.gray200 :
-                               colors.errorLight,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: job.status === 'open' ? colors.success : 
-                           job.status === 'matched' ? colors.info :
-                           job.status === 'done' ? colors.gray400 :
-                           colors.error,
-            }}>
-              <Text style={{ 
-                color: job.status === 'open' ? colors.success : 
-                       job.status === 'matched' ? colors.info :
-                       job.status === 'done' ? colors.gray700 :
-                       colors.error, 
-                fontSize: 13, 
-                fontWeight: '700' 
-              }}>
-                {statusLabel}
-              </Text>
-            </View>
-            <View style={{
-              paddingHorizontal: 10,
-              paddingVertical: 6,
-              backgroundColor: colors.beige100,
-              borderRadius: 8,
-            }}>
-              <Text style={{ color: colors.gray700, fontSize: 13, fontWeight: '600' }}>
-                {timeModeLabel}
-              </Text>
-            </View>
+
+          {/* Kategorie Badge */}
+          <View style={{
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            backgroundColor: COLORS.neon,
+            borderRadius: 10,
+            alignSelf: 'flex-start',
+            marginBottom: 12,
+          }}>
+            <Text style={{ fontSize: 13, fontWeight: '700', color: COLORS.black }}>
+              {job.category}
+            </Text>
+          </View>
+
+          {/* Status Badge */}
+          <View style={{
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            backgroundColor: job.status === 'open' ? '#E8F5E9' : '#E3F2FD',
+            borderRadius: 8,
+            alignSelf: 'flex-start',
+          }}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: job.status === 'open' ? '#2E7D32' : '#1976D2' }}>
+              {statusLabel}
+            </Text>
           </View>
         </View>
 
-        {/* Kategorie & Adresse */}
+        {/* Section Divider */}
+        <View style={{ height: 1, backgroundColor: COLORS.neonTransparent20 }} />
+
+        {/* Zeiten Card */}
         <View style={{
-          backgroundColor: colors.white,
+          backgroundColor: COLORS.white,
           borderRadius: 16,
-          padding: spacing.md,
-          gap: spacing.md,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.08,
-          shadowRadius: 8,
-          elevation: 3,
+          padding: 20,
         }}>
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontWeight: '600', color: colors.gray500, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 }}>
-              Kategorie
-            </Text>
-            <View style={{
-              paddingHorizontal: spacing.sm,
-              paddingVertical: 6,
-              backgroundColor: colors.beige100,
-              borderRadius: 8,
-              alignSelf: 'flex-start',
-            }}>
-              <Text style={{ color: colors.black, fontSize: 15, fontWeight: '600' }}>
-                💼 {job.category}
-              </Text>
-            </View>
-          </View>
-          <View style={{ height: 1, backgroundColor: colors.gray200 }} />
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontWeight: '600', color: colors.gray500, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 }}>
-              Standort
-            </Text>
-            <Text style={{ color: colors.black, fontSize: 15, fontWeight: '500' }}>
-              📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
-            </Text>
-          </View>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
+            ZEITEN
+          </Text>
+          <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
+            {job.startAt && job.endAt 
+              ? `${new Date(job.startAt).toLocaleString('de-DE')} - ${new Date(job.endAt).toLocaleString('de-DE')}`
+              : job.dueAt 
+              ? `Deadline: ${new Date(job.dueAt).toLocaleDateString('de-DE')}`
+              : `Stundenpaket: ${job.hours} Stunden`}
+          </Text>
         </View>
 
-        {/* Beschreibung */}
-        {job.description && (
-          <View style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            padding: spacing.md,
-            gap: 6
-          }}>
-            <Text style={{ fontWeight: '700', color: colors.black, fontSize: 16 }}>
-              Beschreibung
-            </Text>
-            <Text style={{ color: colors.gray700, lineHeight: 20 }}>
-              {job.description}
-            </Text>
-          </View>
-        )}
+        {/* Section Divider */}
+        <View style={{ height: 1, backgroundColor: COLORS.neonTransparent20 }} />
 
-        {/* Anforderungen */}
-        {(job.required_all_tags.length > 0 || job.required_any_tags.length > 0) && (
-          <View style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            padding: spacing.md,
-            gap: 12
-          }}>
-            <Text style={{ fontWeight: '700', color: colors.black, fontSize: 16 }}>
-              Anforderungen
-            </Text>
-            
-            {job.required_all_tags.length > 0 && (
-              <View style={{ gap: 6 }}>
-                <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
-                  PFLICHT-TAGS
-                </Text>
-                <Text style={{ color: colors.gray700 }}>
-                  {job.required_all_tags.join(', ')}
-                </Text>
-              </View>
-            )}
-            
-            {job.required_any_tags.length > 0 && (
-              <View style={{ gap: 6 }}>
-                <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
-                  AKZEPTIERTE FAHRZEUGE
-                </Text>
-                <Text style={{ color: colors.gray700 }}>
-                  {job.required_any_tags.join(', ')}
-                </Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {/* Vergütung */}
+        {/* Adresse Card */}
         <View style={{
-          backgroundColor: colors.white,
-          borderRadius: 12,
-          padding: spacing.md,
-          gap: 12
+          backgroundColor: COLORS.white,
+          borderRadius: 16,
+          padding: 20,
         }}>
-          <Text style={{ fontWeight: '700', color: colors.black, fontSize: 16 }}>
-            Vergütung
+          <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
+            ADRESSE
           </Text>
-          <CostBreakdown workerAmountCents={job.workerAmountCents} />
-          
-          {/* Provision-Hinweis bei Match */}
-          {job.status === 'matched' && (
-            <View style={{
-              backgroundColor: colors.beige50,
-              borderRadius: 8,
-              padding: spacing.sm,
-              borderLeftWidth: 3,
-              borderLeftColor: colors.black,
-            }}>
-              <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
-                💡 <Text style={{ fontWeight: '600' }}>Hinweis:</Text> Für diesen Auftrag wurde ein Match gefunden. 
-                Die Plattformgebühr von 20 % ist jetzt fällig.
-              </Text>
-            </View>
-          )}
-
-          {/* Bewertungs-Button */}
-          {job.status === 'matched' && job.matchedWorkerId && !hasReview && !checkingReview && (
-            <Button
-              title="⭐ Auftrag abschließen & bewerten"
-              onPress={() => {
-                router.push({
-                  pathname: '/(employer)/jobs/rate',
-                  params: {
-                    jobId: job.id,
-                    workerId: job.matchedWorkerId!,
-                  },
-                });
-              }}
-              variant="secondary"
-            />
-          )}
-
-          {/* Bewertung bereits abgegeben */}
-          {job.status === 'matched' && hasReview && (
-            <View style={{
-              backgroundColor: colors.beige100,
-              borderRadius: 8,
-              padding: spacing.sm,
-              borderLeftWidth: 3,
-              borderLeftColor: colors.black,
-            }}>
-              <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
-                ✅ Du hast diese Arbeitskraft bereits bewertet.
-              </Text>
-            </View>
-          )}
-          
-          <View style={{ gap: 4, marginTop: 4 }}>
-            <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
-              ZAHLUNG AN ARBEITNEHMER
-            </Text>
-            <Text style={{ color: colors.gray700 }}>
-              {job.paymentToWorker === 'cash' ? '💵 Bar' : 
-               job.paymentToWorker === 'bank' ? '🏦 Überweisung' : 
-               '💳 PayPal'}
-            </Text>
-          </View>
+          <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
+            📍 {formatAddress(job.location) || 'Keine Adresse angegeben'}
+          </Text>
         </View>
 
-        {/* Bewerber / Matches */}
-        <View style={{
-          backgroundColor: colors.white,
-          borderRadius: 12,
-          padding: spacing.md,
-          gap: 12
-        }}>
-          <Text style={{ fontWeight: '700', color: colors.black, fontSize: 16 }}>
-            Bewerber / Matches
-          </Text>
+        {/* Section Divider */}
+        <View style={{ height: 1, backgroundColor: COLORS.neonTransparent20 }} />
 
-          {isLoadingApps ? (
-            <View style={{ paddingVertical: spacing.md, alignItems: 'center' }}>
-              <ActivityIndicator color={colors.black} />
-              <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 8 }}>
-                Lade Bewerber…
+        {/* Anforderungen Card */}
+        {(job.requiredTags && job.requiredTags.length > 0) && (
+          <>
+            <View style={{
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 20,
+            }}>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
+                ANFORDERUNGEN
               </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {job.requiredTags.map((tag, idx) => (
+                  <View key={idx} style={{
+                    paddingHorizontal: 10,
+                    paddingVertical: 6,
+                    backgroundColor: '#F5F5F5',
+                    borderRadius: 8,
+                  }}>
+                    <Text style={{ fontSize: 13, color: COLORS.darkGray, fontWeight: '600' }}>
+                      {tag}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             </View>
-          ) : appsError ? (
-            <Text style={{ color: '#c00', fontSize: 14 }}>
-              {appsError}
-            </Text>
-          ) : applicants.length === 0 ? (
-            <Text style={{ color: colors.gray500, fontSize: 14 }}>
-              Noch keine Bewerbungen.
-            </Text>
-          ) : (
-            <View style={{ gap: 12 }}>
-              {applicants.map(({ app, profile }) => {
-                const isAccepted = app.status === 'accepted';
-                const statusLabel =
-                  app.status === 'pending' ? 'Offen' :
-                  app.status === 'accepted' ? 'Ausgewählt' :
-                  app.status === 'rejected' ? 'Abgelehnt' :
-                  'Storniert';
 
-                return (
-                  <View key={app.id} style={{ gap: 8 }}>
-                    {/* Status Badge */}
-                    <View style={{
-                      paddingHorizontal: 8,
-                      paddingVertical: 4,
-                      backgroundColor: isAccepted ? colors.beige100 : colors.gray100,
-                      borderRadius: 6,
-                      alignSelf: 'flex-start'
-                    }}>
-                      <Text style={{ color: colors.black, fontSize: 12, fontWeight: '600' }}>
-                        Status: {statusLabel}
-                      </Text>
+            {/* Section Divider */}
+            <View style={{ height: 1, backgroundColor: COLORS.neonTransparent20 }} />
+          </>
+        )}
+
+        {/* Preis Card */}
+        <View style={{
+          backgroundColor: COLORS.white,
+          borderRadius: 16,
+          padding: 20,
+        }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 8, letterSpacing: 0.5 }}>
+            LOHN
+          </Text>
+          <Text style={{ fontSize: 24, fontWeight: '800', color: COLORS.black }}>
+            {euro(job.wages)}
+          </Text>
+          <Text style={{ fontSize: 13, color: COLORS.darkGray, marginTop: 4 }}>
+            {job.timeMode === 'hours' ? 'pro Stunde' : 'Gesamt'}
+          </Text>
+        </View>
+
+        {/* Section Divider */}
+        <View style={{ height: 1, backgroundColor: COLORS.neonTransparent20 }} />
+
+        {/* Bewerberliste Card */}
+        {job.status === 'open' && (
+          <View style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 16,
+            padding: 20,
+          }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 16, letterSpacing: 0.5 }}>
+              BEWERBER ({applications.length})
+            </Text>
+
+            {isLoadingApps ? (
+              <ActivityIndicator color={COLORS.purple} />
+            ) : applicants.length === 0 ? (
+              <Text style={{ fontSize: 14, color: COLORS.darkGray, textAlign: 'center' }}>
+                Noch keine Bewerbungen
+              </Text>
+            ) : (
+              <View style={{ gap: 12 }}>
+                {applicants.map(({ app, profile }) => (
+                  <View key={app.id} style={{
+                    padding: 16,
+                    backgroundColor: '#F8F8F8',
+                    borderRadius: 12,
+                    gap: 12,
+                  }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                      <View style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: 24,
+                        backgroundColor: COLORS.purple,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                        <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700' }}>
+                          {getInitials(profile?.name || 'Anonym')}
+                        </Text>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                          {profile?.name || 'Anonym'}
+                        </Text>
+                        <Text style={{ fontSize: 13, color: COLORS.darkGray }}>
+                          Beworben am {new Date(app.createdAt).toLocaleDateString('de-DE')}
+                        </Text>
+                      </View>
                     </View>
 
-                    {/* Worker Profile Card - zeigt eingeschränkte Infos vor Match */}
-                    {profile ? (
-                      <WorkerProfileCard 
-                        profile={profile} 
-                        isMatched={isAccepted}
-                      />
-                    ) : (
-                      <Text style={{ color: colors.gray500, fontSize: 14 }}>
-                        Profil konnte nicht geladen werden.
+                    {/* Accept Button */}
+                    <Pressable
+                      onPress={() => handleAcceptApplication(app.id, app.workerId, profile?.name || 'Anonym')}
+                      disabled={isAcceptingId === app.id}
+                      style={({ pressed }) => ({
+                        backgroundColor: COLORS.neon,
+                        paddingVertical: 12,
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        opacity: pressed ? 0.9 : 1,
+                      })}
+                    >
+                      <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
+                        {isAcceptingId === app.id ? 'Wird akzeptiert...' : 'Auswählen'}
                       </Text>
-                    )}
-
-                    {/* Action Buttons */}
-                    {app.status === 'pending' && job.status === 'open' && (
-                      <Button
-                        title={isAcceptingId === app.id ? 'Wähle…' : 'Kandidat auswählen'}
-                        onPress={() => handleAcceptClick(app.id)}
-                        disabled={isAcceptingId === app.id}
-                        variant="secondary"
-                      />
-                    )}
-
-                    {isAccepted && (
-                      <View style={{ gap: spacing.sm }}>
-                        <View style={{
-                          padding: spacing.sm,
-                          backgroundColor: colors.beige100,
-                          borderRadius: 6,
-                        }}>
-                          <Text style={{ color: colors.black, fontWeight: '700', fontSize: 14 }}>
-                            ✓ Dieser Kandidat ist ausgewählt. Kontaktdaten sind freigeschaltet.
-                          </Text>
-                        </View>
-                        
-                        <Button
-                          title="💬 Chat öffnen"
-                          variant="secondary"
-                          onPress={() =>
-                            router.push({
-                              pathname: '/chat/[applicationId]',
-                              params: { applicationId: app.id },
-                            })
-                          }
-                        />
-                      </View>
-                    )}
+                    </Pressable>
                   </View>
-                );
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* Action Buttons */}
+        {job.status === 'matched' && (
+          <View style={{ gap: 12 }}>
+            {/* Chat Button */}
+            <Pressable
+              onPress={() => router.push(`/(employer)/chat/${job.matchedWorkerId}`)}
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.neon,
+                paddingVertical: 16,
+                borderRadius: 16,
+                alignItems: 'center',
+                opacity: pressed ? 0.9 : 1,
               })}
-            </View>
-          )}
-        </View>
+            >
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                💬 Zum Chat
+              </Text>
+            </Pressable>
 
-        {/* Actions */}
-        <View style={{ gap: spacing.sm, marginTop: spacing.md }}>
-          <Button
-            title={isDeleting ? 'Lösche…' : 'Auftrag löschen'}
-            onPress={handleDelete}
-            disabled={isDeleting}
-            variant="ghost"
-          />
-          <Button
-            title="Zurück zur Übersicht"
-            variant="secondary"
-            onPress={() => router.replace('/(employer)')}
-          />
-          <Button
-            title="Logout"
-            variant="ghost"
-            onPress={async () => {
-              await signOut();
-              router.replace('/auth/start');
-            }}
-          />
-        </View>
-
-        <View style={{ height: spacing.xl }} />
+            {/* Rate Button */}
+            {!hasReview && (
+              <Pressable
+                onPress={() => router.push(`/(employer)/jobs/rate?id=${job.id}`)}
+                style={({ pressed }) => ({
+                  backgroundColor: COLORS.neon,
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  opacity: pressed ? 0.9 : 1,
+                })}
+              >
+                <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                  Job abschließen & bewerten
+                </Text>
+              </Pressable>
+            )}
+          </View>
+        )}
       </ScrollView>
-      
-      {/* Legal Confirmation Modal */}
-      <LegalConfirmationModal
-        visible={showLegalModal}
-        onConfirm={handleAccept}
-        onCancel={() => {
-          setShowLegalModal(false);
-          setSelectedApplicationId(null);
-          setSelectedWorkerName('');
-        }}
-        workerName={selectedWorkerName}
-      />
-    </SafeAreaView>
+    </View>
   );
 }
