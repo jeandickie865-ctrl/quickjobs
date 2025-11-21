@@ -20,6 +20,7 @@ export default function Start() {
   }
 
   // Rolle gesetzt → in den jeweiligen Bereich
+  // worker = Jobstarter, employer = Auftraggeber
   if (user.role === 'worker') {
     return <Redirect href="/(worker)/feed" />;
   }
