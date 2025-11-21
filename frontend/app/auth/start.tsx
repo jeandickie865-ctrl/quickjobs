@@ -59,14 +59,10 @@ export default function AuthStart() {
           {/* Top Spacer */}
           <View style={{ height: 60 }} />
 
-          {/* Logo - NEUES DESIGN */}
+          {/* Logo - Goldenes Quadrat mit weißem BCKP */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
             <View style={styles.logoContainer}>
-              <Image
-                source={require('../../assets/logo.jpeg')}
-                style={styles.logo}
-                resizeMode="contain"
-              />
+              <Text style={styles.logoText}>BCKP</Text>
             </View>
           </Animated.View>
 
