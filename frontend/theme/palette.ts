@@ -1,13 +1,14 @@
-// theme/palette.ts - BCKP BOLD STARTUP (OPTION B)
+// theme/palette.ts - VIVID BLUE-PURPLE & NEON LIME
 export const palette = {
-  // Primary Colors
-  primary: '#2E5A3E',
-  primaryDark: '#264F35',
-  primaryLight: '#DDE6E0',
+  // Primary Colors - Vivid Blue-Purple
+  primary: '#5941FF',
+  primaryDark: '#4530E0',
+  primaryLight: '#E8E4FF',
   
-  // Accent
-  accent: '#FFB500',
-  accentLight: '#FFB50015',
+  // Accent - Neon Lime
+  accent: '#C8FF16',
+  accentDark: '#B3E612',
+  accentLight: '#F4FFD4',
   
   // Background & Cards
   background: '#F8F8F8',
@@ -27,10 +28,10 @@ export const palette = {
   gray100: '#F5F5F5',
   
   // Status
-  success: '#2E5A3E',
-  successLight: '#DDE6E0',
-  warning: '#FFB500',
-  warningLight: '#FFF3CD',
+  success: '#5941FF',
+  successLight: '#E8E4FF',
+  warning: '#C8FF16',
+  warningLight: '#F4FFD4',
   danger: '#E34242',
   error: '#E34242',
   errorLight: '#FBECEC',
