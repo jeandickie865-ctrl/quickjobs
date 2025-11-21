@@ -156,9 +156,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Logo Container - EXAKT NACH SPEZIFIKATION
+  // Logo Container - Goldenes Quadrat
   logoContainer: {
     marginTop: 80,
+    width: 240,
+    height: 240,
+    backgroundColor: COLORS.gold,
+    borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'rgba(0,0,0,0.08)',
@@ -167,9 +171,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  logo: {
-    width: 220,
-    height: 220,
+  logoText: {
+    fontSize: 90,
+    fontWeight: '900',
+    color: COLORS.white,
+    letterSpacing: -2,
   },
   // Slogan - 12px Abstand zum Logo
   sloganContainer: {
