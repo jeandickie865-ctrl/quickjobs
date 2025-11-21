@@ -1,63 +1,32 @@
 export const palette = {
-  // ===== STIL 1: MODERN, KLAR, HOCHWERTIG, VC-READY =====
+  // Primary Green
+  primary: '#2F5F3F',
+  primaryLight: '#DDE8E1',
+  primaryUltraLight: '#F4F7F5',
   
-  // Primary (Markenfarbe)
-  primary: '#3F6F3D',           // Primary Green
-  primaryDark: '#2F5A32',       // Primary Green Dark
-  primaryLight: '#E9F3EB',      // Primary Light
-  primaryUltraLight: '#F5FAF6', // Primary Very Light
+  // Accent
+  accent: '#7FA68A',
   
-  // Neutral
-  black: '#111111',
+  // Status
+  error: '#C54B4B',
+  errorLight: '#F9D9D9',
+  success: '#2F5F3F',
+  successLight: '#DDE8E1',
+  warning: '#F59E0B',
+  warningLight: '#FEF3C7',
+  
+  // Neutrals
+  black: '#1A1A1A',
   white: '#FFFFFF',
   gray900: '#1A1A1A',
-  gray700: '#4A4A4A',
-  gray500: '#7A7A7A',
-  gray300: '#D7D7D7',
-  gray200: '#EAEAEA',
+  gray600: '#6D6D6D',
+  gray300: '#D4D4D4',
+  gray200: '#E8E8E8',
   gray100: '#F5F5F5',
   
-  // System Colors
-  success: '#0E9F6E',
-  successLight: '#E9F3EB',
-  warning: '#F7C948',
-  warningLight: '#FFF8E5',
-  warningBorder: '#F1E3B8',
-  warningText: '#6F5D2A',
-  error: '#E53E3E',
-  errorLight: '#FFE8E8',
-  info: '#3182CE',
-  infoLight: '#E6F4FF',
-  
-  // Backgrounds
-  background: '#FAFAF7',        // App Background
-  card: '#FFFFFF',              // Card Background
-  
-  // Backward compatibility
-  beige50: '#F5FAF6',
-  beige100: '#E9F3EB',
-  beige200: '#EAEAEA',
-  beige300: '#D7D7D7',
-  accent: '#3F6F3D',
-  accentLight: '#E9F3EB',
-  
-  // Match & Rating
-  matchPerfect: '#0E9F6E',
-  matchGood: '#3F6F3D',
-  matchBasic: '#7A7A7A',
-  ratingGold: '#F7C948',
-  
-  // Disabled
-  disabled: '#7A7A7A',
-  disabledBg: '#F5F5F5',
-  
-  // Borders
-  border: '#EBEBEB',
-  borderLight: '#D7D7D7',
-  
-  // Rating Background
-  ratingBg: '#F5FAF6',
-  ratingBorder: '#E1EDE3',
+  // Transparency
+  overlay: 'rgba(26, 26, 26, 0.75)',
+  backdropLight: 'rgba(255, 255, 255, 0.95)',
 };
 
 export const spacing = {
