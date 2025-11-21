@@ -521,10 +521,16 @@ export default function WorkerProfileScreen() {
             });
           }}
           onLatChange={(value) => {
+            console.log('📍 Coordinates updated - Lat:', value);
             setProfile({ ...profile, homeLat: value });
           }}
           onLonChange={(value) => {
+            console.log('📍 Coordinates updated - Lon:', value);
             setProfile({ ...profile, homeLon: value });
+          }}
+          onGeocodingError={(error) => {
+            console.log('❌ Geocoding error:', error);
+            alert(error);
           }}
           placeholder="Straße und Hausnummer"
         />
