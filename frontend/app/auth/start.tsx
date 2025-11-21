@@ -20,146 +20,117 @@ const COLORS = {
 
 export default function AuthStart() {
   const router = useRouter();
+  const [primaryPressed, setPrimaryPressed] = React.useState(false);
+  const [secondaryPressed, setSecondaryPressed] = React.useState(false);
 
   // Animation values
   const screenOpacity = useRef(new Animated.Value(0)).current;
-  const logoScale = useRef(new Animated.Value(0.98)).current;
-  const button1Y = useRef(new Animated.Value(20)).current;
-  const button1Opacity = useRef(new Animated.Value(0)).current;
-  const button2Y = useRef(new Animated.Value(20)).current;
-  const button2Opacity = useRef(new Animated.Value(0)).current;
-  const textOpacity = useRef(new Animated.Value(0)).current;
+  const logoScale = useRef(new Animated.Value(0.95)).current;
+  const contentOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Exact animation sequence as specified
     Animated.sequence([
-      // Screen Fade-In 0.5s
       Animated.timing(screenOpacity, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(logoScale, {
+        toValue: 1,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }),
+      Animated.timing(contentOpacity, {
         toValue: 1,
         duration: 500,
         useNativeDriver: true,
       }),
-      // Logo Mini-Scale 180ms
-      Animated.timing(logoScale, {
-        toValue: 1.0,
-        duration: 180,
-        useNativeDriver: true,
-      }),
-      // Text Fade-In with 0.2s Delay
-      Animated.timing(textOpacity, {
-        toValue: 1,
-        duration: 300,
-        delay: 200,
-        useNativeDriver: true,
-      }),
-      // Buttons Slide-Up + Fade-In
-      Animated.parallel([
-        Animated.timing(button1Y, {
-          toValue: 0,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(button1Opacity, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(button2Y, {
-          toValue: 0,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(button2Opacity, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ]),
     ]).start();
   }, []);
 
   return (
     <Animated.View style={[styles.container, { opacity: screenOpacity }]}>
-      {/* Background Gradient - exakt wie spezifiziert */}
-      <LinearGradient
-        colors={[COLORS.bgTop, COLORS.bgBottom]}
-        style={StyleSheet.absoluteFill}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-      />
+      {/* Background mit radialem Mint-Glow */}
+      <View style={styles.background}>
+        <View style={styles.mintGlow} />
+      </View>
 
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
           {/* Top Spacer */}
-          <View style={{ height: 80 }} />
+          <View style={{ height: 60 }} />
 
-          {/* Logo Block - mit exakten Specs */}
+          {/* Logo Card */}
           <Animated.View style={{ transform: [{ scale: logoScale }] }}>
-            <View style={styles.logoContainer}>
+            <View style={styles.logoCard}>
               <Image
                 source={{ uri: 'https://customer-assets.emergentagent.com/job_quickjobs-10/artifacts/sce5x6fk_Image.jpeg' }}
                 style={styles.logo}
                 resizeMode="contain"
               />
+              {/* Purple Glow-Linie unter Logo */}
+              <View style={styles.purpleGlowLine} />
             </View>
           </Animated.View>
 
-          {/* Claim - exakte Specs */}
-          <Animated.View style={{ opacity: textOpacity }}>
-            <Text style={styles.claim}>
-              wenn's jetzt passieren muss.
+          {/* Slogan mit Purple Accent */}
+          <Animated.View style={[styles.sloganContainer, { opacity: contentOpacity }]}>
+            <View style={styles.purpleDot} />
+            <Text style={styles.slogan}>
+              wenn’s jetzt passieren muss.
             </Text>
           </Animated.View>
 
-          {/* Haupttitel - exakt 48px Abstand */}
-          <Animated.View style={[styles.titleContainer, { opacity: textOpacity }]}>
+          {/* Haupttitel */}
+          <Animated.View style={{ opacity: contentOpacity }}>
             <Text style={styles.title}>
-              Willkommen bei BACKUP
+              Willkommen bei BCKP
             </Text>
           </Animated.View>
 
           {/* Spacer */}
           <View style={{ flex: 1 }} />
 
-          {/* Button 1 - Registrieren (Primary) - exakte Specs */}
-          <Animated.View style={[
-            styles.buttonWrapper,
-            {
-              opacity: button1Opacity,
-              transform: [{ translateY: button1Y }]
-            }
-          ]}>
+          {/* Buttons */}
+          <Animated.View style={[styles.buttonsContainer, { opacity: contentOpacity }]}>
+            {/* Primary Button - Registrieren */}
             <Link href="/auth/signup" asChild>
-              <TouchableOpacity 
-                style={styles.primaryButton}
-                activeOpacity={0.9}
+              <TouchableOpacity
+                style={[
+                  styles.primaryButton,
+                  primaryPressed && styles.primaryButtonPressed
+                ]}
+                onPressIn={() => setPrimaryPressed(true)}
+                onPressOut={() => setPrimaryPressed(false)}
+                activeOpacity={1}
               >
                 <Text style={styles.primaryButtonText}>Registrieren</Text>
               </TouchableOpacity>
             </Link>
-          </Animated.View>
 
-          {/* Button 2 - Login (Secondary) - exakte Specs */}
-          <Animated.View style={[
-            styles.buttonWrapper,
-            {
-              opacity: button2Opacity,
-              transform: [{ translateY: button2Y }]
-            }
-          ]}>
+            {/* Secondary Button - Login */}
             <Link href="/auth/login" asChild>
-              <TouchableOpacity 
-                style={styles.secondaryButton}
-                activeOpacity={0.9}
+              <TouchableOpacity
+                style={[
+                  styles.secondaryButton,
+                  secondaryPressed && styles.secondaryButtonPressed
+                ]}
+                onPressIn={() => setSecondaryPressed(true)}
+                onPressOut={() => setSecondaryPressed(false)}
+                activeOpacity={1}
               >
-                <Text style={styles.secondaryButtonText}>Login</Text>
+                <Text style={[
+                  styles.secondaryButtonText,
+                  secondaryPressed && styles.secondaryButtonTextPressed
+                ]}>
+                  Login
+                </Text>
               </TouchableOpacity>
             </Link>
           </Animated.View>
 
-          {/* Footer - exakte Specs */}
+          {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
               Mit deiner Nutzung akzeptierst du unsere
@@ -168,19 +139,19 @@ export default function AuthStart() {
               <Pressable onPress={() => router.push('/legal/agb')}>
                 <Text style={styles.footerLink}>AGB</Text>
               </Pressable>
-              <Text style={styles.footerDot}>•</Text>
+              <Text style={styles.goldDot}>•</Text>
               <Pressable onPress={() => router.push('/legal/privacy')}>
                 <Text style={styles.footerLink}>Datenschutz</Text>
               </Pressable>
-              <Text style={styles.footerDot}>•</Text>
+              <Text style={styles.goldDot}>•</Text>
               <Pressable onPress={() => router.push('/legal/guidelines')}>
                 <Text style={styles.footerLink}>Grundsätze</Text>
               </Pressable>
             </View>
           </View>
 
-          {/* Bottom Padding - exakt 32px */}
-          <View style={{ height: 32 }} />
+          {/* Bottom Spacer */}
+          <View style={{ height: 40 }} />
         </View>
       </SafeAreaView>
     </Animated.View>
@@ -191,66 +162,108 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  background: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: COLORS.offWhite,
+  },
+  mintGlow: {
+    position: 'absolute',
+    top: '30%',
+    left: '50%',
+    width: 300,
+    height: 300,
+    marginLeft: -150,
+    marginTop: -150,
+    borderRadius: 150,
+    backgroundColor: COLORS.mint,
+    opacity: 0.05,
+    filter: 'blur(80px)',
+  },
   safeArea: {
     flex: 1,
   },
   content: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
 
-  // Logo Container - exakte Specs
-  logoContainer: {
-    backgroundColor: COLORS.logoContainer,
-    padding: 32,
-    borderRadius: 28,
-    shadowColor: '#000000',
-    shadowOpacity: 0.06,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
+  // Logo Card
+  logoCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 22,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 180,
+    height: 180,
+  },
+  purpleGlowLine: {
+    position: 'absolute',
+    bottom: 0,
+    left: '20%',
+    right: '20%',
+    height: 2,
+    backgroundColor: COLORS.purple,
+    opacity: 0.3,
+    borderRadius: 1,
   },
 
-  // Claim - exakte Specs
-  claim: {
-    fontSize: 15,
-    color: COLORS.gray,
-    letterSpacing: 0.3,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-
-  // Haupttitel - exakt 48px Abstand
-  titleContainer: {
-    marginTop: 48,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: COLORS.text,
-    textAlign: 'center',
-  },
-
-  // Buttons - exakte Specs
-  buttonWrapper: {
-    width: '100%',
+  // Slogan
+  sloganContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 18,
+    gap: 8,
+  },
+  purpleDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: COLORS.purple,
+  },
+  slogan: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: COLORS.gold,
+    letterSpacing: 0.4,
+  },
+
+  // Titel
+  title: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: COLORS.black,
+    textAlign: 'center',
+    marginTop: 28,
+  },
+
+  // Buttons
+  buttonsContainer: {
+    width: '100%',
+    gap: 18,
   },
   primaryButton: {
-    width: '90%',
-    height: 54,
-    backgroundColor: COLORS.primary,
-    borderRadius: 14,
+    backgroundColor: COLORS.mint,
+    height: 56,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    shadowColor: COLORS.mint,
+    shadowOpacity: 0.18,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+  primaryButtonPressed: {
+    backgroundColor: COLORS.mintPressed,
   },
   primaryButtonText: {
     fontSize: 17,
@@ -258,30 +271,34 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   secondaryButton: {
-    width: '90%',
-    height: 54,
     backgroundColor: COLORS.white,
-    borderWidth: 2,
-    borderColor: COLORS.primary,
+    height: 54,
     borderRadius: 14,
+    borderWidth: 2,
+    borderColor: COLORS.mint,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 16,
+  },
+  secondaryButtonPressed: {
+    borderColor: COLORS.mintOutline,
   },
   secondaryButtonText: {
     fontSize: 17,
-    fontWeight: '700',
-    color: COLORS.primary,
+    fontWeight: '600',
+    color: COLORS.mint,
+  },
+  secondaryButtonTextPressed: {
+    color: COLORS.mintOutline,
   },
 
-  // Footer - exakte Specs
+  // Footer
   footer: {
     marginTop: 40,
     alignItems: 'center',
   },
   footerText: {
     fontSize: 12,
-    color: COLORS.footerText,
+    color: COLORS.footerGray,
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -292,10 +309,10 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontSize: 12,
-    color: COLORS.primary,
+    color: COLORS.footerGray,
   },
-  footerDot: {
+  goldDot: {
     fontSize: 12,
-    color: COLORS.footerText,
+    color: COLORS.gold,
   },
 });
