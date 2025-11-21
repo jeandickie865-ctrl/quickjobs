@@ -1,4 +1,4 @@
-// utils/nearbyJobs.ts - MATCHING 2.0 FINAL
+// utils/nearbyJobs.ts - MATCHING 2.2 (Extended Security Checks)
 import { Job } from '../types/job';
 import { WorkerProfile } from '../types/profile';
 import { calculateDistance } from './distance';
@@ -6,7 +6,11 @@ import { normalizeAddress } from './normalizeAddress';
 import { formatAddress } from '../types/address';
 import { LOW_SKILL } from './matching';
 
-const SPECIAL_SECURITY = "Sachkunde nach § 34a GewO";
+// Security Tags (alle werden geprüft)
+const SECURITY_SACHKUNDE = "Sachkunde nach § 34a GewO";
+const SECURITY_UNTERRICHTUNG = "Unterrichtung nach § 34a GewO";
+const SECURITY_BEWACHER_ID = "Bewacher-ID";
+const SECURITY_FUEHRUNGSZEUGNIS = "Polizeiliches Führungszeugnis";
 
 export type NearbyJob = Job & {
   distance: number;
