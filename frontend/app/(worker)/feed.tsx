@@ -42,7 +42,8 @@ export default function WorkerFeed() {
     try {
       const workerProfile = await getWorkerProfile(user.id);
       
-      if (!workerProfile || !workerProfile.categories || workerProfile.categories.length === 0 || !workerProfile.selectedTags || workerProfile.selectedTags.length === 0) {
+      // Nur Kategorien sind Pflicht, Qualifikationen sind optional
+      if (!workerProfile || !workerProfile.categories || workerProfile.categories.length === 0) {
         setError('Bitte zuerst dein Profil ausfüllen.');
         setIsLoading(false);
         return;
