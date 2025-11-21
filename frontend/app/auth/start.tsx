@@ -1,9 +1,9 @@
-// app/auth/start.tsx - FANCY MINIMAL (Mint/Lila/Gold)
+// app/auth/start.tsx - FANCY MINIMAL (Mint/Lila/Gold) - Expo Web Safe
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity, Animated } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { View, Text, StyleSheet, Image, Pressable, Animated } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+import FancyButton from '../../components/FancyButton';
 
 // BCKP Fancy Minimal Colors
 const COLORS = {
