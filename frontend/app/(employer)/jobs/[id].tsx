@@ -7,6 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
+import { getReviewForJob } from '../../../utils/reviewStore';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import { WorkerProfileCard } from '../../../components/WorkerProfileCard';
 import { Job } from '../../../types/job';
