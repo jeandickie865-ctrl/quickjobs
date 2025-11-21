@@ -24,8 +24,8 @@ export type WorkerProfile = {
   selectedTags: string[];    // tag keys aus taxonomy.json
   radiusKm: number;
   homeAddress: Address;      // Strukturierte Adresse (statt string)
-  homeLat: number;
-  homeLon: number;
+  homeLat: number | null;    // Koordinaten - NIEMALS 0 als Fallback!
+  homeLon: number | null;    // Koordinaten - NIEMALS 0 als Fallback!
   profilePhotoUri?: string;  // Lokale URI zum Profilfoto
   documents?: WorkerDocument[]; // Liste der Dokumente
   
