@@ -1,873 +1,996 @@
+diff --git a/frontend/theme/palette.ts b/frontend/theme/palette.ts
+index 2785e26..8de4fe7 100644
+--- a/frontend/theme/palette.ts
++++ b/frontend/theme/palette.ts
+@@ -1,79 +1,49 @@
+ export const palette = {
+-  // ===== STIL 1: MODERN, KLAR, HOCHWERTIG, VC-READY =====
+-  
+-  // Primary (Markenfarbe)
+-  primary: '#3F6F3D',           // Primary Green
+-  primaryDark: '#2F5A32',       // Primary Green Dark
+-  primaryLight: '#E9F3EB',      // Primary Light
+-  primaryUltraLight: '#F5FAF6', // Primary Very Light
+-  
+-  // Neutral
+-  black: '#111111',
++  // Primary Green
++  primary: '#2F5F3F',
++  primaryLight: '#DDE8E1',
++  primaryUltraLight: '#F4F7F5',
++  
++  // Accent
++  accent: '#7FA68A',
++  
++  // Status
++  error: '#C54B4B',
++  errorLight: '#F9D9D9',
++  success: '#2F5F3F',
++  successLight: '#DDE8E1',
++  warning: '#F59E0B',
++  warningLight: '#FEF3C7',
++  
++  // Neutrals
++  black: '#1A1A1A',
+   white: '#FFFFFF',
+   gray900: '#1A1A1A',
+-  gray700: '#4A4A4A',
+-  gray500: '#7A7A7A',
+-  gray300: '#D7D7D7',
+-  gray200: '#EAEAEA',
++  gray600: '#6D6D6D',
++  gray300: '#D4D4D4',
++  gray200: '#E8E8E8',
+   gray100: '#F5F5F5',
+   
+-  // System Colors
+-  success: '#0E9F6E',
+-  successLight: '#E9F3EB',
+-  warning: '#F7C948',
+-  warningLight: '#FFF8E5',
+-  warningBorder: '#F1E3B8',
+-  warningText: '#6F5D2A',
+-  error: '#E53E3E',
+-  errorLight: '#FFE8E8',
+-  info: '#3182CE',
+-  infoLight: '#E6F4FF',
+-  
+-  // Backgrounds
+-  background: '#FAFAF7',        // App Background
+-  card: '#FFFFFF',              // Card Background
+-  
+-  // Backward compatibility
+-  beige50: '#F5FAF6',
+-  beige100: '#E9F3EB',
+-  beige200: '#EAEAEA',
+-  beige300: '#D7D7D7',
+-  accent: '#3F6F3D',
+-  accentLight: '#E9F3EB',
+-  
+-  // Match & Rating
+-  matchPerfect: '#0E9F6E',
+-  matchGood: '#3F6F3D',
+-  matchBasic: '#7A7A7A',
+-  ratingGold: '#F7C948',
+-  
+-  // Disabled
+-  disabled: '#7A7A7A',
+-  disabledBg: '#F5F5F5',
+-  
+-  // Borders
+-  border: '#EBEBEB',
+-  borderLight: '#D7D7D7',
+-  
+-  // Rating Background
+-  ratingBg: '#F5FAF6',
+-  ratingBorder: '#E1EDE3',
++  // Transparency
++  overlay: 'rgba(26, 26, 26, 0.75)',
++  backdropLight: 'rgba(255, 255, 255, 0.95)',
+ };
+ 
+ export const spacing = {
+-  xs: 8,
+-  sm: 12,
++  xs: 4,
++  sm: 8,
+   md: 16,
+-  lg: 20,
+-  xl: 24,
++  lg: 24,
++  xl: 32,
++  xxl: 48,
+ };
+ 
+ export const radius = {
+-  default: 10,    // Buttons
+-  card: 16,       // Job Cards
+-  input: 12,      // Form Inputs
+-  modal: 20,      // Modals/Popups
+-  badge: 8,       // Match Badges
++  sm: 8,
++  md: 12,
++  lg: 14,
++  xl: 20,
++  full: 9999,
+ };
+ 
+ export type Palette = typeof palette;
 diff --git a/model.patch b/model.patch
-index 3107f59..e69de29 100644
+index 5b33f6b..e69de29 100644
 --- a/model.patch
 +++ b/model.patch
-@@ -1,830 +0,0 @@
--diff --git a/frontend/components/ui/Button.tsx b/frontend/components/ui/Button.tsx
--index e0c6a6f..e0b2f67 100644
----- a/frontend/components/ui/Button.tsx
--+++ b/frontend/components/ui/Button.tsx
--@@ -58,9 +58,9 @@ export const Button: React.FC<ButtonProps> = ({
--       case 'secondary':
--         return {
--           ...base,
---          backgroundColor: colors.white,
--+          backgroundColor: colors.primaryLight,
--           borderWidth: 1.5,
---          borderColor: colors.gray300,
--+          borderColor: colors.primary,
--           shadowColor: colors.black,
--           shadowOffset: { width: 0, height: 1 },
--           shadowOpacity: 0.05,
+@@ -1,873 +0,0 @@
 -diff --git a/model.patch b/model.patch
--index 9e8127a..e69de29 100644
+-index 3107f59..e69de29 100644
 ---- a/model.patch
 -+++ b/model.patch
--@@ -1,809 +0,0 @@
---diff --git a/frontend/app/auth/login.tsx b/frontend/app/auth/login.tsx
---index 3ce3ff2..5db18c7 100644
------ a/frontend/app/auth/login.tsx
---+++ b/frontend/app/auth/login.tsx
---@@ -28,70 +28,125 @@ export default function LoginScreen() {
---     } finally {
---       setLoading(false);
---     }
----  };
---+  }
--- 
---   return (
----    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
----      <KeyboardAvoidingView 
----        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
----        style={{ flex: 1 }}
----      >
----        <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
----          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
----            Login
---+    <View
---+      style={{
---+        flex: 1,
---+        backgroundColor: colors.white,
---+        padding: spacing.lg,
---+        justifyContent: 'center',
---+      }}
---+    >
---+
---+      {/* Header */}
---+      <View style={{ marginBottom: spacing.xl }}>
---+        <Text style={{ fontSize: 30, fontWeight: '900', color: colors.black }}>
---+          Willkommen zurück
---+        </Text>
---+        <Text style={{ marginTop: 6, color: colors.gray600, fontSize: 15 }}>
---+          Logge dich mit deiner E-Mail und deinem Passwort ein.
---+        </Text>
---+      </View>
---+
---+      {/* Error Message */}
---+      {errorMsg ? (
---+        <View
---+          style={{
---+            backgroundColor: colors.errorLight,
---+            padding: spacing.sm,
---+            borderRadius: 8,
---+            marginBottom: spacing.md,
---+          }}
---+        >
---+          <Text style={{ color: colors.error, fontWeight: '600' }}>
---+            {errorMsg}
---           </Text>
---+        </View>
---+      ) : null}
--- 
----          <Input
----            label="E-Mail"
----            value={email}
----            onChangeText={setEmail}
----            placeholder="deine@email.de"
----            keyboardType="email-address"
----            autoCapitalize="none"
----            error={errors.email}
----            containerStyle={{ marginBottom: spacing.md }}
----          />
---+      {/* Email Input */}
---+      <View style={{ marginBottom: spacing.md }}>
---+        <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6 }}>
---+          E-Mail
---+        </Text>
---+        <TextInput
---+          autoCapitalize="none"
---+          keyboardType="email-address"
---+          placeholder="name@email.de"
---+          placeholderTextColor={colors.gray400}
---+          value={email}
---+          onChangeText={setEmail}
---+          style={{
---+            borderWidth: 1,
---+            borderColor: colors.gray300,
---+            borderRadius: 10,
---+            padding: 14,
---+            backgroundColor: colors.beige100,
---+            color: colors.black,
---+          }}
---+        />
---+      </View>
---+
---+      {/* Password Input */}
---+      <View style={{ marginBottom: spacing.xl }}>
---+        <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6 }}>
---+          Passwort
---+        </Text>
--- 
----          <Input
----            label="Passwort"
---+        <View
---+          style={{
---+            flexDirection: 'row',
---+            alignItems: 'center',
---+            borderWidth: 1,
---+            borderColor: colors.gray300,
---+            borderRadius: 10,
---+            backgroundColor: colors.beige100,
---+          }}
---+        >
---+          <TextInput
---+            placeholder="******"
---+            placeholderTextColor={colors.gray400}
---+            secureTextEntry={!showPw}
---             value={password}
---             onChangeText={setPassword}
----            placeholder="Dein Passwort"
----            secureTextEntry
----            error={errors.password}
----            containerStyle={{ marginBottom: spacing.xl }}
----          />
----
----          <Button
----            title="Login"
----            onPress={handleLogin}
----            loading={loading}
----            disabled={loading}
---+            style={{
---+              flex: 1,
---+              padding: 14,
---+              color: colors.black,
---+            }}
---           />
--- 
----          <Button
----            title="Zurück"
----            onPress={() => router.back()}
----            variant="ghost"
----            style={{ marginTop: spacing.md }}
----          />
---+          <Pressable onPress={() => setShowPw(!showPw)} style={{ padding: 12 }}>
---+            {showPw ? (
---+              <EyeOff size={20} color={colors.gray600} />
---+            ) : (
---+              <Eye size={20} color={colors.gray600} />
---+            )}
---+          </Pressable>
---         </View>
----      </KeyboardAvoidingView>
----    </SafeAreaView>
----  );
----}
---+      </View>
---+
---+      {/* Login Button */}
---+      <Button
---+        title={loading ? 'Lädt…' : 'Einloggen'}
---+        onPress={handleLogin}
---+        disabled={loading}
---+      />
--- 
----const styles = StyleSheet.create({
----  container: {
----    flex: 1,
----  },
----  content: {
----    flex: 1,
----    justifyContent: 'center',
----  },
----  title: {
----    fontSize: 28,
----    fontWeight: '800',
----    textAlign: 'center',
----  },
----});
---\ No newline at end of file
---+      {/* Link zu Signup */}
---+      <Pressable
---+        onPress={() => router.push('/auth/signup')}
---+        style={{ marginTop: spacing.lg }}
---+      >
---+        <Text style={{ color: colors.black, textAlign: 'center', fontSize: 15 }}>
---+          Noch keinen Account?{' '}
---+          <Text style={{ fontWeight: '700', color: colors.primary }}>
---+            Registrieren
---+          </Text>
---+        </Text>
---+      </Pressable>
---+    </View>
---+  );
---+}
---\ No newline at end of file
+-@@ -1,830 +0,0 @@
+--diff --git a/frontend/components/ui/Button.tsx b/frontend/components/ui/Button.tsx
+--index e0c6a6f..e0b2f67 100644
+----- a/frontend/components/ui/Button.tsx
+--+++ b/frontend/components/ui/Button.tsx
+--@@ -58,9 +58,9 @@ export const Button: React.FC<ButtonProps> = ({
+--       case 'secondary':
+--         return {
+--           ...base,
+---          backgroundColor: colors.white,
+--+          backgroundColor: colors.primaryLight,
+--           borderWidth: 1.5,
+---          borderColor: colors.gray300,
+--+          borderColor: colors.primary,
+--           shadowColor: colors.black,
+--           shadowOffset: { width: 0, height: 1 },
+--           shadowOpacity: 0.05,
 --diff --git a/model.patch b/model.patch
---index 7c53fc4..a4ff1a5 100644
+--index 9e8127a..e69de29 100644
 ----- a/model.patch
 --+++ b/model.patch
---@@ -1,616 +0,0 @@
----diff --git a/frontend/contexts/AuthContext.tsx b/frontend/contexts/AuthContext.tsx
----index 28550b9..d9f3741 100644
------- a/frontend/contexts/AuthContext.tsx
----+++ b/frontend/contexts/AuthContext.tsx
----@@ -23,147 +23,118 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
---- const USER_KEY = '@shiftmatch:user';
---- const USER_DB_KEY = '@shiftmatch:users_database';
+--@@ -1,809 +0,0 @@
+---diff --git a/frontend/app/auth/login.tsx b/frontend/app/auth/login.tsx
+---index 3ce3ff2..5db18c7 100644
+------ a/frontend/app/auth/login.tsx
+---+++ b/frontend/app/auth/login.tsx
+---@@ -28,70 +28,125 @@ export default function LoginScreen() {
+---     } finally {
+---       setLoading(false);
+---     }
+----  };
+---+  }
 --- 
-----export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-----  const [user, setUser] = useState<User>(null);
-----  const [isLoading, setIsLoading] = useState(true);
----+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
----+  const [user, setUser] = useState<User | null>(null);
+---   return (
+----    <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
+----      <KeyboardAvoidingView 
+----        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+----        style={{ flex: 1 }}
+----      >
+----        <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
+----          <Text style={[styles.title, { color: colors.black, marginBottom: spacing.xl }]}>
+----            Login
+---+    <View
+---+      style={{
+---+        flex: 1,
+---+        backgroundColor: colors.white,
+---+        padding: spacing.lg,
+---+        justifyContent: 'center',
+---+      }}
+---+    >
+---+
+---+      {/* Header */}
+---+      <View style={{ marginBottom: spacing.xl }}>
+---+        <Text style={{ fontSize: 30, fontWeight: '900', color: colors.black }}>
+---+          Willkommen zurück
+---+        </Text>
+---+        <Text style={{ marginTop: 6, color: colors.gray600, fontSize: 15 }}>
+---+          Logge dich mit deiner E-Mail und deinem Passwort ein.
+---+        </Text>
+---+      </View>
+---+
+---+      {/* Error Message */}
+---+      {errorMsg ? (
+---+        <View
+---+          style={{
+---+            backgroundColor: colors.errorLight,
+---+            padding: spacing.sm,
+---+            borderRadius: 8,
+---+            marginBottom: spacing.md,
+---+          }}
+---+        >
+---+          <Text style={{ color: colors.error, fontWeight: '600' }}>
+---+            {errorMsg}
+---           </Text>
+---+        </View>
+---+      ) : null}
 --- 
-----  // beim Start User aus Storage holen
----+  // App Start → Benutzer laden
----   useEffect(() => {
----     (async () => {
-----      const stored = await getItem<StoredUser>(USER_KEY);
-----      if (stored) {
-----        setUser(stored);
-----      }
-----      setIsLoading(false);
----+      const stored = await AsyncStorage.getItem(USER_KEY);
----+      if (stored) setUser(JSON.parse(stored));
----     })();
----   }, []);
+----          <Input
+----            label="E-Mail"
+----            value={email}
+----            onChangeText={setEmail}
+----            placeholder="deine@email.de"
+----            keyboardType="email-address"
+----            autoCapitalize="none"
+----            error={errors.email}
+----            containerStyle={{ marginBottom: spacing.md }}
+----          />
+---+      {/* Email Input */}
+---+      <View style={{ marginBottom: spacing.md }}>
+---+        <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6 }}>
+---+          E-Mail
+---+        </Text>
+---+        <TextInput
+---+          autoCapitalize="none"
+---+          keyboardType="email-address"
+---+          placeholder="name@email.de"
+---+          placeholderTextColor={colors.gray400}
+---+          value={email}
+---+          onChangeText={setEmail}
+---+          style={{
+---+            borderWidth: 1,
+---+            borderColor: colors.gray300,
+---+            borderRadius: 10,
+---+            padding: 14,
+---+            backgroundColor: colors.beige100,
+---+            color: colors.black,
+---+          }}
+---+        />
+---+      </View>
+---+
+---+      {/* Password Input */}
+---+      <View style={{ marginBottom: spacing.xl }}>
+---+        <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6 }}>
+---+          Passwort
+---+        </Text>
 --- 
-----  const value = useMemo<AuthContextValue>(() => {
-----    return {
-----      user,
-----      isLoading,
+----          <Input
+----            label="Passwort"
+---+        <View
+---+          style={{
+---+            flexDirection: 'row',
+---+            alignItems: 'center',
+---+            borderWidth: 1,
+---+            borderColor: colors.gray300,
+---+            borderRadius: 10,
+---+            backgroundColor: colors.beige100,
+---+          }}
+---+        >
+---+          <TextInput
+---+            placeholder="******"
+---+            placeholderTextColor={colors.gray400}
+---+            secureTextEntry={!showPw}
+---             value={password}
+---             onChangeText={setPassword}
+----            placeholder="Dein Passwort"
+----            secureTextEntry
+----            error={errors.password}
+----            containerStyle={{ marginBottom: spacing.xl }}
+----          />
 ----
-----      async signUp(email, password) {
-----        const emailNormalized = email.toLowerCase().trim();
-----        console.log('🔐 signUp called with email:', emailNormalized);
-----        
-----        const creds = await loadCredentials();
-----        console.log('📋 Current credentials:', creds.map(c => c.email));
-----        
-----        const exists = creds.find(c => c.email === emailNormalized);
-----        if (exists) {
-----          console.log('❌ Email already registered:', emailNormalized);
-----          throw new Error('Diese E-Mail ist bereits registriert. Bitte einloggen.');
-----        }
-----
-----        const newUser: StoredUser = {
-----          id: 'u-' + Date.now().toString(),
-----          email: emailNormalized,
-----        };
-----
-----        // Speichere Credentials
-----        const nextCreds: StoredCredentials = [
-----          ...creds,
-----          { email: emailNormalized, password },
-----        ];
-----        await saveCredentials(nextCreds);
-----        console.log('✅ Credentials saved');
-----
-----        // Speichere User in der Datenbank
-----        const usersDb = await loadUsersDatabase();
-----        usersDb[emailNormalized] = newUser;
-----        await saveUsersDatabase(usersDb);
-----        console.log('✅ User saved to database');
-----
-----        // Setze als aktuellen User
-----        await setItem(USER_KEY, newUser);
-----        setUser(newUser);
-----        console.log('✅ signUp successful, user set:', newUser);
-----      },
-----
-----      async signIn(email, password) {
-----        const emailNormalized = email.toLowerCase().trim();
-----        console.log('🔐 signIn called with email:', emailNormalized);
-----        
-----        const creds = await loadCredentials();
-----        console.log('📋 Current credentials:', creds.map(c => c.email));
-----        
-----        const found = creds.find(c => c.email === emailNormalized);
-----        if (!found) {
-----          console.log('❌ User not found');
-----          throw new Error('E-Mail oder Passwort ist falsch');
-----        }
-----        
-----        if (found.password !== password) {
-----          console.log('❌ Wrong password');
-----          throw new Error('E-Mail oder Passwort ist falsch');
-----        }
-----        
-----        console.log('✅ Credentials valid');
-----
-----        // Lade User aus der Datenbank (mit persistierter Rolle falls vorhanden)
-----        const usersDb = await loadUsersDatabase();
-----        console.log('📋 Users database:', Object.keys(usersDb));
-----        
-----        const userFromDb = usersDb[emailNormalized];
-----        
-----        if (userFromDb) {
-----          // User existiert bereits in Datenbank - nutze seine Daten (inkl. Rolle)
-----          console.log('✅ Found user in database:', userFromDb);
-----          await setItem(USER_KEY, userFromDb);
-----          setUser(userFromDb);
-----        } else {
-----          // Fallback: User existiert noch nicht in Datenbank (alte Accounts)
-----          // Erstelle neuen User ohne Rolle
-----          console.log('⚠️ User not in database, creating entry');
-----          const newUser: StoredUser = {
-----            id: 'u-' + Date.now().toString(),
-----            email: emailNormalized,
-----          };
-----          
-----          usersDb[emailNormalized] = newUser;
-----          await saveUsersDatabase(usersDb);
-----          await setItem(USER_KEY, newUser);
-----          setUser(newUser);
-----          console.log('✅ User created and set:', newUser);
-----        }
-----        
-----        console.log('✅ signIn successful');
-----      },
-----
-----      async signOut() {
-----        setUser(null);
-----        await removeItem(USER_KEY);
-----      },
-----
-----      async setRole(role) {
-----        if (!user) return;
-----        const updated: StoredUser = {
-----          id: user.id,
-----          email: user.email,
-----          role,
-----          accountType: user.accountType,
-----        };
-----        
-----        // Speichere in der User-Datenbank
-----        const usersDb = await loadUsersDatabase();
-----        usersDb[user.email.toLowerCase()] = updated;
-----        await saveUsersDatabase(usersDb);
-----        
-----        // Setze als aktuellen User
-----        await setItem(USER_KEY, updated);
-----        setUser(updated);
-----      },
----+  // -----------------------------
----+  // Hilfsfunktionen
----+  // -----------------------------
----+
----+  const normalizeEmail = (email: string) => {
----+    return email.trim().toLowerCase();
----+  };
----+
----+  const loadUserDB = async (): Promise<Record<string, User>> => {
----+    const stored = await AsyncStorage.getItem(USER_DB_KEY);
----+    return stored ? JSON.parse(stored) : {};
----+  };
----+
----+  const saveUserDB = async (db: Record<string, User>) => {
----+    await AsyncStorage.setItem(USER_DB_KEY, JSON.stringify(db));
----+  };
----+
----+  // -----------------------------
----+  // SIGN IN (LOGIN)
----+  // -----------------------------
----+  const signIn = async (email: string, password: string): Promise<User> => {
----+    const normalized = normalizeEmail(email);
----+    const db = await loadUserDB();
----+
----+    const existing = db[normalized];
----+
----+    if (!existing) {
----+      throw new Error('Diese E-Mail ist nicht registriert.');
----+    }
----+
----+    if (existing.password !== password) {
----+      throw new Error('E-Mail oder Passwort falsch.');
----+    }
----+
----+    // Login OK
----+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
----+    setUser(existing);
----+
----+    return existing;
----+  };
----+
----+  // -----------------------------
----+  // SIGN UP (REGISTRIEREN)
----+  // -----------------------------
----+  const signUp = async (email: string, password: string): Promise<User> => {
----+    const normalized = normalizeEmail(email);
----+    const db = await loadUserDB();
----+
----+    if (db[normalized]) {
----+      throw new Error('Diese E-Mail ist bereits registriert. Bitte logge dich ein.');
----+    }
----+
----+    const newUser: User = {
----+      id: 'u-' + Date.now().toString(),
----+      email: normalized,
----+      password,
----     };
-----  }, [user, isLoading]);
+----          <Button
+----            title="Login"
+----            onPress={handleLogin}
+----            loading={loading}
+----            disabled={loading}
+---+            style={{
+---+              flex: 1,
+---+              padding: 14,
+---+              color: colors.black,
+---+            }}
+---           />
 --- 
-----  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
----+    db[normalized] = newUser;
----+    await saveUserDB(db);
----+
----+    // Direkt einloggen
----+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
----+    setUser(newUser);
----+
----+    return newUser;
----+  };
----+
----+  // -----------------------------
----+  // ROLLE SPEICHERN
----+  // -----------------------------
----+  const setRole = async (role: 'worker' | 'employer') => {
----+    if (!user) return;
----+
----+    const updated = { ...user, role };
----+
----+    const db = await loadUserDB();
----+    db[user.email] = updated;
----+    await saveUserDB(db);
----+
----+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
----+    setUser(updated);
----+  };
----+
----+  // -----------------------------
----+  // LOGOUT
----+  // -----------------------------
----+  const signOut = async () => {
----+    await AsyncStorage.removeItem(USER_KEY);
----+    setUser(null);
----+  };
----+
----+  return (
----+    <AuthContext.Provider value={{ user, signIn, signUp, signOut, setRole }}>
----+      {children}
----+    </AuthContext.Provider>
----+  );
---- };
---- 
-----export function useAuth(): AuthContextValue {
----+export const useAuth = (): AuthContextType => {
----   const ctx = useContext(AuthContext);
-----  if (!ctx) {
-----    throw new Error('AuthProvider fehlt');
-----  }
----+  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
----   return ctx;
+----          <Button
+----            title="Zurück"
+----            onPress={() => router.back()}
+----            variant="ghost"
+----            style={{ marginTop: spacing.md }}
+----          />
+---+          <Pressable onPress={() => setShowPw(!showPw)} style={{ padding: 12 }}>
+---+            {showPw ? (
+---+              <EyeOff size={20} color={colors.gray600} />
+---+            ) : (
+---+              <Eye size={20} color={colors.gray600} />
+---+            )}
+---+          </Pressable>
+---         </View>
+----      </KeyboardAvoidingView>
+----    </SafeAreaView>
+----  );
 ----}
+---+      </View>
+---+
+---+      {/* Login Button */}
+---+      <Button
+---+        title={loading ? 'Lädt…' : 'Einloggen'}
+---+        onPress={handleLogin}
+---+        disabled={loading}
+---+      />
+--- 
+----const styles = StyleSheet.create({
+----  container: {
+----    flex: 1,
+----  },
+----  content: {
+----    flex: 1,
+----    justifyContent: 'center',
+----  },
+----  title: {
+----    fontSize: 28,
+----    fontWeight: '800',
+----    textAlign: 'center',
+----  },
+----});
 ---\ No newline at end of file
----+};
+---+      {/* Link zu Signup */}
+---+      <Pressable
+---+        onPress={() => router.push('/auth/signup')}
+---+        style={{ marginTop: spacing.lg }}
+---+      >
+---+        <Text style={{ color: colors.black, textAlign: 'center', fontSize: 15 }}>
+---+          Noch keinen Account?{' '}
+---+          <Text style={{ fontWeight: '700', color: colors.primary }}>
+---+            Registrieren
+---+          </Text>
+---+        </Text>
+---+      </Pressable>
+---+    </View>
+---+  );
+---+}
 ---\ No newline at end of file
 ---diff --git a/model.patch b/model.patch
----index 8045e6c..a01a046 100644
+---index 7c53fc4..a4ff1a5 100644
 ------ a/model.patch
 ---+++ b/model.patch
----@@ -1,354 +0,0 @@
+---@@ -1,616 +0,0 @@
+----diff --git a/frontend/contexts/AuthContext.tsx b/frontend/contexts/AuthContext.tsx
+----index 28550b9..d9f3741 100644
+------- a/frontend/contexts/AuthContext.tsx
+----+++ b/frontend/contexts/AuthContext.tsx
+----@@ -23,147 +23,118 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
+---- const USER_KEY = '@shiftmatch:user';
+---- const USER_DB_KEY = '@shiftmatch:users_database';
+---- 
+-----export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+-----  const [user, setUser] = useState<User>(null);
+-----  const [isLoading, setIsLoading] = useState(true);
+----+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+----+  const [user, setUser] = useState<User | null>(null);
+---- 
+-----  // beim Start User aus Storage holen
+----+  // App Start → Benutzer laden
+----   useEffect(() => {
+----     (async () => {
+-----      const stored = await getItem<StoredUser>(USER_KEY);
+-----      if (stored) {
+-----        setUser(stored);
+-----      }
+-----      setIsLoading(false);
+----+      const stored = await AsyncStorage.getItem(USER_KEY);
+----+      if (stored) setUser(JSON.parse(stored));
+----     })();
+----   }, []);
+---- 
+-----  const value = useMemo<AuthContextValue>(() => {
+-----    return {
+-----      user,
+-----      isLoading,
+-----
+-----      async signUp(email, password) {
+-----        const emailNormalized = email.toLowerCase().trim();
+-----        console.log('🔐 signUp called with email:', emailNormalized);
+-----        
+-----        const creds = await loadCredentials();
+-----        console.log('📋 Current credentials:', creds.map(c => c.email));
+-----        
+-----        const exists = creds.find(c => c.email === emailNormalized);
+-----        if (exists) {
+-----          console.log('❌ Email already registered:', emailNormalized);
+-----          throw new Error('Diese E-Mail ist bereits registriert. Bitte einloggen.');
+-----        }
+-----
+-----        const newUser: StoredUser = {
+-----          id: 'u-' + Date.now().toString(),
+-----          email: emailNormalized,
+-----        };
+-----
+-----        // Speichere Credentials
+-----        const nextCreds: StoredCredentials = [
+-----          ...creds,
+-----          { email: emailNormalized, password },
+-----        ];
+-----        await saveCredentials(nextCreds);
+-----        console.log('✅ Credentials saved');
+-----
+-----        // Speichere User in der Datenbank
+-----        const usersDb = await loadUsersDatabase();
+-----        usersDb[emailNormalized] = newUser;
+-----        await saveUsersDatabase(usersDb);
+-----        console.log('✅ User saved to database');
+-----
+-----        // Setze als aktuellen User
+-----        await setItem(USER_KEY, newUser);
+-----        setUser(newUser);
+-----        console.log('✅ signUp successful, user set:', newUser);
+-----      },
+-----
+-----      async signIn(email, password) {
+-----        const emailNormalized = email.toLowerCase().trim();
+-----        console.log('🔐 signIn called with email:', emailNormalized);
+-----        
+-----        const creds = await loadCredentials();
+-----        console.log('📋 Current credentials:', creds.map(c => c.email));
+-----        
+-----        const found = creds.find(c => c.email === emailNormalized);
+-----        if (!found) {
+-----          console.log('❌ User not found');
+-----          throw new Error('E-Mail oder Passwort ist falsch');
+-----        }
+-----        
+-----        if (found.password !== password) {
+-----          console.log('❌ Wrong password');
+-----          throw new Error('E-Mail oder Passwort ist falsch');
+-----        }
+-----        
+-----        console.log('✅ Credentials valid');
+-----
+-----        // Lade User aus der Datenbank (mit persistierter Rolle falls vorhanden)
+-----        const usersDb = await loadUsersDatabase();
+-----        console.log('📋 Users database:', Object.keys(usersDb));
+-----        
+-----        const userFromDb = usersDb[emailNormalized];
+-----        
+-----        if (userFromDb) {
+-----          // User existiert bereits in Datenbank - nutze seine Daten (inkl. Rolle)
+-----          console.log('✅ Found user in database:', userFromDb);
+-----          await setItem(USER_KEY, userFromDb);
+-----          setUser(userFromDb);
+-----        } else {
+-----          // Fallback: User existiert noch nicht in Datenbank (alte Accounts)
+-----          // Erstelle neuen User ohne Rolle
+-----          console.log('⚠️ User not in database, creating entry');
+-----          const newUser: StoredUser = {
+-----            id: 'u-' + Date.now().toString(),
+-----            email: emailNormalized,
+-----          };
+-----          
+-----          usersDb[emailNormalized] = newUser;
+-----          await saveUsersDatabase(usersDb);
+-----          await setItem(USER_KEY, newUser);
+-----          setUser(newUser);
+-----          console.log('✅ User created and set:', newUser);
+-----        }
+-----        
+-----        console.log('✅ signIn successful');
+-----      },
+-----
+-----      async signOut() {
+-----        setUser(null);
+-----        await removeItem(USER_KEY);
+-----      },
+-----
+-----      async setRole(role) {
+-----        if (!user) return;
+-----        const updated: StoredUser = {
+-----          id: user.id,
+-----          email: user.email,
+-----          role,
+-----          accountType: user.accountType,
+-----        };
+-----        
+-----        // Speichere in der User-Datenbank
+-----        const usersDb = await loadUsersDatabase();
+-----        usersDb[user.email.toLowerCase()] = updated;
+-----        await saveUsersDatabase(usersDb);
+-----        
+-----        // Setze als aktuellen User
+-----        await setItem(USER_KEY, updated);
+-----        setUser(updated);
+-----      },
+----+  // -----------------------------
+----+  // Hilfsfunktionen
+----+  // -----------------------------
+----+
+----+  const normalizeEmail = (email: string) => {
+----+    return email.trim().toLowerCase();
+----+  };
+----+
+----+  const loadUserDB = async (): Promise<Record<string, User>> => {
+----+    const stored = await AsyncStorage.getItem(USER_DB_KEY);
+----+    return stored ? JSON.parse(stored) : {};
+----+  };
+----+
+----+  const saveUserDB = async (db: Record<string, User>) => {
+----+    await AsyncStorage.setItem(USER_DB_KEY, JSON.stringify(db));
+----+  };
+----+
+----+  // -----------------------------
+----+  // SIGN IN (LOGIN)
+----+  // -----------------------------
+----+  const signIn = async (email: string, password: string): Promise<User> => {
+----+    const normalized = normalizeEmail(email);
+----+    const db = await loadUserDB();
+----+
+----+    const existing = db[normalized];
+----+
+----+    if (!existing) {
+----+      throw new Error('Diese E-Mail ist nicht registriert.');
+----+    }
+----+
+----+    if (existing.password !== password) {
+----+      throw new Error('E-Mail oder Passwort falsch.');
+----+    }
+----+
+----+    // Login OK
+----+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
+----+    setUser(existing);
+----+
+----+    return existing;
+----+  };
+----+
+----+  // -----------------------------
+----+  // SIGN UP (REGISTRIEREN)
+----+  // -----------------------------
+----+  const signUp = async (email: string, password: string): Promise<User> => {
+----+    const normalized = normalizeEmail(email);
+----+    const db = await loadUserDB();
+----+
+----+    if (db[normalized]) {
+----+      throw new Error('Diese E-Mail ist bereits registriert. Bitte logge dich ein.');
+----+    }
+----+
+----+    const newUser: User = {
+----+      id: 'u-' + Date.now().toString(),
+----+      email: normalized,
+----+      password,
+----     };
+-----  }, [user, isLoading]);
+---- 
+-----  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+----+    db[normalized] = newUser;
+----+    await saveUserDB(db);
+----+
+----+    // Direkt einloggen
+----+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
+----+    setUser(newUser);
+----+
+----+    return newUser;
+----+  };
+----+
+----+  // -----------------------------
+----+  // ROLLE SPEICHERN
+----+  // -----------------------------
+----+  const setRole = async (role: 'worker' | 'employer') => {
+----+    if (!user) return;
+----+
+----+    const updated = { ...user, role };
+----+
+----+    const db = await loadUserDB();
+----+    db[user.email] = updated;
+----+    await saveUserDB(db);
+----+
+----+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
+----+    setUser(updated);
+----+  };
+----+
+----+  // -----------------------------
+----+  // LOGOUT
+----+  // -----------------------------
+----+  const signOut = async () => {
+----+    await AsyncStorage.removeItem(USER_KEY);
+----+    setUser(null);
+----+  };
+----+
+----+  return (
+----+    <AuthContext.Provider value={{ user, signIn, signUp, signOut, setRole }}>
+----+      {children}
+----+    </AuthContext.Provider>
+----+  );
+---- };
+---- 
+-----export function useAuth(): AuthContextValue {
+----+export const useAuth = (): AuthContextType => {
+----   const ctx = useContext(AuthContext);
+-----  if (!ctx) {
+-----    throw new Error('AuthProvider fehlt');
+-----  }
+----+  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
+----   return ctx;
+-----}
+----\ No newline at end of file
+----+};
+----\ No newline at end of file
 ----diff --git a/model.patch b/model.patch
-----index 9b08baa..e69de29 100644
+----index 8045e6c..a01a046 100644
 ------- a/model.patch
 ----+++ b/model.patch
-----@@ -1,349 +0,0 @@
------diff --git a/frontend/components/AddressAutocompleteInput.tsx b/frontend/components/AddressAutocompleteInput.tsx
------index c7342ac..50955be 100644
--------- a/frontend/components/AddressAutocompleteInput.tsx
------+++ b/frontend/components/AddressAutocompleteInput.tsx
------@@ -85,9 +85,11 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
------   }, [street, postalCode, city]);
------ 
------   const handleSuggestionPress = (suggestion: AddressSuggestion) => {
-------    console.log('📍 Suggestion selected:', suggestion);
------+    console.log('🎯 Selected suggestion', suggestion);
------     
-------    // NUR PLZ, Ort und Koordinaten setzen - Straße NICHT überschreiben!
------+    if (suggestion.street && onStreetChange) {
------+      onStreetChange(suggestion.street);
------+    }
------     if (suggestion.postalCode && onPostalCodeChange) {
------       onPostalCodeChange(suggestion.postalCode);
------     }
------@@ -96,26 +98,111 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
------     }
------     if (typeof suggestion.lat === 'number' && onLatChange) {
------       onLatChange(suggestion.lat);
------+      console.log('📍 Address geocoded - Lat:', suggestion.lat);
------     }
------     if (typeof suggestion.lon === 'number' && onLonChange) {
------       onLonChange(suggestion.lon);
------+      console.log('📍 Address geocoded - Lon:', suggestion.lon);
------     }
------     
------     setShowDropdown(false);
------     setSuggestions([]);
------   };
------ 
------+  // Auto-geocode when user stops typing or blurs
------+  const triggerAutoGeocode = async () => {
------+    console.log('🔄 Auto-geocoding triggered', { street, postalCode, city });
------+    
------+    // Clear any existing timer
------+    if (geocodingTimerRef.current) {
------+      clearTimeout(geocodingTimerRef.current);
------+    }
------+
------+    // Need all address components
------+    if (!street || !postalCode || !city) {
------+      console.log('⚠️ Auto-geocoding skipped - missing address components');
------+      return;
------+    }
------+
------+    try {
------+      setIsLoading(true);
------+      const results = await searchAddress(street.trim(), postalCode, city);
------+      
------+      if (results.length === 0) {
------+        console.log('❌ Auto-geocoding - no results found');
------+        if (onGeocodingError) {
------+          onGeocodingError('Adresse konnte nicht gefunden werden. Bitte aus Vorschlägen auswählen.');
------+        }
------+        setIsLoading(false);
------+        return;
------+      }
------+
------+      // If exactly one match, auto-set coordinates
------+      if (results.length === 1) {
------+        const match = results[0];
------+        console.log('✅ Auto-geocoding success (1 match)', match);
------+        
------+        if (typeof match.lat === 'number' && onLatChange) {
------+          onLatChange(match.lat);
------+          console.log('📍 Address geocoded - Lat:', match.lat);
------+        }
------+        if (typeof match.lon === 'number' && onLonChange) {
------+          onLonChange(match.lon);
------+          console.log('📍 Address geocoded - Lon:', match.lon);
------+        }
------+      } else {
------+        // Multiple matches - show dropdown
------+        console.log(`⚠️ Auto-geocoding - ${results.length} matches, showing dropdown`);
------+        setSuggestions(results);
------+        setShowDropdown(true);
------+      }
------+      
------+      setIsLoading(false);
------+    } catch (error) {
------+      console.error('❌ Auto-geocoding error', error);
------+      if (onGeocodingError) {
------+        onGeocodingError('Fehler beim Geocoding. Bitte erneut versuchen.');
------+      }
------+      setIsLoading(false);
------+    }
------+  };
------+
------+  const handleBlur = () => {
------+    // Close dropdown after a delay to allow suggestion clicks
------+    setTimeout(() => {
------+      setShowDropdown(false);
------+    }, 200);
------+    
------+    // Trigger auto-geocode
------+    triggerAutoGeocode();
------+  };
------+
------+  const handleChangeWithAutoGeocode = (text: string) => {
------+    onStreetChange(text);
------+    
------+    if (text.length < 3) {
------+      setShowDropdown(false);
------+      return;
------+    }
------+
------+    // Clear existing timer
------+    if (geocodingTimerRef.current) {
------+      clearTimeout(geocodingTimerRef.current);
------+    }
------+
------+    // Set new timer for auto-geocode after 600ms
------+    geocodingTimerRef.current = setTimeout(() => {
------+      triggerAutoGeocode();
------+    }, 600);
------+  };
------+
------   return (
------     <View style={[styles.container, { zIndex: 100 }]}>
------       <View style={styles.inputContainer}>
------         <TextInput
------           value={street}
-------          onChangeText={(text) => {
-------            onStreetChange(text);
-------            if (text.length < 3) {
-------              setShowDropdown(false);
-------            }
-------          }}
------+          onChangeText={handleChangeWithAutoGeocode}
------+          onBlur={handleBlur}
------           placeholder={placeholder}
------           placeholderTextColor={colors.gray400}
------           editable={!disabled}
+----@@ -1,354 +0,0 @@
 -----diff --git a/model.patch b/model.patch
------index fbf5b54..e6de17a 100644
+-----index 9b08baa..e69de29 100644
 -------- a/model.patch
 -----+++ b/model.patch
------@@ -1,208 +0,0 @@
+-----@@ -1,349 +0,0 @@
+------diff --git a/frontend/components/AddressAutocompleteInput.tsx b/frontend/components/AddressAutocompleteInput.tsx
+------index c7342ac..50955be 100644
+--------- a/frontend/components/AddressAutocompleteInput.tsx
+------+++ b/frontend/components/AddressAutocompleteInput.tsx
+------@@ -85,9 +85,11 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
+------   }, [street, postalCode, city]);
+------ 
+------   const handleSuggestionPress = (suggestion: AddressSuggestion) => {
+-------    console.log('📍 Suggestion selected:', suggestion);
+------+    console.log('🎯 Selected suggestion', suggestion);
+------     
+-------    // NUR PLZ, Ort und Koordinaten setzen - Straße NICHT überschreiben!
+------+    if (suggestion.street && onStreetChange) {
+------+      onStreetChange(suggestion.street);
+------+    }
+------     if (suggestion.postalCode && onPostalCodeChange) {
+------       onPostalCodeChange(suggestion.postalCode);
+------     }
+------@@ -96,26 +98,111 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
+------     }
+------     if (typeof suggestion.lat === 'number' && onLatChange) {
+------       onLatChange(suggestion.lat);
+------+      console.log('📍 Address geocoded - Lat:', suggestion.lat);
+------     }
+------     if (typeof suggestion.lon === 'number' && onLonChange) {
+------       onLonChange(suggestion.lon);
+------+      console.log('📍 Address geocoded - Lon:', suggestion.lon);
+------     }
+------     
+------     setShowDropdown(false);
+------     setSuggestions([]);
+------   };
+------ 
+------+  // Auto-geocode when user stops typing or blurs
+------+  const triggerAutoGeocode = async () => {
+------+    console.log('🔄 Auto-geocoding triggered', { street, postalCode, city });
+------+    
+------+    // Clear any existing timer
+------+    if (geocodingTimerRef.current) {
+------+      clearTimeout(geocodingTimerRef.current);
+------+    }
+------+
+------+    // Need all address components
+------+    if (!street || !postalCode || !city) {
+------+      console.log('⚠️ Auto-geocoding skipped - missing address components');
+------+      return;
+------+    }
+------+
+------+    try {
+------+      setIsLoading(true);
+------+      const results = await searchAddress(street.trim(), postalCode, city);
+------+      
+------+      if (results.length === 0) {
+------+        console.log('❌ Auto-geocoding - no results found');
+------+        if (onGeocodingError) {
+------+          onGeocodingError('Adresse konnte nicht gefunden werden. Bitte aus Vorschlägen auswählen.');
+------+        }
+------+        setIsLoading(false);
+------+        return;
+------+      }
+------+
+------+      // If exactly one match, auto-set coordinates
+------+      if (results.length === 1) {
+------+        const match = results[0];
+------+        console.log('✅ Auto-geocoding success (1 match)', match);
+------+        
+------+        if (typeof match.lat === 'number' && onLatChange) {
+------+          onLatChange(match.lat);
+------+          console.log('📍 Address geocoded - Lat:', match.lat);
+------+        }
+------+        if (typeof match.lon === 'number' && onLonChange) {
+------+          onLonChange(match.lon);
+------+          console.log('📍 Address geocoded - Lon:', match.lon);
+------+        }
+------+      } else {
+------+        // Multiple matches - show dropdown
+------+        console.log(`⚠️ Auto-geocoding - ${results.length} matches, showing dropdown`);
+------+        setSuggestions(results);
+------+        setShowDropdown(true);
+------+      }
+------+      
+------+      setIsLoading(false);
+------+    } catch (error) {
+------+      console.error('❌ Auto-geocoding error', error);
+------+      if (onGeocodingError) {
+------+        onGeocodingError('Fehler beim Geocoding. Bitte erneut versuchen.');
+------+      }
+------+      setIsLoading(false);
+------+    }
+------+  };
+------+
+------+  const handleBlur = () => {
+------+    // Close dropdown after a delay to allow suggestion clicks
+------+    setTimeout(() => {
+------+      setShowDropdown(false);
+------+    }, 200);
+------+    
+------+    // Trigger auto-geocode
+------+    triggerAutoGeocode();
+------+  };
+------+
+------+  const handleChangeWithAutoGeocode = (text: string) => {
+------+    onStreetChange(text);
+------+    
+------+    if (text.length < 3) {
+------+      setShowDropdown(false);
+------+      return;
+------+    }
+------+
+------+    // Clear existing timer
+------+    if (geocodingTimerRef.current) {
+------+      clearTimeout(geocodingTimerRef.current);
+------+    }
+------+
+------+    // Set new timer for auto-geocode after 600ms
+------+    geocodingTimerRef.current = setTimeout(() => {
+------+      triggerAutoGeocode();
+------+    }, 600);
+------+  };
+------+
+------   return (
+------     <View style={[styles.container, { zIndex: 100 }]}>
+------       <View style={styles.inputContainer}>
+------         <TextInput
+------           value={street}
+-------          onChangeText={(text) => {
+-------            onStreetChange(text);
+-------            if (text.length < 3) {
+-------              setShowDropdown(false);
+-------            }
+-------          }}
+------+          onChangeText={handleChangeWithAutoGeocode}
+------+          onBlur={handleBlur}
+------           placeholder={placeholder}
+------           placeholderTextColor={colors.gray400}
+------           editable={!disabled}
 ------diff --git a/model.patch b/model.patch
-------index 060c1fa..e69de29 100644
+------index fbf5b54..e6de17a 100644
 --------- a/model.patch
 ------+++ b/model.patch
-------@@ -1,165 +0,0 @@
--------diff --git a/frontend/app/(worker)/profile.tsx b/frontend/app/(worker)/profile.tsx
--------index 2c553da..b48c3a0 100644
----------- a/frontend/app/(worker)/profile.tsx
--------+++ b/frontend/app/(worker)/profile.tsx
--------@@ -7,7 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
-------- import { WorkerProfile, WorkerDocument } from '../../types/profile';
-------- import { getWorkerProfile, saveWorkerProfile } from '../../utils/profileStore';
-------- import { RADIUS_OPTIONS_KM, DEFAULT_RADIUS_KM } from '../../constants/radius';
---------import { listCategories, groupTagsByType, CategoryKey, Tag } from '../../src/taxonomy';
--------+import { listCategories, groupTagsByType, normalizeCategories, CategoryKey, Tag } from '../../src/taxonomy';
-------- import Chip from '../../components/ui/Chip';
-------- import { Button } from '../../components/ui/Button';
-------- import { ProfilePhoto } from '../../components/ProfilePhoto';
+------@@ -1,208 +0,0 @@
 -------diff --git a/model.patch b/model.patch
--------index 5896118..e69de29 100644
+-------index 060c1fa..e69de29 100644
 ---------- a/model.patch
 -------+++ b/model.patch
--------@@ -1,147 +0,0 @@
---------diff --git a/frontend/app/(employer)/jobs/[id].tsx b/frontend/app/(employer)/jobs/[id].tsx
---------index 611700e..8c9a507 100644
------------ a/frontend/app/(employer)/jobs/[id].tsx
---------+++ b/frontend/app/(employer)/jobs/[id].tsx
---------@@ -227,7 +227,7 @@ export default function JobDetailScreen() {
---------               STANDORT
---------             </Text>
---------             <Text style={{ color: colors.black, fontSize: 16 }}>
----------              📍 {job.address}
---------+              📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
---------             </Text>
---------           </View>
---------         </View>
+-------@@ -1,165 +0,0 @@
+--------diff --git a/frontend/app/(worker)/profile.tsx b/frontend/app/(worker)/profile.tsx
+--------index 2c553da..b48c3a0 100644
+----------- a/frontend/app/(worker)/profile.tsx
+--------+++ b/frontend/app/(worker)/profile.tsx
+--------@@ -7,7 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
+-------- import { WorkerProfile, WorkerDocument } from '../../types/profile';
+-------- import { getWorkerProfile, saveWorkerProfile } from '../../utils/profileStore';
+-------- import { RADIUS_OPTIONS_KM, DEFAULT_RADIUS_KM } from '../../constants/radius';
+---------import { listCategories, groupTagsByType, CategoryKey, Tag } from '../../src/taxonomy';
+--------+import { listCategories, groupTagsByType, normalizeCategories, CategoryKey, Tag } from '../../src/taxonomy';
+-------- import Chip from '../../components/ui/Chip';
+-------- import { Button } from '../../components/ui/Button';
+-------- import { ProfilePhoto } from '../../components/ProfilePhoto';
 --------diff --git a/model.patch b/model.patch
---------index ffc20d0..e69de29 100644
+--------index 5896118..e69de29 100644
 ----------- a/model.patch
 --------+++ b/model.patch
---------@@ -1,129 +0,0 @@
----------diff --git a/frontend/app/(worker)/feed.tsx b/frontend/app/(worker)/feed.tsx
----------index 4c38744..5088842 100644
------------- a/frontend/app/(worker)/feed.tsx
----------+++ b/frontend/app/(worker)/feed.tsx
----------@@ -12,6 +12,7 @@ import { Job } from '../../types/job';
---------- import { WorkerProfile } from '../../types/profile';
---------- import { Button } from '../../components/ui/Button';
---------- import { euro } from '../../utils/pricing';
----------+import { formatAddress } from '../../types/address';
---------- 
---------- // Helper functions for German date/time formatting
---------- const formatDateGerman = (isoDate?: string) => {
+--------@@ -1,147 +0,0 @@
+---------diff --git a/frontend/app/(employer)/jobs/[id].tsx b/frontend/app/(employer)/jobs/[id].tsx
+---------index 611700e..8c9a507 100644
+------------ a/frontend/app/(employer)/jobs/[id].tsx
+---------+++ b/frontend/app/(employer)/jobs/[id].tsx
+---------@@ -227,7 +227,7 @@ export default function JobDetailScreen() {
+---------               STANDORT
+---------             </Text>
+---------             <Text style={{ color: colors.black, fontSize: 16 }}>
+----------              📍 {job.address}
+---------+              📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
+---------             </Text>
+---------           </View>
+---------         </View>
 ---------diff --git a/model.patch b/model.patch
----------index b032a81..e69de29 100644
+---------index ffc20d0..e69de29 100644
 ------------ a/model.patch
 ---------+++ b/model.patch
----------@@ -1,112 +0,0 @@
-----------diff --git a/frontend/types/job.ts b/frontend/types/job.ts
-----------index 1d4e68e..eb2c7f5 100644
-------------- a/frontend/types/job.ts
-----------+++ b/frontend/types/job.ts
-----------@@ -1,3 +1,5 @@
-----------+import { Address } from './address';
-----------+
----------- export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
+---------@@ -1,129 +0,0 @@
+----------diff --git a/frontend/app/(worker)/feed.tsx b/frontend/app/(worker)/feed.tsx
+----------index 4c38744..5088842 100644
+------------- a/frontend/app/(worker)/feed.tsx
+----------+++ b/frontend/app/(worker)/feed.tsx
+----------@@ -12,6 +12,7 @@ import { Job } from '../../types/job';
+---------- import { WorkerProfile } from '../../types/profile';
+---------- import { Button } from '../../components/ui/Button';
+---------- import { euro } from '../../utils/pricing';
+----------+import { formatAddress } from '../../types/address';
 ---------- 
----------- export type Job = {
-----------@@ -21,7 +23,7 @@ export type Job = {
-----------   // project: z. B. "Hecke schneiden bis Freitag"
-----------   dueAt?: string;
----------- 
------------  address: string;
-----------+  address: Address;      // Strukturierte Adresse (statt string)
-----------   lat: number;
-----------   lon: number;
----------- 
+---------- // Helper functions for German date/time formatting
+---------- const formatDateGerman = (isoDate?: string) => {
 ----------diff --git a/model.patch b/model.patch
-----------index fde3a5e..e69de29 100644
+----------index b032a81..e69de29 100644
 ------------- a/model.patch
 ----------+++ b/model.patch
-----------@@ -1,88 +0,0 @@
+----------@@ -1,112 +0,0 @@
+-----------diff --git a/frontend/types/job.ts b/frontend/types/job.ts
+-----------index 1d4e68e..eb2c7f5 100644
+-------------- a/frontend/types/job.ts
+-----------+++ b/frontend/types/job.ts
+-----------@@ -1,3 +1,5 @@
+-----------+import { Address } from './address';
+-----------+
+----------- export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
+----------- 
+----------- export type Job = {
+-----------@@ -21,7 +23,7 @@ export type Job = {
+-----------   // project: z. B. "Hecke schneiden bis Freitag"
+-----------   dueAt?: string;
+----------- 
+------------  address: string;
+-----------+  address: Address;      // Strukturierte Adresse (statt string)
+-----------   lat: number;
+-----------   lon: number;
+----------- 
 -----------diff --git a/model.patch b/model.patch
------------index 528f2c8..e69de29 100644
+-----------index fde3a5e..e69de29 100644
 -------------- a/model.patch
 -----------+++ b/model.patch
------------@@ -1,48 +0,0 @@
+-----------@@ -1,88 +0,0 @@
+------------diff --git a/model.patch b/model.patch
+------------index 528f2c8..e69de29 100644
+--------------- a/model.patch
+------------+++ b/model.patch
+------------@@ -1,48 +0,0 @@
+-------------diff --git a/test_result.md b/test_result.md
+-------------index e5a221c..36ff488 100644
+---------------- a/test_result.md
+-------------+++ b/test_result.md
+-------------@@ -214,8 +214,8 @@ frontend:
+------------- backend:
+-------------   - task: "Backend API"
+-------------     implemented: false
+--------------    working: "NA"
+--------------    file: ""
+-------------+    working: true
+-------------+    file: "backend/server.py"
+-------------     stuck_count: 0
+-------------     priority: "low"
+-------------     needs_retesting: false
+-------------@@ -223,6 +223,9 @@ backend:
+-------------       - working: "NA"
+-------------         agent: "main"
+-------------         comment: "Noch nicht implementiert - App nutzt AsyncStorage für MVP"
+-------------+      - working: true
+-------------+        agent: "testing"
+-------------+        comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
+------------- 
+------------- metadata:
+-------------   created_by: "main_agent"
+-------------@@ -263,4 +266,19 @@ agent_communication:
+-------------       2. Als Worker einloggen, Profil erstellen mit Kategorien
+-------------       3. Worker Feed öffnen und prüfen ob Jobs angezeigt werden
+-------------       4. Matching überprüfen (Jobs sollten nur bei passender Kategorie/Radius erscheinen)
+--------------      5. Cost Breakdown mit 20% Fee überprüfen
+-------------\ No newline at end of file
+-------------+      5. Cost Breakdown mit 20% Fee überprüfen
+-------------+
+-------------+  - agent: "testing"
+-------------+    message: |
+-------------+      **Backend Testing Abgeschlossen:**
+-------------+      
+-------------+      ✅ **Backend Service Status:** RUNNING (pid 554, uptime 0:04:21)
+-------------+      ✅ **Backend Health Check:** Erfolgreich - GET /api/ funktioniert
+-------------+      ✅ **Standard Endpoints:** POST/GET /api/status funktionieren korrekt
+-------------+      ✅ **MongoDB Verbindung:** Erfolgreich - Datenbank erreichbar
+-------------+      ✅ **CORS Konfiguration:** Korrekt eingerichtet
+-------------+      ✅ **Keine Fehler in Backend Logs:** Service läuft stabil
+-------------+      
+-------------+      **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
+-------------+      
+-------------+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
+-------------\ No newline at end of file
 ------------diff --git a/test_result.md b/test_result.md
-------------index e5a221c..36ff488 100644
+------------index 2a11b47..338c2ce 100644
 --------------- a/test_result.md
 ------------+++ b/test_result.md
-------------@@ -214,8 +214,8 @@ frontend:
------------- backend:
-------------   - task: "Backend API"
-------------     implemented: false
--------------    working: "NA"
--------------    file: ""
-------------+    working: true
-------------+    file: "backend/server.py"
-------------     stuck_count: 0
-------------     priority: "low"
-------------     needs_retesting: false
-------------@@ -223,6 +223,9 @@ backend:
-------------       - working: "NA"
-------------         agent: "main"
-------------         comment: "Noch nicht implementiert - App nutzt AsyncStorage für MVP"
+------------@@ -253,6 +253,9 @@ backend:
+------------       - working: true
+------------         agent: "testing"
+------------         comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
 ------------+      - working: true
 ------------+        agent: "testing"
-------------+        comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
+------------+        comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
 ------------ 
 ------------ metadata:
 ------------   created_by: "main_agent"
-------------@@ -263,4 +266,19 @@ agent_communication:
-------------       2. Als Worker einloggen, Profil erstellen mit Kategorien
-------------       3. Worker Feed öffnen und prüfen ob Jobs angezeigt werden
-------------       4. Matching überprüfen (Jobs sollten nur bei passender Kategorie/Radius erscheinen)
--------------      5. Cost Breakdown mit 20% Fee überprüfen
+------------@@ -314,4 +317,17 @@ agent_communication:
+------------       
+------------       **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
+------------       
+-------------      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
 ------------\ No newline at end of file
-------------+      5. Cost Breakdown mit 20% Fee überprüfen
+------------+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
 ------------+
 ------------+  - agent: "testing"
 ------------+    message: |
-------------+      **Backend Testing Abgeschlossen:**
+------------+      **Backend Re-Verification Abgeschlossen (nach Signup Bug Fix):**
 ------------+      
-------------+      ✅ **Backend Service Status:** RUNNING (pid 554, uptime 0:04:21)
-------------+      ✅ **Backend Health Check:** Erfolgreich - GET /api/ funktioniert
-------------+      ✅ **Standard Endpoints:** POST/GET /api/status funktionieren korrekt
-------------+      ✅ **MongoDB Verbindung:** Erfolgreich - Datenbank erreichbar
-------------+      ✅ **CORS Konfiguration:** Korrekt eingerichtet
-------------+      ✅ **Keine Fehler in Backend Logs:** Service läuft stabil
+------------+      ✅ **Backend Service Status:** RUNNING (pid 490, uptime 0:05:31) - Stabil
+------------+      ✅ **Health Check:** GET /api/ → {"message": "Hello World"} ✅
+------------+      ✅ **Status Endpoints:** POST/GET /api/status funktionieren einwandfrei
+------------+      ✅ **MongoDB Verbindung:** Erfolgreich - 2 documents in status_checks collection
+------------+      ✅ **CORS Headers:** Korrekt konfiguriert
+------------+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
 ------------+      
-------------+      **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
-------------+      
-------------+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
+------------+      **Bestätigung:** Backend Infrastructure ist vollständig funktionsfähig. Wie erwartet für MVP mit AsyncStorage - keine ShiftMatch-spezifischen Endpoints nötig. System bereit für weitere Entwicklung.
 ------------\ No newline at end of file
------------diff --git a/test_result.md b/test_result.md
------------index 2a11b47..338c2ce 100644
--------------- a/test_result.md
------------+++ b/test_result.md
------------@@ -253,6 +253,9 @@ backend:
------------       - working: true
------------         agent: "testing"
------------         comment: "Backend Infrastructure getestet: Service läuft stabil, Standard FastAPI Endpoints funktionieren, MongoDB Verbindung erfolgreich. Keine ShiftMatch-spezifischen Endpoints implementiert (wie erwartet für MVP mit AsyncStorage)."
------------+      - working: true
------------+        agent: "testing"
------------+        comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
------------ 
------------ metadata:
------------   created_by: "main_agent"
------------@@ -314,4 +317,17 @@ agent_communication:
------------       
------------       **Bestätigung:** Das Backend läuft grundsätzlich und hat keine Fehler. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP, was korrekt ist.
------------       
-------------      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
------------\ No newline at end of file
------------+      **Backend Test Suite:** Erstellt als /app/backend_test.py für zukünftige Tests
------------+
------------+  - agent: "testing"
------------+    message: |
------------+      **Backend Re-Verification Abgeschlossen (nach Signup Bug Fix):**
------------+      
------------+      ✅ **Backend Service Status:** RUNNING (pid 490, uptime 0:05:31) - Stabil
------------+      ✅ **Health Check:** GET /api/ → {"message": "Hello World"} ✅
------------+      ✅ **Status Endpoints:** POST/GET /api/status funktionieren einwandfrei
------------+      ✅ **MongoDB Verbindung:** Erfolgreich - 2 documents in status_checks collection
------------+      ✅ **CORS Headers:** Korrekt konfiguriert
------------+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
------------+      
------------+      **Bestätigung:** Backend Infrastructure ist vollständig funktionsfähig. Wie erwartet für MVP mit AsyncStorage - keine ShiftMatch-spezifischen Endpoints nötig. System bereit für weitere Entwicklung.
------------\ No newline at end of file
-------diff --git a/test_result.md b/test_result.md
-------index 524f8ea..d183a73 100644
---------- a/test_result.md
-------+++ b/test_result.md
-------@@ -274,6 +274,9 @@ backend:
-------       - working: true
-------         agent: "testing"
-------         comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
-------+      - working: true
-------+        agent: "testing"
-------+        comment: "Backend Infrastructure Test nach Taxonomie-Überarbeitung: Service RUNNING (pid 452, uptime 0:04:47), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status funktionieren), MongoDB ✅ (3 documents persistent gespeichert), CORS ✅ (Headers konfiguriert), Backend Logs ✅ (keine Fehler). Alle 3/3 Tests bestanden. System vollständig stabil nach Frontend-Änderungen."
------- 
------- metadata:
-------   created_by: "main_agent"
-------@@ -463,4 +466,20 @@ agent_communication:
-------       1. Als Worker registrieren → Rolle wählen → App neu laden → sollte im Feed landen
-------       2. Als Employer registrieren → Rolle wählen → App neu laden → sollte im Employer Dashboard landen
-------       3. Logout → erneut Login mit gleicher Email → Rolle sollte erhalten bleiben
--------      4. Mehrere Accounts testen (User A Worker, User B Employer) → Rollenwechsel korrekt
-------\ No newline at end of file
-------+      4. Mehrere Accounts testen (User A Worker, User B Employer) → Rollenwechsel korrekt
-------+
-------+  - agent: "testing"
-------+    message: |
-------+      **Backend Infrastructure Test nach Taxonomie-Überarbeitung - ERFOLGREICH**
-------+      
-------+      **Getestete Komponenten:**
-------+      ✅ **Backend Service Status:** RUNNING (pid 452, uptime 0:04:47) - Stabil
-------+      ✅ **Health Check Endpoint:** GET /api/ → {"message": "Hello World"} funktioniert
-------+      ✅ **Status Endpoints:** POST/GET /api/status beide funktionsfähig
-------+      ✅ **MongoDB Verbindung:** 3 documents persistent in status_checks collection
-------+      ✅ **CORS Konfiguration:** Headers korrekt gesetzt
-------+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
-------+      
-------+      **Test-Ergebnisse:** 3/3 Tests bestanden
-------+      
-------+      **Bestätigung:** Backend Infrastructure ist vollständig stabil nach den Frontend-Taxonomie-Änderungen. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP. System bereit für weitere Entwicklung oder Frontend-Testing falls gewünscht.
-------\ No newline at end of file
-diff --git a/test_result.md b/test_result.md
-index c0c6b38..c31a09b 100644
---- a/test_result.md
-+++ b/test_result.md
-@@ -280,6 +280,9 @@ backend:
-       - working: true
-         agent: "testing"
-         comment: "Backend Infrastructure Test nach Taxonomie-Überarbeitung: Service RUNNING (pid 452, uptime 0:04:47), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status funktionieren), MongoDB ✅ (3 documents persistent gespeichert), CORS ✅ (Headers konfiguriert), Backend Logs ✅ (keine Fehler). Alle 3/3 Tests bestanden. System vollständig stabil nach Frontend-Änderungen."
-+      - working: true
-+        agent: "testing"
-+        comment: "Backend Infrastructure Test nach expo-crypto Installation: Service RUNNING (pid 310, uptime 0:08:32), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status beide funktionsfähig), MongoDB ✅ (4 documents persistent, Verbindung erfolgreich), CORS ✅ (Middleware konfiguriert), Backend Logs ✅ (keine Fehler, nur normale HTTP-Requests). Alle 3/3 Tests bestanden. Backend Infrastructure vollständig stabil nach expo-crypto Fix."
- 
- metadata:
-   created_by: "main_agent"
-@@ -513,4 +516,20 @@ agent_communication:
-       
-       **Nächste Schritte:**
-       - Backend Testing für grundlegende Infrastructure
--      - Dann Funktionstest der neuen Passwort-Hashing-Logik (Registrierung + Login)
-\ No newline at end of file
-+      - Dann Funktionstest der neuen Passwort-Hashing-Logik (Registrierung + Login)
-+
-+  - agent: "testing"
-+    message: |
-+      **Backend Infrastructure Test nach expo-crypto Installation - VOLLSTÄNDIG ERFOLGREICH**
-+      
-+      **Getestete Komponenten:**
-+      ✅ **Backend Service Status:** RUNNING (pid 310, uptime 0:08:32) - Stabil nach expo-crypto Fix
-+      ✅ **Health Check Endpoint:** GET /api/ → {"message": "Hello World"} funktioniert einwandfrei
-+      ✅ **Status Endpoints:** POST/GET /api/status beide vollständig funktionsfähig
-+      ✅ **MongoDB Verbindung:** Erfolgreich - 4 documents persistent in status_checks collection
-+      ✅ **CORS Konfiguration:** Middleware korrekt konfiguriert und aktiv
-+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests (GET, POST, OPTIONS)
-+      
-+      **Test-Ergebnisse:** 3/3 Tests bestanden
-+      
-+      **Bestätigung:** Backend Infrastructure ist vollständig stabil nach der expo-crypto Installation. Die Änderungen am Frontend (Installation der fehlenden Abhängigkeit) haben keine negativen Auswirkungen auf das Backend. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP. System bereit für weitere Entwicklung.
-\ No newline at end of file
+-------diff --git a/test_result.md b/test_result.md
+-------index 524f8ea..d183a73 100644
+---------- a/test_result.md
+-------+++ b/test_result.md
+-------@@ -274,6 +274,9 @@ backend:
+-------       - working: true
+-------         agent: "testing"
+-------         comment: "Backend Re-Verification erfolgreich: Service RUNNING (pid 490, uptime 0:05:31), Health Check ✅, Status Endpoints (POST/GET /api/status) ✅, MongoDB Verbindung ✅ (2 documents in status_checks), CORS konfiguriert ✅. Keine Fehler in Backend Logs. System stabil."
+-------+      - working: true
+-------+        agent: "testing"
+-------+        comment: "Backend Infrastructure Test nach Taxonomie-Überarbeitung: Service RUNNING (pid 452, uptime 0:04:47), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status funktionieren), MongoDB ✅ (3 documents persistent gespeichert), CORS ✅ (Headers konfiguriert), Backend Logs ✅ (keine Fehler). Alle 3/3 Tests bestanden. System vollständig stabil nach Frontend-Änderungen."
+------- 
+------- metadata:
+-------   created_by: "main_agent"
+-------@@ -463,4 +466,20 @@ agent_communication:
+-------       1. Als Worker registrieren → Rolle wählen → App neu laden → sollte im Feed landen
+-------       2. Als Employer registrieren → Rolle wählen → App neu laden → sollte im Employer Dashboard landen
+-------       3. Logout → erneut Login mit gleicher Email → Rolle sollte erhalten bleiben
+--------      4. Mehrere Accounts testen (User A Worker, User B Employer) → Rollenwechsel korrekt
+-------\ No newline at end of file
+-------+      4. Mehrere Accounts testen (User A Worker, User B Employer) → Rollenwechsel korrekt
+-------+
+-------+  - agent: "testing"
+-------+    message: |
+-------+      **Backend Infrastructure Test nach Taxonomie-Überarbeitung - ERFOLGREICH**
+-------+      
+-------+      **Getestete Komponenten:**
+-------+      ✅ **Backend Service Status:** RUNNING (pid 452, uptime 0:04:47) - Stabil
+-------+      ✅ **Health Check Endpoint:** GET /api/ → {"message": "Hello World"} funktioniert
+-------+      ✅ **Status Endpoints:** POST/GET /api/status beide funktionsfähig
+-------+      ✅ **MongoDB Verbindung:** 3 documents persistent in status_checks collection
+-------+      ✅ **CORS Konfiguration:** Headers korrekt gesetzt
+-------+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests
+-------+      
+-------+      **Test-Ergebnisse:** 3/3 Tests bestanden
+-------+      
+-------+      **Bestätigung:** Backend Infrastructure ist vollständig stabil nach den Frontend-Taxonomie-Änderungen. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP. System bereit für weitere Entwicklung oder Frontend-Testing falls gewünscht.
+-------\ No newline at end of file
+-diff --git a/test_result.md b/test_result.md
+-index c0c6b38..c31a09b 100644
+---- a/test_result.md
+-+++ b/test_result.md
+-@@ -280,6 +280,9 @@ backend:
+-       - working: true
+-         agent: "testing"
+-         comment: "Backend Infrastructure Test nach Taxonomie-Überarbeitung: Service RUNNING (pid 452, uptime 0:04:47), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status funktionieren), MongoDB ✅ (3 documents persistent gespeichert), CORS ✅ (Headers konfiguriert), Backend Logs ✅ (keine Fehler). Alle 3/3 Tests bestanden. System vollständig stabil nach Frontend-Änderungen."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "Backend Infrastructure Test nach expo-crypto Installation: Service RUNNING (pid 310, uptime 0:08:32), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status beide funktionsfähig), MongoDB ✅ (4 documents persistent, Verbindung erfolgreich), CORS ✅ (Middleware konfiguriert), Backend Logs ✅ (keine Fehler, nur normale HTTP-Requests). Alle 3/3 Tests bestanden. Backend Infrastructure vollständig stabil nach expo-crypto Fix."
+- 
+- metadata:
+-   created_by: "main_agent"
+-@@ -513,4 +516,20 @@ agent_communication:
+-       
+-       **Nächste Schritte:**
+-       - Backend Testing für grundlegende Infrastructure
+--      - Dann Funktionstest der neuen Passwort-Hashing-Logik (Registrierung + Login)
+-\ No newline at end of file
+-+      - Dann Funktionstest der neuen Passwort-Hashing-Logik (Registrierung + Login)
+-+
+-+  - agent: "testing"
+-+    message: |
+-+      **Backend Infrastructure Test nach expo-crypto Installation - VOLLSTÄNDIG ERFOLGREICH**
+-+      
+-+      **Getestete Komponenten:**
+-+      ✅ **Backend Service Status:** RUNNING (pid 310, uptime 0:08:32) - Stabil nach expo-crypto Fix
+-+      ✅ **Health Check Endpoint:** GET /api/ → {"message": "Hello World"} funktioniert einwandfrei
+-+      ✅ **Status Endpoints:** POST/GET /api/status beide vollständig funktionsfähig
+-+      ✅ **MongoDB Verbindung:** Erfolgreich - 4 documents persistent in status_checks collection
+-+      ✅ **CORS Konfiguration:** Middleware korrekt konfiguriert und aktiv
+-+      ✅ **Backend Logs:** Keine Fehler, nur normale HTTP-Requests (GET, POST, OPTIONS)
+-+      
+-+      **Test-Ergebnisse:** 3/3 Tests bestanden
+-+      
+-+      **Bestätigung:** Backend Infrastructure ist vollständig stabil nach der expo-crypto Installation. Die Änderungen am Frontend (Installation der fehlenden Abhängigkeit) haben keine negativen Auswirkungen auf das Backend. Wie erwartet sind keine ShiftMatch-spezifischen Endpoints implementiert - die App nutzt AsyncStorage für das MVP. System bereit für weitere Entwicklung.
+-\ No newline at end of file
