@@ -246,6 +246,25 @@ export default function WorkerMatchesScreen() {
                       {job.title}
                     </Text>
                     <View style={{ gap: 4 }}>
+                      {/* Arbeitgeber Info */}
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <View style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: 16,
+                          backgroundColor: colors.primary,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                          <Text style={{ color: colors.white, fontSize: 13, fontWeight: '700' }}>
+                            AG
+                          </Text>
+                        </View>
+                        <Text style={{ color: colors.gray700, fontSize: 14, fontWeight: '600' }}>
+                          Arbeitgeber
+                        </Text>
+                      </View>
+                      
                       <Text style={{ color: colors.gray700, fontSize: 14 }}>
                         📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
                       </Text>
