@@ -211,18 +211,32 @@ export default function WorkerProfileScreen() {
           {reviews.length > 0 ? (
             <>
               {/* Durchschnittsbewertung */}
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <StarRating rating={averageRating} size={20} />
-                <Text style={{ color: colors.black, fontSize: 16, fontWeight: '600' }}>
-                  {averageRating.toFixed(1)} von 5
-                </Text>
-                <Text style={{ color: colors.gray600, fontSize: 14 }}>
-                  · {reviews.length} {reviews.length === 1 ? 'Bewertung' : 'Bewertungen'}
-                </Text>
+              <View style={{ 
+                flexDirection: 'row', 
+                alignItems: 'center', 
+                gap: 10,
+                padding: spacing.sm,
+                backgroundColor: colors.successLight,
+                borderRadius: 10,
+                borderLeftWidth: 4,
+                borderLeftColor: colors.success,
+              }}>
+                <StarRating rating={averageRating} size={22} />
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: colors.black, fontSize: 18, fontWeight: '800' }}>
+                    {averageRating.toFixed(1)} von 5
+                  </Text>
+                  <Text style={{ color: colors.gray600, fontSize: 13 }}>
+                    {reviews.length} {reviews.length === 1 ? 'Bewertung' : 'Bewertungen'}
+                  </Text>
+                </View>
               </View>
 
               {/* Letzte 3 Bewertungen */}
-              <View style={{ gap: spacing.sm, marginTop: spacing.sm }}>
+              <View style={{ gap: spacing.sm, marginTop: spacing.xs }}>
+                <Text style={{ color: colors.gray600, fontSize: 13, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Neueste Bewertungen
+                </Text>
                 {reviews
                   .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                   .slice(0, 3)
@@ -232,18 +246,24 @@ export default function WorkerProfileScreen() {
                       style={{
                         backgroundColor: colors.beige50,
                         padding: spacing.sm,
-                        borderRadius: 8,
-                        gap: 4,
+                        borderRadius: 10,
+                        gap: 6,
+                        borderWidth: 1,
+                        borderColor: colors.beige200,
                       }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <StarRating rating={review.rating} size={14} />
-                        <Text style={{ color: colors.gray600, fontSize: 12 }}>
-                          {new Date(review.createdAt).toLocaleDateString('de-DE')}
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <StarRating rating={review.rating} size={16} />
+                        <Text style={{ color: colors.gray500, fontSize: 12, fontWeight: '500' }}>
+                          {new Date(review.createdAt).toLocaleDateString('de-DE', { 
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: 'numeric' 
+                          })}
                         </Text>
                       </View>
                       {review.comment && (
-                        <Text style={{ color: colors.gray700, fontSize: 14, lineHeight: 20 }}>
+                        <Text style={{ color: colors.gray700, fontSize: 14, lineHeight: 20, fontStyle: 'italic' }}>
                           "{review.comment}"
                         </Text>
                       )}
