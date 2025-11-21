@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     height: 160,
   },
   slogan: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '400',
     textAlign: 'center',
   },
