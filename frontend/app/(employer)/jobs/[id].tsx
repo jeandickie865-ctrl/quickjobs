@@ -274,23 +274,37 @@ export default function JobDetailScreen() {
         {/* Kategorie & Adresse */}
         <View style={{
           backgroundColor: colors.white,
-          borderRadius: 12,
+          borderRadius: 16,
           padding: spacing.md,
-          gap: 8
+          gap: spacing.md,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
+          elevation: 3,
         }}>
-          <View style={{ gap: 4 }}>
-            <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
-              KATEGORIE
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontWeight: '600', color: colors.gray500, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+              Kategorie
             </Text>
-            <Text style={{ color: colors.black, fontSize: 16 }}>
-              {job.category}
-            </Text>
+            <View style={{
+              paddingHorizontal: spacing.sm,
+              paddingVertical: 6,
+              backgroundColor: colors.beige100,
+              borderRadius: 8,
+              alignSelf: 'flex-start',
+            }}>
+              <Text style={{ color: colors.black, fontSize: 15, fontWeight: '600' }}>
+                💼 {job.category}
+              </Text>
+            </View>
           </View>
-          <View style={{ gap: 4 }}>
-            <Text style={{ fontWeight: '600', color: colors.gray600, fontSize: 12 }}>
-              STANDORT
+          <View style={{ height: 1, backgroundColor: colors.gray200 }} />
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontWeight: '600', color: colors.gray500, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+              Standort
             </Text>
-            <Text style={{ color: colors.black, fontSize: 16 }}>
+            <Text style={{ color: colors.black, fontSize: 15, fontWeight: '500' }}>
               📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
             </Text>
           </View>
