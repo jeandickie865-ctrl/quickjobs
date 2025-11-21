@@ -160,7 +160,7 @@ export default function LoginScreen() {
           <View style={{ alignItems: 'center', gap: 16 }}>
             <TouchableOpacity 
               style={{
-                backgroundColor: COLORS.primary,
+                backgroundColor: COLORS.accent,
                 width: '90%',
                 paddingVertical: 16,
                 borderRadius: 14,
@@ -175,7 +175,7 @@ export default function LoginScreen() {
               disabled={loading}
               activeOpacity={0.85}
             >
-              <Text style={{ fontSize: 16, fontWeight: '600', color: COLORS.white }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>
                 {loading ? 'Lädt...' : 'Einloggen'}
               </Text>
             </TouchableOpacity>
