@@ -14,23 +14,25 @@ export default function Chip({
   onPress: () => void;
 }) {
   const { colors } = useTheme();
-  const bg = selected ? colors.gray900 : (tone === 'solid' ? colors.beige100 : 'transparent');
+  
+  // Urban Neutral Style
+  const bg = selected ? colors.primary : (tone === 'solid' ? colors.gray100 : 'transparent');
   const fg = selected ? colors.white : colors.black;
-  const border = selected ? colors.gray900 : colors.gray200;
+  const border = selected ? colors.primary : colors.gray300;
   
   return (
     <Pressable 
       onPress={onPress}
       style={{ 
-        paddingVertical: 6, 
-        paddingHorizontal: 10, 
+        paddingVertical: 8, 
+        paddingHorizontal: 12, 
         borderRadius: 999, 
         borderWidth: 1, 
         borderColor: border, 
         backgroundColor: bg 
       }}
     >
-      <Text style={{ color: fg, fontSize: 12, fontWeight: '500' }}>{label}</Text>
+      <Text style={{ color: fg, fontSize: 13, fontWeight: selected ? '600' : '500' }}>{label}</Text>
     </Pressable>
   );
 }
