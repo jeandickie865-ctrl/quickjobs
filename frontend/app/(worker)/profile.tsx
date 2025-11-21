@@ -13,6 +13,9 @@ import { Button } from '../../components/ui/Button';
 import { ProfilePhoto } from '../../components/ProfilePhoto';
 import { DocumentManager } from '../../components/DocumentManager';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
+import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
+import { Review } from '../../types/review';
+import { StarRating } from '../../components/StarRating';
 
 function createEmptyProfile(userId: string): WorkerProfile {
   return {
