@@ -243,24 +243,43 @@ export default function WorkerFeed() {
         }
       >
         {/* Header mit Navigation */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black }}>
-            Jobs für dich
-          </Text>
-          <View style={{ flexDirection: 'row', gap: spacing.md }}>
-            <Text
-              style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
-              onPress={() => router.push('/(worker)/matches')}
-            >
-              🎯 Matches
+        <View style={{ marginBottom: spacing.xs }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ fontSize: 28, fontWeight: '900', color: colors.black, letterSpacing: -0.5 }}>
+              Jobs für dich
             </Text>
-            <Text
-              style={{ color: colors.gray600, fontSize: 14, textDecorationLine: 'underline' }}
-              onPress={() => router.push('/(worker)/profile')}
-            >
-              ⚙️ Profil
-            </Text>
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              <Text
+                style={{ 
+                  color: colors.primary, 
+                  fontSize: 15, 
+                  fontWeight: '600',
+                  paddingHorizontal: spacing.sm,
+                  paddingVertical: 4,
+                }}
+                onPress={() => router.push('/(worker)/matches')}
+              >
+                🎯 Matches
+              </Text>
+              <Text
+                style={{ 
+                  color: colors.gray600, 
+                  fontSize: 15, 
+                  fontWeight: '600',
+                  paddingHorizontal: spacing.sm,
+                  paddingVertical: 4,
+                }}
+                onPress={() => router.push('/(worker)/profile')}
+              >
+                ⚙️ Profil
+              </Text>
+            </View>
           </View>
+          {profile && (
+            <Text style={{ fontSize: 14, color: colors.gray500, marginTop: 4 }}>
+              {profile.categories.length} {profile.categories.length === 1 ? 'Kategorie' : 'Kategorien'} • {profile.radius} km Radius
+            </Text>
+          )}
         </View>
 
         {/* Tab-Buttons */}
