@@ -1,4 +1,4 @@
-// app/auth/signup.tsx - Green Modern Minimal
+// app/auth/signup.tsx - BCKP Style
 import React, { useState } from 'react';
 import { View, Text, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -70,7 +70,7 @@ export default function SignupScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryUltraLight }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -78,11 +78,8 @@ export default function SignupScreen() {
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.xl, justifyContent: 'center' }}
         >
-          <Text style={{ fontSize: 30, fontWeight: '800', color: colors.black, marginBottom: spacing.md }}>
+          <Text style={{ fontSize: 28, fontWeight: '700', color: colors.black, marginBottom: spacing.xl }}>
             Registrieren
-          </Text>
-          <Text style={{ fontSize: 15, color: colors.gray600, marginBottom: spacing.xl }}>
-            Erstelle deinen Account und starte durch.
           </Text>
 
           <Input
@@ -122,17 +119,12 @@ export default function SignupScreen() {
             style={{ marginTop: spacing.md }}
           />
 
-          <Pressable
+          <Button
+            title="Ich habe schon einen Account"
+            variant="ghost"
             onPress={() => router.push('/auth/login')}
-            style={{ marginTop: spacing.lg }}
-          >
-            <Text style={{ color: colors.black, textAlign: 'center', fontSize: 15 }}>
-              Ich habe schon einen Account{' '}
-              <Text style={{ fontWeight: '700', color: colors.primary }}>
-                Login
-              </Text>
-            </Text>
-          </Pressable>
+            style={{ marginTop: spacing.md }}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

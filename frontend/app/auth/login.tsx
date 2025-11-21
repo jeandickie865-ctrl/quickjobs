@@ -1,4 +1,4 @@
-// app/auth/login.tsx - Überarbeitet mit Passwort vergessen Link
+// app/auth/login.tsx - BCKP Style
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -47,11 +47,8 @@ export default function LoginScreen() {
           }}
         >
           <Card padding={spacing.xl} style={{ maxWidth: 400, width: '100%', alignSelf: 'center' }}>
-            <Text style={{ fontSize: 28, fontWeight: '800', color: colors.black, marginBottom: spacing.sm, textAlign: 'center' }}>
-              Login
-            </Text>
-            <Text style={{ fontSize: 15, color: colors.gray600, marginBottom: spacing.xl, textAlign: 'center' }}>
-              Melde dich mit deinem Account an
+            <Text style={{ fontSize: 28, fontWeight: '700', color: colors.black, marginBottom: spacing.lg, textAlign: 'center' }}>
+              Willkommen zurück
             </Text>
 
             {/* Error Message */}
@@ -59,10 +56,10 @@ export default function LoginScreen() {
               <View style={{
                 backgroundColor: colors.errorLight,
                 padding: spacing.md,
-                borderRadius: 12,
+                borderRadius: 10,
                 marginBottom: spacing.md,
               }}>
-                <Text style={{ color: colors.error, fontWeight: '600', fontSize: 14 }}>
+                <Text style={{ color: colors.error, fontWeight: '500', fontSize: 14 }}>
                   {errorMsg}
                 </Text>
               </View>
@@ -70,44 +67,44 @@ export default function LoginScreen() {
 
             {/* Email */}
             <View style={{ marginBottom: spacing.md }}>
-              <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6, fontSize: 14 }}>
+              <Text style={{ fontWeight: '500', color: colors.gray900, marginBottom: 6, fontSize: 14 }}>
                 E-Mail
               </Text>
               <TextInput
                 autoCapitalize="none"
                 keyboardType="email-address"
                 placeholder="name@email.de"
-                placeholderTextColor={colors.gray600}
+                placeholderTextColor={colors.gray500}
                 value={email}
                 onChangeText={setEmail}
                 style={{
-                  borderWidth: 2,
+                  borderWidth: 1,
                   borderColor: colors.gray300,
-                  borderRadius: 14,
+                  borderRadius: 10,
                   padding: 14,
                   backgroundColor: colors.white,
                   color: colors.black,
-                  fontSize: 16,
+                  fontSize: 15,
                 }}
               />
             </View>
 
             {/* Password */}
             <View style={{ marginBottom: spacing.sm }}>
-              <Text style={{ fontWeight: '600', color: colors.black, marginBottom: 6, fontSize: 14 }}>
+              <Text style={{ fontWeight: '500', color: colors.gray900, marginBottom: 6, fontSize: 14 }}>
                 Passwort
               </Text>
               <View style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                borderWidth: 2,
+                borderWidth: 1,
                 borderColor: colors.gray300,
-                borderRadius: 14,
+                borderRadius: 10,
                 backgroundColor: colors.white,
               }}>
                 <TextInput
                   placeholder="••••••"
-                  placeholderTextColor={colors.gray600}
+                  placeholderTextColor={colors.gray500}
                   secureTextEntry={!showPw}
                   value={password}
                   onChangeText={setPassword}
@@ -115,14 +112,14 @@ export default function LoginScreen() {
                     flex: 1,
                     padding: 14,
                     color: colors.black,
-                    fontSize: 16,
+                    fontSize: 15,
                   }}
                 />
                 <Pressable onPress={() => setShowPw(!showPw)} style={{ padding: 12 }}>
                   {showPw ? (
-                    <EyeOff size={20} color={colors.gray600} />
+                    <EyeOff size={20} color={colors.gray500} />
                   ) : (
-                    <Eye size={20} color={colors.gray600} />
+                    <Eye size={20} color={colors.gray500} />
                   )}
                 </Pressable>
               </View>
@@ -131,9 +128,9 @@ export default function LoginScreen() {
             {/* Passwort vergessen Link */}
             <Pressable 
               onPress={() => router.push('/auth/forgot-password')}
-              style={{ marginBottom: spacing.xl, alignSelf: 'flex-end' }}
+              style={{ marginBottom: spacing.lg, alignSelf: 'flex-end' }}
             >
-              <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '500', textDecorationLine: 'underline' }}>
                 Passwort vergessen?
               </Text>
             </Pressable>
@@ -148,17 +145,11 @@ export default function LoginScreen() {
             />
 
             {/* Link zu Signup */}
-            <Pressable
+            <Button
+              title="Registrieren?"
+              variant="ghost"
               onPress={() => router.push('/auth/signup')}
-              style={{ alignItems: 'center' }}
-            >
-              <Text style={{ color: colors.gray600, fontSize: 14 }}>
-                Noch kein Account?{' '}
-                <Text style={{ fontWeight: '700', color: colors.primary }}>
-                  Registrieren
-                </Text>
-              </Text>
-            </Pressable>
+            />
           </Card>
         </ScrollView>
       </KeyboardAvoidingView>
