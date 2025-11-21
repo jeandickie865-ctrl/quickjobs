@@ -10,11 +10,13 @@ import { getWorkerProfile } from '../../../utils/profileStore';
 import { getReviewForJob } from '../../../utils/reviewStore';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import { WorkerProfileCard } from '../../../components/WorkerProfileCard';
+import { LegalConfirmationModal } from '../../../components/LegalConfirmationModal';
 import { Job } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
 import { Button } from '../../../components/ui/Button';
 import { formatAddress } from '../../../types/address';
+import { getInitials } from '../../../utils/stringHelpers';
 
 export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
