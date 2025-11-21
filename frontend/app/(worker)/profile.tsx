@@ -396,18 +396,64 @@ export default function WorkerProfileScreen() {
 
       {/* Kategorien */}
       <View style={{ gap: 8 }}>
-        <Text style={{ color: colors.black, fontWeight: '600' }}>Kategorien</Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          {categories.map(c => (
-            <Chip
-              key={c.key}
-              label={c.label}
-              selected={selectedCategories.includes(c.key)}
-              onPress={() => toggleCategory(c.key)}
-            />
-          ))}
-        </View>
+        <Text style={{ color: colors.black, fontWeight: '600', fontSize: 16 }}>Kategorien</Text>
+        <Text style={{ color: colors.gray600, fontSize: 13 }}>
+          Wähle eine oder mehrere Kategorien aus, in denen du arbeiten möchtest.
+        </Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 8, paddingVertical: 4 }}
+          style={{ marginHorizontal: -spacing.md }}
+        >
+          <View style={{ width: spacing.md }} />
+          {categories.map(c => {
+            const isSelected = selectedCategories.includes(c.key);
+            return (
+              <Pressable
+                key={c.key}
+                onPress={() => toggleCategory(c.key)}
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 16,
+                  borderRadius: 999,
+                  borderWidth: 1,
+                  borderColor: isSelected ? colors.black : colors.gray200,
+                  backgroundColor: isSelected ? colors.black : colors.beige100,
+                }}
+              >
+                <Text
+                  style={{
+                    color: isSelected ? colors.white : colors.black,
+                    fontSize: 14,
+                    fontWeight: '600',
+                  }}
+                >
+                  {c.title}
+                </Text>
+              </Pressable>
+            );
+          })}
+          <View style={{ width: spacing.md }} />
+        </ScrollView>
       </View>
+
+      {/* Hinweis wenn keine Kategorie gewählt */}
+      {selectedCategories.length === 0 && (
+        <View
+          style={{
+            padding: spacing.md,
+            backgroundColor: colors.beige100,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.gray200,
+          }}
+        >
+          <Text style={{ color: colors.gray700, fontSize: 14, textAlign: 'center' }}>
+            👆 Wähle mindestens eine Kategorie aus, um passende Jobs zu finden
+          </Text>
+        </View>
+      )}
 
       {/* Tags pro gewählter Kategorie */}
       {selectedCategories.map(catKey => {
