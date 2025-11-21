@@ -1,71 +1,27 @@
 // contexts/AuthContext.tsx
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  ReactNode,
-} from 'react';
-import { getItem, setItem, removeItem } from '../utils/storage';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export type Role = 'worker' | 'employer';
-
-export type User = {
+type User = {
   id: string;
-  email: string;
-  role?: Role;
-  accountType?: 'private' | 'business';
-} | null;
-
-type AuthContextValue = {
-  user: User;
-  isLoading: boolean;
-  signUp: (email: string, password: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  setRole: (role: Role) => Promise<void>;
-};
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
-
-const USER_KEY = '@shiftmatch:user';
-const USERS_DATABASE_KEY = '@shiftmatch:users_database';
-const CREDENTIALS_KEY = '@shiftmatch:auth_users';
-
-type StoredUser = {
-  id: string;
-  email: string;
-  role?: Role;
-  accountType?: 'private' | 'business';
-};
-
-type StoredCredentials = {
   email: string;
   password: string;
-}[];
-
-type UsersDatabase = {
-  [email: string]: StoredUser;
+  role?: 'worker' | 'employer';
 };
 
-async function loadCredentials(): Promise<StoredCredentials> {
-  const data = await getItem<StoredCredentials>(CREDENTIALS_KEY);
-  return data ?? [];
-}
+type AuthContextType = {
+  user: User | null;
+  signIn: (email: string, password: string) => Promise<User>;
+  signUp: (email: string, password: string) => Promise<User>;
+  signOut: () => Promise<void>;
+  setRole: (role: 'worker' | 'employer') => Promise<void>;
+};
 
-async function saveCredentials(creds: StoredCredentials): Promise<void> {
-  await setItem(CREDENTIALS_KEY, creds);
-}
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-async function loadUsersDatabase(): Promise<UsersDatabase> {
-  const data = await getItem<UsersDatabase>(USERS_DATABASE_KEY);
-  return data ?? {};
-}
-
-async function saveUsersDatabase(db: UsersDatabase): Promise<void> {
-  await setItem(USERS_DATABASE_KEY, db);
-}
+// Keys
+const USER_KEY = '@shiftmatch:user';
+const USER_DB_KEY = '@shiftmatch:users_database';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User>(null);
