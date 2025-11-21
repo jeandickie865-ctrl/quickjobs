@@ -1,86 +1,81 @@
 <analysis>
-The trajectory documents an extensive, iterative development process of the ShiftMatch React Native application, guided by a user providing detailed prompts in German. The AI engineer successfully implemented numerous features and performed critical refactoring and debugging.
+The trajectory documents an extensive, iterative development process for the ShiftMatch React Native application, driven by a user providing detailed prompts in German. The AI engineer successfully resolved numerous issues and implemented several major features.
 
-The work began by fixing a Zod validation crash, then moved to implementing core features like persistent authentication, job creation, and a complete application/matching flow, all mocked with . Several key refactoring cycles occurred: replacing free-text addresses with a structured  using the Nominatim API; implementing a robust, multi-user authentication system in ; and debugging the  propagation throughout the application lifecycle.
+The work began by fixing a critical module resolution error related to . Subsequently, a persistent multi-user authentication flow was correctly implemented, addressing a bug where users could only sign up but not log in. A significant feature, a complete rating and review system, was built from scratch, including a new data store (), a rating UI, and integration into both the worker's profile and the employer's applicant view.
 
-Major features added include a My Matches screen for workers, a tabbed worker feed distinguishing between Matching Jobs and All Jobs in Radius (with robust radius filtering), and a comprehensive legal framework with dedicated screens (, , , ) and a pre-chat legal confirmation screen.
+The most substantial work involved multiple refactors of the job matching engine. Matching 2.0 was introduced, incorporating Haversine distance calculations, a radius filter, and special logic for low-skill jobs. This was later upgraded to Matching 2.2 to handle complex, industry-specific rules for Delivery (vehicle/license requirements), Security (§34a checks), Inventory, and Tutoring. This required a major expansion of the central taxonomy in  and a complete rewrite of the logic in .
 
-The most recent and significant task was a complete overhaul of the job taxonomy. The previous  was replaced with a new, structured . This caused a crash in the worker profile screen, which the engineer was in the process of fixing by making the taxonomy utility functions () and the profile screen () more robust and resilient to data structure changes.
+The final task initiated was a comprehensive UX overhaul. The engineer started by defining a new color palette and began refactoring the most critical screen, the worker's job feed (), to improve its layout and clarity. This task was interrupted while updating the  component to use the new primary color.
 
-The user's primary language is German. All future interactions must be in German.
+The user's primary language is German. All future interactions must be conducted in German.
 </analysis>
-
 <product_requirements>
-The product, ShiftMatch, is a React Native mobile app designed to connect Arbeitgeber (Employers) and Arbeitnehmer (Workers) for short-term jobs. All data is currently mocked using .
+ShiftMatch is a React Native mobile application designed to connect Arbeitgeber (Employers) and Arbeitnehmer (Workers) for short-term jobs. The entire application is currently mocked using  for data persistence.
 
-**Core Features Implemented:**
-*   **Persistent Authentication:** Users sign up and log in with an email/password, select a role (Worker or Employer), and remain logged in across app sessions.
-*   **Worker & Employer Roles:** The app has distinct UIs and functionalities for each role. Workers create profiles and find jobs; Employers post jobs and manage applicants.
-*   **Job Taxonomy:** A detailed, unified taxonomy allows jobs to be categorized with specific activities and required qualifications (e.g., Gastronomy, Security).
-*   **Job Feed & Application:** Workers have a feed with two views: Matching Jobs (profile-based) and All Jobs in Radius. They can apply to jobs, with applications being disabled for roles with unmet mandatory qualifications.
-*   **Matching & Chat Flow:** Employers can accept applicants for a job. A legal confirmation screen gates access to contact details and a one-on-one chat, ensuring both parties acknowledge their responsibilities before communicating.
-*   **Legal Framework:** The app includes dedicated, accessible screens for legal documents (AGB, Privacy Policy, Guidelines, Impressum).
+**Core Features:**
+*   **Authentication:** A robust, multi-user authentication system allows users to sign up and log in with an email/password. It correctly handles persistent sessions and prevents duplicate email registrations.
+*   **Job & Profile Management:** Employers can post jobs with detailed requirements (category, time, location, pay, skills). Workers can create detailed profiles, selecting job categories, skills, work radius, and uploading documents.
+*   **Advanced Matching Engine (Matching 2.2):** A sophisticated matching algorithm connects workers to jobs based on a multi-step process including category, mandatory security checks (§34a), vehicle/license requirements for delivery jobs, skill checks for inventory/tutoring, a bypass for low-skill jobs, and a distance/radius filter.
+*   **Job Feed & Application Flow:** Workers have a dual-tab feed showing Matching Jobs and All Jobs in Radius. The UI clearly indicates job suitability and disables application buttons for unqualified jobs.
+*   **Rating & Review System:** Employers can rate workers (1-5 stars with an optional comment) after a job is completed. Average ratings are displayed on worker profiles and applicant cards.
+*   **Legal & Chat Framework:** A legal confirmation screen gates access to a one-on-one chat between matched parties.
 </product_requirements>
-
 <key_technical_concepts>
 - **React Native & Expo:** Core framework for cross-platform mobile development.
-- **Expo Router:** File-based navigation for screens and routes.
-- **TypeScript:** For static typing across the entire codebase.
-- **AsyncStorage:** Used as a mock database for all application data (users, jobs, applications, etc.) via various  utility files.
+- **Expo Router:** File-based navigation for all application screens.
+- **TypeScript:** Provides static typing and defines data structures (Job, WorkerProfile, Review).
+- **AsyncStorage:** Used as a mock database for all application data (users, jobs, applications, reviews) via multiple  utility files.
 - **React Context API:** Manages global authentication state via .
-- **Data-driven UI:** The job taxonomy is defined in a central  file, and UI components adapt to this structure.
+- **Data-Driven UI & Logic:** The UI and the core matching engine are driven by a central, detailed taxonomy defined in .
 </key_technical_concepts>
-
 <code_architecture>
-The application uses a standard Expo Router file-based routing architecture. Logic is separated into contexts, utils (stores), components, and types.
+The application follows a standard Expo Router architecture, separating concerns into ,  (stores), , , , and  for screens.
 
 
 
-- ****
-  - **Importance**: This new file is the single source of truth for the entire job taxonomy (categories, activities, qualifications). It replaces the previous .
-  - **Changes**: Created to hold the new, detailed, and structured list of job categories as a TypeScript constant ().
+-   ****
+    -   **Importance:** This is the core logic of the application, responsible for the Matching 2.2 engine.
+    -   **Changes:** This file was completely rewritten multiple times. It now contains a sophisticated, multi-step matching function () that handles category checks, hard security filters (§34a), vehicle/license requirements for delivery, special rules for inventory/tutoring, a bypass for low-skill jobs, and radius filtering.
 
-- ****
-  - **Importance**: Provides utility functions to interact with the taxonomy data.
-  - **Changes**: Completely refactored to work with the new  structure. Functions like , , and  were made robust with  for unknown keys instead of crashing, ensuring app stability.
+-   ****
+    -   **Importance:** The single source of truth for the entire job taxonomy. It defines all categories, activities, and qualifications.
+    -   **Changes:** This file was significantly expanded to include new tags and categories required for the Matching 2.2 logic, covering Delivery, Security, Tutoring, and Inventory.
 
-- ****
-  - **Importance**: Allows workers to manage their profile, including selecting their job categories and skills from the taxonomy.
-  - **Changes**: Heavily modified to fix a crash caused by the taxonomy overhaul. It now uses the robust utility functions from  and includes logic to  saved categories on load, filtering out any old or invalid keys from  to prevent errors. The rendering logic was updated to handle the new  and  structure.
+-   ****
+    -   **Importance:** The primary screen for workers. It displays jobs in two tabs: Passende Jobs (using ) and Alle Jobs im Umkreis (using ).
+    -   **Changes:** It was heavily refactored to integrate the new matching logic and display more UX-friendly job cards. The rendering logic was updated to show distance, apply disabled states with reasons, and use a more compact layout.
 
-- ****
-  - **Importance**: A critical new screen for legal compliance that gates access to contact information and chat.
-  - **Changes**: Created to display legal disclaimers and checkboxes that both Employer and Worker must accept after a match is made. It interacts with  to persist the confirmation status.
+-   ** & **
+    -   **Importance:** These files form the new rating system.  manages review data in .  is the UI for submitting a rating.
+    -   **Changes:** Both files were created from scratch to implement the review feature. The  screen and  component were also modified to integrate this system.
 
-- ****
-  - **Importance**: Manages the state of all job applications.
-  - **Changes**: The  type was extended with  and . Functions were added to update these flags, enabling the legal confirmation flow.
+-   ****
+    -   **Importance:** Manages all user authentication and session state.
+    -   **Changes:** It was refactored to correctly handle a multi-user database in , fixing a critical bug where login failed after signup. It now normalizes emails () to prevent inconsistencies.
 
-- ****
-  - **Importance**: The main screen for workers to find jobs.
-  - **Changes**: Refactored to include a tabbed interface (Passende Jobs and Alle Jobs im Umkreis). It now fetches and displays two different sets of jobs based on the active tab and includes UI logic to show profile match status and disable the Apply button for jobs with unmet mandatory qualifications.
-
-- ****
-  - **Importance**: A reusable component for address entry with geocoding.
-  - **Changes**: The UX was significantly improved. The component was refactored to no longer overwrite the user's typed street and house number when a city/postal code suggestion is selected from the dropdown. The dropdown's clickability was also improved with  and .
+-   ****
+    -   **Importance:** Defines the application's color scheme.
+    -   **Changes:** It was updated to include new semantic colors (, , ) as part of the initial UX optimization phase.
 </code_architecture>
-
 <pending_tasks>
+- **Complete UX Optimization:** The user requested a full UX overhaul. Only the color theme and the worker feed have been partially addressed. Other screens like the worker profile, job creation, job details, and chat still need to be optimized.
 - **Backend Integration:** The entire application still relies on  as a mock database. This needs to be replaced with API calls to a live backend.
-- **Refine Registration Flow:** A user request to add more detail to the registration process (e.g.,  for Employers like 'private'/'business', and  for Workers) has not yet been implemented.
-- **Admin Role:** Functionality for an administrative role has been mentioned but deferred.
+- **Refine Navigation:** The user requested a new bottom tab navigation structure which has not been implemented.
 </pending_tasks>
-
 <current_work>
-The most recent task was a critical fix for a crash in the worker profile screen (). This crash was a direct result of a major overhaul of the app's job taxonomy system.
+The most recent task was a comprehensive UX optimization of the entire frontend. Due to token limitations, this was broken down into phases, starting with the most critical components.
 
-The work involved several steps:
-1.  **Restructuring the Taxonomy:** A new, highly structured taxonomy was defined in a central file, , replacing an older, less organized JSON file. This new structure splits tags into  and  under each category.
-2.  **Refactoring Utility Functions:** The functions used to interact with the taxonomy, located in , were completely rewritten. They are now robust, handling cases where a category key might be missing or invalid by returning empty arrays and logging a warning instead of crashing the app.
-3.  **Making the Profile Screen Resilient:** The  screen was modified to handle the new data structure. A  function was added to clean up a user's saved categories when their profile is loaded from . This prevents the app from crashing if the user's profile contains outdated category keys that no longer exist in the new taxonomy.
-4.  **Fixing UI Rendering:** The rendering logic for tags within the profile screen was updated to correctly display the separate Activities and Qualifications groups based on the new data structure. The  function was also being adapted to work with the new data model (an array of strings instead of objects).
+**Phase 1: Theme & Colors**
+-   The color palette in  was extended with new semantic colors to be used across the app for better visual consistency and feedback. New colors include , , , .
+
+**Phase 2: Worker Feed Optimization**
+-   Work began on refactoring the job cards in .
+-   The layout was made more compact and scannable, with a clearer visual hierarchy for the job title, pay, location, and time.
+-   The Apply button () was made more prominent.
+-   The logic for displaying different button states (applied, disabled, loading) was preserved while updating the styles.
+
+The process was interrupted immediately after starting to modify the shared  component. The intention was to update the  component to use the new  for its primary variant, which was a necessary step to complete the visual update of the worker feed. The work is therefore mid-way through refactoring the worker feed screen.
 </current_work>
-
 <optional_next_step>
-Complete the fix for  by ensuring the  function works correctly with the new string-based tag array. Then, verify that the employer's job creation screen () is also updated to use the new taxonomy system without issues.
+Finish updating the  component to correctly use the new  color from the theme for its primary variant and then restart the frontend to apply all UX changes made to the worker feed.
 </optional_next_step>
