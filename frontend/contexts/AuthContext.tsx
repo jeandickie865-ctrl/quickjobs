@@ -126,33 +126,53 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       },
 
       async signIn(email, password) {
+        const emailNormalized = email.toLowerCase().trim();
+        console.log('🔐 signIn called with email:', emailNormalized);
+        
         const creds = await loadCredentials();
-        const found = creds.find(c => c.email.toLowerCase() === email.toLowerCase());
-        if (!found || found.password !== password) {
+        console.log('📋 Current credentials:', creds.map(c => c.email));
+        
+        const found = creds.find(c => c.email === emailNormalized);
+        if (!found) {
+          console.log('❌ User not found');
           throw new Error('E-Mail oder Passwort ist falsch');
         }
+        
+        if (found.password !== password) {
+          console.log('❌ Wrong password');
+          throw new Error('E-Mail oder Passwort ist falsch');
+        }
+        
+        console.log('✅ Credentials valid');
 
         // Lade User aus der Datenbank (mit persistierter Rolle falls vorhanden)
         const usersDb = await loadUsersDatabase();
-        const userFromDb = usersDb[email.toLowerCase()];
+        console.log('📋 Users database:', Object.keys(usersDb));
+        
+        const userFromDb = usersDb[emailNormalized];
         
         if (userFromDb) {
           // User existiert bereits in Datenbank - nutze seine Daten (inkl. Rolle)
+          console.log('✅ Found user in database:', userFromDb);
           await setItem(USER_KEY, userFromDb);
           setUser(userFromDb);
         } else {
           // Fallback: User existiert noch nicht in Datenbank (alte Accounts)
           // Erstelle neuen User ohne Rolle
+          console.log('⚠️ User not in database, creating entry');
           const newUser: StoredUser = {
             id: 'u-' + Date.now().toString(),
-            email,
+            email: emailNormalized,
           };
           
-          usersDb[email.toLowerCase()] = newUser;
+          usersDb[emailNormalized] = newUser;
           await saveUsersDatabase(usersDb);
           await setItem(USER_KEY, newUser);
           setUser(newUser);
+          console.log('✅ User created and set:', newUser);
         }
+        
+        console.log('✅ signIn successful');
       },
 
       async signOut() {
