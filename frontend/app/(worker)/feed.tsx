@@ -477,6 +477,25 @@ export default function WorkerFeed() {
                         ✓ Du hast dich schon für diesen Job gemeldet.
                       </Text>
                     </View>
+                  ) : nearbyJobData?.disabled ? (
+                    <View style={{ gap: spacing.xs }}>
+                      <Button
+                        title="Ich habe Zeit"
+                        onPress={() => {}}
+                        disabled={true}
+                      />
+                      <View style={{
+                        padding: spacing.sm,
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: 8,
+                        borderLeftWidth: 3,
+                        borderLeftColor: colors.gray400,
+                      }}>
+                        <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 16 }}>
+                          🔒 {nearbyJobData.disabledReason || 'Dieser Job steht dir aktuell nicht zur Verfügung.'}
+                        </Text>
+                      </View>
+                    </View>
                   ) : canApply ? (
                     <Button
                       title={isApplyingJobId === job.id ? 'Melde dich…' : 'Ich habe Zeit'}
