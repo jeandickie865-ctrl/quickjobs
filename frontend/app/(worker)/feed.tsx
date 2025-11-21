@@ -453,18 +453,47 @@ export default function WorkerFeed() {
                     </View>
                   )}
 
-                  <View style={{ gap: 4 }}>
-                    <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                      📍 {formatAddress(job.address) || 'Adresse nicht angegeben'}
+                  {/* Kompakte Info-Zeilen */}
+                  <View style={{ gap: 6 }}>
+                    {/* Ort + Distanz */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <Text style={{ fontSize: 16 }}>📍</Text>
+                      <Text style={{ 
+                        flex: 1,
+                        color: colors.gray700, 
+                        fontSize: 14,
+                        fontWeight: '500',
+                      }}>
+                        {formatAddress(job.address) || 'Adresse nicht angegeben'}
+                      </Text>
                       {nearbyJobData && nearbyJobData.distance !== Infinity && (
-                        <Text style={{ color: colors.gray500, fontSize: 13 }}>
-                          {' '}· {nearbyJobData.distance.toFixed(1)} km entfernt
-                        </Text>
+                        <View style={{
+                          paddingHorizontal: 8,
+                          paddingVertical: 3,
+                          borderRadius: 6,
+                          backgroundColor: colors.infoLight,
+                        }}>
+                          <Text style={{ 
+                            color: colors.info, 
+                            fontSize: 12,
+                            fontWeight: '600',
+                          }}>
+                            {nearbyJobData.distance.toFixed(1)} km
+                          </Text>
+                        </View>
                       )}
-                    </Text>
-                    <Text style={{ color: colors.gray700, fontSize: 14 }}>
-                      🏷️ {job.category}
-                    </Text>
+                    </View>
+                    
+                    {/* Kategorie */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <Text style={{ fontSize: 16 }}>💼</Text>
+                      <Text style={{ 
+                        color: colors.gray600, 
+                        fontSize: 13,
+                      }}>
+                        {job.category}
+                      </Text>
+                    </View>
                     {timeDisplay && (
                       <Text style={{ color: colors.gray700, fontSize: 14 }}>
                         ⏱️ {timeDisplay}
