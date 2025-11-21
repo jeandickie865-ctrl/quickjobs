@@ -572,29 +572,12 @@ export default function WorkerFeed() {
                       </Text>
                     </View>
                   ) : canApply ? (
-                    <View style={{
-                      backgroundColor: colors.primary,
-                      borderRadius: 10,
-                      paddingVertical: 14,
-                      paddingHorizontal: 20,
-                      alignItems: 'center',
-                      shadowColor: colors.primary,
-                      shadowOffset: { width: 0, height: 2 },
-                      shadowOpacity: 0.2,
-                      shadowRadius: 4,
-                      elevation: 3,
-                    }}>
-                      <Text 
-                        style={{ 
-                          color: colors.white, 
-                          fontSize: 16, 
-                          fontWeight: '700',
-                        }}
-                        onPress={() => handleApply(job.id, job.employerId)}
-                      >
-                        {isApplyingJobId === job.id ? '⏳ Melde dich…' : '✋ Ich habe Zeit!'}
-                      </Text>
-                    </View>
+                    <Button
+                      title={isApplyingJobId === job.id ? '⏳ Melde dich…' : '✋ Ich habe Zeit!'}
+                      onPress={() => handleApply(job.id, job.employerId)}
+                      disabled={isApplyingJobId === job.id}
+                      variant="primary"
+                    />
                   ) : (
                     <View style={{ gap: spacing.xs }}>
                       <Button
