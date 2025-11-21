@@ -200,17 +200,6 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
   },
-  purpleGlowLine: {
-    position: 'absolute',
-    bottom: 0,
-    left: '20%',
-    right: '20%',
-    height: 2,
-    backgroundColor: COLORS.purple,
-    opacity: 0.3,
-    borderRadius: 1,
-  },
-
   // Slogan
   sloganContainer: {
     flexDirection: 'row',
