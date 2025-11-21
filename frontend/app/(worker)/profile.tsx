@@ -158,15 +158,87 @@ export default function WorkerProfileScreen() {
   }
 
   async function handleSave() {
+    if (isSaving) return; // Prevent double-save
+    
     setIsSaving(true);
+    
     try {
-      // hier später Geocoding einbauen; vorerst dummy Lat/Lon wenn leer
-      const cleaned: WorkerProfile = {
+      // === VALIDATION START ===
+      console.log('🔍 Validating profile before save', {
+        street: profile.homeAddress?.street,
+        postalCode: profile.homeAddress?.postalCode,
+        city: profile.homeAddress?.city,
+        homeLat: profile.homeLat,
+        homeLon: profile.homeLon,
+        categories: profile.categories?.length,
+      });
+
+      // 1. Check street
+      if (!profile.homeAddress?.street || profile.homeAddress.street.trim().length === 0) {
+        console.log('❌ Profile validation failed: street missing');
+        alert('Bitte gib eine Straße ein.');
+        setIsSaving(false);
+        return;
+      }
+
+      // 2. Check city
+      if (!profile.homeAddress?.city || profile.homeAddress.city.trim().length === 0) {
+        console.log('❌ Profile validation failed: city missing');
+        alert('Bitte gib eine Stadt ein.');
+        setIsSaving(false);
+        return;
+      }
+
+      // 3. Check postal code (must be 5 digits)
+      if (!profile.homeAddress?.postalCode || profile.homeAddress.postalCode.length !== 5) {
+        console.log('❌ Profile validation failed: invalid postalCode');
+        alert('Bitte gib eine gültige 5-stellige Postleitzahl ein.');
+        setIsSaving(false);
+        return;
+      }
+
+      // 4. Check coordinates (MUST NOT be 0 or missing)
+      if (!profile.homeLat || !profile.homeLon || profile.homeLat === 0 || profile.homeLon === 0) {
+        console.log('❌ Profile validation failed: coordinates missing', {
+          homeLat: profile.homeLat,
+          homeLon: profile.homeLon,
+        });
+        alert('Bitte Adresse aus Vorschlag auswählen, damit die Karte sie erkennt.');
+        setIsSaving(false);
+        return;
+      }
+
+      // 5. Check categories
+      if (!profile.categories || profile.categories.length === 0) {
+        console.log('❌ Profile validation failed: no categories');
+        alert('Bitte wähle mindestens eine Kategorie aus.');
+        setIsSaving(false);
+        return;
+      }
+
+      // === VALIDATION PASSED ===
+      console.log('✅ Profile validation passed');
+
+      // Save without modifications
+      const profileToSave: WorkerProfile = {
         ...profile,
-        homeLat: profile.homeLat || 0,
-        homeLon: profile.homeLon || 0
+        // Ensure arrays are never undefined
+        categories: profile.categories ?? [],
+        selectedTags: profile.selectedTags ?? [],
       };
-      await saveWorkerProfile(cleaned);
+
+      console.log('💾 Saving profile', profileToSave);
+      
+      await saveWorkerProfile(profileToSave);
+      
+      console.log('✅ Profile saved successfully');
+      
+      // Show success toast
+      alert('✅ Profil gespeichert');
+      
+    } catch (error) {
+      console.error('❌ Error saving profile:', error);
+      alert('Fehler beim Speichern. Bitte erneut versuchen.');
     } finally {
       setIsSaving(false);
     }
