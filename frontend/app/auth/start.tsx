@@ -48,7 +48,7 @@ export default function AuthStart() {
           </Link>
 
           {/* Rechtliche Links */}
-          <View style={{ marginTop: spacing.xxl, alignItems: 'center', gap: spacing.sm }}>
+          <View style={{ marginTop: spacing.xxl, alignItems: 'center', gap: spacing.xs }}>
             <Text style={{ fontSize: 13, color: colors.gray700, textAlign: 'center', lineHeight: 19 }}>
               Mit deiner Nutzung akzeptierst du unsere AGB,{' \n'}die Datenschutzerklärung und die Grundsätze.
             </Text>
