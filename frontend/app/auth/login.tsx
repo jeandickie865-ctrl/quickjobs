@@ -1,22 +1,32 @@
-// app/auth/login.tsx - BCKP Style
+// app/auth/login.tsx - STIL 1: Modern, Ruhig, Clean, Apple-ähnlich
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../theme/ThemeProvider';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
 import { Eye, EyeOff } from '../../components/Icons';
+
+// STIL 1 Brand Colors
+const COLORS = {
+  primary: '#2F4F3A',
+  background: '#F9FAF8',
+  text: '#111111',
+  textSecondary: '#666666',
+  border: '#A8B5A9',
+  placeholder: '#999999',
+  white: '#FFFFFF',
+  errorBg: '#FDE5E5',
+  errorBorder: '#C94040',
+  errorText: '#A62828',
+};
 
 export default function LoginScreen() {
   const router = useRouter();
   const { signIn } = useAuth();
-  const { colors, spacing } = useTheme();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPw, setShowPw] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -34,123 +44,156 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryUltraLight }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
         <ScrollView 
-          contentContainerStyle={{ 
-            flexGrow: 1, 
-            justifyContent: 'center', 
-            padding: spacing.lg 
-          }}
+          contentContainerStyle={{ flexGrow: 1, padding: 24 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <Card padding={spacing.xl} style={{ maxWidth: 400, width: '100%', alignSelf: 'center' }}>
-            <Text style={{ fontSize: 28, fontWeight: '700', color: colors.black, marginBottom: spacing.lg, textAlign: 'center' }}>
-              Willkommen zurück
+          {/* Top Spacer */}
+          <View style={{ height: 60 }} />
+
+          {/* Headline */}
+          <View style={{ marginBottom: 8 }}>
+            <Text style={{ fontSize: 26, fontWeight: '800', color: COLORS.text }}>
+              Login
             </Text>
+          </View>
 
-            {/* Error Message */}
-            {errorMsg ? (
-              <View style={{
-                backgroundColor: colors.errorLight,
-                padding: spacing.md,
-                borderRadius: 10,
-                marginBottom: spacing.md,
-              }}>
-                <Text style={{ color: colors.error, fontWeight: '500', fontSize: 14 }}>
-                  {errorMsg}
-                </Text>
-              </View>
-            ) : null}
+          {/* Subtitle */}
+          <View style={{ marginBottom: 40 }}>
+            <Text style={{ fontSize: 15, fontWeight: '400', color: COLORS.textSecondary }}>
+              Schön, dass du wieder da bist.
+            </Text>
+          </View>
 
-            {/* Email */}
-            <View style={{ marginBottom: spacing.md }}>
-              <Text style={{ fontWeight: '500', color: colors.gray900, marginBottom: 6, fontSize: 14 }}>
-                E-Mail
+          {/* Error Banner */}
+          {errorMsg ? (
+            <View style={{
+              backgroundColor: COLORS.errorBg,
+              borderLeftWidth: 4,
+              borderLeftColor: COLORS.errorBorder,
+              padding: 14,
+              borderRadius: 8,
+              marginBottom: 24,
+            }}>
+              <Text style={{ color: COLORS.errorText, fontSize: 14, fontWeight: '500' }}>
+                {errorMsg}
               </Text>
+            </View>
+          ) : null}
+
+          {/* Email Input */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 13, fontWeight: '500', color: COLORS.text, marginBottom: 8 }}>
+              E-Mail
+            </Text>
+            <TextInput
+              autoCapitalize="none"
+              keyboardType="email-address"
+              placeholder="name@email.de"
+              placeholderTextColor={COLORS.placeholder}
+              value={email}
+              onChangeText={setEmail}
+              style={{
+                backgroundColor: COLORS.white,
+                borderWidth: 1,
+                borderColor: COLORS.border,
+                borderRadius: 14,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                fontSize: 16,
+                color: COLORS.text,
+              }}
+            />
+          </View>
+
+          {/* Password Input */}
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '500', color: COLORS.text, marginBottom: 8 }}>
+              Passwort
+            </Text>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: COLORS.white,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+              borderRadius: 14,
+            }}>
               <TextInput
-                autoCapitalize="none"
-                keyboardType="email-address"
-                placeholder="name@email.de"
-                placeholderTextColor={colors.gray500}
-                value={email}
-                onChangeText={setEmail}
+                placeholder="••••••"
+                placeholderTextColor={COLORS.placeholder}
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
                 style={{
-                  borderWidth: 1,
-                  borderColor: colors.gray300,
-                  borderRadius: 10,
-                  padding: 14,
-                  backgroundColor: colors.white,
-                  color: colors.black,
-                  fontSize: 15,
+                  flex: 1,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  fontSize: 16,
+                  color: COLORS.text,
                 }}
               />
+              <Pressable 
+                onPress={() => setShowPassword(!showPassword)}
+                style={{ paddingHorizontal: 16 }}
+              >
+                {showPassword ? (
+                  <EyeOff size={20} color={COLORS.textSecondary} />
+                ) : (
+                  <Eye size={20} color={COLORS.textSecondary} />
+                )}
+              </Pressable>
             </View>
+          </View>
 
-            {/* Password */}
-            <View style={{ marginBottom: spacing.sm }}>
-              <Text style={{ fontWeight: '500', color: colors.gray900, marginBottom: 6, fontSize: 14 }}>
-                Passwort
-              </Text>
-              <View style={{
-                flexDirection: 'row',
+          {/* Spacer */}
+          <View style={{ flex: 1 }} />
+
+          {/* Buttons - 90% Breite */}
+          <View style={{ alignItems: 'center', gap: 16 }}>
+            <TouchableOpacity 
+              style={{
+                backgroundColor: COLORS.primary,
+                width: '90%',
+                paddingVertical: 16,
+                borderRadius: 14,
                 alignItems: 'center',
-                borderWidth: 1,
-                borderColor: colors.gray300,
-                borderRadius: 10,
-                backgroundColor: colors.white,
-              }}>
-                <TextInput
-                  placeholder="••••••"
-                  placeholderTextColor={colors.gray500}
-                  secureTextEntry={!showPw}
-                  value={password}
-                  onChangeText={setPassword}
-                  style={{
-                    flex: 1,
-                    padding: 14,
-                    color: colors.black,
-                    fontSize: 15,
-                  }}
-                />
-                <Pressable onPress={() => setShowPw(!showPw)} style={{ padding: 12 }}>
-                  {showPw ? (
-                    <EyeOff size={20} color={colors.gray500} />
-                  ) : (
-                    <Eye size={20} color={colors.gray500} />
-                  )}
-                </Pressable>
-              </View>
-            </View>
-
-            {/* Passwort vergessen Link */}
-            <Pressable 
-              onPress={() => router.push('/auth/forgot-password')}
-              style={{ marginBottom: spacing.lg, alignSelf: 'flex-end' }}
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 6,
+                elevation: 3,
+              }}
+              onPress={handleLogin}
+              disabled={loading}
+              activeOpacity={0.85}
             >
-              <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '500', textDecorationLine: 'underline' }}>
+              <Text style={{ fontSize: 16, fontWeight: '600', color: COLORS.white }}>
+                {loading ? 'Lädt...' : 'Einloggen'}
+              </Text>
+            </TouchableOpacity>
+
+            <Pressable onPress={() => router.push('/auth/forgot-password')}>
+              <Text style={{ fontSize: 14, color: COLORS.primary, fontWeight: '500' }}>
                 Passwort vergessen?
               </Text>
             </Pressable>
 
-            {/* Login Button */}
-            <Button
-              title={loading ? 'Lädt...' : 'Einloggen'}
-              onPress={handleLogin}
-              disabled={loading}
-              loading={loading}
-              style={{ marginBottom: spacing.md }}
-            />
+            <Pressable onPress={() => router.push('/auth/signup')} style={{ marginTop: 8 }}>
+              <Text style={{ fontSize: 14, color: COLORS.textSecondary }}>
+                Noch kein Account?{' '}
+                <Text style={{ fontWeight: '600', color: COLORS.primary }}>Registrieren</Text>
+              </Text>
+            </Pressable>
+          </View>
 
-            {/* Link zu Signup */}
-            <Button
-              title="Registrieren?"
-              variant="ghost"
-              onPress={() => router.push('/auth/signup')}
-            />
-          </Card>
+          {/* Bottom Padding */}
+          <View style={{ height: 32 }} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

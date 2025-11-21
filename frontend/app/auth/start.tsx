@@ -1,19 +1,18 @@
-// app/auth/start.tsx - OFFIZIELLER BCKP DESIGN SYSTEM
+// app/auth/start.tsx - STIL 1: Modern, Ruhig, Clean, Apple-ähnlich
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 
-// BCKP Design System Colors
+// STIL 1 Brand Colors
 const COLORS = {
-  primary: '#345C45',
-  primaryDark: '#2D4F3B',
-  primaryLight: '#DDE5E0',
-  surface: '#F7F8F7',
-  text: '#0E0E0E',
-  textSecondary: '#5E615F',
-  border: 'rgba(52,92,69,0.45)',
+  primary: '#2F4F3A',
+  highlight: '#3C6348',
+  background: '#F9FAF8',
+  text: '#111111',
+  textSecondary: '#444444',
+  border: '#A8B5A9',
+  legalText: '#6A716A',
   white: '#FFFFFF',
 };
 
@@ -21,146 +20,134 @@ export default function AuthStart() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      {/* Background mit Gradient */}
-      <LinearGradient
-        colors={['rgba(0,0,0,0.03)', 'transparent']}
-        style={StyleSheet.absoluteFill}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 0.3 }}
-      />
-      
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.content}>
-          {/* Top Spacer */}
-          <View style={{ flex: 0.8 }} />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        {/* Top Spacer - viel Luft */}
+        <View style={{ height: 80 }} />
 
-          {/* Logo */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoShadow}>
-              <Image
-                source={require('../../assets/logo.jpeg')}
-                style={styles.logo}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={styles.slogan}>
-              wenn's jetzt passieren muss.
-            </Text>
+        {/* Hero - Logo & Claim */}
+        <View style={styles.heroContainer}>
+          <View style={styles.logoShadow}>
+            <Image
+              source={{ uri: 'https://customer-assets.emergentagent.com/job_quickjobs-10/artifacts/sce5x6fk_Image.jpeg' }}
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </View>
-
-          {/* Spacer */}
-          <View style={{ flex: 1 }} />
-
-          {/* Title & Buttons */}
-          <View style={styles.buttonsContainer}>
-            <Text style={styles.title}>
-              Willkommen{'\n'}bei BCKP
-            </Text>
-
-            {/* Primary Button - Registrieren */}
-            <Link href="/auth/signup" asChild>
-              <TouchableOpacity 
-                style={styles.primaryButton}
-                activeOpacity={0.85}
-              >
-                <Text style={styles.primaryButtonText}>Registrieren</Text>
-              </TouchableOpacity>
-            </Link>
-
-            {/* Secondary Button - Login */}
-            <Link href="/auth/login" asChild>
-              <TouchableOpacity 
-                style={styles.secondaryButton}
-                activeOpacity={0.85}
-              >
-                <Text style={styles.secondaryButtonText}>Login</Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
-
-          {/* Bottom Spacer */}
-          <View style={{ flex: 0.6 }} />
-
-          {/* Rechtliche Links */}
-          <View style={styles.legalContainer}>
-            <View style={styles.legalRow}>
-              <Pressable onPress={() => router.push('/legal/agb')}>
-                <Text style={styles.legalText}>AGB</Text>
-              </Pressable>
-              <Text style={styles.legalDot}>•</Text>
-              <Pressable onPress={() => router.push('/legal/privacy')}>
-                <Text style={styles.legalText}>Datenschutz</Text>
-              </Pressable>
-              <Text style={styles.legalDot}>•</Text>
-              <Pressable onPress={() => router.push('/legal/guidelines')}>
-                <Text style={styles.legalText}>Grundsätze</Text>
-              </Pressable>
-            </View>
-          </View>
-
-          {/* Bottom Padding */}
-          <View style={{ height: 24 }} />
+          <Text style={styles.claim}>
+            wenn’s jetzt passieren muss.
+          </Text>
         </View>
-      </SafeAreaView>
-    </View>
+
+        {/* Headline */}
+        <View style={{ marginTop: 32 }}>
+          <Text style={styles.headline}>
+            Willkommen bei BCKP
+          </Text>
+        </View>
+
+        {/* Spacer */}
+        <View style={{ flex: 1 }} />
+
+        {/* Buttons - 90% Breite */}
+        <View style={styles.buttonsContainer}>
+          <Link href="/auth/signup" asChild>
+            <TouchableOpacity 
+              style={styles.primaryButton}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.primaryButtonText}>Registrieren</Text>
+            </TouchableOpacity>
+          </Link>
+
+          <Link href="/auth/login" asChild>
+            <TouchableOpacity 
+              style={styles.secondaryButton}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.secondaryButtonText}>Login</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
+        {/* Legal Section - ganz unten */}
+        <View style={styles.legalContainer}>
+          <Text style={styles.legalDescription}>
+            Mit deiner Nutzung akzeptierst du unsere AGB,{' \n'}die Datenschutzerklärung und die Grundsätze.
+          </Text>
+          <View style={styles.legalLinksRow}>
+            <Pressable onPress={() => router.push('/legal/agb')}>
+              <Text style={styles.legalLink}>AGB</Text>
+            </Pressable>
+            <Text style={styles.legalDot}>•</Text>
+            <Pressable onPress={() => router.push('/legal/privacy')}>
+              <Text style={styles.legalLink}>Datenschutz</Text>
+            </Pressable>
+            <Text style={styles.legalDot}>•</Text>
+            <Pressable onPress={() => router.push('/legal/guidelines')}>
+              <Text style={styles.legalLink}>Grundsätze</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Bottom Padding */}
+        <View style={{ height: 32 }} />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.surface,
-  },
-  safeArea: {
-    flex: 1,
+    backgroundColor: COLORS.background,
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
-  logoContainer: {
+  heroContainer: {
     alignItems: 'center',
   },
   logoShadow: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
     shadowRadius: 4,
-    elevation: 1,
+    elevation: 2,
   },
   logo: {
     width: 140,
     height: 140,
   },
-  slogan: {
+  claim: {
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: '500',
     color: COLORS.textSecondary,
     textAlign: 'center',
-    marginTop: 12,
+    marginTop: 16,
+    letterSpacing: 0.2,
   },
-  buttonsContainer: {
-    width: '100%',
-  },
-  title: {
+  headline: {
     fontSize: 26,
     fontWeight: '800',
     color: COLORS.text,
     textAlign: 'center',
-    lineHeight: 30,
-    marginBottom: 32,
+  },
+  buttonsContainer: {
+    alignItems: 'center',
+    gap: 14,
   },
   primaryButton: {
     backgroundColor: COLORS.primary,
-    height: 54,
+    width: '90%',
+    paddingVertical: 16,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 3,
   },
@@ -170,35 +157,43 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   secondaryButton: {
-    backgroundColor: 'rgba(52,92,69,0.05)',
-    height: 54,
+    backgroundColor: '#F7F8F7',
+    width: '90%',
+    paddingVertical: 16,
     borderRadius: 14,
-    borderWidth: 0.75,
+    borderWidth: 1,
     borderColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   secondaryButtonText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: COLORS.primary,
   },
   legalContainer: {
     alignItems: 'center',
+    marginTop: 32,
   },
-  legalRow: {
+  legalDescription: {
+    fontSize: 10,
+    color: '#777777',
+    textAlign: 'center',
+    lineHeight: 14,
+    marginBottom: 8,
+  },
+  legalLinksRow: {
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
   },
-  legalText: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
+  legalLink: {
+    fontSize: 10,
+    color: COLORS.legalText,
+    letterSpacing: 0.2,
   },
   legalDot: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
+    fontSize: 10,
+    color: COLORS.legalText,
   },
 });
