@@ -52,7 +52,7 @@ export default function AuthStart() {
             <Text style={{ fontSize: 12, color: colors.textMuted, textAlign: 'center', lineHeight: 18 }}>
               Mit deiner Nutzung akzeptierst du unsere
             </Text>
-            <View style={{ flexDirection: 'row', gap: spacing.md, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               <Pressable onPress={() => router.push('/legal/agb')}>
                 <Text style={{ fontSize: 13, color: colors.primary, textDecorationLine: 'underline', fontWeight: '500' }}>
                   AGB
