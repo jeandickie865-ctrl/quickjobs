@@ -451,7 +451,7 @@ export default function WorkerProfileScreen() {
       <View style={{ gap: 8 }}>
         <Text style={{ color: colors.black, fontWeight: '600' }}>Steckbrief</Text>
         <Text style={{ color: colors.gray600, fontSize: 13 }}>
-          Beschreibe dich kurz. Dieser Text wird Arbeitgebern vor dem Match angezeigt.
+          Beschreibe dich kurz. Dieser Text wird Auftraggebern vor dem Match angezeigt.
         </Text>
         <TextInput
           placeholder="z.B. Erfahrener Sicherheitsmitarbeiter mit 5 Jahren Erfahrung..."

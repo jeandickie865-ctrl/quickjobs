@@ -169,7 +169,7 @@ export default function WorkerMatchesScreen() {
               Noch keine Matches
             </Text>
             <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
-              Sobald ein Arbeitgeber deine Bewerbung annimmt, erscheint der Job hier.
+              Sobald ein Auftraggeber deine Bewerbung annimmt, erscheint der Job hier.
             </Text>
             <Button
               title="Jobs ansehen"
@@ -246,7 +246,7 @@ export default function WorkerMatchesScreen() {
                       {job.title}
                     </Text>
                     <View style={{ gap: 4 }}>
-                      {/* Arbeitgeber Info */}
+                      {/* Auftraggeber Info */}
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                         <View style={{
                           width: 32,
@@ -261,7 +261,7 @@ export default function WorkerMatchesScreen() {
                           </Text>
                         </View>
                         <Text style={{ color: colors.gray700, fontSize: 14, fontWeight: '600' }}>
-                          Arbeitgeber
+                          Auftraggeber
                         </Text>
                       </View>
                       
@@ -300,7 +300,7 @@ export default function WorkerMatchesScreen() {
                     borderLeftColor: colors.black,
                   }}>
                     <Text style={{ color: colors.gray700, fontSize: 12, lineHeight: 18 }}>
-                      🎉 <Text style={{ fontWeight: '600' }}>Glückwunsch!</Text> Der Arbeitgeber hat dich für diesen Job ausgewählt. 
+                      🎉 <Text style={{ fontWeight: '600' }}>Glückwunsch!</Text> Der Auftraggeber hat dich für diesen Job ausgewählt. 
                       Ihr könnt jetzt Details besprechen.
                     </Text>
                   </View>

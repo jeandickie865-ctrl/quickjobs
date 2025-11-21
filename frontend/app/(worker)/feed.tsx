@@ -160,7 +160,7 @@ export default function WorkerFeed() {
 
     if (!employerId) {
       console.log('❌ handleApply: employerId is missing from job');
-      setError('Dieser Job hat keinen Arbeitgeber zugewiesen. Bitte lade die Seite neu.');
+      setError('Dieser Job hat keinen Auftraggeber zugewiesen. Bitte lade die Seite neu.');
       return;
     }
 
@@ -692,7 +692,7 @@ export default function WorkerFeed() {
             <Text style={{ color: colors.black, fontSize: 14, lineHeight: 20 }}>
               🎉 <Text style={{ fontWeight: '700' }}>Du hast {acceptedJobsCount} {acceptedJobsCount === 1 ? 'Match' : 'Matches'}!</Text>
               {'\n'}
-              Arbeitgeber haben deine Startanfrageen angenommen. Du findest sie unter{' '}
+              Auftraggeber haben deine Startanfrageen angenommen. Du findest sie unter{' '}
               <Text
                 style={{ fontWeight: '700', textDecorationLine: 'underline' }}
                 onPress={() => router.push('/(worker)/matches')}
