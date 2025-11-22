@@ -13,6 +13,7 @@ from profiles.employer_router import router as employer_router
 from profiles.worker_router import router as worker_router
 from jobs.router import router as jobs_router
 from matching.router import router as matching_router
+from upload.router import router as upload_router
 
 # Create FastAPI app
 app = FastAPI(
