@@ -44,6 +44,8 @@ app.include_router(worker_router, prefix="/api/profiles/worker", tags=["Worker P
 app.include_router(jobs_router, prefix="/api/jobs", tags=["Jobs"])
 app.include_router(matching_router, prefix="/api/matching", tags=["Matching"])
 app.include_router(upload_router, prefix="/api/upload", tags=["Upload"])
+app.include_router(applications_router, prefix="/api/applications", tags=["Applications"])
+app.include_router(matches_router, prefix="/api/matches", tags=["Matches"])
 
 # Root endpoint
 @app.get("/", tags=["Root"])
