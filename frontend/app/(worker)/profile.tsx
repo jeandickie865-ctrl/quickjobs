@@ -356,12 +356,12 @@ export default function WorkerProfileScreen() {
               KATEGORIEN * (Mehrfachauswahl)
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {CATEGORIES.map((cat) => {
-                const isSelected = selectedCategories.includes(cat);
+              {availableCategories.map((cat) => {
+                const isSelected = selectedCategories.includes(cat.key);
                 return (
                   <Pressable
-                    key={cat}
-                    onPress={() => toggleCategory(cat)}
+                    key={cat.key}
+                    onPress={() => toggleCategory(cat.key)}
                     style={{
                       backgroundColor: isSelected ? colors.neon : colors.white,
                       borderRadius: 20,
@@ -376,7 +376,7 @@ export default function WorkerProfileScreen() {
                       fontSize: 14, 
                       fontWeight: isSelected ? '700' : '500' 
                     }}>
-                      {isSelected ? '✓ ' : ''}{cat}
+                      {isSelected ? '✓ ' : ''}{cat.title}
                     </Text>
                   </Pressable>
                 );
