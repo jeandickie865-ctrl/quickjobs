@@ -123,17 +123,17 @@ export default function WorkerProfileScreen() {
           gap: 10,
         }}
       >
-        <Text style={{ color: colors.text, fontSize: 18, fontWeight: '700' }}>
+        <Text style={{ color: '#000000', fontSize: 18, fontWeight: '700' }}>
           Persönliche Daten
         </Text>
 
-        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
+        <Text style={{ color: '#666666', fontSize: 14 }}>
           Name: {profile?.name || '—'}
         </Text>
-        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
+        <Text style={{ color: '#666666', fontSize: 14 }}>
           Stadt: {profile?.city || '—'}
         </Text>
-        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
+        <Text style={{ color: '#666666', fontSize: 14 }}>
           Kategorien: {profile?.categories?.join(', ') || '—'}
         </Text>
       </View>
