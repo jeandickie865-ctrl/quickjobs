@@ -455,6 +455,9 @@ export default function SignupScreen() {
               </View>
             </Animated.View>
 
+            {/* Dev Reset Button */}
+            <DevResetButton />
+
             {/* Bottom Padding */}
             <View style={{ height: 40 }} />
           </ScrollView>
