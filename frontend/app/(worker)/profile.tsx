@@ -48,6 +48,14 @@ export default function WorkerProfileScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState('');
   
+  // Address fields
+  const [street, setStreet] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [city, setCity] = useState('');
+  const [lat, setLat] = useState<number | undefined>(undefined);
+  const [lon, setLon] = useState<number | undefined>(undefined);
+  const [radius, setRadius] = useState('15');
+  
   // Reviews
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
