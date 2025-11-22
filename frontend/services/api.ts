@@ -111,6 +111,33 @@ export async function selectWorker(applicationId: string): Promise<SelectWorkerR
 }
 
 // ============================================
+// JOBS API
+// ============================================
+
+export interface Job {
+  id: string;
+  employer_id: string;
+  title: string;
+  description: string | null;
+  street: string | null;
+  postal_code: string | null;
+  city: string | null;
+  lat: number | null;
+  lon: number | null;
+  categories: string[];
+  qualifications: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Get job by ID
+ */
+export async function getJobById(jobId: string): Promise<Job> {
+  return apiRequest<Job>(`/api/jobs/${jobId}`);
+}
+
+// ============================================
 // PROFILES API
 // ============================================
 
