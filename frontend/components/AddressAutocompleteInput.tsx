@@ -74,10 +74,14 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   }, [query, isFocused]);
 
   const selectSuggestion = (item: any) => {
-    const addr = item.address ?? {};
+    // Sofort UI-Zustand zurücksetzen
+    setIsFocused(false);
+    setSuggestions([]);
 
+    const addr = item.address ?? {};
     const streetName = [addr.road, addr.house_number].filter(Boolean).join(' ');
 
+    // Callbacks ausführen
     if (typeof onStreetChange === 'function') onStreetChange(streetName);
     if (typeof onPostalCodeChange === 'function')
       onPostalCodeChange(addr.postcode ?? '');
@@ -87,9 +91,8 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
     if (typeof onLatChange === 'function') onLatChange(parseFloat(item.lat));
     if (typeof onLonChange === 'function') onLonChange(parseFloat(item.lon));
 
+    // Query auf den gewählten Straßennamen setzen
     setQuery(streetName);
-    setSuggestions([]);
-    setIsFocused(false);
   };
 
   return (
