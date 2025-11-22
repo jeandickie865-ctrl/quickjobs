@@ -28,6 +28,7 @@ export default function WorkerProfileScreen() {
   const [radiusKm, setRadiusKm] = useState('15');
   const [photoUrl, setPhotoUrl] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
   
   // Focus state
