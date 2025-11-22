@@ -197,13 +197,13 @@ export default function EditWorkerProfileScreen() {
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={26} color={colors.neon} />
-          </Pressable>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>
-            Profil bearbeiten
-          </Text>
           <View style={{ width: 26 }} />
+          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>
+            Mein Profil
+          </Text>
+          <Pressable onPress={() => router.push('/(worker)/feed')}>
+            <Ionicons name="home-outline" size={26} color={colors.neon} />
+          </Pressable>
         </View>
       </SafeAreaView>
 
