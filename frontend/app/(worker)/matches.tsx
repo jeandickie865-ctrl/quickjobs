@@ -70,7 +70,7 @@ export default function WorkerMatchesScreen() {
       <View
         style={{
           flex: 1,
-          backgroundColor: COLORS.bg,
+          backgroundColor: colors.background,
           justifyContent: 'center',
           alignItems: 'center',
         }}
