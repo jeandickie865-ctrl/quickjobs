@@ -19,9 +19,9 @@ export const palette = {
   beige100: '#EFEFEF',
   
   // Text
-  text: '#000000',
+  text: '#FFFFFF',
   black: '#000000',
-  textMuted: '#666666',
+  textMuted: '#CCCCCC',
   gray900: '#1F1F1F',
   gray700: '#4A4A4A',
   gray600: '#666666',
