@@ -360,6 +360,9 @@ export default function LoginScreen() {
               </View>
             </Animated.View>
 
+            {/* Dev Reset Button */}
+            <DevResetButton />
+
             {/* Bottom Padding */}
             <View style={{ height: 40 }} />
           </ScrollView>
