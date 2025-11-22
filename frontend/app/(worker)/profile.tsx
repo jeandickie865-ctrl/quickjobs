@@ -4,20 +4,13 @@ import { View, Text, ScrollView, Pressable, Image, ActivityIndicator, Alert } fr
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { getWorkerProfile, uploadProfilePhoto, updateWorkerProfile } from '../../services/api';
-
-const COLORS = {
-  neon: '#C8FF16',
-  bg: '#000',
-  white: '#fff',
-  gray: '#777',
-  dark: '#0A0A0A',
-};
+import { useTheme } from '../../theme/ThemeProvider';
 
 export default function WorkerProfileScreen() {
+  const { colors } = useTheme();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -49,16 +42,12 @@ export default function WorkerProfileScreen() {
 
       setUploading(true);
 
-      // Upload to backend → S3
       const uploadRes = await uploadProfilePhoto(uri);
-
-      // Update profile
       const updated = await updateWorkerProfile({
         photo_url: uploadRes.url,
       });
 
       setProfile(updated);
-
       Alert.alert('Erfolg', 'Foto aktualisiert');
     } catch (err) {
       console.log('Upload error:', err);
@@ -70,25 +59,18 @@ export default function WorkerProfileScreen() {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: COLORS.bg,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator size="large" color={COLORS.neon} />
+      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   }
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: COLORS.bg }}
+      style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ padding: 20, gap: 20 }}
     >
-      <Text style={{ color: COLORS.neon, fontSize: 22, fontWeight: '700' }}>
+      <Text style={{ color: colors.accent, fontSize: 22, fontWeight: '700' }}>
         Dein Profil
       </Text>
 
@@ -104,7 +86,7 @@ export default function WorkerProfileScreen() {
             height: 130,
             borderRadius: 100,
             borderWidth: 3,
-            borderColor: COLORS.neon,
+            borderColor: colors.accent,
           }}
         />
 
@@ -114,7 +96,7 @@ export default function WorkerProfileScreen() {
           style={{
             marginTop: 15,
             borderWidth: 2,
-            borderColor: COLORS.neon,
+            borderColor: colors.accent,
             borderRadius: 12,
             paddingVertical: 10,
             paddingHorizontal: 20,
@@ -122,9 +104,9 @@ export default function WorkerProfileScreen() {
           }}
         >
           {uploading ? (
-            <ActivityIndicator color={COLORS.neon} />
+            <ActivityIndicator color={colors.accent} />
           ) : (
-            <Text style={{ color: COLORS.neon, fontWeight: '700', fontSize: 14 }}>
+            <Text style={{ color: colors.accent, fontWeight: '700', fontSize: 14 }}>
               Foto ändern
             </Text>
           )}
@@ -133,25 +115,25 @@ export default function WorkerProfileScreen() {
 
       <View
         style={{
-          backgroundColor: COLORS.dark,
+          backgroundColor: colors.card,
           borderRadius: 12,
           padding: 16,
           borderWidth: 2,
-          borderColor: COLORS.neon,
+          borderColor: colors.accent,
           gap: 10,
         }}
       >
-        <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700' }}>
+        <Text style={{ color: colors.text, fontSize: 18, fontWeight: '700' }}>
           Persönliche Daten
         </Text>
 
-        <Text style={{ color: COLORS.gray, fontSize: 14 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
           Name: {profile?.name || '—'}
         </Text>
-        <Text style={{ color: COLORS.gray, fontSize: 14 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
           Stadt: {profile?.city || '—'}
         </Text>
-        <Text style={{ color: COLORS.gray, fontSize: 14 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
           Kategorien: {profile?.categories?.join(', ') || '—'}
         </Text>
       </View>
