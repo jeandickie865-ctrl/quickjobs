@@ -384,45 +384,61 @@ export default function WorkerProfileScreen() {
             </View>
           </View>
 
-          {/* Qualifications */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ 
-              color: colors.neon, 
-              fontSize: 12, 
-              fontWeight: '700', 
-              letterSpacing: 0.5,
-              marginBottom: 12 
-            }}>
-              QUALIFIKATIONEN (Optional)
-            </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {QUALIFICATIONS.map((qual) => {
-                const isSelected = selectedQualifications.includes(qual);
-                return (
-                  <Pressable
-                    key={qual}
-                    onPress={() => toggleQualification(qual)}
-                    style={{
-                      backgroundColor: isSelected ? colors.neon : colors.white,
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 16,
-                      borderWidth: 2,
-                      borderColor: isSelected ? colors.neon : colors.primary,
-                    }}
-                  >
-                    <Text style={{ 
-                      color: isSelected ? colors.black : colors.primary, 
-                      fontSize: 14, 
-                      fontWeight: isSelected ? '700' : '500' 
-                    }}>
-                      {isSelected ? '✓ ' : ''}{qual}
-                    </Text>
-                  </Pressable>
-                );
-              })}
+          {/* Qualifications - nur anzeigen wenn Kategorien ausgewählt */}
+          {selectedCategories.length > 0 && availableQualifications.length > 0 && (
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ 
+                color: colors.neon, 
+                fontSize: 12, 
+                fontWeight: '700', 
+                letterSpacing: 0.5,
+                marginBottom: 12 
+              }}>
+                QUALIFIKATIONEN (Optional)
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {availableQualifications.map((qual) => {
+                  const isSelected = selectedQualifications.includes(qual.key);
+                  return (
+                    <Pressable
+                      key={qual.key}
+                      onPress={() => toggleQualification(qual.key)}
+                      style={{
+                        backgroundColor: isSelected ? colors.neon : colors.white,
+                        borderRadius: 20,
+                        paddingVertical: 10,
+                        paddingHorizontal: 16,
+                        borderWidth: 2,
+                        borderColor: isSelected ? colors.neon : colors.primary,
+                      }}
+                    >
+                      <Text style={{ 
+                        color: isSelected ? colors.black : colors.primary, 
+                        fontSize: 14, 
+                        fontWeight: isSelected ? '700' : '500' 
+                      }}>
+                        {isSelected ? '✓ ' : ''}{qual.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
             </View>
-          </View>
+          )}
+          
+          {/* Hinweis wenn keine Kategorie gewählt */}
+          {selectedCategories.length === 0 && (
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ 
+                color: colors.caption, 
+                fontSize: 14, 
+                fontStyle: 'italic',
+                textAlign: 'center' 
+              }}>
+                💡 Wähle zuerst Kategorien aus, um passende Qualifikationen zu sehen
+              </Text>
+            </View>
+          )}
 
           {/* Save Button */}
           <Pressable
