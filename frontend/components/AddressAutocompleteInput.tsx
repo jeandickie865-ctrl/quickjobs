@@ -103,7 +103,10 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
         value={query}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
-          setTimeout(() => setIsFocused(false), 200);
+          setTimeout(() => {
+            setIsFocused(false);
+            setSuggestions([]);
+          }, 150);
         }}
         onChangeText={(text) => setQuery(text)}
         placeholder="Straße & Hausnummer"
