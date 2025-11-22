@@ -3,16 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getJobById, getMyApplications, applyForJob } from '../../../services/api';
-
-const COLORS = {
-  neon: '#C8FF16',
-  bg: '#000',
-  white: '#fff',
-  gray: '#777',
-  dark: '#0A0A0A',
-};
+import { useTheme } from '../../../theme/ThemeProvider';
 
 export default function JobDetailScreen() {
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
@@ -51,7 +45,6 @@ export default function JobDetailScreen() {
     try {
       setIsApplying(true);
       await applyForJob(id);
-
       setHasApplied(true);
       Alert.alert('Erfolg', 'Bewerbung gesendet');
     } catch (err) {
@@ -63,72 +56,58 @@ export default function JobDetailScreen() {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: COLORS.bg,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator size="large" color={COLORS.neon} />
+      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   }
 
   if (!job) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: COLORS.bg,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: COLORS.white }}>Job nicht gefunden</Text>
+      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: colors.text }}>Job nicht gefunden</Text>
       </View>
     );
   }
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: COLORS.bg }}
+      style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ padding: 20, gap: 20 }}
     >
-      <Text style={{ color: COLORS.neon, fontSize: 24, fontWeight: '700' }}>
+      <Text style={{ color: colors.accent, fontSize: 24, fontWeight: '700' }}>
         {job.title}
       </Text>
 
       <View
         style={{
-          backgroundColor: COLORS.dark,
+          backgroundColor: colors.card,
           padding: 16,
           borderRadius: 12,
           borderWidth: 2,
-          borderColor: COLORS.neon,
+          borderColor: colors.accent,
           gap: 10,
         }}
       >
-        <Text style={{ color: COLORS.white, fontSize: 16 }}>
+        <Text style={{ color: colors.text, fontSize: 16 }}>
           {job.description || 'Keine Beschreibung'}
         </Text>
 
-        <Text style={{ color: COLORS.gray, fontSize: 14 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
           {job.street}, {job.postal_code} {job.city}
         </Text>
 
-        <Text style={{ color: COLORS.white, fontSize: 14, marginTop: 10 }}>
+        <Text style={{ color: colors.text, fontSize: 14, marginTop: 10 }}>
           Kategorien:
         </Text>
-        <Text style={{ color: COLORS.gray }}>
+        <Text style={{ color: colors.textMuted }}>
           {job.categories?.join(', ') || '—'}
         </Text>
 
-        <Text style={{ color: COLORS.white, fontSize: 14, marginTop: 10 }}>
+        <Text style={{ color: colors.text, fontSize: 14, marginTop: 10 }}>
           Qualifikationen:
         </Text>
-        <Text style={{ color: COLORS.gray }}>
+        <Text style={{ color: colors.textMuted }}>
           {job.qualifications?.join(', ') || '—'}
         </Text>
       </View>
@@ -139,7 +118,7 @@ export default function JobDetailScreen() {
         style={{
           marginTop: 10,
           borderWidth: 2,
-          borderColor: COLORS.neon,
+          borderColor: colors.accent,
           paddingVertical: 14,
           borderRadius: 12,
           alignItems: 'center',
@@ -147,15 +126,9 @@ export default function JobDetailScreen() {
         }}
       >
         {isApplying ? (
-          <ActivityIndicator color={COLORS.neon} />
+          <ActivityIndicator color={colors.accent} />
         ) : (
-          <Text
-            style={{
-              color: COLORS.neon,
-              fontWeight: '700',
-              fontSize: 16,
-            }}
-          >
+          <Text style={{ color: colors.accent, fontWeight: '700', fontSize: 16 }}>
             {hasApplied ? 'Beworben' : 'Ich habe Zeit'}
           </Text>
         )}
