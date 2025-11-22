@@ -59,7 +59,6 @@ class EmployerProfileResponse(BaseModel):
     qualifications: List[str]
     activities: List[str]
     radius_km: int
-    photo_url: Optional[str]
     created_at: datetime
     updated_at: datetime
     
