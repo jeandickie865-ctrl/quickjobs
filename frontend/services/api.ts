@@ -160,10 +160,17 @@ export interface WorkerProfile {
 }
 
 /**
- * Worker Profile laden
+ * Worker Profile laden (eigenes)
  */
 export async function getWorkerProfile(): Promise<WorkerProfile> {
   return apiRequest<WorkerProfile>('/api/profiles/worker/me');
+}
+
+/**
+ * Worker Profile laden (by ID, für Employers)
+ */
+export async function getWorkerProfileById(userId: string): Promise<WorkerProfile> {
+  return apiRequest<WorkerProfile>(`/api/profiles/worker/${userId}`);
 }
 
 /**
