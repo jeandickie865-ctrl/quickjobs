@@ -138,6 +138,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
     setUser(existing);
 
+    console.log("LOGIN OK:", existing);
     return existing;
   };
 
