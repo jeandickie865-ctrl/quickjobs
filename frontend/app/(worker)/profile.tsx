@@ -102,6 +102,7 @@ export default function WorkerProfileScreen() {
         setRadiusKm(String(data.radius_km || 15));
         setPhotoUrl(data.photo_url || '');
         setSelectedCategories(data.categories || []);
+        setSelectedActivities(data.activities || []);
         setSelectedQualifications(data.qualifications || []);
       }
     } catch (err) {
