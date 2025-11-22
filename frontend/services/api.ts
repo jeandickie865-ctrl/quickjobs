@@ -188,18 +188,19 @@ export interface PhotoUploadResponse {
 /**
  * Upload profile photo
  */
-export async function uploadProfilePhoto(uri: string): Promise<PhotoUploadResponse> {
+export async function uploadProfilePhoto(uri: string): Promise<{ url: string; message: string }> {
   const token = await getAuthToken();
   
   // Create form data
   const formData = new FormData();
   const filename = uri.split('/').pop() || 'photo.jpg';
+  const fileType = filename.split('.').pop() || 'jpg';
   
   // @ts-ignore - React Native FormData accepts this format
   formData.append('file', {
     uri,
     name: filename,
-    type: 'image/jpeg',
+    type: `image/${fileType}`,
   });
   
   const url = `${API_BASE_URL}/api/upload/profile-photo`;
@@ -218,7 +219,12 @@ export async function uploadProfilePhoto(uri: string): Promise<PhotoUploadRespon
       throw new Error(errorData.detail || `HTTP ${response.status}`);
     }
     
-    return await response.json();
+    const result = await response.json();
+    // Backend returns { photo_url, message }, map to { url, message }
+    return {
+      url: result.photo_url,
+      message: result.message,
+    };
   } catch (error) {
     console.error('Photo upload error:', error);
     throw error;
