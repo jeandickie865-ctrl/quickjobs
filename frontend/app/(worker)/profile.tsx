@@ -98,6 +98,14 @@ export default function WorkerProfileScreen() {
         const normalizedCategories = normalizeCategories(stored.categories ?? []);
         setProfile({ ...stored, categories: normalizedCategories });
         setName(stored.name || '');
+        
+        // Load address fields
+        setStreet(stored.homeAddress?.street || '');
+        setPostalCode(stored.homeAddress?.postalCode || '');
+        setCity(stored.homeAddress?.city || '');
+        setLat(stored.homeLat ?? undefined);
+        setLon(stored.homeLon ?? undefined);
+        setRadius(String(stored.radius || 15));
       } else {
         setProfile(createEmptyProfile(user.id));
       }
