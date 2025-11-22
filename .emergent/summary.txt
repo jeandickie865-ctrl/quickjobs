@@ -1,81 +1,72 @@
 <analysis>
-The trajectory documents a comprehensive, user-driven development process for a React Native application named BACKUP. The user, communicating exclusively in German, guided the AI engineer through a complete UI/UX overhaul to a Neon-Tech theme, followed by extensive feature additions and bug-fixing cycles.
+The trajectory details an intensive, user-guided development process for a React Native application named BACKUP. The user, communicating in German, directed the AI engineer through building a full-stack application.
 
-The initial phase focused on redesigning all screens (auth, profiles, jobs) and fixing UI bugs. A recurring and complex issue was debugging the  component, which crashed due to prop-passing and import errors (). This component was rewritten multiple times with different APIs before a stable version using OpenStreetMap was settled on.
+Initially, the work focused on scaffolding a complete FastAPI backend with PostgreSQL, SQLAlchemy, and Alembic to replace the existing -based mock data system. This involved significant debugging, including installing PostgreSQL when it was missing and correcting database configurations. The AI iteratively refined the backend models (, , ) based on precise user feedback, fixing issues like mutable array defaults () and adding Pydantic validation.
 
-A significant portion of the work involved creating new features from scratch, including an employer profile with its own data store, a tab-based navigation for employers, and a developer debug screen to manage . The authentication flow () was also refactored to handle data corruption and users without a defined role.
+Subsequently, the focus shifted to implementing core business logic. A full application and matching flow was architected, including creating  and  modules. The AI successfully implemented the backend for workers applying to jobs and employers selecting workers. It also integrated a photo upload feature for worker profiles using a new S3 service.
 
-The most recent and pivotal work was the user's request to build a complete FastAPI backend to replace the -based mock data system. The AI successfully scaffolded a full backend with PostgreSQL, SQLAlchemy, Alembic, and JWT authentication, creating the entire directory structure and placeholder files. The trajectory concludes immediately after the user requested a full dump of all project files, indicating a transition from a frontend prototype to a full-stack application.
+The most recent and critical work involved intensive frontend UI debugging. After integrating new backend-driven screens, the user reported a black screen. The AI correctly diagnosed and fixed hardcoded background colors. When the user requested the app's signature purple theme, the AI updated the global theme file. This led to a new issue: unreadable white text on white UI cards. The AI correctly identified this final problem and was in the process of patching the text colors on the affected screens when the trajectory ended.
 
 The user's primary language is German. The next agent must respond in German only.
 </analysis>
+
 <product_requirements>
-The application, BACKUP, is a two-sided mobile marketplace connecting Auftraggeber (Clients/Employers) and Jobstarter (Workers). The core requirement is to build a polished, functional app with a consistent Neon-Tech visual identity.
+The application, BACKUP, is a two-sided mobile marketplace connecting Auftraggeber (Clients/Employers) and Jobstarter (Workers). The core requirement is to build a polished, full-stack application with a consistent Neon-Tech visual identity, defined by a BACKUP Purple () background and BACKUP Neon () accents.
 
-**Key Features & Requirements:**
-*   **Branding:** A strict color palette of BACKUP Purple () and BACKUP Neon () must be used for backgrounds, accents, and UI elements.
-*   **Dual User Roles:** The app must support distinct flows and profiles for Employers and Workers.
-*   **Full-Stack Architecture:** The application is transitioning from a frontend-only prototype using  to a full-stack application with a FastAPI backend and PostgreSQL database.
-*   **Core Functionality:**
-    *   **Authentication:** Secure user registration and login.
-    *   **Profiles:** Separate, detailed profiles for workers and employers.
-    *   **Job Management:** Employers can create, view, and manage job postings.
-    *   **Matching:** Workers can find and apply for jobs based on location, skills, and radius.
-    *   **Payment Flow:** A system for handling the platform's 20% commission on completed jobs.
-*   **Component-Driven UI:** The app must use consistent, reusable components, such as a stable  that uses a real geocoding service.
+**Key Features Implemented & In-Progress:**
+*   **Architecture:** Migrated from a frontend-only prototype using  to a full-stack application with a FastAPI backend and a PostgreSQL database managed by SQLAlchemy and Alembic.
+*   **User Roles & Authentication:** Secure JWT-based registration and login for distinct Employer and Worker roles.
+*   **Profiles:**
+    *   **Worker:** Includes name, address, matching criteria (categories, qualifications, activities), and a profile photo uploaded to Amazon S3.
+    *   **Employer:** Includes company name, address, and matching criteria. The photo feature was explicitly removed for employers.
+*   **Job & Application Flow:**
+    *   Employers can create, view, update, and delete jobs.
+    *   Workers can view job details and apply (Ich habe Zeit).
+    *   Employers can view a list of applicants for their jobs and select a worker, which updates the application status.
+*   **Taxonomy:** A detailed, fixed taxonomy of 14 categories with 82 activities and 77 qualifications is defined in the frontend and used for matching logic.
 </product_requirements>
+
 <key_technical_concepts>
-- **Frontend:** React Native, Expo (with Expo Router for navigation), TypeScript.
-- **State Management:**  for mock data (legacy), React Context ().
-- **Backend (New):** FastAPI, Python.
-- **Database (New):** PostgreSQL, with SQLAlchemy (async) as the ORM and Alembic for migrations.
-- **Authentication (New):** JWT (JSON Web Tokens) with password hashing via .
-- **Geocoding:** OpenStreetMap (Nominatim) API for address autocompletion.
-- **Styling:** Custom Neon-Tech theming with a central .
+- **Frontend:** React Native, Expo, Expo Router, , .
+- **Backend:** FastAPI, Python, SQLAlchemy (async ORM), Alembic (migrations), Pydantic (validation).
+- **Database:** PostgreSQL.
+- **Authentication:** JWT with  password hashing.
+- **File Storage:** Amazon S3 for photo uploads via .
+- **Styling:** A custom  and  file for global theming.
 </key_technical_concepts>
+
 <code_architecture>
-The project is structured as a monorepo with a  (Expo) and a newly scaffolded  (FastAPI).
+The project is a monorepo with  (Expo) and  (FastAPI) directories.
 
 
 
--   ****: The Expo React Native application.
-    -   ****: Contains all screens, organized by role-based groups using Expo Router.
-    -   ****: Manages all frontend authentication logic (signup, signin, signout, role management) currently using . It was recently patched to fix bugs related to users without roles and to add a debug function to wipe storage.
-    -   ****: A critical, much-revised component for address entry. The final version uses the OpenStreetMap (Nominatim) API and has a stable prop interface (, , ,  callbacks). It was rewritten multiple times to fix crashes and move from HTML elements to React Native components.
-    -   ****: A collection of data stores (, , etc.) that use  to mock a backend. These are the primary targets for replacement with API calls.
-    -   ****: A developer-only screen created to view and clear all data stored in , crucial for debugging auth and profile issues.
+- ****: The FastAPI application.
+    - ****: A new service created to handle file uploads to an Amazon S3 bucket using . It validates file type and size.
+    - **, **: These modules were heavily modified. The SQLAlchemy models were updated to use  for  fields and make timestamps non-nullable. Schemas were improved with  and Pydantic validators.
+    - **, **: Newly created modules to handle the job application and worker selection flow. They contain SQLAlchemy models, Pydantic schemas, and FastAPI routers with business logic (e.g., workers apply, employers select).
+    - ****: Contains multiple Alembic migration files that reflect the iterative changes to the , , , and  tables, including adding/removing columns and creating new tables.
+- ****: The Expo React Native application.
+    - ****: The central theme definition file. It was edited multiple times during a debugging session to change the app's background from light-gray to purple () and the default text color to white ().
+    - ****: A new, central Axios-based service for all backend API communication. It handles sending the auth token and includes functions for , , , etc.
+    - ****: This screen was updated to include an S3 photo upload feature, using  and the new  service. It was also a key file in the theming debug, where its text color was being patched.
+    - ****: A new screen created to list a worker's job applications by calling the  endpoint.
+    - ****: A new screen for employers to view all applicants for a specific job, including their profile photos and details, with a button to select them.
 
--   ****: A newly created FastAPI application.
-    -   ****: The entry point for the FastAPI server. It initializes the app and includes all the feature routers.
-    -   ****: Contains core application logic:  (SQLAlchemy setup),  (password hashing, JWT), and  (environment settings).
-    -   **, , , , **: These directories contain the structured backend logic for each feature, separated into  (API endpoints),  (database tables), and  (Pydantic models for data validation).
-    -   ****: The Alembic directory for managing database schema migrations. It was initialized but no migrations have been created yet.
 </code_architecture>
+
 <pending_tasks>
-- **Backend Implementation:** The entire scaffolded FastAPI backend is currently placeholder code. The business logic within the services and routers needs to be fully implemented.
-- **Frontend-Backend Integration:** The primary pending task is to replace all -based logic in the frontend ( stores and ) with API calls to the newly created FastAPI backend.
-- **Database Migration:** An initial Alembic migration needs to be created from the SQLAlchemy models to set up the PostgreSQL database schema.
+- **Document Upload System:** Implement the full backend logic and frontend UI for workers to upload documents (PDF, JPG) to S3, as per the user's detailed request.
+- **Payment Flow:** Implement the Stripe-based payment system for the 20% platform commission after a match is made.
+- **Real-time Chat:** Build the WebSocket-based chat system for communication between matched employers and workers.
+- **Advanced Matching Logic:** Integrate the more advanced scoring logic from  into the main matching endpoints.
 </pending_tasks>
+
 <current_work>
-The most recent work was a major architectural shift requested by the user: scaffolding a complete backend to replace the app's reliance on .
+The most recent task was fixing a critical UI/theming issue. After the user requested a BACKUP Purple theme, the AI changed the global background color in  to  and the global text color to . This immediately caused a usability problem: on screens with white content cards (like the worker profile), the white text became unreadable against the white card background.
 
-Following a detailed prompt, the AI engineer created a full FastAPI project structure under . This included:
-1.  **Directory Structure:** Created all necessary directories for , , , , , and .
-2.  **File Scaffolding:** Generated placeholder Python files for routers, database models (), data schemas (), and services for each module.
-3.  **Core Services:** Implemented foundational files for database connections (), JWT and password hashing (), and configuration ().
-4.  **Dependencies:** Created a  file with all necessary packages like To use the fastapi command, please install "fastapi[standard]":
-
-	pip install "fastapi[standard]", , , , and .
-5.  **Database Migrations:** Initialized an  environment in the  directory.
-6.  **Server Startup:** Assembled all routers in  and restarted the  service to confirm the application runs without errors.
-
-Immediately after successfully creating this structure, the user requested a full, unfiltered list of every file in the project, which the AI provided. This suggests the user is now taking stock of the entire codebase before proceeding with the integration.
+The user pointed this out (die ganze seite ist zerschossen), and the AI correctly diagnosed the white-on-white text issue. It began patching the affected screens to use a dark text color for content inside white cards. The AI successfully patched the  screen. The last action was an intent to apply the same fix to all other affected screens, specifically mentioning the job detail screens. The work was interrupted immediately after patching the first screen and before patching the others. All new screens (, , ) were using hardcoded colors and were patched to use the theme, which surfaced the final white-on-white issue.
 </current_work>
+
 <optional_next_step>
-Begin migrating the frontend authentication flow from  to the new FastAPI backend by updating  to call the  and  endpoints.
+Continue fixing the UI by applying the text color patch to the remaining screens that have white cards, such as  and , to ensure text is readable.
 </optional_next_step>
-<direct_quotes>
-The user's last set of instructions driving the current state were:
-- Erstelle eine vollständige FastAPI-Backend-Struktur unter /app/backend. (Create a complete FastAPI backend structure under /app/backend.)
-- Gib mir eine vollständige Liste aller Dateien im gesamten Projekt. (Give me a complete list of all files in the entire project.)
-</direct_quotes>

@@ -510,7 +510,7 @@ agent_communication:
       4. ✅ **Signup-Screen geladen** - Formular wird angezeigt
       
       **Verifizierung:**
-      - Frontend URL: https://workflow-app-11.preview.emergentagent.com/
+      - Frontend URL: https://gig-matchr.preview.emergentagent.com/
       - Screenshot bestätigt: "Willkommen bei BCKP" Screen mit Registrieren/Login Buttons
       - Keine Module-Resolution-Errors mehr in den Logs
       
