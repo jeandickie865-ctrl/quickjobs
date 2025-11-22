@@ -193,8 +193,8 @@ export default function WorkerProfileScreen() {
         radius_km: radius,
         photo_url: photoUrl || undefined,
         categories: selectedCategories,
-        qualifications: selectedQualifications,
-        activities: [], // Can be added later
+        activities: selectedActivities,
+        qualifications: selectedQualifications
       });
 
       Alert.alert('Erfolg', 'Profil gespeichert!', [
