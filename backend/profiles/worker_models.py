@@ -34,6 +34,10 @@ class WorkerProfile(Base):
     # Profile photo URL (S3)
     photo_url = Column(String, nullable=True)
     
+    # Documents (qualifications, certificates, etc.)
+    # Format: [{"id": "...", "name": "...", "url": "...", "uploaded_at": "..."}]
+    documents = Column(JSON, nullable=True, default=list)
+    
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
