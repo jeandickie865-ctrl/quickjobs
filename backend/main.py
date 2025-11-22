@@ -14,6 +14,8 @@ from profiles.worker_router import router as worker_router
 from jobs.router import router as jobs_router
 from matching.router import router as matching_router
 from upload.router import router as upload_router
+from applications.router import router as applications_router
+from matches.router import router as matches_router
 
 # Create FastAPI app
 app = FastAPI(
