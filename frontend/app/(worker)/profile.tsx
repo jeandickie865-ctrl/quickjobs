@@ -155,7 +155,19 @@ export default function WorkerProfileScreen() {
     if (!profile || !user) return;
     setIsSaving(true);
     try {
-      await saveWorkerProfile({ ...profile, name });
+      const updatedProfile = {
+        ...profile,
+        name,
+        homeAddress: {
+          street: street.trim(),
+          postalCode: postalCode.trim(),
+          city: city.trim(),
+        },
+        homeLat: lat ?? null,
+        homeLon: lon ?? null,
+        radius: Number(radius) || 15,
+      };
+      await saveWorkerProfile(updatedProfile);
       alert('Profil gespeichert!');
     } catch (error) {
       console.error('Error saving profile:', error);
