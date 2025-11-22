@@ -397,12 +397,12 @@ export default function WorkerProfileScreen() {
                 QUALIFIKATIONEN (Optional)
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {availableQualifications.map((qual) => {
-                  const isSelected = selectedQualifications.includes(qual.key);
+                {availableQualifications.map((qual, idx) => {
+                  const isSelected = selectedQualifications.includes(qual);
                   return (
                     <Pressable
-                      key={qual.key}
-                      onPress={() => toggleQualification(qual.key)}
+                      key={`${qual}-${idx}`}
+                      onPress={() => toggleQualification(qual)}
                       style={{
                         backgroundColor: isSelected ? colors.neon : colors.white,
                         borderRadius: 20,
@@ -417,7 +417,7 @@ export default function WorkerProfileScreen() {
                         fontSize: 14, 
                         fontWeight: isSelected ? '700' : '500' 
                       }}>
-                        {isSelected ? '✓ ' : ''}{qual.label}
+                        {isSelected ? '✓ ' : ''}{qual}
                       </Text>
                     </Pressable>
                   );
