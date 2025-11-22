@@ -19,7 +19,6 @@ class EmployerProfileCreate(BaseModel):
     qualifications: List[str] = Field(default_factory=list)
     activities: List[str] = Field(default_factory=list)
     radius_km: int = Field(default=15, ge=1, le=200)
-    photo_url: Optional[str] = None
     
     @field_validator('radius_km')
     @classmethod
