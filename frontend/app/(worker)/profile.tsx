@@ -1,5 +1,5 @@
-// app/(worker)/edit-profile.tsx - NEON TECH EDITABLE PROFILE
-import React, { useEffect, useState } from 'react';
+// app/(worker)/profile.tsx - NEON TECH EDITABLE PROFILE
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable, ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -8,39 +8,7 @@ import { getWorkerProfile, uploadProfilePhoto, updateWorkerProfile } from '../..
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-
-// Kategorien Liste (sollte aus taxonomy kommen)
-const CATEGORIES = [
-  'Gastronomie',
-  'Events',
-  'Logistik',
-  'Reinigung',
-  'Handwerk',
-  'IT & Digital',
-  'Marketing',
-  'Gesundheit',
-  'Bildung',
-  'Einzelhandel',
-  'Sicherheit',
-  'Pflege',
-  'Büro',
-  'Sonstiges',
-];
-
-const QUALIFICATIONS = [
-  'Führerschein B',
-  'Führerschein CE',
-  'Staplerführerschein',
-  'Erste Hilfe',
-  'Hygieneschulung',
-  '34a Schein',
-  'Sprachkenntnisse Englisch',
-  'Sprachkenntnisse Französisch',
-  'Sprachkenntnisse Spanisch',
-  'PC-Kenntnisse',
-  'Berufserfahrung 1-3 Jahre',
-  'Berufserfahrung 3+ Jahre',
-];
+import { listCategories, getCategoryByKey, groupTagsByType } from '../../src/taxonomy';
 
 export default function EditWorkerProfileScreen() {
   const { colors } = useTheme();
