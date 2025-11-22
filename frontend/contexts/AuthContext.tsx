@@ -100,6 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email: normalized,
       passwordHash,
       salt,
+      role: undefined, // später per setRole gesetzt
     };
 
     db[normalized] = newUser;
