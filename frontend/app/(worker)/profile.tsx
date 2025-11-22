@@ -418,6 +418,48 @@ export default function WorkerProfileScreen() {
             </View>
           </View>
 
+          {/* Activities - nur anzeigen wenn Kategorien ausgewählt */}
+          {selectedCategories.length > 0 && availableActivities.length > 0 && (
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ 
+                color: colors.neon, 
+                fontSize: 12, 
+                fontWeight: '700', 
+                letterSpacing: 0.5,
+                marginBottom: 12 
+              }}>
+                TÄTIGKEITEN * (Mehrfachauswahl)
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {availableActivities.map((act, idx) => {
+                  const isSelected = selectedActivities.includes(act);
+                  return (
+                    <Pressable
+                      key={`${act}-${idx}`}
+                      onPress={() => toggleActivity(act)}
+                      style={{
+                        backgroundColor: isSelected ? colors.neon : colors.white,
+                        borderRadius: 20,
+                        paddingVertical: 10,
+                        paddingHorizontal: 16,
+                        borderWidth: 2,
+                        borderColor: isSelected ? colors.neon : colors.primary,
+                      }}
+                    >
+                      <Text style={{ 
+                        color: isSelected ? colors.black : colors.primary, 
+                        fontSize: 14, 
+                        fontWeight: isSelected ? '700' : '500' 
+                      }}>
+                        {isSelected ? '✓ ' : ''}{act}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+          )}
+
           {/* Qualifications - nur anzeigen wenn Kategorien ausgewählt */}
           {selectedCategories.length > 0 && availableQualifications.length > 0 && (
             <View style={{ marginBottom: 24 }}>
