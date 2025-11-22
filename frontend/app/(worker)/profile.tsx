@@ -42,15 +42,15 @@ export default function WorkerProfileScreen() {
       return [];
     }
     
-    const allQuals: Array<{key: string, label: string}> = [];
-    const seenKeys = new Set<string>();
+    const allQuals: string[] = [];
+    const seenQuals = new Set<string>();
     
     selectedCategories.forEach(catKey => {
       const category = getCategoryByKey(catKey);
       if (category && category.qualifications) {
         category.qualifications.forEach(qual => {
-          if (!seenKeys.has(qual.key)) {
-            seenKeys.add(qual.key);
+          if (!seenQuals.has(qual)) {
+            seenQuals.add(qual);
             allQuals.push(qual);
           }
         });
