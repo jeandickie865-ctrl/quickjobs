@@ -33,7 +33,6 @@ export default function EmployerProfileScreen() {
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [fullAddress, setFullAddress] = useState('');
   const [street, setStreet] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
