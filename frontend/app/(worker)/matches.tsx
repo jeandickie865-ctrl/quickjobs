@@ -82,7 +82,7 @@ export default function WorkerMatchesScreen() {
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: COLORS.bg }}
+      style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ padding: 20, gap: 16 }}
     >
       <Text style={{ color: COLORS.neon, fontSize: 22, fontWeight: '700', marginBottom: 10 }}>
