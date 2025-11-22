@@ -100,6 +100,11 @@ export default function EmployerProfileScreen() {
         setPaymentMethod(stored.paymentMethod || null);
         setShortBio(stored.shortBio || '');
         setProfilePhotoUri(stored.profilePhotoUri);
+        
+        // Reconstruct fullAddress from stored data
+        if (stored.street && stored.postalCode && stored.city) {
+          setFullAddress(`${stored.street}, ${stored.postalCode} ${stored.city}`);
+        }
       } else {
         // Initialize with user email
         setEmail(user.email || '');
