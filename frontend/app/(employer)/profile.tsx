@@ -463,14 +463,15 @@ export default function EmployerProfileScreen() {
             </Text>
 
             <AddressAutocompleteInput
-              street={street}
-              postalCode={postalCode}
-              city={city}
-              onStreetChange={setStreet}
-              onPostalCodeChange={setPostalCode}
-              onCityChange={setCity}
-              onLatChange={setLat}
-              onLonChange={setLon}
+              value={fullAddress}
+              onChange={setFullAddress}
+              onAddressResolved={(data) => {
+                setStreet(data.street);
+                setPostalCode(data.postalCode);
+                setCity(data.city);
+                setLat(data.lat);
+                setLon(data.lon);
+              }}
             />
           </View>
 
