@@ -102,6 +102,7 @@ class WorkerProfileUpdate(BaseModel):
     activities: Optional[List[str]] = None
     radius_km: Optional[int] = Field(default=None, ge=1, le=200)
     photo_url: Optional[str] = None
+    documents: Optional[List[Dict[str, Any]]] = None
     
     @field_validator('radius_km')
     @classmethod
