@@ -31,9 +31,6 @@ class EmployerProfile(Base):
     # Search radius in km (1-200)
     radius_km = Column(Integer, default=15, nullable=False)
     
-    # Profile photo URL (S3)
-    photo_url = Column(String, nullable=True)
-    
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
