@@ -1,0 +1,81 @@
+<analysis>
+The trajectory documents a comprehensive, user-driven development process for a React Native application named BACKUP. The user, communicating exclusively in German, guided the AI engineer through a complete UI/UX overhaul to a Neon-Tech theme, followed by extensive feature additions and bug-fixing cycles.
+
+The initial phase focused on redesigning all screens (auth, profiles, jobs) and fixing UI bugs. A recurring and complex issue was debugging the  component, which crashed due to prop-passing and import errors (). This component was rewritten multiple times with different APIs before a stable version using OpenStreetMap was settled on.
+
+A significant portion of the work involved creating new features from scratch, including an employer profile with its own data store, a tab-based navigation for employers, and a developer debug screen to manage . The authentication flow () was also refactored to handle data corruption and users without a defined role.
+
+The most recent and pivotal work was the user's request to build a complete FastAPI backend to replace the -based mock data system. The AI successfully scaffolded a full backend with PostgreSQL, SQLAlchemy, Alembic, and JWT authentication, creating the entire directory structure and placeholder files. The trajectory concludes immediately after the user requested a full dump of all project files, indicating a transition from a frontend prototype to a full-stack application.
+
+The user's primary language is German. The next agent must respond in German only.
+</analysis>
+<product_requirements>
+The application, BACKUP, is a two-sided mobile marketplace connecting Auftraggeber (Clients/Employers) and Jobstarter (Workers). The core requirement is to build a polished, functional app with a consistent Neon-Tech visual identity.
+
+**Key Features & Requirements:**
+*   **Branding:** A strict color palette of BACKUP Purple () and BACKUP Neon () must be used for backgrounds, accents, and UI elements.
+*   **Dual User Roles:** The app must support distinct flows and profiles for Employers and Workers.
+*   **Full-Stack Architecture:** The application is transitioning from a frontend-only prototype using  to a full-stack application with a FastAPI backend and PostgreSQL database.
+*   **Core Functionality:**
+    *   **Authentication:** Secure user registration and login.
+    *   **Profiles:** Separate, detailed profiles for workers and employers.
+    *   **Job Management:** Employers can create, view, and manage job postings.
+    *   **Matching:** Workers can find and apply for jobs based on location, skills, and radius.
+    *   **Payment Flow:** A system for handling the platform's 20% commission on completed jobs.
+*   **Component-Driven UI:** The app must use consistent, reusable components, such as a stable  that uses a real geocoding service.
+</product_requirements>
+<key_technical_concepts>
+- **Frontend:** React Native, Expo (with Expo Router for navigation), TypeScript.
+- **State Management:**  for mock data (legacy), React Context ().
+- **Backend (New):** FastAPI, Python.
+- **Database (New):** PostgreSQL, with SQLAlchemy (async) as the ORM and Alembic for migrations.
+- **Authentication (New):** JWT (JSON Web Tokens) with password hashing via .
+- **Geocoding:** OpenStreetMap (Nominatim) API for address autocompletion.
+- **Styling:** Custom Neon-Tech theming with a central .
+</key_technical_concepts>
+<code_architecture>
+The project is structured as a monorepo with a  (Expo) and a newly scaffolded  (FastAPI).
+
+
+
+-   ****: The Expo React Native application.
+    -   ****: Contains all screens, organized by role-based groups using Expo Router.
+    -   ****: Manages all frontend authentication logic (signup, signin, signout, role management) currently using . It was recently patched to fix bugs related to users without roles and to add a debug function to wipe storage.
+    -   ****: A critical, much-revised component for address entry. The final version uses the OpenStreetMap (Nominatim) API and has a stable prop interface (, , ,  callbacks). It was rewritten multiple times to fix crashes and move from HTML elements to React Native components.
+    -   ****: A collection of data stores (, , etc.) that use  to mock a backend. These are the primary targets for replacement with API calls.
+    -   ****: A developer-only screen created to view and clear all data stored in , crucial for debugging auth and profile issues.
+
+-   ****: A newly created FastAPI application.
+    -   ****: The entry point for the FastAPI server. It initializes the app and includes all the feature routers.
+    -   ****: Contains core application logic:  (SQLAlchemy setup),  (password hashing, JWT), and  (environment settings).
+    -   **, , , , **: These directories contain the structured backend logic for each feature, separated into  (API endpoints),  (database tables), and  (Pydantic models for data validation).
+    -   ****: The Alembic directory for managing database schema migrations. It was initialized but no migrations have been created yet.
+</code_architecture>
+<pending_tasks>
+- **Backend Implementation:** The entire scaffolded FastAPI backend is currently placeholder code. The business logic within the services and routers needs to be fully implemented.
+- **Frontend-Backend Integration:** The primary pending task is to replace all -based logic in the frontend ( stores and ) with API calls to the newly created FastAPI backend.
+- **Database Migration:** An initial Alembic migration needs to be created from the SQLAlchemy models to set up the PostgreSQL database schema.
+</pending_tasks>
+<current_work>
+The most recent work was a major architectural shift requested by the user: scaffolding a complete backend to replace the app's reliance on .
+
+Following a detailed prompt, the AI engineer created a full FastAPI project structure under . This included:
+1.  **Directory Structure:** Created all necessary directories for , , , , , and .
+2.  **File Scaffolding:** Generated placeholder Python files for routers, database models (), data schemas (), and services for each module.
+3.  **Core Services:** Implemented foundational files for database connections (), JWT and password hashing (), and configuration ().
+4.  **Dependencies:** Created a  file with all necessary packages like To use the fastapi command, please install "fastapi[standard]":
+
+	pip install "fastapi[standard]", , , , and .
+5.  **Database Migrations:** Initialized an  environment in the  directory.
+6.  **Server Startup:** Assembled all routers in  and restarted the  service to confirm the application runs without errors.
+
+Immediately after successfully creating this structure, the user requested a full, unfiltered list of every file in the project, which the AI provided. This suggests the user is now taking stock of the entire codebase before proceeding with the integration.
+</current_work>
+<optional_next_step>
+Begin migrating the frontend authentication flow from  to the new FastAPI backend by updating  to call the  and  endpoints.
+</optional_next_step>
+<direct_quotes>
+The user's last set of instructions driving the current state were:
+- Erstelle eine vollständige FastAPI-Backend-Struktur unter /app/backend. (Create a complete FastAPI backend structure under /app/backend.)
+- Gib mir eine vollständige Liste aller Dateien im gesamten Projekt. (Give me a complete list of all files in the entire project.)
+</direct_quotes>
