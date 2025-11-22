@@ -81,6 +81,7 @@ class WorkerProfileCreate(BaseModel):
     activities: List[str] = Field(default_factory=list)
     radius_km: int = Field(default=15, ge=1, le=200)
     photo_url: Optional[str] = None
+    documents: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
     
     @field_validator('radius_km')
     @classmethod
