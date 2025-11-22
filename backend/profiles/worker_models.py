@@ -1,7 +1,7 @@
 # profiles/worker_models.py
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Float, ForeignKey, DateTime, Integer
+from sqlalchemy import Column, String, Float, ForeignKey, DateTime, Integer, JSON
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from core.database import Base
 
