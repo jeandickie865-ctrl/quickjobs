@@ -74,6 +74,32 @@ async def get_my_worker_profile(
         )
     return profile
 
+@router.get("/{user_id}", response_model=WorkerProfileResponse)
+async def get_worker_profile_by_id(
+    user_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get worker profile by user ID (for employers viewing applicants)"""
+    try:
+        user_uuid = uuid.UUID(user_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid user ID format"
+        )
+    
+    result = await db.execute(
+        select(WorkerProfile).where(WorkerProfile.user_id == user_uuid)
+    )
+    profile = result.scalar_one_or_none()
+    if not profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Worker profile not found"
+        )
+    return profile
+
 @router.put("/me", response_model=WorkerProfileResponse)
 async def update_worker_profile(
     profile_data: WorkerProfileUpdate,
