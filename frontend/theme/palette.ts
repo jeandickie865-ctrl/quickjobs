@@ -124,4 +124,83 @@ export const shadow = {
     shadowRadius: 8,
     elevation: 2,
   },
+  neonGlow: {
+    shadowColor: '#C8FF16',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+};
+
+// ===== NEON TECH COMPONENT STYLES =====
+export const components = {
+  // Primary Button - Neon Lime with black text
+  buttonPrimary: {
+    backgroundColor: '#C8FF16',
+    color: '#000000',
+    borderRadius: 18,
+    height: 52,
+    paddingHorizontal: 24,
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  
+  // Secondary Button - Purple with Neon border & text
+  buttonSecondary: {
+    backgroundColor: 'transparent',
+    borderColor: '#C8FF16',
+    borderWidth: 2,
+    color: '#C8FF16',
+    borderRadius: 18,
+    height: 52,
+    paddingHorizontal: 24,
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  
+  // Text Input - White background with purple border
+  input: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#5941FF',
+    borderWidth: 2,
+    borderRadius: 14,
+    height: 52,
+    paddingHorizontal: 16,
+    color: '#000000',
+    fontSize: 16,
+  },
+  
+  // Card - Purple background with Neon border and glow
+  card: {
+    backgroundColor: '#5941FF',
+    borderColor: '#C8FF16',
+    borderWidth: 2,
+    borderRadius: 18,
+    padding: 16,
+  },
+  
+  // White Card - for content on purple background
+  cardWhite: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 16,
+  },
+  
+  // Avatar - with Neon border
+  avatar: {
+    borderColor: '#C8FF16',
+    borderWidth: 4,
+    borderRadius: 9999,
+  },
+  
+  // Label - Neon text
+  label: {
+    color: '#C8FF16',
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
 };
