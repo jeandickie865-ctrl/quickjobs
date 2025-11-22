@@ -91,6 +91,11 @@ export default function EmployerDashboard() {
 
   if (!user) return null;
 
+  // Calculate statistics
+  const allApplications = Object.values(applications).flat();
+  const pendingApplications = allApplications.filter(app => app.status === 'pending');
+  const acceptedApplications = allApplications.filter(app => app.status === 'accepted');
+
   // Filter jobs by status
   const openJobs = jobs
     .filter(j => j.status === 'open')
