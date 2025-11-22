@@ -144,6 +144,14 @@ export default function WorkerProfileScreen() {
     }
   };
 
+  const toggleActivity = (act: string) => {
+    if (selectedActivities.includes(act)) {
+      setSelectedActivities(selectedActivities.filter(a => a !== act));
+    } else {
+      setSelectedActivities([...selectedActivities, act]);
+    }
+  };
+
   const toggleQualification = (qual: string) => {
     if (selectedQualifications.includes(qual)) {
       setSelectedQualifications(selectedQualifications.filter(q => q !== qual));
