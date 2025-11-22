@@ -24,6 +24,10 @@ from users.models import User
 from profiles.employer_models import EmployerProfile
 from profiles.worker_models import WorkerProfile
 from jobs.models import Job
+from applications.models import Application
+from matches.models import Match
+from payments.models import Payment
+from chat.models import Chat, Message
 
 # this is the Alembic Config object
 config = context.config
