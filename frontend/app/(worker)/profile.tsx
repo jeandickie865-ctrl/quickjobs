@@ -169,7 +169,7 @@ export default function EditWorkerProfileScreen() {
       });
 
       Alert.alert('Erfolg', 'Profil gespeichert!', [
-        { text: 'OK', onPress: () => router.back() }
+        { text: 'OK', onPress: () => router.push('/(worker)/feed') }
       ]);
     } catch (err) {
       console.log('Save error:', err);
