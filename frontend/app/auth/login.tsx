@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
+import DevResetButton from '../../components/DevResetButton';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
