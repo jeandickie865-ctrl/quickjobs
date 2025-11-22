@@ -467,35 +467,6 @@ export default function EmployerDashboard() {
           </>
         )}
       </Animated.ScrollView>
-
-      {/* Floating Button: Neuen Auftrag erstellen */}
-      <SafeAreaView edges={['bottom']} style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-      }}>
-        <Pressable
-          onPress={() => router.push('/(employer)/jobs/create')}
-          style={({ pressed }) => ({
-            backgroundColor: COLORS.neon,
-            borderRadius: 16,
-            paddingVertical: 18,
-            alignItems: 'center',
-            shadowColor: COLORS.neon,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.3,
-            shadowRadius: 12,
-            opacity: pressed ? 0.9 : 1,
-          })}
-        >
-          <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
-            + Neuen Auftrag erstellen
-          </Text>
-        </Pressable>
-      </SafeAreaView>
     </View>
   );
 }
