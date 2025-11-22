@@ -350,17 +350,16 @@ export default function WorkerProfileScreen() {
           <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 8, letterSpacing: 0.5 }}>
             WOHNORT
           </Text>
-          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, overflow: 'hidden' }}>
+          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, padding: 16 }}>
             <AddressAutocompleteInput
-              initialAddress={profile.homeAddress}
-              onAddressSelect={(address, lat, lon) => {
-                setProfile({
-                  ...profile,
-                  homeAddress: address,
-                  homeLat: lat,
-                  homeLon: lon,
-                });
-              }}
+              street={street}
+              postalCode={postalCode}
+              city={city}
+              onStreetChange={setStreet}
+              onPostalCodeChange={setPostalCode}
+              onCityChange={setCity}
+              onLatChange={setLat}
+              onLonChange={setLon}
             />
           </View>
         </View>
