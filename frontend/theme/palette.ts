@@ -1,49 +1,58 @@
-// theme/palette.ts - VIVID BLUE-PURPLE & NEON LIME
+// theme/palette.ts - NEON TECH UI SYSTEM
 export const palette = {
-  // Primary Colors - Vivid Blue-Purple
+  // ===== CORE BRAND COLORS =====
+  // Primary - BACKUP Purple
   primary: '#5941FF',
   primaryDark: '#4530E0',
-  primaryLight: '#E8E4FF',
+  primaryLight: '#7B68FF',
   
-  // Accent - Neon Lime
+  // Accent - BACKUP Neon Lime
+  neon: '#C8FF16',
+  neonDark: '#B3E612',
+  neonLight: '#D4FF4D',
   accent: '#C8FF16',
-  accentDark: '#B3E612',
-  accentLight: '#F4FFD4',
   
-  // Background & Cards
-  background: '#5941FF',
-  card: '#FFFFFF',
-  white: '#FFFFFF',
-  primaryUltraLight: '#F8F8F8',
-  beige50: '#F8F8F8',
-  beige100: '#EFEFEF',
+  // ===== BACKGROUNDS =====
+  background: '#5941FF',        // Global background - always purple
+  screenBg: '#5941FF',          // Screen background
+  cardBg: '#FFFFFF',            // White cards on purple
+  inputBg: '#FFFFFF',           // White input fields
   
-  // Text
-  text: '#FFFFFF',
+  // ===== TEXT COLORS =====
+  text: '#FFFFFF',              // Default text (on purple background)
+  textOnCard: '#000000',        // Text on white cards/inputs
+  textOnNeon: '#000000',        // Text on neon buttons
+  label: '#C8FF16',             // Labels - always neon
+  heading: '#FFFFFF',           // Headlines
+  caption: '#CCCCCC',           // Muted text
+  
+  // ===== SEMANTIC COLORS =====
   black: '#000000',
-  textMuted: '#CCCCCC',
-  gray900: '#1F1F1F',
+  white: '#FFFFFF',
+  gray900: '#1A1A1A',
   gray700: '#4A4A4A',
   gray600: '#666666',
   gray500: '#8A8A8A',
+  gray400: '#A0A0A0',
   gray300: '#D0D0D0',
   gray200: '#E8E8E8',
   gray100: '#F5F5F5',
   
-  // Status
-  success: '#5941FF',
-  successLight: '#E8E4FF',
-  warning: '#C8FF16',
-  warningLight: '#F4FFD4',
-  danger: '#E34242',
-  error: '#E34242',
-  errorLight: '#FBECEC',
+  // ===== STATUS COLORS =====
+  success: '#10B981',
+  successLight: '#D1FAE5',
+  warning: '#F59E0B',
+  warningLight: '#FEF3C7',
+  danger: '#EF4444',
+  error: '#EF4444',
+  errorLight: '#FEE2E2',
   info: '#5941FF',
   infoLight: '#E8E4FF',
   disabled: '#999999',
   disabledBg: '#F0F0F0',
   
-  // Transparency
+  // ===== SPECIAL EFFECTS =====
+  neonGlow: 'rgba(200, 255, 22, 0.4)',   // Glow effect for borders
   overlay: 'rgba(0, 0, 0, 0.75)',
   backdropLight: 'rgba(255, 255, 255, 0.95)',
 };
