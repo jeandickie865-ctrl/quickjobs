@@ -178,3 +178,12 @@ export const useAuth = (): AuthContextType => {
   if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
   return ctx;
 };
+
+// ----------------------
+// DEV FUNCTION: WIPE AUTH
+// ----------------------
+export async function __wipeAuthDebug() {
+  await AsyncStorage.removeItem('@shiftmatch:user');
+  await AsyncStorage.removeItem('@shiftmatch:users_database');
+  console.log('🧹 Auth Storage komplett gelöscht!');
+}
