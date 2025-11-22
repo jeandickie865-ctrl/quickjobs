@@ -11,7 +11,7 @@ export const palette = {
   accentLight: '#F4FFD4',
   
   // Background & Cards
-  background: '#F8F8F8',
+  background: '#5941FF',
   card: '#FFFFFF',
   white: '#FFFFFF',
   primaryUltraLight: '#F8F8F8',
