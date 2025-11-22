@@ -222,20 +222,21 @@ export default function EditWorkerProfileScreen() {
               borderColor: colors.neon,
               borderRadius: 100,
               padding: 8,
-              width: 140,
-              height: 140,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: photoUrl ? 'transparent' : colors.gray200,
+              backgroundColor: colors.primary,
             }}>
-              {photoUrl ? (
-                <img 
-                  src={photoUrl} 
-                  style={{ width: 120, height: 120, borderRadius: 60, objectFit: 'cover' }}
-                />
-              ) : (
-                <Ionicons name="person" size={60} color={colors.gray500} />
-              )}
+              <Image
+                source={
+                  photoUrl
+                    ? { uri: photoUrl }
+                    : { uri: 'https://via.placeholder.com/160/CCCCCC/000000?text=US' }
+                }
+                style={{
+                  width: 160,
+                  height: 160,
+                  borderRadius: 80,
+                  backgroundColor: '#E0E0E0',
+                }}
+              />
             </View>
 
             <Pressable
