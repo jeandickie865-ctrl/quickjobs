@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getMyApplications, getJobById } from '../../services/api';
+import { useTheme } from '../../theme/ThemeProvider';
 
 const COLORS = {
   neon: '#C8FF16',
-  bg: '#000',
-  white: '#fff',
   gray: '#777',
-  dark: '#0A0A0A',
+  dark: '#1A1A1A',
 };
 
 export default function WorkerMatchesScreen() {
