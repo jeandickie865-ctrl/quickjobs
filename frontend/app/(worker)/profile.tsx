@@ -280,7 +280,7 @@ export default function WorkerProfileScreen() {
         </Text>
       </View>
 
-      {/* Save Button - Full Width Neon */}
+      {/* Edit Button - Full Width Neon */}
       <Pressable
         style={{
           backgroundColor: colors.neon,
@@ -290,7 +290,7 @@ export default function WorkerProfileScreen() {
           marginTop: 20,
           marginBottom: 40,
         }}
-        onPress={() => Alert.alert('Info', 'Profil bearbeiten noch nicht implementiert')}
+        onPress={() => router.push('/(worker)/edit-profile')}
       >
         <Text style={{ 
           color: colors.black, 
@@ -298,7 +298,7 @@ export default function WorkerProfileScreen() {
           fontWeight: '700',
           letterSpacing: 0.5 
         }}>
-          Profil speichern
+          ✏️ Profil bearbeiten
         </Text>
       </Pressable>
 
