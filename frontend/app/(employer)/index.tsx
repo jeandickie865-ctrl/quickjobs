@@ -188,6 +188,109 @@ export default function EmployerDashboard() {
           </View>
         ) : (
           <>
+            {/* Statistik Cards */}
+            <View style={{ flexDirection: 'row', gap: 12, flexWrap: 'wrap' }}>
+              {/* Offene Aufträge Card */}
+              <Pressable
+                onPress={() => {}}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  minWidth: '47%',
+                  backgroundColor: 'rgba(255,255,255,0.08)',
+                  borderWidth: 1,
+                  borderColor: COLORS.neon,
+                  borderRadius: 16,
+                  padding: 16,
+                  opacity: pressed ? 0.8 : 1,
+                })}
+              >
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.white, opacity: 0.7 }}>
+                    OFFENE AUFTRÄGE
+                  </Text>
+                  <Ionicons name="clipboard-outline" size={20} color={COLORS.neon} />
+                </View>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: COLORS.neon }}>
+                  {openJobs.length}
+                </Text>
+              </Pressable>
+
+              {/* Bewerbungen Card */}
+              <Pressable
+                onPress={() => {}}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  minWidth: '47%',
+                  backgroundColor: 'rgba(255,255,255,0.08)',
+                  borderWidth: 1,
+                  borderColor: COLORS.neon,
+                  borderRadius: 16,
+                  padding: 16,
+                  opacity: pressed ? 0.8 : 1,
+                })}
+              >
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.white, opacity: 0.7 }}>
+                    BEWERBUNGEN
+                  </Text>
+                  <Ionicons name="people-outline" size={20} color={COLORS.neon} />
+                </View>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: COLORS.neon }}>
+                  {pendingApplications.length}
+                </Text>
+              </Pressable>
+
+              {/* Matches Card */}
+              <Pressable
+                onPress={() => router.push('/(employer)/matches')}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  minWidth: '47%',
+                  backgroundColor: 'rgba(255,255,255,0.08)',
+                  borderWidth: 1,
+                  borderColor: COLORS.neon,
+                  borderRadius: 16,
+                  padding: 16,
+                  opacity: pressed ? 0.8 : 1,
+                })}
+              >
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.white, opacity: 0.7 }}>
+                    MATCHES
+                  </Text>
+                  <Ionicons name="checkmark-circle-outline" size={20} color={COLORS.neon} />
+                </View>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: COLORS.neon }}>
+                  {acceptedApplications.length}
+                </Text>
+              </Pressable>
+
+              {/* Abgeschlossen Card */}
+              <Pressable
+                onPress={() => {}}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  minWidth: '47%',
+                  backgroundColor: 'rgba(255,255,255,0.08)',
+                  borderWidth: 1,
+                  borderColor: COLORS.neon,
+                  borderRadius: 16,
+                  padding: 16,
+                  opacity: pressed ? 0.8 : 1,
+                })}
+              >
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.white, opacity: 0.7 }}>
+                    ABGESCHLOSSEN
+                  </Text>
+                  <Ionicons name="checkmark-done-outline" size={20} color={COLORS.neon} />
+                </View>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: COLORS.neon }}>
+                  {doneJobs.length}
+                </Text>
+              </Pressable>
+            </View>
+
             {/* Offene Aufträge */}
             <View style={{
               backgroundColor: COLORS.white,
