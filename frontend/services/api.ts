@@ -160,6 +160,13 @@ export interface WorkerProfile {
 }
 
 /**
+ * Worker Profile laden
+ */
+export async function getWorkerProfile(): Promise<WorkerProfile> {
+  return apiRequest<WorkerProfile>('/api/profiles/worker/me');
+}
+
+/**
  * Worker Profile aktualisieren
  */
 export async function updateWorkerProfile(data: Partial<WorkerProfile>): Promise<WorkerProfile> {
