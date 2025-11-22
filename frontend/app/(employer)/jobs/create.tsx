@@ -581,18 +581,14 @@ export default function CreateJob() {
           </Text>
           
           <AddressAutocompleteInput
-            value={fullJobAddress}
-            onChange={setFullJobAddress}
-            onAddressResolved={(data) => {
-              setAddress({
-                street: data.street,
-                postalCode: data.postalCode,
-                city: data.city,
-              });
-              setLat(data.lat);
-              setLon(data.lon);
-            }}
-            placeholder="Straße und Hausnummer, PLZ Stadt"
+            street={street}
+            postalCode={postalCode}
+            city={city}
+            onStreetChange={setStreet}
+            onPostalCodeChange={setPostalCode}
+            onCityChange={setCity}
+            onLatChange={setLat}
+            onLonChange={setLon}
           />
         </View>
 
