@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
+import DevResetButton from '../../components/DevResetButton';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
