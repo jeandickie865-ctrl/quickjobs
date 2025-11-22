@@ -128,6 +128,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('E-Mail oder Passwort falsch.');
     }
 
+    // Falls Benutzer keine Rolle hat → Standard setzen
+    if (!existing.role) {
+      existing.role = 'worker';
+      db[normalized] = existing;
+      await saveUserDB(db);
+    }
+
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
     setUser(existing);
 
