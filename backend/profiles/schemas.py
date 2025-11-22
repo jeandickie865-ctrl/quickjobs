@@ -125,6 +125,7 @@ class WorkerProfileResponse(BaseModel):
     activities: List[str]
     radius_km: int
     photo_url: Optional[str]
+    documents: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
     
