@@ -1,15 +1,9 @@
-// app/(worker)/matches.tsx
+// app/(worker)/matches.tsx - NEON TECH DESIGN
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getMyApplications, getJobById } from '../../services/api';
 import { useTheme } from '../../theme/ThemeProvider';
-
-const COLORS = {
-  neon: '#C8FF16',
-  gray: '#777',
-  dark: '#1A1A1A',
-};
 
 export default function WorkerMatchesScreen() {
   const { colors } = useTheme();
@@ -42,23 +36,33 @@ export default function WorkerMatchesScreen() {
 
   const renderStatus = (status) => {
     let label = '';
+    let bgColor = colors.neon;
 
     if (status === 'applied') label = 'Bewerbung gesendet';
-    if (status === 'selected') label = 'Ausgewählt – warte auf Zahlung';
-    if (status === 'pending_payment') label = 'Zahlung läuft';
-    if (status === 'active') label = 'Match aktiv';
+    if (status === 'selected') {
+      label = '✓ Ausgewählt';
+      bgColor = '#10B981';
+    }
+    if (status === 'pending_payment') {
+      label = '⏳ Zahlung läuft';
+      bgColor = '#F59E0B';
+    }
+    if (status === 'active') {
+      label = '🎉 Match aktiv';
+      bgColor = colors.neon;
+    }
 
     return (
       <View
         style={{
-          backgroundColor: COLORS.neon,
-          paddingHorizontal: 10,
-          paddingVertical: 4,
-          borderRadius: 8,
+          backgroundColor: bgColor,
+          paddingHorizontal: 12,
+          paddingVertical: 6,
+          borderRadius: 12,
           alignSelf: 'flex-start',
         }}
       >
-        <Text style={{ color: COLORS.bg, fontWeight: '700', fontSize: 12 }}>
+        <Text style={{ color: colors.black, fontWeight: '700', fontSize: 12 }}>
           {label}
         </Text>
       </View>
@@ -75,7 +79,7 @@ export default function WorkerMatchesScreen() {
           alignItems: 'center',
         }}
       >
-        <ActivityIndicator color={COLORS.neon} size="large" />
+        <ActivityIndicator color={colors.neon} size="large" />
       </View>
     );
   }
@@ -83,53 +87,102 @@ export default function WorkerMatchesScreen() {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 16 }}
+      contentContainerStyle={{ padding: 24 }}
     >
-      <Text style={{ color: COLORS.neon, fontSize: 22, fontWeight: '700', marginBottom: 10 }}>
+      <Text style={{ 
+        color: colors.text, 
+        fontSize: 28, 
+        fontWeight: '800', 
+        marginBottom: 24,
+        letterSpacing: -0.5 
+      }}>
         Deine Bewerbungen
       </Text>
 
       {applications.length === 0 && (
-        <Text style={{ color: COLORS.white, fontSize: 16, opacity: 0.6 }}>
-          Du hast noch keine Bewerbungen.
-        </Text>
+        <View style={{
+          backgroundColor: colors.white,
+          padding: 32,
+          borderRadius: 18,
+          alignItems: 'center',
+        }}>
+          <Text style={{ 
+            color: colors.gray600, 
+            fontSize: 16, 
+            textAlign: 'center',
+            lineHeight: 24 
+          }}>
+            Du hast noch keine Bewerbungen.
+          </Text>
+        </View>
       )}
 
       {applications.map((app) => (
         <View
           key={app.id}
           style={{
-            borderWidth: 2,
-            borderColor: COLORS.neon,
-            borderRadius: 12,
-            padding: 16,
-            backgroundColor: COLORS.dark,
-            gap: 10,
+            backgroundColor: colors.white,
+            borderRadius: 18,
+            padding: 20,
+            marginBottom: 16,
+            gap: 12,
           }}
         >
-          <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '600' }}>
+          {/* Job Title */}
+          <Text style={{ 
+            color: colors.black, 
+            fontSize: 20, 
+            fontWeight: '700',
+            marginBottom: 4 
+          }}>
             {app.job?.title || 'Job'}
           </Text>
 
+          {/* Status Badge */}
           {renderStatus(app.status)}
 
-          <Text style={{ color: COLORS.gray, fontSize: 12 }}>
-            Beworben am: {new Date(app.created_at).toLocaleDateString()}
+          {/* Job Details */}
+          {app.job && (
+            <View style={{ marginTop: 8 }}>
+              <Text style={{ color: colors.gray600, fontSize: 14 }}>
+                📍 {app.job.city}
+              </Text>
+              {app.job.categories && app.job.categories.length > 0 && (
+                <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 4 }}>
+                  🏷️ {app.job.categories.slice(0, 3).join(', ')}
+                </Text>
+              )}
+            </View>
+          )}
+
+          {/* Date */}
+          <Text style={{ 
+            color: colors.gray500, 
+            fontSize: 12, 
+            marginTop: 4 
+          }}>
+            Beworben am: {new Date(app.created_at).toLocaleDateString('de-DE')}
           </Text>
 
+          {/* Chat Button for Active Matches */}
           {app.status === 'active' && (
             <Pressable
               onPress={() => router.push(`/chat/${app.id}`)}
               style={{
                 marginTop: 12,
-                borderWidth: 2,
-                borderColor: COLORS.neon,
-                paddingVertical: 10,
+                backgroundColor: colors.neon,
+                paddingVertical: 14,
                 alignItems: 'center',
-                borderRadius: 10,
+                borderRadius: 14,
               }}
             >
-              <Text style={{ color: COLORS.neon, fontWeight: '700' }}>Zum Chat</Text>
+              <Text style={{ 
+                color: colors.black, 
+                fontWeight: '700', 
+                fontSize: 16 
+              }}>
+                💬 Zum Chat
+              </Text>
             </Pressable>
           )}
         </View>
