@@ -89,25 +89,25 @@ export default function JobDetailScreen() {
           gap: 10,
         }}
       >
-        <Text style={{ color: colors.text, fontSize: 16 }}>
+        <Text style={{ color: '#000000', fontSize: 16 }}>
           {job.description || 'Keine Beschreibung'}
         </Text>
 
-        <Text style={{ color: colors.textMuted, fontSize: 14 }}>
+        <Text style={{ color: '#666666', fontSize: 14 }}>
           {job.street}, {job.postal_code} {job.city}
         </Text>
 
-        <Text style={{ color: colors.text, fontSize: 14, marginTop: 10 }}>
+        <Text style={{ color: '#000000', fontSize: 14, marginTop: 10 }}>
           Kategorien:
         </Text>
-        <Text style={{ color: colors.textMuted }}>
+        <Text style={{ color: '#666666' }}>
           {job.categories?.join(', ') || '—'}
         </Text>
 
-        <Text style={{ color: colors.text, fontSize: 14, marginTop: 10 }}>
+        <Text style={{ color: '#000000', fontSize: 14, marginTop: 10 }}>
           Qualifikationen:
         </Text>
-        <Text style={{ color: colors.textMuted }}>
+        <Text style={{ color: '#666666' }}>
           {job.qualifications?.join(', ') || '—'}
         </Text>
       </View>
