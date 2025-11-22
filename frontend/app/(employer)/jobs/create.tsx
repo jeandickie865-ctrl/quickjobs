@@ -24,6 +24,7 @@ export default function CreateJob() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<string>('');
+  const [fullJobAddress, setFullJobAddress] = useState('');
   const [address, setAddress] = useState<Address>({});
   const [lat, setLat] = useState<number | undefined>(undefined);
   const [lon, setLon] = useState<number | undefined>(undefined);
