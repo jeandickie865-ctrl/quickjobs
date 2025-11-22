@@ -376,10 +376,10 @@ export default function WorkerProfileScreen() {
             paddingVertical: 14,
           }}>
             <TextInput
-              value={String(profile.radius)}
-              onChangeText={(text) => setProfile({ ...profile, radius: parseInt(text) || DEFAULT_RADIUS_KM })}
+              value={radius}
+              onChangeText={setRadius}
               keyboardType="numeric"
-              placeholder="Radius in km"
+              placeholder="15"
               placeholderTextColor="#999"
               style={{ fontSize: 16, color: COLORS.black }}
             />
