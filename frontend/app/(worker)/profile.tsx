@@ -10,7 +10,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { listCategories, getCategoryByKey, groupTagsByType } from '../../src/taxonomy';
 
-export default function EditWorkerProfileScreen() {
+export default function WorkerProfileScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   
@@ -32,6 +32,33 @@ export default function EditWorkerProfileScreen() {
   
   // Focus state
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  
+  // Load categories from taxonomy
+  const availableCategories = useMemo(() => listCategories(), []);
+  
+  // Load qualifications dynamically based on selected categories
+  const availableQualifications = useMemo(() => {
+    if (selectedCategories.length === 0) {
+      return [];
+    }
+    
+    const allQuals: Array<{key: string, label: string}> = [];
+    const seenKeys = new Set<string>();
+    
+    selectedCategories.forEach(catKey => {
+      const category = getCategoryByKey(catKey);
+      if (category && category.qualifications) {
+        category.qualifications.forEach(qual => {
+          if (!seenKeys.has(qual.key)) {
+            seenKeys.add(qual.key);
+            allQuals.push(qual);
+          }
+        });
+      }
+    });
+    
+    return allQuals;
+  }, [selectedCategories]);
 
   useEffect(() => {
     loadProfile();
