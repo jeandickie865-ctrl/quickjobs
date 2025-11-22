@@ -36,6 +36,30 @@ export default function WorkerProfileScreen() {
   // Load categories from taxonomy
   const availableCategories = useMemo(() => listCategories(), []);
   
+  // Load activities dynamically based on selected categories
+  const availableActivities = useMemo(() => {
+    if (selectedCategories.length === 0) {
+      return [];
+    }
+    
+    const allActs: string[] = [];
+    const seenActs = new Set<string>();
+    
+    selectedCategories.forEach(catKey => {
+      const category = getCategoryByKey(catKey);
+      if (category && category.activities) {
+        category.activities.forEach(act => {
+          if (!seenActs.has(act)) {
+            seenActs.add(act);
+            allActs.push(act);
+          }
+        });
+      }
+    });
+    
+    return allActs;
+  }, [selectedCategories]);
+  
   // Load qualifications dynamically based on selected categories
   const availableQualifications = useMemo(() => {
     if (selectedCategories.length === 0) {
