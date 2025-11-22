@@ -12,6 +12,7 @@ const COLORS = {
 };
 
 export default function WorkerMatchesScreen() {
+  const { colors } = useTheme();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
