@@ -148,7 +148,6 @@ export default function EmployerProfileScreen() {
         lon,
         paymentMethod,
         shortBio: shortBio.trim() || undefined,
-        profilePhotoUri,
       };
 
       await saveEmployerProfile(profile);
