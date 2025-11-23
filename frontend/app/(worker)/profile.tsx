@@ -119,14 +119,13 @@ export default function WorkerProfileScreen() {
   const loadProfile = async () => {
     try {
       // BUG 3 FIX: Lade Profil aus AsyncStorage
-      const { user: authUser } = useAuth();
-      if (!authUser) {
+      if (!user) {
         console.log('⚠️ No user logged in, cannot load profile');
         setLoading(false);
         return;
       }
 
-      const data = await getWorkerProfileLocal(authUser.id);
+      const data = await getWorkerProfileLocal(user.id);
       
       if (data) {
         setName(data.name || '');
