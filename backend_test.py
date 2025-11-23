@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Suite for ShiftMatch/BACKUP App
-Tests upload endpoints, worker profile endpoints, and auth flow as requested in review.
+Backend Infrastructure Test Suite for ShiftMatch App
+Tests basic backend functionality after frontend address autocomplete fix
 """
 
 import requests
 import json
 import sys
-import tempfile
-from pathlib import Path
-import uuid
-from PIL import Image
-import io
-from typing import Dict, Any, Optional
+from datetime import datetime
 
-# Backend URL - using localhost since we're testing from within the container
-BASE_URL = "http://localhost:8001"
-API_BASE = f"{BASE_URL}/api"
+# Backend URL from frontend/.env
+BACKEND_URL = "https://hire-connect-19.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
