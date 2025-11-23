@@ -101,32 +101,41 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
 
   // Geocoding für manuell eingegebene Adressen (Fallback)
   const geocodeManualAddress = async () => {
-    // Nur geocoden wenn noch keine Koordinaten vorhanden
-    if (onLatChange && onLonChange && street && postalCode && city) {
-      const fullAddress = `${street}, ${postalCode} ${city}, Germany`;
+    // Nur geocoden wenn Callbacks vorhanden UND Adresse komplett ist
+    if (!onLatChange || !onLonChange) {
+      console.log('ℹ️ No lat/lon callbacks provided, skipping geocoding');
+      return;
+    }
+    
+    if (!street || !postalCode || !city) {
+      console.log('ℹ️ Address incomplete, skipping geocoding');
+      return;
+    }
+
+    const fullAddress = `${street}, ${postalCode} ${city}, Germany`;
+    
+    try {
+      console.log('🌍 Geocoding manual address:', fullAddress);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`,
+        { headers: { 'User-Agent': 'BACKUP-App/1.0' } }
+      );
       
-      try {
-        console.log('🌍 Geocoding manual address:', fullAddress);
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`,
-          { headers: { 'User-Agent': 'BACKUP-App/1.0' } }
-        );
+      const data = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const result = data[0];
+        const lat = parseFloat(result.lat);
+        const lon = parseFloat(result.lon);
         
-        const data = await response.json();
-        if (Array.isArray(data) && data.length > 0) {
-          const result = data[0];
-          const lat = parseFloat(result.lat);
-          const lon = parseFloat(result.lon);
-          
-          console.log('✅ Geocoding successful:', { lat, lon });
-          onLatChange(lat);
-          onLonChange(lon);
-        } else {
-          console.warn('⚠️ No geocoding results for:', fullAddress);
-        }
-      } catch (error) {
-        console.error('❌ Geocoding error:', error);
+        console.log('✅ Geocoding successful:', { lat, lon });
+        onLatChange(lat);
+        onLonChange(lon);
+      } else {
+        console.warn('⚠️ No geocoding results for:', fullAddress);
       }
+    } catch (error) {
+      console.error('❌ Geocoding error:', error);
+      // Geocoding-Fehler sollten das Speichern nicht blockieren
     }
   };
 
