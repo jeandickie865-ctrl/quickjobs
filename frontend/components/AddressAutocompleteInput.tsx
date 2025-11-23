@@ -75,14 +75,23 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
     const addr = item.address ?? {};
 
     const streetName = [addr.road, addr.house_number].filter(Boolean).join(' ');
+    const postal = addr.postcode || '';
+    const cityName = addr.city || addr.town || addr.village || '';
+
+    console.log('📍 Selected address:', {
+      street: streetName,
+      postcode: postal,
+      city: cityName,
+      lat: item.lat,
+      lon: item.lon
+    });
 
     if (onStreetChange) onStreetChange(streetName);
-    if (onPostalCodeChange) onPostalCodeChange(addr.postcode ?? '');
-    if (onCityChange)
-      onCityChange(addr.city ?? addr.town ?? addr.village ?? '');
+    if (onPostalCodeChange) onPostalCodeChange(postal);
+    if (onCityChange) onCityChange(cityName);
 
-    if (onLatChange) onLatChange(parseFloat(item.lat));
-    if (onLonChange) onLonChange(parseFloat(item.lon));
+    if (onLatChange && item.lat) onLatChange(parseFloat(item.lat));
+    if (onLonChange && item.lon) onLonChange(parseFloat(item.lon));
 
     setQuery(streetName);
   };
