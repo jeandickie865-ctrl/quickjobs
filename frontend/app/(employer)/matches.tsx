@@ -4,7 +4,7 @@ import { View, Text, ScrollView, Pressable, ActivityIndicator, Animated } from '
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { Auftrag } from '../../types/job';
+import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob, JobApplication } from '../../utils/applicationStore';
 import { Ionicons } from '@expo/vector-icons';
