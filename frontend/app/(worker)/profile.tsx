@@ -130,14 +130,14 @@ export default function WorkerProfileScreen() {
       const data = await getWorkerProfileLocal(user.id);
       
       if (data) {
-        setName(data.name || '');
-        setStreet(data.street || '');
-        setPostalCode(data.postalCode || '');
-        setCity(data.city || '');
-        setLat(data.homeLat);
-        setLon(data.homeLon);
+        setName(data.firstName || '');
+        setStreet(data.homeAddress?.street || '');
+        setPostalCode(data.homeAddress?.postalCode || '');
+        setCity(data.homeAddress?.city || '');
+        setLat(data.homeLat || undefined);
+        setLon(data.homeLon || undefined);
         setRadiusKm(String(data.radiusKm || 15));
-        setPhotoUrl(data.photoUrl || '');
+        setPhotoUrl(data.profilePhotoUri || '');
         setSelectedCategories(data.categories || []);
         setSelectedActivities(data.selectedTags?.filter(t => 
           TAXONOMY.some(cat => cat.activities?.includes(t))
