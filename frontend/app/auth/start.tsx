@@ -36,6 +36,24 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
       <LinearGradient colors={['#5941FF', '#4935CC']} style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
+          {/* RESET Button (oben rechts) */}
+          <View style={{ position: 'absolute', top: 50, right: 24, zIndex: 10 }}>
+            <Pressable
+              onPress={resetAllStorage}
+              style={{
+                backgroundColor: '#FF4444',
+                padding: 12,
+                borderRadius: 12,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+              }}
+            >
+              <Ionicons name="trash-outline" size={24} color="white" />
+            </Pressable>
+          </View>
+          
           <View style={{ height: 60 }} />
           
           <Animated.View style={{ transform: [{ scale: logoScale }], opacity: logoOpacity, alignItems: 'center' }}>
