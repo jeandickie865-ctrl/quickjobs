@@ -61,15 +61,17 @@ export async function diagnoseAsyncStorage() {
       const profile: WorkerProfile = JSON.parse(profileStr);
       console.log('✅ Worker Profile found:');
       console.log('   - User ID:', profile.userId);
-      console.log('   - Name:', profile.name);
-      console.log('   - Address:', `${profile.street}, ${profile.postalCode} ${profile.city}`);
+      console.log('   - Name:', profile.firstName || 'N/A');
+      console.log('   - Address:', profile.homeAddress 
+        ? `${profile.homeAddress.street}, ${profile.homeAddress.postalCode} ${profile.homeAddress.city}`
+        : '❌ MISSING');
       console.log('   - Coordinates:', profile.homeLat && profile.homeLon 
         ? `✅ Lat: ${profile.homeLat.toFixed(4)}, Lon: ${profile.homeLon.toFixed(4)}`
         : '❌ MISSING');
       console.log('   - Radius:', profile.radiusKm, 'km');
       console.log('   - Categories:', profile.categories?.length || 0, '→', profile.categories);
       console.log('   - Selected Tags:', profile.selectedTags?.length || 0, '→', profile.selectedTags);
-      console.log('   - Photo URL:', profile.photoUrl ? '✅ Set' : '❌ Not set');
+      console.log('   - Photo URL:', profile.profilePhotoUri ? '✅ Set' : '❌ Not set');
     } else {
       console.log('❌ No worker profile found');
     }
