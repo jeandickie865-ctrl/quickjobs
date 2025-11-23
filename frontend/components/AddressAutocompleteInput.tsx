@@ -1,4 +1,4 @@
-// components/AddressAutocompleteInput.tsx - FINAL VERSION with OpenStreetMap Nominatim
+// components/AddressAutocompleteInput.tsx – FINAL VERSION (1 Feld: Straße & Hausnummer)
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 
@@ -22,7 +22,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   onPostalCodeChange,
   onCityChange,
   onLatChange,
-  onLonChange,
+  onLonChange
 }) => {
   const [query, setQuery] = useState(street ?? '');
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -33,6 +33,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
     setQuery(street ?? '');
   }, [street]);
 
+  // 🔥 Autocomplete (OpenStreetMap)
   useEffect(() => {
     if (!isFocused) return;
 
@@ -49,21 +50,14 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
           `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(
             query
           )}`,
-          {
-            headers: {
-              'User-Agent': 'BACKUP-App/1.0',
-            },
-          }
+          { headers: { 'User-Agent': 'GIGMATCH-App/1.0' } }
         );
-        const data = await response.json();
 
-        if (Array.isArray(data)) {
-          setSuggestions(data);
-        } else {
-          setSuggestions([]);
-        }
+        const data = await response.json();
+        if (Array.isArray(data)) setSuggestions(data);
+        else setSuggestions([]);
       } catch (e) {
-        console.warn('Geocoding error:', e);
+        console.log('Geocoding error:', e);
         setSuggestions([]);
       }
     }, 300);
@@ -73,25 +67,23 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
     };
   }, [query, isFocused]);
 
+  // Auswahl einer Adresse aus dem Dropdown
   const selectSuggestion = (item: any) => {
-    // Sofort UI-Zustand zurücksetzen
     setIsFocused(false);
     setSuggestions([]);
 
     const addr = item.address ?? {};
+
     const streetName = [addr.road, addr.house_number].filter(Boolean).join(' ');
 
-    // Callbacks ausführen
-    if (typeof onStreetChange === 'function') onStreetChange(streetName);
-    if (typeof onPostalCodeChange === 'function')
-      onPostalCodeChange(addr.postcode ?? '');
-    if (typeof onCityChange === 'function')
+    if (onStreetChange) onStreetChange(streetName);
+    if (onPostalCodeChange) onPostalCodeChange(addr.postcode ?? '');
+    if (onCityChange)
       onCityChange(addr.city ?? addr.town ?? addr.village ?? '');
 
-    if (typeof onLatChange === 'function') onLatChange(parseFloat(item.lat));
-    if (typeof onLonChange === 'function') onLonChange(parseFloat(item.lon));
+    if (onLatChange) onLatChange(parseFloat(item.lat));
+    if (onLonChange) onLonChange(parseFloat(item.lon));
 
-    // Query auf den gewählten Straßennamen setzen
     setQuery(streetName);
   };
 
@@ -108,23 +100,26 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
             setSuggestions([]);
           }, 150);
         }}
-        onChangeText={(text) => setQuery(text)}
-        placeholder="Straße & Hausnummer"
+        onChangeText={(text) => {
+          setQuery(text);
+          if (onStreetChange) onStreetChange(text);
+        }}
+        placeholder="z. B. Am Stadtpark 10"
         placeholderTextColor="#777"
         style={styles.input}
       />
 
-      {/* Autocomplete Dropdown */}
+      {/* AUTOCOMPLETE DROPDOWN */}
       {isFocused && suggestions.length > 0 && (
         <View style={styles.dropdown}>
-          <ScrollView style={styles.scrollView} nestedScrollEnabled>
+          <ScrollView style={styles.scrollView}>
             {suggestions.map((s, i) => {
               const a = s.address ?? {};
               const label = [
                 a.road,
                 a.house_number,
                 a.postcode,
-                a.city || a.town || a.village,
+                a.city || a.town || a.village
               ]
                 .filter(Boolean)
                 .join(', ');
@@ -135,7 +130,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
                   onPress={() => selectSuggestion(s)}
                   style={({ pressed }) => [
                     styles.suggestionItem,
-                    pressed && styles.suggestionItemPressed,
+                    pressed && styles.suggestionItemPressed
                   ]}
                 >
                   <Text style={styles.suggestionText}>{label}</Text>
@@ -147,12 +142,10 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
       )}
 
       {/* PLZ */}
-      <Text style={[styles.label, styles.labelMarginTop]}>PLZ *</Text>
+      <Text style={styles.labelSmall}>PLZ *</Text>
       <TextInput
         value={postalCode ?? ''}
-        onChangeText={(text) => {
-          if (typeof onPostalCodeChange === 'function') onPostalCodeChange(text);
-        }}
+        onChangeText={(t) => onPostalCodeChange?.(t)}
         placeholder="PLZ"
         placeholderTextColor="#777"
         keyboardType="numeric"
@@ -160,12 +153,10 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
       />
 
       {/* Stadt */}
-      <Text style={[styles.label, styles.labelMarginTop]}>Stadt *</Text>
+      <Text style={styles.labelSmall}>Stadt *</Text>
       <TextInput
         value={city ?? ''}
-        onChangeText={(text) => {
-          if (typeof onCityChange === 'function') onCityChange(text);
-        }}
+        onChangeText={(t) => onCityChange?.(t)}
         placeholder="Stadt"
         placeholderTextColor="#777"
         style={styles.input}
@@ -174,19 +165,21 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   );
 };
 
+// 🟩 Styles (Neon-Tech)
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    marginBottom: 20,
-  },
+  container: { width: '100%', marginBottom: 20 },
   label: {
     fontSize: 12,
     color: '#C8FF16',
-    fontWeight: '600',
-    marginBottom: 8,
+    fontWeight: '700',
+    marginBottom: 8
   },
-  labelMarginTop: {
+  labelSmall: {
+    fontSize: 12,
+    color: '#C8FF16',
+    fontWeight: '700',
     marginTop: 14,
+    marginBottom: 6
   },
   input: {
     width: '100%',
@@ -194,9 +187,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     borderWidth: 2,
     borderColor: '#C8FF16',
-    borderRadius: 12,
+    borderRadius: 14,
     fontSize: 16,
-    color: '#000',
+    color: '#000'
   },
   dropdown: {
     position: 'absolute',
@@ -210,28 +203,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     zIndex: 999,
     maxHeight: 180,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    pointerEvents: 'auto',
+    elevation: 5
   },
-  scrollView: {
-    maxHeight: 180,
-  },
+  scrollView: { maxHeight: 180 },
   suggestionItem: {
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEE',
+    borderBottomColor: '#EEE'
   },
-  suggestionItemPressed: {
-    backgroundColor: 'rgba(200, 255, 22, 0.1)',
-  },
-  suggestionText: {
-    fontSize: 15,
-    color: '#000',
-  },
+  suggestionItemPressed: { backgroundColor: 'rgba(200,255,22,0.1)' },
+  suggestionText: { fontSize: 15, color: '#000' }
 });
 
 export default AddressAutocompleteInput;
