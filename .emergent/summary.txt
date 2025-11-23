@@ -1,72 +1,89 @@
 <analysis>
-The trajectory details an intensive, user-guided development process for a React Native application named BACKUP. The user, communicating in German, directed the AI engineer through building a full-stack application.
+The trajectory details a high-intensity, iterative debugging process conducted primarily in German. The initial goal was to fix core application functionalities like profile saving and photo uploads in a React Native (Expo) and FastAPI application.
 
-Initially, the work focused on scaffolding a complete FastAPI backend with PostgreSQL, SQLAlchemy, and Alembic to replace the existing -based mock data system. This involved significant debugging, including installing PostgreSQL when it was missing and correcting database configurations. The AI iteratively refined the backend models (, , ) based on precise user feedback, fixing issues like mutable array defaults () and adding Pydantic validation.
+The process began with diagnosing and fixing fundamental infrastructure and configuration issues. This included correcting container networking problems by adjusting the  in  and , and modifying  to correctly prefix API calls with . A major discovery was that AWS S3 was not configured, leading to a pivot where the AI implemented a local file upload system as a user-requested alternative ().
 
-Subsequently, the focus shifted to implementing core business logic. A full application and matching flow was architected, including creating  and  modules. The AI successfully implemented the backend for workers applying to jobs and employers selecting workers. It also integrated a photo upload feature for worker profiles using a new S3 service.
+The focus then shifted to a series of rapid-fire bug fixes on the frontend, specifically within the Employer user flow. The user reported numerous UI and functionality problems. The AI addressed these by:
+1.  Fixing broken authentication routing and logic in .
+2.  Correcting a broken layout and navigation in the employer section ().
+3.  Resolving multiple bugs in the job creation form (), including removing duplicated UI elements (for qualifications and address fields) and fixing type errors ( vs. ).
+4.  Implementing  in the employer's job list () to ensure new jobs appear after creation.
 
-The most recent and critical work involved intensive frontend UI debugging. After integrating new backend-driven screens, the user reported a black screen. The AI correctly diagnosed and fixed hardcoded background colors. When the user requested the app's signature purple theme, the AI updated the global theme file. This led to a new issue: unreadable white text on white UI cards. The AI correctly identified this final problem and was in the process of patching the text colors on the affected screens when the trajectory ended.
+The trajectory concludes with an unresolved critical bug: in the job creation form, the  component fails to populate the postal code field when a user selects an address suggestion. The AI's last action was to add extensive console logging to trace the state update and guide the extremely frustrated user on how to access the browser console to provide the necessary debugging information.
 
 The user's primary language is German. The next agent must respond in German only.
 </analysis>
 
 <product_requirements>
-The application, BACKUP, is a two-sided mobile marketplace connecting Auftraggeber (Clients/Employers) and Jobstarter (Workers). The core requirement is to build a polished, full-stack application with a consistent Neon-Tech visual identity, defined by a BACKUP Purple () background and BACKUP Neon () accents.
+The application, BACKUP, is a full-featured, two-sided mobile marketplace designed to connect Auftraggeber (Clients/Employers) and Jobstarter (Workers). It is not an MVP and is intended as a complete product.
 
-**Key Features Implemented & In-Progress:**
-*   **Architecture:** Migrated from a frontend-only prototype using  to a full-stack application with a FastAPI backend and a PostgreSQL database managed by SQLAlchemy and Alembic.
-*   **User Roles & Authentication:** Secure JWT-based registration and login for distinct Employer and Worker roles.
-*   **Profiles:**
-    *   **Worker:** Includes name, address, matching criteria (categories, qualifications, activities), and a profile photo uploaded to Amazon S3.
-    *   **Employer:** Includes company name, address, and matching criteria. The photo feature was explicitly removed for employers.
-*   **Job & Application Flow:**
-    *   Employers can create, view, update, and delete jobs.
-    *   Workers can view job details and apply (Ich habe Zeit).
-    *   Employers can view a list of applicants for their jobs and select a worker, which updates the application status.
-*   **Taxonomy:** A detailed, fixed taxonomy of 14 categories with 82 activities and 77 qualifications is defined in the frontend and used for matching logic.
+**Core Requirements:**
+*   **Dual User Roles:** Distinct registration, login, profile, and functional flows for Employers and Workers. The UI must clearly differentiate between these roles.
+*   **Employer Flow:** Employers must be able to create, publish, and view their jobs (Aufträge). The job creation form requires fields for title, description, address (with autocomplete), compensation, and qualifications.
+*   **Worker Flow:** Workers have a detailed, editable profile where they can upload a photo and select skills from a multi-level taxonomy.
+*   **Navigation & UX:** The application must have persistent, intuitive navigation (e.g., a tab bar) allowing users to access key areas like their profile (with a logout function) from any screen.
+*   **Visual Identity:** The app must adhere to a Neon-Tech theme with a purple background and neon-lime accents.
+
+The development so far has focused heavily on stabilizing the Employer flow, specifically the job creation and listing functionality, after fixing major infrastructure and authentication issues.
 </product_requirements>
 
 <key_technical_concepts>
-- **Frontend:** React Native, Expo, Expo Router, , .
-- **Backend:** FastAPI, Python, SQLAlchemy (async ORM), Alembic (migrations), Pydantic (validation).
-- **Database:** PostgreSQL.
-- **Authentication:** JWT with  password hashing.
-- **File Storage:** Amazon S3 for photo uploads via .
-- **Styling:** A custom  and  file for global theming.
+- **Frontend:** React Native, Expo, Expo Router, Axios.
+- **State Management:** React Context API (), , .
+- **Backend:** Python, FastAPI.
+- **Data Storage:**
+    - **Client-side:**  is used for caching data like jobs ().
+    - **Server-side:** A local file system is used for photo uploads () as an alternative to AWS S3.
+- **APIs:** OpenStreetMap API for address autocomplete.
+- **Infrastructure:** Containerized environment (likely Docker/Kubernetes) where  routes are proxied to the backend service.
 </key_technical_concepts>
 
 <code_architecture>
-The project is a monorepo with  (Expo) and  (FastAPI) directories.
+The project is a monorepo with a  (Expo) and  (FastAPI) structure.
 
 
 
-- ****: The FastAPI application.
-    - ****: A new service created to handle file uploads to an Amazon S3 bucket using . It validates file type and size.
-    - **, **: These modules were heavily modified. The SQLAlchemy models were updated to use  for  fields and make timestamps non-nullable. Schemas were improved with  and Pydantic validators.
-    - **, **: Newly created modules to handle the job application and worker selection flow. They contain SQLAlchemy models, Pydantic schemas, and FastAPI routers with business logic (e.g., workers apply, employers select).
-    - ****: Contains multiple Alembic migration files that reflect the iterative changes to the , , , and  tables, including adding/removing columns and creating new tables.
-- ****: The Expo React Native application.
-    - ****: The central theme definition file. It was edited multiple times during a debugging session to change the app's background from light-gray to purple () and the default text color to white ().
-    - ****: A new, central Axios-based service for all backend API communication. It handles sending the auth token and includes functions for , , , etc.
-    - ****: This screen was updated to include an S3 photo upload feature, using  and the new  service. It was also a key file in the theming debug, where its text color was being patched.
-    - ****: A new screen created to list a worker's job applications by calling the  endpoint.
-    - ****: A new screen for employers to view all applicants for a specific job, including their profile photos and details, with a button to select them.
+- ****
+    - **Importance:** This is the screen for creating new jobs and has been the source of many recent bugs. It integrates the problematic address component.
+    - **Changes:** Heavily modified to remove duplicated UI sections for Qualifikationen and address fields. Corrected a type error, changing state and imports from the non-existent  type to the correct  type. Extensive  statements were added to debug state updates from child components.
 
+- ****
+    - **Importance:** This is the component causing the current critical issue. It's responsible for address search and autocomplete using the OpenStreetMap API.
+    - **Changes:** Multiple attempts were made to fix a bug where selecting a suggestion fails to update the postal code in the parent component's state. The latest change involved reordering state-setting logic and adding detailed  statements to trace the  function's execution and the data it receives.
+
+- ****
+    - **Importance:** This screen lists the jobs created by the employer. It was failing to display newly created jobs.
+    - **Changes:** Fixed an import error ( to ). Implemented the  hook to force a re-fetch of jobs from  whenever the screen comes into focus, ensuring the list is up-to-date.
+
+- ****
+    - **Importance:** This file defines the tab-based navigation for the employer section. Users were getting stuck on pages without access to the main tabs.
+    - **Changes:** The layout was corrected to ensure the three main tabs (Meine Aufträge, Erstellen, Profil) are always visible, providing persistent navigation across the employer flow.
+
+- ** & **
+    - **Importance:** These files define the core data structures for the application.
+    - **Changes:** The agent confirmed the  type exists and the  type does not, which was the source of a critical bug in  and . The  type was also verified.
 </code_architecture>
 
 <pending_tasks>
-- **Document Upload System:** Implement the full backend logic and frontend UI for workers to upload documents (PDF, JPG) to S3, as per the user's detailed request.
-- **Payment Flow:** Implement the Stripe-based payment system for the 20% platform commission after a match is made.
-- **Real-time Chat:** Build the WebSocket-based chat system for communication between matched employers and workers.
-- **Advanced Matching Logic:** Integrate the more advanced scoring logic from  into the main matching endpoints.
+- **Fix Address Autocomplete:** The highest priority is to resolve the bug where the postal code is not being set when an address suggestion is selected in .
+- **Document Upload System:** Implement a feature for workers to upload documents.
+- **Payment Flow:** Implement a Stripe-based payment system.
+- **Real-time Chat:** Build a WebSocket-based chat system.
 </pending_tasks>
 
 <current_work>
-The most recent task was fixing a critical UI/theming issue. After the user requested a BACKUP Purple theme, the AI changed the global background color in  to  and the global text color to . This immediately caused a usability problem: on screens with white content cards (like the worker profile), the white text became unreadable against the white card background.
+The AI engineer was actively debugging a persistent and frustrating bug in the  component within the employer's job creation form ().
 
-The user pointed this out (die ganze seite ist zerschossen), and the AI correctly diagnosed the white-on-white text issue. It began patching the affected screens to use a dark text color for content inside white cards. The AI successfully patched the  screen. The last action was an intent to apply the same fix to all other affected screens, specifically mentioning the job detail screens. The work was interrupted immediately after patching the first screen and before patching the others. All new screens (, , ) were using hardcoded colors and were patched to use the theme, which surfaced the final white-on-white issue.
+**The Problem:** When a user types an address and selects a suggestion from the dropdown (e.g., Am Stadtpark, 10, 40699, Erkrath), the City field (Erkrath) is correctly populated in the form, but the Postal Code field (40699) remains empty.
+
+**Last Actions:**
+1.  The AI made several attempts to fix this within , including reordering the sequence of callback calls and state updates in the  function.
+2.  To definitively diagnose the issue, the AI implemented comprehensive logging in both  (to log the data extracted from the OSM API response) and  (to log whether the state update callback is being triggered and what value it receives).
+3.  The user had trouble finding the browser console. The AI provided detailed, platform-specific instructions on how to open it.
+4.  The user then provided a console log, but it contained a repeated React error () and not the specific debugging logs the AI had added.
+5.  The AI's final action was to patiently re-instruct the user to ignore the errors, perform the address selection again, and look specifically for the new log messages prefixed with emojis (📍, 📮) that would trace the data flow from selection to state update. The process is currently stalled, awaiting this specific console output from the user.
 </current_work>
 
 <optional_next_step>
-Continue fixing the UI by applying the text color patch to the remaining screens that have white cards, such as  and , to ensure text is readable.
+Wait for the user to provide the specific  output from the browser console after selecting an address. Analyze the logs to determine why the postal code state is not updating and then implement the correct fix.
 </optional_next_step>
