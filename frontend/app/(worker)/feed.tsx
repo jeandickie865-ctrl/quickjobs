@@ -115,16 +115,12 @@ export default function WorkerFeed() {
   };
 
   // Prüfen, ob Worker sich für einen Auftrag bewerben kann
+  // SIMPLIFIED: Wenn Job matched (bereits durch jobMatchesWorker geprüft), kann Worker sich bewerben
   const canApplyToJob = (job: Job, workerProfile: WorkerProfile | null): boolean => {
     if (!workerProfile) return false;
-
-    // Sicherheit Kategorie: Pflicht-Tags
-    if (job.category.toLowerCase() === 'sicherheit') {
-      const securityRequiredTags = ['34a', 'bewacher-id', 'führungszeugnis'];
-      const workerTags = new Set(workerProfile.selectedTags.map(t => t.toLowerCase()));
-      return securityRequiredTags.every(tag => workerTags.has(tag));
-    }
-
+    
+    // Job wurde bereits durch matching.ts gefiltert
+    // Wenn er im Feed ist, kann der Worker sich bewerben
     return true;
   };
 
