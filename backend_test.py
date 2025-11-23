@@ -122,8 +122,8 @@ def main():
     if test_health_check():
         tests_passed += 1
     
-    # Test 4: Status Endpoints
-    if test_status_endpoints():
+    # Test 4: API Documentation
+    if test_api_docs():
         tests_passed += 1
     
     print("-" * 60)
