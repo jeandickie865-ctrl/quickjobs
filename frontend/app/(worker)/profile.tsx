@@ -242,7 +242,7 @@ export default function WorkerProfileScreen() {
       const combinedTags = [...selectedActivities, ...selectedQualifications];
 
       const profileData = {
-        userId: authUser.id,
+        userId: user.id,
         name,
         street,
         postalCode,
