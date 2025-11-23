@@ -10,7 +10,7 @@ import Chip from '../../../components/ui/Chip';
 import { listCategories, CategoryKey, groupTagsByType } from '../../../src/taxonomy';
 import { JobTimeMode, Auftrag } from '../../../types/job';
 import { Address } from '../../../types/address';
-import { addAuftrag } from '../../../utils/jobStore';
+import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
 import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
 
