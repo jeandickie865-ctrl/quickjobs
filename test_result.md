@@ -316,11 +316,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Backend API"
     - "Authentication Flow"
     - "Worker Profile"
   stuck_tasks: 
-    - "Backend API"
     - "Authentication Flow"
     - "Worker Profile"
   test_all: false
