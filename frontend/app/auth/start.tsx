@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { resetAllStorage } from '../../utils/resetStorage';
+import { migrateUserIdsToEmailBased } from '../../utils/migrateUserIds';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
