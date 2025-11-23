@@ -200,8 +200,7 @@ export default function WorkerProfileScreen() {
 
   const handleSave = async () => {
     // BUG 3 FIX: Validierung
-    const { user: authUser } = useAuth();
-    if (!authUser) {
+    if (!user) {
       return Alert.alert('Fehler', 'Du bist nicht eingeloggt.');
     }
 
