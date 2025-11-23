@@ -72,6 +72,39 @@ def check_backend_service():
         print(f"❌ Backend Service: ERROR - {str(e)}")
         return False
 
+def test_status_endpoints():
+    """Test status check endpoints (POST and GET)"""
+    print("🔍 Testing Status Endpoints...")
+    try:
+        # Test POST /api/status
+        test_data = {"client_name": f"backend_test_{datetime.now().strftime('%H%M%S')}"}
+        post_response = requests.post(f"{BACKEND_URL}/status", 
+                                    json=test_data, 
+                                    timeout=10)
+        
+        if post_response.status_code != 200:
+            print(f"❌ Status POST: FAILED - Status {post_response.status_code}")
+            return False
+            
+        # Test GET /api/status
+        get_response = requests.get(f"{BACKEND_URL}/status", timeout=10)
+        
+        if get_response.status_code != 200:
+            print(f"❌ Status GET: FAILED - Status {get_response.status_code}")
+            return False
+            
+        status_checks = get_response.json()
+        if isinstance(status_checks, list):
+            print(f"✅ Status Endpoints: PASSED - {len(status_checks)} records in database")
+            return True
+        else:
+            print("❌ Status Endpoints: FAILED - Invalid response format")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Status Endpoints: FAILED - Error: {str(e)}")
+        return False
+
 def main():
     """Run all backend tests"""
     print("=" * 60)
@@ -83,7 +116,7 @@ def main():
     print("-" * 60)
     
     tests_passed = 0
-    total_tests = 3
+    total_tests = 4
     
     # Test 1: Backend Service Status
     if check_backend_service():
@@ -97,11 +130,15 @@ def main():
     if test_health_check():
         tests_passed += 1
     
+    # Test 4: Status Endpoints
+    if test_status_endpoints():
+        tests_passed += 1
+    
     print("-" * 60)
     print(f"📊 TEST RESULTS: {tests_passed}/{total_tests} tests passed")
     
     if tests_passed == total_tests:
-        print("🎉 ALL TESTS PASSED - Backend is fully functional")
+        print("🎉 ALL TESTS PASSED - Backend Infrastructure is stable")
         return True
     else:
         print(f"⚠️  {total_tests - tests_passed} tests failed - Backend has issues")
