@@ -3,11 +3,19 @@ from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.database import get_db
 from core.security import get_current_user
-from core.s3_service import upload_profile_photo
 from users.models import User
 from pydantic import BaseModel
+import os
+import uuid
+from pathlib import Path
 
 router = APIRouter()
+
+UPLOAD_DIR = Path("/app/uploads/profile-photos")
+ALLOWED_TYPES = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
+MAX_SIZE = 5 * 1024 * 1024
+
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 class PhotoUploadResponse(BaseModel):
     photo_url: str
@@ -19,27 +27,29 @@ async def upload_profile_photo_endpoint(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    Upload profile photo to S3
-    
-    - Accepts multipart/form-data with 'file' field
-    - Max size: 5 MB
-    - Allowed types: jpg, jpeg, png
-    - Returns public URL
-    """
-    try:
-        # Upload to S3
-        photo_url = await upload_profile_photo(current_user.id, file)
-        
-        return PhotoUploadResponse(
-            photo_url=photo_url,
-            message="Photo uploaded successfully"
-        )
-        
-    except HTTPException as e:
-        raise e
-    except Exception as e:
+    if file.content_type not in ALLOWED_TYPES:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to upload photo: {str(e)}"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": "Invalid file type", "allowed": ["jpg", "png", "webp"]}
         )
+    
+    content = await file.read()
+    if len(content) > MAX_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": "File too large", "max_size_mb": 5}
+        )
+    
+    ext = file.filename.split(".")[-1].lower()
+    filename = f"{uuid.uuid4()}.{ext}"
+    filepath = UPLOAD_DIR / filename
+    
+    with open(filepath, "wb") as f:
+        f.write(content)
+    
+    photo_url = f"/uploads/profile-photos/{filename}"
+    
+    return PhotoUploadResponse(
+        photo_url=photo_url,
+        message="Photo uploaded successfully"
+    )
