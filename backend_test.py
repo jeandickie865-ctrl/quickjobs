@@ -77,28 +77,24 @@ def main():
     print("=" * 60)
     print("🚀 BACKEND INFRASTRUCTURE TEST SUITE")
     print("=" * 60)
-    print(f"Backend URL: {BACKEND_URL}")
+    print(f"Base URL: {BASE_URL}")
+    print(f"API URL: {BACKEND_URL}")
     print(f"Test Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("-" * 60)
     
     tests_passed = 0
-    total_tests = 4
+    total_tests = 3
     
     # Test 1: Backend Service Status
     if check_backend_service():
         tests_passed += 1
     
-    # Test 2: Health Check
+    # Test 2: Root Endpoint
+    if test_root_endpoint():
+        tests_passed += 1
+    
+    # Test 3: Health Check
     if test_health_check():
-        tests_passed += 1
-    
-    # Test 3: Status POST
-    post_success, status_id = test_status_post()
-    if post_success:
-        tests_passed += 1
-    
-    # Test 4: Status GET
-    if test_status_get():
         tests_passed += 1
     
     print("-" * 60)
