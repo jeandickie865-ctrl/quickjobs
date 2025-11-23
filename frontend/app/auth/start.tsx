@@ -1,65 +1,63 @@
 // app/auth/start.tsx
-import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, Pressable, Image, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../theme/ThemeProvider';
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default function RoleSelection() {
-  const { colors } = useTheme();
-  const { setRole } = useAuth();
+const COLORS = {
+  purple: '#5941FF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  whiteTransparent: 'rgba(255,255,255,0.7)',
+};
+
+export default function WelcomeScreen() {
   const router = useRouter();
-  const [selecting, setSelecting] = useState(false);
+  
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const contentOpacity = useRef(new Animated.Value(0)).current;
+  const logoScale = useRef(new Animated.Value(0.9)).current;
 
-  const handleRoleSelect = async (role: 'worker' | 'employer') => {
-    if (selecting) return;
-    setSelecting(true);
-    try {
-      await setRole(role);
-      if (role === 'worker') {
-        router.replace('/(worker)/feed');
-      } else {
-        router.replace('/(employer)');
-      }
-    } catch (error) {
-      console.error('Role selection error:', error);
-    } finally {
-      setSelecting(false);
-    }
-  };
+  useEffect(() => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(logoOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.spring(logoScale, { toValue: 1, tension: 40, friction: 7, useNativeDriver: true }),
+      ]),
+      Animated.timing(contentOpacity, { toValue: 1, duration: 400, delay: 100, useNativeDriver: true }),
+    ]).start();
+  }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <SafeAreaView style={{ flex: 1, padding: 24, justifyContent: 'center' }}>
-        <Text style={[styles.title, { color: colors.text }]}>Wähle deine Rolle</Text>
-        <Text style={[styles.subtitle, { color: colors.text, opacity: 0.7, marginBottom: 40 }]}>
-          Du kannst dies später in den Einstellungen ändern.
-        </Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <LinearGradient colors={['#5941FF', '#4935CC']} style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
+          <View style={{ height: 60 }} />
+          
+          <Animated.View style={{ transform: [{ scale: logoScale }], opacity: logoOpacity, alignItems: 'center' }}>
+            <View style={{ backgroundColor: COLORS.neon, borderRadius: 22, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12 }}>
+              <Image source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} style={{ width: 180, height: 180 }} resizeMode="contain" />
+            </View>
+          </Animated.View>
 
-        <Pressable
-          onPress={() => handleRoleSelect('worker')}
-          disabled={selecting}
-          style={[styles.button, { backgroundColor: colors.neon }]}
-        >
-          <Text style={[styles.buttonText, { color: colors.black }]}>Worker</Text>
-        </Pressable>
+          <View style={{ height: 32 }} />
 
-        <Pressable
-          onPress={() => handleRoleSelect('employer')}
-          disabled={selecting}
-          style={[styles.button, { backgroundColor: colors.neon, marginTop: 16 }]}
-        >
-          <Text style={[styles.buttonText, { color: colors.black }]}>Employer</Text>
-        </Pressable>
-      </SafeAreaView>
+          <Animated.View style={{ opacity: contentOpacity }}>
+            <Text style={{ fontSize: 36, fontWeight: '900', color: COLORS.white, textAlign: 'center', marginBottom: 12 }}>Willkommen bei BACKUP</Text>
+            <Text style={{ fontSize: 16, color: COLORS.whiteTransparent, textAlign: 'center', fontWeight: '500', marginBottom: 60 }}>wenn's jetzt passieren muss.</Text>
+
+            <Pressable onPress={() => router.push('/auth/signup')} style={({ pressed }) => ({ backgroundColor: COLORS.neon, paddingVertical: 18, borderRadius: 16, alignItems: 'center', marginBottom: 16, opacity: pressed ? 0.9 : 1, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 })}>
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>Registrieren</Text>
+            </Pressable>
+
+            <Pressable onPress={() => router.push('/auth/login')} style={({ pressed }) => ({ backgroundColor: COLORS.white, paddingVertical: 18, borderRadius: 16, borderWidth: 2, borderColor: COLORS.neon, alignItems: 'center', opacity: pressed ? 0.9 : 1 })}>
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.neon }}>Anmelden</Text>
+            </Pressable>
+          </Animated.View>
+        </SafeAreaView>
+      </LinearGradient>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  title: { fontSize: 28, fontWeight: '700', marginBottom: 12, textAlign: 'center' },
-  subtitle: { fontSize: 16, textAlign: 'center' },
-  button: { paddingVertical: 18, borderRadius: 14, alignItems: 'center' },
-  buttonText: { fontSize: 16, fontWeight: '700' },
-});
