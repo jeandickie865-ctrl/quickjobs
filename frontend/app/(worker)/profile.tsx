@@ -89,8 +89,10 @@ export default function WorkerProfileScreen() {
   }, [selectedCategories]);
 
   useEffect(() => {
-    loadProfile();
-  }, []);
+    if (user) {
+      loadProfile();
+    }
+  }, [user]);
 
   // Entfernt ungültige gespeicherte Activities & Qualifications
   useEffect(() => {
