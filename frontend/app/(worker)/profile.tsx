@@ -232,13 +232,21 @@ export default function WorkerProfileScreen() {
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
+          alignItems: 'center',
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <View style={{ width: 30 }} />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
           <Pressable onPress={() => router.push('/(worker)/feed')}>
             <Ionicons name="home-outline" size={26} color={colors.neon} />
+          </Pressable>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
+          <Pressable onPress={async () => {
+            Alert.alert('Logout', 'Möchten Sie sich wirklich abmelden?', [
+              { text: 'Abbrechen', style: 'cancel' },
+              { text: 'Abmelden', onPress: () => router.replace('/auth/login') }
+            ]);
+          }}>
+            <Ionicons name="log-out-outline" size={26} color={colors.neon} />
           </Pressable>
         </View>
       </SafeAreaView>
