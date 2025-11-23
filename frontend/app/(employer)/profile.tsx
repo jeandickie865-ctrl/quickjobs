@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getEmployerProfile, saveEmployerProfile, EmployerProfile } from '../../utils/employerProfileStore';
-import { ProfilePhoto } from '../../components/ProfilePhoto';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { Ionicons } from '@expo/vector-icons';
 
