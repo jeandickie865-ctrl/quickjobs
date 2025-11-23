@@ -177,9 +177,9 @@ export default function WorkerProfileScreen() {
         city,
         lat,
         lon,
-        categories: selectedCategories,
-        activities: selectedActivities,
-        qualifications: selectedQualifications,
+        categories: selectedCategories || [],
+        activities: selectedActivities || [],
+        qualifications: selectedQualifications || [],
         radius_km: radius,
         photo_url: photoUrl,
       });
@@ -188,6 +188,7 @@ export default function WorkerProfileScreen() {
         { text: 'OK', onPress: () => router.push('/(worker)/feed') },
       ]);
     } catch (err) {
+      console.log('Save error:', err);
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden.');
     } finally {
       setSaving(false);
