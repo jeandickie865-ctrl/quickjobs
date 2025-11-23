@@ -6,7 +6,7 @@ const PROFILE_KEY = '@shiftmatch:worker_profile';
 
 export async function getWorkerProfile(userId: string): Promise<WorkerProfile | null> {
   console.log('🔍 getWorkerProfile: Loading profile for user', userId);
-  const stored = await storage.getItem<WorkerProfile>(PROFILE_KEY);
+  const stored = await storage.getItem<any>(PROFILE_KEY);
   
   if (!stored) {
     console.log('⚠️ getWorkerProfile: No profile found');
@@ -18,12 +18,43 @@ export async function getWorkerProfile(userId: string): Promise<WorkerProfile | 
     return null;
   }
   
-  // Ensure arrays are never undefined
-  const profile = {
-    ...stored,
-    categories: stored.categories ?? [],
-    selectedTags: stored.selectedTags ?? [],
-  };
+  // MIGRATION: Altes Format → Neues Format
+  let profile: WorkerProfile;
+  
+  // Check if old format (has street, postalCode, city fields directly)
+  if ('street' in stored || 'postalCode' in stored || 'city' in stored) {
+    console.log('🔄 Migrating old profile format to new format');
+    profile = {
+      userId: stored.userId,
+      categories: stored.categories ?? [],
+      selectedTags: stored.selectedTags ?? [],
+      radiusKm: stored.radiusKm ?? 15,
+      homeAddress: {
+        street: stored.street || '',
+        postalCode: stored.postalCode || '',
+        city: stored.city || '',
+        country: 'DE',
+      },
+      homeLat: stored.homeLat ?? stored.lat ?? null,
+      homeLon: stored.homeLon ?? stored.lon ?? null,
+      firstName: stored.name || stored.firstName,
+      profilePhotoUri: stored.photoUrl || stored.profilePhotoUri,
+      pushToken: stored.pushToken,
+    };
+    
+    // Save migrated version
+    await storage.setItem(PROFILE_KEY, profile);
+    console.log('✅ Profile migrated and saved');
+  } else {
+    // Already new format
+    profile = {
+      ...stored,
+      categories: stored.categories ?? [],
+      selectedTags: stored.selectedTags ?? [],
+      homeLat: stored.homeLat ?? null,
+      homeLon: stored.homeLon ?? null,
+    };
+  }
   
   console.log('✅ getWorkerProfile: Profile loaded', {
     userId: profile.userId,
