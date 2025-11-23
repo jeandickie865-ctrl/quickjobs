@@ -236,8 +236,7 @@ export default function WorkerProfileScreen() {
     setSaving(true);
 
     try {
-      const { user: authUser } = useAuth();
-      if (!authUser) throw new Error('Not logged in');
+      if (!user) throw new Error('Not logged in');
 
       // Kombiniere activities und qualifications zu selectedTags
       const combinedTags = [...selectedActivities, ...selectedQualifications];
