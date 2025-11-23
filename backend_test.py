@@ -33,24 +33,24 @@ def test_health_check():
         print(f"❌ Health Check: FAILED - Error: {str(e)}")
         return False
 
-def test_root_endpoint():
-    """Test GET / endpoint"""
-    print("🔍 Testing Root Endpoint...")
+def test_frontend_serving():
+    """Test that frontend is being served at root"""
+    print("🔍 Testing Frontend Serving...")
     try:
         response = requests.get(f"{BASE_URL}/", timeout=10)
         if response.status_code == 200:
-            data = response.json()
-            if data.get("message") == "BACKUP API v1.0.0" and data.get("status") == "running":
-                print("✅ Root Endpoint: PASSED - GET / returns BACKUP API info")
+            content = response.text
+            if "<!DOCTYPE html>" in content and "expo" in content.lower():
+                print("✅ Frontend Serving: PASSED - Root serves frontend HTML")
                 return True
             else:
-                print(f"❌ Root Endpoint: FAILED - Unexpected response: {data}")
+                print(f"❌ Frontend Serving: FAILED - Unexpected content type")
                 return False
         else:
-            print(f"❌ Root Endpoint: FAILED - Status {response.status_code}")
+            print(f"❌ Frontend Serving: FAILED - Status {response.status_code}")
             return False
     except Exception as e:
-        print(f"❌ Root Endpoint: FAILED - Error: {str(e)}")
+        print(f"❌ Frontend Serving: FAILED - Error: {str(e)}")
         return False
 
 def check_backend_service():
