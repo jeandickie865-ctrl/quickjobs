@@ -333,8 +333,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Adress-Autocomplete: PLZ wird nicht gesetzt"
+  current_focus: []
   stuck_tasks: 
     - "Authentication Flow"
     - "Worker Profile"
