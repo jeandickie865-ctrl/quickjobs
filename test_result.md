@@ -225,11 +225,11 @@ frontend:
 
   - task: "Worker Profile"
     implemented: true
-    working: true
+    working: false
     file: "app/(worker)/profile.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
@@ -240,14 +240,17 @@ frontend:
       - working: true
         agent: "main"
         comment: "Taxonomie-Fix: toggleTag Funktion angepasst für String-basierte Tags (statt Tag-Objekte). Alte license-Rendering-Logik entfernt. Kompatibel mit neuer workerData.ts Struktur (nur activities + qualifications)."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUE CONFIRMED: Mobile testing (390x844) reveals users cannot access profile screen. After successful login (testworker@test.de), app gets stuck at welcome screen instead of redirecting to worker profile. All profile features (logout, photo upload, profile save) are inaccessible because users never reach the profile screen. Root causes: 1) Post-login navigation broken, 2) Backend API missing (/api/profiles/worker/me returns 404). Priority upgraded to CRITICAL."
 
   - task: "Authentication Flow"
     implemented: true
-    working: true
+    working: false
     file: "contexts/AuthContext.tsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
@@ -258,6 +261,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "KRITISCHER SECURITY-FIX: expo-crypto wurde installiert und Passwort-Hashing mit SHA-256 + Salt erfolgreich aktiviert. AuthContext.tsx nutzt jetzt expo-crypto für sicheres Password-Hashing. App läuft stabil, Willkommens-Screen wird korrekt angezeigt. Keine Plaintext-Passwörter mehr!"
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL NAVIGATION ISSUE: Authentication works (login successful with testworker@test.de) but post-login navigation is broken. Users get stuck at welcome screen after login instead of being redirected to worker dashboard/profile. This blocks access to all app functionality. Mobile testing confirms the issue affects core user flow."
 
 backend:
   - task: "Backend API"
@@ -296,8 +302,12 @@ metadata:
 test_plan:
   current_focus:
     - "Backend API"
+    - "Authentication Flow"
+    - "Worker Profile"
   stuck_tasks: 
     - "Backend API"
+    - "Authentication Flow"
+    - "Worker Profile"
   test_all: false
   test_priority: "stuck_first"
 
