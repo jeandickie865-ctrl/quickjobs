@@ -547,19 +547,15 @@ export default function CreateJob() {
             city={address.city}
             onStreetChange={(value) => {
               console.log('🏠 Street changed:', value);
-              setAddress({ ...address, street: value });
+              setAddress(prev => ({ ...prev, street: value }));
             }}
             onPostalCodeChange={(value) => {
               console.log('📮 PostalCode changed:', value);
-              setAddress(prev => {
-                const next = { ...prev, postalCode: value };
-                console.log('📮 Address after postalCode update:', next);
-                return next;
-              });
+              setAddress(prev => ({ ...prev, postalCode: value }));
             }}
             onCityChange={(value) => {
               console.log('🏙️ City changed:', value);
-              setAddress({ ...address, city: value });
+              setAddress(prev => ({ ...prev, city: value }));
             }}
             onLatChange={(value) => {
               console.log('📍 Lat changed:', value);
