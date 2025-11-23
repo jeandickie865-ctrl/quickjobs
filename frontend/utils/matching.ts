@@ -296,16 +296,28 @@ export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
     }
   }
 
-  // 9. Radius check
-  if (worker.homeLat && worker.homeLon && job.lat && job.lon) {
-    const distance = calculateDistance(
-      { lat: job.lat, lon: job.lon },
-      { lat: worker.homeLat, lon: worker.homeLon }
-    );
-    if (distance > worker.radiusKm) {
-      return false;
-    }
+  // 9. Radius check (STRIKT: Jobs ohne Koordinaten werden ausgeblendet)
+  if (!job.lat || !job.lon) {
+    console.warn('⚠️ Job ohne Koordinaten wird übersprungen:', job.id, job.title);
+    return false; // Job MUSS Koordinaten haben
   }
+  
+  if (!worker.homeLat || !worker.homeLon) {
+    console.warn('⚠️ Worker ohne Home-Koordinaten:', worker.userId);
+    return false; // Worker MUSS Koordinaten haben
+  }
+
+  const distance = calculateDistance(
+    { lat: job.lat, lon: job.lon },
+    { lat: worker.homeLat, lon: worker.homeLon }
+  );
+  
+  if (distance > worker.radiusKm) {
+    console.log(`📏 Job zu weit weg: ${distance.toFixed(1)}km > ${worker.radiusKm}km`);
+    return false;
+  }
+  
+  console.log(`✅ Radius-Check OK: ${distance.toFixed(1)}km ≤ ${worker.radiusKm}km`);
 
   // 10. Status check
   if (!['open', 'pending'].includes(job.status)) {
