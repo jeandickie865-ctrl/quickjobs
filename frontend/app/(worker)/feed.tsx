@@ -128,16 +128,10 @@ export default function WorkerFeed() {
     return true;
   };
 
-  // Passende Aufträge - mit Matching-Filter
+  // Passende Aufträge - bereits gefiltert in loadData()
   const matchingJobs = useMemo(
-    () =>
-      profile
-        ? jobs
-            .filter(j => j.status === 'open')
-            .filter(j => jobMatchesWorker(j, profile))
-            .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))
-        : [],
-    [jobs, profile]
+    () => jobs.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')),
+    [jobs]
   );
 
   // Alle Aufträge im Umkreis
