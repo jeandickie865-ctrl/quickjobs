@@ -57,11 +57,16 @@ def check_backend_service():
     """Check if backend service is running"""
     print("🔍 Checking Backend Service Status...")
     try:
-        # Simple connectivity test using root endpoint
-        response = requests.get(f"{BACKEND_URL}/", timeout=5)
+        # Test root endpoint (no /api prefix)
+        response = requests.get(f"{BASE_URL}/", timeout=5)
         if response.status_code == 200:
-            print("✅ Backend Service: RUNNING - Service is accessible")
-            return True
+            data = response.json()
+            if data.get("message") == "BACKUP API v1.0.0":
+                print("✅ Backend Service: RUNNING - BACKUP API v1.0.0 accessible")
+                return True
+            else:
+                print(f"❌ Backend Service: ISSUE - Unexpected response: {data}")
+                return False
         else:
             print(f"❌ Backend Service: ISSUE - Status {response.status_code}")
             return False
