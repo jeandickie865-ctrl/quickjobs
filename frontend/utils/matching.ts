@@ -250,18 +250,29 @@ function checkNachhilfeRequirements(jobCategory: string, jobTags: string[], work
  * 11. Kein Doppelmatch
  */
 export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
-  if (!job || !worker) return false;
+  if (!job || !worker) {
+    console.log('❌ matching: null job or worker');
+    return false;
+  }
 
   const workerSkills = worker.selectedTags || [];
   const workerCategories = worker.categories || [];
   const requiredAllTags = job.required_all_tags || [];
   const requiredAnyTags = job.required_any_tags || [];
 
+  console.log(`🔎 Checking job "${job.title}" (ID: ${job.id})`);
+  console.log('   Job category:', job.category);
+  console.log('   Worker categories:', workerCategories);
+  console.log('   Worker tags:', workerSkills);
+  console.log('   Required ALL tags:', requiredAllTags);
+  console.log('   Required ANY tags:', requiredAnyTags);
+
   // 1. Category match
   if (!workerCategories.includes(job.category)) {
     console.log('❌ matching: category mismatch', { jobCategory: job.category, workerCategories });
     return false;
   }
+  console.log('✅ Category match OK');
 
   // 2. Security Hard-Checks (IMMER, alle Branchen)
   if (!checkSecurityRequirements(requiredAllTags, workerSkills)) {
