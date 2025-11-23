@@ -58,7 +58,7 @@ export default function WorkerProfileScreen() {
     const acts: string[] = [];
 
     selectedCategories.forEach((key) => {
-      const cat = categories.find((c) => c.key === key);
+      const cat = TAXONOMY.find((c) => c.key === key);
       if (cat?.activities) {
         cat.activities.forEach((a) => {
           if (!acts.includes(a)) acts.push(a);
