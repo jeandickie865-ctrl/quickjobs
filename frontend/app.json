@@ -39,7 +39,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "EXPO_BACKEND_URL": "http://localhost:8001"
+      "backendUrl": ""
     }
   }
 }
