@@ -108,7 +108,13 @@ export default function EmployerProfileScreen() {
   }
 
   async function handleSave() {
-    if (!user) return;
+    console.log('💾 handleSave called, user:', user);
+    
+    if (!user) {
+      console.error('❌ No user found!');
+      Alert.alert('Fehler', 'Benutzer nicht gefunden');
+      return;
+    }
 
     // Validation
     if (!firstName.trim()) {
@@ -132,7 +138,9 @@ export default function EmployerProfileScreen() {
       return;
     }
 
+    console.log('✅ All validations passed');
     setSaving(true);
+    
     try {
       const profile: EmployerProfile = {
         userId: user.id,
@@ -150,13 +158,16 @@ export default function EmployerProfileScreen() {
         shortBio: shortBio.trim() || undefined,
       };
 
+      console.log('💾 Saving profile:', profile);
       await saveEmployerProfile(profile);
+      console.log('✅ Profile saved successfully!');
+      
       Alert.alert('Erfolg', 'Profil gespeichert!', [
         { text: 'OK', onPress: () => router.push('/(employer)') }
       ]);
     } catch (error) {
-      console.error('Error saving profile:', error);
-      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden');
+      console.error('❌ Error saving profile:', error);
+      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setSaving(false);
     }
