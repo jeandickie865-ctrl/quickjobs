@@ -33,52 +33,24 @@ def test_health_check():
         print(f"❌ Health Check: FAILED - Error: {str(e)}")
         return False
 
-def test_status_post():
-    """Test POST /api/status endpoint"""
-    print("🔍 Testing Status POST Endpoint...")
+def test_root_endpoint():
+    """Test GET / endpoint"""
+    print("🔍 Testing Root Endpoint...")
     try:
-        test_data = {
-            "client_name": f"backend_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        }
-        response = requests.post(
-            f"{BACKEND_URL}/status", 
-            json=test_data,
-            headers={"Content-Type": "application/json"},
-            timeout=10
-        )
+        response = requests.get(f"{BASE_URL}/", timeout=10)
         if response.status_code == 200:
             data = response.json()
-            if "id" in data and "client_name" in data and "timestamp" in data:
-                print(f"✅ Status POST: PASSED - Created status check with ID: {data['id']}")
-                return True, data["id"]
-            else:
-                print(f"❌ Status POST: FAILED - Missing fields in response: {data}")
-                return False, None
-        else:
-            print(f"❌ Status POST: FAILED - Status {response.status_code}: {response.text}")
-            return False, None
-    except Exception as e:
-        print(f"❌ Status POST: FAILED - Error: {str(e)}")
-        return False, None
-
-def test_status_get():
-    """Test GET /api/status endpoint"""
-    print("🔍 Testing Status GET Endpoint...")
-    try:
-        response = requests.get(f"{BACKEND_URL}/status", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list):
-                print(f"✅ Status GET: PASSED - Retrieved {len(data)} status checks")
+            if data.get("message") == "BACKUP API v1.0.0" and data.get("status") == "running":
+                print("✅ Root Endpoint: PASSED - GET / returns BACKUP API info")
                 return True
             else:
-                print(f"❌ Status GET: FAILED - Expected list, got: {type(data)}")
+                print(f"❌ Root Endpoint: FAILED - Unexpected response: {data}")
                 return False
         else:
-            print(f"❌ Status GET: FAILED - Status {response.status_code}: {response.text}")
+            print(f"❌ Root Endpoint: FAILED - Status {response.status_code}")
             return False
     except Exception as e:
-        print(f"❌ Status GET: FAILED - Error: {str(e)}")
+        print(f"❌ Root Endpoint: FAILED - Error: {str(e)}")
         return False
 
 def check_backend_service():
