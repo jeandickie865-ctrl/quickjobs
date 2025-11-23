@@ -234,13 +234,20 @@ export default function WorkerProfileScreen() {
   };
 
   const saveProfileData = async () => {
+    console.log('🔵 saveProfileData: START');
     setSaving(true);
 
     try {
-      if (!user) throw new Error('Not logged in');
+      if (!user) {
+        console.log('❌ saveProfileData: No user logged in');
+        throw new Error('Not logged in');
+      }
+
+      console.log('🔵 saveProfileData: User ID:', user.id);
 
       // Kombiniere activities und qualifications zu selectedTags
       const combinedTags = [...selectedActivities, ...selectedQualifications];
+      console.log('🔵 saveProfileData: Combined tags:', combinedTags.length);
 
       const profileData = {
         userId: user.id,
@@ -257,19 +264,28 @@ export default function WorkerProfileScreen() {
         pushToken: undefined,
       };
 
+      console.log('🔵 saveProfileData: Profile data prepared:', {
+        userId: profileData.userId,
+        name: profileData.name,
+        categories: profileData.categories.length,
+        tags: profileData.selectedTags.length,
+      });
+
       // BUG 3 FIX: Speichere in AsyncStorage
+      console.log('🔵 saveProfileData: Calling saveWorkerProfile...');
       await saveWorkerProfile(profileData);
 
-      console.log('✅ Profile saved to AsyncStorage');
+      console.log('✅ Profile saved to AsyncStorage successfully!');
 
       Alert.alert('Erfolg', 'Profil erfolgreich gespeichert! 🎉', [
         { text: 'OK', onPress: () => router.push('/(worker)/feed') },
       ]);
     } catch (err) {
-      console.log('Save error:', err);
+      console.error('❌ Save error:', err);
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (err instanceof Error ? err.message : 'Unbekannter Fehler'));
     } finally {
       setSaving(false);
+      console.log('🔵 saveProfileData: END');
     }
   };
 
