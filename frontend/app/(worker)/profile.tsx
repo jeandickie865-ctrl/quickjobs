@@ -29,6 +29,7 @@ import { TAXONOMY, listCategories } from '../../constants/workerData';
 export default function WorkerProfileScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { signOut } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
