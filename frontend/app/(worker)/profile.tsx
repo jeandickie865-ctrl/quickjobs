@@ -74,7 +74,7 @@ export default function WorkerProfileScreen() {
     const quals: string[] = [];
 
     selectedCategories.forEach((key) => {
-      const cat = categories.find((c) => c.key === key);
+      const cat = TAXONOMY.find((c) => c.key === key);
       if (cat?.qualifications) {
         cat.qualifications.forEach((q) => {
           if (!quals.includes(q)) quals.push(q);
