@@ -326,23 +326,35 @@ export default function WorkerProfileScreen() {
 
           {/* Radius */}
           <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>RADIUS (KM) *</Text>
-            <View style={{
-              marginTop: 6,
-              backgroundColor: colors.white,
-              borderWidth: 2,
-              borderColor: colors.primary,
-              borderRadius: 14,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-            }}>
-              <TextInput
-                value={radiusKm}
-                onChangeText={setRadiusKm}
-                keyboardType="number-pad"
-                placeholderTextColor="#999"
-                style={{ fontSize: 16, color: colors.black }}
-              />
+            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12, marginBottom: 12 }}>
+              RADIUS (KM) *
+            </Text>
+            <View style={{ flexDirection: 'row', gap: 12, flexWrap: 'wrap' }}>
+              {[15, 30, 50, 100].map((km) => (
+                <Pressable
+                  key={km}
+                  onPress={() => setRadiusKm(String(km))}
+                  style={{
+                    flex: 1,
+                    minWidth: 70,
+                    paddingVertical: 14,
+                    paddingHorizontal: 20,
+                    backgroundColor: radiusKm === String(km) ? colors.neon : colors.white,
+                    borderRadius: 14,
+                    borderWidth: 2,
+                    borderColor: radiusKm === String(km) ? colors.neon : colors.primary,
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text style={{
+                    fontSize: 16,
+                    fontWeight: '700',
+                    color: radiusKm === String(km) ? colors.black : colors.primary,
+                  }}>
+                    {km} km
+                  </Text>
+                </Pressable>
+              ))}
             </View>
           </View>
 
