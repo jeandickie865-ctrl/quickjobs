@@ -241,13 +241,28 @@ export default function WorkerProfileScreen() {
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
+          alignItems: 'center',
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <View style={{ width: 30 }} />
+          <View style={{ width: 60 }} />
           <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
-          <Pressable onPress={() => router.push('/(worker)/feed')}>
-            <Ionicons name="home-outline" size={26} color={colors.neon} />
+          <Pressable 
+            onPress={async () => {
+              const { signOut } = await import('../../contexts/AuthContext');
+              await signOut();
+              router.replace('/start');
+            }}
+            style={{
+              paddingVertical: 6,
+              paddingHorizontal: 12,
+              backgroundColor: colors.neon,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black }}>
+              Logout
+            </Text>
           </Pressable>
         </View>
       </SafeAreaView>
