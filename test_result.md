@@ -132,15 +132,18 @@ frontend:
 
   - task: "Authentication - Login Screen"
     implemented: true
-    working: true
+    working: false
     file: "app/auth/login.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Zod-API auf result.error.issues aktualisiert für Konsistenz und Zukunftssicherheit"
+      - working: false
+        agent: "testing"
+        comment: "LOGIN SCREEN BROKEN: E2E testing shows login fails completely. Test user worker@test.de returns error 'Diese E-Mail ist nicht registriert'. Login form displays correctly but authentication system is non-functional. Users cannot login with any credentials. Priority upgraded to CRITICAL."
 
   - task: "Employer Dashboard"
     implemented: true
