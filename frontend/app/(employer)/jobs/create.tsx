@@ -550,46 +550,7 @@ export default function CreateJob() {
             onCityChange={(value) => setAddress({ ...address, city: value })}
             onLatChange={(value) => setLat(value)}
             onLonChange={(value) => setLon(value)}
-            placeholder="Straße und Hausnummer"
           />
-          
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <TextInput
-              value={address.postalCode || ''}
-              onChangeText={text => setAddress({ ...address, postalCode: text })}
-              placeholder="PLZ"
-              placeholderTextColor={colors.gray400}
-              keyboardType="number-pad"
-              maxLength={5}
-              style={{
-                flex: 1,
-                borderWidth: 1,
-                borderColor: colors.gray200,
-                borderRadius: 12,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-                backgroundColor: colors.white,
-                color: colors.black
-              }}
-            />
-            
-            <TextInput
-              value={address.city || ''}
-              onChangeText={text => setAddress({ ...address, city: text })}
-              placeholder="Stadt"
-              placeholderTextColor={colors.gray400}
-              style={{
-                flex: 2,
-                borderWidth: 1,
-                borderColor: colors.gray200,
-                borderRadius: 12,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-                backgroundColor: colors.white,
-                color: colors.black
-              }}
-            />
-          </View>
         </View>
 
         {/* Worker Amount */}
