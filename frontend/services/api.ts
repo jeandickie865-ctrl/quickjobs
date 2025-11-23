@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
 // Get API base URL from environment
-const API_BASE_URL = Constants.expoConfig?.extra?.EXPO_BACKEND_URL || 'http://localhost:8001';
+// In Kubernetes, all /api/* requests are automatically routed to backend (port 8001)
+// So we use an empty base URL (relative paths)
+const API_BASE_URL = Constants.expoConfig?.extra?.backendUrl || '';
 
 /**
  * Get auth token from AsyncStorage
