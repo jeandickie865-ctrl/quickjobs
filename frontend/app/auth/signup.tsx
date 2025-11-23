@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
-import DevResetButton from '../../components/DevResetButton';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -123,15 +122,8 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      const user = await signUp(result.data.email, result.data.password);
-      // Redirect based on role
-      if (user.role === 'worker') {
-        router.replace('/(worker)/feed');
-      } else if (user.role === 'employer') {
-        router.replace('/(employer)/dashboard');
-      } else {
-        router.replace('/start');
-      }
+      await signUp(result.data.email, result.data.password);
+      router.replace('/start');
     } catch (error: any) {
       setErrors({ email: error.message || 'Registrierung fehlgeschlagen' });
     } finally {
@@ -461,9 +453,6 @@ export default function SignupScreen() {
                 </Pressable>
               </View>
             </Animated.View>
-
-            {/* Dev Reset Button */}
-            <DevResetButton />
 
             {/* Bottom Padding */}
             <View style={{ height: 40 }} />

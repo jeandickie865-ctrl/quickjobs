@@ -1,15 +1,12 @@
-// app/(employer)/payment.tsx - NEON-TECH PAYMENTS
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator, Animated, Alert } from 'react-native';
+// app/(employer)/payment.tsx - FINAL NEON-TECH DESIGN
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Pressable, ScrollView, Animated, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { 
-  Payment, 
-  getPaymentsByEmployer, 
-  updatePaymentStatus 
-} from '../../utils/paymentsStore';
-import { getEmployerProfile } from '../../utils/employerProfileStore';
+import { getJobById } from '../../utils/jobStore';
+import { Job } from '../../types/job';
+import { euro } from '../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
 
 // BACKUP NEON-TECH COLORS
@@ -19,414 +16,426 @@ const COLORS = {
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
-  lightGray: '#F5F5F5',
-  offBlack: '#0B0B0E',
-  neonTransparent: 'rgba(200,255,22,0.08)',
-  neonBorder: 'rgba(200,255,22,0.3)',
+  lightGray: '#E8E8E8',
   neonShadow: 'rgba(200,255,22,0.2)',
+  dimmed: 'rgba(0,0,0,0.7)',
 };
 
-export default function PaymentsScreen() {
-  const { user } = useAuth();
+type PaymentMethod = 'card' | 'paypal' | 'sepa';
+
+export default function PaymentScreen() {
+  const { jobId } = useLocalSearchParams<{ jobId: string }>();
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [processing, setProcessing] = useState<string | null>(null);
+
+  const [job, setJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const glimmerAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const successScale = useRef(new Animated.Value(0)).current;
+  const checkmarkRotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Fade-in
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 600,
       useNativeDriver: true,
     }).start();
-
-    // Neon Glimmer Effect (Loop)
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(glimmerAnim, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(glimmerAnim, {
-          toValue: 0,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    // Pulse animation for pending payments
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
   }, []);
 
   useEffect(() => {
-    if (!user) return;
-    loadData();
-  }, [user]);
-
-  async function loadData() {
-    if (!user) return;
-    
-    try {
-      setIsLoading(true);
-      
-      // Load payments
-      const userPayments = await getPaymentsByEmployer(user.id);
-      setPayments(userPayments);
-      
-      // Load payment method from profile
-      const profile = await getEmployerProfile(user.id);
-      if (profile?.paymentMethod) {
-        setPaymentMethod(profile.paymentMethod);
-      }
-      
-    } catch (error) {
-      console.error('Error loading payments:', error);
-    } finally {
-      setIsLoading(false);
+    if (showSuccess) {
+      Animated.sequence([
+        Animated.spring(successScale, {
+          toValue: 1,
+          friction: 4,
+          tension: 40,
+          useNativeDriver: true,
+        }),
+        Animated.timing(checkmarkRotate, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+      ]).start();
     }
-  }
+  }, [showSuccess]);
 
-  async function handlePayNow(paymentId: string) {
-    setProcessing(paymentId);
-    
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Update payment status
-      await updatePaymentStatus(paymentId, 'paid');
-      
-      Alert.alert('Erfolg', 'Zahlung erfolgreich abgeschlossen!');
-      
-      // Reload data
-      await loadData();
-      
-    } catch (error) {
-      console.error('Error processing payment:', error);
-      Alert.alert('Fehler', 'Zahlung konnte nicht abgeschlossen werden.');
-    } finally {
-      setProcessing(null);
+  useEffect(() => {
+    if (!authLoading && user && jobId) {
+      (async () => {
+        const foundJob = await getJobById(String(jobId));
+        if (foundJob) {
+          setJob(foundJob);
+        }
+        setLoading(false);
+      })();
     }
+  }, [authLoading, user, jobId]);
+
+  const handlePayment = async () => {
+    if (!selectedMethod) return;
+
+    setProcessing(true);
+
+    // Simulate payment processing
+    setTimeout(() => {
+      setProcessing(false);
+      setShowSuccess(true);
+
+      // Redirect after 3 seconds
+      setTimeout(() => {
+        router.replace(`/(employer)/jobs/${jobId}`);
+      }, 3000);
+    }, 2000);
+  };
+
+  if (authLoading) return null;
+  if (!user || user.role !== 'employer') return <Redirect href="/start" />;
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color={COLORS.neon} size="large" />
+        </SafeAreaView>
+      </View>
+    );
   }
 
-  function formatAmount(cents: number): string {
-    const euros = cents / 100;
-    return `${euros.toFixed(2)} €`;
+  if (!job) {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: COLORS.white, fontSize: 18 }}>Job nicht gefunden</Text>
+        </SafeAreaView>
+      </View>
+    );
   }
 
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('de-DE', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
+  const provisionAmount = job.wages * 0.2; // 20% Provision
+
+  // Success Screen
+  if (showSuccess) {
+    const rotation = checkmarkRotate.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
     });
+
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Animated.View style={{
+            transform: [{ scale: successScale }, { rotate: rotation }],
+            marginBottom: 32,
+          }}>
+            <View style={{
+              width: 120,
+              height: 120,
+              borderRadius: 60,
+              backgroundColor: COLORS.neon,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Ionicons name="checkmark" size={70} color={COLORS.black} />
+            </View>
+          </Animated.View>
+
+          <Text style={{
+            fontSize: 28,
+            fontWeight: '900',
+            color: COLORS.white,
+            textAlign: 'center',
+            marginBottom: 16,
+          }}>
+            Zahlung erfolgreich
+          </Text>
+
+          <Text style={{
+            fontSize: 16,
+            color: 'rgba(255,255,255,0.8)',
+            textAlign: 'center',
+            lineHeight: 24,
+          }}>
+            Dein Match ist jetzt freigeschaltet.{'\n'}
+            Du kannst nun mit dem Worker chatten!
+          </Text>
+        </SafeAreaView>
+      </View>
+    );
   }
 
-  const pendingPayments = payments.filter(p => p.status === 'pending');
-  const paidPayments = payments.filter(p => p.status === 'paid');
-
-  if (!user) return null;
-
+  // Payment Screen
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
       {/* Glow Effect */}
-      <Animated.View style={{
+      <View style={{
         position: 'absolute',
         top: -80,
-        right: -60,
+        left: '50%',
+        marginLeft: -100,
         width: 200,
         height: 200,
         borderRadius: 100,
         backgroundColor: COLORS.neon,
-        opacity: glimmerAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.08, 0.15],
-        }),
+        opacity: 0.12,
         blur: 60,
       }} />
 
-      {/* Header */}
+      {/* Top Bar */}
       <SafeAreaView edges={['top']}>
         <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>
-            Zahlungen
+          <Pressable onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+          </Pressable>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
+            Provision zahlen
           </Text>
-          <Text style={{ fontSize: 14, color: COLORS.white, opacity: 0.7, textAlign: 'center', marginTop: 4 }}>
-            20% BACKUP Provision
-          </Text>
+          <View style={{ width: 26 }} />
         </View>
       </SafeAreaView>
 
       <Animated.ScrollView
         style={{ flex: 1, opacity: fadeAnim }}
-        contentContainerStyle={{ padding: 20, gap: 20, paddingBottom: 20 }}
+        contentContainerStyle={{ padding: 20, gap: 20 }}
       >
-        {isLoading ? (
-          <View style={{ alignItems: 'center', marginTop: 40 }}>
-            <ActivityIndicator color={COLORS.neon} size="large" />
-            <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Zahlungen...</Text>
-          </View>
-        ) : (
-          <>
-            {/* Zahlungsmethode Card */}
-            <View style={{
-              backgroundColor: COLORS.neonTransparent,
-              borderWidth: 1,
-              borderColor: COLORS.neonBorder,
-              borderRadius: 16,
-              padding: 20,
-            }}>
-              <Text style={{ 
-                fontSize: 12, 
-                fontWeight: '700', 
-                color: COLORS.neon, 
-                marginBottom: 12,
-                letterSpacing: 0.5 
-              }}>
-                ZAHLUNGSMETHODE
+        {/* Job Info Card */}
+        <View style={{
+          backgroundColor: COLORS.white,
+          borderRadius: 18,
+          padding: 20,
+          shadowColor: COLORS.neon,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.2,
+          shadowRadius: 16,
+          elevation: 6,
+        }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
+            JOB-DETAILS
+          </Text>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.purple, marginBottom: 8 }}>
+            {job.title}
+          </Text>
+          <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+            Job-Lohn: {euro(job.wages)}
+          </Text>
+        </View>
+
+        {/* Provision Card - NEON PAYMENT CARD */}
+        <View style={{
+          backgroundColor: COLORS.white,
+          borderRadius: 18,
+          padding: 24,
+          shadowColor: COLORS.neon,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.25,
+          shadowRadius: 20,
+          elevation: 8,
+          borderWidth: 2,
+          borderColor: COLORS.neon,
+        }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 16, letterSpacing: 0.5 }}>
+            BACKUP PROVISION (20%)
+          </Text>
+
+          {/* Breakdown */}
+          <View style={{ gap: 12, marginBottom: 20 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 15, color: COLORS.darkGray }}>Job-Lohn</Text>
+              <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black }}>
+                {euro(job.wages)}
               </Text>
-
-              {paymentMethod ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <View style={{
-                    width: 48,
-                    height: 48,
-                    backgroundColor: COLORS.neon,
-                    borderRadius: 12,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <Ionicons
-                      name={paymentMethod === 'card' ? 'card-outline' : 'logo-paypal'}
-                      size={24}
-                      color={COLORS.black}
-                    />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
-                      {paymentMethod === 'card' ? 'Kreditkarte' : 'PayPal'}
-                    </Text>
-                    <Text style={{ fontSize: 13, color: COLORS.white, opacity: 0.6, marginTop: 2 }}>
-                      {paymentMethod === 'card' ? 'Visa/Mastercard' : 'PayPal Account'}
-                    </Text>
-                  </View>
-                  <Pressable onPress={() => router.push('/(employer)/profile')}>
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: COLORS.neon }}>
-                      Ändern
-                    </Text>
-                  </Pressable>
-                </View>
-              ) : (
-                <Pressable
-                  onPress={() => router.push('/(employer)/profile')}
-                  style={{
-                    borderWidth: 2,
-                    borderColor: COLORS.neon,
-                    borderRadius: 12,
-                    paddingVertical: 14,
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
-                    Zahlungsmethode hinzufügen
-                  </Text>
-                </Pressable>
-              )}
             </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 15, color: COLORS.darkGray }}>Provision (20%)</Text>
+              <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black }}>
+                {euro(provisionAmount)}
+              </Text>
+            </View>
+            <View style={{ height: 1, backgroundColor: COLORS.lightGray, marginVertical: 4 }} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                Zu zahlen
+              </Text>
+              <Text style={{ fontSize: 28, fontWeight: '900', color: COLORS.purple }}>
+                {euro(provisionAmount)}
+              </Text>
+            </View>
+          </View>
 
-            {/* Offene Zahlungen */}
-            {pendingPayments.length > 0 && (
-              <View>
-                <Text style={{ 
-                  fontSize: 18, 
-                  fontWeight: '700', 
-                  color: COLORS.white, 
-                  marginBottom: 12 
-                }}>
-                  Offene Zahlungen
-                </Text>
+          {/* Important Note */}
+          <View style={{
+            padding: 12,
+            backgroundColor: '#FFF3CD',
+            borderRadius: 12,
+            borderLeftWidth: 4,
+            borderLeftColor: COLORS.neon,
+          }}>
+            <Text style={{ fontSize: 13, color: COLORS.darkGray, fontWeight: '600', lineHeight: 18 }}>
+              💡 Du zahlst NUR die 20% Provision an BACKUP.{'\n'}
+              Der Job-Lohn wird direkt an den Worker gezahlt.
+            </Text>
+          </View>
+        </View>
 
-                {pendingPayments.map(payment => (
-                  <Animated.View
-                    key={payment.id}
-                    style={{
-                      transform: [{ scale: pulseAnim }],
-                      backgroundColor: COLORS.neonTransparent,
-                      borderWidth: 1,
-                      borderColor: COLORS.neon,
-                      borderRadius: 16,
-                      padding: 20,
-                      marginBottom: 12,
-                    }}
-                  >
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white, marginBottom: 4 }}>
-                          {payment.jobTitle || 'Auftrag'}
-                        </Text>
-                        <Text style={{ fontSize: 13, color: COLORS.white, opacity: 0.6 }}>
-                          {formatDate(payment.createdAt)}
-                        </Text>
-                      </View>
-                      <View style={{
-                        backgroundColor: COLORS.neon,
-                        borderRadius: 8,
-                        paddingHorizontal: 12,
-                        paddingVertical: 6,
-                      }}>
-                        <Text style={{ fontSize: 10, fontWeight: '700', color: COLORS.black }}>
-                          OFFEN
-                        </Text>
-                      </View>
-                    </View>
+        {/* Payment Methods */}
+        <View style={{ gap: 12 }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, letterSpacing: 0.5 }}>
+            ZAHLUNGSMETHODE
+          </Text>
 
-                    <View style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.05)', 
-                      borderRadius: 12, 
-                      padding: 12,
-                      marginBottom: 16
-                    }}>
-                      <Text style={{ fontSize: 24, fontWeight: '700', color: COLORS.neon, textAlign: 'center' }}>
-                        {formatAmount(payment.amount)}
-                      </Text>
-                      <Text style={{ fontSize: 12, color: COLORS.white, opacity: 0.6, textAlign: 'center', marginTop: 4 }}>
-                        20% Provision
-                      </Text>
-                    </View>
-
-                    <Pressable
-                      onPress={() => handlePayNow(payment.id)}
-                      disabled={processing === payment.id}
-                      style={({ pressed }) => ({
-                        backgroundColor: COLORS.neon,
-                        borderRadius: 12,
-                        paddingVertical: 14,
-                        alignItems: 'center',
-                        opacity: pressed || processing === payment.id ? 0.8 : 1,
-                      })}
-                    >
-                      {processing === payment.id ? (
-                        <ActivityIndicator color={COLORS.black} />
-                      ) : (
-                        <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
-                          Jetzt bezahlen
-                        </Text>
-                      )}
-                    </Pressable>
-                  </Animated.View>
-                ))}
-              </View>
+          {/* Kreditkarte */}
+          <Pressable
+            onPress={() => setSelectedMethod('card')}
+            style={{
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 18,
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 2,
+              borderColor: selectedMethod === 'card' ? COLORS.neon : 'transparent',
+            }}
+          >
+            <View style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: selectedMethod === 'card' ? COLORS.neon : COLORS.lightGray,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: 16,
+            }}>
+              <Ionicons name="card-outline" size={24} color={selectedMethod === 'card' ? COLORS.black : COLORS.darkGray} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                Kreditkarte
+              </Text>
+              <Text style={{ fontSize: 13, color: COLORS.darkGray }}>
+                Visa, Mastercard, Amex
+              </Text>
+            </View>
+            {selectedMethod === 'card' && (
+              <Ionicons name="checkmark-circle" size={28} color={COLORS.neon} />
             )}
+          </Pressable>
 
-            {/* Bezahlte Zahlungen */}
-            {paidPayments.length > 0 && (
-              <View>
-                <Text style={{ 
-                  fontSize: 18, 
-                  fontWeight: '700', 
-                  color: COLORS.white, 
-                  marginBottom: 12 
-                }}>
-                  Letzte Zahlungen
-                </Text>
-
-                {paidPayments.map(payment => (
-                  <View
-                    key={payment.id}
-                    style={{
-                      backgroundColor: COLORS.neonTransparent,
-                      borderWidth: 1,
-                      borderColor: COLORS.neonBorder,
-                      borderRadius: 16,
-                      padding: 20,
-                      marginBottom: 12,
-                    }}
-                  >
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white, marginBottom: 4 }}>
-                          {payment.jobTitle || 'Auftrag'}
-                        </Text>
-                        <Text style={{ fontSize: 13, color: COLORS.white, opacity: 0.6 }}>
-                          Bezahlt am {payment.paidAt ? formatDate(payment.paidAt) : formatDate(payment.createdAt)}
-                        </Text>
-                      </View>
-                      <Ionicons name="checkmark-circle" size={24} color={COLORS.neon} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.neon }}>
-                        {formatAmount(payment.amount)}
-                      </Text>
-                      <Text style={{ fontSize: 12, color: COLORS.white, opacity: 0.6 }}>
-                        {payment.method === 'card' ? 'Kreditkarte' : 'PayPal'}
-                      </Text>
-                    </View>
-                  </View>
-                ))}
-              </View>
+          {/* PayPal */}
+          <Pressable
+            onPress={() => setSelectedMethod('paypal')}
+            style={{
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 18,
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 2,
+              borderColor: selectedMethod === 'paypal' ? COLORS.neon : 'transparent',
+            }}
+          >
+            <View style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: selectedMethod === 'paypal' ? COLORS.neon : COLORS.lightGray,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: 16,
+            }}>
+              <Ionicons name="logo-paypal" size={24} color={selectedMethod === 'paypal' ? COLORS.black : COLORS.darkGray} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                PayPal
+              </Text>
+              <Text style={{ fontSize: 13, color: COLORS.darkGray }}>
+                Schnell & sicher
+              </Text>
+            </View>
+            {selectedMethod === 'paypal' && (
+              <Ionicons name="checkmark-circle" size={28} color={COLORS.neon} />
             )}
+          </Pressable>
 
-            {/* Leerer Zustand */}
-            {payments.length === 0 && (
-              <View style={{
-                backgroundColor: COLORS.neonTransparent,
-                borderWidth: 1,
-                borderColor: COLORS.neonBorder,
-                borderRadius: 16,
-                padding: 40,
-                alignItems: 'center',
-              }}>
-                <Ionicons name="card-outline" size={64} color={COLORS.neon} />
-                <Text style={{ 
-                  fontSize: 18, 
-                  fontWeight: '700', 
-                  color: COLORS.white, 
-                  marginTop: 16,
-                  textAlign: 'center'
-                }}>
-                  Noch keine Zahlungen
-                </Text>
-                <Text style={{ 
-                  fontSize: 14, 
-                  color: COLORS.white, 
-                  opacity: 0.6,
-                  marginTop: 8,
-                  textAlign: 'center'
-                }}>
-                  Sobald ein Match zustande kommt, erscheint hier die 20% Provision.
-                </Text>
-              </View>
-            )}
-          </>
-        )}
+          {/* SEPA (Disabled) */}
+          <View style={{
+            backgroundColor: COLORS.lightGray,
+            borderRadius: 16,
+            padding: 18,
+            flexDirection: 'row',
+            alignItems: 'center',
+            opacity: 0.6,
+          }}>
+            <View style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: '#D0D0D0',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: 16,
+            }}>
+              <Ionicons name="business-outline" size={24} color={COLORS.darkGray} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.darkGray }}>
+                SEPA Lastschrift
+              </Text>
+              <Text style={{ fontSize: 13, color: COLORS.darkGray }}>
+                Bald verfügbar
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Pay Button */}
+        <Pressable
+          onPress={handlePayment}
+          disabled={!selectedMethod || processing}
+          style={({ pressed }) => ({
+            backgroundColor: !selectedMethod || processing ? COLORS.lightGray : COLORS.neon,
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            marginTop: 20,
+            opacity: pressed ? 0.9 : 1,
+            shadowColor: selectedMethod && !processing ? COLORS.neon : 'transparent',
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.3,
+            shadowRadius: 12,
+            elevation: 6,
+          })}
+        >
+          <Text style={{ 
+            fontSize: 17, 
+            fontWeight: '700', 
+            color: !selectedMethod || processing ? COLORS.darkGray : COLORS.black,
+          }}>
+            {processing ? 'Zahlung wird verarbeitet...' : `20% Provision zahlen (${euro(provisionAmount)})`}
+          </Text>
+        </Pressable>
+
+        {/* Security Note */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 16 }}>
+          <Ionicons name="shield-checkmark" size={20} color={COLORS.neon} />
+          <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: '600' }}>
+            SSL-verschlüsselt & sicher
+          </Text>
+        </View>
+
+        {/* Bottom Spacing */}
+        <View style={{ height: 40 }} />
       </Animated.ScrollView>
     </View>
   );

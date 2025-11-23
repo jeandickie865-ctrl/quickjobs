@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
-import DevResetButton from '../../components/DevResetButton';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -83,15 +82,8 @@ export default function LoginScreen() {
     setErrorMsg('');
     setLoading(true);
     try {
-      const user = await signIn(email.trim().toLowerCase(), password);
-      // Redirect based on role
-      if (user.role === 'worker') {
-        router.replace('/(worker)/feed');
-      } else if (user.role === 'employer') {
-        router.replace('/(employer)/dashboard');
-      } else {
-        router.replace('/start');
-      }
+      await signIn(email.trim().toLowerCase(), password);
+      router.replace('/start');
     } catch (err: any) {
       setErrorMsg(err.message || 'Login fehlgeschlagen');
     } finally {
@@ -366,9 +358,6 @@ export default function LoginScreen() {
                 </Pressable>
               </View>
             </Animated.View>
-
-            {/* Dev Reset Button */}
-            <DevResetButton />
 
             {/* Bottom Padding */}
             <View style={{ height: 40 }} />

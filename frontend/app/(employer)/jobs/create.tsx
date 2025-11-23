@@ -25,9 +25,6 @@ export default function CreateJob() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<string>('');
   const [address, setAddress] = useState<Address>({});
-  const [street, setStreet] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [city, setCity] = useState('');
   const [lat, setLat] = useState<number | undefined>(undefined);
   const [lon, setLon] = useState<number | undefined>(undefined);
   
@@ -142,9 +139,9 @@ export default function CreateJob() {
 
     // Build structured address
     const location: Address = {
-      street: street.trim() || undefined,
-      postalCode: postalCode.trim() || undefined,
-      city: city.trim() || undefined,
+      street: address.street?.trim() || undefined,
+      postalCode: address.postalCode?.trim() || undefined,
+      city: address.city?.trim() || undefined,
     };
 
     // Create job object
@@ -581,15 +578,54 @@ export default function CreateJob() {
           </Text>
           
           <AddressAutocompleteInput
-            street={street}
-            postalCode={postalCode}
-            city={city}
-            onStreetChange={setStreet}
-            onPostalCodeChange={setPostalCode}
-            onCityChange={setCity}
-            onLatChange={setLat}
-            onLonChange={setLon}
+            street={address.street || ''}
+            postalCode={address.postalCode}
+            city={address.city}
+            onStreetChange={(value) => setAddress({ ...address, street: value })}
+            onPostalCodeChange={(value) => setAddress({ ...address, postalCode: value })}
+            onCityChange={(value) => setAddress({ ...address, city: value })}
+            onLatChange={(value) => setLat(value)}
+            onLonChange={(value) => setLon(value)}
+            placeholder="Straße und Hausnummer"
           />
+          
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <TextInput
+              value={address.postalCode || ''}
+              onChangeText={text => setAddress({ ...address, postalCode: text })}
+              placeholder="PLZ"
+              placeholderTextColor={colors.gray400}
+              keyboardType="number-pad"
+              maxLength={5}
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: colors.gray200,
+                borderRadius: 12,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                backgroundColor: colors.white,
+                color: colors.black
+              }}
+            />
+            
+            <TextInput
+              value={address.city || ''}
+              onChangeText={text => setAddress({ ...address, city: text })}
+              placeholder="Stadt"
+              placeholderTextColor={colors.gray400}
+              style={{
+                flex: 2,
+                borderWidth: 1,
+                borderColor: colors.gray200,
+                borderRadius: 12,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                backgroundColor: colors.white,
+                color: colors.black
+              }}
+            />
+          </View>
         </View>
 
         {/* Worker Amount */}

@@ -1,194 +1,423 @@
-// app/(worker)/matches.tsx - NEON TECH DESIGN
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, ActivityIndicator, Pressable } from 'react-native';
-import { useRouter } from 'expo-router';
-import { getMyApplications, getJobById } from '../../services/api';
-import { useTheme } from '../../theme/ThemeProvider';
+// app/(worker)/matches.tsx - FINAL NEON-TECH DESIGN
+import React, { useEffect, useState, useRef } from 'react';
+import { ScrollView, View, Text, ActivityIndicator, RefreshControl, Pressable, Animated, Modal } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter, Redirect } from 'expo-router';
+import { useAuth } from '../../contexts/AuthContext';
+import { getApplicationsForWorker } from '../../utils/applicationStore';
+import { getJobs } from '../../utils/jobStore';
+import { Job } from '../../types/job';
+import { JobApplication } from '../../types/application';
+import { euro } from '../../utils/pricing';
+import { formatAddress } from '../../types/address';
+import { formatJobTimeDisplay } from '../../utils/date';
+import { isWithinLast24Hours } from '../../utils/stringHelpers';
+import { getInitials } from '../../utils/stringHelpers';
+import { Ionicons } from '@expo/vector-icons';
+
+// BACKUP NEON-TECH COLORS
+const COLORS = {
+  purple: '#5941FF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  darkGray: '#333333',
+  neonShadow: 'rgba(200,255,22,0.15)',
+  dimmed: 'rgba(0,0,0,0.7)',
+};
+
+type Match = {
+  job: Job;
+  application: JobApplication;
+};
 
 export default function WorkerMatchesScreen() {
-  const { colors } = useTheme();
-  const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [showTaxModal, setShowTaxModal] = useState(false);
+
+  // Animation
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
-    loadApplications();
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
-  const loadApplications = async () => {
+  const loadMatches = async () => {
+    if (!user) return;
+
     try {
-      const apps = await getMyApplications();
+      setError(null);
 
-      const appsWithJob = await Promise.all(
-        apps.map(async (app) => {
-          const job = await getJobById(app.job_id);
-          return { ...app, job };
-        })
-      );
+      const apps = await getApplicationsForWorker(user.id);
+      const acceptedApps = apps.filter((a) => a.status === 'accepted');
+      const allJobs = await getJobs();
 
-      setApplications(appsWithJob);
-    } catch (err) {
-      console.log('Error loading applications:', err);
+      const combined: Match[] = [];
+
+      for (const app of acceptedApps) {
+        const job = allJobs.find((j) => j.id === app.jobId);
+        if (job) {
+          combined.push({ job, application: app });
+        }
+      }
+
+      combined.sort((a, b) => {
+        const dateA = a.application.respondedAt || a.application.createdAt;
+        const dateB = b.application.respondedAt || b.application.createdAt;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      });
+
+      setMatches(combined);
+    } catch (e) {
+      console.error('Error loading matches:', e);
+      setError('Matches konnten nicht geladen werden.');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  const renderStatus = (status) => {
-    let label = '';
-    let bgColor = colors.neon;
+  useEffect(() => {
+    if (!authLoading && user) {
+      loadMatches();
+    }
+  }, [user, authLoading]);
 
-    if (status === 'applied') label = 'Bewerbung gesendet';
-    if (status === 'selected') {
-      label = '✓ Ausgewählt';
-      bgColor = '#10B981';
-    }
-    if (status === 'pending_payment') {
-      label = '⏳ Zahlung läuft';
-      bgColor = '#F59E0B';
-    }
-    if (status === 'active') {
-      label = '🎉 Match aktiv';
-      bgColor = colors.neon;
-    }
-
-    return (
-      <View
-        style={{
-          backgroundColor: bgColor,
-          paddingHorizontal: 12,
-          paddingVertical: 6,
-          borderRadius: 12,
-          alignSelf: 'flex-start',
-        }}
-      >
-        <Text style={{ color: colors.black, fontWeight: '700', fontSize: 12 }}>
-          {label}
-        </Text>
-      </View>
-    );
+  const handleRefresh = () => {
+    setRefreshing(true);
+    loadMatches();
   };
+
+  if (authLoading) return null;
+  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.background,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator color={colors.neon} size="large" />
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color={COLORS.neon} size="large" />
+          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Matches...</Text>
+        </SafeAreaView>
       </View>
     );
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 24 }}
-    >
-      <Text style={{ 
-        color: colors.text, 
-        fontSize: 28, 
-        fontWeight: '800', 
-        marginBottom: 24,
-        letterSpacing: -0.5 
-      }}>
-        Deine Bewerbungen
-      </Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      {/* Glow Effect */}
+      <View style={{
+        position: 'absolute',
+        top: -80,
+        left: -40,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        backgroundColor: COLORS.neon,
+        opacity: 0.12,
+        blur: 60,
+      }} />
 
-      {applications.length === 0 && (
+      {/* Top Bar */}
+      <SafeAreaView edges={['top']}>
         <View style={{
-          backgroundColor: colors.white,
-          padding: 32,
-          borderRadius: 18,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'center',
+          paddingHorizontal: 20,
+          paddingVertical: 16,
         }}>
           <Text style={{ 
-            color: colors.gray600, 
-            fontSize: 16, 
-            textAlign: 'center',
-            lineHeight: 24 
+            fontSize: 24, 
+            fontWeight: '900', 
+            color: COLORS.white,
+            letterSpacing: 0.2,
           }}>
-            Du hast noch keine Bewerbungen.
+            Meine Matches
           </Text>
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <Pressable onPress={() => setShowTaxModal(true)}>
+              <Ionicons name="information-circle-outline" size={26} color={COLORS.neon} />
+            </Pressable>
+            <Pressable onPress={() => router.push('/(worker)/profile')}>
+              <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
+            </Pressable>
+          </View>
         </View>
-      )}
+      </SafeAreaView>
 
-      {applications.map((app) => (
-        <View
-          key={app.id}
-          style={{
-            backgroundColor: colors.white,
+      <Animated.ScrollView
+        style={{ flex: 1, opacity: fadeAnim }}
+        contentContainerStyle={{ padding: 20, gap: 16 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={COLORS.neon} />
+        }
+      >
+        {error && (
+          <View style={{
+            padding: 16,
+            backgroundColor: '#FBECEC',
+            borderRadius: 12,
+            borderLeftWidth: 4,
+            borderLeftColor: '#E34242',
+          }}>
+            <Text style={{ color: '#E34242', fontSize: 14, fontWeight: '600' }}>
+              ⚠️ {error}
+            </Text>
+          </View>
+        )}
+
+        {matches.length === 0 ? (
+          <View style={{
+            padding: 32,
+            backgroundColor: COLORS.white,
             borderRadius: 18,
-            padding: 20,
-            marginBottom: 16,
+            alignItems: 'center',
             gap: 12,
-          }}
-        >
-          {/* Job Title */}
-          <Text style={{ 
-            color: colors.black, 
-            fontSize: 20, 
-            fontWeight: '700',
-            marginBottom: 4 
           }}>
-            {app.job?.title || 'Job'}
-          </Text>
+            <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
+              Noch keine Matches
+            </Text>
+            <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
+              Bewirb dich auf Jobs, um Matches zu bekommen!
+            </Text>
+          </View>
+        ) : (
+          <View style={{ gap: 16 }}>
+            {matches.map(({ job, application }) => {
+              const timeDisplay = formatJobTimeDisplay(
+                job.startAt,
+                job.endAt,
+                job.timeMode,
+                job.hours,
+                job.dueAt
+              );
+              const isNew = application.respondedAt && isWithinLast24Hours(application.respondedAt);
+              const employerName = job.employerName || 'Auftraggeber';
+              const employerInitials = getInitials(employerName);
 
-          {/* Status Badge */}
-          {renderStatus(app.status)}
+              return (
+                <View
+                  key={application.id}
+                  style={{
+                    backgroundColor: COLORS.white,
+                    borderRadius: 18,
+                    padding: 20,
+                    shadowColor: COLORS.neon,
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 12,
+                    elevation: 4,
+                  }}
+                >
+                  {/* Header mit Initialen + Badge */}
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
+                    {/* Initialen-Kreis */}
+                    <View style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 28,
+                      backgroundColor: COLORS.purple,
+                      borderWidth: 3,
+                      borderColor: COLORS.neon,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 12,
+                    }}>
+                      <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
+                        {employerInitials}
+                      </Text>
+                    </View>
 
-          {/* Job Details */}
-          {app.job && (
-            <View style={{ marginTop: 8 }}>
-              <Text style={{ color: colors.gray600, fontSize: 14 }}>
-                📍 {app.job.city}
-              </Text>
-              {app.job.categories && app.job.categories.length > 0 && (
-                <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 4 }}>
-                  🏷️ {app.job.categories.slice(0, 3).join(', ')}
-                </Text>
-              )}
-            </View>
-          )}
+                    {/* Job Info */}
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ 
+                        fontSize: 18, 
+                        fontWeight: '700', 
+                        color: COLORS.purple,
+                        marginBottom: 4,
+                      }}>
+                        {job.title}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        von {employerName}
+                      </Text>
+                    </View>
 
-          {/* Date */}
-          <Text style={{ 
-            color: colors.gray500, 
-            fontSize: 12, 
-            marginTop: 4 
+                    {/* Badge */}
+                    {isNew && (
+                      <View style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 8,
+                        backgroundColor: COLORS.neon,
+                      }}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
+                          NEU
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+
+                  {/* Status Badge */}
+                  <View style={{
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    backgroundColor: COLORS.neon,
+                    borderRadius: 10,
+                    alignSelf: 'flex-start',
+                    marginBottom: 12,
+                  }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black }}>
+                      ✓ Akzeptiert
+                    </Text>
+                  </View>
+
+                  {/* Job Details */}
+                  <View style={{ gap: 8, marginBottom: 12 }}>
+                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                      📦 {job.category}
+                    </Text>
+                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                      🕐 {timeDisplay}
+                    </Text>
+                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                      📍 {formatAddress(job.location)}
+                    </Text>
+                  </View>
+
+                  {/* Preis */}
+                  <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
+                    {euro(job.wages)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
+                  </Text>
+
+                  {/* Chat Button */}
+                  <Pressable
+                    onPress={() => router.push(`/(worker)/chat/${job.employerId}`)}
+                    style={({ pressed }) => ({
+                      backgroundColor: COLORS.neon,
+                      paddingVertical: 14,
+                      borderRadius: 16,
+                      alignItems: 'center',
+                      opacity: pressed ? 0.9 : 1,
+                      transform: [{ scale: pressed ? 0.98 : 1 }],
+                    })}
+                  >
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                      💬 Zum Chat
+                    </Text>
+                  </Pressable>
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </Animated.ScrollView>
+
+      {/* Steuer-Hinweis Modal */}
+      <Modal
+        visible={showTaxModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowTaxModal(false)}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: COLORS.dimmed,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 24,
+        }}>
+          <View style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 20,
+            padding: 24,
+            width: '100%',
+            maxWidth: 400,
+            shadowColor: COLORS.neon,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
           }}>
-            Beworben am: {new Date(app.created_at).toLocaleDateString('de-DE')}
-          </Text>
-
-          {/* Chat Button for Active Matches */}
-          {app.status === 'active' && (
-            <Pressable
-              onPress={() => router.push(`/chat/${app.id}`)}
-              style={{
-                marginTop: 12,
-                backgroundColor: colors.neon,
-                paddingVertical: 14,
-                alignItems: 'center',
-                borderRadius: 14,
-              }}
-            >
+            {/* Header mit Neon-Akzent */}
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 20,
+              paddingBottom: 16,
+              borderBottomWidth: 2,
+              borderBottomColor: COLORS.neon,
+            }}>
+              <Ionicons name="information-circle" size={32} color={COLORS.neon} />
               <Text style={{ 
-                color: colors.black, 
-                fontWeight: '700', 
-                fontSize: 16 
+                fontSize: 20, 
+                fontWeight: '800', 
+                color: COLORS.purple,
+                marginLeft: 12,
               }}>
-                💬 Zum Chat
+                Wichtiger Hinweis
+              </Text>
+            </View>
+
+            {/* Content */}
+            <View style={{ gap: 16, marginBottom: 24 }}>
+              <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
+                <Text style={{ fontWeight: '700' }}>Steuern & Versicherung:</Text>
+                {'\n'}
+                Die Bezahlung erfolgt direkt zwischen dir und dem Auftraggeber.
+              </Text>
+              
+              <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
+                <Text style={{ fontWeight: '700' }}>Deine Verantwortung:</Text>
+                {'\n'}
+                • Steuern selbst abführen
+                {'\n'}
+                • Versicherungen eigenständig regeln
+                {'\n'}
+                • Rechtliche Pflichten beachten
+              </Text>
+
+              <View style={{
+                padding: 12,
+                backgroundColor: '#FFF3CD',
+                borderRadius: 10,
+                borderLeftWidth: 4,
+                borderLeftColor: COLORS.neon,
+              }}>
+                <Text style={{ fontSize: 13, color: COLORS.darkGray, fontWeight: '600' }}>
+                  💡 Bei Fragen wende dich an einen Steuerberater.
+                </Text>
+              </View>
+            </View>
+
+            {/* Close Button */}
+            <Pressable
+              onPress={() => setShowTaxModal(false)}
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.neon,
+                paddingVertical: 14,
+                borderRadius: 16,
+                alignItems: 'center',
+                opacity: pressed ? 0.9 : 1,
+              })}
+            >
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                Verstanden
               </Text>
             </Pressable>
-          )}
+          </View>
         </View>
-      ))}
-
-      <View style={{ height: 40 }} />
-    </ScrollView>
+      </Modal>
+    </View>
   );
 }
