@@ -35,7 +35,6 @@ export default function WorkerProfileScreen() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   // Profile fields
   const [name, setName] = useState('');
