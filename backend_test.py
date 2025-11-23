@@ -14,14 +14,14 @@ BASE_URL = "https://hirezone-app.preview.emergentagent.com"
 BACKEND_URL = f"{BASE_URL}/api"
 
 def test_health_check():
-    """Test GET /api/health endpoint"""
+    """Test GET /api/ endpoint (Hello World)"""
     print("🔍 Testing Health Check Endpoint...")
     try:
-        response = requests.get(f"{BACKEND_URL}/health", timeout=10)
+        response = requests.get(f"{BACKEND_URL}/", timeout=10)
         if response.status_code == 200:
             data = response.json()
-            if data.get("status") == "healthy":
-                print("✅ Health Check: PASSED - GET /api/health returns healthy")
+            if data.get("message") == "Hello World":
+                print("✅ Health Check: PASSED - GET /api/ returns Hello World")
                 return True
             else:
                 print(f"❌ Health Check: FAILED - Unexpected response: {data}")
