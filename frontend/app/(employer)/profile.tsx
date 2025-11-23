@@ -96,7 +96,6 @@ export default function EmployerProfileScreen() {
         setLon(stored.lon);
         setPaymentMethod(stored.paymentMethod || null);
         setShortBio(stored.shortBio || '');
-        setProfilePhotoUri(stored.profilePhotoUri);
       } else {
         // Initialize with user email
         setEmail(user.email || '');
