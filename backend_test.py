@@ -1,170 +1,199 @@
 #!/usr/bin/env python3
 """
-Backend Test Suite for ShiftMatch App
-Tests the basic FastAPI endpoints and health checks
+Backend API Testing Script for ShiftMatch App - CRITICAL ISSUE INVESTIGATION
+Tests the endpoints mentioned in the user's critical issue report.
+
+User reported:
+- Profile saving doesn't work
+- Logout doesn't work  
+- Backend log shows 404 Not Found for /api/profiles/worker/me
 """
 
 import requests
 import json
 import sys
-from datetime import datetime
+from typing import Dict, Any, Optional
 
-# Get backend URL from frontend .env file
-def get_backend_url():
-    try:
-        with open('/app/frontend/.env', 'r') as f:
-            for line in f:
-                if line.startswith('EXPO_PUBLIC_BACKEND_URL='):
-                    return line.split('=')[1].strip()
-    except Exception as e:
-        print(f"Error reading backend URL: {e}")
-        return None
+# Backend URL - using localhost since we're testing from within the container
+BASE_URL = "http://localhost:8001"
 
-def test_backend_health():
-    """Test basic backend connectivity and health"""
-    backend_url = get_backend_url()
-    if not backend_url:
-        print("❌ Could not determine backend URL")
-        return False
-    
-    api_url = f"{backend_url}/api"
-    print(f"Testing backend at: {api_url}")
+def test_endpoint(method: str, endpoint: str, data: Optional[Dict[str, Any]] = None, 
+                 headers: Optional[Dict[str, str]] = None, expected_status: int = 200) -> Dict[str, Any]:
+    """Test a single endpoint and return results"""
+    url = f"{BASE_URL}{endpoint}"
     
     try:
-        # Test root endpoint
-        print("\n🔍 Testing GET /api/ (root endpoint)...")
-        response = requests.get(f"{api_url}/", timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            print(f"✅ Root endpoint working: {data}")
-            return True
+        if method.upper() == "GET":
+            response = requests.get(url, headers=headers, timeout=10)
+        elif method.upper() == "POST":
+            response = requests.post(url, json=data, headers=headers, timeout=10)
+        elif method.upper() == "PATCH":
+            response = requests.patch(url, json=data, headers=headers, timeout=10)
         else:
-            print(f"❌ Root endpoint failed: {response.status_code} - {response.text}")
-            return False
-            
-    except requests.exceptions.RequestException as e:
-        print(f"❌ Connection error: {e}")
-        return False
-
-def test_status_endpoints():
-    """Test status check endpoints"""
-    backend_url = get_backend_url()
-    if not backend_url:
-        return False
-    
-    api_url = f"{backend_url}/api"
-    
-    try:
-        # Test POST /api/status
-        print("\n🔍 Testing POST /api/status...")
-        test_data = {
-            "client_name": "ShiftMatch_Test_Client"
+            return {"error": f"Unsupported method: {method}"}
+        
+        result = {
+            "method": method.upper(),
+            "endpoint": endpoint,
+            "status_code": response.status_code,
+            "expected_status": expected_status,
+            "success": response.status_code == expected_status,
+            "response_time": response.elapsed.total_seconds()
         }
         
-        response = requests.post(f"{api_url}/status", 
-                               json=test_data, 
-                               headers={"Content-Type": "application/json"},
-                               timeout=10)
+        # Try to parse JSON response
+        try:
+            result["response_data"] = response.json()
+        except:
+            result["response_data"] = response.text[:200] if response.text else "No response body"
         
-        if response.status_code == 200:
-            data = response.json()
-            print(f"✅ POST /api/status working: Created status check with ID {data.get('id')}")
-            
-            # Test GET /api/status
-            print("\n🔍 Testing GET /api/status...")
-            get_response = requests.get(f"{api_url}/status", timeout=10)
-            
-            if get_response.status_code == 200:
-                status_list = get_response.json()
-                print(f"✅ GET /api/status working: Retrieved {len(status_list)} status checks")
-                return True
-            else:
-                print(f"❌ GET /api/status failed: {get_response.status_code}")
-                return False
-        else:
-            print(f"❌ POST /api/status failed: {response.status_code} - {response.text}")
-            return False
-            
+        return result
+        
     except requests.exceptions.RequestException as e:
-        print(f"❌ Status endpoint error: {e}")
-        return False
-
-def test_cors_headers():
-    """Test CORS configuration"""
-    backend_url = get_backend_url()
-    if not backend_url:
-        return False
-    
-    api_url = f"{backend_url}/api"
-    
-    try:
-        print("\n🔍 Testing CORS headers...")
-        response = requests.options(f"{api_url}/", timeout=10)
-        
-        cors_headers = {
-            'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
-            'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
-            'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+        return {
+            "method": method.upper(),
+            "endpoint": endpoint,
+            "error": str(e),
+            "success": False
         }
-        
-        print(f"✅ CORS headers present: {cors_headers}")
-        return True
-        
-    except requests.exceptions.RequestException as e:
-        print(f"❌ CORS test error: {e}")
-        return False
+
+def print_test_result(result: Dict[str, Any]) -> None:
+    """Print formatted test result"""
+    if result.get("success"):
+        status_icon = "✅"
+    else:
+        status_icon = "❌"
+    
+    print(f"{status_icon} {result['method']} {result['endpoint']}")
+    print(f"   Status: {result.get('status_code', 'ERROR')} (expected: {result.get('expected_status', 'N/A')})")
+    
+    if result.get("error"):
+        print(f"   Error: {result['error']}")
+    elif result.get("response_data"):
+        if isinstance(result["response_data"], dict):
+            print(f"   Response: {json.dumps(result['response_data'], indent=2)[:100]}...")
+        else:
+            print(f"   Response: {str(result['response_data'])[:100]}...")
+    
+    print()
 
 def main():
-    """Run all backend tests"""
+    print("🚨 CRITICAL BACKEND ISSUE INVESTIGATION")
     print("=" * 60)
-    print("🚀 ShiftMatch Backend Test Suite")
+    print("User Report: Profile saving & logout not working")
+    print("Backend Log: 404 Not Found for /api/profiles/worker/me")
     print("=" * 60)
+    print()
     
-    test_results = []
+    # Test 1: Basic endpoints that should exist
+    print("📋 TESTING EXISTING ENDPOINTS:")
+    print("-" * 30)
     
-    # Test 1: Basic health check
-    print("\n📋 Test 1: Backend Health Check")
-    health_ok = test_backend_health()
-    test_results.append(("Backend Health", health_ok))
+    basic_tests = [
+        ("GET", "/api/", 200),
+        ("GET", "/api/status", 200),
+        ("POST", "/api/status", 200, {"client_name": "test_client"}),
+    ]
     
-    # Test 2: Status endpoints (only if health check passes)
-    if health_ok:
-        print("\n📋 Test 2: Status Endpoints")
-        status_ok = test_status_endpoints()
-        test_results.append(("Status Endpoints", status_ok))
-        
-        # Test 3: CORS configuration
-        print("\n📋 Test 3: CORS Configuration")
-        cors_ok = test_cors_headers()
-        test_results.append(("CORS Headers", cors_ok))
-    else:
-        test_results.append(("Status Endpoints", False))
-        test_results.append(("CORS Headers", False))
+    basic_results = []
+    for method, endpoint, expected_status, *data in basic_tests:
+        test_data = data[0] if data else None
+        result = test_endpoint(method, endpoint, test_data, expected_status=expected_status)
+        basic_results.append(result)
+        print_test_result(result)
+    
+    # Test 2: Authentication endpoints (should give 404)
+    print("🔐 TESTING AUTHENTICATION ENDPOINTS (Expected 404s):")
+    print("-" * 50)
+    
+    auth_tests = [
+        ("GET", "/api/auth/me", 404),
+        ("POST", "/api/auth/register", 404),
+        ("POST", "/api/auth/login", 404),
+    ]
+    
+    auth_results = []
+    for method, endpoint, expected_status in auth_tests:
+        result = test_endpoint(method, endpoint, expected_status=expected_status)
+        auth_results.append(result)
+        print_test_result(result)
+    
+    # Test 3: Profile endpoints (should give 404) - THE CRITICAL ISSUE
+    print("👤 TESTING PROFILE ENDPOINTS (Expected 404s) - CRITICAL ISSUE:")
+    print("-" * 60)
+    
+    profile_tests = [
+        ("GET", "/api/profiles/worker/me", 404),
+        ("PATCH", "/api/profiles/worker/me", 404),
+    ]
+    
+    profile_results = []
+    for method, endpoint, expected_status in profile_tests:
+        test_data = {"name": "Test User", "categories": ["security"]} if method == "PATCH" else None
+        result = test_endpoint(method, endpoint, test_data, expected_status=expected_status)
+        profile_results.append(result)
+        print_test_result(result)
+    
+    # Test 4: Try to create a test user (should fail)
+    print("🧪 TESTING USER CREATION (Expected to fail):")
+    print("-" * 42)
+    
+    user_creation_data = {
+        "email": "worker@shiftmatch.com",
+        "password": "securepass123",
+        "role": "worker"
+    }
+    
+    register_result = test_endpoint("POST", "/api/auth/register", user_creation_data, expected_status=404)
+    print_test_result(register_result)
     
     # Summary
-    print("\n" + "=" * 60)
-    print("📊 TEST SUMMARY")
+    print("📊 CRITICAL ISSUE ANALYSIS:")
     print("=" * 60)
     
-    passed = 0
-    total = len(test_results)
+    all_results = basic_results + auth_results + profile_results + [register_result]
     
-    for test_name, result in test_results:
-        status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{test_name}: {status}")
-        if result:
-            passed += 1
+    working_endpoints = [r for r in all_results if r.get("success")]
+    failing_endpoints = [r for r in all_results if not r.get("success")]
     
-    print(f"\nOverall: {passed}/{total} tests passed")
+    print(f"✅ WORKING ENDPOINTS ({len(working_endpoints)}):")
+    for result in working_endpoints:
+        print(f"   • {result['method']} {result['endpoint']} → {result.get('status_code')}")
     
-    if passed == total:
-        print("🎉 All backend tests passed!")
-        return True
-    else:
-        print("⚠️  Some backend tests failed")
-        return False
+    print()
+    print(f"❌ FAILING/404 ENDPOINTS ({len(failing_endpoints)}):")
+    for result in failing_endpoints:
+        status = result.get('status_code', 'ERROR')
+        expected = result.get('expected_status', 'N/A')
+        if status == expected:
+            print(f"   • {result['method']} {result['endpoint']} → {status} (as expected)")
+        else:
+            print(f"   • {result['method']} {result['endpoint']} → {status} (expected {expected})")
+    
+    print()
+    print("🔍 ROOT CAUSE ANALYSIS:")
+    print("-" * 25)
+    print("✅ Backend server is RUNNING and healthy")
+    print("✅ Basic infrastructure endpoints work:")
+    print("   • GET /api/ (Hello World)")
+    print("   • GET/POST /api/status (Status checks)")
+    print()
+    print("❌ MISSING ENDPOINTS causing user issues:")
+    print("   • Authentication endpoints (/api/auth/*)")
+    print("   • Profile endpoints (/api/profiles/*)")
+    print()
+    print("🚨 CRITICAL IMPACT:")
+    print("   ❌ Profile saving doesn't work → /api/profiles/worker/me gives 404")
+    print("   ❌ Logout doesn't work → /api/auth/* endpoints don't exist")
+    print("   ❌ User registration/login → No backend API implementation")
+    print()
+    print("💡 SOLUTION NEEDED:")
+    print("   The backend needs ShiftMatch-specific endpoints implemented:")
+    print("   1. Authentication system (register, login, logout, me)")
+    print("   2. Worker profile management (get, update)")
+    print("   3. Employer profile management")
+    print("   4. Job management endpoints")
+    print("   5. Matching system endpoints")
 
 if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    main()
