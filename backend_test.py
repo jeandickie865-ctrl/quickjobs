@@ -57,8 +57,8 @@ def check_backend_service():
     """Check if backend service is running"""
     print("🔍 Checking Backend Service Status...")
     try:
-        # Simple connectivity test
-        response = requests.get(f"{BACKEND_URL}/", timeout=5)
+        # Simple connectivity test using health endpoint
+        response = requests.get(f"{BACKEND_URL}/health", timeout=5)
         if response.status_code == 200:
             print("✅ Backend Service: RUNNING - Service is accessible")
             return True
