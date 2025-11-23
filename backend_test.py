@@ -77,37 +77,24 @@ def check_backend_service():
         print(f"❌ Backend Service: ERROR - {str(e)}")
         return False
 
-def test_status_endpoints():
-    """Test status check endpoints (POST and GET)"""
-    print("🔍 Testing Status Endpoints...")
+def test_api_docs():
+    """Test API documentation endpoint"""
+    print("🔍 Testing API Documentation...")
     try:
-        # Test POST /api/status
-        test_data = {"client_name": f"backend_test_{datetime.now().strftime('%H%M%S')}"}
-        post_response = requests.post(f"{BACKEND_URL}/status", 
-                                    json=test_data, 
-                                    timeout=10)
-        
-        if post_response.status_code != 200:
-            print(f"❌ Status POST: FAILED - Status {post_response.status_code}")
-            return False
-            
-        # Test GET /api/status
-        get_response = requests.get(f"{BACKEND_URL}/status", timeout=10)
-        
-        if get_response.status_code != 200:
-            print(f"❌ Status GET: FAILED - Status {get_response.status_code}")
-            return False
-            
-        status_checks = get_response.json()
-        if isinstance(status_checks, list):
-            print(f"✅ Status Endpoints: PASSED - {len(status_checks)} records in database")
-            return True
+        response = requests.get(f"{BACKEND_URL}/docs", timeout=10)
+        if response.status_code == 200:
+            content = response.text
+            if "swagger" in content.lower() or "openapi" in content.lower():
+                print("✅ API Documentation: PASSED - Swagger docs accessible")
+                return True
+            else:
+                print("❌ API Documentation: FAILED - Not Swagger/OpenAPI docs")
+                return False
         else:
-            print("❌ Status Endpoints: FAILED - Invalid response format")
+            print(f"❌ API Documentation: FAILED - Status {response.status_code}")
             return False
-            
     except Exception as e:
-        print(f"❌ Status Endpoints: FAILED - Error: {str(e)}")
+        print(f"❌ API Documentation: FAILED - Error: {str(e)}")
         return False
 
 def main():
