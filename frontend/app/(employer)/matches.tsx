@@ -21,7 +21,7 @@ const COLORS = {
 };
 
 type Match = {
-  job: Auftrag;
+  job: Job;
   application: JobApplication;
 };
 
