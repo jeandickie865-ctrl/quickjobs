@@ -163,14 +163,14 @@ export default function EmployerLayout() {
       />
 
       <Tabs.Screen
-        name="payment"
+        name="matches"
         options={{
           href: null, // Hide from tabs
         }}
       />
 
       <Tabs.Screen
-        name="chat/[userId]"
+        name="payment"
         options={{
           href: null, // Hide from tabs
         }}
