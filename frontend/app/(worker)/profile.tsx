@@ -89,6 +89,29 @@ export default function WorkerProfileScreen() {
     loadProfile();
   }, []);
 
+  // Entfernt ungültige gespeicherte Activities & Qualifications
+  useEffect(() => {
+    if (!loading) {
+      // gültige Werte aus Taxonomy ableiten
+      const validActivities = availableActivities.filter(a =>
+        selectedActivities.includes(a)
+      );
+
+      const validQualifications = availableQualifications.filter(q =>
+        selectedQualifications.includes(q)
+      );
+
+      // falls Werte ungültig → automatisch korrigieren
+      if (validActivities.length !== selectedActivities.length) {
+        setSelectedActivities(validActivities);
+      }
+
+      if (validQualifications.length !== selectedQualifications.length) {
+        setSelectedQualifications(validQualifications);
+      }
+    }
+  }, [loading, availableActivities, availableQualifications]);
+
   const loadProfile = async () => {
     try {
       const data = await getWorkerProfile();
