@@ -187,6 +187,21 @@ frontend:
         agent: "main"
         comment: "Taxonomie-Fix: Komplette Überarbeitung der Tag-Auswahl-Logik. Alte Strukturen (role, qual, license, doc, skill, tool, vehicle) entfernt. Neue einfache Struktur: activities und qualifications. Lat/Lon States hinzugefügt. cat.label → cat.title korrigiert."
 
+  - task: "Adress-Autocomplete: PLZ wird nicht gesetzt"
+    implemented: true
+    working: false
+    file: "app/(employer)/jobs/create.tsx, components/AddressAutocompleteInput.tsx"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Benutzer berichtet: Beim Auswählen einer Adresse aus dem Dropdown wird die Stadt korrekt gesetzt, aber die PLZ bleibt leer."
+      - working: true
+        agent: "main"
+        comment: "KRITISCHER FIX: Inkonsistente setState-Handler behoben. Alle drei Handler (Street, PLZ, City) verwenden jetzt die funktionale Update-Form setAddress(prev => ({...prev, ...})). Problem war React State-Batching, das zu Überschreibungen führte. Fix implementiert in create.tsx (Zeilen 544-572)."
+
   - task: "Matching Logic"
     implemented: true
     working: true
