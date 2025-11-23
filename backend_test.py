@@ -225,23 +225,15 @@ class BackendTester:
         """Test file too large upload"""
         self.log("Testing file too large upload (>5MB)...")
         try:
-            # Create a very large image (should be >5MB)
-            # Using a larger size and uncompressed format to ensure it's over 5MB
-            large_img_data = self.create_test_image("PNG", size=(5000, 5000))
+            # Create a large file (6MB of data) to ensure it's over the 5MB limit
+            large_data = b'x' * (6 * 1024 * 1024)  # 6MB of data
+            large_file_data = io.BytesIO(large_data)
             
-            # Check actual size
-            content_size = len(large_img_data.getvalue())
-            self.log(f"Created test image of size: {content_size / (1024*1024):.2f} MB")
-            
-            if content_size <= 5 * 1024 * 1024:
-                self.log("⚠️ Test image is not large enough, creating larger one...")
-                # Create an even larger image
-                large_img_data = self.create_test_image("PNG", size=(8000, 8000))
-                content_size = len(large_img_data.getvalue())
-                self.log(f"Created larger test image of size: {content_size / (1024*1024):.2f} MB")
+            content_size = len(large_data)
+            self.log(f"Created test file of size: {content_size / (1024*1024):.2f} MB")
             
             files = {
-                'file': ('large_photo.png', large_img_data, 'image/png')
+                'file': ('large_photo.jpg', large_file_data, 'image/jpeg')
             }
             
             response = self.session.post(f"{API_BASE}/upload/profile-photo", files=files)
