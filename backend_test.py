@@ -18,183 +18,355 @@ from typing import Dict, Any, Optional
 BASE_URL = "http://localhost:8001"
 API_BASE = f"{BASE_URL}/api"
 
-def test_endpoint(method: str, endpoint: str, data: Optional[Dict[str, Any]] = None, 
-                 headers: Optional[Dict[str, str]] = None, expected_status: int = 200) -> Dict[str, Any]:
-    """Test a single endpoint and return results"""
-    url = f"{BASE_URL}{endpoint}"
-    
-    try:
-        if method.upper() == "GET":
-            response = requests.get(url, headers=headers, timeout=10)
-        elif method.upper() == "POST":
-            response = requests.post(url, json=data, headers=headers, timeout=10)
-        elif method.upper() == "PATCH":
-            response = requests.patch(url, json=data, headers=headers, timeout=10)
-        else:
-            return {"error": f"Unsupported method: {method}"}
+class BackendTester:
+    def __init__(self):
+        self.session = requests.Session()
+        self.auth_token = None
+        self.test_user_email = f"testworker_{uuid.uuid4().hex[:8]}@test.de"
+        self.test_user_password = "TestPassword123!"
+        self.user_id = None
         
-        result = {
-            "method": method.upper(),
-            "endpoint": endpoint,
-            "status_code": response.status_code,
-            "expected_status": expected_status,
-            "success": response.status_code == expected_status,
-            "response_time": response.elapsed.total_seconds()
-        }
+    def log(self, message, level="INFO"):
+        """Log test messages"""
+        print(f"[{level}] {message}")
         
-        # Try to parse JSON response
+    def create_test_image(self, format="JPEG", size=(100, 100)):
+        """Create a test image file"""
+        img = Image.new('RGB', size, color='red')
+        img_bytes = io.BytesIO()
+        img.save(img_bytes, format=format)
+        img_bytes.seek(0)
+        return img_bytes
+        
+    def test_health_check(self):
+        """Test basic health check"""
+        self.log("Testing health check endpoint...")
         try:
-            result["response_data"] = response.json()
-        except:
-            result["response_data"] = response.text[:200] if response.text else "No response body"
+            response = self.session.get(f"{API_BASE}/health")
+            if response.status_code == 200:
+                data = response.json()
+                self.log(f"✅ Health check passed: {data}")
+                return True
+            else:
+                self.log(f"❌ Health check failed: {response.status_code}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Health check error: {e}", "ERROR")
+            return False
+            
+    def test_auth_register(self):
+        """Test user registration"""
+        self.log(f"Testing user registration with email: {self.test_user_email}")
+        try:
+            payload = {
+                "email": self.test_user_email,
+                "password": self.test_user_password,
+                "role": "worker"
+            }
+            response = self.session.post(f"{API_BASE}/auth/register", json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.auth_token = data.get("access_token")
+                self.user_id = data.get("user", {}).get("id")
+                self.session.headers.update({"Authorization": f"Bearer {self.auth_token}"})
+                self.log(f"✅ Registration successful. User ID: {self.user_id}")
+                return True
+            else:
+                self.log(f"❌ Registration failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Registration error: {e}", "ERROR")
+            return False
+            
+    def test_auth_login(self):
+        """Test user login"""
+        self.log("Testing user login...")
+        try:
+            # FastAPI OAuth2PasswordRequestForm expects form data with 'username' field
+            payload = {
+                "username": self.test_user_email,  # Note: username field, not email
+                "password": self.test_user_password
+            }
+            response = self.session.post(f"{API_BASE}/auth/login", data=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.auth_token = data.get("access_token")
+                self.user_id = data.get("user", {}).get("id")
+                self.session.headers.update({"Authorization": f"Bearer {self.auth_token}"})
+                self.log(f"✅ Login successful. Token received.")
+                return True
+            else:
+                self.log(f"❌ Login failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Login error: {e}", "ERROR")
+            return False
+            
+    def test_auth_me(self):
+        """Test get current user"""
+        self.log("Testing get current user...")
+        try:
+            response = self.session.get(f"{API_BASE}/auth/me")
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.log(f"✅ Get current user successful: {data.get('email')}")
+                return True
+            else:
+                self.log(f"❌ Get current user failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Get current user error: {e}", "ERROR")
+            return False
+            
+    def test_worker_profile_create(self):
+        """Test worker profile creation"""
+        self.log("Testing worker profile creation...")
+        try:
+            payload = {
+                "name": "Test Worker",
+                "street": "Teststraße 123",
+                "postal_code": "12345",
+                "city": "Berlin",
+                "lat": 52.5200,
+                "lon": 13.4050,
+                "categories": ["sicherheit", "reinigung"],
+                "qualifications": ["erste_hilfe", "sicherheitsschein"],
+                "activities": ["objektschutz", "buero_reinigung"],
+                "radius_km": 25
+            }
+            response = self.session.post(f"{API_BASE}/profiles/worker", json=payload)
+            
+            if response.status_code == 201:
+                data = response.json()
+                self.log(f"✅ Worker profile created successfully: {data.get('id')}")
+                return True
+            else:
+                self.log(f"❌ Worker profile creation failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Worker profile creation error: {e}", "ERROR")
+            return False
+            
+    def test_worker_profile_get(self):
+        """Test get worker profile"""
+        self.log("Testing get worker profile...")
+        try:
+            response = self.session.get(f"{API_BASE}/profiles/worker/me")
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.log(f"✅ Get worker profile successful: {data.get('name')}")
+                return True
+            else:
+                self.log(f"❌ Get worker profile failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Get worker profile error: {e}", "ERROR")
+            return False
+            
+    def test_upload_profile_photo_valid(self):
+        """Test valid profile photo upload"""
+        self.log("Testing valid profile photo upload (JPEG)...")
+        try:
+            # Create test image
+            img_data = self.create_test_image("JPEG")
+            
+            files = {
+                'file': ('test_photo.jpg', img_data, 'image/jpeg')
+            }
+            
+            response = self.session.post(f"{API_BASE}/upload/profile-photo", files=files)
+            
+            if response.status_code == 200:
+                data = response.json()
+                photo_url = data.get("photo_url")
+                if photo_url and photo_url.startswith("/uploads/profile-photos/"):
+                    self.log(f"✅ Photo upload successful: {photo_url}")
+                    return True, photo_url
+                else:
+                    self.log(f"❌ Invalid photo URL format: {photo_url}", "ERROR")
+                    return False, None
+            else:
+                self.log(f"❌ Photo upload failed: {response.status_code} - {response.text}", "ERROR")
+                return False, None
+        except Exception as e:
+            self.log(f"❌ Photo upload error: {e}", "ERROR")
+            return False, None
+            
+    def test_upload_profile_photo_invalid_type(self):
+        """Test invalid file type upload"""
+        self.log("Testing invalid file type upload (TXT)...")
+        try:
+            files = {
+                'file': ('test.txt', io.BytesIO(b'This is not an image'), 'text/plain')
+            }
+            
+            response = self.session.post(f"{API_BASE}/upload/profile-photo", files=files)
+            
+            if response.status_code == 400:
+                data = response.json()
+                if "Invalid file type" in data.get("detail", {}).get("error", ""):
+                    self.log("✅ Invalid file type correctly rejected")
+                    return True
+                else:
+                    self.log(f"❌ Unexpected error message: {data}", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Invalid file type not rejected: {response.status_code}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Invalid file type test error: {e}", "ERROR")
+            return False
+            
+    def test_upload_profile_photo_too_large(self):
+        """Test file too large upload"""
+        self.log("Testing file too large upload (>5MB)...")
+        try:
+            # Create a large image (should be >5MB)
+            large_img_data = self.create_test_image("JPEG", size=(3000, 3000))
+            
+            files = {
+                'file': ('large_photo.jpg', large_img_data, 'image/jpeg')
+            }
+            
+            response = self.session.post(f"{API_BASE}/upload/profile-photo", files=files)
+            
+            if response.status_code == 400:
+                data = response.json()
+                if "File too large" in data.get("detail", {}).get("error", ""):
+                    self.log("✅ Large file correctly rejected")
+                    return True
+                else:
+                    self.log(f"❌ Unexpected error message: {data}", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Large file not rejected: {response.status_code}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Large file test error: {e}", "ERROR")
+            return False
+            
+    def test_worker_profile_update_with_photo(self, photo_url):
+        """Test worker profile update with photo URL"""
+        self.log("Testing worker profile update with photo URL...")
+        try:
+            payload = {
+                "name": "Updated Test Worker",
+                "street": "Updated Teststraße 456",
+                "postal_code": "54321",
+                "city": "München",
+                "lat": 48.1351,
+                "lon": 11.5820,
+                "categories": ["sicherheit", "logistik"],
+                "qualifications": ["erste_hilfe", "staplerfahrer"],
+                "activities": ["objektschutz", "lager_arbeit"],
+                "radius_km": 30,
+                "photo_url": photo_url
+            }
+            response = self.session.patch(f"{API_BASE}/profiles/worker/me", json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("photo_url") == photo_url and data.get("name") == "Updated Test Worker":
+                    self.log(f"✅ Worker profile updated with photo URL: {data.get('photo_url')}")
+                    return True
+                else:
+                    self.log(f"❌ Profile update data mismatch: {data}", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Worker profile update failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+        except Exception as e:
+            self.log(f"❌ Worker profile update error: {e}", "ERROR")
+            return False
+            
+    def test_complete_flow(self):
+        """Test complete flow: Register → Login → Profile Create → Photo Upload → Profile Update"""
+        self.log("=" * 60)
+        self.log("STARTING COMPLETE BACKEND FLOW TEST")
+        self.log("=" * 60)
         
-        return result
+        results = {}
         
-    except requests.exceptions.RequestException as e:
-        return {
-            "method": method.upper(),
-            "endpoint": endpoint,
-            "error": str(e),
-            "success": False
-        }
-
-def print_test_result(result: Dict[str, Any]) -> None:
-    """Print formatted test result"""
-    if result.get("success"):
-        status_icon = "✅"
-    else:
-        status_icon = "❌"
-    
-    print(f"{status_icon} {result['method']} {result['endpoint']}")
-    print(f"   Status: {result.get('status_code', 'ERROR')} (expected: {result.get('expected_status', 'N/A')})")
-    
-    if result.get("error"):
-        print(f"   Error: {result['error']}")
-    elif result.get("response_data"):
-        if isinstance(result["response_data"], dict):
-            print(f"   Response: {json.dumps(result['response_data'], indent=2)[:100]}...")
+        # 1. Health Check
+        results['health_check'] = self.test_health_check()
+        
+        # 2. Register
+        results['register'] = self.test_auth_register()
+        if not results['register']:
+            self.log("❌ Registration failed, cannot continue with flow", "ERROR")
+            return results
+            
+        # 3. Login (test with new credentials)
+        results['login'] = self.test_auth_login()
+        if not results['login']:
+            self.log("❌ Login failed, cannot continue with flow", "ERROR")
+            return results
+            
+        # 4. Get current user
+        results['auth_me'] = self.test_auth_me()
+        
+        # 5. Create worker profile
+        results['profile_create'] = self.test_worker_profile_create()
+        if not results['profile_create']:
+            self.log("❌ Profile creation failed, cannot continue with flow", "ERROR")
+            return results
+            
+        # 6. Get worker profile
+        results['profile_get'] = self.test_worker_profile_get()
+        
+        # 7. Upload valid photo
+        upload_success, photo_url = self.test_upload_profile_photo_valid()
+        results['upload_valid'] = upload_success
+        
+        # 8. Test invalid uploads
+        results['upload_invalid_type'] = self.test_upload_profile_photo_invalid_type()
+        results['upload_too_large'] = self.test_upload_profile_photo_too_large()
+        
+        # 9. Update profile with photo URL
+        if photo_url:
+            results['profile_update_with_photo'] = self.test_worker_profile_update_with_photo(photo_url)
         else:
-            print(f"   Response: {str(result['response_data'])[:100]}...")
-    
-    print()
+            results['profile_update_with_photo'] = False
+            
+        return results
+        
+    def print_summary(self, results):
+        """Print test summary"""
+        self.log("=" * 60)
+        self.log("TEST SUMMARY")
+        self.log("=" * 60)
+        
+        passed = 0
+        total = len(results)
+        
+        for test_name, result in results.items():
+            status = "✅ PASS" if result else "❌ FAIL"
+            self.log(f"{test_name.replace('_', ' ').title()}: {status}")
+            if result:
+                passed += 1
+                
+        self.log("=" * 60)
+        self.log(f"TOTAL: {passed}/{total} tests passed")
+        
+        if passed == total:
+            self.log("🎉 ALL TESTS PASSED! Backend is working correctly.", "SUCCESS")
+        else:
+            self.log(f"⚠️  {total - passed} tests failed. Backend needs attention.", "WARNING")
+            
+        return passed == total
 
 def main():
-    print("🚨 CRITICAL BACKEND ISSUE INVESTIGATION")
-    print("=" * 60)
-    print("User Report: Profile saving & logout not working")
-    print("Backend Log: 404 Not Found for /api/profiles/worker/me")
-    print("=" * 60)
-    print()
+    """Run all backend tests"""
+    tester = BackendTester()
+    results = tester.test_complete_flow()
+    all_passed = tester.print_summary(results)
     
-    # Test 1: Basic endpoints that should exist
-    print("📋 TESTING EXISTING ENDPOINTS:")
-    print("-" * 30)
-    
-    basic_tests = [
-        ("GET", "/api/", 200),
-        ("GET", "/api/status", 200),
-        ("POST", "/api/status", 200, {"client_name": "test_client"}),
-    ]
-    
-    basic_results = []
-    for method, endpoint, expected_status, *data in basic_tests:
-        test_data = data[0] if data else None
-        result = test_endpoint(method, endpoint, test_data, expected_status=expected_status)
-        basic_results.append(result)
-        print_test_result(result)
-    
-    # Test 2: Authentication endpoints (should give 404)
-    print("🔐 TESTING AUTHENTICATION ENDPOINTS (Expected 404s):")
-    print("-" * 50)
-    
-    auth_tests = [
-        ("GET", "/api/auth/me", 404),
-        ("POST", "/api/auth/register", 404),
-        ("POST", "/api/auth/login", 404),
-    ]
-    
-    auth_results = []
-    for method, endpoint, expected_status in auth_tests:
-        result = test_endpoint(method, endpoint, expected_status=expected_status)
-        auth_results.append(result)
-        print_test_result(result)
-    
-    # Test 3: Profile endpoints (should give 404) - THE CRITICAL ISSUE
-    print("👤 TESTING PROFILE ENDPOINTS (Expected 404s) - CRITICAL ISSUE:")
-    print("-" * 60)
-    
-    profile_tests = [
-        ("GET", "/api/profiles/worker/me", 404),
-        ("PATCH", "/api/profiles/worker/me", 404),
-    ]
-    
-    profile_results = []
-    for method, endpoint, expected_status in profile_tests:
-        test_data = {"name": "Test User", "categories": ["security"]} if method == "PATCH" else None
-        result = test_endpoint(method, endpoint, test_data, expected_status=expected_status)
-        profile_results.append(result)
-        print_test_result(result)
-    
-    # Test 4: Try to create a test user (should fail)
-    print("🧪 TESTING USER CREATION (Expected to fail):")
-    print("-" * 42)
-    
-    user_creation_data = {
-        "email": "worker@shiftmatch.com",
-        "password": "securepass123",
-        "role": "worker"
-    }
-    
-    register_result = test_endpoint("POST", "/api/auth/register", user_creation_data, expected_status=404)
-    print_test_result(register_result)
-    
-    # Summary
-    print("📊 CRITICAL ISSUE ANALYSIS:")
-    print("=" * 60)
-    
-    all_results = basic_results + auth_results + profile_results + [register_result]
-    
-    working_endpoints = [r for r in all_results if r.get("success")]
-    failing_endpoints = [r for r in all_results if not r.get("success")]
-    
-    print(f"✅ WORKING ENDPOINTS ({len(working_endpoints)}):")
-    for result in working_endpoints:
-        print(f"   • {result['method']} {result['endpoint']} → {result.get('status_code')}")
-    
-    print()
-    print(f"❌ FAILING/404 ENDPOINTS ({len(failing_endpoints)}):")
-    for result in failing_endpoints:
-        status = result.get('status_code', 'ERROR')
-        expected = result.get('expected_status', 'N/A')
-        if status == expected:
-            print(f"   • {result['method']} {result['endpoint']} → {status} (as expected)")
-        else:
-            print(f"   • {result['method']} {result['endpoint']} → {status} (expected {expected})")
-    
-    print()
-    print("🔍 ROOT CAUSE ANALYSIS:")
-    print("-" * 25)
-    print("✅ Backend server is RUNNING and healthy")
-    print("✅ Basic infrastructure endpoints work:")
-    print("   • GET /api/ (Hello World)")
-    print("   • GET/POST /api/status (Status checks)")
-    print()
-    print("❌ MISSING ENDPOINTS causing user issues:")
-    print("   • Authentication endpoints (/api/auth/*)")
-    print("   • Profile endpoints (/api/profiles/*)")
-    print()
-    print("🚨 CRITICAL IMPACT:")
-    print("   ❌ Profile saving doesn't work → /api/profiles/worker/me gives 404")
-    print("   ❌ Logout doesn't work → /api/auth/* endpoints don't exist")
-    print("   ❌ User registration/login → No backend API implementation")
-    print()
-    print("💡 SOLUTION NEEDED:")
-    print("   The backend needs ShiftMatch-specific endpoints implemented:")
-    print("   1. Authentication system (register, login, logout, me)")
-    print("   2. Worker profile management (get, update)")
-    print("   3. Employer profile management")
-    print("   4. Job management endpoints")
-    print("   5. Matching system endpoints")
+    # Exit with appropriate code
+    exit(0 if all_passed else 1)
 
 if __name__ == "__main__":
     main()
