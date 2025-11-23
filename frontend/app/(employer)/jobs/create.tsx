@@ -545,11 +545,30 @@ export default function CreateJob() {
             street={address.street || ''}
             postalCode={address.postalCode}
             city={address.city}
-            onStreetChange={(value) => setAddress({ ...address, street: value })}
-            onPostalCodeChange={(value) => setAddress({ ...address, postalCode: value })}
-            onCityChange={(value) => setAddress({ ...address, city: value })}
-            onLatChange={(value) => setLat(value)}
-            onLonChange={(value) => setLon(value)}
+            onStreetChange={(value) => {
+              console.log('🏠 Street changed:', value);
+              setAddress({ ...address, street: value });
+            }}
+            onPostalCodeChange={(value) => {
+              console.log('📮 PostalCode changed:', value);
+              setAddress(prev => {
+                const next = { ...prev, postalCode: value };
+                console.log('📮 Address after postalCode update:', next);
+                return next;
+              });
+            }}
+            onCityChange={(value) => {
+              console.log('🏙️ City changed:', value);
+              setAddress({ ...address, city: value });
+            }}
+            onLatChange={(value) => {
+              console.log('📍 Lat changed:', value);
+              setLat(value);
+            }}
+            onLonChange={(value) => {
+              console.log('📍 Lon changed:', value);
+              setLon(value);
+            }}
           />
         </View>
 
