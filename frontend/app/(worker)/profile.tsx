@@ -329,18 +329,15 @@ export default function WorkerProfileScreen() {
 
             <Pressable
               onPress={pickPhoto}
-              disabled={uploading}
               style={{
                 marginTop: 16,
-                backgroundColor: uploading ? colors.gray400 : colors.neon,
+                backgroundColor: colors.neon,
                 borderRadius: 14,
                 paddingVertical: 12,
                 paddingHorizontal: 24,
               }}
             >
-              {uploading
-                ? <ActivityIndicator color={colors.black} />
-                : <Text style={{ color: colors.black, fontWeight: '700' }}>Foto hochladen</Text>}
+              <Text style={{ color: colors.black, fontWeight: '700' }}>Foto wählen</Text>
             </Pressable>
           </View>
 
