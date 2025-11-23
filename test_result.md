@@ -714,3 +714,36 @@ agent_communication:
       **FILE UPLOADS:** Local storage with validation and UUID naming
       
       **NEXT STEPS:** Backend is ready. Frontend integration issues may remain due to AsyncStorage vs API mismatch.
+
+  - agent: "main"
+    message: |
+      **🔧 KRITISCHER BUG FIX: Adress-Autocomplete PLZ-Problem behoben**
+      
+      **Problem identifiziert:**
+      Wenn Benutzer eine Adresse aus dem Dropdown auswählen, wurde die Stadt korrekt gesetzt, aber die PLZ blieb leer.
+      
+      **Root Cause:**
+      In `app/(employer)/jobs/create.tsx` waren die State-Update-Handler inkonsistent:
+      - `onStreetChange`: verwendete `setAddress({ ...address, street: value })` (direkter State)
+      - `onPostalCodeChange`: verwendete `setAddress(prev => ({ ...prev, postalCode: value }))` (funktionale Form)
+      - `onCityChange`: verwendete `setAddress({ ...address, city: value })` (direkter State)
+      
+      Wenn alle drei Callbacks synchron aufgerufen werden (was in `selectSuggestion` geschieht), führt React State-Batching dazu, dass die Updates sich gegenseitig überschreiben.
+      
+      **Implementierter Fix:**
+      Alle drei Handler verwenden jetzt die funktionale Update-Form:
+      ```javascript
+      onStreetChange={(value) => setAddress(prev => ({ ...prev, street: value }))}
+      onPostalCodeChange={(value) => setAddress(prev => ({ ...prev, postalCode: value }))}
+      onCityChange={(value) => setAddress(prev => ({ ...prev, city: value }))}
+      ```
+      
+      **Datei geändert:**
+      - `/app/frontend/app/(employer)/jobs/create.tsx` (Zeilen 544-572)
+      
+      **Erwartetes Verhalten nach Fix:**
+      - Benutzer tippt Adresse → Dropdown erscheint
+      - Benutzer wählt Adresse aus → Straße, PLZ UND Stadt werden korrekt gesetzt
+      - Alle drei Felder sind ausgefüllt
+      
+      **Status:** Fix implementiert, Expo neu gestartet, bereit für Backend-Testing
