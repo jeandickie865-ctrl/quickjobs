@@ -123,8 +123,15 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      await signUp(result.data.email, result.data.password);
-      router.replace('/start');
+      const user = await signUp(result.data.email, result.data.password);
+      // Redirect based on role
+      if (user.role === 'worker') {
+        router.replace('/(worker)/feed');
+      } else if (user.role === 'employer') {
+        router.replace('/(employer)/dashboard');
+      } else {
+        router.replace('/start');
+      }
     } catch (error: any) {
       setErrors({ email: error.message || 'Registrierung fehlgeschlagen' });
     } finally {
