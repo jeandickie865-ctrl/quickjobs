@@ -89,8 +89,8 @@ def main():
     if check_backend_service():
         tests_passed += 1
     
-    # Test 2: Root Endpoint
-    if test_root_endpoint():
+    # Test 2: Frontend Serving
+    if test_frontend_serving():
         tests_passed += 1
     
     # Test 3: Health Check
