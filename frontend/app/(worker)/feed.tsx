@@ -62,7 +62,12 @@ export default function WorkerFeed() {
 
       const allJobs = await getJobs();
       const openJobs = allJobs.filter(j => j.status === 'open');
-      setJobs(openJobs);
+      
+      // BUG 2 FIX: Wende Matching-Filter an
+      const matchedJobs = openJobs.filter(job => jobMatchesWorker(job, workerProfile));
+      console.log(`✅ Matching: ${matchedJobs.length} von ${openJobs.length} Jobs passen zum Profil`);
+      
+      setJobs(matchedJobs);
 
       const applications = await getApplicationsForWorker(user.id);
       const jobIdsSet = new Set(applications.map(app => app.jobId));
