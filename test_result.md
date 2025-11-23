@@ -262,10 +262,10 @@ frontend:
 backend:
   - task: "Backend API"
     implemented: false
-    working: true
+    working: false
     file: "backend/server.py"
-    stuck_count: 0
-    priority: "low"
+    stuck_count: 1
+    priority: "critical"
     needs_retesting: false
     status_history:
       - working: "NA"
@@ -283,6 +283,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Backend Infrastructure Test nach expo-crypto Installation: Service RUNNING (pid 310, uptime 0:08:32), Health Check ✅ (GET /api/ → Hello World), Status Endpoints ✅ (POST/GET /api/status beide funktionsfähig), MongoDB ✅ (4 documents persistent, Verbindung erfolgreich), CORS ✅ (Middleware konfiguriert), Backend Logs ✅ (keine Fehler, nur normale HTTP-Requests). Alle 3/3 Tests bestanden. Backend Infrastructure vollständig stabil nach expo-crypto Fix."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUE CONFIRMED: User-reported problems verified through comprehensive API testing. Backend infrastructure is healthy (GET /api/, GET/POST /api/status work), but ALL ShiftMatch-specific endpoints return 404 Not Found. Missing endpoints: /api/auth/* (register, login, logout, me), /api/profiles/worker/me (GET/PATCH). This explains why profile saving fails and logout doesn't work. Backend needs complete ShiftMatch API implementation - authentication system, profile management, job management, matching system. Priority upgraded to CRITICAL."
 
 metadata:
   created_by: "main_agent"
