@@ -27,7 +27,7 @@ import { TAXONOMY, listCategories } from '../../constants/workerData';
 
 // BUG 3 FIX: Nutze AsyncStorage statt Backend API
 import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '../../utils/profileStore';
-import { debugAsyncStorage } from '../../utils/debugHelpers';
+import { diagnoseAsyncStorage } from '../../utils/diagnostics';
 
 export default function WorkerProfileScreen() {
   const { colors } = useTheme();
