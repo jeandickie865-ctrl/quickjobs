@@ -158,6 +158,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
       <TextInput
         value={postalCode ?? ''}
         onChangeText={(t) => onPostalCodeChange?.(t)}
+        onBlur={() => geocodeManualAddress()}
         placeholder="PLZ"
         placeholderTextColor="#777"
         keyboardType="numeric"
@@ -169,6 +170,7 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
       <TextInput
         value={city ?? ''}
         onChangeText={(t) => onCityChange?.(t)}
+        onBlur={() => geocodeManualAddress()}
         placeholder="Stadt"
         placeholderTextColor="#777"
         style={styles.input}
