@@ -100,6 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email: normalized,
       passwordHash,
       salt,
+      role: undefined, // später per setRole gesetzt
     };
 
     db[normalized] = newUser;
@@ -127,9 +128,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('E-Mail oder Passwort falsch.');
     }
 
+    // Falls Benutzer keine Rolle hat → Standard setzen
+    if (!existing.role) {
+      existing.role = 'worker';
+      db[normalized] = existing;
+      await saveUserDB(db);
+    }
+
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(existing));
     setUser(existing);
 
+    console.log("LOGIN OK:", existing);
     return existing;
   };
 
@@ -169,3 +178,12 @@ export const useAuth = (): AuthContextType => {
   if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
   return ctx;
 };
+
+// ----------------------
+// DEV FUNCTION: WIPE AUTH
+// ----------------------
+export async function __wipeAuthDebug() {
+  await AsyncStorage.removeItem('@shiftmatch:user');
+  await AsyncStorage.removeItem('@shiftmatch:users_database');
+  console.log('🧹 Auth Storage komplett gelöscht!');
+}
