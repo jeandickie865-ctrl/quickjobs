@@ -327,11 +327,11 @@ export default function CreateJob() {
                 </View>
               )}
 
-              {/* Qualifikationen - Required All */}
+              {/* Qualifikationen */}
               {groups.qualifications.length > 0 && (
                 <View style={{ gap: 8 }}>
                   <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Qualifikationen - Alle erforderlich (optional)
+                    Qualifikationen (optional)
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                     {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => (
@@ -345,44 +345,8 @@ export default function CreateJob() {
                             nextAll.delete(tagKey);
                           } else {
                             nextAll.add(tagKey);
-                            // Remove from "any" if it was there
-                            const nextAny = new Set(requiredAnySet);
-                            nextAny.delete(tagKey);
-                            setRequiredAnySet(nextAny);
                           }
                           setRequiredAllSet(nextAll);
-                        }}
-                      />
-                    ))}
-                  </View>
-                </View>
-              )}
-
-              {/* Qualifikationen - Required Any (mindestens eine) */}
-              {groups.qualifications.length > 0 && (
-                <View style={{ gap: 8 }}>
-                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Qualifikationen - Mindestens eine (optional)
-                  </Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => (
-                      <Chip
-                        key={`any-${tagKey}`}
-                        label={tagKey}
-                        selected={requiredAnySet.has(tagKey)}
-                        tone="outline"
-                        onPress={() => {
-                          const nextAny = new Set(requiredAnySet);
-                          if (nextAny.has(tagKey)) {
-                            nextAny.delete(tagKey);
-                          } else {
-                            nextAny.add(tagKey);
-                            // Remove from "all" if it was there
-                            const nextAll = new Set(requiredAllSet);
-                            nextAll.delete(tagKey);
-                            setRequiredAllSet(nextAll);
-                          }
-                          setRequiredAnySet(nextAny);
                         }}
                       />
                     ))}
