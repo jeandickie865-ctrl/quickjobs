@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Script for ShiftMatch App - CRITICAL ISSUE INVESTIGATION
-Tests the endpoints mentioned in the user's critical issue report.
-
-User reported:
-- Profile saving doesn't work
-- Logout doesn't work  
-- Backend log shows 404 Not Found for /api/profiles/worker/me
+Backend API Testing Suite for ShiftMatch/BACKUP App
+Tests upload endpoints, worker profile endpoints, and auth flow as requested in review.
 """
 
 import requests
 import json
 import sys
+import tempfile
+from pathlib import Path
+import uuid
+from PIL import Image
+import io
 from typing import Dict, Any, Optional
 
 # Backend URL - using localhost since we're testing from within the container
 BASE_URL = "http://localhost:8001"
+API_BASE = f"{BASE_URL}/api"
 
 def test_endpoint(method: str, endpoint: str, data: Optional[Dict[str, Any]] = None, 
                  headers: Optional[Dict[str, str]] = None, expected_status: int = 200) -> Dict[str, Any]:
