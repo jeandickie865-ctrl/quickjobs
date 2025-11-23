@@ -118,18 +118,36 @@ export default function WorkerProfileScreen() {
 
   const loadProfile = async () => {
     try {
-      const data = await getWorkerProfile();
-      setName(data.name || '');
-      setStreet(data.street || '');
-      setPostalCode(data.postal_code || '');
-      setCity(data.city || '');
-      setLat(data.lat);
-      setLon(data.lon);
-      setRadiusKm(String(data.radius_km || 15));
-      setPhotoUrl(data.photo_url || '');
-      setSelectedCategories(data.categories || []);
-      setSelectedActivities(data.activities || []);
-      setSelectedQualifications(data.qualifications || []);
+      // BUG 3 FIX: Lade Profil aus AsyncStorage
+      const { user: authUser } = useAuth();
+      if (!authUser) {
+        console.log('⚠️ No user logged in, cannot load profile');
+        setLoading(false);
+        return;
+      }
+
+      const data = await getWorkerProfileLocal(authUser.id);
+      
+      if (data) {
+        setName(data.name || '');
+        setStreet(data.street || '');
+        setPostalCode(data.postalCode || '');
+        setCity(data.city || '');
+        setLat(data.homeLat);
+        setLon(data.homeLon);
+        setRadiusKm(String(data.radiusKm || 15));
+        setPhotoUrl(data.photoUrl || '');
+        setSelectedCategories(data.categories || []);
+        setSelectedActivities(data.selectedTags?.filter(t => 
+          TAXONOMY.some(cat => cat.activities?.includes(t))
+        ) || []);
+        setSelectedQualifications(data.selectedTags?.filter(t => 
+          TAXONOMY.some(cat => cat.qualifications?.includes(t))
+        ) || []);
+        console.log('✅ Profile loaded from AsyncStorage');
+      } else {
+        console.log('ℹ️ No profile found - new profile');
+      }
     } catch (err) {
       console.log('Error loading profile:', err);
     } finally {
