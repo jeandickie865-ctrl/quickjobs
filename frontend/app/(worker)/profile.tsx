@@ -311,7 +311,7 @@ export default function WorkerProfileScreen() {
           <View style={{ width: 60 }} />
           <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
           <View style={{ flexDirection: 'row', gap: 12 }}>
-            <Pressable onPress={debugAsyncStorage} style={{
+            <Pressable onPress={diagnoseAsyncStorage} style={{
               paddingVertical: 6,
               paddingHorizontal: 12,
               backgroundColor: '#ff6b6b',
