@@ -251,7 +251,6 @@ export default function WorkerProfileScreen() {
           <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
           <Pressable 
             onPress={async () => {
-              const { signOut } = await import('../../contexts/AuthContext');
               await signOut();
               router.replace('/start');
             }}
