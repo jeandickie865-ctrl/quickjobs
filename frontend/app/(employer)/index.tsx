@@ -19,14 +19,26 @@ export default function EmployerDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const loadJobs = async () => {
     if (!user) return;
-    (async () => {
-      const employerJobs = await getEmployerJobs(user.id);
-      setJobs(employerJobs);
-      setIsLoading(false);
-    })();
+    setIsLoading(true);
+    const employerJobs = await getEmployerJobs(user.id);
+    console.log('📋 Loaded jobs:', employerJobs);
+    setJobs(employerJobs);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadJobs();
   }, [user]);
+
+  // Reload jobs when screen comes into focus
+  useEffect(() => {
+    const unsubscribe = router.subscribe(() => {
+      loadJobs();
+    });
+    return unsubscribe;
+  }, []);
 
   if (!user) return null;
 
