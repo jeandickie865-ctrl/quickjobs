@@ -371,7 +371,7 @@ export default function JobDetailScreen() {
           </>
         )}
 
-        {/* Preis Card */}
+        {/* Preis Card - BUG 1 FIX: job.wages → job.workerAmountCents */}
         <View style={{
           backgroundColor: COLORS.white,
           borderRadius: 16,
@@ -381,7 +381,7 @@ export default function JobDetailScreen() {
             LOHN
           </Text>
           <Text style={{ fontSize: 24, fontWeight: '800', color: COLORS.black }}>
-            {euro(job.wages)}
+            {euro(job.workerAmountCents)}
           </Text>
           <Text style={{ fontSize: 13, color: COLORS.darkGray, marginTop: 4 }}>
             {job.timeMode === 'hours' ? 'pro Stunde' : 'Gesamt'}

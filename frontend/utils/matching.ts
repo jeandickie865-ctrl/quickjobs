@@ -1,4 +1,4 @@
-// utils/matching.ts - MATCHING 2.2 (Extended Branchen-Support)
+// utils/matching.ts - MATCHING 2.2 (Extended Branchen-Support) + BUG 2 FIX
 import { WorkerProfile } from '../types/profile';
 import { Job } from '../types/job';
 import { calculateDistance } from './distance';
@@ -234,6 +234,7 @@ function checkNachhilfeRequirements(jobCategory: string, jobTags: string[], work
 
 /**
  * Main matching function - MATCHING 2.2 (Extended Branchen-Support)
+ * BUG 2 FIX: Radius-Check nur wenn BEIDE Koordinaten vorhanden
  * 
  * Reihenfolge:
  * 1. Category-Pass
@@ -244,7 +245,7 @@ function checkNachhilfeRequirements(jobCategory: string, jobTags: string[], work
  * 6. Low-Skill Bypass für einfache Tätigkeiten
  * 7. Required-All (nur High-Skill)
  * 8. Required-Any (nur High-Skill)
- * 9. Radius
+ * 9. Radius (NUR wenn BEIDE Koordinaten vorhanden)
  * 10. Status
  * 11. Kein Doppelmatch
  */
@@ -258,26 +259,31 @@ export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
 
   // 1. Category match
   if (!workerCategories.includes(job.category)) {
+    console.log('❌ matching: category mismatch', { jobCategory: job.category, workerCategories });
     return false;
   }
 
   // 2. Security Hard-Checks (IMMER, alle Branchen)
   if (!checkSecurityRequirements(requiredAllTags, workerSkills)) {
+    console.log('❌ matching: security requirements not met', { jobId: job.id });
     return false;
   }
 
   // 3. Delivery Fahrzeug/Führerschein Checks
   if (!checkDeliveryVehicleRequirements(requiredAllTags, workerSkills)) {
+    console.log('❌ matching: delivery vehicle requirements not met', { jobId: job.id });
     return false;
   }
 
   // 4. Inventur Pflicht-Checks
   if (!checkInventurRequirements(job.category, requiredAllTags, workerSkills)) {
+    console.log('❌ matching: inventur requirements not met', { jobId: job.id });
     return false;
   }
 
   // 5. Nachhilfe Pflicht-Checks
   if (!checkNachhilfeRequirements(job.category, requiredAllTags, workerSkills)) {
+    console.log('❌ matching: nachhilfe requirements not met', { jobId: job.id });
     return false;
   }
 
@@ -287,48 +293,63 @@ export function matchJobToWorker(job: Job, worker: WorkerProfile): boolean {
   if (!isLow) {
     // 7. High-Skill: Required-All
     if (!workerHasAll(workerSkills, requiredAllTags)) {
+      console.log('❌ matching: required all tags not met', { jobId: job.id });
       return false;
     }
     
     // 8. High-Skill: Required-Any
     if (!workerHasOne(workerSkills, requiredAnyTags)) {
+      console.log('❌ matching: required any tags not met', { jobId: job.id });
       return false;
     }
   }
 
-  // 9. Radius check (STRIKT: Jobs ohne Koordinaten werden ausgeblendet)
-  if (!job.lat || !job.lon) {
-    console.warn('⚠️ Job ohne Koordinaten wird übersprungen:', job.id, job.title);
-    return false; // Job MUSS Koordinaten haben
+  // ===== BUG 2 FIX: Radius-Check nur wenn BEIDE Koordinaten vorhanden =====
+  // Wenn Job ODER Worker keine Koordinaten hat → KEIN Distanz-Filter
+  if (!job.lat || !job.lon || !worker.homeLat || !worker.homeLon) {
+    console.log('✅ matching: no coords – job kept', { 
+      workerId: worker.userId, 
+      jobId: job.id,
+      jobHasCoords: !!(job.lat && job.lon),
+      workerHasCoords: !!(worker.homeLat && worker.homeLon)
+    });
+    // Job bleibt im Ergebnis, Radius wird NICHT geprüft
+  } else {
+    // Beide haben Koordinaten → Distanz berechnen und filtern
+    const distance = calculateDistance(
+      { lat: job.lat, lon: job.lon },
+      { lat: worker.homeLat, lon: worker.homeLon }
+    );
+    
+    if (distance > worker.radiusKm) {
+      console.log('❌ matching: filtered by radius', { 
+        jobId: job.id, 
+        distanceKm: distance.toFixed(1), 
+        workerRadiusKm: worker.radiusKm 
+      });
+      return false;
+    }
+    
+    console.log('✅ matching: radius check OK', { 
+      jobId: job.id,
+      distanceKm: distance.toFixed(1), 
+      workerRadiusKm: worker.radiusKm 
+    });
   }
-  
-  if (!worker.homeLat || !worker.homeLon) {
-    console.warn('⚠️ Worker ohne Home-Koordinaten:', worker.userId);
-    return false; // Worker MUSS Koordinaten haben
-  }
-
-  const distance = calculateDistance(
-    { lat: job.lat, lon: job.lon },
-    { lat: worker.homeLat, lon: worker.homeLon }
-  );
-  
-  if (distance > worker.radiusKm) {
-    console.log(`📏 Job zu weit weg: ${distance.toFixed(1)}km > ${worker.radiusKm}km`);
-    return false;
-  }
-  
-  console.log(`✅ Radius-Check OK: ${distance.toFixed(1)}km ≤ ${worker.radiusKm}km`);
 
   // 10. Status check
   if (!['open', 'pending'].includes(job.status)) {
+    console.log('❌ matching: job status not open/pending', { jobId: job.id, status: job.status });
     return false;
   }
 
   // 11. Kein Doppelmatch
   if (job.matchedWorkerId) {
+    console.log('❌ matching: job already matched', { jobId: job.id });
     return false;
   }
 
+  console.log('✅ matching: JOB MATCHED', { jobId: job.id, workerId: worker.userId });
   return true;
 }
 

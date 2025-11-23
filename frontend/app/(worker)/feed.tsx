@@ -415,9 +415,9 @@ export default function WorkerFeed() {
                     )}
                   </View>
 
-                  {/* Preis */}
+                  {/* Preis - BUG 1 FIX: job.wages → job.workerAmountCents */}
                   <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
-                    {euro(job.wages)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
+                    {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
                   </Text>
 
                   {/* Button */}
