@@ -85,8 +85,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('Diese E-Mail-Adresse ist bereits registriert');
     }
 
-    // Create new user
-    const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Create new user - CONSISTENT ID from email
+    const userId = `user_${emailLower.replace(/[^a-z0-9]/g, '_')}`;
     const newUser: User = {
       id: userId,
       email: emailLower,
