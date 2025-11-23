@@ -231,8 +231,8 @@ export default function WorkerProfileScreen() {
               padding: 6,
             }}>
               <Image
-                source={photoUrl ? { uri: photoUrl } : require('../../assets/placeholder-user.png')}
-                style={{ width: 150, height: 150, borderRadius: 75 }}
+                source={photoUrl ? { uri: photoUrl } : { uri: 'https://via.placeholder.com/150/CCCCCC/666666?text=USER' }}
+                style={{ width: 150, height: 150, borderRadius: 75, backgroundColor: '#E0E0E0' }}
               />
             </View>
 
