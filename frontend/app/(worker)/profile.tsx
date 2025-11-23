@@ -17,7 +17,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 
-import { getWorkerProfile, uploadProfilePhoto, updateWorkerProfile } from '../../services/api';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
@@ -25,6 +24,9 @@ import { Ionicons } from '@expo/vector-icons';
 
 // ❗️ FIX: Richtiger Import – NICHT mehr ../../src/taxonomy
 import { TAXONOMY, listCategories } from '../../constants/workerData';
+
+// BUG 3 FIX: Nutze AsyncStorage statt Backend API
+import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '../../utils/profileStore';
 
 export default function WorkerProfileScreen() {
   const { colors } = useTheme();
