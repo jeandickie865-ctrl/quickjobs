@@ -295,12 +295,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Authentication Flow"
-    - "Authentication - Signup Screen"
-    - "Authentication - Login Screen"
-  stuck_tasks: []
+    - "Backend API"
+  stuck_tasks: 
+    - "Backend API"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "main"
