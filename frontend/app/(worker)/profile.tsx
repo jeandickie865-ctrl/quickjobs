@@ -200,6 +200,12 @@ export default function WorkerProfileScreen() {
   };
 
   const handleSave = async () => {
+    // BUG 3 FIX: Validierung
+    const { user: authUser } = useAuth();
+    if (!authUser) {
+      return Alert.alert('Fehler', 'Du bist nicht eingeloggt.');
+    }
+
     if (!name.trim()) return Alert.alert('Fehler', 'Bitte Name eingeben');
     if (!street.trim() || !postalCode.trim() || !city.trim())
       return Alert.alert('Fehler', 'Bitte vollständige Adresse eingeben');
@@ -208,38 +214,62 @@ export default function WorkerProfileScreen() {
     if (isNaN(radius) || radius < 1 || radius > 200)
       return Alert.alert('Fehler', 'Radius muss zwischen 1 und 200 km liegen');
 
-    // KRITISCH: Koordinaten müssen vorhanden sein für Radius-Matching
+    // BUG 2 FIX RELATED: Koordinaten sind optional (nicht mehr zwingend erforderlich)
+    // Aber wir zeigen eine Warnung
     if (!lat || !lon) {
-      return Alert.alert(
-        'Koordinaten fehlen',
-        'Bitte wähle deine Adresse aus der Vorschlagsliste, damit deine Position bestimmt werden kann. Das ist wichtig für das Matching mit Jobs in deinem Umkreis.',
-        [{ text: 'OK' }]
+      Alert.alert(
+        'Hinweis',
+        'Koordinaten fehlen. Du kannst das Profil trotzdem speichern, aber das Radius-Matching funktioniert nur mit Koordinaten. Wähle deine Adresse aus der Vorschlagsliste für besseres Matching.',
+        [
+          { text: 'Abbrechen', style: 'cancel' },
+          { 
+            text: 'Trotzdem speichern', 
+            onPress: async () => await saveProfileData() 
+          }
+        ]
       );
+      return;
     }
 
+    await saveProfileData();
+  };
+
+  const saveProfileData = async () => {
     setSaving(true);
 
     try {
-      await updateWorkerProfile({
+      const { user: authUser } = useAuth();
+      if (!authUser) throw new Error('Not logged in');
+
+      // Kombiniere activities und qualifications zu selectedTags
+      const combinedTags = [...selectedActivities, ...selectedQualifications];
+
+      const profileData = {
+        userId: authUser.id,
         name,
         street,
-        postal_code: postalCode,
+        postalCode,
         city,
-        lat,
-        lon,
+        homeLat: lat,
+        homeLon: lon,
         categories: selectedCategories || [],
-        activities: selectedActivities || [],
-        qualifications: selectedQualifications || [],
-        radius_km: radius,
-        photo_url: photoUrl,
-      });
+        selectedTags: combinedTags || [],
+        radiusKm: parseInt(radiusKm),
+        photoUrl: photoUrl || undefined,
+        pushToken: undefined,
+      };
 
-      Alert.alert('Erfolg', 'Profil gespeichert', [
+      // BUG 3 FIX: Speichere in AsyncStorage
+      await saveWorkerProfile(profileData);
+
+      console.log('✅ Profile saved to AsyncStorage');
+
+      Alert.alert('Erfolg', 'Profil erfolgreich gespeichert! 🎉', [
         { text: 'OK', onPress: () => router.push('/(worker)/feed') },
       ]);
     } catch (err) {
       console.log('Save error:', err);
-      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden.');
+      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (err instanceof Error ? err.message : 'Unbekannter Fehler'));
     } finally {
       setSaving(false);
     }
