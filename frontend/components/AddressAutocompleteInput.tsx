@@ -69,31 +69,34 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
 
   // Auswahl einer Adresse aus dem Dropdown
   const selectSuggestion = (item: any) => {
-    setIsFocused(false);
-    setSuggestions([]);
-
     const addr = item.address ?? {};
 
     const streetName = [addr.road, addr.house_number].filter(Boolean).join(' ');
     const postal = addr.postcode || '';
     const cityName = addr.city || addr.town || addr.village || '';
+    const latitude = item.lat ? parseFloat(item.lat) : undefined;
+    const longitude = item.lon ? parseFloat(item.lon) : undefined;
 
-    console.log('📍 Selected address:', {
-      street: streetName,
-      postcode: postal,
-      city: cityName,
-      lat: item.lat,
-      lon: item.lon
+    console.log('📍 Selected address from OSM:', {
+      fullItem: item,
+      extractedStreet: streetName,
+      extractedPostcode: postal,
+      extractedCity: cityName,
+      lat: latitude,
+      lon: longitude
     });
 
+    // WICHTIG: Erst alle Callbacks aufrufen, DANN State ändern
     if (onStreetChange) onStreetChange(streetName);
     if (onPostalCodeChange) onPostalCodeChange(postal);
     if (onCityChange) onCityChange(cityName);
+    if (onLatChange && latitude) onLatChange(latitude);
+    if (onLonChange && longitude) onLonChange(longitude);
 
-    if (onLatChange && item.lat) onLatChange(parseFloat(item.lat));
-    if (onLonChange && item.lon) onLonChange(parseFloat(item.lon));
-
+    // DANN erst Query und UI State ändern
     setQuery(streetName);
+    setIsFocused(false);
+    setSuggestions([]);
   };
 
   return (
