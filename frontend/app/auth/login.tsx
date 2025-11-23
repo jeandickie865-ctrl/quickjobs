@@ -83,8 +83,15 @@ export default function LoginScreen() {
     setErrorMsg('');
     setLoading(true);
     try {
-      await signIn(email.trim().toLowerCase(), password);
-      router.replace('/start');
+      const user = await signIn(email.trim().toLowerCase(), password);
+      // Redirect based on role
+      if (user.role === 'worker') {
+        router.replace('/(worker)/feed');
+      } else if (user.role === 'employer') {
+        router.replace('/(employer)/dashboard');
+      } else {
+        router.replace('/start');
+      }
     } catch (err: any) {
       setErrorMsg(err.message || 'Login fehlgeschlagen');
     } finally {
