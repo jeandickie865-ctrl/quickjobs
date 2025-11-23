@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getWorkerProfile, uploadProfilePhoto, updateWorkerProfile } from '../../services/api';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useAuth } from '../../contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 
 // ❗️ FIX: Richtiger Import – NICHT mehr ../../src/taxonomy
