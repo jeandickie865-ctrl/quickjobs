@@ -31,7 +31,7 @@ import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '..
 export default function WorkerProfileScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
