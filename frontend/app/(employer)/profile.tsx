@@ -253,35 +253,13 @@ export default function EmployerProfileScreen() {
           </View>
 
           {/* Header */}
-          <View style={{ marginBottom: 8 }}>
+          <View style={{ marginBottom: 24 }}>
             <Text style={{ fontSize: 28, fontWeight: '900', color: COLORS.white, textAlign: 'center', marginBottom: 8 }}>
               Dein Auftraggeber-Profil
             </Text>
             <Text style={{ fontSize: 14, color: COLORS.whiteTransparent, textAlign: 'center' }}>
               Diese Daten werden erst nach einem Match freigeschaltet.
             </Text>
-          </View>
-
-          {/* Profilfoto */}
-          <View style={{ alignItems: 'center', marginBottom: 16 }}>
-            <View style={{
-              padding: 4,
-              borderRadius: 60,
-              borderWidth: 3,
-              borderColor: COLORS.neon,
-            }}>
-              <ProfilePhoto
-                uri={profilePhotoUri}
-                size={100}
-                onPhotoSelected={(uri) => setProfilePhotoUri(uri)}
-              />
-            </View>
-            <View style={{ marginTop: 12, alignItems: 'center' }}>
-              <Ionicons name="cloud-upload-outline" size={20} color={COLORS.neon} />
-              <Text style={{ fontSize: 12, color: COLORS.neon, marginTop: 4, fontWeight: '600' }}>
-                Logo / Foto hochladen
-              </Text>
-            </View>
           </View>
 
           {/* Persönliche Daten */}
