@@ -39,7 +39,6 @@ export default function EmployerProfileScreen() {
   const [lon, setLon] = useState<number | undefined>(undefined);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | null>(null);
   const [shortBio, setShortBio] = useState('');
-  const [profilePhotoUri, setProfilePhotoUri] = useState<string | undefined>(undefined);
 
   // Focus States
   const [focusedField, setFocusedField] = useState<string | null>(null);
