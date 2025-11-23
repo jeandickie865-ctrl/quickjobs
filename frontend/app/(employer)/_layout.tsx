@@ -119,7 +119,35 @@ export default function EmployerLayout() {
         }}
       />
 
-      {/* Tab 3: Profil */}
+      {/* Tab 3: Matches */}
+      <Tabs.Screen
+        name="matches"
+        options={{
+          title: 'Matches',
+          tabBarIcon: ({ focused, color }) => (
+            <View style={{ position: 'relative' }}>
+              <Ionicons
+                name="heart-outline"
+                size={28}
+                color={color}
+              />
+              {focused && (
+                <View style={{
+                  position: 'absolute',
+                  bottom: -14,
+                  left: -8,
+                  right: -8,
+                  height: 3,
+                  backgroundColor: COLORS.neon,
+                  borderRadius: 2,
+                }} />
+              )}
+            </View>
+          ),
+        }}
+      />
+
+      {/* Tab 4: Profil */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -157,13 +185,6 @@ export default function EmployerLayout() {
       
       <Tabs.Screen
         name="jobs/rate"
-        options={{
-          href: null, // Hide from tabs
-        }}
-      />
-
-      <Tabs.Screen
-        name="matches"
         options={{
           href: null, // Hide from tabs
         }}
