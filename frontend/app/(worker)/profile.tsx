@@ -281,9 +281,13 @@ export default function WorkerProfileScreen() {
 
       console.log('✅ Profile saved to AsyncStorage successfully!');
 
-      Alert.alert('Erfolg', 'Profil erfolgreich gespeichert! 🎉', [
-        { text: 'OK', onPress: () => router.push('/(worker)/feed') },
-      ]);
+      // Web-kompatible Success-Meldung und Navigation
+      console.log('🎉 PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung zum Feed...');
+      
+      // Direkt zum Feed navigieren
+      setTimeout(() => {
+        router.push('/(worker)/feed');
+      }, 500);
     } catch (err) {
       console.error('❌ Save error:', err);
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (err instanceof Error ? err.message : 'Unbekannter Fehler'));
