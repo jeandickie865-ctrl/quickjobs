@@ -145,7 +145,7 @@ export default function CreateJob() {
     };
 
     // Create job object
-    const job: Auftrag = {
+    const job: Job = {
       id: 'job-' + Date.now().toString(),
       employerId: user.id,
       employerType: user.accountType === 'business' ? 'business' : 'private',
