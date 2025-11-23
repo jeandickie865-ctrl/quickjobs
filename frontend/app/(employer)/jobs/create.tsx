@@ -92,6 +92,12 @@ export default function CreateJob() {
       return;
     }
 
+    // KRITISCH: Koordinaten müssen vorhanden sein für Radius-Matching
+    if (!lat || !lon) {
+      setError('Bitte wähle eine Adresse aus der Vorschlagsliste, damit die Position bestimmt werden kann. Manuell eingegebene Adressen werden automatisch geocodiert.');
+      return;
+    }
+
     // Time mode validation & parsing
     let startAtIso: string | undefined;
     let endAtIso: string | undefined;
