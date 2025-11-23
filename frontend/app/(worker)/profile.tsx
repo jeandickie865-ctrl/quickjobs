@@ -51,7 +51,7 @@ export default function WorkerProfileScreen() {
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   // Kategorien laden
-  const availableCategories = useMemo(() => categories, []);
+  const availableCategories = useMemo(() => listCategories(), []);
 
   // Aktivitäten dynamisch basierend auf Kategorie
   const availableActivities = useMemo(() => {
