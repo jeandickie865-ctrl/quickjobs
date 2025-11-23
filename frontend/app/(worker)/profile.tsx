@@ -190,6 +190,15 @@ export default function WorkerProfileScreen() {
     if (isNaN(radius) || radius < 1 || radius > 200)
       return Alert.alert('Fehler', 'Radius muss zwischen 1 und 200 km liegen');
 
+    // KRITISCH: Koordinaten müssen vorhanden sein für Radius-Matching
+    if (!lat || !lon) {
+      return Alert.alert(
+        'Koordinaten fehlen',
+        'Bitte wähle deine Adresse aus der Vorschlagsliste, damit deine Position bestimmt werden kann. Das ist wichtig für das Matching mit Jobs in deinem Umkreis.',
+        [{ text: 'OK' }]
+      );
+    }
+
     setSaving(true);
 
     try {
