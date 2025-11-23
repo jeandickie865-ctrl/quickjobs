@@ -1,8 +1,8 @@
 // app/(employer)/index.tsx - VIVID BLUE-PURPLE & NEON LIME (Auftraggeber Dashboard)
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/Button';
@@ -19,26 +19,21 @@ export default function EmployerDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadJobs = async () => {
+  const loadJobs = useCallback(async () => {
     if (!user) return;
     setIsLoading(true);
     const employerJobs = await getEmployerJobs(user.id);
-    console.log('📋 Loaded jobs:', employerJobs);
+    console.log('📋 Loaded jobs for employer:', user.id, '| Count:', employerJobs.length);
     setJobs(employerJobs);
     setIsLoading(false);
-  };
-
-  useEffect(() => {
-    loadJobs();
   }, [user]);
 
-  // Reload jobs when screen comes into focus
-  useEffect(() => {
-    const unsubscribe = router.subscribe(() => {
+  // Reload jobs whenever screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
       loadJobs();
-    });
-    return unsubscribe;
-  }, []);
+    }, [loadJobs])
+  );
 
   if (!user) return null;
 
