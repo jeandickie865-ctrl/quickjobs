@@ -252,16 +252,19 @@ export default function WorkerProfileScreen() {
 
       const profileData = {
         userId: user.id,
-        name,
-        street,
-        postalCode,
-        city,
-        homeLat: lat,
-        homeLon: lon,
         categories: selectedCategories || [],
         selectedTags: combinedTags || [],
         radiusKm: parseInt(radiusKm),
-        photoUrl: photoUrl || undefined,
+        homeAddress: {
+          street,
+          postalCode,
+          city,
+          country: 'DE',
+        },
+        homeLat: lat || null,
+        homeLon: lon || null,
+        firstName: name,
+        profilePhotoUri: photoUrl || undefined,
         pushToken: undefined,
       };
 
