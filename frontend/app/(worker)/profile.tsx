@@ -23,7 +23,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 
 // ❗️ FIX: Richtiger Import – NICHT mehr ../../src/taxonomy
-import { categories } from '../../constants/workerData';
+import { TAXONOMY, listCategories } from '../../constants/workerData';
 
 export default function WorkerProfileScreen() {
   const { colors } = useTheme();
