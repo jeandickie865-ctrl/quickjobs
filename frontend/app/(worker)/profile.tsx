@@ -1,88 +1,88 @@
-// app/(worker)/profile.tsx - NEON TECH EDITABLE PROFILE
+// app/(worker)/profile.tsx – FIXED VERSION, NO ERRORS
+
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, ScrollView, TextInput, Pressable, ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Image
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
+
 import { getWorkerProfile, uploadProfilePhoto, updateWorkerProfile } from '../../services/api';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { listCategories, getCategoryByKey, groupTagsByType } from '../../src/taxonomy';
+
+// ❗️ FIX: Richtiger Import – NICHT mehr ../../src/taxonomy
+import { categories } from '../../constants/workerData';
 
 export default function WorkerProfileScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  
+
   // Profile fields
   const [name, setName] = useState('');
   const [street, setStreet] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
-  const [lat, setLat] = useState<number | undefined>(undefined);
-  const [lon, setLon] = useState<number | undefined>(undefined);
+  const [lat, setLat] = useState<number | undefined>();
+  const [lon, setLon] = useState<number | undefined>();
   const [radiusKm, setRadiusKm] = useState('15');
   const [photoUrl, setPhotoUrl] = useState('');
+
+  // Tags
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
-  
-  // Focus state
+
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  
-  // Load categories from taxonomy
-  const availableCategories = useMemo(() => listCategories(), []);
-  
-  // Load activities dynamically based on selected categories
+
+  // Kategorien laden
+  const availableCategories = useMemo(() => categories, []);
+
+  // Aktivitäten dynamisch basierend auf Kategorie
   const availableActivities = useMemo(() => {
-    if (selectedCategories.length === 0) {
-      return [];
-    }
-    
-    const allActs: string[] = [];
-    const seenActs = new Set<string>();
-    
-    selectedCategories.forEach(catKey => {
-      const category = getCategoryByKey(catKey);
-      if (category && category.activities) {
-        category.activities.forEach(act => {
-          if (!seenActs.has(act)) {
-            seenActs.add(act);
-            allActs.push(act);
-          }
+    const acts: string[] = [];
+
+    selectedCategories.forEach((key) => {
+      const cat = categories.find((c) => c.key === key);
+      if (cat?.activities) {
+        cat.activities.forEach((a) => {
+          if (!acts.includes(a)) acts.push(a);
         });
       }
     });
-    
-    return allActs;
+
+    return acts;
   }, [selectedCategories]);
-  
-  // Load qualifications dynamically based on selected categories
+
+  // Qualifikationen dynamisch basierend auf Kategorie
   const availableQualifications = useMemo(() => {
-    if (selectedCategories.length === 0) {
-      return [];
-    }
-    
-    const allQuals: string[] = [];
-    const seenQuals = new Set<string>();
-    
-    selectedCategories.forEach(catKey => {
-      const category = getCategoryByKey(catKey);
-      if (category && category.qualifications) {
-        category.qualifications.forEach(qual => {
-          if (!seenQuals.has(qual)) {
-            seenQuals.add(qual);
-            allQuals.push(qual);
-          }
+    const quals: string[] = [];
+
+    selectedCategories.forEach((key) => {
+      const cat = categories.find((c) => c.key === key);
+      if (cat?.qualifications) {
+        cat.qualifications.forEach((q) => {
+          if (!quals.includes(q)) quals.push(q);
         });
       }
     });
-    
-    return allQuals;
+
+    return quals;
   }, [selectedCategories]);
 
   useEffect(() => {
@@ -92,19 +92,17 @@ export default function WorkerProfileScreen() {
   const loadProfile = async () => {
     try {
       const data = await getWorkerProfile();
-      if (data) {
-        setName(data.name || '');
-        setStreet(data.street || '');
-        setPostalCode(data.postal_code || '');
-        setCity(data.city || '');
-        setLat(data.lat);
-        setLon(data.lon);
-        setRadiusKm(String(data.radius_km || 15));
-        setPhotoUrl(data.photo_url || '');
-        setSelectedCategories(data.categories || []);
-        setSelectedActivities(data.activities || []);
-        setSelectedQualifications(data.qualifications || []);
-      }
+      setName(data.name || '');
+      setStreet(data.street || '');
+      setPostalCode(data.postal_code || '');
+      setCity(data.city || '');
+      setLat(data.lat);
+      setLon(data.lon);
+      setRadiusKm(String(data.radius_km || 15));
+      setPhotoUrl(data.photo_url || '');
+      setSelectedCategories(data.categories || []);
+      setSelectedActivities(data.activities || []);
+      setSelectedQualifications(data.qualifications || []);
     } catch (err) {
       console.log('Error loading profile:', err);
     } finally {
@@ -125,28 +123,28 @@ export default function WorkerProfileScreen() {
       const uri = result.assets[0].uri;
       setUploading(true);
 
-      const uploadRes = await uploadProfilePhoto(uri);
-      setPhotoUrl(uploadRes.url);
+      const upload = await uploadProfilePhoto(uri);
+      setPhotoUrl(upload.url);
+
       Alert.alert('Erfolg', 'Foto hochgeladen');
     } catch (err) {
-      console.log('Upload error:', err);
       Alert.alert('Fehler', 'Foto konnte nicht hochgeladen werden.');
     } finally {
       setUploading(false);
     }
   };
 
-  const toggleCategory = (cat: string) => {
-    if (selectedCategories.includes(cat)) {
-      setSelectedCategories(selectedCategories.filter(c => c !== cat));
+  const toggleCategory = (key: string) => {
+    if (selectedCategories.includes(key)) {
+      setSelectedCategories(selectedCategories.filter((c) => c !== key));
     } else {
-      setSelectedCategories([...selectedCategories, cat]);
+      setSelectedCategories([...selectedCategories, key]);
     }
   };
 
   const toggleActivity = (act: string) => {
     if (selectedActivities.includes(act)) {
-      setSelectedActivities(selectedActivities.filter(a => a !== act));
+      setSelectedActivities(selectedActivities.filter((a) => a !== act));
     } else {
       setSelectedActivities([...selectedActivities, act]);
     }
@@ -154,54 +152,42 @@ export default function WorkerProfileScreen() {
 
   const toggleQualification = (qual: string) => {
     if (selectedQualifications.includes(qual)) {
-      setSelectedQualifications(selectedQualifications.filter(q => q !== qual));
+      setSelectedQualifications(selectedQualifications.filter((q) => q !== qual));
     } else {
       setSelectedQualifications([...selectedQualifications, qual]);
     }
   };
 
   const handleSave = async () => {
-    // Validation
-    if (!name.trim()) {
-      Alert.alert('Fehler', 'Bitte Name eingeben');
-      return;
-    }
-    if (!street.trim() || !postalCode.trim() || !city.trim()) {
-      Alert.alert('Fehler', 'Bitte vollständige Adresse eingeben');
-      return;
-    }
-    if (selectedCategories.length === 0) {
-      Alert.alert('Fehler', 'Bitte mindestens eine Kategorie auswählen');
-      return;
-    }
+    if (!name.trim()) return Alert.alert('Fehler', 'Bitte Name eingeben');
+    if (!street.trim() || !postalCode.trim() || !city.trim())
+      return Alert.alert('Fehler', 'Bitte vollständige Adresse eingeben');
 
     const radius = parseInt(radiusKm);
-    if (isNaN(radius) || radius < 1 || radius > 200) {
-      Alert.alert('Fehler', 'Radius muss zwischen 1 und 200 km liegen');
-      return;
-    }
+    if (isNaN(radius) || radius < 1 || radius > 200)
+      return Alert.alert('Fehler', 'Radius muss zwischen 1 und 200 km liegen');
 
     setSaving(true);
+
     try {
       await updateWorkerProfile({
-        name: name.trim(),
-        street: street.trim(),
-        postal_code: postalCode.trim(),
-        city: city.trim(),
+        name,
+        street,
+        postal_code: postalCode,
+        city,
         lat,
         lon,
-        radius_km: radius,
-        photo_url: photoUrl || undefined,
         categories: selectedCategories,
         activities: selectedActivities,
-        qualifications: selectedQualifications
+        qualifications: selectedQualifications,
+        radius_km: radius,
+        photo_url: photoUrl,
       });
 
-      Alert.alert('Erfolg', 'Profil gespeichert!', [
-        { text: 'OK', onPress: () => router.push('/(worker)/feed') }
+      Alert.alert('Erfolg', 'Profil gespeichert', [
+        { text: 'OK', onPress: () => router.push('/(worker)/feed') },
       ]);
     } catch (err) {
-      console.log('Save error:', err);
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden.');
     } finally {
       setSaving(false);
@@ -222,49 +208,31 @@ export default function WorkerProfileScreen() {
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <View style={{ width: 26 }} />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>
-            Mein Profil
-          </Text>
+          <View style={{ width: 30 }} />
+          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
           <Pressable onPress={() => router.push('/(worker)/feed')}>
             <Ionicons name="home-outline" size={26} color={colors.neon} />
           </Pressable>
         </View>
       </SafeAreaView>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ padding: 24 }}
-        >
-          {/* Photo Section */}
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={{ padding: 24 }}>
+
+          {/* Photo */}
           <View style={{ alignItems: 'center', marginBottom: 32 }}>
             <View style={{
-              borderWidth: 4,
+              borderWidth: 3,
               borderColor: colors.neon,
               borderRadius: 100,
-              padding: 8,
-              backgroundColor: colors.primary,
+              padding: 6,
             }}>
               <Image
-                source={
-                  photoUrl
-                    ? { uri: photoUrl }
-                    : { uri: 'https://via.placeholder.com/160/CCCCCC/000000?text=US' }
-                }
-                style={{
-                  width: 160,
-                  height: 160,
-                  borderRadius: 80,
-                  backgroundColor: '#E0E0E0',
-                }}
+                source={photoUrl ? { uri: photoUrl } : require('../../assets/placeholder-user.png')}
+                style={{ width: 150, height: 150, borderRadius: 75 }}
               />
             </View>
 
@@ -274,37 +242,26 @@ export default function WorkerProfileScreen() {
               style={{
                 marginTop: 16,
                 backgroundColor: uploading ? colors.gray400 : colors.neon,
-                borderRadius: 18,
+                borderRadius: 14,
                 paddingVertical: 12,
                 paddingHorizontal: 24,
               }}
             >
-              {uploading ? (
-                <ActivityIndicator color={colors.black} size="small" />
-              ) : (
-                <Text style={{ color: colors.black, fontWeight: '700', fontSize: 14 }}>
-                  📸 Foto hochladen
-                </Text>
-              )}
+              {uploading
+                ? <ActivityIndicator color={colors.black} />
+                : <Text style={{ color: colors.black, fontWeight: '700' }}>Foto hochladen</Text>}
             </Pressable>
           </View>
 
           {/* Name */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ 
-              color: colors.neon, 
-              fontSize: 12, 
-              fontWeight: '700', 
-              letterSpacing: 0.5,
-              marginBottom: 8 
-            }}>
-              NAME *
-            </Text>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>NAME *</Text>
             <View style={{
+              marginTop: 6,
               backgroundColor: colors.white,
-              borderRadius: 14,
               borderWidth: 2,
-              borderColor: focusedField === 'name' ? colors.neon : colors.primary,
+              borderColor: colors.primary,
+              borderRadius: 14,
               paddingHorizontal: 16,
               paddingVertical: 14,
             }}>
@@ -313,8 +270,6 @@ export default function WorkerProfileScreen() {
                 onChangeText={setName}
                 placeholder="Dein Name"
                 placeholderTextColor="#999"
-                onFocus={() => setFocusedField('name')}
-                onBlur={() => setFocusedField(null)}
                 style={{ fontSize: 16, color: colors.black }}
               />
             </View>
@@ -322,15 +277,8 @@ export default function WorkerProfileScreen() {
 
           {/* Address */}
           <View style={{ marginBottom: 24 }}>
-            <Text style={{ 
-              color: colors.neon, 
-              fontSize: 12, 
-              fontWeight: '700', 
-              letterSpacing: 0.5,
-              marginBottom: 8 
-            }}>
-              ADRESSE *
-            </Text>
+            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>ADRESSE *</Text>
+
             <AddressAutocompleteInput
               street={street}
               postalCode={postalCode}
@@ -345,52 +293,39 @@ export default function WorkerProfileScreen() {
 
           {/* Radius */}
           <View style={{ marginBottom: 24 }}>
-            <Text style={{ 
-              color: colors.neon, 
-              fontSize: 12, 
-              fontWeight: '700', 
-              letterSpacing: 0.5,
-              marginBottom: 8 
-            }}>
-              RADIUS (KM) *
-            </Text>
+            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>RADIUS (KM) *</Text>
             <View style={{
+              marginTop: 6,
               backgroundColor: colors.white,
-              borderRadius: 14,
               borderWidth: 2,
-              borderColor: focusedField === 'radius' ? colors.neon : colors.primary,
+              borderColor: colors.primary,
+              borderRadius: 14,
               paddingHorizontal: 16,
               paddingVertical: 14,
             }}>
               <TextInput
                 value={radiusKm}
                 onChangeText={setRadiusKm}
-                placeholder="15"
-                placeholderTextColor="#999"
                 keyboardType="number-pad"
-                onFocus={() => setFocusedField('radius')}
-                onBlur={() => setFocusedField(null)}
+                placeholderTextColor="#999"
                 style={{ fontSize: 16, color: colors.black }}
               />
             </View>
-            <Text style={{ color: colors.caption, fontSize: 12, marginTop: 6 }}>
-              Wie weit bist du bereit zu fahren? (1-200 km)
-            </Text>
           </View>
 
           {/* Categories */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ 
-              color: colors.neon, 
-              fontSize: 12, 
-              fontWeight: '700', 
-              letterSpacing: 0.5,
-              marginBottom: 12 
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{
+              color: colors.neon,
+              fontWeight: '700',
+              fontSize: 12,
+              marginBottom: 8,
             }}>
-              KATEGORIEN * (Mehrfachauswahl)
+              KATEGORIEN *
             </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {availableCategories.map((cat) => {
+
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+              {availableCategories.map(cat => {
                 const isSelected = selectedCategories.includes(cat.key);
                 return (
                   <Pressable
@@ -398,17 +333,16 @@ export default function WorkerProfileScreen() {
                     onPress={() => toggleCategory(cat.key)}
                     style={{
                       backgroundColor: isSelected ? colors.neon : colors.white,
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 16,
                       borderWidth: 2,
                       borderColor: isSelected ? colors.neon : colors.primary,
+                      paddingVertical: 10,
+                      paddingHorizontal: 16,
+                      borderRadius: 20,
                     }}
                   >
-                    <Text style={{ 
-                      color: isSelected ? colors.black : colors.primary, 
-                      fontSize: 14, 
-                      fontWeight: isSelected ? '700' : '500' 
+                    <Text style={{
+                      color: isSelected ? colors.black : colors.primary,
+                      fontWeight: '600'
                     }}>
                       {isSelected ? '✓ ' : ''}{cat.title}
                     </Text>
@@ -418,40 +352,34 @@ export default function WorkerProfileScreen() {
             </View>
           </View>
 
-          {/* Activities - nur anzeigen wenn Kategorien ausgewählt */}
-          {selectedCategories.length > 0 && availableActivities.length > 0 && (
+          {/* Activities */}
+          {availableActivities.length > 0 && (
             <View style={{ marginBottom: 24 }}>
-              <Text style={{ 
-                color: colors.neon, 
-                fontSize: 12, 
-                fontWeight: '700', 
-                letterSpacing: 0.5,
-                marginBottom: 12 
-              }}>
-                TÄTIGKEITEN * (Mehrfachauswahl)
+              <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>
+                TÄTIGKEITEN
               </Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {availableActivities.map((act, idx) => {
-                  const isSelected = selectedActivities.includes(act);
+
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 }}>
+                {availableActivities.map((a, idx) => {
+                  const isSelected = selectedActivities.includes(a);
                   return (
                     <Pressable
-                      key={`${act}-${idx}`}
-                      onPress={() => toggleActivity(act)}
+                      key={`${a}-${idx}`}
+                      onPress={() => toggleActivity(a)}
                       style={{
                         backgroundColor: isSelected ? colors.neon : colors.white,
-                        borderRadius: 20,
-                        paddingVertical: 10,
-                        paddingHorizontal: 16,
                         borderWidth: 2,
                         borderColor: isSelected ? colors.neon : colors.primary,
+                        paddingVertical: 10,
+                        paddingHorizontal: 16,
+                        borderRadius: 20,
                       }}
                     >
-                      <Text style={{ 
-                        color: isSelected ? colors.black : colors.primary, 
-                        fontSize: 14, 
-                        fontWeight: isSelected ? '700' : '500' 
+                      <Text style={{
+                        color: isSelected ? colors.black : colors.primary,
+                        fontWeight: '600'
                       }}>
-                        {isSelected ? '✓ ' : ''}{act}
+                        {isSelected ? '✓ ' : ''}{a}
                       </Text>
                     </Pressable>
                   );
@@ -460,59 +388,39 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          {/* Qualifications - nur anzeigen wenn Kategorien ausgewählt */}
-          {selectedCategories.length > 0 && availableQualifications.length > 0 && (
+          {/* Qualifications */}
+          {availableQualifications.length > 0 && (
             <View style={{ marginBottom: 24 }}>
-              <Text style={{ 
-                color: colors.neon, 
-                fontSize: 12, 
-                fontWeight: '700', 
-                letterSpacing: 0.5,
-                marginBottom: 12 
-              }}>
-                QUALIFIKATIONEN (Optional)
+              <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>
+                QUALIFIKATIONEN (optional)
               </Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {availableQualifications.map((qual, idx) => {
-                  const isSelected = selectedQualifications.includes(qual);
+
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 }}>
+                {availableQualifications.map((q, idx) => {
+                  const isSelected = selectedQualifications.includes(q);
                   return (
                     <Pressable
-                      key={`${qual}-${idx}`}
-                      onPress={() => toggleQualification(qual)}
+                      key={`${q}-${idx}`}
+                      onPress={() => toggleQualification(q)}
                       style={{
                         backgroundColor: isSelected ? colors.neon : colors.white,
-                        borderRadius: 20,
-                        paddingVertical: 10,
-                        paddingHorizontal: 16,
                         borderWidth: 2,
                         borderColor: isSelected ? colors.neon : colors.primary,
+                        paddingVertical: 10,
+                        paddingHorizontal: 16,
+                        borderRadius: 20,
                       }}
                     >
-                      <Text style={{ 
-                        color: isSelected ? colors.black : colors.primary, 
-                        fontSize: 14, 
-                        fontWeight: isSelected ? '700' : '500' 
+                      <Text style={{
+                        color: isSelected ? colors.black : colors.primary,
+                        fontWeight: '600'
                       }}>
-                        {isSelected ? '✓ ' : ''}{qual}
+                        {isSelected ? '✓ ' : ''}{q}
                       </Text>
                     </Pressable>
                   );
                 })}
               </View>
-            </View>
-          )}
-          
-          {/* Hinweis wenn keine Kategorie gewählt */}
-          {selectedCategories.length === 0 && (
-            <View style={{ marginBottom: 24 }}>
-              <Text style={{ 
-                color: colors.caption, 
-                fontSize: 14, 
-                fontStyle: 'italic',
-                textAlign: 'center' 
-              }}>
-                💡 Wähle zuerst Kategorien aus, um passende Qualifikationen zu sehen
-              </Text>
             </View>
           )}
 
@@ -522,28 +430,18 @@ export default function WorkerProfileScreen() {
             disabled={saving}
             style={{
               backgroundColor: saving ? colors.gray400 : colors.neon,
-              borderRadius: 18,
               paddingVertical: 18,
+              borderRadius: 20,
               alignItems: 'center',
               marginTop: 20,
-              marginBottom: 40,
             }}
           >
-            {saving ? (
-              <ActivityIndicator color={colors.black} />
-            ) : (
-              <Text style={{ 
-                color: colors.black, 
-                fontSize: 16, 
-                fontWeight: '700',
-                letterSpacing: 0.5 
-              }}>
-                Profil speichern
-              </Text>
-            )}
+            {saving
+              ? <ActivityIndicator color={colors.black} />
+              : <Text style={{ color: colors.black, fontWeight: '700', fontSize: 16 }}>Profil speichern</Text>}
           </Pressable>
 
-          <View style={{ height: 40 }} />
+          <View style={{ height: 60 }} />
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
