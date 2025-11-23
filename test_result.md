@@ -248,7 +248,7 @@ frontend:
     implemented: true
     working: false
     file: "contexts/AuthContext.tsx"
-    stuck_count: 1
+    stuck_count: 2
     priority: "critical"
     needs_retesting: false
     status_history:
@@ -264,6 +264,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "CRITICAL NAVIGATION ISSUE: Authentication works (login successful with testworker@test.de) but post-login navigation is broken. Users get stuck at welcome screen after login instead of being redirected to worker dashboard/profile. This blocks access to all app functionality. Mobile testing confirms the issue affects core user flow."
+      - working: false
+        agent: "testing"
+        comment: "AUTHENTICATION SYSTEM COMPLETELY BROKEN: E2E testing reveals test user worker@test.de does NOT exist in system. Login fails with 'Diese E-Mail ist nicht registriert'. Registration flow also broken (button text mismatch). No user data stored in localStorage. Authentication system is non-functional - users cannot login or register. This is the root cause of all reported issues."
 
 backend:
   - task: "Backend API"
