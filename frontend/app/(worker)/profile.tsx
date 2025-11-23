@@ -155,6 +155,7 @@ export default function WorkerProfileScreen() {
     }
   };
 
+  // BUG 3 FIX: Foto-Upload deaktiviert (braucht Backend)
   const pickPhoto = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -166,16 +167,11 @@ export default function WorkerProfileScreen() {
       if (result.canceled) return;
 
       const uri = result.assets[0].uri;
-      setUploading(true);
-
-      const upload = await uploadProfilePhoto(uri);
-      setPhotoUrl(upload.url);
-
-      Alert.alert('Erfolg', 'Foto hochgeladen');
+      // Lokal speichern (kein Upload)
+      setPhotoUrl(uri);
+      Alert.alert('Erfolg', 'Foto ausgewählt');
     } catch (err) {
-      Alert.alert('Fehler', 'Foto konnte nicht hochgeladen werden.');
-    } finally {
-      setUploading(false);
+      Alert.alert('Fehler', 'Foto konnte nicht ausgewählt werden.');
     }
   };
 
