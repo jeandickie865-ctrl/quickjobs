@@ -133,6 +133,38 @@ export default function CreateJob() {
         return;
       }
       hoursNumber = h;
+
+      // Validate date selection
+      if (hoursDateType === 'specific') {
+        if (!hoursSpecificDate.trim()) {
+          setError('Bitte ein Datum für das Stundenpaket eingeben.');
+          return;
+        }
+        const specificDateIso = parseGermanDateTime(hoursSpecificDate, '00:00');
+        if (!specificDateIso) {
+          setError('Ungültiges Datum. Bitte TT.MM.JJJJ verwenden.');
+          return;
+        }
+        // Store as startAt for specific date
+        startAtIso = specificDateIso;
+      } else if (hoursDateType === 'range') {
+        if (!hoursStartDate.trim() || !hoursEndDate.trim()) {
+          setError('Bitte Start- und Enddatum für den Zeitraum eingeben.');
+          return;
+        }
+        const rangeStartIso = parseGermanDateTime(hoursStartDate, '00:00');
+        const rangeEndIso = parseGermanDateTime(hoursEndDate, '23:59');
+        if (!rangeStartIso || !rangeEndIso) {
+          setError('Ungültige Daten. Bitte TT.MM.JJJJ verwenden.');
+          return;
+        }
+        if (new Date(rangeEndIso) <= new Date(rangeStartIso)) {
+          setError('Enddatum muss nach Startdatum liegen.');
+          return;
+        }
+        startAtIso = rangeStartIso;
+        endAtIso = rangeEndIso;
+      }
     } else if (timeMode === 'project') {
       if (dueDate.trim()) {
         dueAtIso = parseGermanDateTime(dueDate, '23:59');
