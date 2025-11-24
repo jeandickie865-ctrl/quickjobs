@@ -127,7 +127,26 @@ export default function ChatScreen() {
             borderBottomWidth: 1,
             borderBottomColor: COLORS.whiteTransparent10,
           }}>
-            <Pressable onPress={() => router.push('/(worker)/matches')} style={{ padding: 4 }}>
+            <Pressable 
+              onPress={() => {
+                if (jobId) {
+                  // Navigate to job details based on role
+                  if (user.role === 'worker') {
+                    router.push(`/(worker)/jobs/${jobId}`);
+                  } else {
+                    router.push(`/(employer)/jobs/${jobId}`);
+                  }
+                } else {
+                  // Fallback to matches if jobId not loaded yet
+                  if (user.role === 'worker') {
+                    router.push('/(worker)/matches');
+                  } else {
+                    router.push('/(employer)/matches');
+                  }
+                }
+              }} 
+              style={{ padding: 4 }}
+            >
               <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
             </Pressable>
             <View style={{ flex: 1, marginLeft: 16 }}>
