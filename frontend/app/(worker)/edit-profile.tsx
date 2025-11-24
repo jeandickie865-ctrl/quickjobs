@@ -696,12 +696,12 @@ export default function WorkerProfileScreen() {
               </Text>
 
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 }}>
-                {availableActivities.map((a, idx) => {
-                  const isSelected = selectedActivities.includes(a);
+                {availableActivities.map((actObj: any, idx) => {
+                  const isSelected = selectedActivities.includes(actObj.key);
                   return (
                     <Pressable
-                      key={`${a}-${idx}`}
-                      onPress={() => toggleActivity(a)}
+                      key={`${actObj.key}-${idx}`}
+                      onPress={() => toggleActivity(actObj.key)}
                       style={{
                         backgroundColor: isSelected ? colors.neon : colors.white,
                         borderWidth: 2,
@@ -715,7 +715,7 @@ export default function WorkerProfileScreen() {
                         color: isSelected ? colors.black : colors.primary,
                         fontWeight: '600'
                       }}>
-                        {isSelected ? '✓ ' : ''}{a}
+                        {isSelected ? '✓ ' : ''}{actObj.label}
                       </Text>
                     </Pressable>
                   );
