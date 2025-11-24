@@ -107,6 +107,15 @@ export default function RateWorkerScreen() {
       };
 
       await addReview(review);
+      
+      // Job als "completed" markieren nach Bewertung
+      const updatedJob = {
+        ...job,
+        status: 'completed' as const,
+      };
+      await updateJob(updatedJob);
+      console.log('✅ Job marked as completed after review');
+      
       setShowSuccessModal(true);
 
       // Auto-redirect nach 2.5 Sekunden
