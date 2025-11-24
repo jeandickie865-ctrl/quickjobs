@@ -188,9 +188,17 @@ export default function WorkerProfileScreen() {
 
   const toggleCategory = (key: string) => {
     if (selectedCategories.includes(key)) {
+      // Kategorie abwählen
       setSelectedCategories(selectedCategories.filter((c) => c !== key));
+      // Wenn das die aktive war, schließen
+      if (activeCategory === key) {
+        setActiveCategory(null);
+      }
     } else {
+      // Kategorie hinzufügen
       setSelectedCategories([...selectedCategories, key]);
+      // Diese Kategorie als aktiv setzen (Flow öffnet sich)
+      setActiveCategory(key);
     }
   };
 
