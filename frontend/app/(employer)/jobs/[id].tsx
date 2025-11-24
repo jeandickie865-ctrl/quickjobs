@@ -7,7 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
-import { getReviewForJob } from '../../../utils/reviewStore';
+import { getReviewForJob, getReviewsForWorker, calculateAverageRating } from '../../../utils/reviewStore';
 import { Job } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
@@ -15,6 +15,7 @@ import { formatAddress } from '../../../types/address';
 import { getInitials } from '../../../utils/stringHelpers';
 import { euro } from '../../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
+import { RatingDisplay } from '../../../components/RatingDisplay';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
