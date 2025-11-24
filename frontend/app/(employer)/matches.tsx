@@ -27,6 +27,8 @@ type Match = {
   job: Job;
   application: JobApplication;
   workerProfile: WorkerProfile | null;
+  avgRating: number;
+  reviewCount: number;
 };
 
 export default function MatchesScreen() {
