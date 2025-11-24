@@ -15,6 +15,7 @@ import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 import { formatJobTimeDisplay } from '../../utils/date';
 import { Ionicons } from '@expo/vector-icons';
+import { createTestJob } from '../../utils/debugJobs';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -246,6 +247,19 @@ export default function WorkerFeed() {
             Jobs für dich
           </Text>
           <View style={{ flexDirection: 'row', gap: 12 }}>
+            <Pressable 
+              onPress={async () => {
+                await createTestJob();
+                await loadData();
+              }}
+              style={{
+                padding: 12,
+                backgroundColor: COLORS.neon,
+                borderRadius: 8,
+              }}
+            >
+              <Ionicons name="add" size={20} color={COLORS.black} />
+            </Pressable>
             <Pressable onPress={() => router.push('/(worker)/matches')}>
               <Ionicons name="heart-outline" size={26} color={COLORS.neon} />
             </Pressable>
