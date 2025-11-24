@@ -24,6 +24,7 @@ const COLORS = {
 type Match = {
   job: Job;
   application: JobApplication;
+  workerProfile: WorkerProfile | null;
 };
 
 export default function MatchesScreen() {
