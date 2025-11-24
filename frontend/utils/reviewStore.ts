@@ -67,6 +67,14 @@ export async function getReviewForJob(
 }
 
 /**
+ * Alle Reviews für einen bestimmten Employer laden
+ */
+export async function getReviewsForEmployer(employerId: string): Promise<Review[]> {
+  const reviews = await getReviews();
+  return reviews.filter((r) => r.employerId === employerId);
+}
+
+/**
  * Durchschnittliche Bewertung für einen Worker berechnen
  */
 export function calculateAverageRating(reviews: Review[]): number {
