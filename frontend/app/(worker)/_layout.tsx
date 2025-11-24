@@ -214,6 +214,13 @@ export default function WorkerLayout() {
           href: null,
         }}
       />
+      
+      <Tabs.Screen
+        name="matching-debug-backup"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
