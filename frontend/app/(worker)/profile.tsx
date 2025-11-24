@@ -336,7 +336,8 @@ export default function WorkerProfileViewScreen() {
                     )}
                   </View>
                 );
-              })}
+              });
+              })()}
             </View>
 
             {/* Contact Info */}
