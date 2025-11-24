@@ -410,39 +410,74 @@ export default function JobDetailScreen() {
               </Text>
             ) : (
               <View style={{ gap: 12 }}>
-                {applicants.map(({ app, profile }) => (
+                {applicants.map(({ app, profile }) => {
+                  // Format name: "Vorname Nachname" -> "Vorname N."
+                  const displayName = profile?.firstName 
+                    ? `${profile.firstName}${profile.lastName ? ' ' + profile.lastName.charAt(0) + '.' : ''}`
+                    : 'Anonym';
+                  
+                  return (
                   <View key={app.id} style={{
                     padding: 16,
                     backgroundColor: '#F8F8F8',
                     borderRadius: 12,
                     gap: 12,
                   }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                      <View style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 24,
-                        backgroundColor: COLORS.purple,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                        <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700' }}>
-                          {getInitials(profile?.name || 'Anonym')}
-                        </Text>
-                      </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+                      {/* Profilbild */}
+                      {profile?.profilePhotoUri ? (
+                        <Image 
+                          source={{ uri: profile.profilePhotoUri }}
+                          style={{
+                            width: 56,
+                            height: 56,
+                            borderRadius: 28,
+                            backgroundColor: '#E0E0E0',
+                          }}
+                        />
+                      ) : (
+                        <View style={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 28,
+                          backgroundColor: COLORS.purple,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '700' }}>
+                            {getInitials(displayName)}
+                          </Text>
+                        </View>
+                      )}
+                      
                       <View style={{ flex: 1 }}>
                         <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                          {profile?.name || 'Anonym'}
+                          {displayName}
                         </Text>
-                        <Text style={{ fontSize: 13, color: COLORS.darkGray }}>
+                        <Text style={{ fontSize: 12, color: COLORS.darkGray, marginTop: 2 }}>
                           Beworben am {new Date(app.createdAt).toLocaleDateString('de-DE')}
                         </Text>
                       </View>
                     </View>
 
+                    {/* Steckbrief */}
+                    {profile?.shortBio && (
+                      <View style={{
+                        backgroundColor: COLORS.white,
+                        padding: 12,
+                        borderRadius: 8,
+                        borderLeftWidth: 3,
+                        borderLeftColor: COLORS.neon,
+                      }}>
+                        <Text style={{ fontSize: 13, color: COLORS.darkGray, fontStyle: 'italic' }}>
+                          "{profile.shortBio}"
+                        </Text>
+                      </View>
+                    )}
+
                     {/* Accept Button */}
                     <Pressable
-                      onPress={() => handleAcceptApplication(app.id, app.workerId, profile?.name || 'Anonym')}
+                      onPress={() => handleAcceptApplication(app.id, app.workerId, displayName)}
                       disabled={isAcceptingId === app.id}
                       style={({ pressed }) => ({
                         backgroundColor: COLORS.neon,
@@ -457,7 +492,7 @@ export default function JobDetailScreen() {
                       </Text>
                     </Pressable>
                   </View>
-                ))}
+                )})})
               </View>
             )}
           </View>
