@@ -28,7 +28,11 @@ const TAXONOMY = TAXONOMY_DATA.categories;
 
 // Funktion zum Listen der Kategorien
 const listCategories = () => {
-  return TAXONOMY.map((cat: any) => ({ key: cat.key, label: cat.label }));
+  return TAXONOMY.map((cat: any) => ({ 
+    key: cat.key, 
+    title: cat.label,  // title für die Anzeige
+    label: cat.label   // label als Fallback
+  }));
 };
 
 // BUG 3 FIX: Nutze AsyncStorage statt Backend API
