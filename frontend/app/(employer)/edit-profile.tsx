@@ -175,6 +175,14 @@ export default function EmployerProfileScreen() {
       };
 
       console.log('💾 Saving profile:', profile);
+      console.log('💾 Profile fields:', {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        company: profile.company,
+        phone: profile.phone,
+        email: profile.email,
+        paymentMethod: profile.paymentMethod
+      });
       await saveEmployerProfile(profile);
       console.log('✅ Profile saved successfully!');
       console.log('🎉 EMPLOYER-PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung...');
