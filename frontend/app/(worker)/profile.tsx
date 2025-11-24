@@ -247,8 +247,8 @@ export default function WorkerProfileViewScreen() {
               </Text>
               
               {(() => {
-                // Load taxonomy ONCE outside the map
-                const taxonomy = require('../../shared/taxonomy.json');
+                // Use imported taxonomy data
+                const taxonomy = TAXONOMY_DATA;
                 
                 return profile?.categories?.map((categoryKey, catIdx) => {
                 const category = taxonomy.categories.find((c: any) => c.key === categoryKey);
