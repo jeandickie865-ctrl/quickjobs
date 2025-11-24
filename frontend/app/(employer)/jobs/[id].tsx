@@ -107,22 +107,10 @@ export default function JobDetailScreen() {
   async function handleAcceptApplication(appId: string, workerId: string, workerName: string) {
     if (!job || !user) return;
 
-    try {
-      setIsAcceptingId(appId);
-      await acceptApplication(appId);
-      await updateAuftrag(job.id, { status: 'matched', matchedWorkerId: workerId });
-      
-      console.log(`🎉 Match erfolgreich! ${workerName} wurde ausgewählt.`);
-      
-      // Weiterleitung zum Dashboard
-      setTimeout(() => {
-        router.replace('/(employer)');
-      }, 500);
-    } catch (e) {
-      console.error('❌ Fehler: Match konnte nicht erstellt werden.', e);
-    } finally {
-      setIsAcceptingId(null);
-    }
+    console.log(`💳 Weiterleitung zur Zahlung für Bewerbung: ${appId}`);
+    
+    // Weiterleitung zur Payment-Seite (Zahlung BEVOR Match)
+    router.push(`/payment/${appId}`);
   }
 
   async function handleDelete() {
