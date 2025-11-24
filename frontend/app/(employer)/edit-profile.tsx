@@ -99,6 +99,7 @@ export default function EmployerProfileScreen() {
 
     try {
       const stored = await getEmployerProfile(user.id);
+      console.log('📥 Loaded employer profile:', stored);
       if (stored) {
         setFirstName(stored.firstName || '');
         setLastName(stored.lastName || '');
@@ -112,12 +113,14 @@ export default function EmployerProfileScreen() {
         setLon(stored.lon);
         setPaymentMethod(stored.paymentMethod || null);
         setShortBio(stored.shortBio || '');
+        console.log('✅ All employer profile fields loaded');
       } else {
+        console.log('ℹ️ No existing employer profile found, initializing with email');
         // Initialize with user email
         setEmail(user.email || '');
       }
     } catch (error) {
-      console.error('Error loading profile:', error);
+      console.error('❌ Error loading profile:', error);
     } finally {
       setLoading(false);
     }
