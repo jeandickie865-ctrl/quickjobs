@@ -96,13 +96,12 @@ export default function PaymentScreen() {
       console.log('✅ Step 2 complete');
       
       console.log('🎉 MATCH CREATED SUCCESSFULLY!');
-      console.log('🔄 Redirecting to dashboard in 1 second...');
       
-      // Zurück zum Dashboard
-      setTimeout(() => {
-        console.log('🔄 Executing redirect now...');
-        router.replace('/(employer)');
-      }, 1000);
+      // Success-Meldung anzeigen
+      alert('✅ Zahlung erfolgreich!\n\n🎉 Match wurde erstellt!\n\nDu wirst jetzt zum Dashboard weitergeleitet.');
+      
+      console.log('🔄 Redirecting to dashboard now...');
+      router.replace('/(employer)');
       
     } catch (e) {
       console.error('❌ ERROR in handleMockPayment:', e);
