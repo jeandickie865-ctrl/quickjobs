@@ -132,6 +132,7 @@ export default function WorkerProfileScreen() {
       
       if (data) {
         setName(data.firstName || '');
+        setShortBio(data.shortBio || '');
         setStreet(data.homeAddress?.street || '');
         setPostalCode(data.homeAddress?.postalCode || '');
         setCity(data.homeAddress?.city || '');
