@@ -179,9 +179,9 @@ export default function EmployerProfileScreen() {
       console.log('✅ Profile saved successfully!');
       console.log('🎉 EMPLOYER-PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung...');
       
-      // Weiterleitung zum Dashboard
+      // Weiterleitung zur Profil-Ansicht
       setTimeout(() => {
-        router.push('/(employer)');
+        router.push('/(employer)/profile');
       }, 500);
     } catch (error) {
       console.error('❌ Error saving profile:', error);
