@@ -42,7 +42,12 @@ export default function JobDetailScreen() {
 
   // Applications
   const [applications, setApplications] = useState<JobApplication[]>([]);
-  const [applicants, setApplicants] = useState<{ app: JobApplication; profile: WorkerProfile | null }[]>([]);
+  const [applicants, setApplicants] = useState<{ 
+    app: JobApplication; 
+    profile: WorkerProfile | null; 
+    avgRating: number; 
+    reviewCount: number;
+  }[]>([]);
   const [isLoadingApps, setIsLoadingApps] = useState(true);
   const [isAcceptingId, setIsAcceptingId] = useState<string | null>(null);
 
