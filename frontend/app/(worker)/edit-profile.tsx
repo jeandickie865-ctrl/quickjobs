@@ -71,16 +71,16 @@ export default function WorkerProfileScreen() {
     if (!activeCategory) return [];
     
     const cat = TAXONOMY.find((c) => c.key === activeCategory);
+    // Return array of {key, label} objects
     return cat?.activities || [];
   }, [activeCategory]);
 
   // Qualifikationen nur für die AKTIVE Kategorie anzeigen
   const availableQualifications = useMemo(() => {
     if (!activeCategory) return [];
-    
-    const quals: string[] = [];
 
     const cat = TAXONOMY.find((c) => c.key === activeCategory);
+    // Return array of {key, label} objects
     return cat?.qualifications || [];
   }, [activeCategory]);
 
