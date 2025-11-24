@@ -86,8 +86,20 @@ export default function WorkerProfileScreen() {
   useEffect(() => {
     if (user) {
       loadProfile();
+      loadMatchesCount();
     }
   }, [user]);
+
+  const loadMatchesCount = async () => {
+    if (!user) return;
+    try {
+      const apps = await getApplicationsForWorker(user.id);
+      const acceptedCount = apps.filter(app => app.status === 'accepted').length;
+      setMatchesCount(acceptedCount);
+    } catch (err) {
+      console.log('Error loading matches count:', err);
+    }
+  };
 
   // Entfernt ungültige gespeicherte Activities & Qualifications
   useEffect(() => {
