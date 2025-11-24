@@ -253,7 +253,7 @@ export default function PaymentScreen() {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 15, color: COLORS.darkGray }}>Job-Lohn</Text>
               <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black }}>
-                {euro(job.wages)}
+                {euro(job.workerAmountCents)}
               </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
