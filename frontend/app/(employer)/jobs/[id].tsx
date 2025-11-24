@@ -99,7 +99,7 @@ export default function JobDetailScreen() {
       return;
     }
     (async () => {
-      const review = await getReviewForAuftrag(job.id);
+      const review = await getReviewForJob(job.id);
       setHasReview(!!review);
     })();
   }, [job?.id, job?.status, job?.matchedWorkerId, user?.id]);
