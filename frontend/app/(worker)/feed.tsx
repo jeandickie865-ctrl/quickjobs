@@ -15,6 +15,8 @@ import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 import { formatJobTimeDisplay } from '../../utils/date';
 import { Ionicons } from '@expo/vector-icons';
+import { getReviewsForEmployer, calculateAverageRating } from '../../utils/reviewStore';
+import { RatingDisplay } from '../../components/RatingDisplay';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
