@@ -158,23 +158,28 @@ export default function WorkerProfileScreen() {
     }
   };
 
-  // BUG 3 FIX: Foto-Upload deaktiviert (braucht Backend)
   const pickPhoto = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        quality: 0.7,
+        quality: 0.5, // Reduzierte Qualität für kleinere Größe
         aspect: [1, 1],
+        base64: true, // Base64 für AsyncStorage
       });
 
       if (result.canceled) return;
 
-      const uri = result.assets[0].uri;
-      // Lokal speichern (kein Upload)
-      setPhotoUrl(uri);
-      Alert.alert('Erfolg', 'Foto ausgewählt');
+      // Konvertiere zu Base64 Data URI
+      const base64 = result.assets[0].base64;
+      if (base64) {
+        const dataUri = `data:image/jpeg;base64,${base64}`;
+        setPhotoUrl(dataUri);
+        console.log('✅ Foto als Base64 gespeichert (Größe:', Math.round(base64.length / 1024), 'KB)');
+      } else {
+        console.error('❌ Kein Base64 verfügbar');
+      }
     } catch (err) {
-      Alert.alert('Fehler', 'Foto konnte nicht ausgewählt werden.');
+      console.error('❌ Fehler beim Foto auswählen:', err);
     }
   };
 
