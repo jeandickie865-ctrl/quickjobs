@@ -6,7 +6,7 @@ import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { getApplicationById, acceptApplication } from '../../utils/applicationStore';
-import { getJobById, updateAuftrag } from '../../utils/jobStore';
+import { getJobById, updateJob } from '../../utils/jobStore';
 import { getWorkerProfile } from '../../utils/profileStore';
 import { euro } from '../../utils/pricing';
 import { Job } from '../../types/job';
