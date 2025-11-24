@@ -116,7 +116,7 @@ export default function PaymentScreen() {
       
       // Weiterleitung nach erfolgreicher Zahlung
       console.log('🔄 Redirecting to employer dashboard...');
-      router.replace('/(employer)/index');
+      router.replace('/employer');
       
     } catch (e) {
       console.error('❌ ERROR in handleMockPayment:', e);
