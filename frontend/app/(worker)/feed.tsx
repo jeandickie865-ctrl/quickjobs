@@ -439,6 +439,18 @@ export default function WorkerFeed() {
                     📦 {job.category}
                   </Text>
 
+                  {/* Employer Rating */}
+                  {employerRatings[job.employerId] && (
+                    <View style={{ marginBottom: 8 }}>
+                      <RatingDisplay
+                        averageRating={employerRatings[job.employerId].avg}
+                        reviewCount={employerRatings[job.employerId].count}
+                        size="small"
+                        color={COLORS.neon}
+                      />
+                    </View>
+                  )}
+
                   {/* Zeit & Ort */}
                   <View style={{ gap: 6, marginBottom: 12 }}>
                     <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
