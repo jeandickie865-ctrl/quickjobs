@@ -510,6 +510,7 @@ export default function WorkerProfileScreen() {
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
               {availableCategories.map(cat => {
                 const isSelected = selectedCategories.includes(cat.key);
+                const isActive = activeCategory === cat.key;
                 return (
                   <Pressable
                     key={cat.key}
@@ -521,13 +522,14 @@ export default function WorkerProfileScreen() {
                       paddingVertical: 10,
                       paddingHorizontal: 16,
                       borderRadius: 20,
+                      opacity: isSelected && !isActive ? 0.6 : 1,
                     }}
                   >
                     <Text style={{
                       color: isSelected ? colors.black : colors.primary,
                       fontWeight: '600'
                     }}>
-                      {isSelected ? '✓ ' : ''}{cat.title}
+                      {isSelected ? '✓ ' : ''}{cat.title}{isActive ? ' ▼' : ''}
                     </Text>
                   </Pressable>
                 );
