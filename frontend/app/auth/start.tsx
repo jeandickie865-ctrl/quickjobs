@@ -91,6 +91,27 @@ export default function WelcomeScreen() {
             <Pressable onPress={() => router.push('/auth/login')} style={({ pressed }) => ({ backgroundColor: COLORS.white, paddingVertical: 18, borderRadius: 16, borderWidth: 2, borderColor: COLORS.neon, alignItems: 'center', opacity: pressed ? 0.9 : 1 })}>
               <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.neon }}>Anmelden</Text>
             </Pressable>
+
+            {/* Legal Links */}
+            <View style={{ marginTop: 40, flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <Pressable onPress={() => router.push('/legal/agb')}>
+                <Text style={{ fontSize: 13, color: COLORS.whiteTransparent, textDecorationLine: 'underline' }}>
+                  AGB
+                </Text>
+              </Pressable>
+              <Text style={{ fontSize: 13, color: COLORS.whiteTransparent }}>•</Text>
+              <Pressable onPress={() => router.push('/legal/privacy')}>
+                <Text style={{ fontSize: 13, color: COLORS.whiteTransparent, textDecorationLine: 'underline' }}>
+                  Datenschutz
+                </Text>
+              </Pressable>
+              <Text style={{ fontSize: 13, color: COLORS.whiteTransparent }}>•</Text>
+              <Pressable onPress={() => router.push('/legal/impressum')}>
+                <Text style={{ fontSize: 13, color: COLORS.whiteTransparent, textDecorationLine: 'underline' }}>
+                  Impressum
+                </Text>
+              </Pressable>
+            </View>
           </Animated.View>
         </SafeAreaView>
       </LinearGradient>
