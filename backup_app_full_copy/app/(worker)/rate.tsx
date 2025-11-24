@@ -80,7 +80,7 @@ export default function RateEmployerScreen() {
   }
 
   async function handleSave() {
-    if (!job || !employer || !user) return;
+    if (!job || !user) return;
 
     if (rating < 1 || rating > 5) {
       Alert.alert('Fehler', 'Bitte wähle mindestens 1 Stern');
@@ -93,7 +93,7 @@ export default function RateEmployerScreen() {
         id: `review-${Date.now()}`,
         jobId: String(jobId),
         workerId: user.id,
-        employerId: employer.userId,
+        employerId: job.employerId,
         rating,
         comment: comment.trim() || undefined,
         createdAt: new Date().toISOString(),
@@ -136,13 +136,25 @@ export default function RateEmployerScreen() {
     );
   }
 
-  if (!job || !employer) {
+  if (!job) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center' }}>
-            Daten konnten nicht geladen werden
+            Job konnte nicht geladen werden
           </Text>
+          <Pressable
+            onPress={() => router.back()}
+            style={{
+              marginTop: 20,
+              backgroundColor: COLORS.neon,
+              paddingVertical: 12,
+              paddingHorizontal: 24,
+              borderRadius: 12,
+            }}
+          >
+            <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+          </Pressable>
         </SafeAreaView>
       </View>
     );
@@ -203,7 +215,7 @@ export default function RateEmployerScreen() {
                   AUFTRAGGEBER
                 </Text>
                 <Text style={{ fontSize: 18, color: COLORS.white, fontWeight: '700' }}>
-                  {employer.company || employer.firstName || 'Unbekannt'}
+                  {employer?.company || employer?.firstName || 'Auftraggeber'}
                 </Text>
               </View>
 

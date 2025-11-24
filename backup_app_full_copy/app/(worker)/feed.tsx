@@ -356,14 +356,28 @@ export default function WorkerFeed() {
           }}>
             <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
               {activeTab === 'matching' 
-                ? 'Keine passenden Jobs gefunden'
+                ? 'Keine neuen Jobs verfügbar'
                 : 'Keine Jobs im Umkreis'}
             </Text>
             <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
               {activeTab === 'matching'
-                ? 'Aktuell gibt es keine Jobs, die zu deinem Profil passen. Schau später wieder vorbei!'
+                ? 'Alle passenden Jobs wurden bereits beworben oder sind abgeschlossen. Prüfe deine Matches oder warte auf neue Jobs!'
                 : 'Aktuell gibt es keine offenen Jobs in deiner Nähe. Schau später wieder vorbei!'}
             </Text>
+            <Pressable
+              onPress={() => router.push('/(worker)/matches')}
+              style={{
+                marginTop: 8,
+                backgroundColor: COLORS.neon,
+                paddingVertical: 12,
+                paddingHorizontal: 24,
+                borderRadius: 12,
+              }}
+            >
+              <Text style={{ color: COLORS.black, fontWeight: '700' }}>
+                💼 Meine Matches ansehen
+              </Text>
+            </Pressable>
           </View>
         ) : (
           <View style={{ gap: 16 }}>
