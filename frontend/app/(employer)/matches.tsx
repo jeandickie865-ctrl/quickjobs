@@ -90,10 +90,14 @@ export default function MatchesScreen() {
         for (const app of acceptedApps) {
           // Load worker profile to get contact details
           const workerProfile = await getWorkerProfile(app.workerId);
+          // Load worker reviews
+          const reviews = await getReviewsForWorker(app.workerId);
           allMatches.push({ 
             job, 
             application: app,
-            workerProfile 
+            workerProfile,
+            avgRating: calculateAverageRating(reviews),
+            reviewCount: reviews.length
           });
         }
       }
