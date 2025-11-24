@@ -84,10 +84,22 @@ export default function JobDetailScreen() {
       try {
         const apps = await getApplicationsForJob(job.id);
         setApplications(apps);
-        const withProfiles: { app: JobApplication; profile: WorkerProfile | null }[] = [];
+        const withProfiles: { 
+          app: JobApplication; 
+          profile: WorkerProfile | null; 
+          avgRating: number; 
+          reviewCount: number;
+        }[] = [];
         for (const app of apps) {
           const p = await getWorkerProfile(app.workerId);
-          withProfiles.push({ app, profile: p });
+          const reviews = await getReviewsForWorker(app.workerId);
+          const avgRating = calculateAverageRating(reviews);
+          withProfiles.push({ 
+            app, 
+            profile: p, 
+            avgRating,
+            reviewCount: reviews.length
+          });
         }
         setApplicants(withProfiles);
       } catch (e) {
