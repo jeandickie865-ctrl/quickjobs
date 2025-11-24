@@ -133,53 +133,63 @@ export default function ChatScreen() {
             </View>
           </View>
 
-        {/* Messages */}
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.messagesContainer}
-          contentContainerStyle={[
-            styles.messagesContent,
-            { padding: spacing.md, paddingBottom: spacing.lg }
-          ]}
-        >
-          {isLoading ? (
-            <View style={styles.centerContent}>
-              <Text style={{ color: colors.gray500 }}>Nachrichten werden geladen...</Text>
-            </View>
-          ) : messages.length === 0 ? (
-            <View style={styles.centerContent}>
-              <Text style={{ color: colors.gray500, textAlign: 'center' }}>
-                Noch keine Nachrichten.{'\n'}
-                Schreibe die erste Nachricht!
-              </Text>
-            </View>
-          ) : (
-            messages.map(m => {
-              const isOwn = m.senderRole === senderRole;
-              return (
-                <View
-                  key={m.id}
-                  style={[
-                    styles.messageBubble,
-                    {
+          {/* Messages */}
+          <ScrollView
+            ref={scrollViewRef}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 20, paddingBottom: 24, flexGrow: 1 }}
+          >
+            {isLoading ? (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator color={COLORS.neon} size="large" />
+                <Text style={{ color: COLORS.whiteTransparent20, marginTop: 12 }}>Lädt...</Text>
+              </View>
+            ) : messages.length === 0 ? (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40 }}>
+                <Text style={{ color: COLORS.whiteTransparent20, textAlign: 'center', fontSize: 15, lineHeight: 22 }}>
+                  💬 Noch keine Nachrichten.{'\n'}Schreibe die erste Nachricht!
+                </Text>
+              </View>
+            ) : (
+              messages.map(m => {
+                const isOwn = m.senderRole === senderRole;
+                return (
+                  <View
+                    key={m.id}
+                    style={{
                       alignSelf: isOwn ? 'flex-end' : 'flex-start',
-                      backgroundColor: isOwn ? colors.black : colors.white,
-                      marginBottom: spacing.xs,
-                      maxWidth: '80%',
-                    },
-                  ]}
-                >
-                  <Text style={[styles.messageText, { color: isOwn ? colors.white : colors.black }]}>
-                    {m.text}
-                  </Text>
-                  <Text style={[styles.messageTime, { color: isOwn ? colors.gray300 : colors.gray500 }]}>
-                    {formatTime(m.createdAt)}
-                  </Text>
-                </View>
-              );
-            })
-          )}
-        </ScrollView>
+                      backgroundColor: isOwn ? COLORS.neon : COLORS.white,
+                      marginBottom: 12,
+                      maxWidth: '75%',
+                      borderRadius: 18,
+                      paddingHorizontal: 16,
+                      paddingVertical: 12,
+                      shadowColor: isOwn ? COLORS.neon : COLORS.black,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: isOwn ? 0.3 : 0.1,
+                      shadowRadius: isOwn ? 8 : 4,
+                      elevation: 3,
+                    }}
+                  >
+                    <Text style={{ 
+                      fontSize: 15, 
+                      color: isOwn ? COLORS.black : COLORS.darkGray,
+                      lineHeight: 21,
+                    }}>
+                      {m.text}
+                    </Text>
+                    <Text style={{ 
+                      fontSize: 11, 
+                      color: isOwn ? 'rgba(0,0,0,0.5)' : '#999',
+                      marginTop: 6,
+                    }}>
+                      {formatTime(m.createdAt)}
+                    </Text>
+                  </View>
+                );
+              })
+            )}
+          </ScrollView>
 
         {/* Input Area */}
         <View 
