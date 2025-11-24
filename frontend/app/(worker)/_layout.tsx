@@ -185,6 +185,35 @@ export default function WorkerLayout() {
           href: null,
         }}
       />
+
+      {/* Hide Backup Files */}
+      <Tabs.Screen
+        name="feed-old-backup"
+        options={{
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="matches-old-backup"
+        options={{
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="profile-old-backup"
+        options={{
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="profile-readonly-backup"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
