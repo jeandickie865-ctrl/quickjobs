@@ -169,7 +169,7 @@ export default function EmployerProfileScreen() {
       }, 500);
     } catch (error) {
       console.error('❌ Error saving profile:', error);
-      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : String(error)));
+      console.error('❌ FEHLER: Profil konnte nicht gespeichert werden:', error instanceof Error ? error.message : String(error));
     } finally {
       setSaving(false);
     }
