@@ -116,6 +116,7 @@ export default function PaymentScreen() {
       
       // Weiterleitung nach erfolgreicher Zahlung
       console.log('🔄 Redirecting to employer dashboard...');
+      console.log("NAVIGATION REALLY REACHED");
       router.replace('/employer');
       
     } catch (e) {
