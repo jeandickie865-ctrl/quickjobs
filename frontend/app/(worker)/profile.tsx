@@ -370,6 +370,61 @@ export default function WorkerProfileScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ padding: 24 }}>
 
+          {/* Matches Button */}
+          {matchesCount > 0 && (
+            <Pressable
+              onPress={() => router.push('/(worker)/matches')}
+              style={({ pressed }) => ({
+                backgroundColor: colors.neon,
+                borderRadius: 16,
+                padding: 16,
+                marginBottom: 24,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                opacity: pressed ? 0.9 : 1,
+                shadowColor: colors.neon,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 4,
+              })}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                <View style={{
+                  backgroundColor: colors.black,
+                  width: 48,
+                  height: 48,
+                  borderRadius: 24,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Text style={{ fontSize: 24 }}>🎉</Text>
+                </View>
+                <View>
+                  <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black }}>
+                    Neue Matches!
+                  </Text>
+                  <Text style={{ fontSize: 14, color: colors.black, opacity: 0.7 }}>
+                    Du hast {matchesCount} {matchesCount === 1 ? 'neues Match' : 'neue Matches'}
+                  </Text>
+                </View>
+              </View>
+              <View style={{
+                backgroundColor: colors.black,
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Text style={{ fontSize: 16, fontWeight: '900', color: colors.neon }}>
+                  {matchesCount}
+                </Text>
+              </View>
+            </Pressable>
+          )}
+
           {/* Photo */}
           <View style={{ alignItems: 'center', marginBottom: 32 }}>
             <View style={{
