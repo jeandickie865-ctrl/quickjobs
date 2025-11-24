@@ -417,7 +417,7 @@ export default function JobDetailScreen() {
               </Text>
             ) : (
               <View style={{ gap: 12 }}>
-                {applicants.map(({ app, profile }) => {
+                {applicants.map(({ app, profile, avgRating, reviewCount }) => {
                   // Format name: "Vorname Nachname" -> "Vorname N."
                   const displayName = profile?.firstName 
                     ? `${profile.firstName}${profile.lastName ? ' ' + profile.lastName.charAt(0) + '.' : ''}`
@@ -464,6 +464,14 @@ export default function JobDetailScreen() {
                         <Text style={{ fontSize: 12, color: COLORS.darkGray, marginTop: 2 }}>
                           Beworben am {new Date(app.createdAt).toLocaleDateString('de-DE')}
                         </Text>
+                        <View style={{ marginTop: 6 }}>
+                          <RatingDisplay 
+                            averageRating={avgRating} 
+                            reviewCount={reviewCount} 
+                            size="small"
+                            color={COLORS.neon}
+                          />
+                        </View>
                       </View>
                     </View>
 
