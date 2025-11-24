@@ -288,13 +288,15 @@ export default function WorkerApplicationsScreen() {
                   
                   <Button
                     title="💬 Chat mit Auftraggeber"
-                    variant="secondary"
+                    variant="primary"
                     onPress={() =>
                       router.push({
                         pathname: '/chat/[applicationId]',
                         params: { applicationId: app.id },
                       })
                     }
+                    style={{ backgroundColor: '#C8FF16' }}
+                    textStyle={{ color: '#000000', fontWeight: '700' }}
                   />
                 </View>
               )}
