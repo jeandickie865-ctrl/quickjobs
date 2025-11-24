@@ -64,34 +64,54 @@ export default function PaymentScreen() {
   }
 
   async function handleMockPayment() {
-    if (!selectedMethod || !job || !application || !user) return;
+    if (!selectedMethod || !job || !application || !user) {
+      console.error('❌ Missing data:', { selectedMethod, hasJob: !!job, hasApp: !!application, hasUser: !!user });
+      return;
+    }
 
-    console.log(`💳 MOCK PAYMENT: ${selectedMethod.toUpperCase()}`);
+    console.log('💳 MOCK PAYMENT START');
+    console.log('   - Method:', selectedMethod.toUpperCase());
+    console.log('   - Job ID:', job.id);
+    console.log('   - Application ID:', application.id);
+    console.log('   - Worker ID:', application.workerId);
+    
     setPaying(true);
 
     try {
       // Simuliere Zahlungsverarbeitung (2 Sekunden)
+      console.log('⏳ Simulating payment (2 seconds)...');
       await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('✅ Payment simulation complete');
 
-      console.log('✅ Zahlung erfolgreich (Mock)');
-      
       // JETZT Match erstellen
+      console.log('📝 Step 1: Accepting application...');
       await acceptApplication(application.id);
+      console.log('✅ Step 1 complete');
+      
+      console.log('📝 Step 2: Updating job status...');
       await updateAuftrag(job.id, { 
         status: 'matched', 
         matchedWorkerId: application.workerId 
       });
+      console.log('✅ Step 2 complete');
       
-      console.log('✅ Match erstellt! Weiterleitung...');
+      console.log('🎉 MATCH CREATED SUCCESSFULLY!');
+      console.log('🔄 Redirecting to dashboard in 1 second...');
       
       // Zurück zum Dashboard
       setTimeout(() => {
+        console.log('🔄 Executing redirect now...');
         router.replace('/(employer)');
       }, 1000);
       
     } catch (e) {
-      console.error('❌ Fehler beim Payment/Match:', e);
+      console.error('❌ ERROR in handleMockPayment:', e);
+      if (e instanceof Error) {
+        console.error('   - Message:', e.message);
+        console.error('   - Stack:', e.stack);
+      }
     } finally {
+      console.log('🏁 Payment process finished (setting paying=false)');
       setPaying(false);
     }
   }
