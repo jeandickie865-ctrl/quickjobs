@@ -145,7 +145,7 @@ export default function WorkerMatchesScreen() {
             color: COLORS.white,
             letterSpacing: 0.2,
           }}>
-            Meine Matches
+            Meine Bewerbungen
           </Text>
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <Pressable onPress={() => setShowTaxModal(true)}>
