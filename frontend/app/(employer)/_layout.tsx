@@ -177,14 +177,7 @@ export default function EmployerLayout() {
 
       {/* Hidden Routes (nicht in Tabs) */}
       <Tabs.Screen
-        name="jobs/[id]"
-        options={{
-          href: null, // Hide from tabs
-        }}
-      />
-      
-      <Tabs.Screen
-        name="jobs/rate"
+        name="jobs"
         options={{
           href: null, // Hide from tabs
         }}
