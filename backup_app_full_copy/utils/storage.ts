@@ -1,0 +1,29 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export async function getItem<T>(key: string): Promise<T | null> {
+  const raw = await AsyncStorage.getItem(key);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
+export async function setItem<T>(key: string, value: T): Promise<void> {
+  const raw = JSON.stringify(value);
+  await AsyncStorage.setItem(key, raw);
+}
+
+export async function removeItem(key: string): Promise<void> {
+  await AsyncStorage.removeItem(key);
+}
+
+// Zusätzliche Objekt-Variante, damit alte Importe wie "storage.getItem" weiter funktionieren
+export const storage = {
+  getItem,
+  setItem,
+  removeItem,
+};
+
+export default storage;
