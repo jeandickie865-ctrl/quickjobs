@@ -26,6 +26,9 @@ export default function EmployerProfileScreen() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  
+  // Matches Badge Count
+  const [matchesCount, setMatchesCount] = useState(0);
 
   // Profile Fields
   const [firstName, setFirstName] = useState('');
