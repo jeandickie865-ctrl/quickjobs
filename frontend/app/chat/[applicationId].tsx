@@ -56,11 +56,9 @@ export default function ChatScreen() {
 
   if (!user) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.beige50 }]}>
-        <View style={styles.centerContent}>
-          <Text style={{ color: colors.gray700 }}>Bitte einloggen.</Text>
-        </View>
-      </SafeAreaView>
+      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: COLORS.white, fontSize: 16 }}>Bitte einloggen.</Text>
+      </View>
     );
   }
 
