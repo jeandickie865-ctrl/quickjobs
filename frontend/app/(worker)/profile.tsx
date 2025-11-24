@@ -418,42 +418,6 @@ export default function WorkerProfileScreen() {
             </View>
           </Pressable>
 
-          {/* Matching Debug Button */}
-          <Pressable
-            onPress={() => router.push('/(worker)/matching-debug')}
-            style={({ pressed }) => ({
-              backgroundColor: '#FF9800',
-              borderRadius: 16,
-              padding: 16,
-              marginBottom: 24,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              opacity: pressed ? 0.9 : 1,
-            })}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <View style={{
-                backgroundColor: colors.black,
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <Text style={{ fontSize: 24 }}>🔍</Text>
-              </View>
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black }}>
-                  Matching-Analyse
-                </Text>
-                <Text style={{ fontSize: 14, color: colors.black, opacity: 0.7 }}>
-                  Warum matche ich nicht?
-                </Text>
-              </View>
-            </View>
-          </Pressable>
-
           {/* Photo */}
           <View style={{ alignItems: 'center', marginBottom: 32 }}>
             <View style={{
