@@ -47,6 +47,8 @@ export default function WorkerProfileScreen() {
   const [radiusKm, setRadiusKm] = useState('15');
   const [photoUrl, setPhotoUrl] = useState('');
   const [shortBio, setShortBio] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
 
   // Tags
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
