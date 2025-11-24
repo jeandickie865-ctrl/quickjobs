@@ -4,7 +4,7 @@ import { View, Text, TextInput, Alert, Pressable, ScrollView, KeyboardAvoidingVi
 import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getJobById } from '../../../utils/jobStore';
+import { getJobById, updateJob } from '../../../utils/jobStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { addReview } from '../../../utils/reviewStore';
 import { Job } from '../../../types/job';
