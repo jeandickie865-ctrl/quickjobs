@@ -271,6 +271,11 @@ export default function WorkerProfileViewScreen() {
                 console.log('Filtered activities:', categoryActivities);
                 console.log('Filtered qualifications:', categoryQualifications);
                 
+                // Nur anzeigen, wenn mindestens eine Tätigkeit ODER Qualifikation ausgewählt wurde
+                if (categoryActivities.length === 0 && categoryQualifications.length === 0) {
+                  return null;
+                }
+                
                 return (
                   <View key={catIdx} style={{
                     backgroundColor: colors.lightGray,
