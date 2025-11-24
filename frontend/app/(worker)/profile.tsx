@@ -55,6 +55,9 @@ export default function WorkerProfileScreen() {
   
   // Neue State für aktive Kategorie (für besseren Mobile Flow)
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  
+  // Matches Badge Count
+  const [matchesCount, setMatchesCount] = useState(0);
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
