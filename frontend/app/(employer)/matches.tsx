@@ -8,6 +8,8 @@ import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob, JobApplication } from '../../utils/applicationStore';
 import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
+import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
+import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
 
 // BACKUP NEON-TECH COLORS
