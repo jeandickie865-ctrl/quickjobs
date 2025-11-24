@@ -128,28 +128,21 @@ export default function JobDetailScreen() {
   async function handleDelete() {
     if (!job) return;
 
-    Alert.alert(
-      'Auftrag löschen?',
-      'Diese Aktion kann nicht rückgängig gemacht werden.',
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Löschen',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setIsDeleting(true);
-              await deleteJob(job.id);
-              router.replace('/(employer)');
-            } catch (e) {
-              Alert.alert('Fehler', 'Auftrag konnte nicht gelöscht werden.');
-            } finally {
-              setIsDeleting(false);
-            }
-          }
-        }
-      ]
-    );
+    // Browser-kompatible Bestätigung
+    const confirmed = window.confirm('Auftrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.');
+    
+    if (confirmed) {
+      try {
+        setIsDeleting(true);
+        await deleteJob(job.id);
+        console.log('✅ Auftrag gelöscht');
+        router.replace('/(employer)');
+      } catch (e) {
+        console.error('❌ Fehler: Auftrag konnte nicht gelöscht werden.', e);
+      } finally {
+        setIsDeleting(false);
+      }
+    }
   }
 
   if (isLoading) return null;
