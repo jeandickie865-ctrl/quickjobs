@@ -90,6 +90,17 @@ export default function WorkerFeed() {
       
       console.log(`🎯 SIMPLE MATCHING FERTIG: ${matchedJobs.length} von ${notAppliedJobs.length} Jobs matchen`);
       
+      // Load employer ratings for each job
+      const ratings: Record<string, { avg: number; count: number }> = {};
+      for (const job of matchedJobs) {
+        const reviews = await getReviewsForEmployer(job.employerId);
+        ratings[job.employerId] = {
+          avg: calculateAverageRating(reviews),
+          count: reviews.length
+        };
+      }
+      setEmployerRatings(ratings);
+      
       setJobs(matchedJobs);
 
       setError(null);
