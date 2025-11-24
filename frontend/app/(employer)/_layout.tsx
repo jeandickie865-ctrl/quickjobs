@@ -189,6 +189,13 @@ export default function EmployerLayout() {
           href: null, // Hide from tabs
         }}
       />
+
+      <Tabs.Screen
+        name="edit-profile"
+        options={{
+          href: null, // Hide from tabs
+        }}
+      />
     </Tabs>
   );
 }
