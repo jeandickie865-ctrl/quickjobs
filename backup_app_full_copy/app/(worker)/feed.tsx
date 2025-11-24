@@ -74,18 +74,23 @@ export default function WorkerFeed() {
         radius: workerProfile.radiusKm,
       });
       
-      // ROBUST MATCHING: Use new error-safe matching engine
-      const { matches: matchedJobs, stats } = filterMatchingJobsRobust(openJobs, workerProfile);
+      // Load applications FIRST to filter out already applied jobs
+      const applications = await getApplicationsForWorker(user.id);
+      const jobIdsSet = new Set(applications.map(app => app.jobId));
+      setAppsJobIds(jobIdsSet);
       
-      console.log(`🎯 RESULT: ${matchedJobs.length} von ${openJobs.length} Jobs passen zum Profil`);
+      // Filter out jobs the worker already applied to
+      const notAppliedJobs = openJobs.filter(job => !jobIdsSet.has(job.id));
+      console.log(`📋 Filtered out ${openJobs.length - notAppliedJobs.length} already-applied jobs`);
+      
+      // ROBUST MATCHING: Use new error-safe matching engine
+      const { matches: matchedJobs, stats } = filterMatchingJobsRobust(notAppliedJobs, workerProfile);
+      
+      console.log(`🎯 RESULT: ${matchedJobs.length} von ${notAppliedJobs.length} verfügbare Jobs passen zum Profil`);
       console.log('📊 Matching Statistics:', stats);
       console.log('🔍 ROBUST MATCHING END');
       
       setJobs(matchedJobs);
-
-      const applications = await getApplicationsForWorker(user.id);
-      const jobIdsSet = new Set(applications.map(app => app.jobId));
-      setAppsJobIds(jobIdsSet);
 
       setError(null);
     } catch (e) {

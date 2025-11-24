@@ -7,6 +7,8 @@ import { getJobById } from '../../../utils/jobStore';
 import { Job } from '../../../types/job';
 import { euro } from '../../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
+import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
+import { RatingDisplay } from '../../../components/RatingDisplay';
 
 // NEON COLORS
 const COLORS = {
@@ -24,6 +26,8 @@ export default function WorkerJobDetailScreen() {
 
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
+  const [employerRating, setEmployerRating] = useState(0);
+  const [employerReviewCount, setEmployerReviewCount] = useState(0);
 
   useEffect(() => {
     loadJob();
@@ -34,6 +38,13 @@ export default function WorkerJobDetailScreen() {
       if (!id) return;
       const data = await getJobById(String(id));
       setJob(data);
+      
+      // Load employer reviews
+      if (data && data.employerId) {
+        const reviews = await getReviewsForEmployer(data.employerId);
+        setEmployerReviewCount(reviews.length);
+        setEmployerRating(calculateAverageRating(reviews));
+      }
     } catch (err) {
       console.log('Job load error:', err);
     } finally {
