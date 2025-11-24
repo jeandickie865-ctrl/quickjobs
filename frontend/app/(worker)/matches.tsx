@@ -275,13 +275,13 @@ export default function WorkerMatchesScreen() {
                   <View style={{
                     paddingHorizontal: 12,
                     paddingVertical: 6,
-                    backgroundColor: COLORS.neon,
+                    backgroundColor: application.status === 'accepted' ? COLORS.neon : '#FFF3CD',
                     borderRadius: 10,
                     alignSelf: 'flex-start',
                     marginBottom: 12,
                   }}>
                     <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black }}>
-                      ✓ Akzeptiert
+                      {application.status === 'accepted' ? '✓ Akzeptiert' : '⏳ Warte auf Antwort'}
                     </Text>
                   </View>
 
