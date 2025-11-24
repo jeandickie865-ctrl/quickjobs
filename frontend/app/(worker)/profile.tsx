@@ -510,6 +510,66 @@ export default function WorkerProfileScreen() {
             </View>
           </View>
 
+          {/* Contact Details - ONLY UNLOCKED AFTER MATCH */}
+          <View style={{ 
+            marginBottom: 24,
+            backgroundColor: colors.neon,
+            borderRadius: 14,
+            padding: 16,
+          }}>
+            <Text style={{ color: colors.black, fontWeight: '700', fontSize: 12, marginBottom: 4 }}>
+              🔒 KONTAKTDATEN
+            </Text>
+            <Text style={{ color: colors.black, fontSize: 11, opacity: 0.7, marginBottom: 16 }}>
+              Diese werden nur nach einem Match freigegeben
+            </Text>
+
+            {/* Email */}
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{ color: colors.black, fontWeight: '600', fontSize: 11, marginBottom: 6 }}>
+                E-Mail (optional)
+              </Text>
+              <View style={{
+                backgroundColor: colors.white,
+                borderRadius: 10,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+              }}>
+                <TextInput
+                  value={contactEmail}
+                  onChangeText={setContactEmail}
+                  placeholder="deine@email.de"
+                  placeholderTextColor="#999"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  style={{ fontSize: 14, color: colors.black }}
+                />
+              </View>
+            </View>
+
+            {/* Phone */}
+            <View>
+              <Text style={{ color: colors.black, fontWeight: '600', fontSize: 11, marginBottom: 6 }}>
+                Telefon (optional)
+              </Text>
+              <View style={{
+                backgroundColor: colors.white,
+                borderRadius: 10,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+              }}>
+                <TextInput
+                  value={contactPhone}
+                  onChangeText={setContactPhone}
+                  placeholder="+49 123 456789"
+                  placeholderTextColor="#999"
+                  keyboardType="phone-pad"
+                  style={{ fontSize: 14, color: colors.black }}
+                />
+              </View>
+            </View>
+          </View>
+
           {/* Address */}
           <View style={{ marginBottom: 24 }}>
             <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>ADRESSE *</Text>
