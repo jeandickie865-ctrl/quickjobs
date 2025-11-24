@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { getMessagesForApplication, addMessage } from '../../utils/chatStore';
+import { getApplicationById } from '../../utils/applicationStore';
 import { ChatMessage } from '../../types/chat';
 import { Ionicons } from '@expo/vector-icons';
 
