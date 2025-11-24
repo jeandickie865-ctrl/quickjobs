@@ -300,7 +300,7 @@ export default function WorkerMatchesScreen() {
 
                   {/* Preis */}
                   <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
-                    {euro(job.wages)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
+                    {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
                   </Text>
 
                   {/* Action Button */}
