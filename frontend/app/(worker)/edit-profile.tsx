@@ -308,11 +308,11 @@ export default function WorkerProfileScreen() {
       console.log('✅ Profile saved to AsyncStorage successfully!');
 
       // Web-kompatible Success-Meldung und Navigation
-      console.log('🎉 PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung zum Feed...');
+      console.log('🎉 PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung zur Profil-Ansicht...');
       
-      // Direkt zum Feed navigieren
+      // Direkt zur Profil-Ansicht navigieren
       setTimeout(() => {
-        router.push('/(worker)/feed');
+        router.push('/(worker)/profile');
       }, 500);
     } catch (err) {
       console.error('❌ Save error:', err);
