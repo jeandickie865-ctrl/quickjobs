@@ -751,7 +751,7 @@ export default function WorkerProfileScreen() {
                         color: isSelected ? colors.black : colors.primary,
                         fontWeight: '600'
                       }}>
-                        {isSelected ? '✓ ' : ''}{q}
+                        {isSelected ? '✓ ' : ''}{qualObj.label}
                       </Text>
                     </Pressable>
                   );
