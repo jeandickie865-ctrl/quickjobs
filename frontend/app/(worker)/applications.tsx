@@ -316,7 +316,7 @@ export default function WorkerApplicationsScreen() {
                   <Button
                     title="📄 Jobdetails ansehen"
                     variant="primary"
-                    onPress={() => router.push('/(worker)/feed')}
+                    onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                     style={{ backgroundColor: '#5941FF' }}
                     textStyle={{ color: '#FFFFFF', fontWeight: '700' }}
                   />
