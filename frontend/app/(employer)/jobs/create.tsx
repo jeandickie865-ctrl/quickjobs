@@ -42,6 +42,10 @@ export default function CreateJob() {
   
   // hour_package
   const [hours, setHours] = useState('');
+  const [hoursDateType, setHoursDateType] = useState<'specific' | 'range'>('specific');
+  const [hoursSpecificDate, setHoursSpecificDate] = useState('');
+  const [hoursStartDate, setHoursStartDate] = useState('');
+  const [hoursEndDate, setHoursEndDate] = useState('');
   
   // project (deutsches Format TT.MM.JJJJ)
   const [dueDate, setDueDate] = useState('');
