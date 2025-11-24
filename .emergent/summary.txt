@@ -1,84 +1,84 @@
 <analysis>
-The trajectory details a complex and fraught debugging session conducted primarily in German. The initial goal was to fix three specific bugs: an incorrect wage display, an overly strict job matching algorithm, and a failing worker profile save mechanism. The AI correctly identified the causes for the wage and matching bugs and implemented fixes. For the profile saving, it correctly interpreted the user's request to move to a stable  solution and refactored the worker profile screen accordingly, removing backend dependencies.
+The user's primary language is German. All future responses must be in German.
 
-However, a major regression occurred: the user was unable to log in with an email containing a hyphen. The AI's debugging process for this was extensive. It first (correctly) identified a backend Pydantic validation issue but then discovered a more fundamental problem: a failing PostgreSQL connection. This led to a critical, unconfirmed architectural decision: to eliminate the backend dependency for authentication entirely. The AI completely rewrote the  to rely solely on , mirroring the change made to the worker profile.
+The trajectory chronicles a comprehensive debugging and feature-building process for a React Native (Expo) job matching application. The initial task was to fix a non-functional job matching and profile saving system, which relied entirely on . The engineer successfully diagnosed and resolved these issues, which were caused by browser-incompatible  calls and inconsistent user ID generation.
 
-Despite these extensive changes, the user reported that the original problems (profile saving and matching) persisted. The AI's final action was to pivot to a pure debugging strategy by creating a utility () and adding a debug button to the UI to dump  state to the console. The session concluded with the AI instructing the user on how to provide these crucial logs.
+As core functionality was restored, the user requested significant feature enhancements: adding a short bio to worker profiles, redesigning the employer's applicant view, and implementing a mock payment flow. During this phase, numerous UI/UX bugs and navigation issues were identified and fixed, including incorrect routing with , styling problems (invisible stars), and broken chat navigation. The UI was progressively refined to a NEON theme, and all user-facing strings were translated to German (Auftraggeber, Auftragnehmer).
 
-The user's primary language is German. The next agent must respond in German only.
+A critical turning point occurred when the user inquired about multi-user testing. The engineer realized the -only architecture was a fundamental blocker, as users on different devices could not interact. A hybrid approach to re-introduce a dormant FastAPI backend was attempted but led to authentication errors (401) and an unstable state. Following the user's explicit instruction, the engineer rolled back all backend changes, reverting to the stable, pure  version.
+
+Finally, a complete and clean backup of the project was created in . The last task, now in progress within this backup directory, is to implement a new feature: allowing employers to specify a date or date range for hourly jobs.
 </analysis>
 
 <product_requirements>
-The application, BACKUP, is a two-sided mobile marketplace connecting Auftraggeber (Employers) and Jobstarter (Workers).
+The application is a two-sided marketplace designed to connect Auftraggeber (Employers) and Auftragnehmer (Workers) in Germany.
 
 **Core Functionality:**
-*   **Dual User Roles:** The app supports separate registration and feature sets for Employers and Workers.
-*   **Employer Flow:** Employers can post job listings with details like title, address, and compensation. They can view job details and matched workers.
-*   **Worker Flow:** Workers create a profile with their address, search radius, and skills. They can view a feed of available jobs.
-*   **Matching System:** A critical feature that matches workers to jobs based on skills and geographic proximity.
+1.  **Dual Roles:** Users can register and operate as either an Employer or a Worker.
+2.  **Job Creation (Employer):** Employers can post jobs, specifying details like title, category, payment, and required skills. A key feature request is to add more flexibility for hourly jobs, allowing employers to specify a single date or a date range.
+3.  **Profile Management (Worker):** Workers create detailed profiles including contact information, a profile photo, a short bio, work radius, and selectable skills/qualifications from a predefined taxonomy. The profile UX was recently improved to a sequential, accordion-style flow for better mobile usability.
+4.  **Matching & Application:** The app matches workers to jobs based on category, skills, and location (radius). Workers see matching jobs in their feed and can apply.
+5.  **Hiring Flow (Employer):** Employers review applicants, view their basic profiles (photo, bio), and can select one.
+6.  **Payment & Match Confirmation:** Upon selecting a worker, the employer is directed to a mock payment screen that simulates a 20% platform fee. After the mock payment, the match is confirmed, and the chat becomes available.
+7.  **Communication:** A built-in chat allows matched employers and workers to communicate.
 
-**State of Implementation & Current Requirements:**
-The application is in a highly unstable state. The user's explicit and sole requirement is to fix the existing, broken functionality, **not** to add new features. After a series of attempted fixes, the core authentication and profile management systems have been architecturally shifted to rely exclusively on , removing previous backend dependencies. However, the primary goals remain unachieved: profile saving and job matching are still reported as non-functional. The immediate task is to stabilize the application and make these core features work as intended.
+The entire application currently operates without a central backend, using the device's  as the sole database. This enables a fully functional single-user demo but prevents multi-user interaction. A future goal is to migrate this logic to a live backend to enable true marketplace functionality.
 </product_requirements>
 
 <key_technical_concepts>
-- **Frontend:** React Native, Expo, Expo Router (file-based routing), TypeScript.
-- **Backend:** FastAPI, Python (Largely bypassed in the latest changes).
-- **Database:** PostgreSQL (Connection is failing), **AsyncStorage** (Now the primary data store for auth and profiles).
-- **State Management:** React Context (), .
-- **APIs:** OpenStreetMap (Nominatim) for address geocoding.
-- **Authentication:** Shifted from a JWT/backend model to a client-side, -based system.
+- **Data Persistence**:  is the exclusive database for all application data, including user profiles, jobs, applications, and chats.
+- **Frontend Framework**: React Native with Expo.
+- **Navigation**: File-based routing using , including group routes  and dynamic routes . Navigation issues were a recurring theme, fixed by using correct pathing (e.g.,  instead of ).
+- **Styling**: A custom NEON theme (purple and lime green) is applied throughout the app using . No external UI libraries are used.
+- **Image Handling**: Profile photos are converted to Base64 data URIs and stored in .
 </key_technical_concepts>
 
 <code_architecture>
-The project is a monorepo with  and  directories. The architecture has been significantly altered to favor client-side persistence due to backend instability.
+The project is a monorepo, but all work occurs in the  directory. A backup of the entire stable project now exists at , and all new work is being done there.
 
 
+- ****:
+    - **Importance**: The screen where employers create new jobs. It's the entry point for new data into the system.
+    - **Summary of Changes**: This file is the target of the . State variables (, , ) were added to support flexible date selection for hourly jobs. The UI is being modified to include radio buttons and date pickers for this new functionality.
 
-- ****
-  - **Importance:** Manages the application's authentication state. It is central to the user's experience.
-  - **Changes:** This file was **completely rewritten**. All backend API calls (, ) were removed. The , , and  functions now interact exclusively with  to manage user sessions, effectively making authentication a client-side-only process. The previous, backend-dependent version was saved as .
+- ****:
+    - **Importance**: Handles the critical step of an employer hiring a worker.
+    - **Summary of Changes**: This file was heavily debugged. A major bug was fixed where it was calling a non-existent function ( instead of ). The navigation logic after successful payment was also corrected multiple times, finally landing on a stable .
 
-- ****
-  - **Importance:** The screen where workers create and edit their profile, which is critical for the matching logic.
-  - **Changes:** This file was heavily refactored to remove its reliance on the backend. The  function no longer calls . Instead, it uses a local utility ( from ) to save the profile data to . Most recently, a **debug button** (a red bug icon) was added, which triggers a function from  to log  contents to the console.
+- ****:
+    - **Importance**: This is where workers see the status of their applications.
+    - **Summary of Changes**: Initially, it only showed 'accepted' matches. It was updated to show 'pending' applications as well, providing crucial feedback to the user. A Jobdetails button was re-added after being accidentally removed.
 
-- ****
-  - **Importance:** A new utility file created to aid in debugging the persistent issues.
-  - **Changes:** Created to house functions for inspecting the application's state. It currently contains , which iterates through all keys in  and logs them to the console.
+- ****:
+    - **Importance**: The central hub for the worker's data, which is critical for the matching algorithm.
+    - **Summary of Changes**: Underwent a major UX overhaul to implement a sequential, accordion-style UI for selecting categories and skills, making it much more usable on mobile. A My Matches button with a notification badge was also added.
 
-- ****
-  - **Importance:** A new utility for managing the worker profile in .
-  - **Changes:** Created to abstract the logic for saving and loading the worker profile from , replacing the previous backend API calls.
-
-- ****
-  - **Importance:** Displays the list of jobs available to the worker. It contains the core matching filter logic.
-  - **Changes:** The filtering logic was updated to correctly call the  function on every job. The wage display was also fixed to use . However, the user reports it still doesn't find matches, indicating the problem lies deeper.
-
-- ****
-  - **Importance:** Defines the data models for authentication on the backend.
-  - **Changes:** The Pydantic  validator was replaced with a more lenient custom regex to allow hyphens in domain names. This change is now largely moot since the frontend no longer uses the backend for authentication.
+- ****:
+    - **Importance**: This directory is a complete, stable snapshot of the entire application before the major architectural change (re-introducing a backend) was attempted. **All future development must happen within this directory.**
 </code_architecture>
 
 <pending_tasks>
-- **Diagnose and Fix Profile Saving:** The user reports that saving the worker profile still fails, and no success alert is shown. The root cause needs to be identified using the newly implemented debug logs.
-- **Diagnose and Fix Job Matching:** The user reports that no matches are found in the worker feed, even after the matching logic was supposedly fixed. This requires a deep dive into the data stored in  for both jobs and the worker profile.
+- **Display New Date Fields**: Show the newly captured date/period for hourly jobs on the Worker's job detail screen.
+- **Backend Migration**: The fundamental task of migrating from a pure  architecture to a client-server model with a central database (MongoDB) remains. This is necessary for multi-user testing and production.
 </pending_tasks>
 
 <current_work>
-The AI is in a critical debugging phase, attempting to resolve why the core features of profile saving and job matching are still failing after extensive refactoring. The primary architectural model has been shifted to -only for auth and profiles, but this did not solve the issues.
+The immediate task is the implementation of a new feature within the backup directory (). The user requested more flexibility for creating hourly jobs (Stundenpaket).
 
-The last action was to equip the application with better diagnostic tools. A new utility file, , was created. This utility is triggered by a new red bug icon button added to the worker profile screen ().
+**File Being Modified**: 
 
-The immediate goal is to get information from the user. The AI has just restarted the Expo server and has instructed the user to:
-1.  Open the browser's developer console.
-2.  Navigate to the worker profile screen.
-3.  Click the new debug button.
-4.  Copy and paste the entire console output.
+**Specific Changes in Progress**:
+1.  **State Management**: New state variables have been added to the  component to manage the choice of date flexibility and the selected dates:
+    
+2.  **UI Implementation**: The engineer was in the process of adding the UI elements (likely radio buttons and conditional date pickers) to the JSX of the component to allow the employer to choose between:
+    *   Kein spezifisches Datum (Any Date)
+    *   An einem bestimmten Tag (A Specific Day)
+    *   In einem Zeitraum (In a Date Range)
+3.  **Data Persistence**: The next step after implementing the UI is to ensure these new date values are correctly saved as part of the job object when the form is submitted.
 
-The work is paused, awaiting this crucial diagnostic information from the user to understand the state of  and identify the root cause of the persistent failures.
+The work was paused just after adding the new UI logic, with a final step of ensuring colors were correctly defined and the data would be saved.
 </current_work>
 
 <optional_next_step>
-Analyze the console logs provided by the user after they click the new debug button to diagnose the state of  and pinpoint the failures in the profile saving and job matching logic.
+Continue implementing the UI for the flexible date options in , ensuring the new data fields (, , ) are correctly saved to the job object upon creation.
 </optional_next_step>

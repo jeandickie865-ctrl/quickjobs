@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BASE_URL = "https://job-match-fixer.preview.emergentagent.com"
+BASE_URL = "https://jobmatch-de.preview.emergentagent.com"
 BACKEND_URL = f"{BASE_URL}/api"
 
 def test_health_check():
