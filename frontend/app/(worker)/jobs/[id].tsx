@@ -147,9 +147,46 @@ export default function WorkerJobDetailScreen() {
                     🕐 {new Date(job.startAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} - {new Date(job.endAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
                   </Text>
                 </>
+              ) : job.timeMode === 'hour_package' ? (
+                <>
+                  <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: '600' }}>
+                    ⏱️ {job.hours} Stunden
+                  </Text>
+                  {job.startAt && job.endAt ? (
+                    <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
+                      📅 Zeitraum: {new Date(job.startAt).toLocaleDateString('de-DE', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric' 
+                      })} - {new Date(job.endAt).toLocaleDateString('de-DE', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric' 
+                      })}
+                    </Text>
+                  ) : job.startAt ? (
+                    <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
+                      📅 Fester Tag: {new Date(job.startAt).toLocaleDateString('de-DE', { 
+                        weekday: 'short',
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric' 
+                      })}
+                    </Text>
+                  ) : null}
+                </>
+              ) : job.timeMode === 'project' && job.dueAt ? (
+                <Text style={{ fontSize: 16, color: COLORS.black }}>
+                  📅 Fällig bis: {new Date(job.dueAt).toLocaleDateString('de-DE', { 
+                    weekday: 'short',
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                  })}
+                </Text>
               ) : (
                 <Text style={{ fontSize: 16, color: COLORS.black }}>
-                  {job.hours} Stunden
+                  Keine Zeitangabe
                 </Text>
               )}
             </View>
