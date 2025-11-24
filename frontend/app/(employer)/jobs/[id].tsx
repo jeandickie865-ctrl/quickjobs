@@ -112,13 +112,14 @@ export default function JobDetailScreen() {
       await acceptApplication(appId);
       await updateAuftrag(job.id, { status: 'matched', matchedWorkerId: workerId });
       
-      Alert.alert(
-        'Match erfolgreich!',
-        `${workerName} wurde ausgewählt. Du kannst jetzt chatten.`,
-        [{ text: 'OK', onPress: () => router.replace('/(employer)') }]
-      );
+      console.log(`🎉 Match erfolgreich! ${workerName} wurde ausgewählt.`);
+      
+      // Weiterleitung zum Dashboard
+      setTimeout(() => {
+        router.replace('/(employer)');
+      }, 500);
     } catch (e) {
-      Alert.alert('Fehler', 'Match konnte nicht erstellt werden.');
+      console.error('❌ Fehler: Match konnte nicht erstellt werden.', e);
     } finally {
       setIsAcceptingId(null);
     }
