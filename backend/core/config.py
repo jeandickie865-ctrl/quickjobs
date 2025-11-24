@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080"))  # 7 days
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8081", "*"]
+    CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "*").split(",")
     
     class Config:
         env_file = ".env"
