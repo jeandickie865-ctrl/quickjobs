@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { getMessagesForApplication, addMessage } from '../../utils/chatStore';
+import { getApplicationById } from '../../utils/applicationStore';
 import { ChatMessage } from '../../types/chat';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -30,6 +31,7 @@ export default function ChatScreen() {
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [jobId, setJobId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!applicationId) return;
@@ -38,6 +40,12 @@ export default function ChatScreen() {
       try {
         const msgs = await getMessagesForApplication(String(applicationId));
         setMessages(msgs);
+        
+        // Load application to get jobId for back navigation
+        const app = await getApplicationById(String(applicationId));
+        if (app) {
+          setJobId(app.jobId);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -119,7 +127,26 @@ export default function ChatScreen() {
             borderBottomWidth: 1,
             borderBottomColor: COLORS.whiteTransparent10,
           }}>
-            <Pressable onPress={() => router.push('/(worker)/matches')} style={{ padding: 4 }}>
+            <Pressable 
+              onPress={() => {
+                if (jobId) {
+                  // Navigate to job details based on role
+                  if (user.role === 'worker') {
+                    router.push(`/(worker)/jobs/${jobId}`);
+                  } else {
+                    router.push(`/(employer)/jobs/${jobId}`);
+                  }
+                } else {
+                  // Fallback to matches if jobId not loaded yet
+                  if (user.role === 'worker') {
+                    router.push('/(worker)/matches');
+                  } else {
+                    router.push('/(employer)/matches');
+                  }
+                }
+              }} 
+              style={{ padding: 4 }}
+            >
               <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
             </Pressable>
             <View style={{ flex: 1, marginLeft: 16 }}>
