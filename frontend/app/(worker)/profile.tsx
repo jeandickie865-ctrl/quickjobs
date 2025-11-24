@@ -502,9 +502,16 @@ export default function WorkerProfileScreen() {
               color: colors.neon,
               fontWeight: '700',
               fontSize: 12,
-              marginBottom: 8,
+              marginBottom: 4,
             }}>
               KATEGORIEN *
+            </Text>
+            <Text style={{
+              color: colors.gray600,
+              fontSize: 11,
+              marginBottom: 8,
+            }}>
+              Tippe auf eine Kategorie, um Tätigkeiten & Qualifikationen auszuwählen
             </Text>
 
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
