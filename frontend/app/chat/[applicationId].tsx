@@ -191,47 +191,65 @@ export default function ChatScreen() {
             )}
           </ScrollView>
 
-        {/* Input Area */}
-        <View 
-          style={[
-            styles.inputContainer, 
-            { 
-              backgroundColor: colors.white,
-              borderTopColor: colors.gray200,
-              padding: spacing.md,
-            }
-          ]}
-        >
-          <View style={styles.inputRow}>
-            <TextInput
-              value={input}
-              onChangeText={setInput}
-              placeholder="Nachricht schreiben…"
-              placeholderTextColor={colors.gray400}
-              multiline
-              maxLength={500}
-              style={[
-                styles.textInput,
-                {
-                  backgroundColor: colors.beige50,
-                  borderColor: colors.gray200,
-                  color: colors.black,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                }
-              ]}
-              onSubmitEditing={handleSend}
-              blurOnSubmit={false}
-            />
-            <Button
-              title={isSending ? '...' : 'Senden'}
-              onPress={handleSend}
-              disabled={isSending || !input.trim()}
-            />
+          {/* Input Area */}
+          <View style={{
+            backgroundColor: COLORS.whiteTransparent10,
+            borderTopWidth: 1,
+            borderTopColor: COLORS.whiteTransparent10,
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+            paddingBottom: Platform.OS === 'ios' ? 32 : 16,
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 12 }}>
+              <TextInput
+                value={input}
+                onChangeText={setInput}
+                placeholder="Nachricht schreiben…"
+                placeholderTextColor="rgba(255,255,255,0.4)"
+                multiline
+                maxLength={500}
+                style={{
+                  flex: 1,
+                  backgroundColor: COLORS.whiteTransparent10,
+                  borderRadius: 24,
+                  paddingHorizontal: 18,
+                  paddingVertical: 12,
+                  fontSize: 15,
+                  color: COLORS.white,
+                  maxHeight: 100,
+                }}
+                onSubmitEditing={handleSend}
+                blurOnSubmit={false}
+              />
+              <Pressable
+                onPress={handleSend}
+                disabled={isSending || !input.trim()}
+                style={({ pressed }) => ({
+                  backgroundColor: (isSending || !input.trim()) ? '#888' : COLORS.neon,
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: pressed ? 0.8 : 1,
+                  shadowColor: COLORS.neon,
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 4,
+                })}
+              >
+                {isSending ? (
+                  <ActivityIndicator color={COLORS.black} size="small" />
+                ) : (
+                  <Ionicons name="send" size={22} color={COLORS.black} />
+                )}
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }
 
