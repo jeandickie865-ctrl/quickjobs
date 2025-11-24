@@ -105,9 +105,16 @@ export default function JobDetailScreen() {
   }, [job?.id, job?.status, job?.matchedWorkerId, user?.id]);
 
   async function handleAcceptApplication(appId: string, workerId: string, workerName: string) {
-    if (!job || !user) return;
+    if (!job || !user) {
+      console.error('❌ handleAcceptApplication: Missing job or user');
+      return;
+    }
 
-    console.log(`💳 Weiterleitung zur Zahlung für Bewerbung: ${appId}`);
+    console.log('💳 handleAcceptApplication called:');
+    console.log('   - Application ID:', appId);
+    console.log('   - Worker ID:', workerId);
+    console.log('   - Worker Name:', workerName);
+    console.log('🔄 Navigating to /payment/' + appId);
     
     // Weiterleitung zur Payment-Seite (Zahlung BEVOR Match)
     router.push(`/payment/${appId}`);
