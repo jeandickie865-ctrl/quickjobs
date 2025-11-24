@@ -288,6 +288,8 @@ export default function WorkerProfileScreen() {
         homeLon: lon || null,
         firstName: name,
         shortBio: shortBio.trim() || undefined,
+        contactEmail: contactEmail.trim() || undefined,
+        contactPhone: contactPhone.trim() || undefined,
         profilePhotoUri: photoUrl || undefined,
         pushToken: undefined,
       };
