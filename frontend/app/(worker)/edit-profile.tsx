@@ -289,6 +289,9 @@ export default function WorkerProfileScreen() {
       // Kombiniere activities und qualifications zu selectedTags
       const combinedTags = [...selectedActivities, ...selectedQualifications];
       console.log('🔵 saveProfileData: Combined tags:', combinedTags.length);
+      console.log('🔵 saveProfileData: Activities:', selectedActivities);
+      console.log('🔵 saveProfileData: Qualifications:', selectedQualifications);
+      console.log('🔵 saveProfileData: Combined tags array:', combinedTags);
 
       const profileData = {
         userId: user.id,
