@@ -83,12 +83,10 @@ export default function WorkerFeed() {
       const notAppliedJobs = openJobs.filter(job => !jobIdsSet.has(job.id));
       console.log(`📋 Filtered out ${openJobs.length - notAppliedJobs.length} already-applied jobs`);
       
-      // ROBUST MATCHING: Use new error-safe matching engine
-      const { matches: matchedJobs, stats } = filterMatchingJobsRobust(notAppliedJobs, workerProfile);
+      // SIMPLE MATCHING: Nur Kategorie-Check!
+      const matchedJobs = getMatchingJobs(notAppliedJobs, workerProfile);
       
-      console.log(`🎯 RESULT: ${matchedJobs.length} von ${notAppliedJobs.length} verfügbare Jobs passen zum Profil`);
-      console.log('📊 Matching Statistics:', stats);
-      console.log('🔍 ROBUST MATCHING END');
+      console.log(`🎯 SIMPLE MATCHING FERTIG: ${matchedJobs.length} von ${notAppliedJobs.length} Jobs matchen`);
       
       setJobs(matchedJobs);
 
