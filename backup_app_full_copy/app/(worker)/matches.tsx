@@ -323,6 +323,22 @@ export default function WorkerMatchesScreen() {
                       </Pressable>
                       
                       <Pressable
+                        onPress={() => router.push(`/(worker)/rate?jobId=${job.id}`)}
+                        style={({ pressed }) => ({
+                          backgroundColor: '#FFD700',
+                          paddingVertical: 14,
+                          borderRadius: 16,
+                          alignItems: 'center',
+                          opacity: pressed ? 0.9 : 1,
+                          transform: [{ scale: pressed ? 0.98 : 1 }],
+                        })}
+                      >
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                          ⭐ Auftraggeber bewerten
+                        </Text>
+                      </Pressable>
+                      
+                      <Pressable
                         onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                         style={({ pressed }) => ({
                           backgroundColor: COLORS.purple,
