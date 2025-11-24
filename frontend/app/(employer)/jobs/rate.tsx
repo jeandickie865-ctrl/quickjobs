@@ -248,7 +248,7 @@ export default function RateWorkerScreen() {
                   <Ionicons
                     name={star <= rating ? 'star' : 'star-outline'}
                     size={56}
-                    color={star <= rating ? '#C8FF16' : '#FFFFFF'}
+                    color={star <= rating ? '#C8FF16' : '#CCCCCC'}
                   />
                 </Pressable>
               ))}
