@@ -230,6 +230,38 @@ export default function MatchesScreen() {
                   </View>
                 </View>
 
+                {/* Contact Details - ONLY VISIBLE AFTER MATCH */}
+                {match.workerProfile && (
+                  <View style={{
+                    backgroundColor: COLORS.neon,
+                    borderRadius: 12,
+                    padding: 16,
+                    marginBottom: 16,
+                  }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black, marginBottom: 12, opacity: 0.7 }}>
+                      KONTAKTDATEN
+                    </Text>
+                    
+                    {match.workerProfile.email && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                        <Ionicons name="mail" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
+                          {match.workerProfile.email}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    {match.workerProfile.phone && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <Ionicons name="call" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
+                          {match.workerProfile.phone}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )}
+
                 {/* Job Info */}
                 <View style={{ 
                   backgroundColor: COLORS.lightGray, 
