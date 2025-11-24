@@ -67,6 +67,8 @@ export async function getWorkerProfile(userId: string): Promise<WorkerProfile | 
 
 export async function saveWorkerProfile(profile: WorkerProfile): Promise<void> {
   console.log('💾 saveWorkerProfile: Saving profile for user', profile.userId);
+  console.log('💾 saveWorkerProfile: Categories:', profile.categories);
+  console.log('💾 saveWorkerProfile: SelectedTags:', profile.selectedTags);
   
   // Normalize profile to ensure arrays are never undefined
   const normalized: WorkerProfile = {
@@ -74,6 +76,8 @@ export async function saveWorkerProfile(profile: WorkerProfile): Promise<void> {
     categories: profile.categories ?? [],
     selectedTags: profile.selectedTags ?? [],
   };
+  
+  console.log('💾 saveWorkerProfile: Normalized tags:', normalized.selectedTags);
   
   await storage.setItem(PROFILE_KEY, normalized);
   console.log('✅ saveWorkerProfile: Profile saved successfully', {
