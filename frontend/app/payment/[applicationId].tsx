@@ -183,31 +183,23 @@ export default function PaymentScreen() {
           </Text>
 
           <View style={{ gap: 12 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={{ fontSize: 15, color: COLORS.darkGray }}>Auftrag:</Text>
-              <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black }}>
-                {job.title}
-              </Text>
-            </View>
-
-            <View style={{ height: 1, backgroundColor: '#E0E0E0' }} />
-
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 15, color: COLORS.darkGray }}>Vergütung Auftrag:</Text>
-              <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black }}>
-                {euro(job.workerAmountCents)}
-              </Text>
+              <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black, flex: 1, textAlign: 'right' }}>{job.title}</Text>
             </View>
 
             <View style={{ height: 1, backgroundColor: '#E0E0E0' }} />
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                Plattformgebühr (20%):
-              </Text>
-              <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.purple }}>
-                {euro(platformFee)}
-              </Text>
+              <Text style={{ fontSize: 15, color: COLORS.darkGray }}>Vergütung Auftrag:</Text>
+              <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.black }}>{euro(job.workerAmountCents)}</Text>
+            </View>
+
+            <View style={{ height: 1, backgroundColor: '#E0E0E0' }} />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Plattformgebühr (20%):</Text>
+              <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.purple }}>{euro(platformFee)}</Text>
             </View>
           </View>
         </View>
