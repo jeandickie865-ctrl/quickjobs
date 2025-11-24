@@ -227,7 +227,7 @@ export default function PaymentScreen() {
             {job.title}
           </Text>
           <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-            Job-Lohn: {euro(job.wages)}
+            Job-Lohn: {euro(job.workerAmountCents)}
           </Text>
         </View>
 
