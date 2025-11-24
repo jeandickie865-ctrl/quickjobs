@@ -239,25 +239,40 @@ export default function MatchesScreen() {
                     marginBottom: 16,
                   }}>
                     <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black, marginBottom: 12, opacity: 0.7 }}>
-                      KONTAKTDATEN
+                      🔓 KONTAKTDATEN FREIGESCHALTET
                     </Text>
                     
-                    {match.workerProfile.email && (
+                    {(match.workerProfile.firstName || match.workerProfile.lastName) && (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                        <Ionicons name="mail" size={18} color={COLORS.black} />
-                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
-                          {match.workerProfile.email}
+                        <Ionicons name="person" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 15, color: COLORS.black, fontWeight: '700' }}>
+                          {match.workerProfile.firstName} {match.workerProfile.lastName}
                         </Text>
                       </View>
                     )}
                     
-                    {match.workerProfile.phone && (
+                    {match.workerProfile.contactEmail && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                        <Ionicons name="mail" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
+                          {match.workerProfile.contactEmail}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    {match.workerProfile.contactPhone && (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <Ionicons name="call" size={18} color={COLORS.black} />
                         <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
-                          {match.workerProfile.phone}
+                          {match.workerProfile.contactPhone}
                         </Text>
                       </View>
+                    )}
+                    
+                    {!match.workerProfile.contactEmail && !match.workerProfile.contactPhone && (
+                      <Text style={{ fontSize: 13, color: COLORS.black, opacity: 0.6, fontStyle: 'italic' }}>
+                        Worker hat noch keine Kontaktdaten hinterlegt
+                      </Text>
                     )}
                   </View>
                 )}
