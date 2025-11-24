@@ -161,10 +161,12 @@ export default function EmployerProfileScreen() {
       console.log('💾 Saving profile:', profile);
       await saveEmployerProfile(profile);
       console.log('✅ Profile saved successfully!');
+      console.log('🎉 EMPLOYER-PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung...');
       
-      Alert.alert('Erfolg', 'Profil gespeichert!', [
-        { text: 'OK', onPress: () => router.push('/(employer)') }
-      ]);
+      // Weiterleitung zum Dashboard
+      setTimeout(() => {
+        router.push('/(employer)');
+      }, 500);
     } catch (error) {
       console.error('❌ Error saving profile:', error);
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : String(error)));
