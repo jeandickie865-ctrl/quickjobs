@@ -71,8 +71,11 @@ export default function WorkerProfileScreen() {
     if (!activeCategory) return [];
     
     const cat = TAXONOMY.find((c) => c.key === activeCategory);
+    const activities = cat?.activities || [];
+    console.log('🔍 availableActivities:', activities);
+    console.log('🔍 First activity:', activities[0]);
     // Return array of {key, label} objects
-    return cat?.activities || [];
+    return activities;
   }, [activeCategory]);
 
   // Qualifikationen nur für die AKTIVE Kategorie anzeigen
