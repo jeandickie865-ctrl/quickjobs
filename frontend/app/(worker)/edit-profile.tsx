@@ -149,12 +149,29 @@ export default function WorkerProfileScreen() {
         setRadiusKm(String(data.radiusKm || 15));
         setPhotoUrl(data.profilePhotoUri || '');
         setSelectedCategories(data.categories || []);
-        setSelectedActivities(data.selectedTags?.filter(t => 
-          TAXONOMY.some(cat => cat.activities?.includes(t))
-        ) || []);
-        setSelectedQualifications(data.selectedTags?.filter(t => 
-          TAXONOMY.some(cat => cat.qualifications?.includes(t))
-        ) || []);
+        
+        // Filter activities and qualifications from selectedTags
+        const activities: string[] = [];
+        const qualifications: string[] = [];
+        
+        data.selectedTags?.forEach((tagKey: string) => {
+          TAXONOMY.forEach(cat => {
+            // Check if it's an activity
+            if (cat.activities?.some((act: any) => act.key === tagKey)) {
+              activities.push(tagKey);
+            }
+            // Check if it's a qualification
+            if (cat.qualifications?.some((qual: any) => qual.key === tagKey)) {
+              qualifications.push(tagKey);
+            }
+          });
+        });
+        
+        setSelectedActivities(activities);
+        setSelectedQualifications(qualifications);
+        
+        console.log('✅ Loaded activities:', activities.length);
+        console.log('✅ Loaded qualifications:', qualifications.length);
         console.log('✅ Profile loaded from AsyncStorage');
       } else {
         console.log('ℹ️ No profile found - new profile');
