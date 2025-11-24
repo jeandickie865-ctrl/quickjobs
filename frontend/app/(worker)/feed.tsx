@@ -64,7 +64,7 @@ export default function WorkerFeed() {
       const allJobs = await getJobs();
       const openJobs = allJobs.filter(j => j.status === 'open');
       
-      console.log('🔍 MATCHING DEBUG START');
+      console.log('🔍 ROBUST MATCHING START');
       console.log(`📊 Total Jobs: ${allJobs.length}, Open Jobs: ${openJobs.length}`);
       console.log('👤 Worker Profile:', {
         userId: workerProfile.userId,
@@ -74,19 +74,12 @@ export default function WorkerFeed() {
         radius: workerProfile.radiusKm,
       });
       
-      // BUG 2 FIX: Wende Matching-Filter an
-      const matchedJobs = openJobs.filter(job => {
-        const match = jobMatchesWorker(job, workerProfile);
-        if (!match) {
-          console.log(`❌ Job "${job.title}" (${job.category}) did NOT match`);
-        } else {
-          console.log(`✅ Job "${job.title}" (${job.category}) MATCHED!`);
-        }
-        return match;
-      });
+      // ROBUST MATCHING: Use new error-safe matching engine
+      const { matches: matchedJobs, stats } = filterMatchingJobsRobust(openJobs, workerProfile);
       
       console.log(`🎯 RESULT: ${matchedJobs.length} von ${openJobs.length} Jobs passen zum Profil`);
-      console.log('🔍 MATCHING DEBUG END');
+      console.log('📊 Matching Statistics:', stats);
+      console.log('🔍 ROBUST MATCHING END');
       
       setJobs(matchedJobs);
 
