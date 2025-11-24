@@ -41,11 +41,11 @@ export default function RoleSelection() {
         <Text style={{ fontSize: 16, color: COLORS.white, opacity: 0.8, marginBottom: 60, textAlign: 'center' }}>Du kannst dies später in den Einstellungen ändern.</Text>
 
         <Pressable onPress={() => handleRoleSelect('worker')} disabled={selecting} style={({ pressed }) => ({ backgroundColor: COLORS.neon, paddingVertical: 20, borderRadius: 16, alignItems: 'center', marginBottom: 16, opacity: pressed || selecting ? 0.8 : 1 })}>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>Jobstarter (Worker)</Text>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>Auftragnehmer</Text>
         </Pressable>
 
         <Pressable onPress={() => handleRoleSelect('employer')} disabled={selecting} style={({ pressed }) => ({ backgroundColor: COLORS.neon, paddingVertical: 20, borderRadius: 16, alignItems: 'center', opacity: pressed || selecting ? 0.8 : 1 })}>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>Auftraggeber (Employer)</Text>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>Auftraggeber</Text>
         </Pressable>
       </SafeAreaView>
     </View>
