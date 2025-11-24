@@ -44,17 +44,31 @@ export default function PaymentScreen() {
   }, [isLoading, user]);
 
   async function loadData() {
-    if (!applicationId) return;
+    console.log('🔍 loadData called with applicationId:', applicationId);
+    
+    if (!applicationId) {
+      console.error('❌ No applicationId provided!');
+      return;
+    }
+    
     try {
+      console.log('📝 Fetching application with ID:', applicationId);
       const app = await getApplicationById(applicationId);
+      
       if (app) {
+        console.log('✅ Application found:', app);
         setApplication(app);
+        
         const j = await getJobById(app.jobId);
+        console.log('✅ Job found:', j?.title);
         setJob(j);
         
         // Worker-Profil laden für Anzeige
         const profile = await getWorkerProfile(app.workerId);
+        console.log('✅ Worker profile found:', profile?.firstName);
         setWorkerProfile(profile);
+      } else {
+        console.error('❌ Application not found in AsyncStorage');
       }
     } catch (e) {
       console.error('❌ Error loading payment data:', e);
