@@ -80,7 +80,7 @@ export default function RateEmployerScreen() {
   }
 
   async function handleSave() {
-    if (!job || !employer || !user) return;
+    if (!job || !user) return;
 
     if (rating < 1 || rating > 5) {
       Alert.alert('Fehler', 'Bitte wähle mindestens 1 Stern');
@@ -93,7 +93,7 @@ export default function RateEmployerScreen() {
         id: `review-${Date.now()}`,
         jobId: String(jobId),
         workerId: user.id,
-        employerId: employer.userId,
+        employerId: job.employerId,
         rating,
         comment: comment.trim() || undefined,
         createdAt: new Date().toISOString(),
