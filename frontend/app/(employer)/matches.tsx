@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob, JobApplication } from '../../utils/applicationStore';
+import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { Ionicons } from '@expo/vector-icons';
 
 // BACKUP NEON-TECH COLORS
