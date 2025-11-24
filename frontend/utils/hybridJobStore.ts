@@ -8,19 +8,43 @@ import { Job } from '../types/job';
 // Backend API URL
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
 const JOBS_KEY = '@shiftmatch:jobs';
+const TOKEN_KEY = '@shiftmatch:token';
 
 // ============================================
-// HELPER: Backend API Call mit Fehlerbehandlung
+// HELPER: Get Auth Token
+// ============================================
+
+async function getAuthToken(): Promise<string | null> {
+  try {
+    return await AsyncStorage.getItem(TOKEN_KEY);
+  } catch (error) {
+    console.log('⚠️ Could not get auth token:', error);
+    return null;
+  }
+}
+
+// ============================================
+// HELPER: Backend API Call mit Fehlerbehandlung & AUTH
 // ============================================
 
 async function callBackendAPI(endpoint: string, options: RequestInit = {}) {
   try {
+    // Hole Auth-Token
+    const token = await getAuthToken();
+    
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...(options.headers as Record<string, string> || {}),
+    };
+    
+    // Füge Token hinzu, falls vorhanden
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
       // Timeout nach 5 Sekunden
       signal: AbortSignal.timeout(5000),
     });
