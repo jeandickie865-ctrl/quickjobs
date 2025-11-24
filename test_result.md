@@ -336,7 +336,11 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus: 
+    - "Stundenpaket Date Functionality - Fixed Day"
+    - "Stundenpaket Date Functionality - Date Range"
+    - "Job Creation Validation"
+    - "Worker Job Display"
   stuck_tasks: 
     - "Authentication Flow"
     - "Worker Profile"
