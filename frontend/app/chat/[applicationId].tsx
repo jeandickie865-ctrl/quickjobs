@@ -23,7 +23,6 @@ const COLORS = {
 export default function ChatScreen() {
   const { applicationId } = useLocalSearchParams<{ applicationId: string }>();
   const { user } = useAuth();
-  const { colors, spacing } = useTheme();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
   
