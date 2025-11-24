@@ -303,23 +303,41 @@ export default function WorkerMatchesScreen() {
                     {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
                   </Text>
 
-                  {/* Action Button */}
+                  {/* Action Buttons */}
                   {application.status === 'accepted' ? (
-                    <Pressable
-                      onPress={() => router.push(`/chat/${application.id}`)}
-                      style={({ pressed }) => ({
-                        backgroundColor: COLORS.neon,
-                        paddingVertical: 14,
-                        borderRadius: 16,
-                        alignItems: 'center',
-                        opacity: pressed ? 0.9 : 1,
-                        transform: [{ scale: pressed ? 0.98 : 1 }],
-                      })}
-                    >
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                        💬 Zum Chat
-                      </Text>
-                    </Pressable>
+                    <View style={{ gap: 12 }}>
+                      <Pressable
+                        onPress={() => router.push(`/chat/${application.id}`)}
+                        style={({ pressed }) => ({
+                          backgroundColor: COLORS.neon,
+                          paddingVertical: 14,
+                          borderRadius: 16,
+                          alignItems: 'center',
+                          opacity: pressed ? 0.9 : 1,
+                          transform: [{ scale: pressed ? 0.98 : 1 }],
+                        })}
+                      >
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                          💬 Zum Chat
+                        </Text>
+                      </Pressable>
+                      
+                      <Pressable
+                        onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
+                        style={({ pressed }) => ({
+                          backgroundColor: COLORS.purple,
+                          paddingVertical: 14,
+                          borderRadius: 16,
+                          alignItems: 'center',
+                          opacity: pressed ? 0.9 : 1,
+                          transform: [{ scale: pressed ? 0.98 : 1 }],
+                        })}
+                      >
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
+                          📄 Jobdetails ansehen
+                        </Text>
+                      </Pressable>
+                    </View>
                   ) : (
                     <View style={{
                       backgroundColor: '#E8E8E8',
