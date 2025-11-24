@@ -114,8 +114,9 @@ export default function PaymentScreen() {
       // Success-Meldung anzeigen
       alert('✅ Zahlung erfolgreich!\n\n🎉 Match wurde erstellt!\n\nDu wirst jetzt zum Dashboard weitergeleitet.');
       
-      console.log('🔄 Redirecting to dashboard now...');
-      router.replace('/(employer)/');
+      // Weiterleitung nach erfolgreicher Zahlung
+      console.log('🔄 Redirecting to employer dashboard...');
+      router.replace('/(employer)/index');
       
     } catch (e) {
       console.error('❌ ERROR in handleMockPayment:', e);
