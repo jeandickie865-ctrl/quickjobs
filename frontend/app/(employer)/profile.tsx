@@ -82,6 +82,11 @@ export default function EmployerProfileViewScreen() {
     );
   }
 
+  // If no profile exists, redirect to edit
+  if (!profile || !profile.firstName) {
+    return <Redirect href="/(employer)/edit-profile" />;
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
       <SafeAreaView edges={['top']} style={{ flex: 1 }}>
