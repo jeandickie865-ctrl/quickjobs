@@ -103,7 +103,7 @@ export default function PaymentScreen() {
       console.log('✅ Step 1 complete');
       
       console.log('📝 Step 2: Updating job status...');
-      await updateAuftrag(job.id, { 
+      await updateJob(job.id, { 
         status: 'matched', 
         matchedWorkerId: application.workerId 
       });
