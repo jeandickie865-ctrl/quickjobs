@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob, JobApplication } from '../../utils/applicationStore';
+import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { Ionicons } from '@expo/vector-icons';
 
 // BACKUP NEON-TECH COLORS
@@ -23,6 +24,7 @@ const COLORS = {
 type Match = {
   job: Job;
   application: JobApplication;
+  workerProfile: WorkerProfile | null;
 };
 
 export default function MatchesScreen() {
@@ -75,14 +77,20 @@ export default function MatchesScreen() {
       // Load employer's jobs
       const employerJobs = await getEmployerJobs(user.id);
       
-      // Find all accepted applications
+      // Find all accepted applications and load worker profiles
       const allMatches: Match[] = [];
       for (const job of employerJobs) {
         const jobApps = await getApplicationsForJob(job.id);
         const acceptedApps = jobApps.filter(app => app.status === 'accepted');
         
         for (const app of acceptedApps) {
-          allMatches.push({ job, application: app });
+          // Load worker profile to get contact details
+          const workerProfile = await getWorkerProfile(app.workerId);
+          allMatches.push({ 
+            job, 
+            application: app,
+            workerProfile 
+          });
         }
       }
       
@@ -221,6 +229,38 @@ export default function MatchesScreen() {
                     </Text>
                   </View>
                 </View>
+
+                {/* Contact Details - ONLY VISIBLE AFTER MATCH */}
+                {match.workerProfile && (
+                  <View style={{
+                    backgroundColor: COLORS.neon,
+                    borderRadius: 12,
+                    padding: 16,
+                    marginBottom: 16,
+                  }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black, marginBottom: 12, opacity: 0.7 }}>
+                      KONTAKTDATEN
+                    </Text>
+                    
+                    {match.workerProfile.email && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                        <Ionicons name="mail" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
+                          {match.workerProfile.email}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    {match.workerProfile.phone && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <Ionicons name="call" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
+                          {match.workerProfile.phone}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )}
 
                 {/* Job Info */}
                 <View style={{ 
