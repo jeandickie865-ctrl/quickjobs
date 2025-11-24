@@ -75,17 +75,9 @@ export default function WorkerProfileScreen() {
     
     const quals: string[] = [];
 
-    selectedCategories.forEach((key) => {
-      const cat = TAXONOMY.find((c) => c.key === key);
-      if (cat?.qualifications) {
-        cat.qualifications.forEach((q) => {
-          if (!quals.includes(q)) quals.push(q);
-        });
-      }
-    });
-
-    return quals;
-  }, [selectedCategories]);
+    const cat = TAXONOMY.find((c) => c.key === activeCategory);
+    return cat?.qualifications || [];
+  }, [activeCategory]);
 
   useEffect(() => {
     if (user) {
