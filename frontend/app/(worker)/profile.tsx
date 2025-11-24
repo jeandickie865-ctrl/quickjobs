@@ -265,6 +265,7 @@ export default function WorkerProfileScreen() {
         homeLat: lat || null,
         homeLon: lon || null,
         firstName: name,
+        shortBio: shortBio.trim() || undefined,
         profilePhotoUri: photoUrl || undefined,
         pushToken: undefined,
       };
