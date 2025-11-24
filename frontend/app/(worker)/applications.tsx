@@ -314,9 +314,11 @@ export default function WorkerApplicationsScreen() {
               {job && (
                 <View style={{ marginTop: spacing.sm }}>
                   <Button
-                    title="Jobdetails ansehen"
-                    variant="secondary"
+                    title="📄 Jobdetails ansehen"
+                    variant="primary"
                     onPress={() => router.push('/(worker)/feed')}
+                    style={{ backgroundColor: '#5941FF' }}
+                    textStyle={{ color: '#FFFFFF', fontWeight: '700' }}
                   />
                 </View>
               )}
