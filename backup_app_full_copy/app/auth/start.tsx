@@ -4,9 +4,6 @@ import { View, Text, Pressable, Image, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { resetAllStorage } from '../../utils/resetStorage';
-import { migrateUserIdsToEmailBased } from '../../utils/migrateUserIds';
-import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   purple: '#5941FF',
@@ -37,39 +34,6 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
       <LinearGradient colors={['#5941FF', '#4935CC']} style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
-          {/* RESET & MIGRATE Buttons (oben rechts) */}
-          <View style={{ position: 'absolute', top: 50, right: 24, zIndex: 10, flexDirection: 'row', gap: 12 }}>
-            <Pressable
-              onPress={migrateUserIdsToEmailBased}
-              style={{
-                backgroundColor: '#4CAF50',
-                padding: 12,
-                borderRadius: 12,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-              }}
-            >
-              <Ionicons name="sync-outline" size={24} color="white" />
-            </Pressable>
-            
-            <Pressable
-              onPress={resetAllStorage}
-              style={{
-                backgroundColor: '#FF4444',
-                padding: 12,
-                borderRadius: 12,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-              }}
-            >
-              <Ionicons name="trash-outline" size={24} color="white" />
-            </Pressable>
-          </View>
-          
           <View style={{ height: 60 }} />
           
           <Animated.View style={{ transform: [{ scale: logoScale }], opacity: logoOpacity, alignItems: 'center' }}>
