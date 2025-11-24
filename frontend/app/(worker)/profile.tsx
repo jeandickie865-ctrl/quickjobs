@@ -300,8 +300,8 @@ export default function WorkerProfileViewScreen() {
                     </View>
                     
                     {/* Activities */}
-                    {categoryActivities.length > 0 ? (
-                      <View style={{ marginBottom: 12 }}>
+                    {categoryActivities.length > 0 && (
+                      <View style={{ marginBottom: categoryQualifications.length > 0 ? 12 : 0 }}>
                         <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
                           TÄTIGKEITEN:
                         </Text>
@@ -314,19 +314,10 @@ export default function WorkerProfileViewScreen() {
                           </View>
                         ))}
                       </View>
-                    ) : (
-                      <View style={{ marginBottom: 12 }}>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                          TÄTIGKEITEN:
-                        </Text>
-                        <Text style={{ fontSize: 12, color: '#999', fontStyle: 'italic' }}>
-                          Keine Tätigkeiten ausgewählt
-                        </Text>
-                      </View>
                     )}
                     
                     {/* Qualifications */}
-                    {categoryQualifications.length > 0 ? (
+                    {categoryQualifications.length > 0 && (
                       <View>
                         <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
                           QUALIFIKATIONEN:
@@ -339,15 +330,6 @@ export default function WorkerProfileViewScreen() {
                             </Text>
                           </View>
                         ))}
-                      </View>
-                    ) : (
-                      <View>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                          QUALIFIKATIONEN:
-                        </Text>
-                        <Text style={{ fontSize: 12, color: '#999', fontStyle: 'italic' }}>
-                          Keine Qualifikationen ausgewählt
-                        </Text>
                       </View>
                     )}
                   </View>
