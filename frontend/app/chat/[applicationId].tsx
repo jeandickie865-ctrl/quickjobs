@@ -1,12 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, ScrollView, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { View, Text, TextInput, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getMessagesForApplication, addMessage } from '../../utils/chatStore';
 import { ChatMessage } from '../../types/chat';
-import { Button } from '../../components/ui/Button';
+import { Ionicons } from '@expo/vector-icons';
+
+// NEON-TECH COLORS
+const COLORS = {
+  purple: '#5941FF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  darkGray: '#333333',
+  lightGray: '#F5F5F5',
+  whiteTransparent20: 'rgba(255,255,255,0.2)',
+  whiteTransparent10: 'rgba(255,255,255,0.1)',
+  neonShadow: 'rgba(200,255,22,0.2)',
+};
 
 export default function ChatScreen() {
   const { applicationId } = useLocalSearchParams<{ applicationId: string }>();
