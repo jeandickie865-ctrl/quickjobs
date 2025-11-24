@@ -732,12 +732,12 @@ export default function WorkerProfileScreen() {
               </Text>
 
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 }}>
-                {availableQualifications.map((q, idx) => {
-                  const isSelected = selectedQualifications.includes(q);
+                {availableQualifications.map((qualObj: any, idx) => {
+                  const isSelected = selectedQualifications.includes(qualObj.key);
                   return (
                     <Pressable
-                      key={`${q}-${idx}`}
-                      onPress={() => toggleQualification(q)}
+                      key={`${qualObj.key}-${idx}`}
+                      onPress={() => toggleQualification(qualObj.key)}
                       style={{
                         backgroundColor: isSelected ? colors.neon : colors.white,
                         borderWidth: 2,
