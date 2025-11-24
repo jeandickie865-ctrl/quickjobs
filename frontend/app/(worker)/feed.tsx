@@ -42,6 +42,7 @@ export default function WorkerFeed() {
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [appsJobIds, setAppsJobIds] = useState<Set<string>>(new Set());
+  const [employerRatings, setEmployerRatings] = useState<Record<string, { avg: number; count: number }>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isApplyingJobId, setIsApplyingJobId] = useState<string | null>(null);
