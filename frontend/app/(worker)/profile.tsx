@@ -52,6 +52,9 @@ export default function WorkerProfileScreen() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
+  
+  // Neue State für aktive Kategorie (für besseren Mobile Flow)
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
