@@ -119,7 +119,7 @@ export default function ChatScreen() {
             borderBottomWidth: 1,
             borderBottomColor: COLORS.whiteTransparent10,
           }}>
-            <Pressable onPress={() => router.back()} style={{ padding: 4 }}>
+            <Pressable onPress={() => router.push('/(worker)/matches')} style={{ padding: 4 }}>
               <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
             </Pressable>
             <View style={{ flex: 1, marginLeft: 16 }}>
