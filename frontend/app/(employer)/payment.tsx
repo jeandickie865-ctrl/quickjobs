@@ -117,7 +117,7 @@ export default function PaymentScreen() {
     );
   }
 
-  const provisionAmount = job.wages * 0.2; // 20% Provision
+  const provisionAmount = (job.workerAmountCents / 100) * 0.2; // 20% Provision
 
   // Success Screen
   if (showSuccess) {
