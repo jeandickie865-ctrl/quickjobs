@@ -278,59 +278,57 @@ export default function EmployerProfileScreen() {
           </View>
 
           {/* Matches Button */}
-          {matchesCount > 0 && (
-            <Pressable
-              onPress={() => router.push('/(employer)/matches')}
-              style={({ pressed }) => ({
-                backgroundColor: COLORS.neon,
-                borderRadius: 16,
-                padding: 16,
-                marginBottom: 24,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                opacity: pressed ? 0.9 : 1,
-                shadowColor: COLORS.neon,
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 8,
-                elevation: 4,
-              })}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                <View style={{
-                  backgroundColor: COLORS.black,
-                  width: 48,
-                  height: 48,
-                  borderRadius: 24,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Text style={{ fontSize: 24 }}>🎉</Text>
-                </View>
-                <View>
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
-                    Neue Matches!
-                  </Text>
-                  <Text style={{ fontSize: 14, color: COLORS.black, opacity: 0.7 }}>
-                    Du hast {matchesCount} {matchesCount === 1 ? 'neues Match' : 'neue Matches'}
-                  </Text>
-                </View>
-              </View>
+          <Pressable
+            onPress={() => router.push('/(employer)/matches')}
+            style={({ pressed }) => ({
+              backgroundColor: COLORS.neon,
+              borderRadius: 16,
+              padding: 16,
+              marginBottom: 24,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              opacity: pressed ? 0.9 : 1,
+              shadowColor: COLORS.neon,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 4,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
               <View style={{
                 backgroundColor: COLORS.black,
-                width: 32,
-                height: 32,
-                borderRadius: 16,
+                width: 48,
+                height: 48,
+                borderRadius: 24,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-                <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
-                  {matchesCount}
+                <Text style={{ fontSize: 24 }}>{matchesCount > 0 ? '🎉' : '💼'}</Text>
+              </View>
+              <View>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                  {matchesCount > 0 ? 'Neue Matches!' : 'Meine Matches'}
+                </Text>
+                <Text style={{ fontSize: 14, color: COLORS.black, opacity: 0.7 }}>
+                  {matchesCount > 0 ? `Du hast ${matchesCount} ${matchesCount === 1 ? 'neues Match' : 'neue Matches'}` : 'Noch keine Matches'}
                 </Text>
               </View>
-            </Pressable>
-          )}
+            </View>
+            <View style={{
+              backgroundColor: COLORS.black,
+              width: 32,
+              height: 32,
+              borderRadius: 16,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
+                {matchesCount}
+              </Text>
+            </View>
+          </Pressable>
 
           {/* Header */}
           <View style={{ marginBottom: 24 }}>
