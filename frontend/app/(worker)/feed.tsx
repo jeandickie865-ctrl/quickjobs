@@ -243,19 +243,6 @@ export default function WorkerFeed() {
             Jobs für dich
           </Text>
           <View style={{ flexDirection: 'row', gap: 12 }}>
-            <Pressable 
-              onPress={async () => {
-                await createTestJob();
-                await loadData();
-              }}
-              style={{
-                padding: 12,
-                backgroundColor: COLORS.neon,
-                borderRadius: 8,
-              }}
-            >
-              <Ionicons name="add" size={20} color={COLORS.black} />
-            </Pressable>
             <Pressable onPress={() => router.push('/(worker)/matches')}>
               <Ionicons name="heart-outline" size={26} color={COLORS.neon} />
             </Pressable>
