@@ -228,13 +228,26 @@ export default function RateWorkerScreen() {
             </Text>
 
             {/* Stars */}
-            <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16, marginBottom: 20 }}>
               {[1, 2, 3, 4, 5].map((star) => (
-                <Pressable key={star} onPress={() => setRating(star)}>
+                <Pressable 
+                  key={star} 
+                  onPress={() => setRating(star)}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.7 : 1,
+                    transform: [{ scale: pressed ? 0.95 : 1 }],
+                  })}
+                >
                   <Ionicons
                     name={star <= rating ? 'star' : 'star-outline'}
-                    size={44}
-                    color={star <= rating ? COLORS.neon : COLORS.whiteTransparent30}
+                    size={52}
+                    color={star <= rating ? COLORS.neon : COLORS.white}
+                    style={{
+                      shadowColor: star <= rating ? COLORS.neon : 'transparent',
+                      shadowOffset: { width: 0, height: 0 },
+                      shadowOpacity: 0.8,
+                      shadowRadius: 8,
+                    }}
                   />
                 </Pressable>
               ))}
