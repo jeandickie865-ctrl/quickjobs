@@ -7,6 +7,8 @@ import { getJobById } from '../../../utils/jobStore';
 import { Job } from '../../../types/job';
 import { euro } from '../../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
+import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
+import { RatingDisplay } from '../../../components/RatingDisplay';
 
 // NEON COLORS
 const COLORS = {
