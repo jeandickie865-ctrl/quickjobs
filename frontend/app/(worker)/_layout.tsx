@@ -221,6 +221,13 @@ export default function WorkerLayout() {
           href: null,
         }}
       />
+      
+      <Tabs.Screen
+        name="edit-profile"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
