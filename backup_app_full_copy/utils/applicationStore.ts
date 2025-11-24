@@ -182,3 +182,9 @@ export async function getApplicationById(applicationId: string): Promise<JobAppl
   const apps = await loadApplications();
   return apps.find(app => app.id === applicationId) || null;
 }
+
+// Get all applications for a specific employer
+export async function getApplicationsForEmployer(employerId: string): Promise<JobApplication[]> {
+  const apps = await loadApplications();
+  return apps.filter(app => app.employerId === employerId);
+}
