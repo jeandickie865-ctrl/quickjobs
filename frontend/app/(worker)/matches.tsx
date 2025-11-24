@@ -303,22 +303,35 @@ export default function WorkerMatchesScreen() {
                     {euro(job.wages)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
                   </Text>
 
-                  {/* Chat Button */}
-                  <Pressable
-                    onPress={() => router.push(`/(worker)/chat/${job.employerId}`)}
-                    style={({ pressed }) => ({
-                      backgroundColor: COLORS.neon,
+                  {/* Action Button */}
+                  {application.status === 'accepted' ? (
+                    <Pressable
+                      onPress={() => router.push(`/(worker)/chat/${job.employerId}`)}
+                      style={({ pressed }) => ({
+                        backgroundColor: COLORS.neon,
+                        paddingVertical: 14,
+                        borderRadius: 16,
+                        alignItems: 'center',
+                        opacity: pressed ? 0.9 : 1,
+                        transform: [{ scale: pressed ? 0.98 : 1 }],
+                      })}
+                    >
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                        💬 Zum Chat
+                      </Text>
+                    </Pressable>
+                  ) : (
+                    <View style={{
+                      backgroundColor: '#E8E8E8',
                       paddingVertical: 14,
                       borderRadius: 16,
                       alignItems: 'center',
-                      opacity: pressed ? 0.9 : 1,
-                      transform: [{ scale: pressed ? 0.98 : 1 }],
-                    })}
-                  >
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                      💬 Zum Chat
-                    </Text>
-                  </Pressable>
+                    }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: '#666' }}>
+                        Warte auf Antwort...
+                      </Text>
+                    </View>
+                  )}
                 </View>
               );
             })}
