@@ -118,23 +118,23 @@ export default function EmployerProfileScreen() {
 
     // Validation
     if (!firstName.trim()) {
-      Alert.alert('Fehler', 'Bitte Vorname eingeben');
+      console.error('❌ Validation failed: Vorname fehlt');
       return;
     }
     if (!lastName.trim()) {
-      Alert.alert('Fehler', 'Bitte Nachname eingeben');
+      console.error('❌ Validation failed: Nachname fehlt');
       return;
     }
     if (!phone.trim()) {
-      Alert.alert('Fehler', 'Bitte Telefonnummer eingeben');
+      console.error('❌ Validation failed: Telefonnummer fehlt');
       return;
     }
     if (!street.trim() || !postalCode.trim() || !city.trim()) {
-      Alert.alert('Fehler', 'Bitte Rechnungsadresse vollständig ausfüllen');
+      console.error('❌ Validation failed: Rechnungsadresse unvollständig');
       return;
     }
     if (!paymentMethod) {
-      Alert.alert('Fehler', 'Bitte Zahlart wählen');
+      console.error('❌ Validation failed: Zahlart fehlt');
       return;
     }
 
