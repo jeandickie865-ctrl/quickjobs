@@ -54,19 +54,38 @@ export async function getApplicationsForWorker(workerId: string): Promise<JobApp
 }
 
 export async function acceptApplication(
-  jobId: string, 
   applicationId: string,
   employerConfirmedLegal: boolean = true
 ): Promise<void> {
-  console.log('🎯 acceptApplication called', { jobId, applicationId, employerConfirmedLegal });
+  console.log('🎯 acceptApplication called', { applicationId, employerConfirmedLegal });
+  
+  // Validate input
+  if (!applicationId || typeof applicationId !== 'string') {
+    console.error('❌ acceptApplication: Application ID missing or invalid', { applicationId });
+    throw new Error('Application ID missing');
+  }
   
   const apps = await loadApplications();
+  console.log(`📋 Total applications in storage: ${apps.length}`);
+  
   const acceptedApp = apps.find(app => app.id === applicationId);
   
   if (!acceptedApp) {
-    console.error('❌ acceptApplication: Application not found', { applicationId });
-    throw new Error('Application not found');
+    console.error('❌ acceptApplication: Application not found', { 
+      applicationId, 
+      availableIds: apps.map(a => a.id) 
+    });
+    throw new Error(`Application not found: ${applicationId}`);
   }
+  
+  console.log('✅ Found application:', {
+    id: acceptedApp.id,
+    jobId: acceptedApp.jobId,
+    workerId: acceptedApp.workerId,
+    currentStatus: acceptedApp.status,
+  });
+  
+  const jobId = acceptedApp.jobId;
   
   const next = apps.map(app => {
     if (app.jobId !== jobId) return app;
@@ -78,7 +97,11 @@ export async function acceptApplication(
         employerConfirmedLegal,
         workerConfirmedLegal: false,
       };
-      console.log('✅ acceptApplication: Application accepted', updated);
+      console.log('✅ acceptApplication: Application accepted', {
+        id: updated.id,
+        newStatus: updated.status,
+        respondedAt: updated.respondedAt,
+      });
       return updated;
     }
     if (app.status === 'pending') {
@@ -99,9 +122,6 @@ export async function acceptApplication(
   } catch (error) {
     console.error('⚠️ acceptApplication: Could not send notification', error);
   }
-  
-  // TODO: Send email notification (will be replaced by backend later)
-  // await sendEmailNotification(workerEmail, jobTitle);
 }
 
 export async function updateApplicationStatus(id: string, status: ApplicationStatus): Promise<void> {
