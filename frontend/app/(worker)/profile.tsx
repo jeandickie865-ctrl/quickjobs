@@ -378,6 +378,48 @@ export default function WorkerProfileScreen() {
             </Pressable>
           </View>
 
+          {/* Kurzer Steckbrief */}
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12, marginBottom: 8 }}>
+              KURZER STECKBRIEF (Optional)
+            </Text>
+            <Text style={{ color: colors.whiteTransparent, fontSize: 12, marginBottom: 12 }}>
+              Schreibe ein paar Sätze über dich. Dieser Text wird dem Arbeitgeber bei deiner Bewerbung angezeigt.
+            </Text>
+            <View style={{
+              backgroundColor: colors.white,
+              borderWidth: 2,
+              borderColor: colors.primary,
+              borderRadius: 14,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+            }}>
+              <TextInput
+                value={shortBio}
+                onChangeText={setShortBio}
+                placeholder="z.B. Ich bin ein erfahrener Sicherheitsmitarbeiter mit 5 Jahren Erfahrung..."
+                placeholderTextColor="#999"
+                multiline
+                numberOfLines={4}
+                maxLength={300}
+                style={{ 
+                  fontSize: 15, 
+                  color: colors.black,
+                  minHeight: 100,
+                  textAlignVertical: 'top',
+                }}
+              />
+              <Text style={{ 
+                color: '#999', 
+                fontSize: 11, 
+                textAlign: 'right', 
+                marginTop: 8 
+              }}>
+                {shortBio.length}/300 Zeichen
+              </Text>
+            </View>
+          </View>
+
           {/* Name */}
           <View style={{ marginBottom: 20 }}>
             <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>NAME *</Text>
