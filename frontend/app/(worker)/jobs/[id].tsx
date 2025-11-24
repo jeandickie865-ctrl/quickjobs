@@ -1,28 +1,37 @@
 // app/(worker)/jobs/[id].tsx - NEON TECH DESIGN
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { getJobById, getMyApplications, applyForJob } from '../../../services/api';
-import { useTheme } from '../../../theme/ThemeProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { getJobById } from '../../../utils/jobStore';
+import { Job } from '../../../types/job';
+import { euro } from '../../../utils/pricing';
+import { Ionicons } from '@expo/vector-icons';
+
+// NEON COLORS
+const COLORS = {
+  purple: '#5941FF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  darkGray: '#666666',
+};
 
 export default function JobDetailScreen() {
-  const { colors } = useTheme();
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const [job, setJob] = useState(null);
+  const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
-  const [hasApplied, setHasApplied] = useState(false);
-  const [isApplying, setIsApplying] = useState(false);
 
   useEffect(() => {
     loadJob();
-    checkIfApplied();
-  }, []);
+  }, [id]);
 
   const loadJob = async () => {
     try {
-      const data = await getJobById(id);
+      if (!id) return;
+      const data = await getJobById(String(id));
       setJob(data);
     } catch (err) {
       console.log('Job load error:', err);
@@ -30,24 +39,6 @@ export default function JobDetailScreen() {
       setLoading(false);
     }
   };
-
-  const checkIfApplied = async () => {
-    try {
-      const apps = await getMyApplications();
-      const exists = apps.some((app) => app.job_id === id);
-      setHasApplied(exists);
-    } catch (err) {
-      console.log('Application check error:', err);
-    }
-  };
-
-  const handleApply = async () => {
-    try {
-      setIsApplying(true);
-      await applyForJob(id);
-      setHasApplied(true);
-      Alert.alert('Erfolg', 'Bewerbung gesendet');
-    } catch (err) {
       Alert.alert('Fehler', err.message);
     } finally {
       setIsApplying(false);
