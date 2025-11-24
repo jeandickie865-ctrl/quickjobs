@@ -492,7 +492,14 @@ export default function JobDetailScreen() {
           <View style={{ gap: 12 }}>
             {/* Chat Button */}
             <Pressable
-              onPress={() => router.push(`/(employer)/chat/${job.matchedWorkerId}`)}
+              onPress={() => {
+                const matchedApp = applications.find(app => app.workerId === job.matchedWorkerId && app.status === 'accepted');
+                if (matchedApp) {
+                  router.push(`/chat/${matchedApp.id}`);
+                } else {
+                  alert('Chat nicht verfügbar');
+                }
+              }}
               style={({ pressed }) => ({
                 backgroundColor: COLORS.neon,
                 paddingVertical: 16,
