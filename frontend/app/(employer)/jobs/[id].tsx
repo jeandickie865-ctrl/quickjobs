@@ -4,7 +4,7 @@ import { View, Text, ScrollView, Alert, ActivityIndicator, Pressable, Image } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getJobById, deleteJob, updateAuftrag } from '../../../utils/jobStore';
+import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { getReviewForJob } from '../../../utils/reviewStore';
