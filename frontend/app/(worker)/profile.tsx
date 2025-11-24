@@ -239,49 +239,88 @@ export default function WorkerProfileViewScreen() {
               </View>
             )}
 
-            {/* Categories */}
+            {/* Categories with Details */}
             <View style={{ marginBottom: 24 }}>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: colors.neon, letterSpacing: 0.5, marginBottom: 12 }}>
-                KATEGORIEN
+              <Text style={{ fontSize: 12, fontWeight: '700', color: colors.neon, letterSpacing: 0.5, marginBottom: 16 }}>
+                MEINE TÄTIGKEITEN & QUALIFIKATIONEN
               </Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {profile?.categories?.map((cat, idx) => (
-                  <View key={idx} style={{
-                    backgroundColor: colors.purple,
-                    paddingHorizontal: 14,
-                    paddingVertical: 8,
-                    borderRadius: 20,
+              
+              {profile?.categories?.map((categoryKey, catIdx) => {
+                // Load taxonomy to get category details
+                const taxonomy = require('../../shared/taxonomy.json');
+                const category = taxonomy.categories.find((c: any) => c.key === categoryKey);
+                
+                if (!category) return null;
+                
+                // Filter activities and qualifications from selectedTags
+                const categoryActivities = category.activities
+                  .filter((act: any) => profile.selectedTags?.includes(act.key))
+                  .map((act: any) => act.label);
+                
+                const categoryQualifications = category.qualifications
+                  .filter((qual: any) => profile.selectedTags?.includes(qual.key))
+                  .map((qual: any) => qual.label);
+                
+                return (
+                  <View key={catIdx} style={{
+                    backgroundColor: colors.lightGray,
+                    borderRadius: 12,
+                    padding: 16,
+                    marginBottom: 12,
+                    borderLeftWidth: 4,
+                    borderLeftColor: colors.purple,
                   }}>
-                    <Text style={{ fontSize: 13, fontWeight: '600', color: colors.white }}>
-                      {cat}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            {/* Tags */}
-            {profile?.tags && profile.tags.length > 0 && (
-              <View style={{ marginBottom: 24 }}>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: colors.neon, letterSpacing: 0.5, marginBottom: 12 }}>
-                  SKILLS & TAGS
-                </Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                  {profile.tags.map((tag, idx) => (
-                    <View key={idx} style={{
-                      backgroundColor: colors.lightGray,
+                    {/* Category Title */}
+                    <View style={{
+                      backgroundColor: colors.purple,
                       paddingHorizontal: 12,
                       paddingVertical: 6,
                       borderRadius: 16,
+                      alignSelf: 'flex-start',
+                      marginBottom: 12,
                     }}>
-                      <Text style={{ fontSize: 12, fontWeight: '600', color: '#666' }}>
-                        {tag}
+                      <Text style={{ fontSize: 14, fontWeight: '700', color: colors.white }}>
+                        {category.label}
                       </Text>
                     </View>
-                  ))}
-                </View>
-              </View>
-            )}
+                    
+                    {/* Activities */}
+                    {categoryActivities.length > 0 && (
+                      <View style={{ marginBottom: 12 }}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                          TÄTIGKEITEN:
+                        </Text>
+                        {categoryActivities.map((activity: string, idx: number) => (
+                          <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                            <Text style={{ color: colors.purple, marginRight: 6, fontSize: 16 }}>✓</Text>
+                            <Text style={{ fontSize: 13, color: colors.black }}>
+                              {activity}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                    
+                    {/* Qualifications */}
+                    {categoryQualifications.length > 0 && (
+                      <View>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                          QUALIFIKATIONEN:
+                        </Text>
+                        {categoryQualifications.map((qualification: string, idx: number) => (
+                          <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                            <Text style={{ color: colors.neon, marginRight: 6, fontSize: 16 }}>★</Text>
+                            <Text style={{ fontSize: 13, color: colors.black, fontWeight: '600' }}>
+                              {qualification}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
 
             {/* Contact Info */}
             <View style={{ gap: 16 }}>
