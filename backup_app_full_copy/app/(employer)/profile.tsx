@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getEmployerProfile, saveEmployerProfile, EmployerProfile } from '../../utils/employerProfileStore';
 import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
 import { Ionicons } from '@expo/vector-icons';
+import { getApplicationsForEmployer } from '../../utils/applicationStore';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
