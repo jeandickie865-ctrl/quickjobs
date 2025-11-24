@@ -252,14 +252,24 @@ export default function WorkerProfileViewScreen() {
                 
                 if (!category) return null;
                 
+                // Debug: Check what tags we have
+                console.log('Profile selectedTags:', profile.selectedTags);
+                console.log('Category:', categoryKey);
+                console.log('Available activities:', category.activities.map((a: any) => a.key));
+                console.log('Available qualifications:', category.qualifications.map((q: any) => q.key));
+                
                 // Filter activities and qualifications from selectedTags
+                const allTags = profile.selectedTags || [];
                 const categoryActivities = category.activities
-                  .filter((act: any) => profile.selectedTags?.includes(act.key))
+                  .filter((act: any) => allTags.includes(act.key))
                   .map((act: any) => act.label);
                 
                 const categoryQualifications = category.qualifications
-                  .filter((qual: any) => profile.selectedTags?.includes(qual.key))
+                  .filter((qual: any) => allTags.includes(qual.key))
                   .map((qual: any) => qual.label);
+                
+                console.log('Filtered activities:', categoryActivities);
+                console.log('Filtered qualifications:', categoryQualifications);
                 
                 return (
                   <View key={catIdx} style={{
