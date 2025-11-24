@@ -48,7 +48,7 @@ export default function EmployerDashboard() {
             Meine Aufträge
           </Text>
           <Text style={{ color: colors.gray600, fontSize: 14, marginTop: 4 }}>
-            Verwalte deine Aufträge und finde Aufträgetarter
+            Verwalte deine Aufträge und finde Arbeitskräfte
           </Text>
         </View>
 
