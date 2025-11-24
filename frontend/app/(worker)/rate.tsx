@@ -136,13 +136,25 @@ export default function RateEmployerScreen() {
     );
   }
 
-  if (!job || !employer) {
+  if (!job) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center' }}>
-            Daten konnten nicht geladen werden
+            Job konnte nicht geladen werden
           </Text>
+          <Pressable
+            onPress={() => router.back()}
+            style={{
+              marginTop: 20,
+              backgroundColor: COLORS.neon,
+              paddingVertical: 12,
+              paddingHorizontal: 24,
+              borderRadius: 12,
+            }}
+          >
+            <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+          </Pressable>
         </SafeAreaView>
       </View>
     );
