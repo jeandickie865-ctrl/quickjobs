@@ -626,6 +626,7 @@ export default function WorkerProfileScreen() {
               borderRadius: 20,
               alignItems: 'center',
               marginTop: 20,
+              marginBottom: 100,
             }}
           >
             {saving
