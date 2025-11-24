@@ -221,6 +221,13 @@ export default function WorkerLayout() {
           href: null,
         }}
       />
+      
+      <Tabs.Screen
+        name="rate"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
