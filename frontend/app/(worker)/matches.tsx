@@ -306,7 +306,7 @@ export default function WorkerMatchesScreen() {
                   {/* Action Button */}
                   {application.status === 'accepted' ? (
                     <Pressable
-                      onPress={() => router.push(`/(worker)/chat/${job.employerId}`)}
+                      onPress={() => router.push(`/chat/${application.id}`)}
                       style={({ pressed }) => ({
                         backgroundColor: COLORS.neon,
                         paddingVertical: 14,
