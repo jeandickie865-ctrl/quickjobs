@@ -77,15 +77,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('Passwort muss mindestens 6 Zeichen lang sein');
     }
 
-    // Check if user already exists
-    const usersDb = await getUsersDb();
     const emailLower = email.toLowerCase().trim();
+
+    // 🔄 HYBRID: Try Backend first
+    try {
+      const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+      console.log('🔄 HYBRID AUTH: Trying signup via Backend...');
+      
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailLower, password, role }),
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ HYBRID AUTH: Registered via BACKEND');
+        
+        // Save token and user
+        await AsyncStorage.setItem(TOKEN_KEY, data.access_token);
+        await AsyncStorage.setItem(USER_KEY, JSON.stringify({ id: data.user_id, email: emailLower, role }));
+        
+        setToken(data.access_token);
+        setUser({ id: data.user_id, email: emailLower, role });
+        return;
+      }
+    } catch (error) {
+      console.log('⚠️ HYBRID AUTH: Backend signup failed, using AsyncStorage');
+    }
+
+    // 📱 FALLBACK: Use AsyncStorage
+    const usersDb = await getUsersDb();
     
     if (usersDb[emailLower]) {
       throw new Error('Diese E-Mail-Adresse ist bereits registriert');
     }
 
-    // Create new user - CONSISTENT ID from email
     const userId = `user_${emailLower.replace(/[^a-z0-9]/g, '_')}`;
     const newUser: User = {
       id: userId,
@@ -93,25 +121,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       role,
     };
 
-    // Save to users database
     usersDb[emailLower] = {
       email: emailLower,
-      password, // In production, this should be hashed!
+      password,
       role,
     };
     await saveUsersDb(usersDb);
 
-    // Create token (just a simple UUID for local storage)
     const newToken = `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    // Save auth state
     await AsyncStorage.setItem(TOKEN_KEY, newToken);
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
 
     setToken(newToken);
     setUser(newUser);
 
-    console.log('✅ User registered successfully (AsyncStorage)');
+    console.log('✅ HYBRID AUTH: Registered via AsyncStorage');
   };
 
   const signIn = async (email: string, password: string) => {
