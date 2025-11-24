@@ -27,7 +27,6 @@ import { TAXONOMY, listCategories } from '../../constants/workerData';
 
 // BUG 3 FIX: Nutze AsyncStorage statt Backend API
 import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '../../utils/profileStore';
-import { diagnoseAsyncStorage } from '../../utils/diagnostics';
 import { getApplicationsForWorker } from '../../utils/applicationStore';
 
 export default function WorkerProfileScreen() {
@@ -338,32 +337,22 @@ export default function WorkerProfileScreen() {
         }}>
           <View style={{ width: 60 }} />
           <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
-          <View style={{ flexDirection: 'row', gap: 12 }}>
-            <Pressable onPress={diagnoseAsyncStorage} style={{
+          <Pressable 
+            onPress={async () => {
+              await signOut();
+              router.replace('/start');
+            }}
+            style={{
               paddingVertical: 6,
               paddingHorizontal: 12,
-              backgroundColor: '#ff6b6b',
+              backgroundColor: colors.neon,
               borderRadius: 8,
-            }}>
-              <Ionicons name="bug-outline" size={20} color="white" />
-            </Pressable>
-            <Pressable 
-              onPress={async () => {
-                await signOut();
-                router.replace('/start');
-              }}
-              style={{
-                paddingVertical: 6,
-                paddingHorizontal: 12,
-                backgroundColor: colors.neon,
-                borderRadius: 8,
-              }}
-            >
-              <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black }}>
-                Logout
-              </Text>
-            </Pressable>
-          </View>
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black }}>
+              Logout
+            </Text>
+          </Pressable>
         </View>
       </SafeAreaView>
 
