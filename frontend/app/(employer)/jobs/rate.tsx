@@ -202,10 +202,10 @@ export default function RateWorkerScreen() {
             elevation: 4,
           }}>
             <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
-              WORKER
+              AUFTRAGNEHMER
             </Text>
             <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.purple, marginBottom: 4 }}>
-              {worker.name || 'Worker'}
+              {worker.name || 'Auftragnehmer'}
             </Text>
             <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
               für Job: {job.title}
