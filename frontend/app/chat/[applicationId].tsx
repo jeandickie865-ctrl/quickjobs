@@ -31,6 +31,7 @@ export default function ChatScreen() {
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [jobId, setJobId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!applicationId) return;
@@ -39,6 +40,12 @@ export default function ChatScreen() {
       try {
         const msgs = await getMessagesForApplication(String(applicationId));
         setMessages(msgs);
+        
+        // Load application to get jobId for back navigation
+        const app = await getApplicationById(String(applicationId));
+        if (app) {
+          setJobId(app.jobId);
+        }
       } finally {
         setIsLoading(false);
       }
