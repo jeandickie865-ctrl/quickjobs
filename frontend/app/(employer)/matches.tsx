@@ -235,6 +235,14 @@ export default function MatchesScreen() {
                     <Text style={{ fontSize: 13, color: COLORS.darkGray, marginTop: 2 }}>
                       Match seit {formatDate(match.application.createdAt)}
                     </Text>
+                    <View style={{ marginTop: 6 }}>
+                      <RatingDisplay
+                        averageRating={match.avgRating}
+                        reviewCount={match.reviewCount}
+                        size="small"
+                        color={COLORS.neon}
+                      />
+                    </View>
                   </View>
                 </View>
 
