@@ -502,24 +502,139 @@ export default function CreateJob() {
         )}
 
         {timeMode === 'hour_package' && (
-          <View style={{ gap: 6 }}>
-            <Text style={{ color: colors.black, fontWeight: '600' }}>Stundenanzahl</Text>
-            <TextInput
-              value={hours}
-              onChangeText={setHours}
-              placeholder="z.B. 6"
-              placeholderTextColor={colors.gray400}
-              keyboardType="numeric"
-              style={{
-                borderWidth: 1,
-                borderColor: colors.gray200,
-                borderRadius: 12,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-                backgroundColor: colors.white,
-                color: colors.black
-              }}
-            />
+          <View style={{ gap: 12 }}>
+            <View style={{ gap: 6 }}>
+              <Text style={{ color: colors.black, fontWeight: '600' }}>Stundenanzahl</Text>
+              <TextInput
+                value={hours}
+                onChangeText={setHours}
+                placeholder="z.B. 6"
+                placeholderTextColor={colors.gray400}
+                keyboardType="numeric"
+                style={{
+                  borderWidth: 1,
+                  borderColor: colors.gray200,
+                  borderRadius: 12,
+                  paddingHorizontal: 12,
+                  paddingVertical: 10,
+                  backgroundColor: colors.white,
+                  color: colors.black
+                }}
+              />
+            </View>
+
+            {/* Date Type Selection */}
+            <View style={{ gap: 6 }}>
+              <Text style={{ color: colors.black, fontWeight: '600' }}>Zeitraum</Text>
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                <Pressable
+                  onPress={() => setHoursDateType('specific')}
+                  style={{
+                    flex: 1,
+                    paddingVertical: 10,
+                    paddingHorizontal: 12,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: hoursDateType === 'specific' ? colors.black : colors.gray200,
+                    backgroundColor: hoursDateType === 'specific' ? colors.black : colors.beige100,
+                  }}
+                >
+                  <Text style={{ 
+                    color: hoursDateType === 'specific' ? colors.white : colors.black,
+                    textAlign: 'center',
+                    fontWeight: '600',
+                    fontSize: 12
+                  }}>
+                    Fester Tag
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => setHoursDateType('range')}
+                  style={{
+                    flex: 1,
+                    paddingVertical: 10,
+                    paddingHorizontal: 12,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: hoursDateType === 'range' ? colors.black : colors.gray200,
+                    backgroundColor: hoursDateType === 'range' ? colors.black : colors.beige100,
+                  }}
+                >
+                  <Text style={{ 
+                    color: hoursDateType === 'range' ? colors.white : colors.black,
+                    textAlign: 'center',
+                    fontWeight: '600',
+                    fontSize: 12
+                  }}>
+                    Zeitraum
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            {/* Date Inputs based on selection */}
+            {hoursDateType === 'specific' && (
+              <View style={{ gap: 6 }}>
+                <Text style={{ color: colors.black, fontWeight: '600' }}>Datum</Text>
+                <TextInput
+                  value={hoursSpecificDate}
+                  onChangeText={setHoursSpecificDate}
+                  placeholder="TT.MM.JJJJ"
+                  placeholderTextColor={colors.gray400}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: colors.gray200,
+                    borderRadius: 12,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    backgroundColor: colors.white,
+                    color: colors.black
+                  }}
+                />
+              </View>
+            )}
+
+            {hoursDateType === 'range' && (
+              <View style={{ gap: 12 }}>
+                <View style={{ gap: 6 }}>
+                  <Text style={{ color: colors.black, fontWeight: '600' }}>Von Datum</Text>
+                  <TextInput
+                    value={hoursStartDate}
+                    onChangeText={setHoursStartDate}
+                    placeholder="TT.MM.JJJJ"
+                    placeholderTextColor={colors.gray400}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: colors.gray200,
+                      borderRadius: 12,
+                      paddingHorizontal: 12,
+                      paddingVertical: 10,
+                      backgroundColor: colors.white,
+                      color: colors.black
+                    }}
+                  />
+                </View>
+                <View style={{ gap: 6 }}>
+                  <Text style={{ color: colors.black, fontWeight: '600' }}>Bis Datum</Text>
+                  <TextInput
+                    value={hoursEndDate}
+                    onChangeText={setHoursEndDate}
+                    placeholder="TT.MM.JJJJ"
+                    placeholderTextColor={colors.gray400}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: colors.gray200,
+                      borderRadius: 12,
+                      paddingHorizontal: 12,
+                      paddingVertical: 10,
+                      backgroundColor: colors.white,
+                      color: colors.black
+                    }}
+                  />
+                </View>
+              </View>
+            )}
           </View>
         )}
 
