@@ -1,0 +1,192 @@
+{
+  "version": 2,
+  "radiusStepsKm": [5, 15, 20, 50, 100],
+  "categories": [
+    {
+      "key": "sicherheit",
+      "label": "Sicherheit",
+      "tags": [
+        { "key": "sicherheit.rolle_bewachung", "label": "Bewachung", "type": "role" },
+        { "key": "sicherheit.rolle_kaufhausdetektiv", "label": "Kaufhausdetektiv", "type": "role" },
+        { "key": "sicherheit.rolle_doorman", "label": "Doorman", "type": "role" },
+        { "key": "sicherheit.rolle_event_security", "label": "Event Security", "type": "role" },
+        { "key": "sicherheit.rolle_revierdienst", "label": "Revierdienst", "type": "role" },
+        { "key": "sicherheit.rolle_brandsicherheitswache", "label": "Brandsicherheitswache", "type": "role" },
+        { "key": "sicherheit.sachkunde_34a", "label": "§34a Sachkunde", "type": "qual" },
+        { "key": "sicherheit.unterrichtung_34a", "label": "§34a Unterrichtung", "type": "qual" },
+        { "key": "sicherheit.bewacher_id", "label": "Bewacher-ID", "type": "doc" },
+        { "key": "sicherheit.fuehrungszeugnis", "label": "Führungszeugnis", "type": "doc" }
+      ]
+    },
+    {
+      "key": "gastro",
+      "label": "Gastro",
+      "tags": [
+        { "key": "gastro.spueler", "label": "Spüler", "type": "role" },
+        { "key": "gastro.servicekraft", "label": "Servicekraft", "type": "role" },
+        { "key": "gastro.koch", "label": "Koch", "type": "role" },
+        { "key": "gastro.bar", "label": "Bar", "type": "role" },
+        { "key": "gastro.haccp", "label": "Hygiene HACCP", "type": "qual" }
+      ]
+    },
+    {
+      "key": "lieferservice",
+      "label": "Lieferservice",
+      "tags": [
+        { "key": "lieferservice.fuehrerschein_b", "label": "Führerschein B", "type": "license" },
+        { "key": "lieferservice.eigener_pkw", "label": "Eigener PKW", "type": "vehicle" },
+        { "key": "lieferservice.fahrrad", "label": "Fahrrad", "type": "vehicle" },
+        { "key": "lieferservice.roller", "label": "Roller", "type": "vehicle" },
+        { "key": "lieferservice.e_bike", "label": "E-Bike", "type": "vehicle" }
+      ]
+    },
+    {
+      "key": "lager_logistik",
+      "label": "Lager und Logistik",
+      "tags": [
+        { "key": "lager_logistik.staplerschein", "label": "Staplerschein", "type": "qual" },
+        { "key": "lager_logistik.kommissionierung", "label": "Kommissionierung", "type": "skill" },
+        { "key": "lager_logistik.handscanner", "label": "Handscanner", "type": "tool" }
+      ]
+    },
+    {
+      "key": "einzelhandel",
+      "label": "Einzelhandel",
+      "tags": [
+        { "key": "einzelhandel.kasse", "label": "Kasse", "type": "role" },
+        { "key": "einzelhandel.inventur", "label": "Inventur", "type": "skill" },
+        { "key": "einzelhandel.regalpflege", "label": "Regalpflege", "type": "skill" }
+      ]
+    },
+    {
+      "key": "event_messe",
+      "label": "Event und Messe",
+      "tags": [
+        { "key": "event_messe.host_hostess", "label": "Host, Hostess", "type": "role" },
+        { "key": "event_messe.aufbau_abbau", "label": "Aufbau, Abbau", "type": "role" },
+        { "key": "event_messe.promotion", "label": "Promotion", "type": "role" }
+      ]
+    },
+    {
+      "key": "reinigung",
+      "label": "Reinigung",
+      "tags": [
+        { "key": "reinigung.unterhaltsreinigung", "label": "Unterhalt", "type": "role" },
+        { "key": "reinigung.glasreinigung", "label": "Glas", "type": "role" },
+        { "key": "reinigung.maschinenfuehrung", "label": "Maschinenführung", "type": "skill" }
+      ]
+    },
+    {
+      "key": "bau_helfer",
+      "label": "Bau und Helfer",
+      "tags": [
+        { "key": "bau_helfer.ppe", "label": "PSA vorhanden", "type": "qual" },
+        { "key": "bau_helfer.maler_klein", "label": "Maler klein", "type": "skill" },
+        { "key": "bau_helfer.arbeiten_hoehe", "label": "Arbeiten in Höhe", "type": "skill" }
+      ]
+    },
+    {
+      "key": "haus_garten",
+      "label": "Haus und Garten",
+      "tags": [
+        { "key": "haus_garten.gaertner_helfer", "label": "Gärtner Helfer", "type": "role" },
+        { "key": "haus_garten.rasenmaehen", "label": "Rasen mähen", "type": "skill" },
+        { "key": "haus_garten.heckenschnitt", "label": "Heckenschnitt", "type": "skill" },
+        { "key": "haus_garten.moebel_aufbau", "label": "Möbelaufbau", "type": "skill" }
+      ]
+    },
+    {
+      "key": "babysitting_kinder",
+      "label": "Babysitting und Kinder",
+      "tags": [
+        { "key": "babysitting_kinder.babysitter", "label": "Babysitter", "type": "role" },
+        { "key": "babysitting_kinder.erste_hilfe_kind", "label": "Erste Hilfe Kind", "type": "qual" },
+        { "key": "babysitting_kinder.fuehrungszeugnis_erweitert", "label": "Erweitertes Führungszeugnis", "type": "doc" }
+      ]
+    },
+    {
+      "key": "kleinstreparaturen_handwerk",
+      "label": "Kleinstreparaturen",
+      "tags": [
+        { "key": "kleinstreparaturen_handwerk.allrounder", "label": "Allrounder", "type": "role" },
+        { "key": "kleinstreparaturen_handwerk.elektro_klein", "label": "Elektro klein", "type": "skill" },
+        { "key": "kleinstreparaturen_handwerk.moebel_aufbau", "label": "Möbelaufbau", "type": "skill" },
+        { "key": "kleinstreparaturen_handwerk.werkzeug_set", "label": "Eigenes Werkzeug", "type": "tool" }
+      ]
+    },
+    {
+      "key": "haustiere",
+      "label": "Haustiere",
+      "tags": [
+        { "key": "haustiere.gassi_service", "label": "Gassi Service", "type": "role" },
+        { "key": "haustiere.catsitting", "label": "Catsitting", "type": "role" },
+        { "key": "haustiere.medikamentengabe", "label": "Medikamentengabe", "type": "skill" }
+      ]
+    },
+    {
+      "key": "umzug_transport",
+      "label": "Umzug und Transport",
+      "tags": [
+        { "key": "umzug_transport.traeger", "label": "Träger", "type": "role" },
+        { "key": "umzug_transport.fahrer_b", "label": "Fahrer B", "type": "role" },
+        { "key": "umzug_transport.fuehrerschein_b", "label": "Führerschein B", "type": "license" },
+        { "key": "umzug_transport.schweres_heben", "label": "Schweres Heben", "type": "skill" }
+      ]
+    },
+    {
+      "key": "buero_service",
+      "label": "Büro und Service",
+      "tags": [
+        { "key": "buero_service.datenerfassung", "label": "Datenerfassung", "type": "role" },
+        { "key": "buero_service.telefonservice", "label": "Telefonservice", "type": "role" },
+        { "key": "buero_service.ms_office", "label": "MS Office", "type": "skill" }
+      ]
+    },
+    {
+      "key": "it_support",
+      "label": "IT Support",
+      "tags": [
+        { "key": "it_support.helpdesk", "label": "Helpdesk", "type": "role" },
+        { "key": "it_support.hardware_setup", "label": "Hardware Setup", "type": "role" },
+        { "key": "it_support.netzwerk_grundlagen", "label": "Netzwerk Grundlagen", "type": "skill" }
+      ]
+    },
+    {
+      "key": "foto_video",
+      "label": "Foto und Video",
+      "tags": [
+        { "key": "foto_video.fotograf", "label": "Fotograf", "type": "role" },
+        { "key": "foto_video.videograf", "label": "Videograf", "type": "role" },
+        { "key": "foto_video.dslr", "label": "DSLR", "type": "tool" }
+      ]
+    },
+    {
+      "key": "nachhilfe",
+      "label": "Nachhilfe",
+      "tags": [
+        { "key": "nachhilfe.mathe", "label": "Mathe", "type": "role" },
+        { "key": "nachhilfe.deutsch", "label": "Deutsch", "type": "role" },
+        { "key": "nachhilfe.englisch", "label": "Englisch", "type": "role" },
+        { "key": "nachhilfe.abitur", "label": "Abitur", "type": "qual" }
+      ]
+    },
+    {
+      "key": "fahrdienst",
+      "label": "Fahrdienst",
+      "tags": [
+        { "key": "fahrdienst.shuttle_fahrer", "label": "Shuttle Fahrer", "type": "role" },
+        { "key": "fahrdienst.fuehrerschein_b", "label": "Führerschein B", "type": "license" },
+        { "key": "fahrdienst.p_schein", "label": "P-Schein", "type": "license" }
+      ]
+    },
+    {
+      "key": "hauswirtschaft",
+      "label": "Hauswirtschaft",
+      "tags": [
+        { "key": "hauswirtschaft.waesche", "label": "Wäsche", "type": "role" },
+        { "key": "hauswirtschaft.buegeln", "label": "Bügeln", "type": "role" },
+        { "key": "hauswirtschaft.einkaufen", "label": "Einkaufen", "type": "role" }
+      ]
+    }
+  ]
+}
