@@ -22,8 +22,14 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 
-// ❗️ FIX: Richtiger Import – NICHT mehr ../../src/taxonomy
-import { TAXONOMY, listCategories } from '../../constants/workerData';
+// ❗️ FIX: Import taxonomy.json direkt (hat richtige {key, label} Struktur)
+const TAXONOMY_DATA = require('../../shared/taxonomy.json');
+const TAXONOMY = TAXONOMY_DATA.categories;
+
+// Funktion zum Listen der Kategorien
+const listCategories = () => {
+  return TAXONOMY.map((cat: any) => ({ key: cat.key, label: cat.label }));
+};
 
 // BUG 3 FIX: Nutze AsyncStorage statt Backend API
 import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '../../utils/profileStore';
