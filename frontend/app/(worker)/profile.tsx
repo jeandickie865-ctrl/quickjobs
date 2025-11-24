@@ -61,24 +61,18 @@ export default function WorkerProfileScreen() {
   // Kategorien laden
   const availableCategories = useMemo(() => listCategories(), []);
 
-  // Aktivitäten dynamisch basierend auf Kategorie
+  // Aktivitäten nur für die AKTIVE Kategorie anzeigen (besserer Mobile Flow)
   const availableActivities = useMemo(() => {
-    const acts: string[] = [];
+    if (!activeCategory) return [];
+    
+    const cat = TAXONOMY.find((c) => c.key === activeCategory);
+    return cat?.activities || [];
+  }, [activeCategory]);
 
-    selectedCategories.forEach((key) => {
-      const cat = TAXONOMY.find((c) => c.key === key);
-      if (cat?.activities) {
-        cat.activities.forEach((a) => {
-          if (!acts.includes(a)) acts.push(a);
-        });
-      }
-    });
-
-    return acts;
-  }, [selectedCategories]);
-
-  // Qualifikationen dynamisch basierend auf Kategorie
+  // Qualifikationen nur für die AKTIVE Kategorie anzeigen
   const availableQualifications = useMemo(() => {
+    if (!activeCategory) return [];
+    
     const quals: string[] = [];
 
     selectedCategories.forEach((key) => {
