@@ -77,14 +77,20 @@ export default function MatchesScreen() {
       // Load employer's jobs
       const employerJobs = await getEmployerJobs(user.id);
       
-      // Find all accepted applications
+      // Find all accepted applications and load worker profiles
       const allMatches: Match[] = [];
       for (const job of employerJobs) {
         const jobApps = await getApplicationsForJob(job.id);
         const acceptedApps = jobApps.filter(app => app.status === 'accepted');
         
         for (const app of acceptedApps) {
-          allMatches.push({ job, application: app });
+          // Load worker profile to get contact details
+          const workerProfile = await getWorkerProfile(app.workerId);
+          allMatches.push({ 
+            job, 
+            application: app,
+            workerProfile 
+          });
         }
       }
       
