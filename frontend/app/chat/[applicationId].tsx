@@ -89,31 +89,49 @@ export default function ChatScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.beige50 }]} edges={['top']}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        {/* Header */}
-        <View 
-          style={[
-            styles.header, 
-            { 
-              backgroundColor: colors.white, 
-              borderBottomColor: colors.gray200,
-              paddingHorizontal: spacing.md,
-              paddingVertical: spacing.sm,
-            }
-          ]}
+    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      {/* Glow Effect */}
+      <View style={{
+        position: 'absolute',
+        top: -80,
+        left: '50%',
+        marginLeft: -100,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        backgroundColor: COLORS.neon,
+        opacity: 0.08,
+        blur: 60,
+      }} />
+
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
-          <Text style={[styles.headerTitle, { color: colors.black }]}>
-            Chat
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: colors.gray600 }]}>
-            Bewerbung #{applicationId?.slice(-8)}
-          </Text>
-        </View>
+          {/* Header */}
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: COLORS.whiteTransparent10,
+          }}>
+            <Pressable onPress={() => router.back()} style={{ padding: 4 }}>
+              <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+            </Pressable>
+            <View style={{ flex: 1, marginLeft: 16 }}>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
+                💬 Chat
+              </Text>
+              <Text style={{ fontSize: 12, color: COLORS.whiteTransparent20, marginTop: 2 }}>
+                ID: {applicationId?.slice(-8)}
+              </Text>
+            </View>
+          </View>
 
         {/* Messages */}
         <ScrollView
