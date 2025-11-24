@@ -245,9 +245,11 @@ export default function WorkerProfileViewScreen() {
                 MEINE TÄTIGKEITEN & QUALIFIKATIONEN
               </Text>
               
-              {profile?.categories?.map((categoryKey, catIdx) => {
-                // Load taxonomy to get category details
+              {(() => {
+                // Load taxonomy ONCE outside the map
                 const taxonomy = require('../../shared/taxonomy.json');
+                
+                return profile?.categories?.map((categoryKey, catIdx) => {
                 const category = taxonomy.categories.find((c: any) => c.key === categoryKey);
                 
                 if (!category) return null;
