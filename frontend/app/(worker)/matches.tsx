@@ -59,12 +59,15 @@ export default function WorkerMatchesScreen() {
       setError(null);
 
       const apps = await getApplicationsForWorker(user.id);
-      const acceptedApps = apps.filter((a) => a.status === 'accepted');
+      // Show both pending and accepted applications
+      const relevantApps = apps.filter((a) => 
+        a.status === 'pending' || a.status === 'accepted'
+      );
       const allJobs = await getJobs();
 
       const combined: Match[] = [];
 
-      for (const app of acceptedApps) {
+      for (const app of relevantApps) {
         const job = allJobs.find((j) => j.id === app.jobId);
         if (job) {
           combined.push({ job, application: app });
