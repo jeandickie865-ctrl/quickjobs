@@ -86,7 +86,10 @@ export default function WorkerFeed() {
       const notAppliedJobs = openJobs.filter(job => !jobIdsSet.has(job.id));
       console.log(`📋 Filtered out ${openJobs.length - notAppliedJobs.length} already-applied jobs`);
       
-      // SIMPLE MATCHING: Nur Kategorie-Check!
+      // Store ALL open jobs (not applied yet) for "Alle" tab
+      setAllOpenJobs(notAppliedJobs);
+      
+      // SIMPLE MATCHING: Nur Kategorie-Check für "Passende" Tab!
       const matchedJobs = getMatchingJobs(notAppliedJobs, workerProfile);
       
       console.log(`🎯 SIMPLE MATCHING FERTIG: ${matchedJobs.length} von ${notAppliedJobs.length} Jobs matchen`);
