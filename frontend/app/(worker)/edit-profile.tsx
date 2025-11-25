@@ -378,6 +378,73 @@ export default function EditWorkerProfileScreen() {
             Persönliche Daten
           </Text>
 
+          {/* Profile Photo Upload */}
+          <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <View style={{
+              position: 'relative',
+              marginBottom: 12,
+            }}>
+              {photoUrl ? (
+                <Image
+                  source={{ uri: photoUrl }}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                    borderWidth: 4,
+                    borderColor: COLORS.neon,
+                  }}
+                />
+              ) : (
+                <View style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 50,
+                  backgroundColor: COLORS.purple,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 4,
+                  borderColor: COLORS.neon,
+                }}>
+                  <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.white }}>
+                    {getInitials()}
+                  </Text>
+                </View>
+              )}
+              <Pressable
+                onPress={showPhotoOptions}
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  backgroundColor: COLORS.neon,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 18,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 3,
+                  borderColor: COLORS.white,
+                }}
+              >
+                <Ionicons name="camera" size={18} color={COLORS.black} />
+              </Pressable>
+            </View>
+            <Pressable
+              onPress={showPhotoOptions}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+              }}
+            >
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.purple }}>
+                Foto ändern
+              </Text>
+            </Pressable>
+          </View>
+
           {/* First Name */}
           <View style={{ marginBottom: 16 }}>
             <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
