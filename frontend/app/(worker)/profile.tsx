@@ -282,146 +282,15 @@ export default function WorkerProfileViewScreen() {
               </View>
             )}
 
-            {/* Categories with Details */}
-            <View style={{ marginBottom: 24 }}>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: colors.neon, letterSpacing: 0.5, marginBottom: 16 }}>
-                MEINE TÄTIGKEITEN & QUALIFIKATIONEN
-              </Text>
-              
-              {(() => {
-                // Use imported taxonomy data
-                const taxonomy = TAXONOMY_DATA;
-                
-                return profile?.categories?.map((categoryKey, catIdx) => {
-                const category = taxonomy.categories.find((c: any) => c.key === categoryKey);
-                
-                if (!category) return null;
-                
-                // Debug: Check what tags we have
-                console.log('Profile selectedTags:', profile.selectedTags);
-                console.log('Category:', categoryKey);
-                console.log('Available activities:', category.activities.map((a: any) => a.key));
-                console.log('Available qualifications:', category.qualifications.map((q: any) => q.key));
-                
-                // Filter activities and qualifications from selectedTags
-                const allTags = profile.selectedTags || [];
-                const categoryActivities = category.activities
-                  .filter((act: any) => allTags.includes(act.key))
-                  .map((act: any) => act.label);
-                
-                const categoryQualifications = category.qualifications
-                  .filter((qual: any) => allTags.includes(qual.key))
-                  .map((qual: any) => qual.label);
-                
-                console.log('Filtered activities:', categoryActivities);
-                console.log('Filtered qualifications:', categoryQualifications);
-                
-                // Nur anzeigen, wenn mindestens eine Tätigkeit ODER Qualifikation ausgewählt wurde
-                if (categoryActivities.length === 0 && categoryQualifications.length === 0) {
-                  return null;
-                }
-                
-                return (
-                  <View key={catIdx} style={{
-                    backgroundColor: colors.lightGray,
-                    borderRadius: 12,
-                    padding: 16,
-                    marginBottom: 12,
-                    borderLeftWidth: 4,
-                    borderLeftColor: colors.purple,
-                  }}>
-                    {/* Category Title */}
-                    <View style={{
-                      backgroundColor: colors.purple,
-                      paddingHorizontal: 12,
-                      paddingVertical: 6,
-                      borderRadius: 16,
-                      alignSelf: 'flex-start',
-                      marginBottom: 12,
-                    }}>
-                      <Text style={{ fontSize: 14, fontWeight: '700', color: colors.white }}>
-                        {category.label}
-                      </Text>
-                    </View>
-                    
-                    {/* Activities */}
-                    {categoryActivities.length > 0 && (
-                      <View style={{ marginBottom: categoryQualifications.length > 0 ? 12 : 0 }}>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                          TÄTIGKEITEN:
-                        </Text>
-                        {categoryActivities.map((activity: string, idx: number) => (
-                          <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                            <Text style={{ color: colors.purple, marginRight: 6, fontSize: 16 }}>✓</Text>
-                            <Text style={{ fontSize: 13, color: colors.black }}>
-                              {activity}
-                            </Text>
-                          </View>
-                        ))}
-                      </View>
-                    )}
-                    
-                    {/* Qualifications */}
-                    {categoryQualifications.length > 0 && (
-                      <View>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                          QUALIFIKATIONEN:
-                        </Text>
-                        {categoryQualifications.map((qualification: string, idx: number) => (
-                          <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                            <Text style={{ color: colors.neon, marginRight: 6, fontSize: 16 }}>★</Text>
-                            <Text style={{ fontSize: 13, color: colors.black, fontWeight: '600' }}>
-                              {qualification}
-                            </Text>
-                          </View>
-                        ))}
-                      </View>
-                    )}
-                  </View>
-                );
-              });
-              })()}
-            </View>
-
-            {/* Contact Info */}
-            <View style={{ gap: 16 }}>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: colors.neon, letterSpacing: 0.5 }}>
-                KONTAKTINFORMATIONEN
-              </Text>
-
-              {profile?.contactEmail && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <Ionicons name="mail" size={20} color={colors.purple} />
-                  <Text style={{ fontSize: 15, color: colors.black }}>{profile.contactEmail}</Text>
-                </View>
-              )}
-
-              {profile?.contactPhone && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <Ionicons name="call" size={20} color={colors.purple} />
-                  <Text style={{ fontSize: 15, color: colors.black }}>{profile.contactPhone}</Text>
-                </View>
-              )}
-
-              {profile?.radiusKm && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <Ionicons name="location" size={20} color={colors.purple} />
-                  <Text style={{ fontSize: 15, color: colors.black }}>
-                    Arbeitsradius: {profile.radiusKm} km
-                  </Text>
-                </View>
-              )}
-            </View>
-
             {/* Edit Button */}
             <Pressable
               onPress={() => router.push('/(worker)/edit-profile')}
               style={({ pressed }) => ({
                 backgroundColor: colors.neon,
-                paddingVertical: 16,
+                paddingVertical: 14,
                 borderRadius: 12,
                 alignItems: 'center',
-                marginTop: 32,
+                marginTop: 8,
                 opacity: pressed ? 0.9 : 1,
               })}
             >
@@ -433,6 +302,207 @@ export default function WorkerProfileViewScreen() {
               </View>
             </Pressable>
           </View>
+
+          {/* Card 2: Tätigkeiten & Qualifikationen */}
+          <View style={{
+            backgroundColor: colors.white,
+            borderRadius: 18,
+            padding: 24,
+            marginBottom: 16,
+            shadowColor: colors.neon,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.2,
+            shadowRadius: 12,
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+              <Ionicons name="briefcase" size={22} color={colors.purple} />
+              <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black, marginLeft: 10 }}>
+                Tätigkeiten & Qualifikationen
+              </Text>
+            </View>
+              
+            {(() => {
+              // Use imported taxonomy data
+              const taxonomy = TAXONOMY_DATA;
+              
+              return profile?.categories?.map((categoryKey, catIdx) => {
+              const category = taxonomy.categories.find((c: any) => c.key === categoryKey);
+              
+              if (!category) return null;
+              
+              // Filter activities and qualifications from selectedTags
+              const allTags = profile.selectedTags || [];
+              const categoryActivities = category.activities
+                .filter((act: any) => allTags.includes(act.key))
+                .map((act: any) => act.label);
+              
+              const categoryQualifications = category.qualifications
+                .filter((qual: any) => allTags.includes(qual.key))
+                .map((qual: any) => qual.label);
+              
+              // Nur anzeigen, wenn mindestens eine Tätigkeit ODER Qualifikation ausgewählt wurde
+              if (categoryActivities.length === 0 && categoryQualifications.length === 0) {
+                return null;
+              }
+              
+              return (
+                <View key={catIdx} style={{
+                  backgroundColor: colors.lightGray,
+                  borderRadius: 12,
+                  padding: 16,
+                  marginBottom: 12,
+                  borderLeftWidth: 4,
+                  borderLeftColor: colors.purple,
+                }}>
+                  {/* Category Title */}
+                  <View style={{
+                    backgroundColor: colors.purple,
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 16,
+                    alignSelf: 'flex-start',
+                    marginBottom: 12,
+                  }}>
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: colors.white }}>
+                      {category.label}
+                    </Text>
+                  </View>
+                  
+                  {/* Activities */}
+                  {categoryActivities.length > 0 && (
+                    <View style={{ marginBottom: categoryQualifications.length > 0 ? 12 : 0 }}>
+                      <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                        TÄTIGKEITEN:
+                      </Text>
+                      {categoryActivities.map((activity: string, idx: number) => (
+                        <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                          <Text style={{ color: colors.purple, marginRight: 6, fontSize: 16 }}>✓</Text>
+                          <Text style={{ fontSize: 13, color: colors.black }}>
+                            {activity}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                  
+                  {/* Qualifications */}
+                  {categoryQualifications.length > 0 && (
+                    <View>
+                      <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                        QUALIFIKATIONEN:
+                      </Text>
+                      {categoryQualifications.map((qualification: string, idx: number) => (
+                        <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                          <Text style={{ color: colors.neon, marginRight: 6, fontSize: 16 }}>★</Text>
+                          <Text style={{ fontSize: 13, color: colors.black, fontWeight: '600' }}>
+                            {qualification}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              );
+            });
+            })()}
+          </View>
+
+          {/* Card 3: Kontaktinformationen */}
+          <View style={{
+            backgroundColor: colors.white,
+            borderRadius: 18,
+            padding: 24,
+            marginBottom: 16,
+            shadowColor: colors.neon,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.2,
+            shadowRadius: 12,
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+              <Ionicons name="mail" size={22} color={colors.purple} />
+              <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black, marginLeft: 10 }}>
+                Kontaktinformationen
+              </Text>
+            </View>
+
+            {profile?.email && (
+              <View style={{
+                backgroundColor: colors.lightGray,
+                padding: 16,
+                borderRadius: 12,
+                borderLeftWidth: 4,
+                borderLeftColor: colors.neon,
+                marginBottom: 12,
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                  <Ionicons name="mail-outline" size={18} color={colors.purple} />
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 8 }}>
+                    E-MAIL
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 15, color: colors.black, marginLeft: 26 }}>
+                  {profile.email}
+                </Text>
+              </View>
+            )}
+
+            {profile?.phone && (
+              <View style={{
+                backgroundColor: colors.lightGray,
+                padding: 16,
+                borderRadius: 12,
+                borderLeftWidth: 4,
+                borderLeftColor: colors.purple,
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                  <Ionicons name="call-outline" size={18} color={colors.purple} />
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 8 }}>
+                    TELEFON
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 15, color: colors.black, marginLeft: 26 }}>
+                  {profile.phone}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Card 4: Arbeitsradius */}
+          {profile?.radiusKm && (
+            <View style={{
+              backgroundColor: colors.white,
+              borderRadius: 18,
+              padding: 24,
+              marginBottom: 16,
+              shadowColor: colors.neon,
+              shadowOffset: { width: 0, height: 6 },
+              shadowOpacity: 0.2,
+              shadowRadius: 12,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <Ionicons name="location" size={22} color={colors.purple} />
+                <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black, marginLeft: 10 }}>
+                  Arbeitsradius
+                </Text>
+              </View>
+
+              <View style={{
+                backgroundColor: colors.lightGray,
+                padding: 20,
+                borderRadius: 12,
+                alignItems: 'center',
+                borderLeftWidth: 4,
+                borderLeftColor: colors.neon,
+              }}>
+                <Text style={{ fontSize: 36, fontWeight: '900', color: colors.purple }}>
+                  {profile.radiusKm}
+                </Text>
+                <Text style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
+                  Kilometer Umkreis
+                </Text>
+              </View>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </View>
