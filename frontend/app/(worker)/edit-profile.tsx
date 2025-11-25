@@ -9,12 +9,15 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  ActionSheetIOS,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile, saveWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 // Import taxonomy
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
