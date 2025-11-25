@@ -9,7 +9,9 @@ import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewS
 import { getApplicationsForWorker } from '../../utils/applicationStore';
 import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
-import TAXONOMY_DATA from '../../shared/taxonomy.json';
+
+// Import taxonomy data statically
+const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 
 const colors = {
   purple: '#5941FF',
