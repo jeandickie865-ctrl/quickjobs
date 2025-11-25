@@ -164,9 +164,16 @@ export default function WorkerFeed() {
 
   // Alle Aufträge im Umkreis - NUTZT allOpenJobs statt jobs!
   const allJobsInRadius: NearbyJob[] = useMemo(() => {
-    if (!profile) return [];
-    // allOpenJobs enthält bereits ALLE offenen Jobs (nicht nur die gematchten)
-    return nearbyJobs(allOpenJobs, profile).sort((a, b) => a.distance - b.distance);
+    if (!profile) {
+      console.log('⚠️ allJobsInRadius: No profile');
+      return [];
+    }
+    console.log('🔍 allJobsInRadius: allOpenJobs count:', allOpenJobs.length);
+    console.log('🔍 allJobsInRadius: profile:', profile);
+    const nearby = nearbyJobs(allOpenJobs, profile);
+    console.log('🔍 allJobsInRadius: nearby count:', nearby.length);
+    console.log('🔍 allJobsInRadius: nearby jobs:', nearby);
+    return nearby.sort((a, b) => a.distance - b.distance);
   }, [allOpenJobs, profile]);
 
   const handleApply = async (job: Job) => {
