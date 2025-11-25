@@ -53,19 +53,25 @@ class WorkerDocument(BaseModel):
 
 class WorkerProfile(BaseModel):
     userId: str
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
     categories: List[str] = []
     selectedTags: List[str] = []
+    activities: List[str] = []
+    qualifications: List[str] = []
     radiusKm: int = 15
     homeAddress: Address
     homeLat: Optional[float] = None
     homeLon: Optional[float] = None
+    photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
-    documents: Optional[List[WorkerDocument]] = []
-    firstName: Optional[str] = None
-    lastName: Optional[str] = None
     shortBio: Optional[str] = None
+    # Deprecated fields for backward compatibility
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
+    documents: Optional[List[WorkerDocument]] = []
     pushToken: Optional[str] = None
     createdAt: Optional[str] = None
     updatedAt: Optional[str] = None
