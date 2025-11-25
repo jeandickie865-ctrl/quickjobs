@@ -907,6 +907,106 @@ async def update_employer_profile(
     logger.info(f"Employer profile updated for user {user_id}")
     return EmployerProfile(**updated_profile)
 
+# Review/Rating Endpoints
+
+@api_router.post("/reviews", response_model=Review)
+async def create_review(
+    review_data: ReviewCreate,
+    authorization: Optional[str] = Header(None)
+):
+    """Create a new review/rating"""
+    logger.info(f"Creating review for job {review_data.jobId}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # User must be either the worker or employer to create a review
+    if requesting_user not in [review_data.workerId, review_data.employerId]:
+        raise HTTPException(status_code=403, detail="Cannot create review for another user")
+    
+    # Validate rating
+    if review_data.rating < 1 or review_data.rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+    
+    # Check if review already exists for this combination
+    existing = await db.reviews.find_one({
+        "jobId": review_data.jobId,
+        "workerId": review_data.workerId,
+        "employerId": review_data.employerId
+    })
+    
+    if existing:
+        # Update existing review
+        logger.info(f"Review already exists, updating: {existing.get('id')}")
+        await db.reviews.update_one(
+            {"_id": existing["_id"]},
+            {"$set": {
+                "rating": review_data.rating,
+                "comment": review_data.comment,
+                "createdAt": datetime.utcnow().isoformat()
+            }}
+        )
+        updated_review = await db.reviews.find_one({"_id": existing["_id"]})
+        updated_review.pop("_id", None)
+        return Review(**updated_review)
+    
+    # Create new review
+    review_dict = review_data.dict()
+    review_dict["id"] = f"review_{str(uuid.uuid4())}"
+    review_dict["createdAt"] = datetime.utcnow().isoformat()
+    
+    # Insert into MongoDB
+    result = await db.reviews.insert_one(review_dict)
+    
+    # Fetch and return created review
+    created_review = await db.reviews.find_one({"_id": result.inserted_id})
+    created_review.pop("_id", None)
+    
+    logger.info(f"Review created: {review_dict['id']}")
+    return Review(**created_review)
+
+@api_router.get("/reviews/worker/{worker_id}", response_model=List[Review])
+async def get_reviews_for_worker(
+    worker_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all reviews for a specific worker"""
+    logger.info(f"Fetching reviews for worker {worker_id}")
+    
+    # Verify token (optional - reviews are semi-public)
+    get_user_id_from_token(authorization)
+    
+    # Find all reviews for this worker
+    reviews = await db.reviews.find({"workerId": worker_id}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for review in reviews:
+        review.pop("_id", None)
+    
+    logger.info(f"Found {len(reviews)} reviews for worker {worker_id}")
+    return [Review(**review) for review in reviews]
+
+@api_router.get("/reviews/employer/{employer_id}", response_model=List[Review])
+async def get_reviews_for_employer(
+    employer_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all reviews for a specific employer"""
+    logger.info(f"Fetching reviews for employer {employer_id}")
+    
+    # Verify token (optional - reviews are semi-public)
+    get_user_id_from_token(authorization)
+    
+    # Find all reviews for this employer
+    reviews = await db.reviews.find({"employerId": employer_id}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for review in reviews:
+        review.pop("_id", None)
+    
+    logger.info(f"Found {len(reviews)} reviews for employer {employer_id}")
+    return [Review(**review) for review in reviews]
+
 # Include the router in the main app
 app.include_router(api_router)
 
