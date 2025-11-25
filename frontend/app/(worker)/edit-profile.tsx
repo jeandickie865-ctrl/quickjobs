@@ -246,19 +246,19 @@ export default function EditWorkerProfileScreen() {
     return (first + last).toUpperCase() || '?';
   };
 
-  // Geocode address using Nominatim/OSM
-  async function geocodeAddress() {
-    if (!street.trim() || !city.trim() || !postalCode.trim()) {
-      console.log('📍 Geocoding skipped: incomplete address');
+  // OSM Autocomplete for address
+  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  async function searchAddress(query: string) {
+    if (!query || query.length < 3) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
     try {
-      console.log('📍 Geocoding address...');
-      const query = `${street.trim()} ${houseNumber.trim()}, ${postalCode.trim()} ${city.trim()}, ${country.trim()}`;
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
-      
-      console.log('📍 Geocoding URL:', url);
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`;
       
       const response = await fetch(url, {
         headers: {
@@ -267,26 +267,49 @@ export default function EditWorkerProfileScreen() {
       });
       
       const data = await response.json();
-      console.log('📍 Geocoding response:', data);
-      
-      if (data && data.length > 0) {
-        const location = data[0];
-        const newLat = parseFloat(location.lat);
-        const newLon = parseFloat(location.lon);
-        
-        setLat(newLat);
-        setLon(newLon);
-        
-        console.log('✅ Geocoding successful:', { lat: newLat, lon: newLon });
-        Alert.alert('Adresse gefunden', `Koordinaten aktualisiert: ${newLat.toFixed(4)}, ${newLon.toFixed(4)}`);
-      } else {
-        console.log('❌ Geocoding failed: No results');
-        Alert.alert('Adresse nicht gefunden', 'Bitte überprüfe die Adresse und versuche es erneut.');
-      }
+      setAddressSuggestions(data);
+      setShowSuggestions(data.length > 0);
     } catch (error) {
-      console.error('❌ Geocoding error:', error);
-      Alert.alert('Fehler', 'Adresse konnte nicht gefunden werden.');
+      console.error('Address search error:', error);
     }
+  }
+
+  function selectAddress(suggestion: any) {
+    console.log('Selected address:', suggestion);
+    
+    // Extract address components
+    const addr = suggestion.address || {};
+    
+    // Street
+    const streetName = addr.road || addr.street || '';
+    setStreet(streetName);
+    
+    // House number
+    const houseNum = addr.house_number || '';
+    setHouseNumber(houseNum);
+    
+    // Postal code
+    const postal = addr.postcode || '';
+    setPostalCode(postal);
+    
+    // City
+    const cityName = addr.city || addr.town || addr.village || '';
+    setCity(cityName);
+    
+    // Country
+    const countryName = addr.country || 'Deutschland';
+    setCountry(countryName);
+    
+    // Coordinates
+    const latitude = parseFloat(suggestion.lat);
+    const longitude = parseFloat(suggestion.lon);
+    setLat(latitude);
+    setLon(longitude);
+    
+    console.log('Address filled:', { streetName, houseNum, postal, cityName, countryName, latitude, longitude });
+    
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
   }
 
   function validate(): boolean {
