@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 """
-Backend Testing Suite for ShiftMatch Jobs API
-Tests the Jobs API endpoints implemented in Phase 2
+Backend API Testing Suite for ShiftMatch Applications API
+Testing Phase 3: Applications System
+
+This script tests all Applications API endpoints with realistic German data
+as requested in the German review.
 """
 
 import requests
 import json
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Dict, List, Optional
 
-# Get backend URL from frontend/.env
+# Backend URL from frontend/.env
 BACKEND_URL = "https://jobfinder-de.preview.emergentagent.com/api"
 
-# Test users for authorization testing
-EMPLOYER_TOKEN = "user_testemployer_test_de"
-WORKER_TOKEN = "user_testworker_test_de"
+# Test users
+TEST_WORKER = "user_testworker_test_de"
+TEST_EMPLOYER = "user_testemployer_test_de"
 
 def print_test_header(test_name):
     print(f"\n{'='*60}")
