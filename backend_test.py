@@ -437,10 +437,78 @@ class DistanceMatchingTester:
             print("❌ SOME TESTS FAILED - Jobs matching system needs attention")
             return False
 
+def run_basic_infrastructure_check():
+    """Basic infrastructure check after frontend changes"""
+    print("🚀 BACKEND INFRASTRUCTURE CHECK - Job-Matching Bug Fix")
+    print("=" * 60)
+    print("Testing basic backend infrastructure after frontend-only changes")
+    print("=" * 60)
+    
+    tester = DistanceMatchingTester()
+    
+    # Test 1: Backend Service Status
+    print("\n🔍 TEST 1: Backend Service Status")
+    health_ok = tester.test_backend_health()
+    
+    # Test 2: Frontend Serving
+    print("\n🔍 TEST 2: Frontend Serving")
+    try:
+        response = requests.get("https://jobmatcher-de.preview.emergentagent.com/", timeout=10)
+        if response.status_code == 200 and "html" in response.headers.get("content-type", "").lower():
+            print("✅ Frontend Serving CORRECTLY - Root URL delivers HTML content")
+            frontend_ok = True
+        else:
+            print(f"❌ Frontend Serving ISSUE - Status: {response.status_code}")
+            frontend_ok = False
+    except Exception as e:
+        print(f"❌ Frontend Serving FAILED - Error: {e}")
+        frontend_ok = False
+    
+    # Test 3: Health Check Endpoint
+    print("\n🔍 TEST 3: Health Check Endpoint")
+    try:
+        response = requests.get(f"{BACKEND_URL}/", timeout=10)
+        if response and response.status_code == 200:
+            data = response.json()
+            if data.get("message") == "Hello World":
+                print(f"✅ Health Check Endpoint WORKING - Response: {data}")
+                health_endpoint_ok = True
+            else:
+                print(f"❌ Health Check Endpoint unexpected response: {data}")
+                health_endpoint_ok = False
+        else:
+            print(f"❌ Health Check Endpoint FAILED - Status: {response.status_code if response else 'No response'}")
+            health_endpoint_ok = False
+    except Exception as e:
+        print(f"❌ Health Check Endpoint FAILED - Error: {e}")
+        health_endpoint_ok = False
+    
+    # Summary
+    print("\n" + "=" * 60)
+    print("📊 INFRASTRUCTURE CHECK SUMMARY")
+    print("=" * 60)
+    
+    tests_passed = sum([health_ok, frontend_ok, health_endpoint_ok])
+    total_tests = 3
+    
+    print(f"✅ Tests Passed: {tests_passed}/{total_tests}")
+    
+    if tests_passed == total_tests:
+        print("🎉 ALL TESTS PASSED - Backend Infrastructure is STABLE")
+        print("✅ Backend unaffected by frontend job-matching bug fix as expected")
+        return True
+    else:
+        print("❌ SOME TESTS FAILED - Backend Infrastructure needs attention")
+        return False
+
 def main():
     """Main test execution"""
-    tester = DistanceMatchingTester()
-    success = tester.run_comprehensive_test()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "--infrastructure":
+        success = run_basic_infrastructure_check()
+    else:
+        tester = DistanceMatchingTester()
+        success = tester.run_comprehensive_test()
     
     # Exit with appropriate code
     sys.exit(0 if success else 1)
