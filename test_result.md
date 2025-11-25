@@ -1445,3 +1445,64 @@ agent_communication:
       - Security-Checks: Spezielle Prüfung für §34a, Bewacher-ID funktioniert ✅
       
       **STATUS: Matching-System ist PRODUCTION-READY und arbeitet exakt wie spezifiziert**
+
+
+frontend:
+  - task: "Job-Matching Bug: Jobs im Umkreis zeigt nur gematchte Jobs"
+    implemented: true
+    working: true
+    file: "app/(worker)/feed.tsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User berichtet: Jobs, die nicht zu den Qualifikationen des Workers passen (z.B. Spülkraft), erscheinen nicht im Tab 'Jobs im Umkreis'. Dieser Tab sollte ALLE Jobs in der Nähe zeigen, unabhängig von Kategorie-Matching."
+      - working: true
+        agent: "main"
+        comment: "KRITISCHER FIX: allJobsInRadius useMemo verwendet jetzt allOpenJobs statt jobs. Root Cause: Der useMemo (Zeilen 148-152) nutzte die bereits gefilterte jobs-Variable als Eingabe. Dadurch zeigte der 'Jobs im Umkreis' Tab nur Jobs, die bereits durch Kategorie-Matching gefiltert wurden. Fix: Geändert von 'nearbyJobs(openJobs, profile)' mit jobs als Eingabe zu 'nearbyJobs(allOpenJobs, profile)'. allOpenJobs enthält ALLE offenen Jobs (nicht nur gematchte). Tab 'Passende Jobs' bleibt unverändert (zeigt nur Kategorie-Matches), Tab 'Jobs im Umkreis' zeigt jetzt korrekt ALLE Jobs im Radius. Frontend neu gestartet."
+
+agent_communication:
+  - agent: "main"
+    message: |
+      **🔧 JOB-MATCHING BUG BEHOBEN: Jobs im Umkreis jetzt vollständig**
+      
+      **Problem identifiziert:**
+      User meldete, dass Jobs, die nicht zu den Worker-Qualifikationen passen (z.B. "Spülkraft" für Security-Worker), nicht im "Jobs im Umkreis" Tab erschienen. Dieser Tab soll aber ALLE Jobs in der Nähe zeigen, unabhängig vom Matching.
+      
+      **Root Cause gefunden:**
+      In `feed.tsx` Zeilen 148-152:
+      ```javascript
+      const allJobsInRadius: NearbyJob[] = useMemo(() => {
+        if (!profile) return [];
+        const openJobs = jobs.filter(j => j.status === 'open');  // ❌ FALSCH!
+        return nearbyJobs(openJobs, profile);
+      }, [jobs, profile]);
+      ```
+      
+      Problem: Die Variable `jobs` enthielt bereits nur die durch Kategorie-Matching gefilterten Jobs. Der "Alle Jobs" Tab bekam dadurch eine doppelt gefilterte Liste.
+      
+      **Implementierter Fix:**
+      ```javascript
+      const allJobsInRadius: NearbyJob[] = useMemo(() => {
+        if (!profile) return [];
+        return nearbyJobs(allOpenJobs, profile);  // ✅ KORREKT!
+      }, [allOpenJobs, profile]);
+      ```
+      
+      Die Variable `allOpenJobs` wird in `loadData()` (Zeile 90) gesetzt und enthält ALLE offenen Jobs, die der Worker noch nicht beworben hat. Die Distanzfilterung erfolgt dann in der `nearbyJobs()` Funktion.
+      
+      **Erwartetes Verhalten nach Fix:**
+      - ✅ Tab "Passende Jobs": Zeigt nur Jobs mit passender Kategorie (unverändert)
+      - ✅ Tab "Jobs im Umkreis": Zeigt ALLE Jobs im Radius, auch ohne Kategorie-Match (BEHOBEN!)
+      - ✅ Worker können jetzt auch Jobs außerhalb ihrer Hauptkategorie finden
+      
+      **Datei geändert:**
+      - `/app/frontend/app/(worker)/feed.tsx` (Zeilen 147-152)
+      
+      **Status:** 
+      - Fix implementiert, Frontend neu gestartet
+      - Bereit für Backend-Testing (Infrastructure Check)
+      - Keine Backend-Änderungen, aber Testing-Protokoll erfordert Test nach Frontend-Änderungen
+
