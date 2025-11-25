@@ -149,20 +149,22 @@ export default function WorkerProfileScreen() {
         return;
       }
 
-      const data = await getWorkerProfileLocal(user.id);
+      const data = await getWorkerProfile(user.id);
       
       if (data) {
-        setName(data.firstName || '');
+        setFirstName(data.firstName || '');
+        setLastName(data.lastName || '');
         setShortBio(data.shortBio || '');
-        setContactEmail(data.contactEmail || '');
-        setContactPhone(data.contactPhone || '');
+        setEmail(data.email || '');
+        setPhone(data.phone || '');
         setStreet(data.homeAddress?.street || '');
+        setHouseNumber(data.homeAddress?.houseNumber || '');
         setPostalCode(data.homeAddress?.postalCode || '');
         setCity(data.homeAddress?.city || '');
         setLat(data.homeLat || undefined);
         setLon(data.homeLon || undefined);
         setRadiusKm(String(data.radiusKm || 15));
-        setPhotoUrl(data.profilePhotoUri || '');
+        setPhotoUrl(data.photoUrl || data.profilePhotoUri || '');
         setSelectedCategories(data.categories || []);
         
         // Filter activities and qualifications from selectedTags
