@@ -144,12 +144,12 @@ export default function WorkerFeed() {
     [jobs]
   );
 
-  // Alle Aufträge im Umkreis
+  // Alle Aufträge im Umkreis - NUTZT allOpenJobs statt jobs!
   const allJobsInRadius: NearbyJob[] = useMemo(() => {
     if (!profile) return [];
-    const openJobs = jobs.filter(j => j.status === 'open');
-    return nearbyJobs(openJobs, profile);
-  }, [jobs, profile]);
+    // allOpenJobs enthält bereits ALLE offenen Jobs (nicht nur die gematchten)
+    return nearbyJobs(allOpenJobs, profile);
+  }, [allOpenJobs, profile]);
 
   // Aktive Job-Liste basierend auf Tab
   const activeJobs = activeTab === 'matching' ? matchingJobs : allJobsInRadius;
