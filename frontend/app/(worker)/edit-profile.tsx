@@ -263,25 +263,32 @@ export default function WorkerProfileScreen() {
       return Alert.alert('Fehler', 'Du bist nicht eingeloggt.');
     }
 
-    // Vorname und Nachname separat prüfen
-    const nameParts = name.trim().split(' ');
-    if (nameParts.length < 2) {
-      return Alert.alert('Fehler', 'Bitte Vor- und Nachname eingeben (z.B. "Max Mustermann")');
+    // Vorname (Pflicht)
+    if (!firstName || firstName.trim() === '') {
+      return Alert.alert('Fehler', 'Vorname ist ein Pflichtfeld');
+    }
+
+    // Nachname (Pflicht)
+    if (!lastName || lastName.trim() === '') {
+      return Alert.alert('Fehler', 'Nachname ist ein Pflichtfeld');
     }
 
     // Telefonnummer (Pflicht)
-    if (!contactPhone || contactPhone.trim() === '') {
+    if (!phone || phone.trim() === '') {
       return Alert.alert('Fehler', 'Telefonnummer ist ein Pflichtfeld');
     }
 
     // Adresse (alle Felder Pflicht)
-    if (!street.trim()) {
-      return Alert.alert('Fehler', 'Straße und Hausnummer sind Pflichtfelder');
+    if (!street || street.trim() === '') {
+      return Alert.alert('Fehler', 'Straße ist ein Pflichtfeld');
     }
-    if (!postalCode.trim()) {
+    if (!houseNumber || houseNumber.trim() === '') {
+      return Alert.alert('Fehler', 'Hausnummer ist ein Pflichtfeld');
+    }
+    if (!postalCode || postalCode.trim() === '') {
       return Alert.alert('Fehler', 'Postleitzahl ist ein Pflichtfeld');
     }
-    if (!city.trim()) {
+    if (!city || city.trim() === '') {
       return Alert.alert('Fehler', 'Stadt ist ein Pflichtfeld');
     }
 
