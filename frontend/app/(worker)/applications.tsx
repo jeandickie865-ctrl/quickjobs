@@ -329,7 +329,7 @@ export default function WorkerApplicationsScreen() {
                   />
                 </View>
               )}
-            </View>
+            </Pressable>
           );
         })}
       </ScrollView>
