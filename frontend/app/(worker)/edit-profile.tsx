@@ -837,28 +837,22 @@ export default function EditWorkerProfileScreen() {
             )}
           </View>
 
-          {/* Email */}
+          {/* Email - Read-only, from AuthContext */}
           <View>
             <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
               E-Mail
             </Text>
-            <TextInput
-              value={email}
-              onChangeText={setEmail}
-              placeholder="max@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              editable={false}
-              style={{
-                backgroundColor: '#E8E8E8',
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-                color: COLORS.darkGray,
-              }}
-            />
-            <Text style={{ fontSize: 12, color: COLORS.darkGray, marginTop: 4 }}>
+            <View style={{
+              backgroundColor: '#E8E8E8',
+              borderRadius: 12,
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+            }}>
+              <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
+                {user?.email || email || 'Keine E-Mail'}
+              </Text>
+            </View>
+            <Text style={{ fontSize: 12, color: '#888', marginTop: 4, fontStyle: 'italic' }}>
               E-Mail kann nicht geändert werden
             </Text>
           </View>
