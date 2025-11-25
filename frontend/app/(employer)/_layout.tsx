@@ -37,30 +37,30 @@ export default function EmployerLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.neon,
-        tabBarInactiveTintColor: COLORS.whiteTransparent45,
+        tabBarActiveTintColor: COLORS.white,
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
         tabBarStyle: {
-          backgroundColor: COLORS.purple,
-          borderTopWidth: 2,
-          borderTopColor: 'rgba(200, 255, 22, 0.2)',
-          height: Platform.OS === 'ios' ? 90 : 75,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 12,
-          paddingTop: 12,
-          elevation: 20,
+          backgroundColor: '#4A35D9', // Etwas hellerer Purple für besseren Kontrast
+          borderTopWidth: 3,
+          borderTopColor: COLORS.neon,
+          height: Platform.OS === 'ios' ? 95 : 80,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 15,
+          paddingTop: 15,
+          elevation: 25,
           shadowColor: COLORS.neon,
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.15,
-          shadowRadius: 8,
+          shadowOffset: { width: 0, height: -5 },
+          shadowOpacity: 0.3,
+          shadowRadius: 12,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '700',
-          letterSpacing: 0.5,
+          fontSize: 13,
+          fontWeight: '800',
+          letterSpacing: 0.8,
           textTransform: 'uppercase',
-          marginTop: 6,
+          marginTop: 4,
         },
         tabBarIconStyle: {
-          marginTop: 6,
+          marginTop: 0,
         },
       }}
     >
