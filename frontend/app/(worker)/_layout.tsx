@@ -92,7 +92,7 @@ export default function WorkerLayout() {
                 size={28}
                 color={color}
               />
-              {focused && (
+              {Boolean(focused) && (
                 <View style={{
                   position: 'absolute',
                   bottom: -14,
@@ -120,7 +120,7 @@ export default function WorkerLayout() {
                 size={28}
                 color={color}
               />
-              {focused && (
+              {Boolean(focused) && (
                 <View style={{
                   position: 'absolute',
                   bottom: -14,
@@ -148,7 +148,7 @@ export default function WorkerLayout() {
                 size={28}
                 color={color}
               />
-              {focused && (
+              {Boolean(focused) && (
                 <View style={{
                   position: 'absolute',
                   bottom: -14,
