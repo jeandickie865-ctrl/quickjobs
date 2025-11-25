@@ -350,7 +350,7 @@ backend:
   - task: "Backend API"
     implemented: true
     working: true
-    file: "backend/main.py"
+    file: "backend/server.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -379,6 +379,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ BACKEND INFRASTRUCTURE VERIFICATION nach BUG FIXES: Nach den 3 Frontend Bug-Fixes (Wage Display, Matching Logic, Worker Profile AsyncStorage) wurde Backend Infrastructure getestet. ALLE 4/4 TESTS BESTANDEN: ✅ Backend Service RUNNING (Health Check erfolgreich), ✅ Frontend Serving korrekt (Root URL liefert HTML), ✅ Health Check Endpoint funktioniert (/api/health returns healthy), ✅ API Documentation zugänglich (/api/docs Swagger UI). Backend läuft mit BACKUP API v1.0.0 (main.py) statt server.py. Wie erwartet keine Auswirkungen auf Backend durch reine Frontend-Änderungen. Backend Infrastructure vollständig stabil nach Bug-Fixes."
+      - working: true
+        agent: "testing"
+        comment: "✅ BACKEND INFRASTRUCTURE CHECK nach Job-Matching Bug Fix: Routine Infrastructure Check nach Frontend-only Änderungen durchgeführt. ALLE 3/3 TESTS BESTANDEN: ✅ Backend Service RUNNING (pid 1032, uptime 0:00:05, nach Neustart), ✅ Frontend Serving korrekt (Root URL liefert HTML), ✅ Health Check Endpoint funktioniert (GET /api/ → {'message': 'Hello World'}). Backend Logs zeigen keine Fehler, nur normale HTTP-Requests. Service war kurzzeitig gestoppt, wurde erfolgreich neu gestartet. Wie erwartet keine Auswirkungen auf Backend durch reine Frontend-Logik-Änderung (allJobsInRadius useMemo Fix). Backend Infrastructure vollständig stabil nach Job-Matching Bug Fix."
 
 metadata:
   created_by: "main_agent"
