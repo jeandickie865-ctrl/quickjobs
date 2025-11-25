@@ -174,22 +174,9 @@ export default function WorkerProfileScreen() {
             Mein Profil
           </Text>
           <Pressable 
-            onPress={() => {
-              Alert.alert(
-                'Abmelden',
-                'Möchtest du dich wirklich abmelden?',
-                [
-                  { text: 'Abbrechen', style: 'cancel' },
-                  { 
-                    text: 'Abmelden', 
-                    style: 'destructive',
-                    onPress: async () => {
-                      await signOut();
-                      router.replace('/auth/login');
-                    }
-                  }
-                ]
-              );
+            onPress={async () => {
+              await signOut();
+              router.replace('/auth/login');
             }}
           >
             <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
