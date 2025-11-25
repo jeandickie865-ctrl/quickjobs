@@ -164,6 +164,29 @@ class JobUpdate(BaseModel):
     status: Optional[str] = None
     matchedWorkerId: Optional[str] = None
 
+# Application Models
+class JobApplication(BaseModel):
+    id: str = Field(default_factory=lambda: f"app_{str(uuid.uuid4())}")
+    jobId: str
+    workerId: str
+    employerId: str
+    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    respondedAt: Optional[str] = None
+    status: str = "pending"  # 'pending', 'accepted', 'rejected', 'canceled'
+    employerConfirmedLegal: Optional[bool] = None
+    workerConfirmedLegal: Optional[bool] = None
+
+class ApplicationCreate(BaseModel):
+    jobId: str
+    workerId: str
+    employerId: str
+
+class ApplicationUpdate(BaseModel):
+    status: Optional[str] = None
+    respondedAt: Optional[str] = None
+    employerConfirmedLegal: Optional[bool] = None
+    workerConfirmedLegal: Optional[bool] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
