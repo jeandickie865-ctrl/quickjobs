@@ -291,6 +291,40 @@ class ChatMessageCreate(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
+@api_router.get("/health")
+async def health_check():
+    return {"status": "ok", "message": "API is running"}
+
+@api_router.get("/geocode")
+async def geocode_address(query: str):
+    """Proxy for Nominatim/OSM geocoding to avoid CORS issues"""
+    import httpx
+    
+    logger.info(f"Geocoding query: {query}")
+    
+    try:
+        url = f"https://nominatim.openstreetmap.org/search?format=json&q={query}&limit=5&addressdetails=1&countrycodes=de"
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                url,
+                headers={'User-Agent': 'ShiftMatchApp/1.0'},
+                timeout=10.0
+            )
+            
+            if response.status_code == 429:
+                raise HTTPException(status_code=429, detail="Rate limit exceeded")
+            
+            response.raise_for_status()
+            data = response.json()
+            
+            logger.info(f"Found {len(data)} results")
+            return data
+            
+    except httpx.HTTPError as e:
+        logger.error(f"Geocoding error: {e}")
+        raise HTTPException(status_code=500, detail="Geocoding service unavailable")
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.dict()
