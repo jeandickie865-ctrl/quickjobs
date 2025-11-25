@@ -302,6 +302,173 @@ async def update_worker_profile(
     logger.info(f"Worker profile updated for user {user_id}")
     return WorkerProfile(**updated_profile)
 
+# Job Endpoints
+
+@api_router.post("/jobs", response_model=Job)
+async def create_job(
+    job_data: JobCreate,
+    authorization: Optional[str] = Header(None)
+):
+    """Create a new job"""
+    logger.info("Creating new job")
+    
+    employerId = get_user_id_from_token(authorization)
+    
+    # Create job document
+    job_dict = job_data.dict()
+    job_dict["id"] = f"job_{str(uuid.uuid4())}"
+    job_dict["employerId"] = employerId
+    job_dict["createdAt"] = datetime.utcnow().isoformat()
+    
+    # Convert nested Address to dict if needed
+    if isinstance(job_dict.get("address"), Address):
+        job_dict["address"] = job_dict["address"].dict()
+    
+    # Insert into MongoDB
+    result = await db.jobs.insert_one(job_dict)
+    
+    # Fetch and return created job
+    created_job = await db.jobs.find_one({"_id": result.inserted_id})
+    created_job.pop("_id", None)
+    
+    logger.info(f"Job created: {job_dict['id']} by employer {employerId}")
+    return Job(**created_job)
+
+@api_router.get("/jobs", response_model=List[Job])
+async def get_all_open_jobs(
+    authorization: Optional[str] = Header(None)
+):
+    """Get all open jobs"""
+    logger.info("Fetching all open jobs")
+    
+    # Verify token (optional)
+    get_user_id_from_token(authorization)
+    
+    # Find all open jobs
+    jobs = await db.jobs.find({"status": "open"}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for job in jobs:
+        job.pop("_id", None)
+    
+    logger.info(f"Found {len(jobs)} open jobs")
+    return [Job(**job) for job in jobs]
+
+@api_router.get("/jobs/employer/{employer_id}", response_model=List[Job])
+async def get_employer_jobs(
+    employer_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all jobs for a specific employer"""
+    logger.info(f"Fetching jobs for employer {employer_id}")
+    
+    # Verify token - employer can only see their own jobs
+    requesting_user = get_user_id_from_token(authorization)
+    if requesting_user != employer_id:
+        raise HTTPException(status_code=403, detail="Cannot view another employer's jobs")
+    
+    # Find all jobs for this employer
+    jobs = await db.jobs.find({"employerId": employer_id}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for job in jobs:
+        job.pop("_id", None)
+    
+    logger.info(f"Found {len(jobs)} jobs for employer {employer_id}")
+    return [Job(**job) for job in jobs]
+
+@api_router.get("/jobs/{job_id}", response_model=Job)
+async def get_job(
+    job_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get a specific job by ID"""
+    logger.info(f"Fetching job {job_id}")
+    
+    # Verify token (optional)
+    get_user_id_from_token(authorization)
+    
+    # Find job
+    job = await db.jobs.find_one({"id": job_id})
+    
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    job.pop("_id", None)
+    
+    logger.info(f"Job {job_id} found")
+    return Job(**job)
+
+@api_router.put("/jobs/{job_id}", response_model=Job)
+async def update_job(
+    job_id: str,
+    job_update: JobUpdate,
+    authorization: Optional[str] = Header(None)
+):
+    """Update a job"""
+    logger.info(f"Updating job {job_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Check if job exists and user is the owner
+    existing = await db.jobs.find_one({"id": job_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if existing.get("employerId") != requesting_user:
+        raise HTTPException(status_code=403, detail="Cannot update another employer's job")
+    
+    # Prepare update data (only include non-None fields)
+    update_data = job_update.dict(exclude_none=True)
+    
+    if not update_data:
+        # No fields to update
+        existing.pop("_id", None)
+        return Job(**existing)
+    
+    # Convert nested Address to dict if needed
+    if "address" in update_data and isinstance(update_data["address"], Address):
+        update_data["address"] = update_data["address"].dict()
+    
+    # Update in MongoDB
+    await db.jobs.update_one(
+        {"id": job_id},
+        {"$set": update_data}
+    )
+    
+    # Fetch and return updated job
+    updated_job = await db.jobs.find_one({"id": job_id})
+    updated_job.pop("_id", None)
+    
+    logger.info(f"Job {job_id} updated")
+    return Job(**updated_job)
+
+@api_router.delete("/jobs/{job_id}")
+async def delete_job(
+    job_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Delete a job"""
+    logger.info(f"Deleting job {job_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Check if job exists and user is the owner
+    existing = await db.jobs.find_one({"id": job_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if existing.get("employerId") != requesting_user:
+        raise HTTPException(status_code=403, detail="Cannot delete another employer's job")
+    
+    # Delete from MongoDB
+    await db.jobs.delete_one({"id": job_id})
+    
+    logger.info(f"Job {job_id} deleted")
+    return {"message": "Job deleted successfully"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
