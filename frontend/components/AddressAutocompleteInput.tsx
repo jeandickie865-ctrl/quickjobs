@@ -217,18 +217,18 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
   );
 };
 
-// 🟩 Styles (Neon-Tech)
+// 🟪 Styles (Purple-Tech)
 const styles = StyleSheet.create({
   container: { width: '100%', marginBottom: 20 },
   label: {
     fontSize: 12,
-    color: '#C8FF16',
+    color: '#5941FF',
     fontWeight: '700',
     marginBottom: 8
   },
   labelSmall: {
     fontSize: 12,
-    color: '#C8FF16',
+    color: '#5941FF',
     fontWeight: '700',
     marginTop: 14,
     marginBottom: 6
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     padding: 14,
     backgroundColor: '#FFF',
     borderWidth: 2,
-    borderColor: '#C8FF16',
+    borderColor: '#5941FF',
     borderRadius: 14,
     fontSize: 16,
     color: '#000'
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#FFF',
     borderWidth: 2,
-    borderColor: '#C8FF16',
+    borderColor: '#5941FF',
     borderRadius: 12,
     marginTop: 4,
     zIndex: 999,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#EEE'
   },
-  suggestionItemPressed: { backgroundColor: 'rgba(200,255,22,0.1)' },
+  suggestionItemPressed: { backgroundColor: 'rgba(89,65,255,0.1)' },
   suggestionText: { fontSize: 15, color: '#000' }
 });
 
