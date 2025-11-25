@@ -122,45 +122,45 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     return formatDateTime(minimumDate);
   };
 
-  // For Web: Different approach for date vs time
+  // For Web
   if (Platform.OS === 'web') {
     const inputRef = React.useRef<any>(null);
     
-    // TIME: Simple TextInput for manual entry
+    // TIME: Einfaches TextInput
     if (mode === 'time') {
-      const timeString = value ? 
-        `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}` 
-        : '';
+      const [timeText, setTimeText] = useState('');
+      
+      React.useEffect(() => {
+        if (value) {
+          const h = String(value.getHours()).padStart(2, '0');
+          const m = String(value.getMinutes()).padStart(2, '0');
+          setTimeText(`${h}:${m}`);
+        }
+      }, [value]);
       
       return (
         <View style={styles.container}>
           <Text style={styles.label}>{label}</Text>
           <TextInput
-            value={timeString}
-            onChangeText={(text) => {
-              // Format: HH:MM
-              const match = text.match(/^(\d{1,2}):?(\d{0,2})$/);
-              if (match) {
-                const [_, hoursStr, minutesStr] = match;
-                const hours = parseInt(hoursStr) || 0;
-                const minutes = parseInt(minutesStr) || 0;
-                
-                if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
-                  const baseDate = value ? new Date(value) : new Date();
-                  baseDate.setHours(hours);
-                  baseDate.setMinutes(minutes);
-                  baseDate.setSeconds(0);
-                  baseDate.setMilliseconds(0);
-                  onChange(baseDate);
+            value={timeText}
+            onChangeText={setTimeText}
+            onBlur={() => {
+              // Parse HH:MM
+              const parts = timeText.split(':');
+              if (parts.length === 2) {
+                const h = parseInt(parts[0]);
+                const m = parseInt(parts[1]);
+                if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+                  const newDate = value ? new Date(value) : new Date();
+                  newDate.setHours(h);
+                  newDate.setMinutes(m);
+                  onChange(newDate);
                 }
               }
             }}
-            placeholder="HH:MM (z.B. 09:00)"
+            placeholder="09:00"
             placeholderTextColor="#999"
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
               backgroundColor: '#FFF',
               borderWidth: 2,
               borderColor: '#5941FF',
@@ -176,7 +176,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       );
     }
     
-    // DATE: Use HTML5 input with overlay
+    // DATE: Unverändert - funktioniert!
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{label}</Text>
