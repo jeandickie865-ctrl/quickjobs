@@ -120,15 +120,15 @@ job2 = {
     'endAt': (datetime.utcnow() + timedelta(days=3, hours=12)).isoformat(),
     'hours': None,
     'dueAt': None,
-    'location': {
+    'address': {
         'street': 'Baustraße',
         'houseNumber': '5',
         'postalCode': '10117',
         'city': 'Berlin',
-        'country': 'Deutschland',
-        'lat': 52.523,
-        'lon': 13.408
+        'country': 'Deutschland'
     },
+    'lat': 52.523,
+    'lon': 13.408,
     'requiredAllTags': [],
     'requiredAnyTags': [],
     'workerAmountCents': 1800,
