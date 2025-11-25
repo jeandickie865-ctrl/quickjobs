@@ -103,7 +103,7 @@ export default function RateEmployerScreen() {
       console.log('✅ Review saved successfully');
       
       // Job als "completed" markieren nach Bewertung
-      await updateJob(String(jobId), { status: 'completed' });
+      await updateJob(job.id, { status: 'completed' });
       console.log('✅ Job marked as completed after worker review');
       
       setShowSuccessModal(true);
