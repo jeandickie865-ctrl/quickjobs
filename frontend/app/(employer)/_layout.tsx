@@ -75,11 +75,11 @@ export default function EmployerLayout() {
               paddingVertical: 12,
               paddingHorizontal: 20,
               borderRadius: 12,
-              minWidth: 100,
+              minWidth: 85,
               alignItems: 'center',
             }}>
               <Text style={{
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: '700',
                 color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
               }}>
@@ -90,7 +90,33 @@ export default function EmployerLayout() {
         }}
       />
 
-      {/* Tab 2: Matches */}
+      {/* Tab 2: Bewerbungen */}
+      <Tabs.Screen
+        name="applications"
+        options={{
+          tabBarIcon: () => null,
+          tabBarLabel: ({ focused }) => (
+            <View style={{
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
+              paddingVertical: 12,
+              paddingHorizontal: 16,
+              borderRadius: 12,
+              minWidth: 85,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 13,
+                fontWeight: '700',
+                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+              }}>
+                Bewerb.
+              </Text>
+            </View>
+          ),
+        }}
+      />
+
+      {/* Tab 3: Matches */}
       <Tabs.Screen
         name="matches"
         options={{
@@ -101,11 +127,11 @@ export default function EmployerLayout() {
               paddingVertical: 12,
               paddingHorizontal: 20,
               borderRadius: 12,
-              minWidth: 100,
+              minWidth: 85,
               alignItems: 'center',
             }}>
               <Text style={{
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: '700',
                 color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
               }}>
@@ -116,7 +142,7 @@ export default function EmployerLayout() {
         }}
       />
 
-      {/* Tab 3: Profil */}
+      {/* Tab 4: Profil */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -127,41 +153,15 @@ export default function EmployerLayout() {
               paddingVertical: 12,
               paddingHorizontal: 20,
               borderRadius: 12,
-              minWidth: 100,
+              minWidth: 85,
               alignItems: 'center',
             }}>
               <Text style={{
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: '700',
                 color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
               }}>
                 Profil
-              </Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 4: Erstellen (Create Job) */}
-      <Tabs.Screen
-        name="jobs/create"
-        options={{
-          tabBarIcon: () => null,
-          tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: COLORS.neon,
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 100,
-              alignItems: 'center',
-            }}>
-              <Text style={{
-                fontSize: 14,
-                fontWeight: '700',
-                color: '#000000',
-              }}>
-                Erstellen
               </Text>
             </View>
           ),
