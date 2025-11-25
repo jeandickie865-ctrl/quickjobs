@@ -68,25 +68,27 @@ export default function EmployerLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Meine Aufträge',
+          title: 'Aufträge',
           tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
+            <View style={{ 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: 56,
+              height: 40,
+              backgroundColor: focused ? 'rgba(200, 255, 22, 0.15)' : 'transparent',
+              borderRadius: 12,
+              marginTop: -4,
+            }}>
               <Ionicons
-                name="briefcase-outline"
-                size={28}
+                name={focused ? "briefcase" : "briefcase-outline"}
+                size={32}
                 color={color}
+                style={{
+                  textShadowColor: focused ? COLORS.neon : 'transparent',
+                  textShadowOffset: { width: 0, height: 0 },
+                  textShadowRadius: 8,
+                }}
               />
-              {focused && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
             </View>
           ),
         }}
