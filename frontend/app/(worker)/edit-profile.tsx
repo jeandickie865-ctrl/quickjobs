@@ -35,7 +35,7 @@ const listCategories = () => {
   }));
 };
 
-// BUG 3 FIX: Nutze AsyncStorage statt Backend API
+// Import profile and application functions (now API-based)
 import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '../../utils/profileStore';
 import { getApplicationsForWorker } from '../../utils/applicationStore';
 
