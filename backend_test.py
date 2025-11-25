@@ -1,44 +1,20 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Suite for ShiftMatch Worker Profile System
-Tests the newly implemented Worker Profile API endpoints with MongoDB integration
+Backend Testing Suite for ShiftMatch Jobs API
+Tests the Jobs API endpoints implemented in Phase 2
 """
 
 import requests
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
-# Get backend URL from frontend .env
+# Get backend URL from frontend/.env
 BACKEND_URL = "https://jobfinder-de.preview.emergentagent.com/api"
 
-# Test data for Worker Profile API
-TEST_USER_ID = "user_testworker_test_de"
-AUTH_HEADER = {"Authorization": f"Bearer {TEST_USER_ID}"}
-
-WORKER_PROFILE_DATA = {
-    "categories": ["gastronomie", "lager_logistik"],
-    "selectedTags": ["service_kellner", "kommissionierung"],
-    "radiusKm": 25,
-    "homeAddress": {
-        "street": "Teststraße 123",
-        "postalCode": "10115",
-        "city": "Berlin",
-        "country": "DE"
-    },
-    "homeLat": 52.5200,
-    "homeLon": 13.4050,
-    "firstName": "Test",
-    "shortBio": "Erfahrener Worker"
-}
-
-PROFILE_UPDATE_DATA = {
-    "categories": ["gastronomie", "lager_logistik", "reinigung"],
-    "selectedTags": ["service_kellner", "kommissionierung", "buero_reinigung"],
-    "radiusKm": 30,
-    "firstName": "Test Updated",
-    "shortBio": "Sehr erfahrener Worker mit neuen Skills"
-}
+# Test users for authorization testing
+EMPLOYER_TOKEN = "user_testemployer_test_de"
+WORKER_TOKEN = "user_testworker_test_de"
 
 def print_test_header(test_name):
     print(f"\n{'='*60}")
