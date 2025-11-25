@@ -1,37 +1,11 @@
-// app/index.tsx
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useAuth } from '../contexts/AuthContext';
+import { View, Text } from 'react-native';
 
 export default function Index() {
-  const { user, loading } = useAuth();
-  const router = useRouter();
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    if (!loading) {
-      setIsReady(true);
-    }
-  }, [loading]);
-
-  useEffect(() => {
-    if (isReady) {
-      if (!user) {
-        router.replace('/auth/start');
-      } else if (!user.role) {
-        router.replace('/auth/role-select');
-      } else if (user.role === 'worker') {
-        router.replace('/(worker)/feed');
-      } else {
-        router.replace('/(employer)');
-      }
-    }
-  }, [isReady, user]);
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#5941FF' }}>
-      <ActivityIndicator size="large" color="#C8FF16" />
+      <Text style={{ fontSize: 24, color: '#C8FF16', fontWeight: 'bold' }}>
+        TEST - App lädt!
+      </Text>
     </View>
   );
 }
