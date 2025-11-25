@@ -48,8 +48,10 @@ export default function WorkerProfileScreen() {
   const [saving, setSaving] = useState(false);
 
   // Profile fields
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [street, setStreet] = useState('');
+  const [houseNumber, setHouseNumber] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
   const [lat, setLat] = useState<number | undefined>();
@@ -57,8 +59,8 @@ export default function WorkerProfileScreen() {
   const [radiusKm, setRadiusKm] = useState('15');
   const [photoUrl, setPhotoUrl] = useState('');
   const [shortBio, setShortBio] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
   // Tags
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
