@@ -73,23 +73,30 @@ export default function EmployerLayout() {
             <View style={{ 
               alignItems: 'center', 
               justifyContent: 'center',
-              width: 56,
-              height: 40,
-              backgroundColor: focused ? 'rgba(200, 255, 22, 0.15)' : 'transparent',
-              borderRadius: 12,
-              marginTop: -4,
+              width: 70,
+              height: 48,
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.08)',
+              borderRadius: 16,
+              marginTop: -6,
             }}>
               <Ionicons
                 name={focused ? "briefcase" : "briefcase-outline"}
-                size={32}
-                color={color}
-                style={{
-                  textShadowColor: focused ? COLORS.neon : 'transparent',
-                  textShadowOffset: { width: 0, height: 0 },
-                  textShadowRadius: 8,
-                }}
+                size={focused ? 38 : 34}
+                color={focused ? COLORS.purple : color}
               />
             </View>
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{
+              fontSize: 13,
+              fontWeight: '800',
+              color: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.6)',
+              marginTop: 4,
+              textTransform: 'uppercase',
+              letterSpacing: 0.8,
+            }}>
+              Aufträge
+            </Text>
           ),
         }}
       />
