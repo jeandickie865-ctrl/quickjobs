@@ -111,8 +111,19 @@ export default function PaymentScreen() {
       
       console.log('🎉 MATCH CREATED SUCCESSFULLY!');
       
-      // Success-Meldung anzeigen
-      alert('✅ Zahlung erfolgreich!\n\n🎉 Match wurde erstellt!\n\nDu wirst jetzt zum Dashboard weitergeleitet.');
+      // Success-Meldung anzeigen mit rechtlichem Haftungsausschluss
+      alert(
+        '✅ Zahlung erfolgreich!\n' +
+        '🎉 Das Match wurde freigeschaltet.\n\n' +
+        'Wichtiger Hinweis:\n' +
+        'Die Plattform vermittelt nur den Kontakt zwischen Arbeitgeber und Arbeitnehmer.\n\n' +
+        'Die Parteien sind selbst verantwortlich für:\n' +
+        '• Anmeldung und Registrierung (falls erforderlich)\n' +
+        '• Zahlung der Vergütung\n' +
+        '• Einhaltung steuerlicher und rechtlicher Pflichten\n' +
+        '• Abschluss eventueller Arbeits- oder Dienstleistungsverträge\n\n' +
+        'Die Plattform übernimmt keine Haftung für Vereinbarungen, Zahlungen oder die Durchführung des Auftrags.'
+      );
       
       // Weiterleitung nach erfolgreicher Zahlung
       console.log('🔄 Redirecting to employer matches...');
