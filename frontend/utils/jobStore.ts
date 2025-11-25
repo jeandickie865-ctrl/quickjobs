@@ -130,6 +130,9 @@ export async function getEmployerJobs(employerId: string): Promise<Job[]> {
   
   try {
     const userId = await getUserId();
+    console.log('🔐 getEmployerJobs: userId from AsyncStorage:', userId);
+    console.log('🎯 getEmployerJobs: employerId from parameter:', employerId);
+    console.log('✅ getEmployerJobs: IDs match:', userId === employerId);
     
     const response = await fetch(`${API_BASE}/jobs/employer/${employerId}`, {
       method: 'GET',
@@ -139,9 +142,18 @@ export async function getEmployerJobs(employerId: string): Promise<Job[]> {
       },
     });
     
+    console.log('📡 getEmployerJobs: Response status:', response.status);
+    
     if (!response.ok) {
       const error = await response.text();
       console.error('❌ getEmployerJobs (API): Failed', response.status, error);
+      console.error('❌ getEmployerJobs: Full error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorText: error,
+        userId,
+        employerId
+      });
       throw new Error(`Failed to fetch employer jobs: ${response.status}`);
     }
     
