@@ -384,8 +384,12 @@ export default function EditWorkerProfileScreen() {
       console.log('✅ SAVE: profile saved successfully');
       console.log('🔄 SAVE: navigating to profile screen');
 
-      // Navigate back immediately after successful save
-      router.replace('/(worker)/profile');
+      // Role-based navigation
+      if (user.role === 'worker') {
+        router.replace('/(worker)/profile');
+      } else if (user.role === 'employer') {
+        router.replace('/(employer)/profile');
+      }
       
       // Show success message after navigation
       setTimeout(() => {
