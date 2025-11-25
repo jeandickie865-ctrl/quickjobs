@@ -90,7 +90,6 @@ export default function RateEmployerScreen() {
     setSaving(true);
     try {
       const review = {
-        id: `review-${Date.now()}`,
         jobId: String(jobId),
         workerId: user.id,
         employerId: job.employerId,
@@ -99,14 +98,12 @@ export default function RateEmployerScreen() {
         createdAt: new Date().toISOString(),
       };
 
+      console.log('💾 Saving review:', review);
       await addReview(review);
+      console.log('✅ Review saved successfully');
       
       // Job als "completed" markieren nach Bewertung
-      const updatedJob = {
-        ...job,
-        status: 'completed' as const,
-      };
-      await updateJob(updatedJob);
+      await updateJob(String(jobId), { status: 'completed' });
       console.log('✅ Job marked as completed after worker review');
       
       setShowSuccessModal(true);
@@ -115,8 +112,8 @@ export default function RateEmployerScreen() {
         router.replace('/(worker)/matches');
       }, 2500);
     } catch (error) {
-      console.error('Error saving review:', error);
-      Alert.alert('Fehler', 'Bewertung konnte nicht gespeichert werden');
+      console.error('❌ Error saving review:', error);
+      Alert.alert('Fehler', 'Bewertung konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : 'Unbekannter Fehler'));
     } finally {
       setSaving(false);
     }
