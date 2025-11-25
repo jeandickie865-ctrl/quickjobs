@@ -22,32 +22,46 @@ export default function EmployerDashboard() {
   const [profileChecked, setProfileChecked] = useState(false);
   const [hasProfile, setHasProfile] = useState(true);
 
-  // Check if employer has a profile
+  // Check if employer has a profile (only on mount)
   useEffect(() => {
+    let isMounted = true;
+    
     async function checkProfile() {
-      if (!user) return;
+      if (!user) {
+        if (isMounted) setProfileChecked(true);
+        return;
+      }
       
       try {
-        console.log('🔍 Checking employer profile...');
+        console.log('🔍 [Index] Checking employer profile...');
         const profile = await getEmployerProfile(user.id);
         
+        if (!isMounted) return;
+        
         if (!profile || !profile.firstName) {
-          console.log('⚠️ No profile found - redirecting to edit-profile');
+          console.log('⚠️ [Index] No profile found - redirecting to edit-profile');
           setHasProfile(false);
         } else {
-          console.log('✅ Profile exists');
+          console.log('✅ [Index] Profile exists:', profile.firstName);
           setHasProfile(true);
         }
       } catch (error) {
-        console.log('⚠️ Error loading profile (404 expected for new users)');
+        if (!isMounted) return;
+        console.log('⚠️ [Index] Error loading profile (404 expected for new users)');
         setHasProfile(false);
       } finally {
-        setProfileChecked(true);
+        if (isMounted) setProfileChecked(true);
       }
     }
 
-    checkProfile();
-  }, [user]);
+    if (!profileChecked) {
+      checkProfile();
+    }
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [user, profileChecked]);
 
   const loadJobs = useCallback(async () => {
     if (!user) return;
