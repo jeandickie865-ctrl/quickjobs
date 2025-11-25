@@ -460,7 +460,7 @@ export default function WorkerFeed() {
             </View>
           ) : (
             <View style={{ gap: 16 }}>
-              {allJobsInRadius.filter((job) => job && job.id).map((job) => {
+              {allJobsInRadius.filter((job) => job && job.id && job.startAt).map((job) => {
                 const distance = job.distance;
                 const timeDisplay = formatJobTimeDisplay(
                   job.startAt,
