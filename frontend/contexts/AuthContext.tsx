@@ -70,49 +70,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, role: 'worker' | 'employer') => {
-    // Validation
-    if (!email || !email.includes('@')) {
-      throw new Error('Bitte gültige E-Mail-Adresse eingeben');
-    }
-    if (!password || password.length < 6) {
-      throw new Error('Passwort muss mindestens 6 Zeichen lang sein');
-    }
-
-    // Check if user already exists
-    const usersDb = await getUsersDb();
-    const emailLower = email.toLowerCase().trim();
+    // Call backend API
+    const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
     
-    if (usersDb[emailLower]) {
-      throw new Error('Diese E-Mail-Adresse ist bereits registriert');
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, role }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Registrierung fehlgeschlagen');
+      }
+
+      const data = await response.json();
+      
+      // Create user object
+      const newUser: User = {
+        id: data.userId,
+        email: data.email,
+        role: data.role,
+      };
+
+      // Save auth state
+      await AsyncStorage.setItem(TOKEN_KEY, data.token);
+      await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
+
+      setToken(data.token);
+      setUser(newUser);
+
+      console.log('✅ User registered successfully (Backend)');
+    } catch (error: any) {
+      console.error('❌ Signup error:', error);
+      throw error;
     }
-
-    // Create new user - CONSISTENT ID from email
-    const userId = `user_${emailLower.replace(/[^a-z0-9]/g, '_')}`;
-    const newUser: User = {
-      id: userId,
-      email: emailLower,
-      role,
-    };
-
-    // Save to users database
-    usersDb[emailLower] = {
-      email: emailLower,
-      password, // In production, this should be hashed!
-      role,
-    };
-    await saveUsersDb(usersDb);
-
-    // Create token (just a simple UUID for local storage)
-    const newToken = `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    // Save auth state
-    await AsyncStorage.setItem(TOKEN_KEY, newToken);
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser));
-
-    setToken(newToken);
-    setUser(newUser);
-
-    console.log('✅ User registered successfully (AsyncStorage)');
   };
 
   const signIn = async (email: string, password: string) => {
