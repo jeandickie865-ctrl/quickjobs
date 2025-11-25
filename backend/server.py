@@ -325,6 +325,100 @@ async def geocode_address(query: str):
         logger.error(f"Geocoding error: {e}")
         raise HTTPException(status_code=500, detail="Geocoding service unavailable")
 
+# User Authentication Endpoints
+class SignUpRequest(BaseModel):
+    email: str
+    password: str
+    role: str  # 'worker' or 'employer'
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class AuthResponse(BaseModel):
+    userId: str
+    email: str
+    role: str
+    token: str
+
+@api_router.post("/auth/signup", response_model=AuthResponse)
+async def signup(request: SignUpRequest):
+    """User registration"""
+    import hashlib
+    
+    email = request.email.lower().strip()
+    
+    # Check if user exists
+    existing = await db.users.find_one({"email": email})
+    if existing:
+        raise HTTPException(status_code=400, detail="Diese E-Mail-Adresse ist bereits registriert")
+    
+    # Validate
+    if not email or '@' not in email:
+        raise HTTPException(status_code=400, detail="Bitte gültige E-Mail-Adresse eingeben")
+    if not request.password or len(request.password) < 6:
+        raise HTTPException(status_code=400, detail="Passwort muss mindestens 6 Zeichen lang sein")
+    if request.role not in ['worker', 'employer']:
+        raise HTTPException(status_code=400, detail="Rolle muss 'worker' oder 'employer' sein")
+    
+    # Create userId
+    userId = f"user_{email.replace('@', '_').replace('.', '_')}"
+    
+    # Hash password (simple SHA256 for now)
+    password_hash = hashlib.sha256(request.password.encode()).hexdigest()
+    
+    # Create user
+    user_doc = {
+        "userId": userId,
+        "email": email,
+        "password": password_hash,
+        "role": request.role,
+        "createdAt": datetime.utcnow().isoformat()
+    }
+    
+    await db.users.insert_one(user_doc)
+    
+    # Create token
+    token = f"token_{datetime.utcnow().timestamp()}_{hashlib.md5(email.encode()).hexdigest()[:8]}"
+    
+    logger.info(f"✅ User registered: {email} as {request.role}")
+    
+    return AuthResponse(
+        userId=userId,
+        email=email,
+        role=request.role,
+        token=token
+    )
+
+@api_router.post("/auth/login", response_model=AuthResponse)
+async def login(request: LoginRequest):
+    """User login"""
+    import hashlib
+    
+    email = request.email.lower().strip()
+    
+    # Find user
+    user = await db.users.find_one({"email": email})
+    if not user:
+        raise HTTPException(status_code=404, detail="Kein Account mit dieser E-Mail gefunden")
+    
+    # Check password
+    password_hash = hashlib.sha256(request.password.encode()).hexdigest()
+    if user.get("password") != password_hash:
+        raise HTTPException(status_code=401, detail="Falsches Passwort")
+    
+    # Create token
+    token = f"token_{datetime.utcnow().timestamp()}_{hashlib.md5(email.encode()).hexdigest()[:8]}"
+    
+    logger.info(f"✅ User logged in: {email}")
+    
+    return AuthResponse(
+        userId=user["userId"],
+        email=user["email"],
+        role=user["role"],
+        token=token
+    )
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.dict()
