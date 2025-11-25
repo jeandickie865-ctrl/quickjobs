@@ -19,11 +19,16 @@ async function getAuthToken(): Promise<string> {
 
 // Helper: Get userId from AsyncStorage
 async function getUserId(): Promise<string> {
+  console.log('🔍 [jobStore] Getting userId from AsyncStorage...');
   const userJson = await AsyncStorage.getItem('@shiftmatch:user');
+  console.log('🔍 [jobStore] User JSON from AsyncStorage:', userJson);
   if (!userJson) {
+    console.error('❌ [jobStore] No user found in AsyncStorage!');
     throw new Error('Not authenticated - no user found');
   }
   const user = JSON.parse(userJson);
+  console.log('🔍 [jobStore] Parsed user:', user);
+  console.log('🔍 [jobStore] User ID:', user.id);
   return user.id;
 }
 
