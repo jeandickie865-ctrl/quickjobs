@@ -677,22 +677,6 @@ export default function EmployerProfileScreen() {
             </Pressable>
 
             {/* Secondary */}
-            <Pressable
-              onPress={() => router.push('/(employer)')}
-              style={({ pressed }) => ({
-                backgroundColor: 'transparent',
-                paddingVertical: 16,
-                borderRadius: 16,
-                alignItems: 'center',
-                borderWidth: 2,
-                borderColor: COLORS.neon,
-                opacity: pressed ? 0.8 : 1,
-              })}
-            >
-              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>
-                Weiter zu meinen Aufträgen
-              </Text>
-            </Pressable>
           </View>
 
           {/* Bottom Spacing */}
