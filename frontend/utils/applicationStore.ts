@@ -1,190 +1,328 @@
-import { getItem, setItem } from './storage';
+// utils/applicationStore.ts - API-based application management (MongoDB)
 import { JobApplication, ApplicationStatus } from '../types/application';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
-const APPLICATIONS_KEY = '@shiftmatch:applications';
+const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://workermatch-debug.preview.emergentagent.com';
+const API_BASE = `${BACKEND_URL}/api`;
 
-async function loadApplications(): Promise<JobApplication[]> {
-  const stored = await getItem<JobApplication[]>(APPLICATIONS_KEY);
-  return stored ?? [];
+const TOKEN_KEY = '@shiftmatch:token';
+
+// Helper: Get auth token from AsyncStorage
+async function getAuthToken(): Promise<string> {
+  const token = await AsyncStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    throw new Error('Not authenticated - no token found');
+  }
+  return token;
 }
 
-async function saveApplications(apps: JobApplication[]): Promise<void> {
-  await setItem<JobApplication[]>(APPLICATIONS_KEY, apps);
+// Helper: Get userId from AsyncStorage
+async function getUserId(): Promise<string> {
+  const userJson = await AsyncStorage.getItem('@shiftmatch:user');
+  if (!userJson) {
+    throw new Error('Not authenticated - no user found');
+  }
+  const user = JSON.parse(userJson);
+  return user.id;
 }
 
 export async function addApplication(
-  jobId: string, 
+  jobId: string,
   workerId: string,
   employerId: string
 ): Promise<JobApplication> {
-  console.log('➕ addApplication called', { jobId, workerId, employerId });
+  console.log('➕ addApplication (API): Creating application', { jobId, workerId, employerId });
   
-  const apps = await loadApplications();
-  const existing = apps.find(a => a.jobId === jobId && a.workerId === workerId);
-  if (existing) {
-    console.log('📋 addApplication: Application already exists', { jobId, workerId, appId: existing.id });
-    return existing;
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jobId,
+        workerId,
+        employerId,
+      }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ addApplication (API): Failed', response.status, error);
+      throw new Error(`Failed to create application: ${response.status}`);
+    }
+    
+    const application = await response.json();
+    console.log('✅ addApplication (API): Application created', application.id);
+    
+    return application;
+  } catch (error) {
+    console.error('❌ addApplication (API): Error', error);
+    throw error;
   }
-
-  const app: JobApplication = {
-    id: 'app-' + Date.now().toString() + '-' + Math.random().toString(36).slice(2),
-    jobId,
-    workerId,
-    employerId,
-    createdAt: new Date().toISOString(),
-    status: 'pending',
-  };
-  const next = [...apps, app];
-  await saveApplications(next);
-  console.log('✅ addApplication: New application created', { appId: app.id, jobId, workerId, employerId });
-  return app;
 }
 
 export async function getApplicationsForJob(jobId: string): Promise<JobApplication[]> {
-  console.log('🔍 getApplicationsForJob called', { jobId });
-  const apps = await loadApplications();
-  const filtered = apps.filter(a => a.jobId === jobId);
-  console.log('📋 getApplicationsForJob: Found', filtered.length, 'applications for job', jobId);
-  return filtered;
+  console.log('🔍 getApplicationsForJob (API): Fetching applications for job', jobId);
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/job/${jobId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getApplicationsForJob (API): Failed', response.status, error);
+      throw new Error(`Failed to fetch applications: ${response.status}`);
+    }
+    
+    const applications = await response.json();
+    console.log(`✅ getApplicationsForJob (API): Found ${applications.length} applications for job ${jobId}`);
+    
+    return applications;
+  } catch (error) {
+    console.error('❌ getApplicationsForJob (API): Error', error);
+    throw error;
+  }
 }
 
 export async function getApplicationsForWorker(workerId: string): Promise<JobApplication[]> {
-  const apps = await loadApplications();
-  return apps.filter(a => a.workerId === workerId);
+  console.log('🔍 getApplicationsForWorker (API): Fetching applications for worker', workerId);
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/worker/${workerId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getApplicationsForWorker (API): Failed', response.status, error);
+      throw new Error(`Failed to fetch worker applications: ${response.status}`);
+    }
+    
+    const applications = await response.json();
+    console.log(`✅ getApplicationsForWorker (API): Found ${applications.length} applications for worker ${workerId}`);
+    
+    return applications;
+  } catch (error) {
+    console.error('❌ getApplicationsForWorker (API): Error', error);
+    throw error;
+  }
 }
 
 export async function acceptApplication(
   applicationId: string,
   employerConfirmedLegal: boolean = true
 ): Promise<void> {
-  console.log('🎯 acceptApplication called', { applicationId, employerConfirmedLegal });
+  console.log('🎯 acceptApplication (API): Accepting application', applicationId);
   
-  // Validate input
-  if (!applicationId || typeof applicationId !== 'string') {
-    console.error('❌ acceptApplication: Application ID missing or invalid', { applicationId });
-    throw new Error('Application ID missing');
-  }
-  
-  const apps = await loadApplications();
-  console.log(`📋 Total applications in storage: ${apps.length}`);
-  
-  const acceptedApp = apps.find(app => app.id === applicationId);
-  
-  if (!acceptedApp) {
-    console.error('❌ acceptApplication: Application not found', { 
-      applicationId, 
-      availableIds: apps.map(a => a.id) 
-    });
-    throw new Error(`Application not found: ${applicationId}`);
-  }
-  
-  console.log('✅ Found application:', {
-    id: acceptedApp.id,
-    jobId: acceptedApp.jobId,
-    workerId: acceptedApp.workerId,
-    currentStatus: acceptedApp.status,
-  });
-  
-  const jobId = acceptedApp.jobId;
-  
-  const next = apps.map(app => {
-    if (app.jobId !== jobId) return app;
-    if (app.id === applicationId) {
-      const updated = { 
-        ...app, 
-        status: 'accepted' as ApplicationStatus,
-        respondedAt: new Date().toISOString(),
-        employerConfirmedLegal,
-        workerConfirmedLegal: false,
-      };
-      console.log('✅ acceptApplication: Application accepted', {
-        id: updated.id,
-        newStatus: updated.status,
-        respondedAt: updated.respondedAt,
-      });
-      return updated;
-    }
-    if (app.status === 'pending') {
-      console.log('❌ acceptApplication: Rejecting other pending application', app.id);
-      return { ...app, status: 'rejected' as ApplicationStatus };
-    }
-    return app;
-  });
-  
-  await saveApplications(next);
-  console.log('💾 acceptApplication: All applications saved');
-  
-  // Send notification to worker (local notification for now)
   try {
-    const { sendMatchNotification } = await import('./notifications');
-    await sendMatchNotification('Job Match', 'Arbeitgeber');
-    console.log('📬 acceptApplication: Match notification sent to worker');
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/${applicationId}/accept?employer_confirmed_legal=${employerConfirmedLegal}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ acceptApplication (API): Failed', response.status, error);
+      throw new Error(`Failed to accept application: ${response.status}`);
+    }
+    
+    console.log('✅ acceptApplication (API): Application accepted', applicationId);
+    
+    // Note: Notification handling would be done on the backend or via push notifications
   } catch (error) {
-    console.error('⚠️ acceptApplication: Could not send notification', error);
+    console.error('❌ acceptApplication (API): Error', error);
+    throw error;
   }
 }
 
 export async function updateApplicationStatus(id: string, status: ApplicationStatus): Promise<void> {
-  const apps = await loadApplications();
-  const next = apps.map(app => (app.id === id ? { ...app, status } : app));
-  await saveApplications(next);
+  console.log('🔄 updateApplicationStatus (API): Updating status', { id, status });
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ updateApplicationStatus (API): Failed', response.status, error);
+      throw new Error(`Failed to update application status: ${response.status}`);
+    }
+    
+    console.log('✅ updateApplicationStatus (API): Status updated', { id, status });
+  } catch (error) {
+    console.error('❌ updateApplicationStatus (API): Error', error);
+    throw error;
+  }
 }
 
 // Alias für addApplication mit erweiterten Logs
 export async function applyForJob(
   jobId: string,
   workerId: string,
-  employerId: string,
+  employerId: string
 ): Promise<JobApplication> {
-  try {
-    console.log('🔍 applyForJob called', { jobId, workerId, employerId });
-
-    if (!employerId) {
-      console.log('❌ applyForJob: employerId fehlt beim Bewerben');
-      throw new Error('employerId fehlt beim Bewerben.');
-    }
-
-    const result = await addApplication(jobId, workerId, employerId);
-    console.log('✅ applyForJob: success', result);
-    return result;
-  } catch (e) {
-    console.log('❌ applyForJob: ERROR', e);
-    throw e;
+  console.log('🔍 applyForJob (API): Applying for job', { jobId, workerId, employerId });
+  
+  if (!employerId) {
+    console.error('❌ applyForJob (API): employerId missing');
+    throw new Error('employerId fehlt beim Bewerben.');
   }
+  
+  return await addApplication(jobId, workerId, employerId);
 }
 
 // Set employer legal confirmation for a match
 export async function setEmployerLegalConfirmation(applicationId: string, confirmed: boolean): Promise<void> {
-  const apps = await loadApplications();
-  const next = apps.map(app => 
-    app.id === applicationId 
-      ? { ...app, employerConfirmedLegal: confirmed } 
-      : app
-  );
-  await saveApplications(next);
-  console.log('✅ Employer legal confirmation set:', { applicationId, confirmed });
+  console.log('✅ setEmployerLegalConfirmation (API):', { applicationId, confirmed });
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/${applicationId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ employerConfirmedLegal: confirmed }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ setEmployerLegalConfirmation (API): Failed', response.status, error);
+      throw new Error(`Failed to set employer legal confirmation: ${response.status}`);
+    }
+    
+    console.log('✅ Employer legal confirmation set');
+  } catch (error) {
+    console.error('❌ setEmployerLegalConfirmation (API): Error', error);
+    throw error;
+  }
 }
 
 // Set worker legal confirmation for a match
 export async function setWorkerLegalConfirmation(applicationId: string, confirmed: boolean): Promise<void> {
-  const apps = await loadApplications();
-  const next = apps.map(app => 
-    app.id === applicationId 
-      ? { ...app, workerConfirmedLegal: confirmed } 
-      : app
-  );
-  await saveApplications(next);
-  console.log('✅ Worker legal confirmation set:', { applicationId, confirmed });
+  console.log('✅ setWorkerLegalConfirmation (API):', { applicationId, confirmed });
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/${applicationId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ workerConfirmedLegal: confirmed }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ setWorkerLegalConfirmation (API): Failed', response.status, error);
+      throw new Error(`Failed to set worker legal confirmation: ${response.status}`);
+    }
+    
+    console.log('✅ Worker legal confirmation set');
+  } catch (error) {
+    console.error('❌ setWorkerLegalConfirmation (API): Error', error);
+    throw error;
+  }
 }
 
 // Get a single application by ID
 export async function getApplicationById(applicationId: string): Promise<JobApplication | null> {
-  const apps = await loadApplications();
-  return apps.find(app => app.id === applicationId) || null;
+  console.log('🔍 getApplicationById (API): Fetching application', applicationId);
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/${applicationId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (response.status === 404) {
+      console.log('⚠️ getApplicationById (API): Application not found');
+      return null;
+    }
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getApplicationById (API): Failed', response.status, error);
+      throw new Error(`Failed to fetch application: ${response.status}`);
+    }
+    
+    const application = await response.json();
+    console.log('✅ getApplicationById (API): Application found', applicationId);
+    
+    return application;
+  } catch (error) {
+    console.error('❌ getApplicationById (API): Error', error);
+    throw error;
+  }
 }
 
 // Get all applications for a specific employer
 export async function getApplicationsForEmployer(employerId: string): Promise<JobApplication[]> {
-  const apps = await loadApplications();
-  return apps.filter(app => app.employerId === employerId);
+  console.log('📋 getApplicationsForEmployer (API): Fetching applications for employer', employerId);
+  
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/applications/employer/${employerId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getApplicationsForEmployer (API): Failed', response.status, error);
+      throw new Error(`Failed to fetch employer applications: ${response.status}`);
+    }
+    
+    const applications = await response.json();
+    console.log(`✅ getApplicationsForEmployer (API): Found ${applications.length} applications for employer ${employerId}`);
+    
+    return applications;
+  } catch (error) {
+    console.error('❌ getApplicationsForEmployer (API): Error', error);
+    throw error;
+  }
 }
