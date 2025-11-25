@@ -15,6 +15,7 @@ export interface EmployerProfile {
   phone: string;
   email: string;
   street: string;
+  houseNumber?: string;  // Added for house number support
   postalCode: string;
   city: string;
   lat?: number;
