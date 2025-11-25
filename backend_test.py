@@ -41,33 +41,31 @@ class DistanceMatchingTester:
             "success": success,
             "details": details
         })
-        
-    def make_request(self, method: str, endpoint: str, headers: Dict = None, data: Dict = None, params: Dict = None) -> tuple:
-        """Make HTTP request and return (success, response, status_code)"""
+    
+    def make_request(self, method: str, endpoint: str, data: Dict = None, token: str = None) -> requests.Response:
+        """Make HTTP request with proper headers"""
         url = f"{self.base_url}{endpoint}"
+        headers = {"Content-Type": "application/json"}
         
-        # Default headers
-        default_headers = {"Content-Type": "application/json"}
-        if headers:
-            default_headers.update(headers)
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
         
         try:
             if method.upper() == "GET":
-                response = requests.get(url, headers=default_headers, params=params, timeout=30)
+                response = self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = requests.post(url, headers=default_headers, json=data, timeout=30)
+                response = self.session.post(url, headers=headers, json=data)
             elif method.upper() == "PUT":
-                response = requests.put(url, headers=default_headers, json=data, params=params, timeout=30)
+                response = self.session.put(url, headers=headers, json=data)
             elif method.upper() == "DELETE":
-                response = requests.delete(url, headers=default_headers, timeout=30)
+                response = self.session.delete(url, headers=headers)
             else:
-                return False, None, 0
-                
-            return True, response, response.status_code
+                raise ValueError(f"Unsupported method: {method}")
             
+            return response
         except Exception as e:
             print(f"Request failed: {e}")
-            return False, None, 0
+            return None
     
     def test_backend_health(self) -> bool:
         """Test basic backend connectivity"""
