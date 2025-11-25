@@ -509,7 +509,7 @@ export default function WorkerFeed() {
                         backgroundColor: COLORS.purpleTransparent30,
                       }}>
                         <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.white }}>
-                          {distanceKm.toFixed(1)} km
+                          {distance.toFixed(1)} km
                         </Text>
                       </View>
                     </View>
