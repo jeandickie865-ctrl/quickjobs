@@ -59,9 +59,9 @@ export default function WorkerMatchesScreen() {
       setError(null);
 
       const apps = await getApplicationsForWorker(user.id);
-      // Show both pending and accepted applications
+      // WICHTIG: Nur akzeptierte Applications (fertige Matches) zeigen!
       const relevantApps = apps.filter((a) => 
-        a.status === 'pending' || a.status === 'accepted'
+        a.status === 'accepted'
       );
       const allJobs = await getJobs();
 
