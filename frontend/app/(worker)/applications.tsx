@@ -201,9 +201,15 @@ export default function WorkerApplicationsScreen() {
           const isPending = app.status === 'pending';
 
           return (
-            <View
+            <Pressable
               key={app.id}
-              style={[
+              onPress={() => {
+                if (job?.id) {
+                  // Navigate to job details screen (we need to create this route for workers)
+                  router.push(`/(worker)/jobs/${job.id}`);
+                }
+              }}
+              style={({ pressed }) => [
                 styles.applicationCard,
                 {
                   backgroundColor: colors.white,
@@ -211,6 +217,7 @@ export default function WorkerApplicationsScreen() {
                   borderWidth: isMatched ? 2 : 1,
                   padding: spacing.md,
                   marginBottom: spacing.sm,
+                  opacity: pressed ? 0.8 : 1,
                 },
               ]}
             >
