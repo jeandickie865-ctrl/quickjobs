@@ -108,6 +108,7 @@ export default function EmployerProfileScreen() {
         setPhone(stored.phone || '');
         setEmail(stored.email || user.email || '');
         setStreet(stored.street || '');
+        setHouseNumber(stored.houseNumber || '');  // Load house number
         setPostalCode(stored.postalCode || '');
         setCity(stored.city || '');
         setLat(stored.lat);
