@@ -36,6 +36,16 @@ export default function WorkerProfileViewScreen() {
     loadProfile();
   }, [user, authLoading]);
 
+  // Reload profile when screen comes into focus (after saving in edit screen)
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!authLoading && user) {
+        console.log('🔄 Profile screen focused - reloading data');
+        loadProfile();
+      }
+    }, [user, authLoading])
+  );
+
   async function loadProfile() {
     if (!user) return;
 
