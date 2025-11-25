@@ -338,15 +338,13 @@ export default function WorkerProfileScreen() {
       console.log('🔵 saveProfileData: Calling saveWorkerProfile...');
       await saveWorkerProfile(profileData);
 
-      console.log('✅ Profile saved to AsyncStorage successfully!');
+      console.log('✅ Profile saved via API successfully!');
 
       // Web-kompatible Success-Meldung und Navigation
       console.log('🎉 PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung zur Profil-Ansicht...');
       
-      // Direkt zur Profil-Ansicht navigieren
-      setTimeout(() => {
-        router.push('/(worker)/profile');
-      }, 500);
+      // Direkt zur Profil-Ansicht navigieren mit replace (um einen Reload zu erzwingen)
+      router.replace('/(worker)/profile');
     } catch (err) {
       console.error('❌ Save error:', err);
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (err instanceof Error ? err.message : 'Unbekannter Fehler'));
