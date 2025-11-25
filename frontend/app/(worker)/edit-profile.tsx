@@ -263,21 +263,25 @@ export default function EditWorkerProfileScreen() {
       return;
     }
 
-    // Debounce: Wait 800ms before searching
+    // Debounce: Wait 500ms before searching
     searchTimeoutRef.current = setTimeout(async () => {
       try {
-        console.log('🔍 Searching address:', query);
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1&countrycodes=de`;
+        console.log('🔍 Searching address via backend proxy:', query);
         
-        const response = await fetch(url, {
-          headers: {
-            'User-Agent': 'ShiftMatchApp/1.0',
-          },
-        });
+        // Use backend proxy to avoid CORS issues
+        const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+        const url = `${API_BASE}/api/geocode?query=${encodeURIComponent(query)}`;
+        
+        const response = await fetch(url);
 
         if (response.status === 429) {
           console.warn('⚠️ Rate limit reached, please wait');
+          Alert.alert('Rate Limit', 'Bitte warte einen Moment und versuche es erneut.');
           return;
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
         }
         
         const data = await response.json();
@@ -286,8 +290,10 @@ export default function EditWorkerProfileScreen() {
         setShowSuggestions(data.length > 0);
       } catch (error) {
         console.error('Address search error:', error);
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
       }
-    }, 800);
+    }, 500);
   }
 
   function selectAddress(suggestion: any) {
