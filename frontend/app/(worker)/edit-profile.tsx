@@ -244,6 +244,49 @@ export default function EditWorkerProfileScreen() {
     const first = firstName.charAt(0) || '';
     const last = lastName.charAt(0) || '';
     return (first + last).toUpperCase() || '?';
+  };
+
+  // Geocode address using Nominatim/OSM
+  async function geocodeAddress() {
+    if (!street.trim() || !city.trim() || !postalCode.trim()) {
+      console.log('📍 Geocoding skipped: incomplete address');
+      return;
+    }
+
+    try {
+      console.log('📍 Geocoding address...');
+      const query = `${street.trim()} ${houseNumber.trim()}, ${postalCode.trim()} ${city.trim()}, ${country.trim()}`;
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+      
+      console.log('📍 Geocoding URL:', url);
+      
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'ShiftMatchApp/1.0',
+        },
+      });
+      
+      const data = await response.json();
+      console.log('📍 Geocoding response:', data);
+      
+      if (data && data.length > 0) {
+        const location = data[0];
+        const newLat = parseFloat(location.lat);
+        const newLon = parseFloat(location.lon);
+        
+        setLat(newLat);
+        setLon(newLon);
+        
+        console.log('✅ Geocoding successful:', { lat: newLat, lon: newLon });
+        Alert.alert('Adresse gefunden', `Koordinaten aktualisiert: ${newLat.toFixed(4)}, ${newLon.toFixed(4)}`);
+      } else {
+        console.log('❌ Geocoding failed: No results');
+        Alert.alert('Adresse nicht gefunden', 'Bitte überprüfe die Adresse und versuche es erneut.');
+      }
+    } catch (error) {
+      console.error('❌ Geocoding error:', error);
+      Alert.alert('Fehler', 'Adresse konnte nicht gefunden werden.');
+    }
   }
 
   function validate(): boolean {
