@@ -158,12 +158,20 @@ export default function EditWorkerProfileScreen() {
   }
 
   async function handleSave() {
-    if (!user) return;
+    console.log('💾 SAVE: start');
+    
+    if (!user) {
+      console.error('❌ SAVE: No user found');
+      return;
+    }
 
+    console.log('🔍 SAVE: validating data');
     if (!validate()) {
+      console.log('❌ SAVE: validation failed');
       Alert.alert('Fehler', 'Bitte alle Pflichtfelder ausfüllen');
       return;
     }
+    console.log('✅ SAVE: validation passed');
 
     try {
       setSaving(true);
@@ -189,19 +197,36 @@ export default function EditWorkerProfileScreen() {
         radiusKm: parseInt(radiusKm),
       };
 
+      console.log('📤 SAVE: calling saveWorkerProfile', {
+        userId: user.id,
+        data: updatedProfile
+      });
+
       await saveWorkerProfile(user.id, updatedProfile);
 
-      Alert.alert('Erfolg', 'Profil erfolgreich aktualisiert', [
-        {
-          text: 'OK',
-          onPress: () => router.back(),
-        },
-      ]);
+      console.log('✅ SAVE: profile saved successfully');
+      console.log('🔄 SAVE: navigating to profile screen');
+
+      // Navigate back immediately after successful save
+      router.replace('/(worker)/profile');
+      
+      // Show success message after navigation
+      setTimeout(() => {
+        Alert.alert('Erfolg', 'Profil erfolgreich aktualisiert');
+      }, 500);
+
     } catch (err: any) {
-      console.error('Error saving profile:', err);
-      Alert.alert('Fehler', err.message || 'Profil konnte nicht gespeichert werden');
+      console.error('❌ SAVE: Error saving profile:', err);
+      console.error('❌ SAVE: Error message:', err.message);
+      console.error('❌ SAVE: Error stack:', err.stack);
+      
+      Alert.alert(
+        'Fehler beim Speichern',
+        err.message || 'Profil konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.'
+      );
     } finally {
       setSaving(false);
+      console.log('🏁 SAVE: finished');
     }
   }
 
