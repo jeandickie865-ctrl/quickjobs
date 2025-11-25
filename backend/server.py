@@ -197,6 +197,7 @@ class EmployerProfile(BaseModel):
     phone: str
     email: str
     street: str
+    houseNumber: Optional[str] = None  # Added for house number support
     postalCode: str
     city: str
     lat: Optional[float] = None
@@ -214,6 +215,7 @@ class EmployerProfileCreate(BaseModel):
     phone: str
     email: str
     street: str
+    houseNumber: Optional[str] = None  # Added for house number support
     postalCode: str
     city: str
     lat: Optional[float] = None
@@ -229,6 +231,7 @@ class EmployerProfileUpdate(BaseModel):
     phone: Optional[str] = None
     email: Optional[str] = None
     street: Optional[str] = None
+    houseNumber: Optional[str] = None  # Added for house number support
     postalCode: Optional[str] = None
     city: Optional[str] = None
     lat: Optional[float] = None
