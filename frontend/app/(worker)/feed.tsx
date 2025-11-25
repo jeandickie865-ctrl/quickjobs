@@ -240,7 +240,7 @@ export default function WorkerFeed() {
             color: COLORS.white,
             letterSpacing: 0.2,
           }}>
-            Aufträge
+            Aktuelle Jobs
           </Text>
           <Pressable onPress={() => router.push('/(worker)/profile')}>
             <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
