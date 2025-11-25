@@ -790,6 +790,106 @@ async def update_application(
     logger.info(f"Application {application_id} updated")
     return JobApplication(**updated_app)
 
+# Employer Profile Endpoints
+
+@api_router.post("/profiles/employer", response_model=EmployerProfile)
+async def create_employer_profile(
+    profile_data: EmployerProfileCreate,
+    authorization: Optional[str] = Header(None)
+):
+    """Create a new employer profile"""
+    logger.info("Creating employer profile")
+    
+    userId = get_user_id_from_token(authorization)
+    
+    # Check if profile already exists
+    existing = await db.employer_profiles.find_one({"userId": userId})
+    if existing:
+        raise HTTPException(status_code=400, detail="Profile already exists")
+    
+    # Create profile document
+    now = datetime.utcnow().isoformat()
+    profile_dict = profile_data.dict()
+    profile_dict["userId"] = userId
+    profile_dict["createdAt"] = now
+    profile_dict["updatedAt"] = now
+    
+    # Insert into MongoDB
+    result = await db.employer_profiles.insert_one(profile_dict)
+    
+    # Fetch and return created profile
+    created_profile = await db.employer_profiles.find_one({"_id": result.inserted_id})
+    created_profile.pop("_id", None)
+    
+    logger.info(f"Employer profile created for user {userId}")
+    return EmployerProfile(**created_profile)
+
+@api_router.get("/profiles/employer/{user_id}", response_model=EmployerProfile)
+async def get_employer_profile(
+    user_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get employer profile by userId"""
+    logger.info(f"Fetching employer profile for user {user_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Find profile
+    profile = await db.employer_profiles.find_one({"userId": user_id})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Remove MongoDB _id field
+    profile.pop("_id", None)
+    
+    logger.info(f"Employer profile found for user {user_id}")
+    return EmployerProfile(**profile)
+
+@api_router.put("/profiles/employer/{user_id}", response_model=EmployerProfile)
+async def update_employer_profile(
+    user_id: str,
+    profile_update: EmployerProfileUpdate,
+    authorization: Optional[str] = Header(None)
+):
+    """Update employer profile"""
+    logger.info(f"Updating employer profile for user {user_id}")
+    
+    # Verify token - user can only update their own profile
+    requesting_user = get_user_id_from_token(authorization)
+    if requesting_user != user_id:
+        raise HTTPException(status_code=403, detail="Cannot update another user's profile")
+    
+    # Check if profile exists
+    existing = await db.employer_profiles.find_one({"userId": user_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Prepare update data (only include non-None fields)
+    update_data = profile_update.dict(exclude_none=True)
+    
+    if not update_data:
+        # No fields to update
+        existing.pop("_id", None)
+        return EmployerProfile(**existing)
+    
+    # Add updatedAt timestamp
+    update_data["updatedAt"] = datetime.utcnow().isoformat()
+    
+    # Update in MongoDB
+    await db.employer_profiles.update_one(
+        {"userId": user_id},
+        {"$set": update_data}
+    )
+    
+    # Fetch and return updated profile
+    updated_profile = await db.employer_profiles.find_one({"userId": user_id})
+    updated_profile.pop("_id", None)
+    
+    logger.info(f"Employer profile updated for user {user_id}")
+    return EmployerProfile(**updated_profile)
+
 # Include the router in the main app
 app.include_router(api_router)
 
