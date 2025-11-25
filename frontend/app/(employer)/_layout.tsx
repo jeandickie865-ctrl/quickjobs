@@ -1,10 +1,9 @@
 // app/(employer)/_layout.tsx - FINAL NEON-TECH DESIGN WITH TABS
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getEmployerProfile } from '../../utils/employerProfileStore';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -17,56 +16,8 @@ const COLORS = {
 
 export default function EmployerLayout() {
   const { user, isLoading } = useAuth();
-  const [profileChecked, setProfileChecked] = useState(false);
-  const [hasProfile, setHasProfile] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    
-    async function checkProfile() {
-      if (!user) {
-        if (isMounted) setProfileChecked(true);
-        return;
-      }
-      
-      if (user.role !== 'employer') {
-        if (isMounted) setProfileChecked(true);
-        return;
-      }
-      
-      try {
-        console.log('🔍 Checking if employer has profile...', user.id);
-        const profile = await getEmployerProfile(user.id);
-        
-        if (!isMounted) return;
-        
-        if (!profile || !profile.firstName) {
-          console.log('⚠️ No profile found - will redirect to edit-profile');
-          setHasProfile(false);
-        } else {
-          console.log('✅ Profile exists:', profile.firstName);
-          setHasProfile(true);
-        }
-      } catch (error) {
-        if (!isMounted) return;
-        console.log('⚠️ Error checking profile (404 expected for new users), assuming no profile');
-        // 404 is expected for new users, so treat as no profile
-        setHasProfile(false);
-      } finally {
-        if (isMounted) setProfileChecked(true);
-      }
-    }
-
-    if (!profileChecked) {
-      checkProfile();
-    }
-    
-    return () => {
-      isMounted = false;
-    };
-  }, [user, profileChecked]);
-
-  if (isLoading || !profileChecked) {
+  if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.purple }}>
         <ActivityIndicator size="large" color={COLORS.neon} />
@@ -80,11 +31,6 @@ export default function EmployerLayout() {
 
   if (user.role !== 'employer') {
     return <Redirect href="/start" />;
-  }
-
-  // Redirect to edit-profile if no profile exists
-  if (!hasProfile) {
-    return <Redirect href="/(employer)/edit-profile" />;
   }
 
   return (
