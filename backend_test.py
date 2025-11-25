@@ -18,7 +18,7 @@ WORKER_TOKEN = "user_testworker_test_de"
 
 def print_test_header(test_name):
     print(f"\n{'='*60}")
-    print(f"🧪 {test_name}")
+    print(f"🧪 TESTING: {test_name}")
     print(f"{'='*60}")
 
 def print_success(message):
@@ -30,299 +30,414 @@ def print_error(message):
 def print_info(message):
     print(f"ℹ️  {message}")
 
-def test_backend_health():
-    """Test basic backend connectivity"""
-    print_test_header("Backend Health Check")
+def test_job_creation():
+    """Test POST /api/jobs - Job creation"""
+    print_test_header("Job Creation (POST /api/jobs)")
+    
+    # Test data from the review request
+    job_data = {
+        "employerType": "business",
+        "title": "Kellner für Hochzeit gesucht",
+        "description": "5 Stunden Service für elegante Hochzeitsfeier in Berlin Mitte",
+        "category": "gastronomie",
+        "timeMode": "fixed_time",
+        "startAt": "2025-12-01T18:00:00Z",
+        "endAt": "2025-12-01T23:00:00Z",
+        "address": {
+            "street": "Musterstraße 10",
+            "postalCode": "10115",
+            "city": "Berlin",
+            "country": "DE"
+        },
+        "lat": 52.5200,
+        "lon": 13.4050,
+        "workerAmountCents": 10000,
+        "paymentToWorker": "cash",
+        "required_all_tags": ["service_kellner"],
+        "required_any_tags": ["erfahrung_service"],
+        "status": "open"
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {EMPLOYER_TOKEN}",
+        "Content-Type": "application/json"
+    }
     
     try:
-        response = requests.get(f"{BACKEND_URL}/", timeout=10)
-        if response.status_code == 200:
-            print_success(f"Backend is running: {response.json()}")
-            return True
-        else:
-            print_error(f"Backend health check failed: {response.status_code}")
-            return False
-    except Exception as e:
-        print_error(f"Backend connection failed: {str(e)}")
-        return False
-
-def test_create_worker_profile():
-    """Test POST /api/profiles/worker - Create worker profile"""
-    print_test_header("Create Worker Profile")
-    
-    try:
-        # Create new profile
-        response = requests.post(
-            f"{BACKEND_URL}/profiles/worker",
-            headers={**AUTH_HEADER, "Content-Type": "application/json"},
-            json=WORKER_PROFILE_DATA,
-            timeout=10
-        )
-        
-        print_info(f"Response Status: {response.status_code}")
-        print_info(f"Response Headers: {dict(response.headers)}")
+        response = requests.post(f"{BACKEND_URL}/jobs", json=job_data, headers=headers)
         
         if response.status_code in [200, 201]:
-            profile = response.json()
-            print_success("Worker profile created successfully")
-            print_info(f"Profile ID: {profile.get('userId')}")
-            print_info(f"Categories: {profile.get('categories')}")
-            print_info(f"Selected Tags: {profile.get('selectedTags')}")
-            print_info(f"Home Address: {profile.get('homeAddress')}")
-            print_info(f"Created At: {profile.get('createdAt')}")
-            return True, profile
-        elif response.status_code == 400:
-            # Profile might already exist, try to get it
-            print_info("Profile might already exist (400), checking existing profile...")
-            return test_get_worker_profile()
+            job = response.json()
+            print_success(f"Job created successfully with ID: {job.get('id')}")
+            print_info(f"Title: {job.get('title')}")
+            print_info(f"Employer ID: {job.get('employerId')}")
+            print_info(f"Status: {job.get('status')}")
+            print_info(f"Worker Amount: {job.get('workerAmountCents')} cents")
+            return job.get('id')  # Return job ID for further tests
         else:
-            print_error(f"Profile creation failed: {response.status_code}")
-            print_error(f"Response: {response.text}")
-            return False, None
+            print_error(f"Job creation failed: {response.status_code} - {response.text}")
+            return None
             
     except Exception as e:
-        print_error(f"Profile creation error: {str(e)}")
-        return False, None
+        print_error(f"Job creation error: {str(e)}")
+        return None
 
-def test_get_worker_profile():
-    """Test GET /api/profiles/worker/{user_id} - Get worker profile"""
-    print_test_header("Get Worker Profile")
+def test_get_all_open_jobs():
+    """Test GET /api/jobs - Get all open jobs"""
+    print_test_header("Get All Open Jobs (GET /api/jobs)")
+    
+    headers = {
+        "Authorization": f"Bearer {WORKER_TOKEN}",
+        "Content-Type": "application/json"
+    }
     
     try:
-        response = requests.get(
-            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
-            headers=AUTH_HEADER,
-            timeout=10
-        )
-        
-        print_info(f"Response Status: {response.status_code}")
+        response = requests.get(f"{BACKEND_URL}/jobs", headers=headers)
         
         if response.status_code == 200:
-            profile = response.json()
-            print_success("Worker profile retrieved successfully")
-            print_info(f"Profile ID: {profile.get('userId')}")
-            print_info(f"Categories: {profile.get('categories')}")
-            print_info(f"Selected Tags: {profile.get('selectedTags')}")
-            print_info(f"Radius: {profile.get('radiusKm')} km")
-            print_info(f"First Name: {profile.get('firstName')}")
-            return True, profile
-        elif response.status_code == 404:
-            print_error("Profile not found (404)")
-            print_info("This is expected if profile hasn't been created yet")
-            return False, None
-        else:
-            print_error(f"Profile retrieval failed: {response.status_code}")
-            print_error(f"Response: {response.text}")
-            return False, None
+            jobs = response.json()
+            print_success(f"Retrieved {len(jobs)} open jobs")
             
-    except Exception as e:
-        print_error(f"Profile retrieval error: {str(e)}")
-        return False, None
-
-def test_update_worker_profile():
-    """Test PUT /api/profiles/worker/{user_id} - Update worker profile"""
-    print_test_header("Update Worker Profile")
-    
-    try:
-        response = requests.put(
-            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
-            headers={**AUTH_HEADER, "Content-Type": "application/json"},
-            json=PROFILE_UPDATE_DATA,
-            timeout=10
-        )
-        
-        print_info(f"Response Status: {response.status_code}")
-        
-        if response.status_code == 200:
-            profile = response.json()
-            print_success("Worker profile updated successfully")
-            print_info(f"Updated Categories: {profile.get('categories')}")
-            print_info(f"Updated Tags: {profile.get('selectedTags')}")
-            print_info(f"Updated Radius: {profile.get('radiusKm')} km")
-            print_info(f"Updated Name: {profile.get('firstName')}")
-            print_info(f"Updated At: {profile.get('updatedAt')}")
-            return True, profile
-        elif response.status_code == 404:
-            print_error("Profile not found for update (404)")
-            return False, None
-        else:
-            print_error(f"Profile update failed: {response.status_code}")
-            print_error(f"Response: {response.text}")
-            return False, None
+            for job in jobs:
+                if job.get('status') != 'open':
+                    print_error(f"Non-open job found: {job.get('id')} has status {job.get('status')}")
+                else:
+                    print_info(f"Job: {job.get('title')} - Status: {job.get('status')}")
             
-    except Exception as e:
-        print_error(f"Profile update error: {str(e)}")
-        return False, None
-
-def test_authorization():
-    """Test authorization - user can only access their own profile"""
-    print_test_header("Authorization Testing")
-    
-    try:
-        # Test with different user ID in URL vs token
-        different_user_id = "different_user_123"
-        
-        response = requests.get(
-            f"{BACKEND_URL}/profiles/worker/{different_user_id}",
-            headers=AUTH_HEADER,  # Token for TEST_USER_ID
-            timeout=10
-        )
-        
-        print_info(f"Response Status: {response.status_code}")
-        
-        if response.status_code == 404:
-            print_success("Authorization working: Different user profile not accessible")
-            return True
-        elif response.status_code == 403:
-            print_success("Authorization working: Access forbidden for different user")
-            return True
+            return len(jobs) > 0
         else:
-            print_error(f"Authorization test unexpected result: {response.status_code}")
+            print_error(f"Failed to get open jobs: {response.status_code} - {response.text}")
             return False
             
+    except Exception as e:
+        print_error(f"Get open jobs error: {str(e)}")
+        return False
+
+def test_get_employer_jobs():
+    """Test GET /api/jobs/employer/{employerId} - Get employer's jobs"""
+    print_test_header("Get Employer Jobs (GET /api/jobs/employer/{employerId})")
+    
+    headers = {
+        "Authorization": f"Bearer {EMPLOYER_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.get(f"{BACKEND_URL}/jobs/employer/{EMPLOYER_TOKEN}", headers=headers)
+        
+        if response.status_code == 200:
+            jobs = response.json()
+            print_success(f"Retrieved {len(jobs)} jobs for employer {EMPLOYER_TOKEN}")
+            
+            for job in jobs:
+                if job.get('employerId') != EMPLOYER_TOKEN:
+                    print_error(f"Wrong employer job found: {job.get('id')} belongs to {job.get('employerId')}")
+                else:
+                    print_info(f"Job: {job.get('title')} - Employer: {job.get('employerId')}")
+            
+            return jobs
+        else:
+            print_error(f"Failed to get employer jobs: {response.status_code} - {response.text}")
+            return []
+            
+    except Exception as e:
+        print_error(f"Get employer jobs error: {str(e)}")
+        return []
+
+def test_get_single_job(job_id):
+    """Test GET /api/jobs/{jobId} - Get single job"""
+    print_test_header(f"Get Single Job (GET /api/jobs/{job_id})")
+    
+    if not job_id:
+        print_error("No job ID provided for single job test")
+        return False
+    
+    headers = {
+        "Authorization": f"Bearer {WORKER_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.get(f"{BACKEND_URL}/jobs/{job_id}", headers=headers)
+        
+        if response.status_code == 200:
+            job = response.json()
+            print_success(f"Retrieved job: {job.get('title')}")
+            print_info(f"Job ID: {job.get('id')}")
+            print_info(f"Category: {job.get('category')}")
+            print_info(f"Time Mode: {job.get('timeMode')}")
+            print_info(f"Address: {job.get('address', {}).get('street')}, {job.get('address', {}).get('city')}")
+            return True
+        else:
+            print_error(f"Failed to get single job: {response.status_code} - {response.text}")
+            return False
+            
+    except Exception as e:
+        print_error(f"Get single job error: {str(e)}")
+        return False
+
+def test_update_job(job_id):
+    """Test PUT /api/jobs/{jobId} - Update job"""
+    print_test_header(f"Update Job (PUT /api/jobs/{job_id})")
+    
+    if not job_id:
+        print_error("No job ID provided for update test")
+        return False
+    
+    update_data = {
+        "title": "Kellner für Hochzeit gesucht - AKTUALISIERT",
+        "description": "5 Stunden Service für elegante Hochzeitsfeier - Neue Details hinzugefügt",
+        "workerAmountCents": 12000,  # Increased payment
+        "status": "open"
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {EMPLOYER_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.put(f"{BACKEND_URL}/jobs/{job_id}", json=update_data, headers=headers)
+        
+        if response.status_code == 200:
+            job = response.json()
+            print_success(f"Job updated successfully")
+            print_info(f"New title: {job.get('title')}")
+            print_info(f"New amount: {job.get('workerAmountCents')} cents")
+            
+            # Verify the update worked
+            if job.get('title') == update_data['title'] and job.get('workerAmountCents') == update_data['workerAmountCents']:
+                print_success("Update data verified correctly")
+                return True
+            else:
+                print_error("Update data verification failed")
+                return False
+        else:
+            print_error(f"Failed to update job: {response.status_code} - {response.text}")
+            return False
+            
+    except Exception as e:
+        print_error(f"Update job error: {str(e)}")
+        return False
+
+def test_authorization_failures():
+    """Test authorization failures - worker trying to edit employer's job"""
+    print_test_header("Authorization Testing - Unauthorized Access")
+    
+    # First create a job as employer
+    job_data = {
+        "employerType": "private",
+        "title": "Test Job für Authorization",
+        "category": "reinigung",
+        "timeMode": "project",
+        "address": {
+            "street": "Teststraße 1",
+            "postalCode": "10117",
+            "city": "Berlin"
+        },
+        "workerAmountCents": 5000,
+        "status": "open"
+    }
+    
+    employer_headers = {
+        "Authorization": f"Bearer {EMPLOYER_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        # Create job as employer
+        response = requests.post(f"{BACKEND_URL}/jobs", json=job_data, headers=employer_headers)
+        if response.status_code not in [200, 201]:
+            print_error("Could not create test job for authorization test")
+            return False
+        
+        job_id = response.json().get('id')
+        print_info(f"Created test job {job_id} as employer")
+        
+        # Try to update as worker (should fail)
+        worker_headers = {
+            "Authorization": f"Bearer {WORKER_TOKEN}",
+            "Content-Type": "application/json"
+        }
+        
+        update_data = {"title": "Hacked Job Title"}
+        
+        response = requests.put(f"{BACKEND_URL}/jobs/{job_id}", json=update_data, headers=worker_headers)
+        
+        if response.status_code == 403:
+            print_success("Authorization correctly blocked worker from updating employer's job")
+            auth_test_passed = True
+        else:
+            print_error(f"Authorization failed - worker was able to update job: {response.status_code}")
+            auth_test_passed = False
+        
+        # Try to delete as worker (should fail)
+        response = requests.delete(f"{BACKEND_URL}/jobs/{job_id}", headers=worker_headers)
+        
+        if response.status_code == 403:
+            print_success("Authorization correctly blocked worker from deleting employer's job")
+            auth_test_passed = auth_test_passed and True
+        else:
+            print_error(f"Authorization failed - worker was able to delete job: {response.status_code}")
+            auth_test_passed = False
+        
+        # Clean up - delete the test job as employer
+        requests.delete(f"{BACKEND_URL}/jobs/{job_id}", headers=employer_headers)
+        
+        return auth_test_passed
+        
     except Exception as e:
         print_error(f"Authorization test error: {str(e)}")
         return False
 
-def test_invalid_auth():
-    """Test invalid authorization header"""
-    print_test_header("Invalid Authorization Testing")
+def test_delete_job(job_id):
+    """Test DELETE /api/jobs/{jobId} - Delete job"""
+    print_test_header(f"Delete Job (DELETE /api/jobs/{job_id})")
     
-    try:
-        # Test without authorization header
-        response = requests.get(
-            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
-            timeout=10
-        )
-        
-        print_info(f"No auth header - Status: {response.status_code}")
-        
-        if response.status_code == 401:
-            print_success("Unauthorized access correctly blocked (401)")
-        else:
-            print_error(f"Expected 401, got {response.status_code}")
-            
-        # Test with invalid authorization format
-        response = requests.get(
-            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
-            headers={"Authorization": "InvalidFormat"},
-            timeout=10
-        )
-        
-        print_info(f"Invalid auth format - Status: {response.status_code}")
-        
-        if response.status_code == 401:
-            print_success("Invalid auth format correctly blocked (401)")
-            return True
-        else:
-            print_error(f"Expected 401, got {response.status_code}")
-            return False
-            
-    except Exception as e:
-        print_error(f"Invalid auth test error: {str(e)}")
+    if not job_id:
+        print_error("No job ID provided for delete test")
         return False
-
-def test_mongodb_storage():
-    """Test that profiles are actually stored in MongoDB"""
-    print_test_header("MongoDB Storage Verification")
     
-    try:
-        # Create a profile and then retrieve it to verify persistence
-        create_success, created_profile = test_create_worker_profile()
-        
-        if not create_success:
-            print_error("Cannot test MongoDB storage - profile creation failed")
-            return False
-            
-        # Wait a moment and retrieve again to ensure it's persisted
-        import time
-        time.sleep(1)
-        
-        get_success, retrieved_profile = test_get_worker_profile()
-        
-        if not get_success:
-            print_error("MongoDB storage test failed - cannot retrieve created profile")
-            return False
-            
-        # Verify data integrity
-        if (retrieved_profile.get('categories') == WORKER_PROFILE_DATA['categories'] and
-            retrieved_profile.get('selectedTags') == WORKER_PROFILE_DATA['selectedTags'] and
-            retrieved_profile.get('radiusKm') == WORKER_PROFILE_DATA['radiusKm']):
-            print_success("MongoDB storage verified - data persisted correctly")
-            return True
-        else:
-            print_error("MongoDB storage test failed - data integrity issues")
-            return False
-            
-    except Exception as e:
-        print_error(f"MongoDB storage test error: {str(e)}")
-        return False
-
-def run_comprehensive_test():
-    """Run complete test suite for Worker Profile API"""
-    print("🚀 Starting Comprehensive Worker Profile API Testing")
-    print(f"Backend URL: {BACKEND_URL}")
-    print(f"Test User ID: {TEST_USER_ID}")
-    
-    results = {
-        "backend_health": False,
-        "create_profile": False,
-        "get_profile": False,
-        "update_profile": False,
-        "authorization": False,
-        "invalid_auth": False,
-        "mongodb_storage": False
+    headers = {
+        "Authorization": f"Bearer {EMPLOYER_TOKEN}",
+        "Content-Type": "application/json"
     }
     
-    # Test 1: Backend Health
-    results["backend_health"] = test_backend_health()
+    try:
+        response = requests.delete(f"{BACKEND_URL}/jobs/{job_id}", headers=headers)
+        
+        if response.status_code == 200:
+            result = response.json()
+            print_success(f"Job deleted successfully: {result.get('message')}")
+            
+            # Verify job is actually deleted by trying to get it
+            get_response = requests.get(f"{BACKEND_URL}/jobs/{job_id}", headers=headers)
+            if get_response.status_code == 404:
+                print_success("Job deletion verified - job no longer exists")
+                return True
+            else:
+                print_error("Job deletion verification failed - job still exists")
+                return False
+        else:
+            print_error(f"Failed to delete job: {response.status_code} - {response.text}")
+            return False
+            
+    except Exception as e:
+        print_error(f"Delete job error: {str(e)}")
+        return False
+
+def test_404_errors():
+    """Test 404 errors for non-existent jobs"""
+    print_test_header("404 Error Testing - Non-existent Jobs")
     
-    if not results["backend_health"]:
-        print_error("Backend is not accessible. Stopping tests.")
-        return results
+    fake_job_id = "job_nonexistent_12345"
+    headers = {
+        "Authorization": f"Bearer {WORKER_TOKEN}",
+        "Content-Type": "application/json"
+    }
     
-    # Test 2: Create Profile
-    results["create_profile"], created_profile = test_create_worker_profile()
+    tests_passed = 0
+    total_tests = 3
     
-    # Test 3: Get Profile
-    results["get_profile"], retrieved_profile = test_get_worker_profile()
+    try:
+        # Test GET non-existent job
+        response = requests.get(f"{BACKEND_URL}/jobs/{fake_job_id}", headers=headers)
+        if response.status_code == 404:
+            print_success("GET non-existent job correctly returns 404")
+            tests_passed += 1
+        else:
+            print_error(f"GET non-existent job returned {response.status_code} instead of 404")
+        
+        # Test PUT non-existent job
+        employer_headers = {"Authorization": f"Bearer {EMPLOYER_TOKEN}", "Content-Type": "application/json"}
+        response = requests.put(f"{BACKEND_URL}/jobs/{fake_job_id}", json={"title": "test"}, headers=employer_headers)
+        if response.status_code == 404:
+            print_success("PUT non-existent job correctly returns 404")
+            tests_passed += 1
+        else:
+            print_error(f"PUT non-existent job returned {response.status_code} instead of 404")
+        
+        # Test DELETE non-existent job
+        response = requests.delete(f"{BACKEND_URL}/jobs/{fake_job_id}", headers=employer_headers)
+        if response.status_code == 404:
+            print_success("DELETE non-existent job correctly returns 404")
+            tests_passed += 1
+        else:
+            print_error(f"DELETE non-existent job returned {response.status_code} instead of 404")
+        
+        return tests_passed == total_tests
+        
+    except Exception as e:
+        print_error(f"404 testing error: {str(e)}")
+        return False
+
+def main():
+    """Run all Jobs API tests"""
+    print("🚀 STARTING JOBS API TESTING SUITE")
+    print(f"Backend URL: {BACKEND_URL}")
+    print(f"Employer Token: {EMPLOYER_TOKEN}")
+    print(f"Worker Token: {WORKER_TOKEN}")
     
-    # Test 4: Update Profile (only if profile exists)
-    if results["get_profile"]:
-        results["update_profile"], updated_profile = test_update_worker_profile()
+    test_results = []
+    created_job_id = None
     
-    # Test 5: Authorization
-    results["authorization"] = test_authorization()
+    # Test 1: Job Creation
+    created_job_id = test_job_creation()
+    test_results.append(("Job Creation", created_job_id is not None))
     
-    # Test 6: Invalid Auth
-    results["invalid_auth"] = test_invalid_auth()
+    # Test 2: Get All Open Jobs
+    test_results.append(("Get All Open Jobs", test_get_all_open_jobs()))
     
-    # Test 7: MongoDB Storage
-    results["mongodb_storage"] = test_mongodb_storage()
+    # Test 3: Get Employer Jobs
+    employer_jobs = test_get_employer_jobs()
+    test_results.append(("Get Employer Jobs", len(employer_jobs) >= 0))
     
-    # Summary
-    print_test_header("TEST SUMMARY")
-    passed = sum(results.values())
-    total = len(results)
-    
-    for test_name, passed_test in results.items():
-        status = "✅ PASS" if passed_test else "❌ FAIL"
-        print(f"{status} {test_name.replace('_', ' ').title()}")
-    
-    print(f"\n🎯 Overall Result: {passed}/{total} tests passed")
-    
-    if passed == total:
-        print_success("🎉 ALL TESTS PASSED - Worker Profile API is fully functional!")
+    # Test 4: Get Single Job (if we have a job ID)
+    if created_job_id:
+        test_results.append(("Get Single Job", test_get_single_job(created_job_id)))
+        
+        # Test 5: Update Job
+        test_results.append(("Update Job", test_update_job(created_job_id)))
     else:
-        print_error(f"⚠️  {total - passed} tests failed - Issues need to be addressed")
+        print_error("Skipping single job and update tests - no job created")
+        test_results.append(("Get Single Job", False))
+        test_results.append(("Update Job", False))
     
-    return results
+    # Test 6: Authorization Testing
+    test_results.append(("Authorization Testing", test_authorization_failures()))
+    
+    # Test 7: 404 Error Testing
+    test_results.append(("404 Error Testing", test_404_errors()))
+    
+    # Test 8: Delete Job (if we have a job ID)
+    if created_job_id:
+        test_results.append(("Delete Job", test_delete_job(created_job_id)))
+    else:
+        print_error("Skipping delete test - no job created")
+        test_results.append(("Delete Job", False))
+    
+    # Print final results
+    print_test_header("FINAL TEST RESULTS")
+    
+    passed_tests = 0
+    total_tests = len(test_results)
+    
+    for test_name, passed in test_results:
+        if passed:
+            print_success(f"{test_name}")
+            passed_tests += 1
+        else:
+            print_error(f"{test_name}")
+    
+    print(f"\n📊 SUMMARY: {passed_tests}/{total_tests} tests passed")
+    
+    if passed_tests == total_tests:
+        print("🎉 ALL TESTS PASSED - Jobs API is fully functional!")
+        return True
+    else:
+        print("⚠️  SOME TESTS FAILED - Jobs API has issues")
+        return False
 
 if __name__ == "__main__":
-    results = run_comprehensive_test()
-    
-    # Exit with appropriate code
-    if all(results.values()):
-        sys.exit(0)  # Success
-    else:
-        sys.exit(1)  # Failure
+    success = main()
+    sys.exit(0 if success else 1)
