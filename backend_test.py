@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Testing Suite for ShiftMatch App
-Tests all MongoDB-migrated features including Chat System, Reviews, and Employer Profiles
-As requested in the German review request for complete backend testing.
+Backend API Testing Suite for ShiftMatch App
+Tests the comprehensive Jobs matching system with distance/radius filtering
+As requested in the German review request for UMFASSENDE TESTS: Jobs im Umkreis / Matching-System
 """
 
 import requests
 import json
 import sys
+from typing import Dict, List, Any
 import uuid
-from datetime import datetime
-from typing import Dict, List, Optional
+import math
 
 # Backend URL from frontend/.env
 BACKEND_URL = "https://jobfinder-de.preview.emergentagent.com/api"
 
-# Test users
-TEST_WORKER = "user_testworker_test_de"
-TEST_EMPLOYER = "user_testemployer_test_de"
+# Test users as specified in the review request
+TEST_WORKER = "user_test_distance_worker"
+TEST_EMPLOYER = "user_test_employer_distance"
 
 class ComprehensiveBackendTester:
     def __init__(self):
