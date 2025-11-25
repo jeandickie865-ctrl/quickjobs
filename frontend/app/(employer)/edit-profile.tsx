@@ -137,23 +137,35 @@ export default function EmployerProfileScreen() {
 
     // Validation
     if (!firstName.trim()) {
-      console.error('❌ Validation failed: Vorname fehlt');
+      Alert.alert('Fehler', 'Bitte geben Sie Ihren Vornamen ein.');
       return;
     }
     if (!lastName.trim()) {
-      console.error('❌ Validation failed: Nachname fehlt');
+      Alert.alert('Fehler', 'Bitte geben Sie Ihren Nachnamen ein.');
       return;
     }
     if (!phone.trim()) {
-      console.error('❌ Validation failed: Telefonnummer fehlt');
+      Alert.alert('Fehler', 'Bitte geben Sie Ihre Telefonnummer ein.');
       return;
     }
-    if (!street.trim() || !postalCode.trim() || !city.trim()) {
-      console.error('❌ Validation failed: Rechnungsadresse unvollständig');
+    if (!email.trim()) {
+      Alert.alert('Fehler', 'Bitte geben Sie Ihre E-Mail-Adresse ein.');
+      return;
+    }
+    if (!street.trim()) {
+      Alert.alert('Fehler', 'Bitte geben Sie Ihre Straße und Hausnummer ein.');
+      return;
+    }
+    if (!postalCode.trim()) {
+      Alert.alert('Fehler', 'Bitte geben Sie Ihre Postleitzahl ein.');
+      return;
+    }
+    if (!city.trim()) {
+      Alert.alert('Fehler', 'Bitte geben Sie Ihren Ort ein.');
       return;
     }
     if (!paymentMethod) {
-      console.error('❌ Validation failed: Zahlart fehlt');
+      Alert.alert('Fehler', 'Bitte wählen Sie eine Zahlungsart.');
       return;
     }
 
