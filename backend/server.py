@@ -35,6 +35,72 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Worker Profile Models
+class Address(BaseModel):
+    street: Optional[str] = None
+    postalCode: Optional[str] = None
+    city: Optional[str] = None
+    country: Optional[str] = "DE"
+
+class WorkerDocument(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    type: str
+    fileUri: str
+    fileName: str
+    uploadedAt: str
+    mimeType: Optional[str] = None
+
+class WorkerProfile(BaseModel):
+    userId: str
+    categories: List[str] = []
+    selectedTags: List[str] = []
+    radiusKm: int = 15
+    homeAddress: Address
+    homeLat: Optional[float] = None
+    homeLon: Optional[float] = None
+    profilePhotoUri: Optional[str] = None
+    documents: Optional[List[WorkerDocument]] = []
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    shortBio: Optional[str] = None
+    contactPhone: Optional[str] = None
+    contactEmail: Optional[str] = None
+    pushToken: Optional[str] = None
+    createdAt: Optional[str] = None
+    updatedAt: Optional[str] = None
+
+class WorkerProfileCreate(BaseModel):
+    categories: List[str] = []
+    selectedTags: List[str] = []
+    radiusKm: int = 15
+    homeAddress: Address
+    homeLat: Optional[float] = None
+    homeLon: Optional[float] = None
+    profilePhotoUri: Optional[str] = None
+    documents: Optional[List[WorkerDocument]] = []
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    shortBio: Optional[str] = None
+    contactPhone: Optional[str] = None
+    contactEmail: Optional[str] = None
+    pushToken: Optional[str] = None
+
+class WorkerProfileUpdate(BaseModel):
+    categories: Optional[List[str]] = None
+    selectedTags: Optional[List[str]] = None
+    radiusKm: Optional[int] = None
+    homeAddress: Optional[Address] = None
+    homeLat: Optional[float] = None
+    homeLon: Optional[float] = None
+    profilePhotoUri: Optional[str] = None
+    documents: Optional[List[WorkerDocument]] = None
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    shortBio: Optional[str] = None
+    contactPhone: Optional[str] = None
+    contactEmail: Optional[str] = None
+    pushToken: Optional[str] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
