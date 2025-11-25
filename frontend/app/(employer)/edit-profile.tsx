@@ -37,6 +37,7 @@ export default function EmployerProfileScreen() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [street, setStreet] = useState('');
+  const [houseNumber, setHouseNumber] = useState('');  // Added for house number
   const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
   const [lat, setLat] = useState<number | undefined>(undefined);
