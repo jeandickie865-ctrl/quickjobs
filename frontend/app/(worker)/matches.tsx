@@ -96,6 +96,15 @@ export default function WorkerMatchesScreen() {
     }
   }, [user, authLoading]);
 
+  // Reload matches when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!authLoading && user) {
+        loadMatches();
+      }
+    }, [user, authLoading])
+  );
+
   const handleRefresh = () => {
     setRefreshing(true);
     loadMatches();
