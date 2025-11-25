@@ -93,19 +93,25 @@ class WorkerProfileCreate(BaseModel):
     pushToken: Optional[str] = None
 
 class WorkerProfileUpdate(BaseModel):
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
     categories: Optional[List[str]] = None
     selectedTags: Optional[List[str]] = None
+    activities: Optional[List[str]] = None
+    qualifications: Optional[List[str]] = None
     radiusKm: Optional[int] = None
     homeAddress: Optional[Address] = None
     homeLat: Optional[float] = None
     homeLon: Optional[float] = None
+    photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
-    documents: Optional[List[WorkerDocument]] = None
-    firstName: Optional[str] = None
-    lastName: Optional[str] = None
     shortBio: Optional[str] = None
+    # Deprecated fields for backward compatibility
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
+    documents: Optional[List[WorkerDocument]] = None
     pushToken: Optional[str] = None
 
 # Job Models
