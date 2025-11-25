@@ -236,6 +236,23 @@ class EmployerProfileUpdate(BaseModel):
     shortBio: Optional[str] = None
     profilePhotoUri: Optional[str] = None
 
+# Review/Rating Models
+class Review(BaseModel):
+    id: str = Field(default_factory=lambda: f"review_{str(uuid.uuid4())}")
+    jobId: str
+    workerId: str
+    employerId: str
+    rating: int  # 1-5
+    comment: Optional[str] = None
+    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class ReviewCreate(BaseModel):
+    jobId: str
+    workerId: str
+    employerId: str
+    rating: int  # 1-5
+    comment: Optional[str] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
