@@ -67,16 +67,26 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       newDate.setMinutes(value.getMinutes());
       newDate.setSeconds(0);
       newDate.setMilliseconds(0);
+      onChange(newDate);
+      return;
     }
     
-    // If we have an existing date, preserve the date when changing time
-    if (value && mode === 'time') {
-      const existingDate = new Date(value);
-      existingDate.setHours(newDate.getHours());
-      existingDate.setMinutes(newDate.getMinutes());
-      existingDate.setSeconds(0);
-      existingDate.setMilliseconds(0);
-      onChange(existingDate);
+    // UHRZEIT: Behalte das Datum, ändere nur die Uhrzeit
+    if (mode === 'time') {
+      // Wenn kein Datum existiert, nutze heute als Fallback
+      const baseDate = value ? new Date(value) : new Date();
+      
+      // Extrahiere Stunden und Minuten aus dem time input
+      const [hours, minutes] = dateString.split(':').map(Number);
+      
+      // Setze nur die Uhrzeit, behalte das Datum
+      baseDate.setHours(hours);
+      baseDate.setMinutes(minutes);
+      baseDate.setSeconds(0);
+      baseDate.setMilliseconds(0);
+      
+      console.log('🕐 Time changed to:', baseDate.toISOString());
+      onChange(baseDate);
       return;
     }
     
