@@ -1,4 +1,4 @@
-// app/(worker)/profile.tsx - MODERN WORKER PROFILE VIEW
+// app/(worker)/profile.tsx - VOLLSTÄNDIGES WORKER PROFILE
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Pressable, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,6 +40,7 @@ export default function WorkerProfileScreen() {
   useFocusEffect(
     React.useCallback(() => {
       if (!authLoading && user) {
+        console.log('🔄 Profil-Screen fokussiert - lade Daten neu');
         loadProfile();
       }
     }, [user, authLoading])
@@ -50,7 +51,9 @@ export default function WorkerProfileScreen() {
     
     try {
       setLoading(true);
+      console.log('📥 Lade Worker-Profil für:', user.id);
       const data = await getWorkerProfile(user.id);
+      console.log('✅ Profil geladen:', data);
       setProfile(data);
 
       // Load reviews
@@ -58,7 +61,7 @@ export default function WorkerProfileScreen() {
       setAvgRating(calculateAverageRating(reviews));
       setReviewCount(reviews.length);
     } catch (err) {
-      console.error('Error loading profile:', err);
+      console.error('❌ Fehler beim Laden des Profils:', err);
     } finally {
       setLoading(false);
     }
@@ -79,7 +82,30 @@ export default function WorkerProfileScreen() {
   }
 
   if (!profile) {
-    return <Redirect href="/(worker)/edit-profile" />;
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+          <Ionicons name="person-add" size={64} color={COLORS.neon} />
+          <Text style={{ color: COLORS.white, marginTop: 16, fontSize: 18, textAlign: 'center' }}>
+            Noch kein Profil vorhanden
+          </Text>
+          <Pressable
+            onPress={() => router.push('/(worker)/edit-profile')}
+            style={{
+              backgroundColor: COLORS.neon,
+              paddingVertical: 14,
+              paddingHorizontal: 24,
+              borderRadius: 12,
+              marginTop: 24,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+              Profil erstellen
+            </Text>
+          </Pressable>
+        </SafeAreaView>
+      </View>
+    );
   }
 
   // Get initials for avatar
@@ -91,16 +117,16 @@ export default function WorkerProfileScreen() {
 
   // Map category keys to labels
   const getCategoryLabels = () => {
-    if (!profile?.categories) return [];
+    if (!profile?.categories || profile.categories.length === 0) return [];
     return profile.categories.map(catKey => {
       const category = TAXONOMY_DATA.categories.find((c: any) => c.key === catKey);
       return category?.label || catKey;
     });
   };
 
-  // Map tag keys to labels
+  // Map tag keys to labels (from selectedTags)
   const getTagLabels = () => {
-    if (!profile?.selectedTags) return [];
+    if (!profile?.selectedTags || profile.selectedTags.length === 0) return [];
     const tags: string[] = [];
     
     profile.selectedTags.forEach((tagKey: string) => {
@@ -124,6 +150,14 @@ export default function WorkerProfileScreen() {
 
   const categoryLabels = getCategoryLabels();
   const tagLabels = getTagLabels();
+
+  console.log('📊 Anzuzeigende Daten:');
+  console.log('  - Name:', profile.firstName, profile.lastName);
+  console.log('  - Kategorien:', categoryLabels);
+  console.log('  - Tags:', tagLabels);
+  console.log('  - Adresse:', profile.homeAddress);
+  console.log('  - Radius:', profile.radiusKm);
+  console.log('  - Kontakt:', profile.email, profile.phone);
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.lightGray }}>
@@ -155,7 +189,7 @@ export default function WorkerProfileScreen() {
           paddingBottom: 30,
           alignItems: 'center',
         }}>
-          {/* Profilbild */}
+          {/* Profilbild oder Initialen */}
           {profile.photoUrl || profile.profilePhotoUri ? (
             <Image
               source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
@@ -186,7 +220,7 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          {/* Name */}
+          {/* Vollständiger Name */}
           <Text style={{ fontSize: 26, fontWeight: '900', color: COLORS.white, marginBottom: 8 }}>
             {profile.firstName} {profile.lastName}
           </Text>
@@ -204,10 +238,10 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          {/* Status/Tagline */}
+          {/* Hauptkategorie als Tagline */}
           {categoryLabels.length > 0 && (
             <Text style={{ fontSize: 14, color: COLORS.neon, fontWeight: '600' }}>
-              {categoryLabels.join(' • ')}
+              {categoryLabels[0]}
             </Text>
           )}
         </View>
@@ -215,7 +249,7 @@ export default function WorkerProfileScreen() {
         {/* Content Area */}
         <View style={{ paddingHorizontal: 20, marginTop: -20 }}>
           
-          {/* 2) Über mich */}
+          {/* 2) Über mich / Profiltext */}
           {profile.shortBio && (
             <View style={{
               backgroundColor: COLORS.white,
@@ -240,7 +274,7 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          {/* 3) Wohnadresse */}
+          {/* 3) Wohnadresse - VOLLSTÄNDIG */}
           {profile.homeAddress && (
             <View style={{
               backgroundColor: COLORS.white,
@@ -260,12 +294,15 @@ export default function WorkerProfileScreen() {
                 </Text>
               </View>
               <View style={{ gap: 6 }}>
+                {/* Zeile 1: Straße + Hausnummer */}
                 <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
                   {profile.homeAddress.street} {profile.homeAddress.houseNumber || ''}
                 </Text>
+                {/* Zeile 2: PLZ + Stadt */}
                 <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
                   {profile.homeAddress.postalCode} {profile.homeAddress.city}
                 </Text>
+                {/* Zeile 3: Land */}
                 {profile.homeAddress.country && (
                   <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
                     {profile.homeAddress.country}
@@ -275,7 +312,7 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          {/* 4) Tätigkeiten & Qualifikationen */}
+          {/* 4) Tätigkeiten & Qualifikationen - ALLE CHIPS */}
           {(categoryLabels.length > 0 || tagLabels.length > 0) && (
             <View style={{
               backgroundColor: COLORS.white,
@@ -295,9 +332,9 @@ export default function WorkerProfileScreen() {
                 </Text>
               </View>
 
-              {/* Kategorien als Chips */}
+              {/* Kategorien als Purple Chips */}
               {categoryLabels.length > 0 && (
-                <View style={{ marginBottom: 16 }}>
+                <View style={{ marginBottom: tagLabels.length > 0 ? 16 : 0 }}>
                   <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
                     KATEGORIEN
                   </Text>
@@ -318,11 +355,11 @@ export default function WorkerProfileScreen() {
                 </View>
               )}
 
-              {/* Tags/Qualifikationen als Chips */}
+              {/* Tags/Qualifikationen als Gray Chips */}
               {tagLabels.length > 0 && (
                 <View>
                   <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                    QUALIFIKATIONEN
+                    QUALIFIKATIONEN & TÄTIGKEITEN
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                     {tagLabels.map((label, idx) => (
@@ -345,57 +382,59 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          {/* 5) Kontaktinformationen */}
-          <View style={{
-            backgroundColor: COLORS.white,
-            borderRadius: 16,
-            padding: 20,
-            marginBottom: 16,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 8,
-            elevation: 3,
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-              <Ionicons name="mail" size={22} color={COLORS.purple} />
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
-                Kontaktinformationen
-              </Text>
+          {/* 5) Kontaktinformationen - FÜR WORKER SELBST IMMER SICHTBAR */}
+          {(profile.email || profile.phone) && (
+            <View style={{
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 20,
+              marginBottom: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <Ionicons name="call" size={22} color={COLORS.purple} />
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
+                  Kontaktinformationen
+                </Text>
+              </View>
+
+              {/* E-Mail */}
+              {profile.email && (
+                <View style={{ marginBottom: profile.phone ? 12 : 0 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                    <Ionicons name="mail-outline" size={16} color={COLORS.darkGray} />
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
+                      E-MAIL
+                    </Text>
+                  </View>
+                  <Text style={{ fontSize: 15, color: COLORS.darkGray, marginLeft: 22 }}>
+                    {profile.email}
+                  </Text>
+                </View>
+              )}
+
+              {/* Telefon */}
+              {profile.phone && (
+                <View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                    <Ionicons name="call-outline" size={16} color={COLORS.darkGray} />
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
+                      TELEFON
+                    </Text>
+                  </View>
+                  <Text style={{ fontSize: 15, color: COLORS.darkGray, marginLeft: 22 }}>
+                    {profile.phone}
+                  </Text>
+                </View>
+              )}
             </View>
+          )}
 
-            {/* E-Mail */}
-            {profile.email && (
-              <View style={{ marginBottom: 12 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                  <Ionicons name="mail-outline" size={16} color={COLORS.darkGray} />
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
-                    E-MAIL
-                  </Text>
-                </View>
-                <Text style={{ fontSize: 15, color: COLORS.darkGray, marginLeft: 22 }}>
-                  {profile.email}
-                </Text>
-              </View>
-            )}
-
-            {/* Telefon */}
-            {profile.phone && (
-              <View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                  <Ionicons name="call-outline" size={16} color={COLORS.darkGray} />
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
-                    TELEFON
-                  </Text>
-                </View>
-                <Text style={{ fontSize: 15, color: COLORS.darkGray, marginLeft: 22 }}>
-                  {profile.phone}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {/* 6) Arbeitsradius */}
+          {/* 6) Arbeitsradius - GROSSE ZAHL */}
           {profile.radiusKm && (
             <View style={{
               backgroundColor: COLORS.white,
