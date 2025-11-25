@@ -1,8 +1,8 @@
-// app/(worker)/feed.tsx - FINAL NEON-TECH DESIGN
-import React, { useEffect, useState, useMemo } from 'react';
+// app/(worker)/feed.tsx - FINAL NEON-TECH DESIGN WITH AUTO-REFRESH
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { View, Text, ScrollView, RefreshControl, ActivityIndicator, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, Redirect } from 'expo-router';
+import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
 import { getJobs } from '../../utils/jobStore';
@@ -50,8 +50,16 @@ export default function WorkerFeed() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('matching');
 
-  const loadData = async () => {
+  // Auto-refresh interval ref
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const loadData = async (silent = false) => {
     if (!user) return;
+
+    // Don't show loading spinner on auto-refresh
+    if (!silent) {
+      setIsLoading(true);
+    }
 
     try {
       const workerProfile = await getWorkerProfile(user.id);
@@ -67,16 +75,6 @@ export default function WorkerFeed() {
       const allJobs = await getJobs();
       const openJobs = allJobs.filter(j => j.status === 'open');
       
-      console.log('🔍 ROBUST MATCHING START');
-      console.log(`📊 Total Jobs: ${allJobs.length}, Open Jobs: ${openJobs.length}`);
-      console.log('👤 Worker Profile:', {
-        userId: workerProfile.userId,
-        categories: workerProfile.categories,
-        tags: workerProfile.selectedTags,
-        coords: workerProfile.homeLat && workerProfile.homeLon ? 'YES' : 'NO',
-        radius: workerProfile.radiusKm,
-      });
-      
       // Load applications FIRST to filter out already applied jobs
       const applications = await getApplicationsForWorker(user.id);
       const jobIdsSet = new Set(applications.map(app => app.jobId));
@@ -84,15 +82,12 @@ export default function WorkerFeed() {
       
       // Filter out jobs the worker already applied to
       const notAppliedJobs = openJobs.filter(job => !jobIdsSet.has(job.id));
-      console.log(`📋 Filtered out ${openJobs.length - notAppliedJobs.length} already-applied jobs`);
       
       // Store ALL open jobs (not applied yet) for "Alle" tab
       setAllOpenJobs(notAppliedJobs);
       
       // SIMPLE MATCHING: Nur Kategorie-Check für "Passende" Tab!
       const matchedJobs = getMatchingJobs(notAppliedJobs, workerProfile);
-      
-      console.log(`🎯 SIMPLE MATCHING FERTIG: ${matchedJobs.length} von ${notAppliedJobs.length} Jobs matchen`);
       
       // Load employer ratings for each job
       const ratings: Record<string, { avg: number; count: number }> = {};
@@ -110,18 +105,41 @@ export default function WorkerFeed() {
       setError(null);
     } catch (e) {
       console.error('Error loading feed:', e);
-      setError('Fehler beim Laden der Aufträge.');
+      if (!silent) {
+        setError('Fehler beim Laden der Aufträge.');
+      }
     } finally {
-      setIsLoading(false);
+      if (!silent) {
+        setIsLoading(false);
+      }
       setIsRefreshing(false);
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      loadData();
-    }
-  }, [user, authLoading]);
+  // Setup auto-refresh when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      // Load data immediately
+      if (!authLoading && user) {
+        loadData();
+      }
+
+      // Start auto-refresh interval (5 seconds)
+      intervalRef.current = setInterval(() => {
+        if (!authLoading && user) {
+          loadData(true); // Silent refresh
+        }
+      }, 5000);
+
+      // Cleanup on unfocus
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
+    }, [user, authLoading])
+  );
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -148,80 +166,45 @@ export default function WorkerFeed() {
   const allJobsInRadius: NearbyJob[] = useMemo(() => {
     if (!profile) return [];
     // allOpenJobs enthält bereits ALLE offenen Jobs (nicht nur die gematchten)
-    return nearbyJobs(allOpenJobs, profile);
+    return nearbyJobs(allOpenJobs, profile).sort((a, b) => a.distanceKm - b.distanceKm);
   }, [allOpenJobs, profile]);
 
-  // Aktive Job-Liste basierend auf Tab
-  const activeJobs = activeTab === 'matching' ? matchingJobs : allJobsInRadius;
+  const handleApply = async (job: Job) => {
+    if (!user || !profile || isApplyingJobId) return;
 
-  async function handleApply(jobId: string, employerId: string | undefined) {
-    if (!user || !profile) {
-      setError('Du bist nicht eingeloggt.');
+    if (!profile.categories || profile.categories.length === 0) {
+      setError('Bitte zuerst dein Profil vervollständigen.');
       return;
     }
 
-    if (!employerId) {
-      setError('Dieser Auftrag hat keinen Auftraggeber zugewiesen.');
-      return;
-    }
+    setIsApplyingJobId(job.id);
 
     try {
-      setIsApplyingJobId(jobId);
-      await applyForJob(jobId, user.id, employerId);
+      await applyForJob(job.id, user.id, job.employerId);
+      
+      // Remove job from lists
+      setJobs(prev => prev.filter(j => j.id !== job.id));
+      setAllOpenJobs(prev => prev.filter(j => j.id !== job.id));
+      setAppsJobIds(prev => new Set(prev).add(job.id));
 
-      const updated = new Set(appsJobIds);
-      updated.add(jobId);
-      setAppsJobIds(updated);
       setError(null);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Unbekannter Fehler';
-      setError('Bewerbung konnte nicht gespeichert werden: ' + msg);
+    } catch (e: any) {
+      console.error('Error applying:', e);
+      setError(e.message || 'Fehler beim Bewerben.');
     } finally {
       setIsApplyingJobId(null);
     }
-  }
+  };
 
   if (authLoading) return null;
-
-  if (!user || user.role !== 'worker') {
-    return <Redirect href="/start" />;
-  }
+  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
   if (isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={COLORS.neon} size="large" />
-          <Text style={{ color: COLORS.white, marginTop: 16, fontSize: 15 }}>Lade Aufträge…</Text>
-        </SafeAreaView>
-      </View>
-    );
-  }
-
-  if (error && (!profile || !profile.categories || profile.categories.length === 0)) {
-    return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, gap: 16 }}>
-          <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: '900', textAlign: 'center' }}>
-            Profil vervollständigen
-          </Text>
-          <Text style={{ color: COLORS.whiteTransparent60, fontSize: 15, textAlign: 'center' }}>
-            Bitte wähle mindestens eine Kategorie in deinem Profil, um Aufträge zu sehen.
-          </Text>
-          <Pressable
-            onPress={() => router.replace('/(worker)/profile')}
-            style={{
-              backgroundColor: COLORS.neon,
-              paddingHorizontal: 24,
-              paddingVertical: 16,
-              borderRadius: 16,
-              marginTop: 16,
-            }}
-          >
-            <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '700' }}>
-              Zum Profil
-            </Text>
-          </Pressable>
+          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Aufträge...</Text>
         </SafeAreaView>
       </View>
     );
@@ -229,14 +212,14 @@ export default function WorkerFeed() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      {/* Optional Glow Effect */}
+      {/* Glow Effect */}
       <View style={{
         position: 'absolute',
         top: -80,
-        right: -40,
-        width: 180,
-        height: 180,
-        borderRadius: 90,
+        left: -40,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
         backgroundColor: COLORS.neon,
         opacity: 0.12,
         blur: 60,
@@ -257,81 +240,65 @@ export default function WorkerFeed() {
             color: COLORS.white,
             letterSpacing: 0.2,
           }}>
-            Jobs für dich
+            Aufträge
           </Text>
-          <View style={{ flexDirection: 'row', gap: 12 }}>
-            <Pressable onPress={() => router.push('/(worker)/matches')}>
-              <Ionicons name="heart-outline" size={26} color={COLORS.neon} />
-            </Pressable>
-            <Pressable onPress={() => router.push('/(worker)/profile')}>
-              <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
-            </Pressable>
-          </View>
-        </View>
-
-        {/* Tabs */}
-        <View style={{
-          flexDirection: 'row',
-          paddingHorizontal: 20,
-          marginTop: 8,
-          marginBottom: 16,
-        }}>
-          <Pressable
-            onPress={() => setActiveTab('matching')}
-            style={{ flex: 1, alignItems: 'center', paddingBottom: 12 }}
-          >
-            <Text style={{
-              fontSize: 15,
-              fontWeight: '700',
-              color: activeTab === 'matching' ? COLORS.neon : COLORS.whiteTransparent60,
-            }}>
-              Passende Jobs
-            </Text>
-            {activeTab === 'matching' && (
-              <View style={{
-                marginTop: 8,
-                width: 40,
-                height: 3,
-                backgroundColor: COLORS.neon,
-                borderRadius: 2,
-              }} />
-            )}
-          </Pressable>
-
-          <Pressable
-            onPress={() => setActiveTab('all')}
-            style={{ flex: 1, alignItems: 'center', paddingBottom: 12 }}
-          >
-            <Text style={{
-              fontSize: 15,
-              fontWeight: '700',
-              color: activeTab === 'all' ? COLORS.neon : COLORS.whiteTransparent60,
-            }}>
-              Jobs im Umkreis
-            </Text>
-            {activeTab === 'all' && (
-              <View style={{
-                marginTop: 8,
-                width: 40,
-                height: 3,
-                backgroundColor: COLORS.neon,
-                borderRadius: 2,
-              }} />
-            )}
+          <Pressable onPress={() => router.push('/(worker)/profile')}>
+            <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
           </Pressable>
         </View>
       </SafeAreaView>
 
-      {/* Content */}
+      {/* Tab Switcher */}
+      <View style={{
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+        gap: 12,
+        marginBottom: 16,
+      }}>
+        <Pressable
+          onPress={() => setActiveTab('matching')}
+          style={{
+            flex: 1,
+            paddingVertical: 12,
+            borderRadius: 14,
+            backgroundColor: activeTab === 'matching' ? COLORS.neon : COLORS.whiteTransparent40,
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{
+            fontSize: 15,
+            fontWeight: '700',
+            color: activeTab === 'matching' ? COLORS.black : COLORS.white,
+          }}>
+            Passende ({matchingJobs.length})
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => setActiveTab('all')}
+          style={{
+            flex: 1,
+            paddingVertical: 12,
+            borderRadius: 14,
+            backgroundColor: activeTab === 'all' ? COLORS.neon : COLORS.whiteTransparent40,
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{
+            fontSize: 15,
+            fontWeight: '700',
+            color: activeTab === 'all' ? COLORS.black : COLORS.white,
+          }}>
+            Alle ({allJobsInRadius.length})
+          </Text>
+        </Pressable>
+      </View>
+
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 20, gap: 16 }}
         refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={handleRefresh}
-            tintColor={COLORS.neon}
-          />
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} tintColor={COLORS.neon} />
         }
       >
         {error && (
@@ -348,178 +315,249 @@ export default function WorkerFeed() {
           </View>
         )}
 
-        {activeJobs.length === 0 ? (
-          <View style={{
-            padding: 32,
-            backgroundColor: COLORS.white,
-            borderRadius: 18,
-            alignItems: 'center',
-            gap: 12,
-          }}>
-            <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
-              {activeTab === 'matching' 
-                ? 'Keine neuen Jobs verfügbar'
-                : 'Keine Jobs im Umkreis'}
-            </Text>
-            <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
-              {activeTab === 'matching'
-                ? 'Alle passenden Jobs wurden bereits beworben oder sind abgeschlossen. Prüfe deine Matches oder warte auf neue Jobs!'
-                : 'Aktuell gibt es keine offenen Jobs in deiner Nähe. Schau später wieder vorbei!'}
-            </Text>
-            <Pressable
-              onPress={() => router.push('/(worker)/matches')}
-              style={{
-                marginTop: 8,
-                backgroundColor: COLORS.neon,
-                paddingVertical: 12,
-                paddingHorizontal: 24,
-                borderRadius: 12,
-              }}
-            >
-              <Text style={{ color: COLORS.black, fontWeight: '700' }}>
-                💼 Meine Matches ansehen
+        {activeTab === 'matching' && (
+          matchingJobs.length === 0 ? (
+            <View style={{
+              padding: 32,
+              backgroundColor: COLORS.white,
+              borderRadius: 18,
+              alignItems: 'center',
+              gap: 12,
+            }}>
+              <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
+                Keine passenden Aufträge
               </Text>
-            </Pressable>
-          </View>
-        ) : (
-          <View style={{ gap: 16 }}>
-            {activeJobs.map((job) => {
-              const hasApplied = appsJobIds.has(job.id);
-              const timeDisplay = formatJobTimeDisplay(
-                job.startAt,
-                job.endAt,
-                job.timeMode,
-                job.hours,
-                job.dueAt
-              );
-              const canApply = canApplyToJob(job, profile);
-              const isNearbyJob = activeTab === 'all' && 'distance' in job;
-              const nearbyJobData = isNearbyJob ? (job as NearbyJob) : null;
-              const isNew = job.createdAt && (Date.now() - new Date(job.createdAt).getTime()) < 24 * 60 * 60 * 1000;
+              <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
+                Aktuell gibt es keine Aufträge, die zu deinem Profil passen.
+              </Text>
+            </View>
+          ) : (
+            <View style={{ gap: 16 }}>
+              {matchingJobs.map((job) => {
+                const timeDisplay = formatJobTimeDisplay(
+                  job.startAt,
+                  job.endAt,
+                  job.timeMode,
+                  job.hours,
+                  job.dueAt
+                );
+                const canApply = canApplyToJob(job, profile);
+                const isApplying = isApplyingJobId === job.id;
+                const employerRating = employerRatings[job.employerId];
 
-              return (
-                <View
-                  key={job.id}
-                  style={{
-                    backgroundColor: COLORS.white,
-                    borderRadius: 18,
-                    padding: 20,
-                    shadowColor: COLORS.neon,
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.15,
-                    shadowRadius: 12,
-                    elevation: 4,
-                  }}
-                >
-                  {/* Header mit Badges */}
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                    <Text style={{ 
-                      flex: 1,
-                      fontSize: 18, 
-                      fontWeight: '700', 
-                      color: COLORS.purple,
-                      lineHeight: 24,
-                      marginRight: 12,
-                    }}>
-                      {job.title}
-                    </Text>
-                    
-                    {isNew && (
-                      <View style={{
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        borderRadius: 8,
-                        backgroundColor: COLORS.neon,
-                      }}>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
-                          NEU
+                return (
+                  <View
+                    key={job.id}
+                    style={{
+                      backgroundColor: COLORS.white,
+                      borderRadius: 18,
+                      padding: 20,
+                      shadowColor: COLORS.neon,
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 12,
+                      elevation: 4,
+                    }}
+                  >
+                    {/* Header */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ 
+                          fontSize: 18, 
+                          fontWeight: '700', 
+                          color: COLORS.purple,
+                          marginBottom: 4,
+                        }}>
+                          {job.title}
                         </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                            von {job.employerName || 'Auftraggeber'}
+                          </Text>
+                          {employerRating && employerRating.count > 0 && (
+                            <RatingDisplay 
+                              rating={employerRating.avg} 
+                              reviewCount={employerRating.count}
+                              size="small"
+                            />
+                          )}
+                        </View>
                       </View>
-                    )}
-                  </View>
-
-                  {/* Category */}
-                  <Text style={{ fontSize: 13, color: COLORS.darkGray, marginBottom: 8 }}>
-                    📦 {job.category}
-                  </Text>
-
-                  {/* Employer Rating */}
-                  {employerRatings[job.employerId] && (
-                    <View style={{ marginBottom: 8 }}>
-                      <RatingDisplay
-                        averageRating={employerRatings[job.employerId].avg}
-                        reviewCount={employerRatings[job.employerId].count}
-                        size="small"
-                        color={COLORS.neon}
-                      />
                     </View>
-                  )}
 
-                  {/* Zeit & Ort */}
-                  <View style={{ gap: 6, marginBottom: 12 }}>
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                      🕐 {timeDisplay}
+                    {/* Job Details */}
+                    <View style={{ gap: 8, marginBottom: 12 }}>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        📦 {job.category}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        🕐 {timeDisplay}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        📍 {formatAddress(job.location)}
+                      </Text>
+                    </View>
+
+                    {/* Preis */}
+                    <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
+                      {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
                     </Text>
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                      📍 {formatAddress(job.location)}
-                    </Text>
-                    {nearbyJobData && nearbyJobData.distance && (
-                      <Text style={{ fontSize: 13, color: COLORS.neon, fontWeight: '600' }}>
-                        📏 {nearbyJobData.distance.toFixed(1)} km entfernt
-                      </Text>
-                    )}
-                  </View>
 
-                  {/* Preis - BUG 1 FIX: job.wages → job.workerAmountCents */}
-                  <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
-                    {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
-                  </Text>
-
-                  {/* Button */}
-                  {hasApplied ? (
-                    <View style={{
-                      paddingVertical: 16,
-                      borderRadius: 14,
-                      backgroundColor: '#E8E8E8',
-                      alignItems: 'center',
-                    }}>
-                      <Text style={{ fontSize: 15, fontWeight: '700', color: '#666' }}>
-                        ✓ Bereits beworben
-                      </Text>
-                    </View>
-                  ) : !canApply ? (
-                    <View style={{
-                      paddingVertical: 16,
-                      borderRadius: 14,
-                      backgroundColor: COLORS.purpleTransparent30,
-                      alignItems: 'center',
-                    }}>
-                      <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.whiteTransparent40 }}>
-                        Qualifikationen fehlen
-                      </Text>
-                    </View>
-                  ) : (
+                    {/* Action Button */}
                     <Pressable
-                      onPress={() => handleApply(job.id, job.employerId)}
-                      disabled={isApplyingJobId === job.id}
+                      onPress={() => handleApply(job)}
+                      disabled={!canApply || isApplying}
                       style={({ pressed }) => ({
-                        paddingVertical: 16,
-                        borderRadius: 14,
-                        backgroundColor: COLORS.neon,
+                        backgroundColor: canApply && !isApplying ? COLORS.neon : '#E8E8E8',
+                        paddingVertical: 14,
+                        borderRadius: 16,
                         alignItems: 'center',
                         opacity: pressed ? 0.9 : 1,
                         transform: [{ scale: pressed ? 0.98 : 1 }],
                       })}
                     >
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                        {isApplyingJobId === job.id ? 'Bewerbe...' : 'Ich habe Zeit'}
-                      </Text>
+                      {isApplying ? (
+                        <ActivityIndicator color={COLORS.darkGray} />
+                      ) : (
+                        <Text style={{ 
+                          fontSize: 16, 
+                          fontWeight: '700', 
+                          color: canApply ? COLORS.black : '#666',
+                        }}>
+                          {canApply ? '✓ Ich habe Zeit' : '× Nicht verfügbar'}
+                        </Text>
+                      )}
                     </Pressable>
-                  )}
-                </View>
-              );
-            })}
-          </View>
+                  </View>
+                );
+              })}
+            </View>
+          )
+        )}
+
+        {activeTab === 'all' && (
+          allJobsInRadius.length === 0 ? (
+            <View style={{
+              padding: 32,
+              backgroundColor: COLORS.white,
+              borderRadius: 18,
+              alignItems: 'center',
+              gap: 12,
+            }}>
+              <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
+                Keine Aufträge in deinem Umkreis
+              </Text>
+              <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
+                Erweitere deinen Suchradius in den Profileinstellungen.
+              </Text>
+            </View>
+          ) : (
+            <View style={{ gap: 16 }}>
+              {allJobsInRadius.map(({ job, distanceKm }) => {
+                const timeDisplay = formatJobTimeDisplay(
+                  job.startAt,
+                  job.endAt,
+                  job.timeMode,
+                  job.hours,
+                  job.dueAt
+                );
+                const isApplying = isApplyingJobId === job.id;
+                const employerRating = employerRatings[job.employerId];
+
+                return (
+                  <View
+                    key={job.id}
+                    style={{
+                      backgroundColor: COLORS.white,
+                      borderRadius: 18,
+                      padding: 20,
+                      shadowColor: COLORS.neon,
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 12,
+                      elevation: 4,
+                    }}
+                  >
+                    {/* Header */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ 
+                          fontSize: 18, 
+                          fontWeight: '700', 
+                          color: COLORS.purple,
+                          marginBottom: 4,
+                        }}>
+                          {job.title}
+                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                            von {job.employerName || 'Auftraggeber'}
+                          </Text>
+                          {employerRating && employerRating.count > 0 && (
+                            <RatingDisplay 
+                              rating={employerRating.avg} 
+                              reviewCount={employerRating.count}
+                              size="small"
+                            />
+                          )}
+                        </View>
+                      </View>
+                      <View style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 8,
+                        backgroundColor: COLORS.purpleTransparent30,
+                      }}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.white }}>
+                          {distanceKm.toFixed(1)} km
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Job Details */}
+                    <View style={{ gap: 8, marginBottom: 12 }}>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        📦 {job.category}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        🕐 {timeDisplay}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                        📍 {formatAddress(job.location)}
+                      </Text>
+                    </View>
+
+                    {/* Preis */}
+                    <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
+                      {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
+                    </Text>
+
+                    {/* Action Button */}
+                    <Pressable
+                      onPress={() => handleApply(job)}
+                      disabled={isApplying}
+                      style={({ pressed }) => ({
+                        backgroundColor: !isApplying ? COLORS.neon : '#E8E8E8',
+                        paddingVertical: 14,
+                        borderRadius: 16,
+                        alignItems: 'center',
+                        opacity: pressed ? 0.9 : 1,
+                        transform: [{ scale: pressed ? 0.98 : 1 }],
+                      })}
+                    >
+                      {isApplying ? (
+                        <ActivityIndicator color={COLORS.darkGray} />
+                      ) : (
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                          ✓ Ich habe Zeit
+                        </Text>
+                      )}
+                    </Pressable>
+                  </View>
+                );
+              })}
+            </View>
+          )
         )}
       </ScrollView>
     </View>
