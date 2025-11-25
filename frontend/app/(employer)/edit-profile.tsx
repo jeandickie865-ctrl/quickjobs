@@ -546,6 +546,31 @@ export default function EmployerProfileScreen() {
               onLatChange={setLat}
               onLonChange={setLon}
             />
+
+            {/* Hausnummer */}
+            <View style={{ marginTop: 16 }}>
+              <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>
+                Hausnummer (optional)
+              </Text>
+              <View style={{
+                backgroundColor: COLORS.white,
+                borderRadius: 16,
+                borderWidth: 2,
+                borderColor: focusedField === 'houseNumber' ? COLORS.neon : 'transparent',
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+              }}>
+                <TextInput
+                  value={houseNumber}
+                  onChangeText={setHouseNumber}
+                  placeholder="z.B. 42a"
+                  placeholderTextColor="#999"
+                  onFocus={() => setFocusedField('houseNumber')}
+                  onBlur={() => setFocusedField(null)}
+                  style={{ fontSize: 16, color: COLORS.black }}
+                />
+              </View>
+            </View>
           </View>
 
           {/* Zahlungsdaten */}
