@@ -1,5 +1,5 @@
 // app/(worker)/edit-profile.tsx - COMPLETE WORKER PROFILE EDITOR
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ScrollView,
   View,
