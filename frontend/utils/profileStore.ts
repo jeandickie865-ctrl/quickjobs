@@ -75,9 +75,10 @@ export async function saveWorkerProfile(
   console.log('💾 SAVE: profileData:', profileData);
   
   try {
-    console.log('🔄 SAVE: Updating profile via PUT request');
+    // First, try to update (PUT)
+    console.log('🔄 SAVE: Trying to update profile via PUT request');
     
-    const response = await fetch(`${API_BASE}/profiles/worker/${userId}`, {
+    let response = await fetch(`${API_BASE}/profiles/worker/${userId}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${userId}`,
@@ -86,7 +87,23 @@ export async function saveWorkerProfile(
       body: JSON.stringify(profileData),
     });
     
-    console.log('📥 SAVE: Backend response status:', response.status);
+    console.log('📥 SAVE: Backend PUT response status:', response.status);
+    
+    // If 404, profile doesn't exist - create it with POST
+    if (response.status === 404) {
+      console.log('⚠️ SAVE: Profile not found (404), creating new profile via POST');
+      
+      response = await fetch(`${API_BASE}/profiles/worker`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${userId}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+      
+      console.log('📥 SAVE: Backend POST response status:', response.status);
+    }
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -103,7 +120,7 @@ export async function saveWorkerProfile(
     
     const result = await response.json();
     console.log('✅ SAVE: Backend response data:', result);
-    console.log('✅ SAVE: Profile updated successfully');
+    console.log('✅ SAVE: Profile saved successfully');
   } catch (error: any) {
     console.error('❌ SAVE: Exception in saveWorkerProfile:', error);
     console.error('❌ SAVE: Error message:', error.message);
