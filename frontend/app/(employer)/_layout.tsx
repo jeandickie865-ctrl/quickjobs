@@ -94,85 +94,93 @@ export default function EmployerLayout() {
         }}
       />
 
-      {/* Tab 2: Auftrag erstellen */}
-      <Tabs.Screen
-        name="jobs/create"
-        options={{
-          title: 'Erstellen',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
-              <Ionicons
-                name="add-circle-outline"
-                size={28}
-                color={color}
-              />
-              {focused && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 3: Matches */}
+      {/* Tab 2: Matches */}
       <Tabs.Screen
         name="matches"
         options={{
           title: 'Matches',
           tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
+            <View style={{ 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: 56,
+              height: 40,
+              backgroundColor: focused ? 'rgba(200, 255, 22, 0.15)' : 'transparent',
+              borderRadius: 12,
+              marginTop: -4,
+            }}>
               <Ionicons
-                name="heart-outline"
-                size={28}
+                name={focused ? "heart" : "heart-outline"}
+                size={32}
                 color={color}
+                style={{
+                  textShadowColor: focused ? COLORS.neon : 'transparent',
+                  textShadowOffset: { width: 0, height: 0 },
+                  textShadowRadius: 8,
+                }}
               />
-              {focused && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
             </View>
           ),
         }}
       />
 
-      {/* Tab 4: Profil */}
+      {/* Tab 3: Profil */}
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profil',
           tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
+            <View style={{ 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: 56,
+              height: 40,
+              backgroundColor: focused ? 'rgba(200, 255, 22, 0.15)' : 'transparent',
+              borderRadius: 12,
+              marginTop: -4,
+            }}>
               <Ionicons
-                name="person-circle-outline"
-                size={28}
+                name={focused ? "person-circle" : "person-circle-outline"}
+                size={32}
                 color={color}
+                style={{
+                  textShadowColor: focused ? COLORS.neon : 'transparent',
+                  textShadowOffset: { width: 0, height: 0 },
+                  textShadowRadius: 8,
+                }}
               />
-              {focused && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
+            </View>
+          ),
+        }}
+      />
+
+      {/* Tab 4: Erstellen (Create Job) - als letzter Tab */}
+      <Tabs.Screen
+        name="jobs/create"
+        options={{
+          title: 'Erstellen',
+          tabBarIcon: ({ focused, color }) => (
+            <View style={{ 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: 56,
+              height: 40,
+              backgroundColor: focused ? 'rgba(200, 255, 22, 0.25)' : 'rgba(200, 255, 22, 0.1)',
+              borderRadius: 12,
+              marginTop: -4,
+              borderWidth: focused ? 2 : 1,
+              borderColor: focused ? COLORS.neon : 'rgba(200, 255, 22, 0.3)',
+            }}>
+              <Ionicons
+                name="add-circle"
+                size={34}
+                color={focused ? COLORS.neon : color}
+                style={{
+                  textShadowColor: focused ? COLORS.neon : 'transparent',
+                  textShadowOffset: { width: 0, height: 0 },
+                  textShadowRadius: 12,
+                }}
+              />
             </View>
           ),
         }}
