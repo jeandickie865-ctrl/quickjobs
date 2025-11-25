@@ -708,7 +708,7 @@ export default function EditWorkerProfileScreen() {
           </View>
 
           {/* Country */}
-          <View>
+          <View style={{ marginBottom: 16 }}>
             <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
               Land *
             </Text>
@@ -725,6 +725,45 @@ export default function EditWorkerProfileScreen() {
               }}
             />
           </View>
+
+          {/* Geocoding Button */}
+          <Pressable
+            onPress={geocodeAddress}
+            style={{
+              backgroundColor: COLORS.purple,
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            <Ionicons name="location" size={20} color={COLORS.neon} />
+            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.white }}>
+              Adresse prüfen & Koordinaten laden
+            </Text>
+          </Pressable>
+
+          {/* Coordinates Display */}
+          {(lat !== undefined && lon !== undefined) && (
+            <View style={{
+              marginTop: 12,
+              padding: 12,
+              backgroundColor: '#F0F0F0',
+              borderRadius: 8,
+              borderLeftWidth: 3,
+              borderLeftColor: COLORS.neon,
+            }}>
+              <Text style={{ fontSize: 12, color: '#888', fontWeight: '700', marginBottom: 4 }}>
+                KOORDINATEN
+              </Text>
+              <Text style={{ fontSize: 13, color: COLORS.darkGray }}>
+                📍 Lat: {lat.toFixed(6)}, Lon: {lon.toFixed(6)}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* SECTION 3: Tätigkeiten & Qualifikationen */}
