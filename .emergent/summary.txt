@@ -1,218 +1,99 @@
 <analysis>
-The trajectory reveals a complex series of bug fixes, feature implementations, and intense debugging sessions on a German-language React Native (Expo) job matching app. The user's primary language is German, and future interactions must be in German.
+The trajectory documents a complex, iterative development and debugging process for a German-language, two-sided job-matching mobile application. The primary language of the user is German, and all future communications must be in German.
 
-The work began by addressing a user-reported white screen issue, which was correctly identified as an intended complete profile screen for new users. Following a user-approved plan, I fixed a backend CORS deployment blocker, removed debug tools, and implemented a user rating system.
+The work began by tackling a critical bug where accepted job matches weren't appearing for workers. The debugging journey was fraught with challenges, including a stopped backend service, a major misdiagnosis involving  vs. MongoDB, and a critical database name mismatch ( vs. ). These infrastructure-level problems were eventually resolved by restarting services, correcting the engineer's assumptions based on user feedback, and creating a Python script to seed the database with consistent test data.
 
-Subsequent user requests led to significant UI/UX improvements, including creating separate read-only and edit views for both worker and employer profiles. During this, a critical bug was discovered and fixed where worker qualifications and activities (tags) were not being saved, breaking the core matching logic.
+Following the bug fixes, development shifted to implementing user-requested features. This included:
+- A 5-second auto-refresh/polling mechanism on key screens.
+- A complete redesign and implementation of the worker profile view () and its corresponding edit screen (), including robust frontend and backend validation.
+- A sophisticated privacy feature involving a masked view of the worker's profile for employers, which reveals full details only after a match is confirmed. This involved creating a new reusable component and modifying several employer-facing screens.
 
-The most challenging phase involved a prolonged, unsuccessful attempt to resolve a white screen error on the Expo Go mobile client, which worked fine in the web preview. This led through a dependency hell of React Native and Expo SDK version mismatches. After exhausting all options and consulting the support agent, it was concluded that the issue stemmed from platform limitations within the development environment.
-
-Pivoting based on this, the user made a final, decisive request: abandon the local mobile preview issues and migrate the entire application from its client-side  architecture to a centralized MongoDB backend to enable true multi-user functionality for deployment. The work concluded immediately after acknowledging this new primary directive.
+The most recent request is a large-scale refactoring task to standardize navigation, restore a previous UI design for the profile screen, add a global logout function, and fix several other UI/UX inconsistencies across the application. The previous engineer had just begun work on this final, large request.
 </analysis>
 
 <product_requirements>
-The product is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
+The application is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
 **Core Functionality:**
-*   **User Roles:** Users register as either an Employer or a Worker.
-*   **Job & Profile Management:** Employers post jobs, and Workers create detailed profiles including skills, bio, and qualifications (tags).
-*   **Matching & Application:** The app matches workers to jobs based on categories and skills. Workers apply to jobs in their feed.
-*   **Hiring & Reviews:** Employers can hire applicants. After a job, both parties can rate each other.
-
-**Architectural Evolution:**
-The application was initially built with all data (jobs, profiles, applications, reviews) stored locally on the client's device using . This made it a single-user experience.
-
-**Current Mandate:**
-The primary requirement has shifted. The application must be refactored to support multiple users concurrently. This involves a full migration of the data persistence layer from  to a centralized MongoDB database.  should only be used for storing the authentication token. This will make the app scalable and ready for a production deployment where users on different devices can interact.
+*   **Dual Roles:** Users are either Employers or Workers.
+*   **Job & Profile Management:** Employers post jobs. Workers create detailed profiles with qualifications, contact info, and a work radius. Profile completion is mandatory for applying to jobs.
+*   **Matching Flow:**
+    1.  Workers view jobs in two feeds: Passende Jobs (filtered by skills/location) and Alle Jobs (all nearby).
+    2.  Worker applies to a job.
+    3.  Employer reviews applicants. A **masked profile** is shown (e.g., John D., no contact info).
+    4.  Employer accepts and pays a fee (simulated).
+    5.  The application status becomes accepted. The match now appears in the Matches tab for both users, and the worker's **full profile** (full name, address, contact) becomes visible to the employer.
+*   **Real-time Updates:** Key data screens (feeds, applications, matches) must auto-refresh every 5 seconds to reflect new data without manual intervention.
+*   **Chat:** A chat feature is unlocked between an employer and a worker only after a match is confirmed and paid for.
+*   **Navigation:** The app uses a tab-based layout, with distinct navigation stacks for Workers and Employers.
 </product_requirements>
 
 <key_technical_concepts>
-- **Data Persistence (Legacy):**  for all application data (jobs, profiles, etc.).
-- **Data Persistence (Target):** MongoDB for centralized, multi-user data storage.
-- **Frontend:** React Native with Expo and file-based routing via .
-- **Backend:** A minimal FastAPI server () connected to MongoDB, which will be expanded.
-- **State Management:** React Context API () for authentication and / for component-level state.
-- **Data Stores:** A collection of utility files () that previously managed  operations and must be refactored to make API calls.
+- **Backend:** FastAPI (Python) with Pydantic for data modeling and validation.
+- **Database:** MongoDB.
+- **Frontend:** React Native with Expo.
+- **Routing:** File-based routing with .
+- **State Management:** , , .
+- **Data Fetching & Caching:**
+    - API calls managed in  files.
+    -  from React Navigation to trigger actions on screen focus.
+    -  with  for implementing a 5-second polling/auto-refresh mechanism.
+- **UI/UX:** Custom components, , and a card-based layout.
+- **Privacy:** Implemented logic for staged data visibility (masked vs. full profiles) based on application status.
 </key_technical_concepts>
 
 <code_architecture>
-The project is a monorepo with a  (Expo) and a  (FastAPI). The architecture was significantly refactored to support view/edit modes and is now slated for a migration to a centralized database.
+The project is a monorepo with a  and  directory.
 
 
 
 - ****
-  - **Importance:** This file was the source of a critical bug preventing worker skills (tags) from being saved, which broke the matching feature.
-  - **Changes:** It was heavily refactored to correctly handle state updates for selected skills, use the correct data source (), and fix the logic for loading and saving profile data.
-
-- ** & **
-  - **Importance:** These files were created to provide a much-requested read-only view of a user's profile, improving UX.
-  - **Changes:** Created from the original profile edit screens. They now display profile data and contain logic to redirect to the edit screen if a profile is incomplete. The worker version was updated to show detailed selected skills.
+    - **Importance:** The single source of all API logic, data validation, and database interaction.
+    - **Changes:** Pydantic models (, , etc.) were heavily modified to enforce required fields (, , etc.) and add optional ones. The  endpoint was updated with strict validation logic to reject invalid data with a  status code.
 
 - ****
-  - **Importance:** Defines all frontend dependencies.
-  - **Changes:** Underwent numerous changes during the attempt to fix Expo Go compatibility issues, including upgrades and downgrades of , , and 
-  Usage: expo [command] [options]
-
-  Options:
-  
-    -V, --version                     output the version number
-    --non-interactive                 Fail, if an interactive prompt would be required to continue.
-    -h, --help                        output usage information
-  
-  Commands:
-
-    init [name]                       Create a new Expo project
-    start [path]                      Start a local dev server for the app
-    start:web [path]                  Start a Webpack dev server for the web app
-    export [path]                     Export the static files of the app for hosting it on a web server
-    install [packages...]             Install a module or other package to a project
-    run:android [path]                Run the Android app binary locally
-    run:ios [path]                    Run the iOS app binary locally
-    send [path]                       Share the project's URL to an email address
-
-    login                             Login to an Expo account
-    logout                            Logout of an Expo account
-    register                          Sign up for a new Expo account
-    whoami                            Return the currently authenticated account
-
-    client:install:ios                Install Expo Go for iOS on the simulator
-    client:install:android            Install Expo Go for Android on a connected device or emulator
-
-    config [path]                     Show the project config
-    doctor [path]                     Diagnose issues with the project
-    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
-
-    customize:web [path]              Eject the default web files for customization
-    prebuild [path]                   Create native iOS and Android project files before building natively.
-                                      Learn more: https://docs.expo.dev/workflow/customizing/
-
-    build:web [path]                  Build the web app for production
-
-    credentials:manager [path]        Superseded by eas credentials in eas-cli
-
-    url [path]                        Log a URL for opening the project in Expo Go
-    url:ipa [path]                    Log the download URL for the standalone iOS binary
-    url:apk [path]                    Log the download URL for the standalone Android binary
-
-    webhooks [path]                   List all webhooks for a project
-    webhooks:add [path]               Add a webhook to a project
-    webhooks:remove [path]            Delete a webhook
-    webhooks:update [path]            Update an existing webhook
-
-    build:ios [path]                  Superseded by eas build in eas-cli
-    build:android [path]              Superseded by eas build in eas-cli
-    build:status [path]               Superseded by eas build:list in eas-cli
-    eject [path]                      Superseded by expo prebuild
-    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
-    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
-    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
-    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
-    publish [path]                    Superseded by eas update in eas-cli
-    publish:set [path]                Superseded by eas update:republish in eas-cli
-    publish:rollback [path]           Superseded by eas update:republish in eas-cli
-    publish:history [path]            Superseded by eas update:list in eas-cli
-    publish:details [path]            Superseded by eas update:view in eas-cli
-    push:android:upload [path]        Superseded by eas credentials in eas-cli
-    push:android:show [path]          Superseded by eas credentials in eas-cli
-    push:android:clear [path]         Superseded by eas credentials in eas-cli
-    upload:android [path]             Superseded by eas submit in eas-cli
-    upload:ios [path]                 Superseded by eas submit in eas-cli
-    client:ios [path]                 Superseded by Expo Dev Clients
-
-[08:44:16]   Run a command with --help for more info 💡
-[08:44:16]     $ expo start --help
-[08:44:16]. It was finally stabilized on versions compatible with Expo SDK 54.
+    - **Importance:** Displays the worker's own profile.
+    - **Changes:** This file was completely rewritten to create a modern, card-based UI. It now correctly fetches and displays all fields from the MongoDB  collection, including nested address data and mapped  and  as chips. It is a display-only component.
 
 - ****
-  - **Importance:** Controls which backend process is run.
-  - **Changes:** The  was changed from  to  to switch from the unused PostgreSQL backend to the active MongoDB-ready backend, unblocking deployment.
+    - **Importance:** Allows workers to create and update their profile.
+    - **Changes:** This file was significantly overhauled to include input fields for all profile data. It features a robust validation function () that checks for all required fields, displays inline error messages, and disables the Save button until the form is valid. The save handler () was fixed to correctly call the  API function and navigate back to the profile view upon success.
+
+- ****
+    - **Importance:** Shows job details and a list of workers who have applied.
+    - **Changes:** Logic was added to make each applicant card pressable, opening a modal that displays the worker's profile. It passes the application status () to the profile view component to control data masking.
+
+- ****
+    - **Importance:** A new, reusable component created to display a worker's profile from an employer's perspective.
+    - **Changes:** This component contains the core privacy logic. It accepts a worker profile and an  boolean. If  is , it displays a masked version of the profile (e.g., John D., no contact info). If , it displays all data. This ensures consistent privacy rules.
+
+- ****
+    - **Importance:** The main job discovery screen for workers.
+    - **Changes:** This file was debugged extensively. Fixes included correcting data structure access ( vs ), fixing filters to handle  job objects gracefully, and ensuring both the Matching and All tabs display the correct job lists fetched from the API. The auto-refresh logic was also added here.
 </code_architecture>
 
 <pending_tasks>
-- **Full MongoDB Migration:** The primary and only pending task is to convert the application from a single-user, -based app to a multi-user, database-driven app. This involves:
-    1.  Creating API endpoints in the FastAPI backend for all CRUD operations (jobs, profiles, applications, reviews).
-    2.  Rewriting all data stores in  to use  to call these new API endpoints instead of .
+The last user request (Chat Message 445) is a large refactoring and cleanup task that was not completed. It includes:
+- **Part 1:** Implement a global logout button, accessible from every screen.
+- **Part 2:** Fix and enforce all navigation and routing rules.
+- **Part 3:** Restore a Matches badge counter in the worker's bottom tab navigation.
+- **Part 4:** Restore a previous, specific design for the worker profile screen.
+- **Part 5:** Fix filtering logic in the worker's job feed.
+- **Part 6 & 7:** Fix and standardize the Matches screen and overall page flow for both user roles.
+- **Chat Logic:** Implement the full chat unlocking logic as requested in Chat Message 440.
 </pending_tasks>
 
 <current_work>
-The last cycle was an exhaustive and ultimately frustrating attempt to debug a white screen issue on the Expo Go mobile client, which was not present in the web preview. This involved a deep dive into dependency hell, trying to align versions of , 
-  Usage: expo [command] [options]
+The most recent work was the start of a large-scale refactoring and UI/UX restoration task outlined by the user in Chat Message 445. The previous engineer had just acknowledged this comprehensive request and was about to begin the very first part of it.
 
-  Options:
-  
-    -V, --version                     output the version number
-    --non-interactive                 Fail, if an interactive prompt would be required to continue.
-    -h, --help                        output usage information
-  
-  Commands:
+**Specifically, the task was to:**
+- **Part 1: GLOBAL LOGOUT (REQUIRED)**
+  - Add a logout button that works from every screen.
+  - The implementation plan was to add it to the  first.
 
-    init [name]                       Create a new Expo project
-    start [path]                      Start a local dev server for the app
-    start:web [path]                  Start a Webpack dev server for the web app
-    export [path]                     Export the static files of the app for hosting it on a web server
-    install [packages...]             Install a module or other package to a project
-    run:android [path]                Run the Android app binary locally
-    run:ios [path]                    Run the iOS app binary locally
-    send [path]                       Share the project's URL to an email address
-
-    login                             Login to an Expo account
-    logout                            Logout of an Expo account
-    register                          Sign up for a new Expo account
-    whoami                            Return the currently authenticated account
-
-    client:install:ios                Install Expo Go for iOS on the simulator
-    client:install:android            Install Expo Go for Android on a connected device or emulator
-
-    config [path]                     Show the project config
-    doctor [path]                     Diagnose issues with the project
-    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
-
-    customize:web [path]              Eject the default web files for customization
-    prebuild [path]                   Create native iOS and Android project files before building natively.
-                                      Learn more: https://docs.expo.dev/workflow/customizing/
-
-    build:web [path]                  Build the web app for production
-
-    credentials:manager [path]        Superseded by eas credentials in eas-cli
-
-    url [path]                        Log a URL for opening the project in Expo Go
-    url:ipa [path]                    Log the download URL for the standalone iOS binary
-    url:apk [path]                    Log the download URL for the standalone Android binary
-
-    webhooks [path]                   List all webhooks for a project
-    webhooks:add [path]               Add a webhook to a project
-    webhooks:remove [path]            Delete a webhook
-    webhooks:update [path]            Update an existing webhook
-
-    build:ios [path]                  Superseded by eas build in eas-cli
-    build:android [path]              Superseded by eas build in eas-cli
-    build:status [path]               Superseded by eas build:list in eas-cli
-    eject [path]                      Superseded by expo prebuild
-    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
-    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
-    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
-    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
-    publish [path]                    Superseded by eas update in eas-cli
-    publish:set [path]                Superseded by eas update:republish in eas-cli
-    publish:rollback [path]           Superseded by eas update:republish in eas-cli
-    publish:history [path]            Superseded by eas update:list in eas-cli
-    publish:details [path]            Superseded by eas update:view in eas-cli
-    push:android:upload [path]        Superseded by eas credentials in eas-cli
-    push:android:show [path]          Superseded by eas credentials in eas-cli
-    push:android:clear [path]         Superseded by eas credentials in eas-cli
-    upload:android [path]             Superseded by eas submit in eas-cli
-    upload:ios [path]                 Superseded by eas submit in eas-cli
-    client:ios [path]                 Superseded by Expo Dev Clients
-
-[08:44:17]   Run a command with --help for more info 💡
-[08:44:17]     $ expo start --help
-[08:44:17], and . After multiple failed attempts, and based on feedback from the support agent, we concluded this was a platform limitation of the development environment's Expo Go integration, not a code issue that could be resolved.
-
-Following this realization, the user made a strategic decision to pivot away from fixing the local preview and to focus on the most critical architectural flaw of the application: its lack of multi-user support.
-
-The very last action was the user giving the explicit command to migrate the entire application's data persistence from client-side  to a centralized MongoDB database. I acknowledged this request and was preparing to begin this major refactoring task. All previous work on UI/UX and bug fixing is complete and stable in the web preview. The focus is now entirely on this backend and data-layer migration.
+The work concluded immediately after the engineer decided on this first step. No code was written for this task yet. All previous tasks, including the implementation of the worker profile edit screen, validation, and the employer's view of the worker profile, were completed and considered Production Ready by the previous engineer. The system is in a state where backend and frontend services are running, the database is seeded with test data, and core features are functional but require the UI/UX and navigational cleanup outlined in the pending tasks.
 </current_work>
 
 <optional_next_step>
-Begin the MongoDB migration by creating the necessary backend API endpoints and refactoring the corresponding frontend data store. I will start with , as it is a core piece of functionality.
+Continue with the plan from the last message: Implement Part 1 of the user's refactoring request by adding the logout functionality to the worker profile screen ().
 </optional_next_step>
