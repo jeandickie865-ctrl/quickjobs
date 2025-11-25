@@ -466,7 +466,7 @@ async def update_worker_profile(
     profile_update: WorkerProfileUpdate,
     authorization: Optional[str] = Header(None)
 ):
-    """Update worker profile"""
+    """Update worker profile with validation"""
     logger.info(f"Updating worker profile for user {user_id}")
     
     # Verify token - user can only update their own profile
@@ -487,12 +487,69 @@ async def update_worker_profile(
         existing.pop("_id", None)
         return WorkerProfile(**existing)
     
+    # VALIDATION: Check required fields
+    # Merge with existing data for validation
+    merged_data = {**existing, **update_data}
+    
+    # firstName validation
+    if not merged_data.get("firstName") or not merged_data["firstName"].strip():
+        raise HTTPException(status_code=400, detail="Vorname ist erforderlich")
+    
+    # lastName validation
+    if not merged_data.get("lastName") or not merged_data["lastName"].strip():
+        raise HTTPException(status_code=400, detail="Nachname ist erforderlich")
+    
+    # phone validation
+    if not merged_data.get("phone") or not merged_data["phone"].strip():
+        raise HTTPException(status_code=400, detail="Telefonnummer ist erforderlich")
+    
+    # email validation
+    if not merged_data.get("email") or not merged_data["email"].strip():
+        raise HTTPException(status_code=400, detail="E-Mail ist erforderlich")
+    
+    # categories validation
+    categories = merged_data.get("categories", [])
+    if not categories or len(categories) == 0:
+        raise HTTPException(status_code=400, detail="Mindestens eine Kategorie muss ausgewählt werden")
+    
+    # radiusKm validation
+    radius = merged_data.get("radiusKm", 0)
+    if radius < 1 or radius > 200:
+        raise HTTPException(status_code=400, detail="Arbeitsradius muss zwischen 1 und 200 km liegen")
+    
+    # homeAddress validation
+    address = merged_data.get("homeAddress")
+    if not address:
+        raise HTTPException(status_code=400, detail="Adresse ist erforderlich")
+    
+    if isinstance(address, dict):
+        if not address.get("street") or not address["street"].strip():
+            raise HTTPException(status_code=400, detail="Straße ist erforderlich")
+        if not address.get("postalCode") or not address["postalCode"].strip():
+            raise HTTPException(status_code=400, detail="Postleitzahl ist erforderlich")
+        if not address.get("city") or not address["city"].strip():
+            raise HTTPException(status_code=400, detail="Stadt ist erforderlich")
+        if not address.get("country") or not address["country"].strip():
+            raise HTTPException(status_code=400, detail="Land ist erforderlich")
+    
     # Add updatedAt timestamp
     update_data["updatedAt"] = datetime.utcnow().isoformat()
     
     # Convert nested Address to dict if needed
     if "homeAddress" in update_data and isinstance(update_data["homeAddress"], Address):
         update_data["homeAddress"] = update_data["homeAddress"].dict()
+    
+    # Sanitize string fields (trim whitespace)
+    if "firstName" in update_data:
+        update_data["firstName"] = update_data["firstName"].strip()
+    if "lastName" in update_data:
+        update_data["lastName"] = update_data["lastName"].strip()
+    if "phone" in update_data:
+        update_data["phone"] = update_data["phone"].strip()
+    if "email" in update_data:
+        update_data["email"] = update_data["email"].strip()
+    if "shortBio" in update_data and update_data["shortBio"]:
+        update_data["shortBio"] = update_data["shortBio"].strip()
     
     # Update in MongoDB
     await db.worker_profiles.update_one(
@@ -504,7 +561,7 @@ async def update_worker_profile(
     updated_profile = await db.worker_profiles.find_one({"userId": user_id})
     updated_profile.pop("_id", None)
     
-    logger.info(f"Worker profile updated for user {user_id}")
+    logger.info(f"Worker profile updated successfully for user {user_id}")
     return WorkerProfile(**updated_profile)
 
 # Job Endpoints
