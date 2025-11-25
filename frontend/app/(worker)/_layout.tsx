@@ -147,6 +147,8 @@ export default function WorkerLayout() {
               borderRadius: 12,
               minWidth: 100,
               alignItems: 'center',
+              flexDirection: 'row',
+              gap: 6,
             }}>
               <Text style={{
                 fontSize: 14,
@@ -155,6 +157,25 @@ export default function WorkerLayout() {
               }}>
                 Matches
               </Text>
+              {matchesCount > 0 && (
+                <View style={{
+                  backgroundColor: focused ? COLORS.purple : COLORS.neon,
+                  paddingHorizontal: 8,
+                  paddingVertical: 2,
+                  borderRadius: 10,
+                  minWidth: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Text style={{
+                    fontSize: 12,
+                    fontWeight: '900',
+                    color: focused ? COLORS.neon : COLORS.black,
+                  }}>
+                    {matchesCount}
+                  </Text>
+                </View>
+              )}
             </View>
           ),
         }}
