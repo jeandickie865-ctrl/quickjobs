@@ -111,45 +111,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    // Validation
-    if (!email || !password) {
-      throw new Error('Bitte E-Mail und Passwort eingeben');
+    // Call backend API
+    const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+    
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Login fehlgeschlagen');
+      }
+
+      const data = await response.json();
+      
+      // Create user object
+      const loggedInUser: User = {
+        id: data.userId,
+        email: data.email,
+        role: data.role,
+      };
+
+      // Save auth state
+      await AsyncStorage.setItem(TOKEN_KEY, data.token);
+      await AsyncStorage.setItem(USER_KEY, JSON.stringify(loggedInUser));
+
+      setToken(data.token);
+      setUser(loggedInUser);
+
+      console.log('✅ User logged in successfully (Backend)');
+    } catch (error: any) {
+      console.error('❌ Login error:', error);
+      throw error;
     }
-
-    // Get users database
-    const usersDb = await getUsersDb();
-    const emailLower = email.toLowerCase().trim();
-
-    // Check if user exists
-    const userData = usersDb[emailLower];
-    if (!userData) {
-      throw new Error('Kein Account mit dieser E-Mail gefunden');
-    }
-
-    // Check password
-    if (userData.password !== password) {
-      throw new Error('Falsches Passwort');
-    }
-
-    // Create user object
-    const userId = `user_${emailLower.replace(/[^a-z0-9]/g, '_')}`;
-    const loggedInUser: User = {
-      id: userId,
-      email: emailLower,
-      role: userData.role as 'worker' | 'employer',
-    };
-
-    // Create token
-    const newToken = `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    // Save auth state
-    await AsyncStorage.setItem(TOKEN_KEY, newToken);
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(loggedInUser));
-
-    setToken(newToken);
-    setUser(loggedInUser);
-
-    console.log('✅ User logged in successfully (AsyncStorage)');
   };
 
   const signOut = async () => {
