@@ -58,21 +58,35 @@ export default function WorkerMatchesScreen() {
     try {
       setError(null);
 
+      console.log('🔍 loadMatches: Fetching applications for user', user.id);
       const apps = await getApplicationsForWorker(user.id);
+      console.log('📋 loadMatches: Total applications found:', apps.length);
+      console.log('📋 loadMatches: All applications:', apps.map(a => ({ id: a.id, status: a.status, jobId: a.jobId })));
+      
       // WICHTIG: Nur akzeptierte Applications (fertige Matches) zeigen!
       const relevantApps = apps.filter((a) => 
         a.status === 'accepted'
       );
+      console.log('✅ loadMatches: Accepted applications:', relevantApps.length);
+      console.log('✅ loadMatches: Accepted app details:', relevantApps.map(a => ({ id: a.id, jobId: a.jobId })));
+      
       const allJobs = await getJobs();
+      console.log('💼 loadMatches: All jobs loaded:', allJobs.length);
 
       const combined: Match[] = [];
 
       for (const app of relevantApps) {
+        console.log(`🔎 loadMatches: Looking for job ${app.jobId} in ${allJobs.length} jobs`);
         const job = allJobs.find((j) => j.id === app.jobId);
         if (job) {
+          console.log(`✅ loadMatches: Job found for app ${app.id}: ${job.title}`);
           combined.push({ job, application: app });
+        } else {
+          console.error(`❌ loadMatches: Job NOT found for app ${app.id}, jobId: ${app.jobId}`);
         }
       }
+      
+      console.log('🎯 loadMatches: Final combined matches:', combined.length);
 
       combined.sort((a, b) => {
         const dateA = a.application.respondedAt || a.application.createdAt;
