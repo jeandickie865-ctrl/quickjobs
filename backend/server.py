@@ -118,6 +118,127 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
 
+# Helper: Get userId from Authorization header (simplified for MVP)
+def get_user_id_from_token(authorization: Optional[str] = Header(None)) -> str:
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+    
+    # Simple token format: "Bearer {userId}"
+    # In production, this should be a proper JWT token
+    parts = authorization.split(" ")
+    if len(parts) != 2 or parts[0] != "Bearer":
+        raise HTTPException(status_code=401, detail="Invalid authorization format")
+    
+    return parts[1]
+
+# Worker Profile Endpoints
+
+@api_router.post("/profiles/worker", response_model=WorkerProfile)
+async def create_worker_profile(
+    profile_data: WorkerProfileCreate,
+    authorization: Optional[str] = Header(None)
+):
+    """Create a new worker profile"""
+    logger.info("Creating worker profile")
+    
+    userId = get_user_id_from_token(authorization)
+    
+    # Check if profile already exists
+    existing = await db.worker_profiles.find_one({"userId": userId})
+    if existing:
+        raise HTTPException(status_code=400, detail="Profile already exists")
+    
+    # Create profile document
+    now = datetime.utcnow().isoformat()
+    profile_dict = profile_data.dict()
+    profile_dict["userId"] = userId
+    profile_dict["createdAt"] = now
+    profile_dict["updatedAt"] = now
+    
+    # Convert nested Address to dict if needed
+    if isinstance(profile_dict.get("homeAddress"), Address):
+        profile_dict["homeAddress"] = profile_dict["homeAddress"].dict()
+    
+    # Insert into MongoDB
+    result = await db.worker_profiles.insert_one(profile_dict)
+    
+    # Fetch and return created profile
+    created_profile = await db.worker_profiles.find_one({"_id": result.inserted_id})
+    created_profile["userId"] = created_profile.pop("userId", userId)
+    
+    logger.info(f"Worker profile created for user {userId}")
+    return WorkerProfile(**created_profile)
+
+@api_router.get("/profiles/worker/{user_id}", response_model=WorkerProfile)
+async def get_worker_profile(
+    user_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get worker profile by userId"""
+    logger.info(f"Fetching worker profile for user {user_id}")
+    
+    # Verify token (optional: check if requester is the same user)
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Find profile
+    profile = await db.worker_profiles.find_one({"userId": user_id})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Remove MongoDB _id field
+    profile.pop("_id", None)
+    
+    logger.info(f"Worker profile found for user {user_id}")
+    return WorkerProfile(**profile)
+
+@api_router.put("/profiles/worker/{user_id}", response_model=WorkerProfile)
+async def update_worker_profile(
+    user_id: str,
+    profile_update: WorkerProfileUpdate,
+    authorization: Optional[str] = Header(None)
+):
+    """Update worker profile"""
+    logger.info(f"Updating worker profile for user {user_id}")
+    
+    # Verify token - user can only update their own profile
+    requesting_user = get_user_id_from_token(authorization)
+    if requesting_user != user_id:
+        raise HTTPException(status_code=403, detail="Cannot update another user's profile")
+    
+    # Check if profile exists
+    existing = await db.worker_profiles.find_one({"userId": user_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Prepare update data (only include non-None fields)
+    update_data = profile_update.dict(exclude_none=True)
+    
+    if not update_data:
+        # No fields to update
+        existing.pop("_id", None)
+        return WorkerProfile(**existing)
+    
+    # Add updatedAt timestamp
+    update_data["updatedAt"] = datetime.utcnow().isoformat()
+    
+    # Convert nested Address to dict if needed
+    if "homeAddress" in update_data and isinstance(update_data["homeAddress"], Address):
+        update_data["homeAddress"] = update_data["homeAddress"].dict()
+    
+    # Update in MongoDB
+    await db.worker_profiles.update_one(
+        {"userId": user_id},
+        {"$set": update_data}
+    )
+    
+    # Fetch and return updated profile
+    updated_profile = await db.worker_profiles.find_one({"userId": user_id})
+    updated_profile.pop("_id", None)
+    
+    logger.info(f"Worker profile updated for user {user_id}")
+    return WorkerProfile(**updated_profile)
+
 # Include the router in the main app
 app.include_router(api_router)
 
