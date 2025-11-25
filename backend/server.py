@@ -1021,6 +1021,94 @@ async def get_reviews_for_employer(
     logger.info(f"Found {len(reviews)} reviews for employer {employer_id}")
     return [Review(**review) for review in reviews]
 
+# Chat Message Endpoints
+
+@api_router.post("/chat/messages", response_model=ChatMessage)
+async def send_message(
+    message_data: ChatMessageCreate,
+    authorization: Optional[str] = Header(None)
+):
+    """Send a chat message"""
+    logger.info(f"Sending message for application {message_data.applicationId}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Get application to verify user is part of it
+    application = await db.applications.find_one({"id": message_data.applicationId})
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # User must be either the worker or employer
+    if requesting_user not in [application.get("workerId"), application.get("employerId")]:
+        raise HTTPException(status_code=403, detail="Cannot send message for this application")
+    
+    # Determine sender role
+    sender_role = "worker" if requesting_user == application.get("workerId") else "employer"
+    
+    # Create message
+    message_dict = {
+        "id": f"msg_{str(uuid.uuid4())}",
+        "applicationId": message_data.applicationId,
+        "senderId": requesting_user,
+        "senderRole": sender_role,
+        "message": message_data.message,
+        "createdAt": datetime.utcnow().isoformat(),
+        "read": False
+    }
+    
+    # Insert into MongoDB
+    result = await db.chat_messages.insert_one(message_dict)
+    
+    # Fetch and return created message
+    created_message = await db.chat_messages.find_one({"_id": result.inserted_id})
+    created_message.pop("_id", None)
+    
+    logger.info(f"Message sent: {message_dict['id']}")
+    return ChatMessage(**created_message)
+
+@api_router.get("/chat/messages/{application_id}", response_model=List[ChatMessage])
+async def get_messages(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all messages for an application"""
+    logger.info(f"Fetching messages for application {application_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Get application to verify user is part of it
+    application = await db.applications.find_one({"id": application_id})
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # User must be either the worker or employer
+    if requesting_user not in [application.get("workerId"), application.get("employerId")]:
+        raise HTTPException(status_code=403, detail="Cannot view messages for this application")
+    
+    # Find all messages for this application, sorted by createdAt
+    messages = await db.chat_messages.find({"applicationId": application_id}).sort("createdAt", 1).to_list(1000)
+    
+    # Mark messages as read if they are from the other person
+    sender_role = "worker" if requesting_user == application.get("workerId") else "employer"
+    other_role = "employer" if sender_role == "worker" else "worker"
+    
+    for msg in messages:
+        if msg.get("senderRole") == other_role and not msg.get("read"):
+            await db.chat_messages.update_one(
+                {"_id": msg["_id"]},
+                {"$set": {"read": True}}
+            )
+            msg["read"] = True
+    
+    # Remove MongoDB _id field
+    for msg in messages:
+        msg.pop("_id", None)
+    
+    logger.info(f"Found {len(messages)} messages for application {application_id}")
+    return [ChatMessage(**msg) for msg in messages]
+
 # Include the router in the main app
 app.include_router(api_router)
 
