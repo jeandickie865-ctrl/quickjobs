@@ -492,6 +492,255 @@ async def delete_job(
     logger.info(f"Job {job_id} deleted")
     return {"message": "Job deleted successfully"}
 
+# Application Endpoints
+
+@api_router.post("/applications", response_model=JobApplication)
+async def create_application(
+    app_data: ApplicationCreate,
+    authorization: Optional[str] = Header(None)
+):
+    """Create a new job application"""
+    logger.info(f"Creating application: worker {app_data.workerId} -> job {app_data.jobId}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Worker can only apply for themselves
+    if requesting_user != app_data.workerId:
+        raise HTTPException(status_code=403, detail="Cannot apply on behalf of another worker")
+    
+    # Check if application already exists
+    existing = await db.applications.find_one({
+        "jobId": app_data.jobId,
+        "workerId": app_data.workerId
+    })
+    
+    if existing:
+        logger.info(f"Application already exists: {existing.get('id')}")
+        existing.pop("_id", None)
+        return JobApplication(**existing)
+    
+    # Create application document
+    app_dict = app_data.dict()
+    app_dict["id"] = f"app_{str(uuid.uuid4())}"
+    app_dict["createdAt"] = datetime.utcnow().isoformat()
+    app_dict["status"] = "pending"
+    
+    # Insert into MongoDB
+    result = await db.applications.insert_one(app_dict)
+    
+    # Fetch and return created application
+    created_app = await db.applications.find_one({"_id": result.inserted_id})
+    created_app.pop("_id", None)
+    
+    logger.info(f"Application created: {app_dict['id']}")
+    return JobApplication(**created_app)
+
+@api_router.get("/applications/job/{job_id}", response_model=List[JobApplication])
+async def get_applications_for_job(
+    job_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all applications for a specific job"""
+    logger.info(f"Fetching applications for job {job_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Check if job exists and user is the employer
+    job = await db.jobs.find_one({"id": job_id})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if job.get("employerId") != requesting_user:
+        raise HTTPException(status_code=403, detail="Cannot view applications for another employer's job")
+    
+    # Find all applications for this job
+    applications = await db.applications.find({"jobId": job_id}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for app in applications:
+        app.pop("_id", None)
+    
+    logger.info(f"Found {len(applications)} applications for job {job_id}")
+    return [JobApplication(**app) for app in applications]
+
+@api_router.get("/applications/worker/{worker_id}", response_model=List[JobApplication])
+async def get_applications_for_worker(
+    worker_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all applications for a specific worker"""
+    logger.info(f"Fetching applications for worker {worker_id}")
+    
+    # Verify token - worker can only see their own applications
+    requesting_user = get_user_id_from_token(authorization)
+    if requesting_user != worker_id:
+        raise HTTPException(status_code=403, detail="Cannot view another worker's applications")
+    
+    # Find all applications for this worker
+    applications = await db.applications.find({"workerId": worker_id}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for app in applications:
+        app.pop("_id", None)
+    
+    logger.info(f"Found {len(applications)} applications for worker {worker_id}")
+    return [JobApplication(**app) for app in applications]
+
+@api_router.get("/applications/employer/{employer_id}", response_model=List[JobApplication])
+async def get_applications_for_employer(
+    employer_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get all applications for all jobs of a specific employer"""
+    logger.info(f"Fetching applications for employer {employer_id}")
+    
+    # Verify token - employer can only see their own applications
+    requesting_user = get_user_id_from_token(authorization)
+    if requesting_user != employer_id:
+        raise HTTPException(status_code=403, detail="Cannot view another employer's applications")
+    
+    # Find all applications for this employer
+    applications = await db.applications.find({"employerId": employer_id}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for app in applications:
+        app.pop("_id", None)
+    
+    logger.info(f"Found {len(applications)} applications for employer {employer_id}")
+    return [JobApplication(**app) for app in applications]
+
+@api_router.get("/applications/{application_id}", response_model=JobApplication)
+async def get_application(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get a specific application by ID"""
+    logger.info(f"Fetching application {application_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the worker or employer
+    if requesting_user not in [application.get("workerId"), application.get("employerId")]:
+        raise HTTPException(status_code=403, detail="Cannot view this application")
+    
+    application.pop("_id", None)
+    
+    logger.info(f"Application {application_id} found")
+    return JobApplication(**application)
+
+@api_router.put("/applications/{application_id}/accept", response_model=JobApplication)
+async def accept_application(
+    application_id: str,
+    employer_confirmed_legal: bool = True,
+    authorization: Optional[str] = Header(None)
+):
+    """Accept an application and reject all other pending applications for the same job"""
+    logger.info(f"Accepting application {application_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the employer
+    if requesting_user != application.get("employerId"):
+        raise HTTPException(status_code=403, detail="Only the employer can accept applications")
+    
+    # Update this application to accepted
+    now = datetime.utcnow().isoformat()
+    await db.applications.update_one(
+        {"id": application_id},
+        {"$set": {
+            "status": "accepted",
+            "respondedAt": now,
+            "employerConfirmedLegal": employer_confirmed_legal,
+            "workerConfirmedLegal": False
+        }}
+    )
+    
+    # Reject all other pending applications for the same job
+    job_id = application.get("jobId")
+    await db.applications.update_many(
+        {
+            "jobId": job_id,
+            "id": {"$ne": application_id},
+            "status": "pending"
+        },
+        {"$set": {"status": "rejected"}}
+    )
+    
+    # Update job status to matched
+    await db.jobs.update_one(
+        {"id": job_id},
+        {"$set": {
+            "status": "matched",
+            "matchedWorkerId": application.get("workerId")
+        }}
+    )
+    
+    # Fetch and return updated application
+    updated_app = await db.applications.find_one({"id": application_id})
+    updated_app.pop("_id", None)
+    
+    logger.info(f"Application {application_id} accepted, job {job_id} matched")
+    return JobApplication(**updated_app)
+
+@api_router.put("/applications/{application_id}", response_model=JobApplication)
+async def update_application(
+    application_id: str,
+    app_update: ApplicationUpdate,
+    authorization: Optional[str] = Header(None)
+):
+    """Update an application (e.g., set legal confirmations)"""
+    logger.info(f"Updating application {application_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    
+    # Find application
+    existing = await db.applications.find_one({"id": application_id})
+    
+    if not existing:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the worker or employer
+    if requesting_user not in [existing.get("workerId"), existing.get("employerId")]:
+        raise HTTPException(status_code=403, detail="Cannot update this application")
+    
+    # Prepare update data (only include non-None fields)
+    update_data = app_update.dict(exclude_none=True)
+    
+    if not update_data:
+        # No fields to update
+        existing.pop("_id", None)
+        return JobApplication(**existing)
+    
+    # Update in MongoDB
+    await db.applications.update_one(
+        {"id": application_id},
+        {"$set": update_data}
+    )
+    
+    # Fetch and return updated application
+    updated_app = await db.applications.find_one({"id": application_id})
+    updated_app.pop("_id", None)
+    
+    logger.info(f"Application {application_id} updated")
+    return JobApplication(**updated_app)
+
 # Include the router in the main app
 app.include_router(api_router)
 
