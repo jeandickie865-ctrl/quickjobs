@@ -474,20 +474,51 @@ export default function CreateJob() {
         {/* Time inputs based on mode */}
         {timeMode === 'fixed_time' && (
           <View style={{ gap: 16 }}>
-            <DateTimePicker
-              label="Start (Datum & Uhrzeit)"
-              value={startDateTime}
-              onChange={setStartDateTime}
-              mode="datetime"
-              minimumDate={new Date()}
-            />
-            <DateTimePicker
-              label="Ende (Datum & Uhrzeit)"
-              value={endDateTime}
-              onChange={setEndDateTime}
-              mode="datetime"
-              minimumDate={startDateTime || new Date()}
-            />
+            <View style={{ gap: 12 }}>
+              <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Start</Text>
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                <View style={{ flex: 1 }}>
+                  <DateTimePicker
+                    label="Datum"
+                    value={startDateTime}
+                    onChange={setStartDateTime}
+                    mode="date"
+                    minimumDate={new Date()}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DateTimePicker
+                    label="Uhrzeit"
+                    value={startDateTime}
+                    onChange={setStartDateTime}
+                    mode="time"
+                  />
+                </View>
+              </View>
+            </View>
+            
+            <View style={{ gap: 12 }}>
+              <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Ende</Text>
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                <View style={{ flex: 1 }}>
+                  <DateTimePicker
+                    label="Datum"
+                    value={endDateTime}
+                    onChange={setEndDateTime}
+                    mode="date"
+                    minimumDate={startDateTime || new Date()}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DateTimePicker
+                    label="Uhrzeit"
+                    value={endDateTime}
+                    onChange={setEndDateTime}
+                    mode="time"
+                  />
+                </View>
+              </View>
+            </View>
           </View>
         )}
 
