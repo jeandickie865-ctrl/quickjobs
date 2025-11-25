@@ -106,32 +106,39 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   // For Web: Use native HTML5 input
   if (Platform.OS === 'web') {
+    const inputRef = React.useRef<any>(null);
+    
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{label}</Text>
-        <View style={styles.button}>
+        <Pressable 
+          style={styles.button}
+          onPress={() => inputRef.current?.showPicker?.()}
+        >
+          <Text style={styles.buttonText}>
+            {formatDisplayDateTime(value)}
+          </Text>
+          <Ionicons 
+            name="calendar-outline" 
+            size={20} 
+            color="#5941FF" 
+          />
+          {/* Hidden HTML input for web */}
           <input
+            ref={inputRef}
             type={getInputType()}
             value={formatDateTime(value)}
             onChange={handleDateChange}
             min={getMinimum()}
             style={{
-              width: '100%',
-              border: 'none',
-              background: 'transparent',
-              fontSize: 16,
-              fontWeight: '600',
-              color: '#000',
-              padding: 0,
-              outline: 'none',
+              position: 'absolute',
+              opacity: 0,
+              width: 1,
+              height: 1,
+              pointerEvents: 'none',
             }}
           />
-          <Ionicons 
-            name="calendar-outline" 
-            size={20} 
-            color="#C8FF16" 
-          />
-        </View>
+        </Pressable>
       </View>
     );
   }
