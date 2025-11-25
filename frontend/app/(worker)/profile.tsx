@@ -229,9 +229,24 @@ export default function WorkerProfileScreen() {
           )}
 
           {/* Vollständiger Name */}
-          <Text style={{ fontSize: 26, fontWeight: '900', color: COLORS.white, marginBottom: 8 }}>
+          <Text style={{ fontSize: 26, fontWeight: '900', color: COLORS.white, marginBottom: 12 }}>
             {profile.firstName} {profile.lastName}
           </Text>
+
+          {/* Hauptkategorie als Neon Chip direkt unter Name */}
+          {categoryLabels.length > 0 && (
+            <View style={{
+              backgroundColor: COLORS.neon,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              borderRadius: 20,
+              marginBottom: 12,
+            }}>
+              <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '700' }}>
+                {categoryLabels[0]}
+              </Text>
+            </View>
+          )}
 
           {/* Bewertung */}
           {reviewCount > 0 && (
@@ -244,13 +259,6 @@ export default function WorkerProfileScreen() {
                 ({reviewCount} Bewertungen)
               </Text>
             </View>
-          )}
-
-          {/* Hauptkategorie als Tagline */}
-          {categoryLabels.length > 0 && (
-            <Text style={{ fontSize: 14, color: COLORS.neon, fontWeight: '600' }}>
-              {categoryLabels[0]}
-            </Text>
           )}
         </View>
 
