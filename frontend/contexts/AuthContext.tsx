@@ -158,11 +158,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = async () => {
-    await AsyncStorage.removeItem(TOKEN_KEY);
-    await AsyncStorage.removeItem(USER_KEY);
-    setToken(null);
-    setUser(null);
-    console.log('✅ User logged out');
+    try {
+      await AsyncStorage.clear();  // Alle Keys löschen
+      setToken(null);
+      setUser(null);
+      console.log('✅ User logged out - AsyncStorage cleared');
+    } catch (e) {
+      console.error('❌ Logout Error:', e);
+    }
   };
 
   const setRole = async (role: 'worker' | 'employer') => {
