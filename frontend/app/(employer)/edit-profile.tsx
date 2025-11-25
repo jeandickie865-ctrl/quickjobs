@@ -187,13 +187,11 @@ export default function EmployerProfileScreen() {
         paymentMethod: profile.paymentMethod
       });
       await saveEmployerProfile(profile);
-      console.log('✅ Profile saved successfully!');
+      console.log('✅ Profile saved via API successfully!');
       console.log('🎉 EMPLOYER-PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung...');
       
-      // Weiterleitung zur Profil-Ansicht
-      setTimeout(() => {
-        router.push('/(employer)/profile');
-      }, 500);
+      // Direkt zur Profil-Ansicht navigieren mit replace (um einen Reload zu erzwingen)
+      router.replace('/(employer)/profile');
     } catch (error) {
       console.error('❌ Error saving profile:', error);
       console.error('❌ FEHLER: Profil konnte nicht gespeichert werden:', error instanceof Error ? error.message : String(error));
