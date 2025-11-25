@@ -516,26 +516,23 @@ export default function JobDetailScreen() {
         {/* Action Buttons */}
         {job.status === 'matched' && (
           <View style={{ gap: 12 }}>
-            {/* Chat Button */}
+            {/* Chat Button - Temporarily disabled, feature coming soon */}
             <Pressable
               onPress={() => {
-                const matchedApp = applications.find(app => app.workerId === job.matchedWorkerId && app.status === 'accepted');
-                if (matchedApp) {
-                  router.push(`/chat/${matchedApp.id}`);
-                } else {
-                  alert('Chat nicht verfügbar');
-                }
+                alert('Chat-Funktion wird bald verfügbar sein!');
               }}
               style={({ pressed }) => ({
-                backgroundColor: COLORS.neon,
+                backgroundColor: 'rgba(200, 255, 22, 0.3)',
                 paddingVertical: 16,
                 borderRadius: 16,
                 alignItems: 'center',
                 opacity: pressed ? 0.9 : 1,
+                borderWidth: 2,
+                borderColor: COLORS.neon,
               })}
             >
-              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                💬 Zum Chat
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
+                💬 Chat (demnächst verfügbar)
               </Text>
             </Pressable>
 
