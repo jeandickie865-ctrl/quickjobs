@@ -467,11 +467,17 @@ async def get_employer_jobs(
     authorization: Optional[str] = Header(None)
 ):
     """Get all jobs for a specific employer"""
-    logger.info(f"Fetching jobs for employer {employer_id}")
+    logger.info(f"🔍 GET /jobs/employer/{employer_id}")
+    logger.info(f"📋 Authorization header: {authorization}")
     
     # Verify token - employer can only see their own jobs
     requesting_user = get_user_id_from_token(authorization)
+    logger.info(f"👤 Requesting user from token: '{requesting_user}'")
+    logger.info(f"🎯 Employer ID from URL: '{employer_id}'")
+    logger.info(f"✅ Match: {requesting_user == employer_id}")
+    
     if requesting_user != employer_id:
+        logger.error(f"❌ 403 FORBIDDEN: User '{requesting_user}' tried to access jobs of employer '{employer_id}'")
         raise HTTPException(status_code=403, detail="Cannot view another employer's jobs")
     
     # Find all jobs for this employer
