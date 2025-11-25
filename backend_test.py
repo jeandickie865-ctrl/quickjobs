@@ -19,13 +19,15 @@ BACKEND_URL = "https://jobfinder-de.preview.emergentagent.com/api"
 TEST_WORKER = "user_test_distance_worker"
 TEST_EMPLOYER = "user_test_employer_distance"
 
-class ComprehensiveBackendTester:
+class DistanceMatchingTester:
     def __init__(self):
         self.base_url = BACKEND_URL
-        self.test_jobs = []
-        self.test_applications = []
-        self.test_reviews = []
-        self.results = []
+        self.session = requests.Session()
+        self.test_results = []
+        
+        # Test data storage
+        self.created_worker_profile = None
+        self.created_jobs = []
         
     def log_result(self, test_name: str, success: bool, details: str = ""):
         """Log test result with timestamp"""
