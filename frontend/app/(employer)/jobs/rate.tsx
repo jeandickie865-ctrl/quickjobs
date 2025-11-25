@@ -97,7 +97,6 @@ export default function RateWorkerScreen() {
     setSaving(true);
     try {
       const review = {
-        id: `review-${Date.now()}`,
         jobId: String(jobId),
         workerId: worker.userId,
         employerId: user.id,
@@ -106,15 +105,13 @@ export default function RateWorkerScreen() {
         createdAt: new Date().toISOString(),
       };
 
+      console.log('💾 Saving employer review:', review);
       await addReview(review);
+      console.log('✅ Review saved successfully');
       
       // Job als "completed" markieren nach Bewertung
-      const updatedJob = {
-        ...job,
-        status: 'completed' as const,
-      };
-      await updateJob(updatedJob);
-      console.log('✅ Job marked as completed after review');
+      await updateJob(job.id, { status: 'completed' });
+      console.log('✅ Job marked as completed after employer review');
       
       setShowSuccessModal(true);
 
