@@ -173,6 +173,30 @@ export default function WorkerProfileScreen() {
           <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>
             Mein Profil
           </Text>
+          <Pressable 
+            onPress={() => {
+              Alert.alert(
+                'Abmelden',
+                'Möchtest du dich wirklich abmelden?',
+                [
+                  { text: 'Abbrechen', style: 'cancel' },
+                  { 
+                    text: 'Abmelden', 
+                    style: 'destructive',
+                    onPress: async () => {
+                      const { logout } = await import('../../contexts/AuthContext');
+                      // Clear AsyncStorage and redirect
+                      const AsyncStorage = await import('@react-native-async-storage/async-storage');
+                      await AsyncStorage.default.removeItem('user');
+                      router.replace('/start');
+                    }
+                  }
+                ]
+              );
+            }}
+          >
+            <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
+          </Pressable>
         </View>
       </SafeAreaView>
 
