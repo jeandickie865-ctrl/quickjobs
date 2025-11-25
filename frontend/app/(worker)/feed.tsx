@@ -340,7 +340,7 @@ export default function WorkerFeed() {
             </View>
           ) : (
             <View style={{ gap: 16 }}>
-              {matchingJobs.filter(job => job && job.id).map((job) => {
+              {matchingJobs.filter(job => job && job.id && job.startAt).map((job) => {
                 const timeDisplay = formatJobTimeDisplay(
                   job.startAt,
                   job.endAt,
