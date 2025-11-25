@@ -21,15 +21,24 @@ export default function EmployerLayout() {
   const [hasProfile, setHasProfile] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+    
     async function checkProfile() {
       if (!user) {
-        setProfileChecked(true);
+        if (isMounted) setProfileChecked(true);
+        return;
+      }
+      
+      if (user.role !== 'employer') {
+        if (isMounted) setProfileChecked(true);
         return;
       }
       
       try {
         console.log('🔍 Checking if employer has profile...', user.id);
         const profile = await getEmployerProfile(user.id);
+        
+        if (!isMounted) return;
         
         if (!profile || !profile.firstName) {
           console.log('⚠️ No profile found - will redirect to edit-profile');
@@ -39,19 +48,22 @@ export default function EmployerLayout() {
           setHasProfile(true);
         }
       } catch (error) {
-        console.log('⚠️ Error checking profile (404 expected for new users), assuming no profile:', error);
+        if (!isMounted) return;
+        console.log('⚠️ Error checking profile (404 expected for new users), assuming no profile');
         // 404 is expected for new users, so treat as no profile
         setHasProfile(false);
       } finally {
-        setProfileChecked(true);
+        if (isMounted) setProfileChecked(true);
       }
     }
 
-    if (user && user.role === 'employer' && !profileChecked) {
+    if (!profileChecked) {
       checkProfile();
-    } else if (!user || user.role !== 'employer') {
-      setProfileChecked(true);
     }
+    
+    return () => {
+      isMounted = false;
+    };
   }, [user, profileChecked]);
 
   if (isLoading || !profileChecked) {
