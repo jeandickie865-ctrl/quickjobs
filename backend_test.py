@@ -105,6 +105,14 @@ class DistanceMatchingTester:
             "contactEmail": "test@distance.de"
         }
         
+        # First try to get existing profile
+        get_response = self.make_request("GET", f"/profiles/worker/{TEST_WORKER}", token=TEST_WORKER)
+        if get_response and get_response.status_code == 200:
+            self.created_worker_profile = get_response.json()
+            self.log_test("Create Worker Profile", True, "Profile already exists, retrieved successfully")
+            return True
+        
+        # If profile doesn't exist, create it
         response = self.make_request("POST", "/profiles/worker", worker_data, TEST_WORKER)
         
         if response and response.status_code in [200, 201]:
@@ -113,7 +121,7 @@ class DistanceMatchingTester:
                          f"Profile created with radius {worker_data['radiusKm']}km at Berlin Brandenburger Tor")
             return True
         elif response and response.status_code == 400:
-            # Profile might already exist, try to get it
+            # Profile might already exist, try to get it again
             get_response = self.make_request("GET", f"/profiles/worker/{TEST_WORKER}", token=TEST_WORKER)
             if get_response and get_response.status_code == 200:
                 self.created_worker_profile = get_response.json()
@@ -124,7 +132,8 @@ class DistanceMatchingTester:
                 return False
         else:
             error_msg = response.text if response else "No response"
-            self.log_test("Create Worker Profile", False, f"Failed to create profile: {error_msg}")
+            status_code = response.status_code if response else "No response"
+            self.log_test("Create Worker Profile", False, f"Failed to create profile: {status_code} - {error_msg}")
             return False
 
     def test_create_test_jobs(self):
