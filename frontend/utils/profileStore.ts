@@ -66,7 +66,53 @@ export async function getWorkerProfile(userId: string): Promise<WorkerProfile | 
   }
 }
 
-export async function saveWorkerProfile(profile: WorkerProfile): Promise<void> {
+export async function saveWorkerProfile(
+  userId: string, 
+  profileData: Partial<WorkerProfile>
+): Promise<void> {
+  console.log('💾 SAVE: saveWorkerProfile called');
+  console.log('💾 SAVE: userId:', userId);
+  console.log('💾 SAVE: profileData:', profileData);
+  
+  try {
+    console.log('🔄 SAVE: Updating profile via PUT request');
+    
+    const response = await fetch(`${API_BASE}/profiles/worker/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(profileData),
+    });
+    
+    console.log('📥 SAVE: Backend response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ SAVE: Backend error response:', errorText);
+      
+      // Try to parse JSON error message
+      try {
+        const errorJson = JSON.parse(errorText);
+        throw new Error(errorJson.detail || `Server Error ${response.status}`);
+      } catch {
+        throw new Error(errorText || `Server Error ${response.status}`);
+      }
+    }
+    
+    const result = await response.json();
+    console.log('✅ SAVE: Backend response data:', result);
+    console.log('✅ SAVE: Profile updated successfully');
+  } catch (error: any) {
+    console.error('❌ SAVE: Exception in saveWorkerProfile:', error);
+    console.error('❌ SAVE: Error message:', error.message);
+    throw error; // Re-throw so UI can handle it
+  }
+}
+
+// Legacy function - kept for backward compatibility
+export async function saveWorkerProfileLegacy(profile: WorkerProfile): Promise<void> {
   console.log('💾 saveWorkerProfile (API): Saving profile for user', profile.userId);
   console.log('💾 saveWorkerProfile (API): Categories:', profile.categories);
   console.log('💾 saveWorkerProfile (API): SelectedTags:', profile.selectedTags);
