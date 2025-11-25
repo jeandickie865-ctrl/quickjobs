@@ -139,7 +139,7 @@ export default function EmployerDashboard() {
               Noch keine Aufträge erstellt
             </Text>
             <Text style={{ color: colors.gray600, fontSize: 14, textAlign: 'center' }}>
-              Erstelle deinen ersten Auftrag, um Aufträgetarter zu finden
+              Erstelle deinen ersten Auftrag, um Auftragnehmer zu finden
             </Text>
           </Card>
         ) : (
