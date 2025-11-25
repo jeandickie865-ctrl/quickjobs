@@ -188,10 +188,10 @@ export default function WorkerMatchesScreen() {
             gap: 12,
           }}>
             <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
-              Noch keine Bewerbungen
+              Noch keine Matches
             </Text>
             <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
-              Bewirb dich auf Jobs, um deine Bewerbungen hier zu sehen!
+              Bewirb dich auf Jobs, um deine Matches hier zu sehen!
             </Text>
           </View>
         ) : (
