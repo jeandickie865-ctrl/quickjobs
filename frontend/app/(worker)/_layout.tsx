@@ -35,20 +35,31 @@ export default function WorkerLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false as any,
+        headerShown: false,
+        tabBarActiveTintColor: COLORS.white,
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
         tabBarStyle: {
-          backgroundColor: COLORS.purple,
-          borderTopWidth: 2,
+          backgroundColor: '#4A35D9',
+          borderTopWidth: 3,
           borderTopColor: COLORS.neon,
-          height: 70,
-          paddingBottom: 10,
-          paddingTop: 10,
+          height: Platform.OS === 'ios' ? 95 : 80,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 15,
+          paddingTop: 15,
+          elevation: 25,
+          shadowColor: COLORS.neon,
+          shadowOffset: { width: 0, height: -5 },
+          shadowOpacity: 0.3,
+          shadowRadius: 12,
         },
-        tabBarActiveTintColor: COLORS.neon,
-        tabBarInactiveTintColor: COLORS.darkGray,
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
+          fontSize: 13,
+          fontWeight: '800',
+          letterSpacing: 0.8,
+          textTransform: 'uppercase',
+          marginTop: 4,
+        },
+        tabBarIconStyle: {
+          marginTop: 0,
         },
       }}
     >
