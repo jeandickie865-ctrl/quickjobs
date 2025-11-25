@@ -183,6 +183,7 @@ export default function EmployerProfileScreen() {
         phone: phone.trim(),
         email: email.trim(),
         street: street.trim(),
+        houseNumber: houseNumber.trim() || undefined,  // Save house number
         postalCode: postalCode.trim(),
         city: city.trim(),
         lat,
