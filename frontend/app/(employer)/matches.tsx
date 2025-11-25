@@ -1,8 +1,8 @@
-// app/(employer)/matches.tsx - NEON-TECH MATCHES SCREEN
+// app/(employer)/matches.tsx - NEON-TECH MATCHES SCREEN WITH AUTO-REFRESH
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
@@ -38,6 +38,9 @@ export default function MatchesScreen() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Auto-refresh interval ref
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const glimmerAnim = useRef(new Animated.Value(0)).current;
@@ -67,17 +70,15 @@ export default function MatchesScreen() {
     ).start();
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-    loadMatches();
-  }, [user]);
-
-  async function loadMatches() {
+  async function loadMatches(silent = false) {
     if (!user) return;
     
-    try {
+    // Don't show loading spinner on auto-refresh
+    if (!silent) {
       setIsLoading(true);
-      
+    }
+    
+    try {
       // Load employer's jobs
       const employerJobs = await getEmployerJobs(user.id);
       
@@ -112,9 +113,36 @@ export default function MatchesScreen() {
     } catch (error) {
       console.error('Error loading matches:', error);
     } finally {
-      setIsLoading(false);
+      if (!silent) {
+        setIsLoading(false);
+      }
     }
   }
+
+  // Setup auto-refresh when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      // Load data immediately
+      if (user) {
+        loadMatches();
+      }
+
+      // Start auto-refresh interval (5 seconds)
+      intervalRef.current = setInterval(() => {
+        if (user) {
+          loadMatches(true); // Silent refresh
+        }
+      }, 5000);
+
+      // Cleanup on unfocus
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
+    }, [user])
+  );
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
