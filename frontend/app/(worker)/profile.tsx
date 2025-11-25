@@ -178,11 +178,12 @@ export default function WorkerProfileViewScreen() {
             </View>
           </Pressable>
 
-          {/* Profile Card */}
+          {/* Card 1: Persönliche Daten */}
           <View style={{
             backgroundColor: colors.white,
             borderRadius: 18,
             padding: 24,
+            marginBottom: 16,
             shadowColor: colors.neon,
             shadowOffset: { width: 0, height: 6 },
             shadowOpacity: 0.2,
@@ -190,9 +191,9 @@ export default function WorkerProfileViewScreen() {
           }}>
             {/* Profile Header with Photo */}
             <View style={{ alignItems: 'center', marginBottom: 24 }}>
-              {profile?.profilePhotoUri ? (
+              {profile?.profilePhotoUri || profile?.photoUrl ? (
                 <Image 
-                  source={{ uri: profile.profilePhotoUri }}
+                  source={{ uri: profile.profilePhotoUri || profile.photoUrl }}
                   style={{
                     width: 100,
                     height: 100,
@@ -236,13 +237,42 @@ export default function WorkerProfileViewScreen() {
               </View>
             </View>
 
+            {/* Adresse */}
+            {profile?.homeAddress && (
+              <View style={{
+                backgroundColor: colors.lightGray,
+                padding: 16,
+                borderRadius: 12,
+                borderLeftWidth: 4,
+                borderLeftColor: colors.purple,
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                  <Ionicons name="home" size={18} color={colors.purple} />
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black, marginLeft: 8 }}>
+                    Wohnadresse
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 14, color: '#666' }}>
+                  {profile.homeAddress.street} {profile.homeAddress.houseNumber}
+                </Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>
+                  {profile.homeAddress.postalCode} {profile.homeAddress.city}
+                </Text>
+                {profile.homeAddress.country && (
+                  <Text style={{ fontSize: 14, color: '#666' }}>
+                    {profile.homeAddress.country}
+                  </Text>
+                )}
+              </View>
+            )}
+
             {/* Bio */}
             {profile?.shortBio && (
               <View style={{
                 backgroundColor: colors.lightGray,
                 padding: 16,
                 borderRadius: 12,
-                marginBottom: 24,
+                marginTop: 16,
                 borderLeftWidth: 4,
                 borderLeftColor: colors.neon,
               }}>
