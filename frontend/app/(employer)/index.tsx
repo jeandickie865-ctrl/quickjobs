@@ -82,7 +82,7 @@ export default function EmployerDashboard() {
   if (!user) return null;
 
   // Show loading while checking profile
-  if (!profileChecked) {
+  if (profileLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.primaryUltraLight, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={colors.primary} />
