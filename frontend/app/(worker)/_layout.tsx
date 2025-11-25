@@ -67,25 +67,23 @@ export default function WorkerLayout() {
       <Tabs.Screen
         name="feed"
         options={{
-          title: 'Feed',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
-              <Ionicons
-                name="grid-outline"
-                size={28}
-                color={color}
-              />
-              {Boolean(focused) && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
+          tabBarIcon: () => null,
+          tabBarLabel: ({ focused }) => (
+            <View style={{
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              minWidth: 100,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontWeight: '700',
+                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+              }}>
+                Feed
+              </Text>
             </View>
           ),
         }}
@@ -95,25 +93,23 @@ export default function WorkerLayout() {
       <Tabs.Screen
         name="applications"
         options={{
-          title: 'Bewerbungen',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
-              <Ionicons
-                name="document-text-outline"
-                size={28}
-                color={color}
-              />
-              {Boolean(focused) && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
+          tabBarIcon: () => null,
+          tabBarLabel: ({ focused }) => (
+            <View style={{
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              minWidth: 100,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontWeight: '700',
+                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+              }}>
+                Bewerbungen
+              </Text>
             </View>
           ),
         }}
@@ -123,25 +119,23 @@ export default function WorkerLayout() {
       <Tabs.Screen
         name="matches"
         options={{
-          title: 'Matches',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
-              <Ionicons
-                name="heart-outline"
-                size={28}
-                color={color}
-              />
-              {Boolean(focused) && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
+          tabBarIcon: () => null,
+          tabBarLabel: ({ focused }) => (
+            <View style={{
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              minWidth: 100,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontWeight: '700',
+                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+              }}>
+                Matches
+              </Text>
             </View>
           ),
         }}
@@ -151,25 +145,23 @@ export default function WorkerLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profil',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={{ position: 'relative' }}>
-              <Ionicons
-                name="person-circle-outline"
-                size={28}
-                color={color}
-              />
-              {Boolean(focused) && (
-                <View style={{
-                  position: 'absolute',
-                  bottom: -14,
-                  left: -8,
-                  right: -8,
-                  height: 3,
-                  backgroundColor: COLORS.neon,
-                  borderRadius: 2,
-                }} />
-              )}
+          tabBarIcon: () => null,
+          tabBarLabel: ({ focused }) => (
+            <View style={{
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              minWidth: 100,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontWeight: '700',
+                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+              }}>
+                Profil
+              </Text>
             </View>
           ),
         }}
