@@ -129,49 +129,39 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{label}</Text>
-        <View style={{ position: 'relative' }}>
-          <Pressable 
-            style={styles.button}
-            onPress={() => {
-              console.log('🖱️ Pressed button for:', mode, label);
-              inputRef.current?.click();
-              setTimeout(() => {
-                inputRef.current?.focus();
-              }, 100);
-            }}
-          >
-            <Text style={styles.buttonText}>
-              {formatDisplayDateTime(value)}
-            </Text>
-            <Ionicons 
-              name="calendar-outline" 
-              size={20} 
-              color="#5941FF" 
-            />
-          </Pressable>
-          {/* Hidden HTML input - directly overlaid on button */}
-          <input
-            ref={inputRef}
-            type={getInputType()}
-            value={formatDateTime(value) || ''}
-            onChange={handleDateChange}
-            min={getMinimum()}
-            onClick={(e) => {
-              console.log('🖱️ Input clicked:', mode, label);
-              e.stopPropagation();
-            }}
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              width: '100%',
-              height: '100%',
-              opacity: 0,
-              cursor: 'pointer',
-              zIndex: 999,
-            }}
+        <Pressable 
+          style={styles.button}
+          onPress={() => {
+            console.log('🖱️ Pressed button for:', mode, label);
+            inputRef.current?.showPicker?.();
+          }}
+        >
+          <Text style={styles.buttonText}>
+            {formatDisplayDateTime(value)}
+          </Text>
+          <Ionicons 
+            name="calendar-outline" 
+            size={20} 
+            color="#5941FF" 
           />
-        </View>
+        </Pressable>
+        {/* Hidden HTML input - completely out of flow */}
+        <input
+          ref={inputRef}
+          type={getInputType()}
+          value={formatDateTime(value) || ''}
+          onChange={handleDateChange}
+          min={getMinimum()}
+          style={{
+            position: 'fixed',
+            left: -9999,
+            top: -9999,
+            width: 1,
+            height: 1,
+            opacity: 0,
+            pointerEvents: 'none',
+          }}
+        />
       </View>
     );
   }
