@@ -997,7 +997,12 @@ export default function EditWorkerProfileScreen() {
       >
         <SafeAreaView edges={['bottom']}>
           <Pressable
-            onPress={handleSave}
+            onPress={() => {
+              console.log('🔘 SAVE BUTTON PRESSED!');
+              console.log('🔘 isFormValid:', isFormValid());
+              console.log('🔘 saving:', saving);
+              handleSave();
+            }}
             disabled={!isFormValid() || saving}
             style={({ pressed }) => ({
               backgroundColor: isFormValid() && !saving ? COLORS.neon : '#CCCCCC',
