@@ -179,12 +179,12 @@ class DistanceMatchingTester:
                     "category": "gastronomie",
                     "timeMode": "fixed_time",
                     "address": {
-                        "street": "Schönefeld",
-                        "postalCode": "12529",
-                        "city": "Berlin"
+                        "street": "Oranienburg",
+                        "postalCode": "16515",
+                        "city": "Oranienburg"
                     },
-                    "lat": 52.3667,
-                    "lon": 13.5167,
+                    "lat": 52.7534,
+                    "lon": 13.2399,
                     "workerAmountCents": 10000,
                     "required_all_tags": [],
                     "status": "open"
