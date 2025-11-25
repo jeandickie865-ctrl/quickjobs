@@ -38,6 +38,7 @@ class StatusCheckCreate(BaseModel):
 # Worker Profile Models
 class Address(BaseModel):
     street: Optional[str] = None
+    houseNumber: Optional[str] = None  # Added for house number support
     postalCode: Optional[str] = None
     city: Optional[str] = None
     country: Optional[str] = "DE"
