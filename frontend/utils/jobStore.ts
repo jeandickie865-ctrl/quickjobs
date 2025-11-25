@@ -3,7 +3,7 @@ import { Job } from '../types/job';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://jobfinder-de.preview.emergentagent.com';
+const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://jobmatcher-de.preview.emergentagent.com';
 const API_BASE = `${BACKEND_URL}/api`;
 
 const TOKEN_KEY = '@shiftmatch:token';

@@ -31,7 +31,7 @@ index 2fe41e29..e69de29b 100644
 ---- import { Review } from '../types/review';
 ---- 
 -----const REVIEW_KEY = '@shiftmatch:reviews';
-----+const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://jobfinder-de.preview.emergentagent.com';
+----+const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://jobmatcher-de.preview.emergentagent.com';
 ----+const API_BASE = `${BACKEND_URL}/api`;
 ---- 
 -----/**

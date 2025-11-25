@@ -13,7 +13,7 @@ import uuid
 import math
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://jobfinder-de.preview.emergentagent.com/api"
+BACKEND_URL = "https://jobmatcher-de.preview.emergentagent.com/api"
 
 # Test users as specified in the review request
 TEST_WORKER = "user_test_distance_worker"
