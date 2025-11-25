@@ -35,7 +35,7 @@ export default function WorkerLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: false as any,
         tabBarStyle: {
           backgroundColor: COLORS.purple,
           borderTopWidth: 2,
