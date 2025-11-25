@@ -362,6 +362,92 @@ async def get_worker_profile(
     logger.info(f"Worker profile found for user {user_id}")
     return WorkerProfile(**profile)
 
+@api_router.get("/profiles/worker/{user_id}/employer-view")
+async def get_worker_profile_for_employer(
+    user_id: str,
+    application_id: Optional[str] = None,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Get worker profile with privacy controls for employer view.
+    Returns limited data if application is not accepted.
+    Returns full data if application is accepted.
+    """
+    logger.info(f"Fetching worker profile for employer view: {user_id}, application: {application_id}")
+    
+    # Verify token
+    requesting_user = get_user_id_from_token(authorization)
+    if not requesting_user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # Find profile
+    profile = await db.worker_profiles.find_one({"userId": user_id})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Remove MongoDB _id field
+    profile.pop("_id", None)
+    
+    # Check if application is accepted
+    is_accepted = False
+    if application_id:
+        application = await db.applications.find_one({"id": application_id})
+        if application and application.get("status") == "accepted":
+            is_accepted = True
+    
+    # Return full or limited profile based on acceptance status
+    if is_accepted:
+        # PHASE B: Full data access for accepted matches
+        logger.info(f"Returning full worker profile (accepted match) for {user_id}")
+        return {
+            "userId": profile.get("userId"),
+            "firstName": profile.get("firstName"),
+            "lastName": profile.get("lastName"),  # Full last name
+            "email": profile.get("email"),  # Visible
+            "phone": profile.get("phone"),  # Visible
+            "homeAddress": profile.get("homeAddress"),  # Full address visible
+            "homeLat": profile.get("homeLat"),
+            "homeLon": profile.get("homeLon"),
+            "radiusKm": profile.get("radiusKm"),
+            "categories": profile.get("categories", []),
+            "selectedTags": profile.get("selectedTags", []),
+            "activities": profile.get("activities", []),
+            "qualifications": profile.get("qualifications", []),
+            "shortBio": profile.get("shortBio"),
+            "photoUrl": profile.get("photoUrl"),
+            "profilePhotoUri": profile.get("profilePhotoUri"),
+            "isAcceptedMatch": True
+        }
+    else:
+        # PHASE A: Limited data for non-accepted applications
+        logger.info(f"Returning limited worker profile (not accepted) for {user_id}")
+        
+        # Mask last name (only first letter)
+        first_name = profile.get("firstName", "")
+        last_name = profile.get("lastName", "")
+        masked_last_name = last_name[0] + "." if last_name else ""
+        
+        return {
+            "userId": profile.get("userId"),
+            "firstName": first_name,
+            "lastName": masked_last_name,  # Only first letter
+            "email": None,  # Hidden
+            "phone": None,  # Hidden
+            "homeAddress": None,  # Hidden
+            "homeLat": None,
+            "homeLon": None,
+            "radiusKm": profile.get("radiusKm"),  # Can be shown (general info)
+            "categories": profile.get("categories", []),
+            "selectedTags": profile.get("selectedTags", []),
+            "activities": profile.get("activities", []),
+            "qualifications": profile.get("qualifications", []),
+            "shortBio": profile.get("shortBio"),
+            "photoUrl": profile.get("photoUrl"),
+            "profilePhotoUri": profile.get("profilePhotoUri"),
+            "isAcceptedMatch": False
+        }
+
 @api_router.put("/profiles/worker/{user_id}", response_model=WorkerProfile)
 async def update_worker_profile(
     user_id: str,
