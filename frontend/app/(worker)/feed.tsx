@@ -166,7 +166,7 @@ export default function WorkerFeed() {
   const allJobsInRadius: NearbyJob[] = useMemo(() => {
     if (!profile) return [];
     // allOpenJobs enthält bereits ALLE offenen Jobs (nicht nur die gematchten)
-    return nearbyJobs(allOpenJobs, profile).sort((a, b) => a.distanceKm - b.distanceKm);
+    return nearbyJobs(allOpenJobs, profile).sort((a, b) => a.distance - b.distance);
   }, [allOpenJobs, profile]);
 
   const handleApply = async (job: Job) => {
