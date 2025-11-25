@@ -253,6 +253,20 @@ class ReviewCreate(BaseModel):
     rating: int  # 1-5
     comment: Optional[str] = None
 
+# Chat Message Models
+class ChatMessage(BaseModel):
+    id: str = Field(default_factory=lambda: f"msg_{str(uuid.uuid4())}")
+    applicationId: str
+    senderId: str
+    senderRole: str  # 'worker' or 'employer'
+    message: str
+    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    read: bool = False
+
+class ChatMessageCreate(BaseModel):
+    applicationId: str
+    message: str
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
