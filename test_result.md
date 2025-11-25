@@ -1045,6 +1045,73 @@ backend:
     implemented: true
     working: true
     file: "backend/server.py"
+
+
+  - agent: "main"
+    message: |
+      **🚀 PHASE 3: Bewerbungs-System MongoDB-Migration ABGESCHLOSSEN**
+      
+      **Durchgeführte Änderungen:**
+      
+      **1. Backend API-Endpoints erstellt (`/app/backend/server.py`):**
+      - ✅ POST /api/applications - Bewerbung erstellen
+      - ✅ GET /api/applications/job/{jobId} - Bewerbungen für einen Job abrufen
+      - ✅ GET /api/applications/worker/{workerId} - Bewerbungen eines Workers
+      - ✅ GET /api/applications/employer/{employerId} - Alle Bewerbungen für Employer's Jobs
+      - ✅ GET /api/applications/{applicationId} - Einzelne Bewerbung abrufen
+      - ✅ PUT /api/applications/{applicationId}/accept - Bewerbung akzeptieren (+ alle anderen pending ablehnen)
+      - ✅ PUT /api/applications/{applicationId} - Bewerbung aktualisieren (legal confirmations, etc.)
+      
+      **2. Pydantic Models hinzugefügt:**
+      - JobApplication (vollständiges Application-Schema)
+      - ApplicationCreate (für POST)
+      - ApplicationUpdate (für PUT, alle Felder optional)
+      
+      **3. Komplexe Business-Logik im Backend:**
+      - ✅ acceptApplication: Bewerbung akzeptieren + alle anderen pending Bewerbungen für denselben Job ablehnen
+      - ✅ Job-Status wird auf "matched" gesetzt + matchedWorkerId gespeichert
+      - ✅ Duplicate-Check: Verhindert mehrfache Bewerbungen auf denselben Job
+      - ✅ Authorization: Worker kann nur eigene Bewerbungen sehen, Employer nur für eigene Jobs
+      
+      **4. Frontend applicationStore.ts refactored:**
+      - ✅ Vollständig von AsyncStorage auf API-Calls umgestellt
+      - ✅ Alle Funktionen beibehalten (addApplication, getApplicationsForJob, acceptApplication, etc.)
+      - ✅ Backup erstellt: applicationStore_asyncstorage_backup.ts
+      - ✅ Legal confirmation Funktionen implementiert
+      
+      **Erwartetes Verhalten:**
+      - Bewerbungen werden jetzt zentral in MongoDB gespeichert (Collection: applications)
+      - Wenn Employer eine Bewerbung akzeptiert:
+        * Bewerbung → status: "accepted"
+        * Alle anderen Bewerbungen auf denselben Job → status: "rejected"
+        * Job → status: "matched", matchedWorkerId gesetzt
+      - Multi-User-Support: Jeder User sieht nur seine eigenen Bewerbungen
+      
+      **Nächste Schritte:**
+      - Backend-Testing der neuen Applications-API-Endpoints
+      - Verifizierung der kompletten Bewerbungs-Flow (Bewerben → Akzeptieren → Job matched)
+      - Phase 4 (optional): Bewertungs-System falls vorhanden
+
+backend:
+  - task: "Applications API"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Applications API-Endpoints erstellt: POST /api/applications (create), GET endpoints (job/worker/employer/single), PUT /api/applications/{id}/accept (accept + reject others + update job), PUT /api/applications/{id} (update legal confirmations). Komplexe Business-Logik: Duplicate-Check, Multi-Status-Update bei Accept. MongoDB-Integration. Authorization: User sieht nur eigene Bewerbungen. Bereit für Testing."
+
+test_plan:
+  current_focus:
+    - "Applications API"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
     stuck_count: 0
     priority: "critical"
     needs_retesting: false
