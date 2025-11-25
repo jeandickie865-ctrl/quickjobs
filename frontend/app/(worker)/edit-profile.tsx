@@ -632,49 +632,72 @@ export default function EditWorkerProfileScreen() {
             Wohnadresse
           </Text>
 
-          {/* Street & House Number */}
-          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
-            <View style={{ flex: 3 }}>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-                Straße *
+          {/* Address Search with Autocomplete */}
+          <View style={{ marginBottom: 16, position: 'relative', zIndex: 1000 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Straße + Nr. *
+            </Text>
+            <TextInput
+              value={street && houseNumber ? `${street} ${houseNumber}` : street}
+              onChangeText={(text) => {
+                setStreet(text);
+                searchAddress(text);
+              }}
+              placeholder="Hauptstraße 123"
+              style={{
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+                borderWidth: errors.street ? 2 : 0,
+                borderColor: COLORS.error,
+              }}
+            />
+            {errors.street && (
+              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                {errors.street}
               </Text>
-              <TextInput
-                value={street}
-                onChangeText={setStreet}
-                placeholder="Hauptstraße"
-                style={{
-                  backgroundColor: COLORS.lightGray,
-                  borderRadius: 12,
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  fontSize: 15,
-                  borderWidth: errors.street ? 2 : 0,
-                  borderColor: COLORS.error,
-                }}
-              />
-              {errors.street && (
-                <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                  {errors.street}
-                </Text>
-              )}
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-                Nr.
-              </Text>
-              <TextInput
-                value={houseNumber}
-                onChangeText={setHouseNumber}
-                placeholder="123"
-                style={{
-                  backgroundColor: COLORS.lightGray,
-                  borderRadius: 12,
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  fontSize: 15,
-                }}
-              />
-            </View>
+            )}
+            
+            {/* Autocomplete Suggestions */}
+            {showSuggestions && addressSuggestions.length > 0 && (
+              <View style={{
+                position: 'absolute',
+                top: 70,
+                left: 0,
+                right: 0,
+                backgroundColor: COLORS.white,
+                borderRadius: 12,
+                maxHeight: 200,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 10,
+                zIndex: 1001,
+              }}>
+                <ScrollView style={{ maxHeight: 200 }}>
+                  {addressSuggestions.map((suggestion, index) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => selectAddress(suggestion)}
+                      style={({ pressed }) => ({
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                        backgroundColor: pressed ? COLORS.lightGray : COLORS.white,
+                        borderBottomWidth: index < addressSuggestions.length - 1 ? 1 : 0,
+                        borderBottomColor: COLORS.borderGray,
+                      })}
+                    >
+                      <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.black }}>
+                        {suggestion.display_name}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
           </View>
 
           {/* Postal Code & City */}
