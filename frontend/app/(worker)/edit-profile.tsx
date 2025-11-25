@@ -140,6 +140,18 @@ export default function EditWorkerProfileScreen() {
 
   async function pickImage() {
     try {
+      console.log('📷 pickImage: Requesting media library permissions...');
+      
+      // Request permissions first
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      console.log('📷 pickImage: Permission result:', permissionResult.granted);
+      
+      if (!permissionResult.granted) {
+        Alert.alert('Berechtigung erforderlich', 'Bitte erlaube den Zugriff auf die Fotogalerie in den Einstellungen.');
+        return;
+      }
+
+      console.log('📷 pickImage: Launching image library...');
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -147,35 +159,49 @@ export default function EditWorkerProfileScreen() {
         quality: 0.8,
       });
 
-      if (!result.canceled && result.assets[0]) {
-        setPhotoUrl(result.assets[0].uri);
+      console.log('📷 pickImage: Result:', { canceled: result.canceled, assetsLength: result.assets?.length });
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        const uri = result.assets[0].uri;
+        console.log('📷 pickImage: Setting photo URL:', uri);
+        setPhotoUrl(uri);
+        Alert.alert('Erfolg', 'Foto wurde ausgewählt');
       }
     } catch (error) {
-      console.error('Error picking image:', error);
+      console.error('❌ Error picking image:', error);
       Alert.alert('Fehler', 'Bild konnte nicht ausgewählt werden');
     }
   }
 
   async function takePhoto() {
     try {
+      console.log('📸 takePhoto: Requesting camera permissions...');
+      
       const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      console.log('📸 takePhoto: Permission result:', permissionResult.granted);
       
       if (!permissionResult.granted) {
-        Alert.alert('Berechtigung erforderlich', 'Bitte erlaube den Zugriff auf die Kamera');
+        Alert.alert('Berechtigung erforderlich', 'Bitte erlaube den Zugriff auf die Kamera in den Einstellungen.');
         return;
       }
 
+      console.log('📸 takePhoto: Launching camera...');
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
       });
 
-      if (!result.canceled && result.assets[0]) {
-        setPhotoUrl(result.assets[0].uri);
+      console.log('📸 takePhoto: Result:', { canceled: result.canceled, assetsLength: result.assets?.length });
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        const uri = result.assets[0].uri;
+        console.log('📸 takePhoto: Setting photo URL:', uri);
+        setPhotoUrl(uri);
+        Alert.alert('Erfolg', 'Foto wurde aufgenommen');
       }
     } catch (error) {
-      console.error('Error taking photo:', error);
+      console.error('❌ Error taking photo:', error);
       Alert.alert('Fehler', 'Foto konnte nicht aufgenommen werden');
     }
   }
