@@ -138,6 +138,82 @@ export default function EditWorkerProfileScreen() {
     }
   }
 
+  async function pickImage() {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setPhotoUrl(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Fehler', 'Bild konnte nicht ausgewählt werden');
+    }
+  }
+
+  async function takePhoto() {
+    try {
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (!permissionResult.granted) {
+        Alert.alert('Berechtigung erforderlich', 'Bitte erlaube den Zugriff auf die Kamera');
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setPhotoUrl(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error taking photo:', error);
+      Alert.alert('Fehler', 'Foto konnte nicht aufgenommen werden');
+    }
+  }
+
+  function showPhotoOptions() {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Abbrechen', 'Foto aufnehmen', 'Aus Galerie wählen'],
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            takePhoto();
+          } else if (buttonIndex === 2) {
+            pickImage();
+          }
+        }
+      );
+    } else {
+      Alert.alert(
+        'Profilbild ändern',
+        'Wähle eine Option',
+        [
+          { text: 'Abbrechen', style: 'cancel' },
+          { text: 'Foto aufnehmen', onPress: takePhoto },
+          { text: 'Aus Galerie wählen', onPress: pickImage },
+        ]
+      );
+    }
+  }
+
+  const getInitials = () => {
+    const first = firstName.charAt(0) || '';
+    const last = lastName.charAt(0) || '';
+    return (first + last).toUpperCase() || '?';
+  }
+
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
 
