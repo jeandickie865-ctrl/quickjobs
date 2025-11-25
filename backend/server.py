@@ -77,17 +77,20 @@ class WorkerProfile(BaseModel):
     updatedAt: Optional[str] = None
 
 class WorkerProfileCreate(BaseModel):
+    firstName: str  # Required
+    lastName: str   # Required
+    phone: str      # Required
     categories: List[str] = []
     selectedTags: List[str] = []
     radiusKm: int = 15
-    homeAddress: Address
+    homeAddress: Optional[Address] = None
     homeLat: Optional[float] = None
     homeLon: Optional[float] = None
+    photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
     documents: Optional[List[WorkerDocument]] = []
-    firstName: Optional[str] = None
-    lastName: Optional[str] = None
     shortBio: Optional[str] = None
+    email: Optional[str] = None
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     pushToken: Optional[str] = None
