@@ -1,799 +1,590 @@
-// app/(worker)/profile.tsx – FIXED VERSION, NO ERRORS
-
-import React, { useEffect, useState, useMemo } from 'react';
+// app/(worker)/edit-profile.tsx - COMPLETE WORKER PROFILE EDITOR
+import React, { useState, useEffect } from 'react';
 import {
+  ScrollView,
   View,
   Text,
-  ScrollView,
   TextInput,
   Pressable,
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Image
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
-
-import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
-import { useTheme } from '../../theme/ThemeProvider';
+import { useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
+import { getWorkerProfile, saveWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { Ionicons } from '@expo/vector-icons';
 
-// ❗️ FIX: Import taxonomy.json direkt (hat richtige {key, label} Struktur)
+// Import taxonomy
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
-const TAXONOMY = TAXONOMY_DATA.categories;
 
-// Funktion zum Listen der Kategorien
-const listCategories = () => {
-  return TAXONOMY.map((cat: any) => ({ 
-    key: cat.key, 
-    title: cat.label,  // title für die Anzeige
-    label: cat.label   // label als Fallback
-  }));
+const COLORS = {
+  purple: '#5941FF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  darkGray: '#333333',
+  lightGray: '#F5F5F5',
+  borderGray: '#E0E0E0',
+  error: '#FF4D4D',
 };
 
-// Import profile and application functions (now API-based)
-import { getWorkerProfile as getWorkerProfileLocal, saveWorkerProfile } from '../../utils/profileStore';
-import { getApplicationsForWorker } from '../../utils/applicationStore';
-
-export default function WorkerProfileScreen() {
-  const { colors } = useTheme();
+export default function EditWorkerProfileScreen() {
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  const { signOut, user } = useAuth();
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  // Profile fields
+  // Personal Data
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [profileText, setProfileText] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+
+  // Address
   const [street, setStreet] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
+  const [country, setCountry] = useState('Deutschland');
   const [lat, setLat] = useState<number | undefined>();
   const [lon, setLon] = useState<number | undefined>();
-  const [radiusKm, setRadiusKm] = useState('15');
-  const [photoUrl, setPhotoUrl] = useState('');
-  const [shortBio, setShortBio] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
 
-  // Tags
+  // Categories & Tags
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
-  const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
-  
-  // Neue State für aktive Kategorie (für besseren Mobile Flow)
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  
-  // Matches Badge Count
-  const [matchesCount, setMatchesCount] = useState(0);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  // Contact
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
 
-  // Kategorien laden
-  const availableCategories = useMemo(() => listCategories(), []);
+  // Radius
+  const [radiusKm, setRadiusKm] = useState('20');
 
-  // Aktivitäten nur für die AKTIVE Kategorie anzeigen (besserer Mobile Flow)
-  const availableActivities = useMemo(() => {
-    if (!activeCategory) return [];
-    
-    const cat = TAXONOMY.find((c) => c.key === activeCategory);
-    const activities = cat?.activities || [];
-    console.log('🔍 availableActivities:', activities);
-    console.log('🔍 First activity:', activities[0]);
-    // Return array of {key, label} objects
-    return activities;
-  }, [activeCategory]);
+  // UI State
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Qualifikationen nur für die AKTIVE Kategorie anzeigen
-  const availableQualifications = useMemo(() => {
-    if (!activeCategory) return [];
-
-    const cat = TAXONOMY.find((c) => c.key === activeCategory);
-    // Return array of {key, label} objects
-    return cat?.qualifications || [];
-  }, [activeCategory]);
+  // Available tags for selected categories
+  const [availableTags, setAvailableTags] = useState<{key: string, label: string}[]>([]);
 
   useEffect(() => {
-    if (user) {
-      loadProfile();
-      loadMatchesCount();
-    }
-  }, [user]);
+    if (authLoading || !user) return;
+    loadProfile();
+  }, [user, authLoading]);
 
-  const loadMatchesCount = async () => {
-    if (!user) return;
-    try {
-      const apps = await getApplicationsForWorker(user.id);
-      const acceptedCount = apps.filter(app => app.status === 'accepted').length;
-      setMatchesCount(acceptedCount);
-    } catch (err) {
-      console.log('Error loading matches count:', err);
-    }
-  };
-
-  // Entfernt ungültige gespeicherte Activities & Qualifications
+  // Update available tags when categories change
   useEffect(() => {
-    if (!loading) {
-      // gültige Werte aus Taxonomy ableiten
-      const validActivities = availableActivities.filter(a =>
-        selectedActivities.includes(a)
-      );
-
-      const validQualifications = availableQualifications.filter(q =>
-        selectedQualifications.includes(q)
-      );
-
-      // falls Werte ungültig → automatisch korrigieren
-      if (validActivities.length !== selectedActivities.length) {
-        setSelectedActivities(validActivities);
-      }
-
-      if (validQualifications.length !== selectedQualifications.length) {
-        setSelectedQualifications(validQualifications);
-      }
-    }
-  }, [loading, availableActivities, availableQualifications]);
-
-  const loadProfile = async () => {
-    try {
-      // BUG 3 FIX: Lade Profil aus AsyncStorage
-      if (!user) {
-        console.log('⚠️ No user logged in, cannot load profile');
-        setLoading(false);
-        return;
-      }
-
-      const data = await getWorkerProfile(user.id);
-      
-      if (data) {
-        setFirstName(data.firstName || '');
-        setLastName(data.lastName || '');
-        setShortBio(data.shortBio || '');
-        setEmail(data.email || '');
-        setPhone(data.phone || '');
-        setStreet(data.homeAddress?.street || '');
-        setHouseNumber(data.homeAddress?.houseNumber || '');
-        setPostalCode(data.homeAddress?.postalCode || '');
-        setCity(data.homeAddress?.city || '');
-        setLat(data.homeLat || undefined);
-        setLon(data.homeLon || undefined);
-        setRadiusKm(String(data.radiusKm || 15));
-        setPhotoUrl(data.photoUrl || data.profilePhotoUri || '');
-        setSelectedCategories(data.categories || []);
-        
-        // Filter activities and qualifications from selectedTags
-        const activities: string[] = [];
-        const qualifications: string[] = [];
-        
-        data.selectedTags?.forEach((tagKey: string) => {
-          TAXONOMY.forEach(cat => {
-            // Check if it's an activity
-            if (cat.activities?.some((act: any) => act.key === tagKey)) {
-              activities.push(tagKey);
-            }
-            // Check if it's a qualification
-            if (cat.qualifications?.some((qual: any) => qual.key === tagKey)) {
-              qualifications.push(tagKey);
-            }
-          });
-        });
-        
-        setSelectedActivities(activities);
-        setSelectedQualifications(qualifications);
-        
-        console.log('✅ Loaded activities:', activities.length);
-        console.log('✅ Loaded qualifications:', qualifications.length);
-        console.log('✅ Profile loaded from AsyncStorage');
-      } else {
-        console.log('ℹ️ No profile found - new profile');
-      }
-    } catch (err) {
-      console.log('Error loading profile:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const pickPhoto = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        quality: 0.5, // Reduzierte Qualität für kleinere Größe
-        aspect: [1, 1],
-        base64: true, // Base64 für AsyncStorage
-      });
-
-      if (result.canceled) return;
-
-      // Konvertiere zu Base64 Data URI
-      const base64 = result.assets[0].base64;
-      if (base64) {
-        const dataUri = `data:image/jpeg;base64,${base64}`;
-        setPhotoUrl(dataUri);
-        console.log('✅ Foto als Base64 gespeichert (Größe:', Math.round(base64.length / 1024), 'KB)');
-      } else {
-        console.error('❌ Kein Base64 verfügbar');
-      }
-    } catch (err) {
-      console.error('❌ Fehler beim Foto auswählen:', err);
-    }
-  };
-
-  const toggleCategory = (key: string) => {
-    if (selectedCategories.includes(key)) {
-      // Kategorie abwählen
-      setSelectedCategories(selectedCategories.filter((c) => c !== key));
-      // Wenn das die aktive war, schließen
-      if (activeCategory === key) {
-        setActiveCategory(null);
-      }
-    } else {
-      // Kategorie hinzufügen
-      setSelectedCategories([...selectedCategories, key]);
-      // Diese Kategorie als aktiv setzen (Flow öffnet sich)
-      setActiveCategory(key);
-    }
-  };
-
-  const toggleActivity = (act: string) => {
-    if (selectedActivities.includes(act)) {
-      setSelectedActivities(selectedActivities.filter((a) => a !== act));
-    } else {
-      setSelectedActivities([...selectedActivities, act]);
-    }
-  };
-
-  const toggleQualification = (qual: string) => {
-    if (selectedQualifications.includes(qual)) {
-      setSelectedQualifications(selectedQualifications.filter((q) => q !== qual));
-    } else {
-      setSelectedQualifications([...selectedQualifications, qual]);
-    }
-  };
-
-  const handleSave = async () => {
-    // PFLICHTFELD-VALIDIERUNG
-    if (!user) {
-      return Alert.alert('Fehler', 'Du bist nicht eingeloggt.');
-    }
-
-    // Vorname (Pflicht)
-    if (!firstName || firstName.trim() === '') {
-      return Alert.alert('Fehler', 'Vorname ist ein Pflichtfeld');
-    }
-
-    // Nachname (Pflicht)
-    if (!lastName || lastName.trim() === '') {
-      return Alert.alert('Fehler', 'Nachname ist ein Pflichtfeld');
-    }
-
-    // Telefonnummer (Pflicht)
-    if (!phone || phone.trim() === '') {
-      return Alert.alert('Fehler', 'Telefonnummer ist ein Pflichtfeld');
-    }
-
-    // Adresse (alle Felder Pflicht)
-    if (!street || street.trim() === '') {
-      return Alert.alert('Fehler', 'Straße ist ein Pflichtfeld');
-    }
-    if (!houseNumber || houseNumber.trim() === '') {
-      return Alert.alert('Fehler', 'Hausnummer ist ein Pflichtfeld');
-    }
-    if (!postalCode || postalCode.trim() === '') {
-      return Alert.alert('Fehler', 'Postleitzahl ist ein Pflichtfeld');
-    }
-    if (!city || city.trim() === '') {
-      return Alert.alert('Fehler', 'Stadt ist ein Pflichtfeld');
-    }
-
-    // Arbeitsradius (Pflicht)
-    const radius = parseInt(radiusKm);
-    if (isNaN(radius) || radius < 1 || radius > 200) {
-      return Alert.alert('Fehler', 'Arbeitsradius muss zwischen 1 und 200 km liegen');
-    }
-
-    // Mindestens 1 Kategorie (Pflicht)
-    if (!selectedCategories || selectedCategories.length === 0) {
-      return Alert.alert('Fehler', 'Bitte wähle mindestens eine Kategorie aus');
-    }
-
-    // Mindestens 1 Tag/Qualifikation (Pflicht)
-    const combinedTags = [...selectedActivities, ...selectedQualifications];
-    if (combinedTags.length === 0) {
-      return Alert.alert('Fehler', 'Bitte wähle mindestens eine Tätigkeit oder Qualifikation aus');
-    }
-
-    // Koordinaten Warning (optional, aber empfohlen)
-    if (!lat || !lon) {
-      Alert.alert(
-        'Hinweis',
-        'Koordinaten fehlen. Das Radius-Matching funktioniert nur mit Koordinaten. Wähle deine Adresse aus der Vorschlagsliste für besseres Matching.',
-        [
-          { text: 'Abbrechen', style: 'cancel' },
-          { 
-            text: 'Trotzdem speichern', 
-            onPress: async () => await saveProfileData() 
-          }
-        ]
-      );
+    if (selectedCategories.length === 0) {
+      setAvailableTags([]);
       return;
     }
 
-    await saveProfileData();
-  };
+    const tags: {key: string, label: string}[] = [];
+    selectedCategories.forEach(catKey => {
+      const category = TAXONOMY_DATA.categories.find((c: any) => c.key === catKey);
+      if (category) {
+        // Add activities
+        category.activities?.forEach((act: any) => {
+          if (!tags.find(t => t.key === act.key)) {
+            tags.push({ key: act.key, label: act.label });
+          }
+        });
+        // Add qualifications
+        category.qualifications?.forEach((qual: any) => {
+          if (!tags.find(t => t.key === qual.key)) {
+            tags.push({ key: qual.key, label: qual.label });
+          }
+        });
+      }
+    });
 
-  const saveProfileData = async () => {
-    console.log('🔵 saveProfileData: START');
-    setSaving(true);
+    setAvailableTags(tags);
+  }, [selectedCategories]);
+
+  async function loadProfile() {
+    if (!user) return;
 
     try {
-      if (!user) {
-        console.log('❌ saveProfileData: No user logged in');
-        throw new Error('Not logged in');
-      }
+      setLoading(true);
+      const profile = await getWorkerProfile(user.id);
 
-      console.log('🔵 saveProfileData: User ID:', user.id);
+      if (profile) {
+        setFirstName(profile.firstName || '');
+        setLastName(profile.lastName || '');
+        setProfileText(profile.shortBio || '');
+        setPhotoUrl(profile.photoUrl || profile.profilePhotoUri || '');
+        setStreet(profile.homeAddress?.street || '');
+        setHouseNumber(profile.homeAddress?.houseNumber || '');
+        setPostalCode(profile.homeAddress?.postalCode || '');
+        setCity(profile.homeAddress?.city || '');
+        setCountry(profile.homeAddress?.country || 'Deutschland');
+        setLat(profile.homeLat);
+        setLon(profile.homeLon);
+        setSelectedCategories(profile.categories || []);
+        setSelectedTags(profile.selectedTags || []);
+        setPhone(profile.phone || '');
+        setEmail(profile.email || user.email || '');
+        setRadiusKm(String(profile.radiusKm || 20));
+      }
+    } catch (err) {
+      console.error('Error loading profile:', err);
+      Alert.alert('Fehler', 'Profil konnte nicht geladen werden');
+    } finally {
+      setLoading(false);
+    }
+  }
 
-      // Validierung der Pflichtfelder
-      if (!name || name.trim() === '') {
-        Alert.alert('Fehler', 'Bitte geben Sie Ihren Namen ein.');
-        return;
-      }
-      if (!contactPhone || contactPhone.trim() === '') {
-        Alert.alert('Fehler', 'Bitte geben Sie Ihre Telefonnummer ein.');
-        return;
-      }
-      if (!contactEmail || contactEmail.trim() === '') {
-        Alert.alert('Fehler', 'Bitte geben Sie Ihre E-Mail-Adresse ein.');
-        return;
-      }
-      if (!street || street.trim() === '') {
-        Alert.alert('Fehler', 'Bitte geben Sie Ihre Straße und Hausnummer ein.');
-        return;
-      }
-      if (!postalCode || postalCode.trim() === '') {
-        Alert.alert('Fehler', 'Bitte geben Sie Ihre Postleitzahl ein.');
-        return;
-      }
-      if (!city || city.trim() === '') {
-        Alert.alert('Fehler', 'Bitte geben Sie Ihren Wohnort ein.');
-        return;
-      }
+  function validate(): boolean {
+    const newErrors: Record<string, string> = {};
 
-      // Kombiniere activities und qualifications zu selectedTags
-      const combinedTags = [...selectedActivities, ...selectedQualifications];
-      console.log('🔵 saveProfileData: Combined tags:', combinedTags.length);
-      console.log('🔵 saveProfileData: Activities:', selectedActivities);
-      console.log('🔵 saveProfileData: Qualifications:', selectedQualifications);
-      console.log('🔵 saveProfileData: Combined tags array:', combinedTags);
+    // Required fields
+    if (!firstName.trim()) newErrors.firstName = 'Vorname ist erforderlich';
+    if (!lastName.trim()) newErrors.lastName = 'Nachname ist erforderlich';
+    if (!street.trim()) newErrors.street = 'Straße ist erforderlich';
+    if (!postalCode.trim()) newErrors.postalCode = 'PLZ ist erforderlich';
+    if (!city.trim()) newErrors.city = 'Stadt ist erforderlich';
+    if (!country.trim()) newErrors.country = 'Land ist erforderlich';
+    if (!phone.trim()) newErrors.phone = 'Telefonnummer ist erforderlich';
+    if (selectedCategories.length === 0) newErrors.categories = 'Mindestens eine Kategorie wählen';
 
-      const profileData = {
-        userId: user.id,
-        categories: selectedCategories || [],
-        selectedTags: combinedTags || [],
-        radiusKm: parseInt(radiusKm),
+    const radius = parseInt(radiusKm);
+    if (isNaN(radius) || radius < 1 || radius > 200) {
+      newErrors.radiusKm = 'Radius muss zwischen 1 und 200 km liegen';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  async function handleSave() {
+    if (!user) return;
+
+    if (!validate()) {
+      Alert.alert('Fehler', 'Bitte alle Pflichtfelder ausfüllen');
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const updatedProfile: Partial<WorkerProfile> = {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        shortBio: profileText.trim() || undefined,
+        photoUrl: photoUrl.trim() || undefined,
+        categories: selectedCategories,
+        selectedTags: selectedTags,
         homeAddress: {
-          street,
-          postalCode,
-          city,
-          country: 'DE',
+          street: street.trim(),
+          houseNumber: houseNumber.trim() || undefined,
+          postalCode: postalCode.trim(),
+          city: city.trim(),
+          country: country.trim(),
         },
-        homeLat: lat || null,
-        homeLon: lon || null,
-        firstName: name,
-        shortBio: shortBio.trim() || undefined,
-        contactEmail: contactEmail.trim() || undefined,
-        contactPhone: contactPhone.trim() || undefined,
-        profilePhotoUri: photoUrl || undefined,
-        pushToken: undefined,
+        homeLat: lat,
+        homeLon: lon,
+        phone: phone.trim(),
+        email: email.trim(),
+        radiusKm: parseInt(radiusKm),
       };
 
-      console.log('🔵 saveProfileData: Profile data prepared:', {
-        userId: profileData.userId,
-        name: profileData.name,
-        categories: profileData.categories.length,
-        tags: profileData.selectedTags.length,
-      });
+      await saveWorkerProfile(user.id, updatedProfile);
 
-      // BUG 3 FIX: Speichere in AsyncStorage
-      console.log('🔵 saveProfileData: Calling saveWorkerProfile...');
-      await saveWorkerProfile(profileData);
-
-      console.log('✅ Profile saved via API successfully!');
-
-      // Web-kompatible Success-Meldung und Navigation
-      console.log('🎉 PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung zur Profil-Ansicht...');
-      
-      // Direkt zur Profil-Ansicht navigieren mit replace (um einen Reload zu erzwingen)
-      router.replace('/(worker)/profile');
-    } catch (err) {
-      console.error('❌ Save error:', err);
-      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden: ' + (err instanceof Error ? err.message : 'Unbekannter Fehler'));
+      Alert.alert('Erfolg', 'Profil erfolgreich aktualisiert', [
+        {
+          text: 'OK',
+          onPress: () => router.back(),
+        },
+      ]);
+    } catch (err: any) {
+      console.error('Error saving profile:', err);
+      Alert.alert('Fehler', err.message || 'Profil konnte nicht gespeichert werden');
     } finally {
       setSaving(false);
-      console.log('🔵 saveProfileData: END');
     }
+  }
+
+  const isFormValid = () => {
+    return (
+      firstName.trim() &&
+      lastName.trim() &&
+      street.trim() &&
+      postalCode.trim() &&
+      city.trim() &&
+      country.trim() &&
+      phone.trim() &&
+      selectedCategories.length > 0 &&
+      !isNaN(parseInt(radiusKm)) &&
+      parseInt(radiusKm) >= 1 &&
+      parseInt(radiusKm) <= 200
+    );
   };
+
+  if (authLoading) return null;
+  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={colors.neon} />
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color={COLORS.neon} size="large" />
+          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Profil...</Text>
+        </SafeAreaView>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <SafeAreaView edges={['top']}>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingHorizontal: 20,
-          paddingVertical: 16,
-        }}>
-          <View style={{ width: 60 }} />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>Mein Profil</Text>
-          <Pressable 
-            onPress={async () => {
-              await signOut();
-              router.replace('/start');
-            }}
-            style={{
-              paddingVertical: 6,
-              paddingHorizontal: 12,
-              backgroundColor: colors.neon,
-              borderRadius: 8,
-            }}
-          >
-            <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black }}>
-              Logout
-            </Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.lightGray }}>
+      {/* Header */}
+      <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.purple }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+          }}
+        >
+          <Pressable onPress={() => router.back()} style={{ marginRight: 16 }}>
+            <Ionicons name="arrow-back" size={24} color={COLORS.white} />
           </Pressable>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
+            Profil bearbeiten
+          </Text>
         </View>
       </SafeAreaView>
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={{ padding: 24 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* SECTION 1: Persönliche Daten */}
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 18,
+            padding: 20,
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+            Persönliche Daten
+          </Text>
 
-          {/* Matches Button */}
-          <Pressable
-            onPress={() => router.push('/(worker)/matches')}
-            style={({ pressed }) => ({
-              backgroundColor: colors.neon,
-              borderRadius: 16,
-              padding: 16,
-              marginBottom: 12,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              opacity: pressed ? 0.9 : 1,
-              shadowColor: colors.neon,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 4,
-            })}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <View style={{
-                backgroundColor: colors.black,
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <Text style={{ fontSize: 24 }}>{matchesCount > 0 ? '🎉' : '💼'}</Text>
-              </View>
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black }}>
-                  {matchesCount > 0 ? 'Neue Matches!' : 'Meine Matches'}
-                </Text>
-                <Text style={{ fontSize: 14, color: colors.black, opacity: 0.7 }}>
-                  {matchesCount > 0 ? `Du hast ${matchesCount} ${matchesCount === 1 ? 'neues Match' : 'neue Matches'}` : 'Noch keine Matches'}
-                </Text>
-              </View>
-            </View>
-            <View style={{
-              backgroundColor: colors.black,
-              width: 32,
-              height: 32,
-              borderRadius: 16,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <Text style={{ fontSize: 16, fontWeight: '900', color: colors.neon }}>
-                {matchesCount}
-              </Text>
-            </View>
-          </Pressable>
-
-          {/* Photo */}
-          <View style={{ alignItems: 'center', marginBottom: 32 }}>
-            <View style={{
-              borderWidth: 3,
-              borderColor: colors.neon,
-              borderRadius: 100,
-              padding: 6,
-            }}>
-              <Image
-                source={photoUrl ? { uri: photoUrl } : { uri: 'https://via.placeholder.com/150/CCCCCC/666666?text=USER' }}
-                style={{ width: 150, height: 150, borderRadius: 75, backgroundColor: '#E0E0E0' }}
-              />
-            </View>
-
-            <Pressable
-              onPress={pickPhoto}
+          {/* First Name */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Vorname *
+            </Text>
+            <TextInput
+              value={firstName}
+              onChangeText={setFirstName}
+              placeholder="Max"
               style={{
-                marginTop: 16,
-                backgroundColor: colors.neon,
-                borderRadius: 14,
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
                 paddingVertical: 12,
-                paddingHorizontal: 24,
+                fontSize: 15,
+                borderWidth: errors.firstName ? 2 : 0,
+                borderColor: COLORS.error,
               }}
-            >
-              <Text style={{ color: colors.black, fontWeight: '700' }}>Foto wählen</Text>
-            </Pressable>
-          </View>
-
-          {/* Kurzer Steckbrief */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12, marginBottom: 8 }}>
-              KURZER STECKBRIEF (Optional)
-            </Text>
-            <Text style={{ color: colors.whiteTransparent, fontSize: 12, marginBottom: 12 }}>
-              Schreibe ein paar Sätze über dich. Dieser Text wird dem Arbeitgeber bei deiner Bewerbung angezeigt.
-            </Text>
-            <View style={{
-              backgroundColor: colors.white,
-              borderWidth: 2,
-              borderColor: colors.primary,
-              borderRadius: 14,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-            }}>
-              <TextInput
-                value={shortBio}
-                onChangeText={setShortBio}
-                placeholder="z.B. Ich bin ein erfahrener Sicherheitsmitarbeiter mit 5 Jahren Erfahrung..."
-                placeholderTextColor="#999"
-                multiline
-                numberOfLines={4}
-                maxLength={300}
-                style={{ 
-                  fontSize: 15, 
-                  color: colors.black,
-                  minHeight: 100,
-                  textAlignVertical: 'top',
-                }}
-              />
-              <Text style={{ 
-                color: '#999', 
-                fontSize: 11, 
-                textAlign: 'right', 
-                marginTop: 8 
-              }}>
-                {shortBio.length}/300 Zeichen
+            />
+            {errors.firstName && (
+              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                {errors.firstName}
               </Text>
-            </View>
+            )}
           </View>
 
-          {/* Name */}
-          <View style={{ marginBottom: 20 }}>
-            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>NAME *</Text>
-            <View style={{
-              marginTop: 6,
-              backgroundColor: colors.white,
-              borderWidth: 2,
-              borderColor: colors.primary,
-              borderRadius: 14,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-            }}>
-              <TextInput
-                value={name}
-                onChangeText={setName}
-                placeholder="Dein Name"
-                placeholderTextColor="#999"
-                style={{ fontSize: 16, color: colors.black }}
-              />
-            </View>
-          </View>
-
-          {/* Contact Details - ONLY UNLOCKED AFTER MATCH */}
-          <View style={{ 
-            marginBottom: 24,
-            backgroundColor: colors.neon,
-            borderRadius: 14,
-            padding: 16,
-          }}>
-            <Text style={{ color: colors.black, fontWeight: '700', fontSize: 12, marginBottom: 4 }}>
-              🔒 KONTAKTDATEN
+          {/* Last Name */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Nachname *
             </Text>
-            <Text style={{ color: colors.black, fontSize: 11, opacity: 0.7, marginBottom: 16 }}>
-              Diese werden nur nach einem Match freigegeben
-            </Text>
-
-            {/* Email */}
-            <View style={{ marginBottom: 12 }}>
-              <Text style={{ color: colors.black, fontWeight: '600', fontSize: 11, marginBottom: 6 }}>
-                E-Mail (optional)
+            <TextInput
+              value={lastName}
+              onChangeText={setLastName}
+              placeholder="Mustermann"
+              style={{
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+                borderWidth: errors.lastName ? 2 : 0,
+                borderColor: COLORS.error,
+              }}
+            />
+            {errors.lastName && (
+              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                {errors.lastName}
               </Text>
-              <View style={{
-                backgroundColor: colors.white,
-                borderRadius: 10,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-              }}>
-                <TextInput
-                  value={contactEmail}
-                  onChangeText={setContactEmail}
-                  placeholder="deine@email.de"
-                  placeholderTextColor="#999"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  style={{ fontSize: 14, color: colors.black }}
-                />
-              </View>
-            </View>
-
-            {/* Phone */}
-            <View>
-              <Text style={{ color: colors.black, fontWeight: '600', fontSize: 11, marginBottom: 6 }}>
-                Telefon (optional)
-              </Text>
-              <View style={{
-                backgroundColor: colors.white,
-                borderRadius: 10,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-              }}>
-                <TextInput
-                  value={contactPhone}
-                  onChangeText={setContactPhone}
-                  placeholder="+49 123 456789"
-                  placeholderTextColor="#999"
-                  keyboardType="phone-pad"
-                  style={{ fontSize: 14, color: colors.black }}
-                />
-              </View>
-            </View>
+            )}
           </View>
 
-          {/* Address */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>ADRESSE *</Text>
-
-            <AddressAutocompleteInput
-              street={street}
-              postalCode={postalCode}
-              city={city}
-              onStreetChange={setStreet}
-              onPostalCodeChange={setPostalCode}
-              onCityChange={setCity}
-              onLatChange={setLat}
-              onLonChange={setLon}
+          {/* Profile Text */}
+          <View>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Über mich (optional)
+            </Text>
+            <TextInput
+              value={profileText}
+              onChangeText={setProfileText}
+              placeholder="Erzähle etwas über dich..."
+              multiline
+              numberOfLines={4}
+              style={{
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+                minHeight: 100,
+                textAlignVertical: 'top',
+              }}
             />
           </View>
+        </View>
 
-          {/* Radius */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12, marginBottom: 12 }}>
-              RADIUS (KM) *
-            </Text>
-            <View style={{ flexDirection: 'row', gap: 12, flexWrap: 'wrap' }}>
-              {[15, 30, 50, 100].map((km) => (
-                <Pressable
-                  key={km}
-                  onPress={() => setRadiusKm(String(km))}
-                  style={{
-                    flex: 1,
-                    minWidth: 70,
-                    paddingVertical: 14,
-                    paddingHorizontal: 20,
-                    backgroundColor: radiusKm === String(km) ? colors.neon : colors.white,
-                    borderRadius: 14,
-                    borderWidth: 2,
-                    borderColor: radiusKm === String(km) ? colors.neon : colors.primary,
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{
-                    fontSize: 16,
-                    fontWeight: '700',
-                    color: radiusKm === String(km) ? colors.black : colors.primary,
-                  }}>
-                    {km} km
-                  </Text>
-                </Pressable>
-              ))}
+        {/* SECTION 2: Wohnadresse */}
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 18,
+            padding: 20,
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+            Wohnadresse
+          </Text>
+
+          {/* Street & House Number */}
+          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
+            <View style={{ flex: 3 }}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+                Straße *
+              </Text>
+              <TextInput
+                value={street}
+                onChangeText={setStreet}
+                placeholder="Hauptstraße"
+                style={{
+                  backgroundColor: COLORS.lightGray,
+                  borderRadius: 12,
+                  paddingHorizontal: 16,
+                  paddingVertical: 12,
+                  fontSize: 15,
+                  borderWidth: errors.street ? 2 : 0,
+                  borderColor: COLORS.error,
+                }}
+              />
+              {errors.street && (
+                <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                  {errors.street}
+                </Text>
+              )}
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+                Nr.
+              </Text>
+              <TextInput
+                value={houseNumber}
+                onChangeText={setHouseNumber}
+                placeholder="123"
+                style={{
+                  backgroundColor: COLORS.lightGray,
+                  borderRadius: 12,
+                  paddingHorizontal: 16,
+                  paddingVertical: 12,
+                  fontSize: 15,
+                }}
+              />
             </View>
           </View>
 
-          {/* Categories */}
-          <View style={{ marginBottom: 20 }}>
-            <Text style={{
-              color: colors.neon,
-              fontWeight: '700',
-              fontSize: 12,
-              marginBottom: 4,
-            }}>
-              KATEGORIEN *
-            </Text>
-            <Text style={{
-              color: colors.gray600,
-              fontSize: 11,
-              marginBottom: 8,
-            }}>
-              Tippe auf eine Kategorie, um Tätigkeiten & Qualifikationen auszuwählen
-            </Text>
+          {/* Postal Code & City */}
+          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+                PLZ *
+              </Text>
+              <TextInput
+                value={postalCode}
+                onChangeText={setPostalCode}
+                placeholder="10115"
+                keyboardType="numeric"
+                style={{
+                  backgroundColor: COLORS.lightGray,
+                  borderRadius: 12,
+                  paddingHorizontal: 16,
+                  paddingVertical: 12,
+                  fontSize: 15,
+                  borderWidth: errors.postalCode ? 2 : 0,
+                  borderColor: COLORS.error,
+                }}
+              />
+              {errors.postalCode && (
+                <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                  {errors.postalCode}
+                </Text>
+              )}
+            </View>
+            <View style={{ flex: 2 }}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+                Stadt *
+              </Text>
+              <TextInput
+                value={city}
+                onChangeText={setCity}
+                placeholder="Berlin"
+                style={{
+                  backgroundColor: COLORS.lightGray,
+                  borderRadius: 12,
+                  paddingHorizontal: 16,
+                  paddingVertical: 12,
+                  fontSize: 15,
+                  borderWidth: errors.city ? 2 : 0,
+                  borderColor: COLORS.error,
+                }}
+              />
+              {errors.city && (
+                <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                  {errors.city}
+                </Text>
+              )}
+            </View>
+          </View>
 
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-              {availableCategories.map(cat => {
+          {/* Country */}
+          <View>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Land *
+            </Text>
+            <TextInput
+              value={country}
+              onChangeText={setCountry}
+              placeholder="Deutschland"
+              style={{
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+              }}
+            />
+          </View>
+        </View>
+
+        {/* SECTION 3: Tätigkeiten & Qualifikationen */}
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 18,
+            padding: 20,
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+            Tätigkeiten & Qualifikationen
+          </Text>
+
+          {/* Categories */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
+              Kategorien * (mind. 1)
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {TAXONOMY_DATA.categories.map((cat: any) => {
                 const isSelected = selectedCategories.includes(cat.key);
-                const isActive = activeCategory === cat.key;
                 return (
                   <Pressable
                     key={cat.key}
-                    onPress={() => toggleCategory(cat.key)}
+                    onPress={() => {
+                      if (isSelected) {
+                        setSelectedCategories(prev => prev.filter(k => k !== cat.key));
+                        // Remove tags from unselected category
+                        setSelectedTags(prev => {
+                          const categoryTags = [
+                            ...(cat.activities?.map((a: any) => a.key) || []),
+                            ...(cat.qualifications?.map((q: any) => q.key) || []),
+                          ];
+                          return prev.filter(tag => !categoryTags.includes(tag));
+                        });
+                      } else {
+                        setSelectedCategories(prev => [...prev, cat.key]);
+                      }
+                    }}
                     style={{
-                      backgroundColor: isSelected ? colors.neon : colors.white,
-                      borderWidth: 2,
-                      borderColor: isSelected ? colors.neon : colors.primary,
-                      paddingVertical: 10,
+                      backgroundColor: isSelected ? COLORS.purple : COLORS.lightGray,
+                      borderWidth: isSelected ? 0 : 1,
+                      borderColor: COLORS.borderGray,
                       paddingHorizontal: 16,
+                      paddingVertical: 10,
                       borderRadius: 20,
-                      opacity: isSelected && !isActive ? 0.6 : 1,
                     }}
                   >
-                    <Text style={{
-                      color: isSelected ? colors.black : colors.primary,
-                      fontWeight: '600'
-                    }}>
-                      {isSelected ? '✓ ' : ''}{cat.title}{isActive ? ' ▼' : ''}
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: '600',
+                        color: isSelected ? COLORS.white : COLORS.darkGray,
+                      }}
+                    >
+                      {cat.label}
                     </Text>
                   </Pressable>
                 );
               })}
             </View>
+            {errors.categories && (
+              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 8 }}>
+                {errors.categories}
+              </Text>
+            )}
           </View>
 
-          {/* Activities */}
-          {availableActivities.length > 0 && (
-            <View style={{ marginBottom: 24 }}>
-              <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>
-                TÄTIGKEITEN
+          {/* Tags */}
+          {availableTags.length > 0 && (
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
+                Qualifikationen & Tätigkeiten (optional)
               </Text>
-
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 }}>
-                {availableActivities.map((actObj: any, idx) => {
-                  const isSelected = selectedActivities.includes(actObj.key);
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {availableTags.map((tag) => {
+                  const isSelected = selectedTags.includes(tag.key);
                   return (
                     <Pressable
-                      key={`${actObj.key}-${idx}`}
-                      onPress={() => toggleActivity(actObj.key)}
+                      key={tag.key}
+                      onPress={() => {
+                        if (isSelected) {
+                          setSelectedTags(prev => prev.filter(k => k !== tag.key));
+                        } else {
+                          setSelectedTags(prev => [...prev, tag.key]);
+                        }
+                      }}
                       style={{
-                        backgroundColor: isSelected ? colors.neon : colors.white,
-                        borderWidth: 2,
-                        borderColor: isSelected ? colors.neon : colors.primary,
-                        paddingVertical: 10,
-                        paddingHorizontal: 16,
-                        borderRadius: 20,
+                        backgroundColor: isSelected ? COLORS.neon : COLORS.lightGray,
+                        borderWidth: 1,
+                        borderColor: isSelected ? COLORS.neon : COLORS.borderGray,
+                        paddingHorizontal: 14,
+                        paddingVertical: 8,
+                        borderRadius: 16,
                       }}
                     >
-                      <Text style={{
-                        color: isSelected ? colors.black : colors.primary,
-                        fontWeight: '600'
-                      }}>
-                        {isSelected ? '✓ ' : ''}{actObj.label}
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          fontWeight: '600',
+                          color: isSelected ? COLORS.black : COLORS.darkGray,
+                        }}
+                      >
+                        {tag.label}
                       </Text>
                     </Pressable>
                   );
@@ -801,64 +592,152 @@ export default function WorkerProfileScreen() {
               </View>
             </View>
           )}
+        </View>
 
-          {/* Qualifications */}
-          {availableQualifications.length > 0 && (
-            <View style={{ marginBottom: 24 }}>
-              <Text style={{ color: colors.neon, fontWeight: '700', fontSize: 12 }}>
-                QUALIFIKATIONEN (optional)
+        {/* SECTION 4: Kontaktinformationen */}
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 18,
+            padding: 20,
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+            Kontaktinformationen
+          </Text>
+
+          {/* Phone */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Telefonnummer *
+            </Text>
+            <TextInput
+              value={phone}
+              onChangeText={setPhone}
+              placeholder="0162 123 4567"
+              keyboardType="phone-pad"
+              style={{
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+                borderWidth: errors.phone ? 2 : 0,
+                borderColor: COLORS.error,
+              }}
+            />
+            {errors.phone && (
+              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                {errors.phone}
               </Text>
+            )}
+          </View>
 
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 }}>
-                {availableQualifications.map((qualObj: any, idx) => {
-                  const isSelected = selectedQualifications.includes(qualObj.key);
-                  return (
-                    <Pressable
-                      key={`${qualObj.key}-${idx}`}
-                      onPress={() => toggleQualification(qualObj.key)}
-                      style={{
-                        backgroundColor: isSelected ? colors.neon : colors.white,
-                        borderWidth: 2,
-                        borderColor: isSelected ? colors.neon : colors.primary,
-                        paddingVertical: 10,
-                        paddingHorizontal: 16,
-                        borderRadius: 20,
-                      }}
-                    >
-                      <Text style={{
-                        color: isSelected ? colors.black : colors.primary,
-                        fontWeight: '600'
-                      }}>
-                        {isSelected ? '✓ ' : ''}{qualObj.label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
-          )}
+          {/* Email */}
+          <View>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              E-Mail
+            </Text>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="max@example.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              editable={false}
+              style={{
+                backgroundColor: '#E8E8E8',
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+                color: COLORS.darkGray,
+              }}
+            />
+            <Text style={{ fontSize: 12, color: COLORS.darkGray, marginTop: 4 }}>
+              E-Mail kann nicht geändert werden
+            </Text>
+          </View>
+        </View>
 
-          {/* Save Button */}
+        {/* SECTION 5: Arbeitsradius */}
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 18,
+            padding: 20,
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+            Arbeitsradius
+          </Text>
+
+          <View>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
+              Radius in km * (1-200)
+            </Text>
+            <TextInput
+              value={radiusKm}
+              onChangeText={setRadiusKm}
+              placeholder="20"
+              keyboardType="numeric"
+              style={{
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 15,
+                borderWidth: errors.radiusKm ? 2 : 0,
+                borderColor: COLORS.error,
+              }}
+            />
+            {errors.radiusKm && (
+              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
+                {errors.radiusKm}
+              </Text>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Fixed Save Button */}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: COLORS.white,
+          paddingHorizontal: 20,
+          paddingVertical: 16,
+          borderTopWidth: 1,
+          borderTopColor: COLORS.borderGray,
+        }}
+      >
+        <SafeAreaView edges={['bottom']}>
           <Pressable
             onPress={handleSave}
-            disabled={saving}
-            style={{
-              backgroundColor: saving ? colors.gray400 : colors.neon,
-              paddingVertical: 18,
-              borderRadius: 20,
+            disabled={!isFormValid() || saving}
+            style={({ pressed }) => ({
+              backgroundColor: isFormValid() && !saving ? COLORS.neon : '#CCCCCC',
+              paddingVertical: 16,
+              borderRadius: 16,
               alignItems: 'center',
-              marginTop: 20,
-              marginBottom: 100,
-            }}
+              opacity: pressed ? 0.9 : 1,
+            })}
           >
-            {saving
-              ? <ActivityIndicator color={colors.black} />
-              : <Text style={{ color: colors.black, fontWeight: '700', fontSize: 16 }}>Profil speichern</Text>}
+            {saving ? (
+              <ActivityIndicator color={COLORS.black} />
+            ) : (
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
+                Profil speichern
+              </Text>
+            )}
           </Pressable>
-
-          <View style={{ height: 60 }} />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </SafeAreaView>
+      </View>
     </View>
   );
 }
