@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter, useFocusEffect, Redirect } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/Button';
@@ -11,6 +11,7 @@ import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
+import { getEmployerProfile } from '../../utils/employerProfileStore';
 
 export default function EmployerDashboard() {
   const { colors, spacing } = useTheme();
@@ -18,6 +19,35 @@ export default function EmployerDashboard() {
   const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [profileChecked, setProfileChecked] = useState(false);
+  const [hasProfile, setHasProfile] = useState(true);
+
+  // Check if employer has a profile
+  useEffect(() => {
+    async function checkProfile() {
+      if (!user) return;
+      
+      try {
+        console.log('🔍 Checking employer profile...');
+        const profile = await getEmployerProfile(user.id);
+        
+        if (!profile || !profile.firstName) {
+          console.log('⚠️ No profile found - redirecting to edit-profile');
+          setHasProfile(false);
+        } else {
+          console.log('✅ Profile exists');
+          setHasProfile(true);
+        }
+      } catch (error) {
+        console.log('⚠️ Error loading profile (404 expected for new users)');
+        setHasProfile(false);
+      } finally {
+        setProfileChecked(true);
+      }
+    }
+
+    checkProfile();
+  }, [user]);
 
   const loadJobs = useCallback(async () => {
     if (!user) return;
@@ -36,6 +66,21 @@ export default function EmployerDashboard() {
   );
 
   if (!user) return null;
+
+  // Show loading while checking profile
+  if (!profileChecked) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.primaryUltraLight, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={{ color: colors.gray600, marginTop: 16, fontSize: 15 }}>Lade Profil...</Text>
+      </View>
+    );
+  }
+
+  // Redirect to edit-profile if no profile exists
+  if (!hasProfile) {
+    return <Redirect href="/(employer)/edit-profile" />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryUltraLight }}>
