@@ -110,23 +110,30 @@ export default function EmployerLayout() {
             <View style={{ 
               alignItems: 'center', 
               justifyContent: 'center',
-              width: 56,
-              height: 40,
-              backgroundColor: focused ? 'rgba(200, 255, 22, 0.15)' : 'transparent',
-              borderRadius: 12,
-              marginTop: -4,
+              width: 70,
+              height: 48,
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.08)',
+              borderRadius: 16,
+              marginTop: -6,
             }}>
               <Ionicons
                 name={focused ? "heart" : "heart-outline"}
-                size={32}
-                color={color}
-                style={{
-                  textShadowColor: focused ? COLORS.neon : 'transparent',
-                  textShadowOffset: { width: 0, height: 0 },
-                  textShadowRadius: 8,
-                }}
+                size={focused ? 38 : 34}
+                color={focused ? COLORS.purple : color}
               />
             </View>
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{
+              fontSize: 13,
+              fontWeight: '800',
+              color: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.6)',
+              marginTop: 4,
+              textTransform: 'uppercase',
+              letterSpacing: 0.8,
+            }}>
+              Matches
+            </Text>
           ),
         }}
       />
@@ -140,23 +147,30 @@ export default function EmployerLayout() {
             <View style={{ 
               alignItems: 'center', 
               justifyContent: 'center',
-              width: 56,
-              height: 40,
-              backgroundColor: focused ? 'rgba(200, 255, 22, 0.15)' : 'transparent',
-              borderRadius: 12,
-              marginTop: -4,
+              width: 70,
+              height: 48,
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.08)',
+              borderRadius: 16,
+              marginTop: -6,
             }}>
               <Ionicons
                 name={focused ? "person-circle" : "person-circle-outline"}
-                size={32}
-                color={color}
-                style={{
-                  textShadowColor: focused ? COLORS.neon : 'transparent',
-                  textShadowOffset: { width: 0, height: 0 },
-                  textShadowRadius: 8,
-                }}
+                size={focused ? 38 : 34}
+                color={focused ? COLORS.purple : color}
               />
             </View>
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{
+              fontSize: 13,
+              fontWeight: '800',
+              color: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.6)',
+              marginTop: 4,
+              textTransform: 'uppercase',
+              letterSpacing: 0.8,
+            }}>
+              Profil
+            </Text>
           ),
         }}
       />
@@ -170,25 +184,32 @@ export default function EmployerLayout() {
             <View style={{ 
               alignItems: 'center', 
               justifyContent: 'center',
-              width: 56,
-              height: 40,
-              backgroundColor: focused ? 'rgba(200, 255, 22, 0.25)' : 'rgba(200, 255, 22, 0.1)',
-              borderRadius: 12,
-              marginTop: -4,
-              borderWidth: focused ? 2 : 1,
-              borderColor: focused ? COLORS.neon : 'rgba(200, 255, 22, 0.3)',
+              width: 70,
+              height: 48,
+              backgroundColor: focused ? COLORS.neon : 'rgba(200, 255, 22, 0.2)',
+              borderRadius: 16,
+              marginTop: -6,
+              borderWidth: 2,
+              borderColor: focused ? COLORS.neon : 'rgba(200, 255, 22, 0.4)',
             }}>
               <Ionicons
                 name="add-circle"
-                size={34}
-                color={focused ? COLORS.neon : color}
-                style={{
-                  textShadowColor: focused ? COLORS.neon : 'transparent',
-                  textShadowOffset: { width: 0, height: 0 },
-                  textShadowRadius: 12,
-                }}
+                size={40}
+                color={focused ? COLORS.purple : COLORS.neon}
               />
             </View>
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{
+              fontSize: 13,
+              fontWeight: '800',
+              color: focused ? COLORS.neon : 'rgba(200, 255, 22, 0.8)',
+              marginTop: 4,
+              textTransform: 'uppercase',
+              letterSpacing: 0.8,
+            }}>
+              Erstellen
+            </Text>
           ),
         }}
       />
