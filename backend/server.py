@@ -187,6 +187,55 @@ class ApplicationUpdate(BaseModel):
     employerConfirmedLegal: Optional[bool] = None
     workerConfirmedLegal: Optional[bool] = None
 
+# Employer Profile Models
+class EmployerProfile(BaseModel):
+    userId: str
+    firstName: str
+    lastName: str
+    company: Optional[str] = None
+    phone: str
+    email: str
+    street: str
+    postalCode: str
+    city: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    paymentMethod: Optional[str] = None  # 'card', 'paypal', None
+    shortBio: Optional[str] = None
+    profilePhotoUri: Optional[str] = None
+    createdAt: Optional[str] = None
+    updatedAt: Optional[str] = None
+
+class EmployerProfileCreate(BaseModel):
+    firstName: str
+    lastName: str
+    company: Optional[str] = None
+    phone: str
+    email: str
+    street: str
+    postalCode: str
+    city: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    paymentMethod: Optional[str] = None
+    shortBio: Optional[str] = None
+    profilePhotoUri: Optional[str] = None
+
+class EmployerProfileUpdate(BaseModel):
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    company: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    street: Optional[str] = None
+    postalCode: Optional[str] = None
+    city: Optional[str] = None
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    paymentMethod: Optional[str] = None
+    shortBio: Optional[str] = None
+    profilePhotoUri: Optional[str] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
