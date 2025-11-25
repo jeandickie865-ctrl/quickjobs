@@ -1,9 +1,10 @@
 // app/(employer)/_layout.tsx - FINAL NEON-TECH DESIGN WITH TABS
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { getEmployerProfile } from '../../utils/employerProfileStore';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -16,8 +17,38 @@ const COLORS = {
 
 export default function EmployerLayout() {
   const { user, isLoading } = useAuth();
+  const [profileChecked, setProfileChecked] = useState(false);
+  const [hasProfile, setHasProfile] = useState(true);
 
-  if (isLoading) {
+  useEffect(() => {
+    async function checkProfile() {
+      if (!user) return;
+      
+      try {
+        console.log('🔍 Checking if employer has profile...');
+        const profile = await getEmployerProfile(user.id);
+        
+        if (!profile || !profile.firstName) {
+          console.log('⚠️ No profile found - redirecting to edit-profile');
+          setHasProfile(false);
+        } else {
+          console.log('✅ Profile exists');
+          setHasProfile(true);
+        }
+      } catch (error) {
+        console.log('⚠️ Error checking profile, assuming no profile:', error);
+        setHasProfile(false);
+      } finally {
+        setProfileChecked(true);
+      }
+    }
+
+    if (user && !profileChecked) {
+      checkProfile();
+    }
+  }, [user, profileChecked]);
+
+  if (isLoading || !profileChecked) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.purple }}>
         <ActivityIndicator size="large" color={COLORS.neon} />
@@ -31,6 +62,11 @@ export default function EmployerLayout() {
 
   if (user.role !== 'employer') {
     return <Redirect href="/start" />;
+  }
+
+  // Redirect to edit-profile if no profile exists
+  if (!hasProfile) {
+    return <Redirect href="/(employer)/edit-profile" />;
   }
 
   return (
