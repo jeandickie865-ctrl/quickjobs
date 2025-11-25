@@ -29,32 +29,45 @@ export default function EmployerDashboard() {
       
       async function checkProfile() {
         if (!user) {
-          if (isMounted) setProfileLoading(false);
+          if (isMounted) {
+            setProfileLoading(false);
+            setHasProfile(true); // Allow access if no user context issue
+          }
           return;
         }
         
         try {
-          console.log('🔍 [Index] Checking employer profile...');
+          console.log('🔍 [Employer Index] Checking profile for user:', user.id);
           const profile = await getEmployerProfile(user.id);
           
           if (!isMounted) return;
           
-          if (!profile || !profile.firstName) {
-            console.log('⚠️ [Index] No profile found - redirecting to edit-profile');
+          console.log('🔍 [Employer Index] Profile response:', profile);
+          
+          if (!profile) {
+            console.log('⚠️ [Employer Index] No profile found - redirecting to edit-profile');
+            setHasProfile(false);
+          } else if (!profile.firstName || profile.firstName.trim() === '') {
+            console.log('⚠️ [Employer Index] Profile exists but firstName is empty - redirecting to edit-profile');
             setHasProfile(false);
           } else {
-            console.log('✅ [Index] Profile exists:', profile.firstName);
+            console.log('✅ [Employer Index] Profile is complete! firstName:', profile.firstName);
             setHasProfile(true);
           }
-        } catch (error) {
+        } catch (error: any) {
           if (!isMounted) return;
-          console.log('⚠️ [Index] Error loading profile (404 expected for new users)');
+          console.log('⚠️ [Employer Index] Error loading profile:', error?.message || error);
+          // On error (404 or network), redirect to edit
           setHasProfile(false);
         } finally {
-          if (isMounted) setProfileLoading(false);
+          if (isMounted) {
+            console.log('🔍 [Employer Index] Final state - hasProfile:', !isMounted ? 'unmounted' : (isMounted && setProfileLoading(false), hasProfile));
+            setProfileLoading(false);
+          }
         }
       }
 
+      setProfileLoading(true); // Reset loading state
       checkProfile();
       
       return () => {
