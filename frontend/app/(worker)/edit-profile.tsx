@@ -207,6 +207,9 @@ export default function EditWorkerProfileScreen() {
   }
 
   function showPhotoOptions() {
+    console.log('🎬 showPhotoOptions: Opening photo selection menu...');
+    console.log('🎬 showPhotoOptions: Platform:', Platform.OS);
+    
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
         {
@@ -214,9 +217,12 @@ export default function EditWorkerProfileScreen() {
           cancelButtonIndex: 0,
         },
         (buttonIndex) => {
+          console.log('🎬 ActionSheet button clicked:', buttonIndex);
           if (buttonIndex === 1) {
+            console.log('🎬 -> Taking photo...');
             takePhoto();
           } else if (buttonIndex === 2) {
+            console.log('🎬 -> Picking image from gallery...');
             pickImage();
           }
         }
@@ -226,9 +232,9 @@ export default function EditWorkerProfileScreen() {
         'Profilbild ändern',
         'Wähle eine Option',
         [
-          { text: 'Abbrechen', style: 'cancel' },
-          { text: 'Foto aufnehmen', onPress: takePhoto },
-          { text: 'Aus Galerie wählen', onPress: pickImage },
+          { text: 'Abbrechen', style: 'cancel', onPress: () => console.log('🎬 Cancelled') },
+          { text: 'Foto aufnehmen', onPress: () => { console.log('🎬 -> Taking photo...'); takePhoto(); } },
+          { text: 'Aus Galerie wählen', onPress: () => { console.log('🎬 -> Picking image from gallery...'); pickImage(); } },
         ]
       );
     }
