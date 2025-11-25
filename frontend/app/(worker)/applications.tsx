@@ -33,8 +33,15 @@ export default function WorkerApplicationsScreen() {
         setLoading(true);
         setError(null);
         const apps = await getApplicationsForWorker(user.id);
+        
+        // WICHTIG: Nur pending und rejected Applications zeigen
+        // Accepted gehören in den "Matches" Tab!
+        const pendingAndRejectedApps = apps.filter(app => 
+          app.status === 'pending' || app.status === 'rejected'
+        );
+        
         const result: ApplicationWithJob[] = [];
-        for (const app of apps) {
+        for (const app of pendingAndRejectedApps) {
           const job = await getJobById(app.jobId);
           result.push({ app, job });
         }
