@@ -197,17 +197,6 @@ export default function EmployerDashboard() {
             ))}
           </View>
         )}
-
-        <View style={{ marginTop: spacing.xl, gap: spacing.sm }}>
-          <Button
-            title="Logout"
-            variant="ghost"
-            onPress={async () => {
-              await signOut();
-              router.replace('/auth/start');
-            }}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
