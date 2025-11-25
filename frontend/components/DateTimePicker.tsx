@@ -59,9 +59,28 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     if (!dateString) return;
     
     const newDate = new Date(dateString);
-    if (!isNaN(newDate.getTime())) {
-      onChange(newDate);
+    if (isNaN(newDate.getTime())) return;
+    
+    // If we have an existing date/time, preserve the time when changing date
+    if (value && mode === 'date') {
+      newDate.setHours(value.getHours());
+      newDate.setMinutes(value.getMinutes());
+      newDate.setSeconds(0);
+      newDate.setMilliseconds(0);
     }
+    
+    // If we have an existing date, preserve the date when changing time
+    if (value && mode === 'time') {
+      const existingDate = new Date(value);
+      existingDate.setHours(newDate.getHours());
+      existingDate.setMinutes(newDate.getMinutes());
+      existingDate.setSeconds(0);
+      existingDate.setMilliseconds(0);
+      onChange(existingDate);
+      return;
+    }
+    
+    onChange(newDate);
   };
 
   const getInputType = () => {
