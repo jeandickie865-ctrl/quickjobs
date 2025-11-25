@@ -1,4 +1,4 @@
-// app/(worker)/profile.tsx - PROFIL-ANSICHT (READ-ONLY)
+// app/(worker)/profile.tsx - MODERN WORKER PROFILE VIEW
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Pressable, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,41 +6,40 @@ import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
-import { getApplicationsForWorker } from '../../utils/applicationStore';
-import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
 
-// Import taxonomy data statically
+// Import taxonomy data
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 
-const colors = {
+const COLORS = {
   purple: '#5941FF',
   neon: '#C8FF16',
   white: '#FFFFFF',
   black: '#000000',
-  lightGray: '#F0F0F0',
+  darkGray: '#333333',
+  lightGray: '#F5F5F5',
+  borderGray: '#E0E0E0',
 };
 
-export default function WorkerProfileViewScreen() {
-  const { user, isLoading: authLoading, signOut } = useAuth();
+export default function WorkerProfileScreen() {
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
-  const [matchesCount, setMatchesCount] = useState(0);
   const [avgRating, setAvgRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
 
+  // Load profile on mount
   useEffect(() => {
     if (authLoading || !user) return;
     loadProfile();
   }, [user, authLoading]);
 
-  // Reload profile when screen comes into focus (after saving in edit screen)
+  // Reload when screen comes into focus
   useFocusEffect(
     React.useCallback(() => {
       if (!authLoading && user) {
-        console.log('🔄 Profile screen focused - reloading data');
         loadProfile();
       }
     }, [user, authLoading])
@@ -48,463 +47,409 @@ export default function WorkerProfileViewScreen() {
 
   async function loadProfile() {
     if (!user) return;
-
+    
     try {
-      const prof = await getWorkerProfile(user.id);
-      setProfile(prof);
-
-      // Load matches count
-      const apps = await getApplicationsForWorker(user.id);
-      const acceptedApps = apps.filter(app => app.status === 'accepted');
-      setMatchesCount(acceptedApps.length);
+      setLoading(true);
+      const data = await getWorkerProfile(user.id);
+      setProfile(data);
 
       // Load reviews
       const reviews = await getReviewsForWorker(user.id);
       setAvgRating(calculateAverageRating(reviews));
       setReviewCount(reviews.length);
-    } catch (error) {
-      console.error('Error loading profile:', error);
+    } catch (err) {
+      console.error('Error loading profile:', err);
     } finally {
       setLoading(false);
     }
   }
 
-  if (authLoading) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.purple, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={colors.neon} />
-      </View>
-    );
-  }
-
-  if (!user) {
-    return <Redirect href="/start" />;
-  }
+  if (authLoading) return null;
+  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator color={colors.neon} size="large" />
-          <Text style={{ color: colors.white, marginTop: 16, fontSize: 15 }}>Lade Profil…</Text>
+          <ActivityIndicator color={COLORS.neon} size="large" />
+          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Profil...</Text>
         </SafeAreaView>
       </View>
     );
   }
 
-  // If no profile exists, redirect to edit
-  if (!profile || !profile.categories || profile.categories.length === 0) {
+  if (!profile) {
     return <Redirect href="/(worker)/edit-profile" />;
   }
 
+  // Get initials for avatar
+  const getInitials = () => {
+    const first = profile?.firstName?.charAt(0) || '';
+    const last = profile?.lastName?.charAt(0) || '';
+    return (first + last).toUpperCase();
+  };
+
+  // Map category keys to labels
+  const getCategoryLabels = () => {
+    if (!profile?.categories) return [];
+    return profile.categories.map(catKey => {
+      const category = TAXONOMY_DATA.categories.find((c: any) => c.key === catKey);
+      return category?.label || catKey;
+    });
+  };
+
+  // Map tag keys to labels
+  const getTagLabels = () => {
+    if (!profile?.selectedTags) return [];
+    const tags: string[] = [];
+    
+    profile.selectedTags.forEach((tagKey: string) => {
+      TAXONOMY_DATA.categories.forEach((cat: any) => {
+        // Check activities
+        const activity = cat.activities?.find((a: any) => a.key === tagKey);
+        if (activity) {
+          tags.push(activity.label);
+          return;
+        }
+        // Check qualifications
+        const qual = cat.qualifications?.find((q: any) => q.key === tagKey);
+        if (qual) {
+          tags.push(qual.label);
+        }
+      });
+    });
+    
+    return tags;
+  };
+
+  const categoryLabels = getCategoryLabels();
+  const tagLabels = getTagLabels();
+
   return (
-    <View style={{ flex: 1, backgroundColor: colors.purple }}>
-      <SafeAreaView edges={['top']} style={{ flex: 1 }}>
-        {/* Header */}
+    <View style={{ flex: 1, backgroundColor: COLORS.lightGray }}>
+      {/* Header Bar */}
+      <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.purple }}>
         <View style={{
           flexDirection: 'row',
-          alignItems: 'center',
           justifyContent: 'space-between',
+          alignItems: 'center',
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <View style={{ width: 60 }} />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.white }}>Mein Profil</Text>
-          <Pressable 
-            onPress={async () => {
-              await signOut();
-              router.replace('/start');
-            }}
-            style={{
-              paddingVertical: 6,
-              paddingHorizontal: 12,
-              backgroundColor: colors.neon,
-              borderRadius: 8,
-            }}
-          >
-            <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black }}>
-              Logout
+          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>
+            Mein Profil
+          </Text>
+        </View>
+      </SafeAreaView>
+
+      <ScrollView 
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* 1) Header-Bereich: Profilbild, Name, Bewertung */}
+        <View style={{
+          backgroundColor: COLORS.purple,
+          paddingHorizontal: 20,
+          paddingTop: 10,
+          paddingBottom: 30,
+          alignItems: 'center',
+        }}>
+          {/* Profilbild */}
+          {profile.photoUrl || profile.profilePhotoUri ? (
+            <Image
+              source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                borderWidth: 4,
+                borderColor: COLORS.neon,
+                marginBottom: 16,
+              }}
+            />
+          ) : (
+            <View style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              backgroundColor: COLORS.white,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 4,
+              borderColor: COLORS.neon,
+              marginBottom: 16,
+            }}>
+              <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.purple }}>
+                {getInitials()}
+              </Text>
+            </View>
+          )}
+
+          {/* Name */}
+          <Text style={{ fontSize: 26, fontWeight: '900', color: COLORS.white, marginBottom: 8 }}>
+            {profile.firstName} {profile.lastName}
+          </Text>
+
+          {/* Bewertung */}
+          {reviewCount > 0 && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+              <Ionicons name="star" size={18} color={COLORS.neon} />
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white, marginLeft: 6 }}>
+                {avgRating.toFixed(1)}
+              </Text>
+              <Text style={{ fontSize: 14, color: COLORS.white, marginLeft: 4 }}>
+                ({reviewCount} Bewertungen)
+              </Text>
+            </View>
+          )}
+
+          {/* Status/Tagline */}
+          {categoryLabels.length > 0 && (
+            <Text style={{ fontSize: 14, color: COLORS.neon, fontWeight: '600' }}>
+              {categoryLabels.join(' • ')}
             </Text>
-          </Pressable>
+          )}
         </View>
 
-        <ScrollView 
-          contentContainerStyle={{ padding: 20 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Matches Button */}
-          <Pressable
-            onPress={() => router.push('/(worker)/matches')}
-            style={({ pressed }) => ({
-              backgroundColor: colors.white,
-              borderRadius: 16,
-              padding: 16,
-              marginBottom: 24,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              opacity: pressed ? 0.9 : 1,
-            })}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <View style={{
-                backgroundColor: colors.neon,
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <Ionicons name="heart" size={24} color={colors.black} />
-              </View>
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black }}>
-                  Meine Matches
-                </Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>
-                  Angenommene Jobs
-                </Text>
-              </View>
-            </View>
+        {/* Content Area */}
+        <View style={{ paddingHorizontal: 20, marginTop: -20 }}>
+          
+          {/* 2) Über mich */}
+          {profile.shortBio && (
             <View style={{
-              backgroundColor: colors.purple,
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-              borderRadius: 12,
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 20,
+              marginBottom: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
             }}>
-              <Text style={{ fontSize: 16, fontWeight: '900', color: colors.neon }}>
-                {matchesCount}
-              </Text>
-            </View>
-          </Pressable>
-
-          {/* Card 1: Persönliche Daten */}
-          <View style={{
-            backgroundColor: colors.white,
-            borderRadius: 18,
-            padding: 24,
-            marginBottom: 16,
-            shadowColor: colors.neon,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.2,
-            shadowRadius: 12,
-          }}>
-            {/* Profile Header with Photo */}
-            <View style={{ alignItems: 'center', marginBottom: 24 }}>
-              {profile?.profilePhotoUri || profile?.photoUrl ? (
-                <Image 
-                  source={{ uri: profile.profilePhotoUri || profile.photoUrl }}
-                  style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: 50,
-                    borderWidth: 4,
-                    borderColor: colors.neon,
-                    marginBottom: 16,
-                  }}
-                />
-              ) : (
-                <View style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
-                  backgroundColor: colors.purple,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderWidth: 4,
-                  borderColor: colors.neon,
-                  marginBottom: 16,
-                }}>
-                  <Text style={{ fontSize: 36, fontWeight: '700', color: colors.white }}>
-                    {profile?.firstName?.charAt(0) || 'W'}
-                  </Text>
-                </View>
-              )}
-              <Text style={{ fontSize: 24, fontWeight: '800', color: colors.black, textAlign: 'center' }}>
-                {profile?.firstName && profile?.lastName 
-                  ? `${profile.firstName} ${profile.lastName}`
-                  : 'Kein Name'}
-              </Text>
-              
-              {/* Rating */}
-              <View style={{ marginTop: 12 }}>
-                <RatingDisplay
-                  averageRating={avgRating}
-                  reviewCount={reviewCount}
-                  size="medium"
-                  color={colors.neon}
-                />
-              </View>
-            </View>
-
-            {/* Adresse */}
-            {profile?.homeAddress && (
-              <View style={{
-                backgroundColor: colors.lightGray,
-                padding: 16,
-                borderRadius: 12,
-                borderLeftWidth: 4,
-                borderLeftColor: colors.purple,
-              }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                  <Ionicons name="home" size={18} color={colors.purple} />
-                  <Text style={{ fontSize: 14, fontWeight: '700', color: colors.black, marginLeft: 8 }}>
-                    Wohnadresse
-                  </Text>
-                </View>
-                <Text style={{ fontSize: 14, color: '#666' }}>
-                  {profile.homeAddress.street} {profile.homeAddress.houseNumber}
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                <Ionicons name="information-circle" size={22} color={COLORS.purple} />
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
+                  Über mich
                 </Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>
+              </View>
+              <Text style={{ fontSize: 15, color: COLORS.darkGray, lineHeight: 22 }}>
+                {profile.shortBio}
+              </Text>
+            </View>
+          )}
+
+          {/* 3) Wohnadresse */}
+          {profile.homeAddress && (
+            <View style={{
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 20,
+              marginBottom: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                <Ionicons name="home" size={22} color={COLORS.purple} />
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
+                  Wohnadresse
+                </Text>
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
+                  {profile.homeAddress.street} {profile.homeAddress.houseNumber || ''}
+                </Text>
+                <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
                   {profile.homeAddress.postalCode} {profile.homeAddress.city}
                 </Text>
                 {profile.homeAddress.country && (
-                  <Text style={{ fontSize: 14, color: '#666' }}>
+                  <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
                     {profile.homeAddress.country}
                   </Text>
                 )}
               </View>
-            )}
-
-            {/* Bio */}
-            {profile?.shortBio && (
-              <View style={{
-                backgroundColor: colors.lightGray,
-                padding: 16,
-                borderRadius: 12,
-                marginTop: 16,
-                borderLeftWidth: 4,
-                borderLeftColor: colors.neon,
-              }}>
-                <Text style={{ fontSize: 14, color: '#666', fontStyle: 'italic' }}>
-                  "{profile.shortBio}"
-                </Text>
-              </View>
-            )}
-
-            {/* Edit Button */}
-            <Pressable
-              onPress={() => router.push('/(worker)/edit-profile')}
-              style={({ pressed }) => ({
-                backgroundColor: colors.neon,
-                paddingVertical: 14,
-                borderRadius: 12,
-                alignItems: 'center',
-                marginTop: 8,
-                opacity: pressed ? 0.9 : 1,
-              })}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <Ionicons name="create-outline" size={20} color={colors.black} />
-                <Text style={{ fontSize: 16, fontWeight: '700', color: colors.black }}>
-                  Profil bearbeiten
-                </Text>
-              </View>
-            </Pressable>
-          </View>
-
-          {/* Card 2: Tätigkeiten & Qualifikationen */}
-          <View style={{
-            backgroundColor: colors.white,
-            borderRadius: 18,
-            padding: 24,
-            marginBottom: 16,
-            shadowColor: colors.neon,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.2,
-            shadowRadius: 12,
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-              <Ionicons name="briefcase" size={22} color={colors.purple} />
-              <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black, marginLeft: 10 }}>
-                Tätigkeiten & Qualifikationen
-              </Text>
             </View>
-              
-            {(() => {
-              // Use imported taxonomy data
-              const taxonomy = TAXONOMY_DATA;
-              
-              return profile?.categories?.map((categoryKey, catIdx) => {
-              const category = taxonomy.categories.find((c: any) => c.key === categoryKey);
-              
-              if (!category) return null;
-              
-              // Filter activities and qualifications from selectedTags
-              const allTags = profile.selectedTags || [];
-              const categoryActivities = category.activities
-                .filter((act: any) => allTags.includes(act.key))
-                .map((act: any) => act.label);
-              
-              const categoryQualifications = category.qualifications
-                .filter((qual: any) => allTags.includes(qual.key))
-                .map((qual: any) => qual.label);
-              
-              // Nur anzeigen, wenn mindestens eine Tätigkeit ODER Qualifikation ausgewählt wurde
-              if (categoryActivities.length === 0 && categoryQualifications.length === 0) {
-                return null;
-              }
-              
-              return (
-                <View key={catIdx} style={{
-                  backgroundColor: colors.lightGray,
-                  borderRadius: 12,
-                  padding: 16,
-                  marginBottom: 12,
-                  borderLeftWidth: 4,
-                  borderLeftColor: colors.purple,
-                }}>
-                  {/* Category Title */}
-                  <View style={{
-                    backgroundColor: colors.purple,
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                    borderRadius: 16,
-                    alignSelf: 'flex-start',
-                    marginBottom: 12,
-                  }}>
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: colors.white }}>
-                      {category.label}
-                    </Text>
-                  </View>
-                  
-                  {/* Activities */}
-                  {categoryActivities.length > 0 && (
-                    <View style={{ marginBottom: categoryQualifications.length > 0 ? 12 : 0 }}>
-                      <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                        TÄTIGKEITEN:
-                      </Text>
-                      {categoryActivities.map((activity: string, idx: number) => (
-                        <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                          <Text style={{ color: colors.purple, marginRight: 6, fontSize: 16 }}>✓</Text>
-                          <Text style={{ fontSize: 13, color: colors.black }}>
-                            {activity}
-                          </Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
-                  
-                  {/* Qualifications */}
-                  {categoryQualifications.length > 0 && (
-                    <View>
-                      <Text style={{ fontSize: 11, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                        QUALIFIKATIONEN:
-                      </Text>
-                      {categoryQualifications.map((qualification: string, idx: number) => (
-                        <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                          <Text style={{ color: colors.neon, marginRight: 6, fontSize: 16 }}>★</Text>
-                          <Text style={{ fontSize: 13, color: colors.black, fontWeight: '600' }}>
-                            {qualification}
-                          </Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
-                </View>
-              );
-            });
-            })()}
-          </View>
+          )}
 
-          {/* Card 3: Kontaktinformationen */}
+          {/* 4) Tätigkeiten & Qualifikationen */}
+          {(categoryLabels.length > 0 || tagLabels.length > 0) && (
+            <View style={{
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 20,
+              marginBottom: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <Ionicons name="briefcase" size={22} color={COLORS.purple} />
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
+                  Tätigkeiten & Qualifikationen
+                </Text>
+              </View>
+
+              {/* Kategorien als Chips */}
+              {categoryLabels.length > 0 && (
+                <View style={{ marginBottom: 16 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                    KATEGORIEN
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                    {categoryLabels.map((label, idx) => (
+                      <View key={idx} style={{
+                        backgroundColor: COLORS.purple,
+                        paddingHorizontal: 14,
+                        paddingVertical: 8,
+                        borderRadius: 20,
+                      }}>
+                        <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.white }}>
+                          {label}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+
+              {/* Tags/Qualifikationen als Chips */}
+              {tagLabels.length > 0 && (
+                <View>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                    QUALIFIKATIONEN
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                    {tagLabels.map((label, idx) => (
+                      <View key={idx} style={{
+                        backgroundColor: COLORS.lightGray,
+                        borderWidth: 1,
+                        borderColor: COLORS.borderGray,
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        borderRadius: 16,
+                      }}>
+                        <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.darkGray }}>
+                          {label}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+            </View>
+          )}
+
+          {/* 5) Kontaktinformationen */}
           <View style={{
-            backgroundColor: colors.white,
-            borderRadius: 18,
-            padding: 24,
+            backgroundColor: COLORS.white,
+            borderRadius: 16,
+            padding: 20,
             marginBottom: 16,
-            shadowColor: colors.neon,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.2,
-            shadowRadius: 12,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 3,
           }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-              <Ionicons name="mail" size={22} color={colors.purple} />
-              <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black, marginLeft: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <Ionicons name="mail" size={22} color={COLORS.purple} />
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
                 Kontaktinformationen
               </Text>
             </View>
 
-            {profile?.email && (
-              <View style={{
-                backgroundColor: colors.lightGray,
-                padding: 16,
-                borderRadius: 12,
-                borderLeftWidth: 4,
-                borderLeftColor: colors.neon,
-                marginBottom: 12,
-              }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
-                  <Ionicons name="mail-outline" size={18} color={colors.purple} />
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 8 }}>
+            {/* E-Mail */}
+            {profile.email && (
+              <View style={{ marginBottom: 12 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                  <Ionicons name="mail-outline" size={16} color={COLORS.darkGray} />
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
                     E-MAIL
                   </Text>
                 </View>
-                <Text style={{ fontSize: 15, color: colors.black, marginLeft: 26 }}>
+                <Text style={{ fontSize: 15, color: COLORS.darkGray, marginLeft: 22 }}>
                   {profile.email}
                 </Text>
               </View>
             )}
 
-            {profile?.phone && (
-              <View style={{
-                backgroundColor: colors.lightGray,
-                padding: 16,
-                borderRadius: 12,
-                borderLeftWidth: 4,
-                borderLeftColor: colors.purple,
-              }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
-                  <Ionicons name="call-outline" size={18} color={colors.purple} />
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 8 }}>
+            {/* Telefon */}
+            {profile.phone && (
+              <View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                  <Ionicons name="call-outline" size={16} color={COLORS.darkGray} />
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
                     TELEFON
                   </Text>
                 </View>
-                <Text style={{ fontSize: 15, color: colors.black, marginLeft: 26 }}>
+                <Text style={{ fontSize: 15, color: COLORS.darkGray, marginLeft: 22 }}>
                   {profile.phone}
                 </Text>
               </View>
             )}
           </View>
 
-          {/* Card 4: Arbeitsradius */}
-          {profile?.radiusKm && (
+          {/* 6) Arbeitsradius */}
+          {profile.radiusKm && (
             <View style={{
-              backgroundColor: colors.white,
-              borderRadius: 18,
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
               padding: 24,
               marginBottom: 16,
-              shadowColor: colors.neon,
-              shadowOffset: { width: 0, height: 6 },
-              shadowOpacity: 0.2,
-              shadowRadius: 12,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+              alignItems: 'center',
             }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                <Ionicons name="location" size={22} color={colors.purple} />
-                <Text style={{ fontSize: 18, fontWeight: '700', color: colors.black, marginLeft: 10 }}>
+                <Ionicons name="location" size={22} color={COLORS.purple} />
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginLeft: 8 }}>
                   Arbeitsradius
                 </Text>
               </View>
-
-              <View style={{
-                backgroundColor: colors.lightGray,
-                padding: 20,
-                borderRadius: 12,
-                alignItems: 'center',
-                borderLeftWidth: 4,
-                borderLeftColor: colors.neon,
-              }}>
-                <Text style={{ fontSize: 36, fontWeight: '900', color: colors.purple }}>
-                  {profile.radiusKm}
-                </Text>
-                <Text style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
-                  Kilometer Umkreis
-                </Text>
-              </View>
+              <Text style={{ fontSize: 48, fontWeight: '900', color: COLORS.purple }}>
+                {profile.radiusKm}
+              </Text>
+              <Text style={{ fontSize: 14, color: '#888', marginTop: 4 }}>
+                Kilometer Umkreis
+              </Text>
             </View>
           )}
-        </ScrollView>
-      </SafeAreaView>
+
+          {/* 7) Profil bearbeiten Button */}
+          <Pressable
+            onPress={() => router.push('/(worker)/edit-profile')}
+            style={({ pressed }) => ({
+              backgroundColor: COLORS.neon,
+              paddingVertical: 16,
+              borderRadius: 16,
+              alignItems: 'center',
+              marginBottom: 20,
+              opacity: pressed ? 0.9 : 1,
+              shadowColor: COLORS.neon,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 12,
+              elevation: 4,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Ionicons name="create-outline" size={22} color={COLORS.black} />
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
+                Profil bearbeiten
+              </Text>
+            </View>
+          </Pressable>
+        </View>
+      </ScrollView>
     </View>
   );
 }
