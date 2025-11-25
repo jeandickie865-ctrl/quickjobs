@@ -63,7 +63,7 @@ export default function WorkerLayout() {
         },
       }}
     >
-      {/* Tab 1: Feed */}
+      {/* Tab 1: Aktuelle Jobs */}
       <Tabs.Screen
         name="feed"
         options={{
@@ -82,7 +82,7 @@ export default function WorkerLayout() {
                 fontWeight: '700',
                 color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
               }}>
-                Feed
+                Aktuelle Jobs
               </Text>
             </View>
           ),
