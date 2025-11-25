@@ -184,11 +184,8 @@ export default function WorkerProfileScreen() {
                     text: 'Abmelden', 
                     style: 'destructive',
                     onPress: async () => {
-                      const { logout } = await import('../../contexts/AuthContext');
-                      // Clear AsyncStorage and redirect
-                      const AsyncStorage = await import('@react-native-async-storage/async-storage');
-                      await AsyncStorage.default.removeItem('user');
-                      router.replace('/start');
+                      await signOut();
+                      router.replace('/auth/login');
                     }
                   }
                 ]
