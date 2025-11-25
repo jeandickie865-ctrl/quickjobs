@@ -596,64 +596,31 @@ export default function CreateJob() {
 
             {/* Date Inputs based on selection */}
             {hoursDateType === 'specific' && (
-              <View style={{ gap: 6 }}>
-                <Text style={{ color: colors.black, fontWeight: '600' }}>Datum</Text>
-                <TextInput
-                  value={hoursSpecificDate}
-                  onChangeText={setHoursSpecificDate}
-                  placeholder="TT.MM.JJJJ"
-                  placeholderTextColor={colors.gray400}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: colors.gray200,
-                    borderRadius: 12,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    backgroundColor: colors.white,
-                    color: colors.black
-                  }}
-                />
-              </View>
+              <DateTimePicker
+                label="Datum"
+                value={hoursSpecificDate}
+                onChange={setHoursSpecificDate}
+                mode="date"
+                minimumDate={new Date()}
+              />
             )}
 
             {hoursDateType === 'range' && (
               <View style={{ gap: 12 }}>
-                <View style={{ gap: 6 }}>
-                  <Text style={{ color: colors.black, fontWeight: '600' }}>Von Datum</Text>
-                  <TextInput
-                    value={hoursStartDate}
-                    onChangeText={setHoursStartDate}
-                    placeholder="TT.MM.JJJJ"
-                    placeholderTextColor={colors.gray400}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: colors.gray200,
-                      borderRadius: 12,
-                      paddingHorizontal: 12,
-                      paddingVertical: 10,
-                      backgroundColor: colors.white,
-                      color: colors.black
-                    }}
-                  />
-                </View>
-                <View style={{ gap: 6 }}>
-                  <Text style={{ color: colors.black, fontWeight: '600' }}>Bis Datum</Text>
-                  <TextInput
-                    value={hoursEndDate}
-                    onChangeText={setHoursEndDate}
-                    placeholder="TT.MM.JJJJ"
-                    placeholderTextColor={colors.gray400}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: colors.gray200,
-                      borderRadius: 12,
-                      paddingHorizontal: 12,
-                      paddingVertical: 10,
-                      backgroundColor: colors.white,
-                      color: colors.black
-                    }}
-                  />
-                </View>
+                <DateTimePicker
+                  label="Von Datum"
+                  value={hoursStartDate}
+                  onChange={setHoursStartDate}
+                  mode="date"
+                  minimumDate={new Date()}
+                />
+                <DateTimePicker
+                  label="Bis Datum"
+                  value={hoursEndDate}
+                  onChange={setHoursEndDate}
+                  mode="date"
+                  minimumDate={hoursStartDate || new Date()}
+                />
               </View>
             )}
           </View>
