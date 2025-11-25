@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Pressable, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, Redirect } from 'expo-router';
+import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getEmployerProfile, EmployerProfile } from '../../utils/employerProfileStore';
 import { getReviewsForEmployer, calculateAverageRating } from '../../utils/reviewStore';
