@@ -113,7 +113,10 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         <Text style={styles.label}>{label}</Text>
         <Pressable 
           style={styles.button}
-          onPress={() => inputRef.current?.showPicker?.()}
+          onPress={() => {
+            inputRef.current?.click();
+            inputRef.current?.focus();
+          }}
         >
           <Text style={styles.buttonText}>
             {formatDisplayDateTime(value)}
@@ -123,22 +126,25 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
             size={20} 
             color="#5941FF" 
           />
-          {/* Hidden HTML input for web */}
-          <input
-            ref={inputRef}
-            type={getInputType()}
-            value={formatDateTime(value)}
-            onChange={handleDateChange}
-            min={getMinimum()}
-            style={{
-              position: 'absolute',
-              opacity: 0,
-              width: 1,
-              height: 1,
-              pointerEvents: 'none',
-            }}
-          />
         </Pressable>
+        {/* Hidden HTML input for web - positioned absolute outside view */}
+        <input
+          ref={inputRef}
+          type={getInputType()}
+          value={formatDateTime(value) || ''}
+          onChange={handleDateChange}
+          min={getMinimum()}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 30,
+            opacity: 0,
+            width: '100%',
+            height: 44,
+            zIndex: -1,
+            pointerEvents: 'auto',
+          }}
+        />
       </View>
     );
   }
