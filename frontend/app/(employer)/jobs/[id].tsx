@@ -16,6 +16,7 @@ import { getInitials } from '../../../utils/stringHelpers';
 import { euro } from '../../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
 import { RatingDisplay } from '../../../components/RatingDisplay';
+import { WorkerProfileEmployerView } from '../../../components/WorkerProfileEmployerView';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -53,6 +54,12 @@ export default function JobDetailScreen() {
 
   // Review state
   const [hasReview, setHasReview] = useState(false);
+
+  // Worker Profile Modal
+  const [selectedWorker, setSelectedWorker] = useState<{
+    workerId: string;
+    applicationId: string;
+  } | null>(null);
 
   useEffect(() => {
     if (isLoading || !user) return;
