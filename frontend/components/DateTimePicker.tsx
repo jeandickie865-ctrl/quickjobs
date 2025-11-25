@@ -122,46 +122,92 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     return formatDateTime(minimumDate);
   };
 
-  // For Web: Use native HTML5 input
+  // For Web: Different approach for date vs time
   if (Platform.OS === 'web') {
     const inputRef = React.useRef<any>(null);
     
+    // TIME: Simple TextInput for manual entry
+    if (mode === 'time') {
+      const timeString = value ? 
+        `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}` 
+        : '';
+      
+      return (
+        <View style={styles.container}>
+          <Text style={styles.label}>{label}</Text>
+          <TextInput
+            value={timeString}
+            onChangeText={(text) => {
+              // Format: HH:MM
+              const match = text.match(/^(\d{1,2}):?(\d{0,2})$/);
+              if (match) {
+                const [_, hoursStr, minutesStr] = match;
+                const hours = parseInt(hoursStr) || 0;
+                const minutes = parseInt(minutesStr) || 0;
+                
+                if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+                  const baseDate = value ? new Date(value) : new Date();
+                  baseDate.setHours(hours);
+                  baseDate.setMinutes(minutes);
+                  baseDate.setSeconds(0);
+                  baseDate.setMilliseconds(0);
+                  onChange(baseDate);
+                }
+              }
+            }}
+            placeholder="HH:MM (z.B. 09:00)"
+            placeholderTextColor="#999"
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: '#FFF',
+              borderWidth: 2,
+              borderColor: '#5941FF',
+              borderRadius: 14,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              fontSize: 16,
+              fontWeight: '600',
+              color: '#000',
+            }}
+          />
+        </View>
+      );
+    }
+    
+    // DATE: Use HTML5 input with overlay
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{label}</Text>
-        <Pressable 
-          style={styles.button}
-          onPress={() => {
-            console.log('🖱️ Pressed button for:', mode, label);
-            inputRef.current?.showPicker?.();
-          }}
-        >
-          <Text style={styles.buttonText}>
-            {formatDisplayDateTime(value)}
-          </Text>
-          <Ionicons 
-            name="calendar-outline" 
-            size={20} 
-            color="#5941FF" 
+        <View style={{ position: 'relative' }}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>
+              {formatDisplayDateTime(value)}
+            </Text>
+            <Ionicons 
+              name="calendar-outline" 
+              size={20} 
+              color="#5941FF" 
+            />
+          </View>
+          <input
+            ref={inputRef}
+            type="date"
+            value={formatDateTime(value) || ''}
+            onChange={handleDateChange}
+            min={getMinimum()}
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              opacity: 0,
+              cursor: 'pointer',
+            }}
           />
-        </Pressable>
-        {/* Hidden HTML input - completely out of flow */}
-        <input
-          ref={inputRef}
-          type={getInputType()}
-          value={formatDateTime(value) || ''}
-          onChange={handleDateChange}
-          min={getMinimum()}
-          style={{
-            position: 'fixed',
-            left: -9999,
-            top: -9999,
-            width: 1,
-            height: 1,
-            opacity: 0,
-            pointerEvents: 'none',
-          }}
-        />
+        </View>
       </View>
     );
   }
