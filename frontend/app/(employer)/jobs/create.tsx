@@ -36,10 +36,9 @@ export default function CreateJob() {
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
   
-  // fixed_time (deutsches Format TT.MM.JJJJ)
-  const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  // fixed_time - Date objects for DateTimePicker
+  const [startDateTime, setStartDateTime] = useState<Date | undefined>(undefined);
+  const [endDateTime, setEndDateTime] = useState<Date | undefined>(undefined);
   
   // hour_package
   const [hours, setHours] = useState('');
