@@ -101,6 +101,69 @@ class WorkerProfileUpdate(BaseModel):
     contactEmail: Optional[str] = None
     pushToken: Optional[str] = None
 
+# Job Models
+class Job(BaseModel):
+    id: str = Field(default_factory=lambda: f"job_{str(uuid.uuid4())}")
+    employerId: str
+    employerType: str = "private"  # 'private' or 'business'
+    title: str
+    description: Optional[str] = None
+    category: str
+    timeMode: str  # 'fixed_time', 'hour_package', 'project'
+    startAt: Optional[str] = None
+    endAt: Optional[str] = None
+    hours: Optional[float] = None
+    dueAt: Optional[str] = None
+    address: Address
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    workerAmountCents: int
+    paymentToWorker: str = "cash"  # 'cash', 'bank', 'paypal'
+    required_all_tags: List[str] = []
+    required_any_tags: List[str] = []
+    status: str = "open"  # 'draft', 'open', 'matched', 'done', 'canceled'
+    matchedWorkerId: Optional[str] = None
+    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class JobCreate(BaseModel):
+    employerType: str = "private"
+    title: str
+    description: Optional[str] = None
+    category: str
+    timeMode: str
+    startAt: Optional[str] = None
+    endAt: Optional[str] = None
+    hours: Optional[float] = None
+    dueAt: Optional[str] = None
+    address: Address
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    workerAmountCents: int
+    paymentToWorker: str = "cash"
+    required_all_tags: List[str] = []
+    required_any_tags: List[str] = []
+    status: str = "open"
+
+class JobUpdate(BaseModel):
+    employerType: Optional[str] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    timeMode: Optional[str] = None
+    startAt: Optional[str] = None
+    endAt: Optional[str] = None
+    hours: Optional[float] = None
+    dueAt: Optional[str] = None
+    address: Optional[Address] = None
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    workerAmountCents: Optional[int] = None
+    paymentToWorker: Optional[str] = None
+    required_all_tags: Optional[List[str]] = None
+    required_any_tags: Optional[List[str]] = None
+    status: Optional[str] = None
+    matchedWorkerId: Optional[str] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
