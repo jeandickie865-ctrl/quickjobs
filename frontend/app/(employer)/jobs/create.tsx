@@ -473,63 +473,21 @@ export default function CreateJob() {
 
         {/* Time inputs based on mode */}
         {timeMode === 'fixed_time' && (
-          <View style={{ gap: 12 }}>
-            <View style={{ gap: 6 }}>
-              <Text style={{ color: colors.black, fontWeight: '600' }}>Datum</Text>
-              <TextInput
-                value={date}
-                onChangeText={setDate}
-                placeholder="TT.MM.JJJJ"
-                placeholderTextColor={colors.gray400}
-                style={{
-                  borderWidth: 1,
-                  borderColor: colors.gray200,
-                  borderRadius: 12,
-                  paddingHorizontal: 12,
-                  paddingVertical: 10,
-                  backgroundColor: colors.white,
-                  color: colors.black
-                }}
-              />
-            </View>
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-              <View style={{ flex: 1, gap: 6 }}>
-                <Text style={{ color: colors.black, fontWeight: '600' }}>Von</Text>
-                <TextInput
-                  value={startTime}
-                  onChangeText={setStartTime}
-                  placeholder="19:00"
-                  placeholderTextColor={colors.gray400}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: colors.gray200,
-                    borderRadius: 12,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    backgroundColor: colors.white,
-                    color: colors.black
-                  }}
-                />
-              </View>
-              <View style={{ flex: 1, gap: 6 }}>
-                <Text style={{ color: colors.black, fontWeight: '600' }}>Bis</Text>
-                <TextInput
-                  value={endTime}
-                  onChangeText={setEndTime}
-                  placeholder="23:00"
-                  placeholderTextColor={colors.gray400}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: colors.gray200,
-                    borderRadius: 12,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    backgroundColor: colors.white,
-                    color: colors.black
-                  }}
-                />
-              </View>
-            </View>
+          <View style={{ gap: 16 }}>
+            <DateTimePicker
+              label="Start (Datum & Uhrzeit)"
+              value={startDateTime}
+              onChange={setStartDateTime}
+              mode="datetime"
+              minimumDate={new Date()}
+            />
+            <DateTimePicker
+              label="Ende (Datum & Uhrzeit)"
+              value={endDateTime}
+              onChange={setEndDateTime}
+              mode="datetime"
+              minimumDate={startDateTime || new Date()}
+            />
           </View>
         )}
 
