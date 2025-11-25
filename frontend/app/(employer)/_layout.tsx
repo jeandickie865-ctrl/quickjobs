@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { View, ActivityIndicator, Platform } from 'react-native';
+import { View, ActivityIndicator, Platform, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 // BACKUP NEON-TECH COLORS
