@@ -16,6 +16,24 @@ const COLORS = {
 
 export default function WorkerLayout() {
   const { user, isLoading } = useAuth();
+  const [matchesCount, setMatchesCount] = useState(0);
+
+  // Load matches count
+  useEffect(() => {
+    if (!user) return;
+    
+    async function loadMatchesCount() {
+      try {
+        const apps = await getApplicationsForWorker(user.id);
+        const acceptedApps = apps.filter(app => app.status === 'accepted');
+        setMatchesCount(acceptedApps.length);
+      } catch (error) {
+        console.error('Error loading matches count:', error);
+      }
+    }
+    
+    loadMatchesCount();
+  }, [user]);
 
   if (isLoading) {
     return (
