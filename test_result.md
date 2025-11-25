@@ -1457,7 +1457,7 @@ frontend:
     file: "app/(worker)/feed.tsx"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "user"
