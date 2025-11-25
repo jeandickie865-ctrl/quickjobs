@@ -611,17 +611,12 @@ export default function JobDetailScreen() {
       </ScrollView>
 
       {/* Worker Profile Modal */}
-      {selectedWorker && (
-        <WorkerProfileEmployerView
-          workerId={selectedWorker.workerId}
-          applicationId={selectedWorker.applicationId}
-          onClose={() => setSelectedWorker(null)}
-          onAccept={(appId, workerId, workerName) => {
-            setSelectedWorker(null);
-            handleAcceptApplication(appId, workerId, workerName);
-          }}
-        />
-      )}
+      <WorkerProfileEmployerView
+        workerId={selectedWorker?.workerId || ''}
+        applicationId={selectedWorker?.applicationId}
+        visible={!!selectedWorker}
+        onClose={() => setSelectedWorker(null)}
+      />
     </View>
   );
 }
