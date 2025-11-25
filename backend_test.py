@@ -29,15 +29,18 @@ class DistanceMatchingTester:
         self.created_worker_profile = None
         self.created_jobs = []
         
-    def log_result(self, test_name: str, success: bool, details: str = ""):
-        """Log test result with timestamp"""
-        timestamp = datetime.now().strftime("%H:%M:%S")
+    def log_test(self, test_name: str, success: bool, details: str = ""):
+        """Log test result"""
         status = "✅ PASS" if success else "❌ FAIL"
-        result = f"[{timestamp}] {status} {test_name}"
+        print(f"{status}: {test_name}")
         if details:
-            result += f" - {details}"
-        self.results.append((success, result))
-        print(result)
+            print(f"   Details: {details}")
+        
+        self.test_results.append({
+            "test": test_name,
+            "success": success,
+            "details": details
+        })
         
     def make_request(self, method: str, endpoint: str, headers: Dict = None, data: Dict = None, params: Dict = None) -> tuple:
         """Make HTTP request and return (success, response, status_code)"""
