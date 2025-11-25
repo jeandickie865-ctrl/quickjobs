@@ -299,6 +299,32 @@ export default function WorkerProfileScreen() {
 
       console.log('🔵 saveProfileData: User ID:', user.id);
 
+      // Validierung der Pflichtfelder
+      if (!name || name.trim() === '') {
+        Alert.alert('Fehler', 'Bitte geben Sie Ihren Namen ein.');
+        return;
+      }
+      if (!contactPhone || contactPhone.trim() === '') {
+        Alert.alert('Fehler', 'Bitte geben Sie Ihre Telefonnummer ein.');
+        return;
+      }
+      if (!contactEmail || contactEmail.trim() === '') {
+        Alert.alert('Fehler', 'Bitte geben Sie Ihre E-Mail-Adresse ein.');
+        return;
+      }
+      if (!street || street.trim() === '') {
+        Alert.alert('Fehler', 'Bitte geben Sie Ihre Straße und Hausnummer ein.');
+        return;
+      }
+      if (!postalCode || postalCode.trim() === '') {
+        Alert.alert('Fehler', 'Bitte geben Sie Ihre Postleitzahl ein.');
+        return;
+      }
+      if (!city || city.trim() === '') {
+        Alert.alert('Fehler', 'Bitte geben Sie Ihren Wohnort ein.');
+        return;
+      }
+
       // Kombiniere activities und qualifications zu selectedTags
       const combinedTags = [...selectedActivities, ...selectedQualifications];
       console.log('🔵 saveProfileData: Combined tags:', combinedTags.length);
