@@ -22,29 +22,35 @@ export default function EmployerLayout() {
 
   useEffect(() => {
     async function checkProfile() {
-      if (!user) return;
+      if (!user) {
+        setProfileChecked(true);
+        return;
+      }
       
       try {
-        console.log('🔍 Checking if employer has profile...');
+        console.log('🔍 Checking if employer has profile...', user.id);
         const profile = await getEmployerProfile(user.id);
         
         if (!profile || !profile.firstName) {
-          console.log('⚠️ No profile found - redirecting to edit-profile');
+          console.log('⚠️ No profile found - will redirect to edit-profile');
           setHasProfile(false);
         } else {
-          console.log('✅ Profile exists');
+          console.log('✅ Profile exists:', profile.firstName);
           setHasProfile(true);
         }
       } catch (error) {
-        console.log('⚠️ Error checking profile, assuming no profile:', error);
+        console.log('⚠️ Error checking profile (404 expected for new users), assuming no profile:', error);
+        // 404 is expected for new users, so treat as no profile
         setHasProfile(false);
       } finally {
         setProfileChecked(true);
       }
     }
 
-    if (user && !profileChecked) {
+    if (user && user.role === 'employer' && !profileChecked) {
       checkProfile();
+    } else if (!user || user.role !== 'employer') {
+      setProfileChecked(true);
     }
   }, [user, profileChecked]);
 
