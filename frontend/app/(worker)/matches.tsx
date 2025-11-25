@@ -1,4 +1,4 @@
-// app/(worker)/matches.tsx - FINAL NEON-TECH DESIGN
+// app/(worker)/matches.tsx - FINAL NEON-TECH DESIGN WITH AUTO-REFRESH
 import React, { useEffect, useState, useRef } from 'react';
 import { ScrollView, View, Text, ActivityIndicator, RefreshControl, Pressable, Animated, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -41,6 +41,9 @@ export default function WorkerMatchesScreen() {
   const [error, setError] = useState<string | null>(null);
   const [showTaxModal, setShowTaxModal] = useState(false);
 
+  // Auto-refresh interval ref
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Animation
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -52,8 +55,13 @@ export default function WorkerMatchesScreen() {
     }).start();
   }, []);
 
-  const loadMatches = async () => {
+  const loadMatches = async (silent = false) => {
     if (!user) return;
+
+    // Don't show loading spinner on auto-refresh
+    if (!silent) {
+      setLoading(true);
+    }
 
     try {
       setError(null);
@@ -97,25 +105,39 @@ export default function WorkerMatchesScreen() {
       setMatches(combined);
     } catch (e) {
       console.error('Error loading matches:', e);
-      setError('Matches konnten nicht geladen werden.');
+      if (!silent) {
+        setError('Matches konnten nicht geladen werden.');
+      }
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
       setRefreshing(false);
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      loadMatches();
-    }
-  }, [user, authLoading]);
-
-  // Reload matches when screen comes into focus
+  // Setup auto-refresh when screen is focused
   useFocusEffect(
     React.useCallback(() => {
+      // Load data immediately
       if (!authLoading && user) {
         loadMatches();
       }
+
+      // Start auto-refresh interval (5 seconds)
+      intervalRef.current = setInterval(() => {
+        if (!authLoading && user) {
+          loadMatches(true); // Silent refresh
+        }
+      }, 5000);
+
+      // Cleanup on unfocus
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
     }, [user, authLoading])
   );
 
