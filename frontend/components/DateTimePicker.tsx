@@ -129,40 +129,49 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     return (
       <View style={styles.container}>
         <Text style={styles.label}>{label}</Text>
-        <Pressable 
-          style={styles.button}
-          onPress={() => {
-            inputRef.current?.click();
-            inputRef.current?.focus();
-          }}
-        >
-          <Text style={styles.buttonText}>
-            {formatDisplayDateTime(value)}
-          </Text>
-          <Ionicons 
-            name="calendar-outline" 
-            size={20} 
-            color="#5941FF" 
+        <View style={{ position: 'relative' }}>
+          <Pressable 
+            style={styles.button}
+            onPress={() => {
+              console.log('🖱️ Pressed button for:', mode, label);
+              inputRef.current?.click();
+              setTimeout(() => {
+                inputRef.current?.focus();
+              }, 100);
+            }}
+          >
+            <Text style={styles.buttonText}>
+              {formatDisplayDateTime(value)}
+            </Text>
+            <Ionicons 
+              name="calendar-outline" 
+              size={20} 
+              color="#5941FF" 
+            />
+          </Pressable>
+          {/* Hidden HTML input - directly overlaid on button */}
+          <input
+            ref={inputRef}
+            type={getInputType()}
+            value={formatDateTime(value) || ''}
+            onChange={handleDateChange}
+            min={getMinimum()}
+            onClick={(e) => {
+              console.log('🖱️ Input clicked:', mode, label);
+              e.stopPropagation();
+            }}
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              opacity: 0,
+              cursor: 'pointer',
+              zIndex: 999,
+            }}
           />
-        </Pressable>
-        {/* Hidden HTML input for web - positioned absolute outside view */}
-        <input
-          ref={inputRef}
-          type={getInputType()}
-          value={formatDateTime(value) || ''}
-          onChange={handleDateChange}
-          min={getMinimum()}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 30,
-            opacity: 0,
-            width: '100%',
-            height: 44,
-            zIndex: -1,
-            pointerEvents: 'auto',
-          }}
-        />
+        </View>
       </View>
     );
   }
