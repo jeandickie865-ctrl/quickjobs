@@ -1,7 +1,6 @@
 // components/DateTimePicker.tsx
 import React, { useState } from 'react';
-import { View, Text, Pressable, Platform, StyleSheet } from 'react-native';
-import DateTimePickerModal from '@react-native-community/datetimepicker';
+import { View, Text, Pressable, Platform, StyleSheet, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface DateTimePickerProps {
@@ -19,9 +18,25 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   mode = 'datetime',
   minimumDate,
 }) => {
-  const [show, setShow] = useState(false);
-
   const formatDateTime = (date: Date | undefined) => {
+    if (!date) return '';
+    
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    if (mode === 'date') {
+      return `${year}-${month}-${day}`;
+    } else if (mode === 'time') {
+      return `${hours}:${minutes}`;
+    } else {
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+  };
+
+  const formatDisplayDateTime = (date: Date | undefined) => {
     if (!date) return 'Bitte wählen';
     
     const day = String(date.getDate()).padStart(2, '0');
@@ -38,6 +53,63 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       return `${day}.${month}.${year} ${hours}:${minutes}`;
     }
   };
+
+  const handleDateChange = (event: any) => {
+    const dateString = event.target.value;
+    if (!dateString) return;
+    
+    const newDate = new Date(dateString);
+    if (!isNaN(newDate.getTime())) {
+      onChange(newDate);
+    }
+  };
+
+  const getInputType = () => {
+    if (mode === 'date') return 'date';
+    if (mode === 'time') return 'time';
+    return 'datetime-local';
+  };
+
+  const getMinimum = () => {
+    if (!minimumDate) return undefined;
+    return formatDateTime(minimumDate);
+  };
+
+  // For Web: Use native HTML5 input
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.label}>{label}</Text>
+        <View style={styles.button}>
+          <input
+            type={getInputType()}
+            value={formatDateTime(value)}
+            onChange={handleDateChange}
+            min={getMinimum()}
+            style={{
+              width: '100%',
+              border: 'none',
+              background: 'transparent',
+              fontSize: 16,
+              fontWeight: '600',
+              color: '#000',
+              padding: 0,
+              outline: 'none',
+            }}
+          />
+          <Ionicons 
+            name="calendar-outline" 
+            size={20} 
+            color="#C8FF16" 
+          />
+        </View>
+      </View>
+    );
+  }
+
+  // For Mobile: Use react-native-community/datetimepicker
+  const DateTimePickerModal = require('@react-native-community/datetimepicker').default;
+  const [show, setShow] = useState(false);
 
   const handleChange = (event: any, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
@@ -57,7 +129,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         style={styles.button}
       >
         <Text style={styles.buttonText}>
-          {formatDateTime(value)}
+          {formatDisplayDateTime(value)}
         </Text>
         <Ionicons 
           name="calendar-outline" 
