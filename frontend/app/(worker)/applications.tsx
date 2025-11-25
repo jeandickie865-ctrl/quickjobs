@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect, useRouter, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
@@ -26,36 +26,71 @@ export default function WorkerApplicationsScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  // Auto-refresh interval ref
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const loadApplications = async (silent = false) => {
     if (!user) return;
-    (async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const apps = await getApplicationsForWorker(user.id);
-        
-        // WICHTIG: Nur pending und rejected Applications zeigen
-        // Accepted gehören in den "Matches" Tab!
-        const pendingAndRejectedApps = apps.filter(app => 
-          app.status === 'pending' || app.status === 'rejected'
-        );
-        
-        const result: ApplicationWithJob[] = [];
-        for (const app of pendingAndRejectedApps) {
-          const job = await getJobById(app.jobId);
-          result.push({ app, job });
-        }
-        // Neuste Bewerbungen oben
-        result.sort((a, b) => b.app.createdAt.localeCompare(a.app.createdAt));
-        setItems(result);
-      } catch (e) {
-        console.log('Worker applications load error', e);
+
+    // Don't show loading spinner on auto-refresh
+    if (!silent) {
+      setLoading(true);
+    }
+
+    try {
+      setError(null);
+      const apps = await getApplicationsForWorker(user.id);
+      
+      // WICHTIG: Nur pending und rejected Applications zeigen
+      // Accepted gehören in den "Matches" Tab!
+      const pendingAndRejectedApps = apps.filter(app => 
+        app.status === 'pending' || app.status === 'rejected'
+      );
+      
+      const result: ApplicationWithJob[] = [];
+      for (const app of pendingAndRejectedApps) {
+        const job = await getJobById(app.jobId);
+        result.push({ app, job });
+      }
+      // Neuste Bewerbungen oben
+      result.sort((a, b) => b.app.createdAt.localeCompare(a.app.createdAt));
+      setItems(result);
+    } catch (e) {
+      console.log('Worker applications load error', e);
+      if (!silent) {
         setError('Bewerbungen konnten nicht geladen werden.');
-      } finally {
+      }
+    } finally {
+      if (!silent) {
         setLoading(false);
       }
-    })();
-  }, [user?.id]);
+    }
+  };
+
+  // Setup auto-refresh when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      // Load data immediately
+      if (user) {
+        loadApplications();
+      }
+
+      // Start auto-refresh interval (5 seconds)
+      intervalRef.current = setInterval(() => {
+        if (user) {
+          loadApplications(true); // Silent refresh
+        }
+      }, 5000);
+
+      // Cleanup on unfocus
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
+    }, [user])
+  );
 
   if (isLoading) {
     return (
