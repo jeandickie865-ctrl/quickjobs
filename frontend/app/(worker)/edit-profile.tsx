@@ -249,29 +249,45 @@ export default function EditWorkerProfileScreen() {
   // OSM Autocomplete for address
   const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   async function searchAddress(query: string) {
-    if (!query || query.length < 3) {
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (!query || query.length < 5) {
       setAddressSuggestions([]);
       setShowSuggestions(false);
       return;
     }
 
-    try {
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`;
-      
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'ShiftMatchApp/1.0',
-        },
-      });
-      
-      const data = await response.json();
-      setAddressSuggestions(data);
-      setShowSuggestions(data.length > 0);
-    } catch (error) {
-      console.error('Address search error:', error);
-    }
+    // Debounce: Wait 800ms before searching
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        console.log('🔍 Searching address:', query);
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1&countrycodes=de`;
+        
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'ShiftMatchApp/1.0',
+          },
+        });
+
+        if (response.status === 429) {
+          console.warn('⚠️ Rate limit reached, please wait');
+          return;
+        }
+        
+        const data = await response.json();
+        console.log('✅ Found addresses:', data.length);
+        setAddressSuggestions(data);
+        setShowSuggestions(data.length > 0);
+      } catch (error) {
+        console.error('Address search error:', error);
+      }
+    }, 800);
   }
 
   function selectAddress(suggestion: any) {
