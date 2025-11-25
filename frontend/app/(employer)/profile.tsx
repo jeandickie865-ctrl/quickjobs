@@ -108,23 +108,15 @@ export default function EmployerProfileViewScreen() {
           paddingHorizontal: 20,
           paddingVertical: 16,
         }}>
-          <View style={{ width: 60 }} />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>Mein Profil</Text>
+          <View style={{ width: 30 }} />
+          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>Mein Profil</Text>
           <Pressable 
             onPress={async () => {
               await signOut();
-              router.replace('/start');
-            }}
-            style={{
-              paddingVertical: 6,
-              paddingHorizontal: 12,
-              backgroundColor: COLORS.neon,
-              borderRadius: 8,
+              router.replace('/auth/login');
             }}
           >
-            <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.black }}>
-              Logout
-            </Text>
+            <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
           </Pressable>
         </View>
 
