@@ -997,6 +997,69 @@ agent_communication:
       ✅ **POST /api/profiles/worker:** Profile creation working perfectly
       ✅ **GET /api/profiles/worker/{user_id}:** Profile retrieval with all data intact
       ✅ **PUT /api/profiles/worker/{user_id}:** Profile updates successful
+
+
+  - agent: "main"
+    message: |
+      **🚀 PHASE 2: Jobs-System MongoDB-Migration ABGESCHLOSSEN**
+      
+      **Durchgeführte Änderungen:**
+      
+      **1. Backend API-Endpoints erstellt (`/app/backend/server.py`):**
+      - ✅ POST /api/jobs - Neuen Job erstellen
+      - ✅ GET /api/jobs - Alle offenen Jobs abrufen
+      - ✅ GET /api/jobs/employer/{employerId} - Jobs eines Employers
+      - ✅ GET /api/jobs/{jobId} - Einzelnen Job abrufen
+      - ✅ PUT /api/jobs/{jobId} - Job aktualisieren
+      - ✅ DELETE /api/jobs/{jobId} - Job löschen
+      
+      **2. Pydantic Models hinzugefügt:**
+      - Job (vollständiges Job-Schema mit allen Feldern)
+      - JobCreate (für POST)
+      - JobUpdate (für PUT, alle Felder optional)
+      
+      **3. Authentifizierung & Authorization:**
+      - Token-basierte Auth: "Bearer {userId}"
+      - Employer kann nur eigene Jobs sehen/bearbeiten/löschen
+      - Worker können alle offenen Jobs sehen
+      
+      **4. Frontend jobStore.ts refactored:**
+      - ✅ Vollständig von AsyncStorage auf API-Calls umgestellt
+      - ✅ Alle Job-Operationen (CRUD) gehen jetzt über Backend
+      - ✅ Backup erstellt: jobStore_asyncstorage_backup.ts
+      - ✅ Alle Legacy-Funktionen beibehalten (getEmployerJobs, getOpenJobs, etc.)
+      
+      **Erwartetes Verhalten:**
+      - Jobs werden jetzt zentral in MongoDB gespeichert (Collection: jobs)
+      - Matching-System verwendet weiterhin die API-Jobs
+      - Multi-User-Support: Jeder Employer sieht nur seine eigenen Jobs
+      - Worker sehen alle offenen Jobs in ihrem Feed
+      
+      **Nächste Schritte:**
+      - Backend-Testing der neuen Jobs-API-Endpoints
+      - Verifizierung, dass Matching mit MongoDB-Jobs funktioniert
+      - Dann weiter mit Phase 3: Bewerbungs-System Migration
+
+backend:
+  - task: "Jobs API"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Jobs API-Endpoints erstellt: POST /api/jobs (create), GET /api/jobs (all open), GET /api/jobs/employer/{employerId} (employer's jobs), GET /api/jobs/{jobId} (single job), PUT /api/jobs/{jobId} (update), DELETE /api/jobs/{jobId} (delete). MongoDB-Integration. Authorization: Employer kann nur eigene Jobs bearbeiten. Bereit für Testing."
+
+test_plan:
+  current_focus:
+    - "Jobs API"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
       ✅ **Authorization System:** Bearer token auth working, users can only edit own profiles
       ✅ **Error Handling:** 404 for non-existent profiles, 403 for unauthorized access
       ✅ **MongoDB Storage:** Data persisted correctly in worker_profiles collection
