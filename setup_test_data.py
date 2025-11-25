@@ -29,6 +29,13 @@ worker_profile = {
     'lastName': 'Dickie',
     'email': 'john@dickies-helden.de',
     'phone': '01622572545',
+    'homeAddress': {
+        'street': 'Teststraße',
+        'houseNumber': '1',
+        'postalCode': '10115',
+        'city': 'Berlin',
+        'country': 'Deutschland'
+    },
     'categories': ['sicherheit'],
     'selectedTags': ['sachkunde', 'event_security'],
     'activities': ['security_guard', 'event_security'],
