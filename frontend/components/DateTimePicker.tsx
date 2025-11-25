@@ -55,42 +55,60 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   };
 
   const handleDateChange = (event: any) => {
-    const dateString = event.target.value;
-    if (!dateString) return;
+    const inputValue = event.target.value;
+    console.log('📅 Input changed:', { mode, inputValue, currentValue: value });
     
-    const newDate = new Date(dateString);
-    if (isNaN(newDate.getTime())) return;
+    if (!inputValue) return;
     
-    // If we have an existing date/time, preserve the time when changing date
-    if (value && mode === 'date') {
-      newDate.setHours(value.getHours());
-      newDate.setMinutes(value.getMinutes());
-      newDate.setSeconds(0);
-      newDate.setMilliseconds(0);
-      onChange(newDate);
-      return;
-    }
-    
-    // UHRZEIT: Behalte das Datum, ändere nur die Uhrzeit
+    // MODE: TIME - nur Uhrzeit ändern
     if (mode === 'time') {
-      // Wenn kein Datum existiert, nutze heute als Fallback
+      // Split "HH:MM" format
+      const [hours, minutes] = inputValue.split(':').map(Number);
+      
+      if (isNaN(hours) || isNaN(minutes)) {
+        console.error('❌ Invalid time format:', inputValue);
+        return;
+      }
+      
+      // Nutze existierendes Datum oder heute
       const baseDate = value ? new Date(value) : new Date();
-      
-      // Extrahiere Stunden und Minuten aus dem time input
-      const [hours, minutes] = dateString.split(':').map(Number);
-      
-      // Setze nur die Uhrzeit, behalte das Datum
       baseDate.setHours(hours);
       baseDate.setMinutes(minutes);
       baseDate.setSeconds(0);
       baseDate.setMilliseconds(0);
       
-      console.log('🕐 Time changed to:', baseDate.toISOString());
+      console.log('🕐 Time updated:', baseDate.toISOString(), { hours, minutes });
       onChange(baseDate);
       return;
     }
     
-    onChange(newDate);
+    // MODE: DATE - nur Datum ändern
+    if (mode === 'date') {
+      const newDate = new Date(inputValue);
+      
+      if (isNaN(newDate.getTime())) {
+        console.error('❌ Invalid date:', inputValue);
+        return;
+      }
+      
+      // Behalte die Uhrzeit vom vorherigen Wert
+      if (value) {
+        newDate.setHours(value.getHours());
+        newDate.setMinutes(value.getMinutes());
+        newDate.setSeconds(0);
+        newDate.setMilliseconds(0);
+      }
+      
+      console.log('📅 Date updated:', newDate.toISOString());
+      onChange(newDate);
+      return;
+    }
+    
+    // MODE: DATETIME (Fallback)
+    const newDate = new Date(inputValue);
+    if (!isNaN(newDate.getTime())) {
+      onChange(newDate);
+    }
   };
 
   const getInputType = () => {
