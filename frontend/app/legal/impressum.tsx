@@ -1,103 +1,148 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View, Text, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../../theme/ThemeProvider';
+import { Ionicons } from '@expo/vector-icons';
+
+const COLORS = {
+  purple: '#5941FF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  darkGray: '#333333',
+  gray: '#666666',
+  lightGray: '#F5F5F5',
+};
 
 export default function ImpressumScreen() {
-  const { colors, spacing } = useTheme();
   const router = useRouter();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: spacing.lg }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <SafeAreaView style={{ flex: 1 }}>
         {/* Header */}
-        <View style={{ marginBottom: spacing.xl }}>
-          <Text
-            style={{
-              fontSize: 12,
-              color: colors.gray600,
-              textDecorationLine: 'underline',
-              marginBottom: spacing.md,
-            }}
-            onPress={() => router.back()}
-          >
-            ← Zurück
-          </Text>
-          <Text style={{ fontSize: 28, fontWeight: '800', color: colors.black, marginBottom: spacing.sm }}>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 20,
+          paddingVertical: 16,
+          borderBottomWidth: 1,
+          borderBottomColor: 'rgba(255,255,255,0.1)',
+        }}>
+          <Pressable onPress={() => router.back()} style={{ marginRight: 16 }}>
+            <Ionicons name="arrow-back" size={24} color={COLORS.neon} />
+          </Pressable>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
             Impressum
           </Text>
-          <Text style={{ fontSize: 14, color: colors.gray600 }}>
-            Hier findest du die Angaben zum Betreiber der App.
-          </Text>
         </View>
 
-        {/* Content */}
-        <View
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            padding: spacing.lg,
-            gap: spacing.md,
-          }}
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 20 }}
         >
-          <Text style={{ fontSize: 16, color: colors.black, lineHeight: 24 }}>
-            Name der Firma, Rechtsform, Anschrift, Kontakt und Handelsregister-Angaben werden hier noch ergänzt.
-          </Text>
-          
-          <View style={{ marginTop: spacing.md, gap: spacing.sm }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: colors.black }}>
-              Angaben gemäß § 5 TMG:
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-              [Firmenname]{'\n'}
-              [Rechtsform]{'\n'}
-              [Straße und Hausnummer]{'\n'}
-              [PLZ Ort]{'\n'}
-              [Land]
-            </Text>
+          <View style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 16,
+            padding: 20,
+            gap: 20,
+          }}>
+            {/* Hauptüberschrift */}
+            <View>
+              <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.black, marginBottom: 8 }}>
+                Impressum / Anbieterkennzeichnung
+              </Text>
+              <Text style={{ fontSize: 13, color: COLORS.gray, fontStyle: 'italic' }}>
+                (§ 5 TMG & § 18 Abs. 2 MStV)
+              </Text>
+            </View>
+
+            {/* Name */}
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.darkGray, marginBottom: 4 }}>
+                Name:
+              </Text>
+              <Text style={{ fontSize: 15, color: COLORS.black }}>
+                Jean-Christine Dickie
+              </Text>
+            </View>
+
+            {/* Adresse */}
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.darkGray, marginBottom: 4 }}>
+                Adresse:
+              </Text>
+              <Text style={{ fontSize: 15, color: COLORS.black }}>
+                Am Stadtpark 10{"\n"}
+                40699 Erkrath{"\n"}
+                Deutschland
+              </Text>
+            </View>
+
+            {/* E-Mail */}
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.darkGray, marginBottom: 4 }}>
+                E-Mail:
+              </Text>
+              <Text style={{ fontSize: 15, color: COLORS.purple }}>
+                jeandickie865@gmail.com
+              </Text>
+            </View>
+
+            {/* Telefon */}
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.darkGray, marginBottom: 4 }}>
+                Telefon:
+              </Text>
+              <Text style={{ fontSize: 15, color: COLORS.gray, fontStyle: 'italic' }}>
+                (nicht erforderlich, optional)
+              </Text>
+            </View>
+
+            {/* Umsatzsteuer */}
+            <View style={{
+              backgroundColor: COLORS.lightGray,
+              padding: 12,
+              borderRadius: 8,
+            }}>
+              <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                Keine Umsatzsteuer-ID vorhanden.
+              </Text>
+            </View>
+
+            {/* Hinweis */}
+            <View style={{
+              backgroundColor: '#FFF9E6',
+              padding: 16,
+              borderRadius: 12,
+              borderLeftWidth: 4,
+              borderLeftColor: COLORS.neon,
+            }}>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.darkGray, marginBottom: 8 }}>
+                Hinweis:
+              </Text>
+              <Text style={{ fontSize: 14, color: COLORS.darkGray, lineHeight: 20 }}>
+                Diese App befindet sich in einem privaten Testbetrieb (Beta).{"\n"}
+                Es erfolgt keine kommerzielle Nutzung und kein Verkauf von Dienstleistungen oder Produkten.
+              </Text>
+            </View>
+
+            {/* Verantwortlich */}
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.darkGray, marginBottom: 8 }}>
+                Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:
+              </Text>
+              <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
+                Jean-Christine Dickie{"\n"}
+                Am Stadtpark 10{"\n"}
+                40699 Erkrath
+              </Text>
+            </View>
           </View>
 
-          <View style={{ marginTop: spacing.sm, gap: spacing.sm }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: colors.black }}>
-              Kontakt:
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-              Telefon: [Telefonnummer]{'\n'}
-              E-Mail: [E-Mail-Adresse]
-            </Text>
-          </View>
-
-          <View style={{ marginTop: spacing.sm, gap: spacing.sm }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: colors.black }}>
-              Handelsregister:
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-              Eintragung im Handelsregister{'\n'}
-              Registergericht: [Gericht]{'\n'}
-              Registernummer: [Nummer]
-            </Text>
-          </View>
-
-          <View style={{ marginTop: spacing.sm, gap: spacing.sm }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: colors.black }}>
-              Umsatzsteuer-ID:
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.gray700, lineHeight: 22 }}>
-              Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:{'\n'}
-              [USt-IdNr.]
-            </Text>
-          </View>
-
-          <View style={{ marginTop: spacing.lg, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.gray200 }}>
-            <Text style={{ fontSize: 12, color: colors.gray500, lineHeight: 18, fontStyle: 'italic' }}>
-              Die vollständigen Angaben werden von der Rechtsabteilung ergänzt.
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ height: spacing.xl }} />
-      </ScrollView>
-    </SafeAreaView>
+          <View style={{ height: 40 }} />
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
