@@ -75,39 +75,67 @@ export default function JobDetailScreen() {
     })();
   }, [id, user, isLoading]);
 
-  // Load applications
+  // Auto-refresh interval ref
+  const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  // Load applications function
+  const loadApplications = async (silent = false) => {
+    if (!job || !user) return;
+
+    // Don't show loading spinner on auto-refresh
+    if (!silent) {
+      setIsLoadingApps(true);
+    }
+
+    try {
+      const apps = await getApplicationsForJob(job.id);
+      setApplications(apps);
+      const withProfiles: { 
+        app: JobApplication; 
+        profile: WorkerProfile | null; 
+        avgRating: number; 
+        reviewCount: number;
+      }[] = [];
+      for (const app of apps) {
+        const p = await getWorkerProfile(app.workerId);
+        const reviews = await getReviewsForWorker(app.workerId);
+        const avgRating = calculateAverageRating(reviews);
+        withProfiles.push({ 
+          app, 
+          profile: p, 
+          avgRating,
+          reviewCount: reviews.length
+        });
+      }
+      setApplicants(withProfiles);
+    } catch (e) {
+      console.error('Error loading applicants:', e);
+    } finally {
+      if (!silent) {
+        setIsLoadingApps(false);
+      }
+    }
+  };
+
+  // Initial load + setup auto-refresh
   useEffect(() => {
     if (!job || !user) return;
 
-    (async () => {
-      setIsLoadingApps(true);
-      try {
-        const apps = await getApplicationsForJob(job.id);
-        setApplications(apps);
-        const withProfiles: { 
-          app: JobApplication; 
-          profile: WorkerProfile | null; 
-          avgRating: number; 
-          reviewCount: number;
-        }[] = [];
-        for (const app of apps) {
-          const p = await getWorkerProfile(app.workerId);
-          const reviews = await getReviewsForWorker(app.workerId);
-          const avgRating = calculateAverageRating(reviews);
-          withProfiles.push({ 
-            app, 
-            profile: p, 
-            avgRating,
-            reviewCount: reviews.length
-          });
-        }
-        setApplicants(withProfiles);
-      } catch (e) {
-        console.error('Error loading applicants:', e);
-      } finally {
-        setIsLoadingApps(false);
+    // Load immediately
+    loadApplications();
+
+    // Start auto-refresh interval (5 seconds)
+    intervalRef.current = setInterval(() => {
+      loadApplications(true); // Silent refresh
+    }, 5000);
+
+    // Cleanup on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
-    })();
+    };
   }, [job?.id, user?.id]);
 
   // Check review
