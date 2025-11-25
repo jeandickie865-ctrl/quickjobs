@@ -307,20 +307,18 @@ export default function WorkerMatchesScreen() {
                   {application.status === 'accepted' ? (
                     <View style={{ gap: 12 }}>
                       <Pressable
-                        onPress={() => alert('Chat-Funktion wird bald verfügbar sein!')}
+                        onPress={() => router.push(`/chat/${application.id}`)}
                         style={({ pressed }) => ({
-                          backgroundColor: 'rgba(200, 255, 22, 0.3)',
+                          backgroundColor: COLORS.neon,
                           paddingVertical: 14,
                           borderRadius: 16,
                           alignItems: 'center',
                           opacity: pressed ? 0.9 : 1,
                           transform: [{ scale: pressed ? 0.98 : 1 }],
-                          borderWidth: 2,
-                          borderColor: COLORS.neon,
                         })}
                       >
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
-                          💬 Chat (demnächst)
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                          💬 Zum Chat
                         </Text>
                       </Pressable>
                       
