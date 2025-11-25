@@ -254,25 +254,55 @@ export default function WorkerProfileScreen() {
   };
 
   const handleSave = async () => {
-    // BUG 3 FIX: Validierung
+    // PFLICHTFELD-VALIDIERUNG
     if (!user) {
       return Alert.alert('Fehler', 'Du bist nicht eingeloggt.');
     }
 
-    if (!name.trim()) return Alert.alert('Fehler', 'Bitte Name eingeben');
-    if (!street.trim() || !postalCode.trim() || !city.trim())
-      return Alert.alert('Fehler', 'Bitte vollständige Adresse eingeben');
+    // Vorname und Nachname separat prüfen
+    const nameParts = name.trim().split(' ');
+    if (nameParts.length < 2) {
+      return Alert.alert('Fehler', 'Bitte Vor- und Nachname eingeben (z.B. "Max Mustermann")');
+    }
 
+    // Telefonnummer (Pflicht)
+    if (!contactPhone || contactPhone.trim() === '') {
+      return Alert.alert('Fehler', 'Telefonnummer ist ein Pflichtfeld');
+    }
+
+    // Adresse (alle Felder Pflicht)
+    if (!street.trim()) {
+      return Alert.alert('Fehler', 'Straße und Hausnummer sind Pflichtfelder');
+    }
+    if (!postalCode.trim()) {
+      return Alert.alert('Fehler', 'Postleitzahl ist ein Pflichtfeld');
+    }
+    if (!city.trim()) {
+      return Alert.alert('Fehler', 'Stadt ist ein Pflichtfeld');
+    }
+
+    // Arbeitsradius (Pflicht)
     const radius = parseInt(radiusKm);
-    if (isNaN(radius) || radius < 1 || radius > 200)
-      return Alert.alert('Fehler', 'Radius muss zwischen 1 und 200 km liegen');
+    if (isNaN(radius) || radius < 1 || radius > 200) {
+      return Alert.alert('Fehler', 'Arbeitsradius muss zwischen 1 und 200 km liegen');
+    }
 
-    // BUG 2 FIX RELATED: Koordinaten sind optional (nicht mehr zwingend erforderlich)
-    // Aber wir zeigen eine Warnung
+    // Mindestens 1 Kategorie (Pflicht)
+    if (!selectedCategories || selectedCategories.length === 0) {
+      return Alert.alert('Fehler', 'Bitte wähle mindestens eine Kategorie aus');
+    }
+
+    // Mindestens 1 Tag/Qualifikation (Pflicht)
+    const combinedTags = [...selectedActivities, ...selectedQualifications];
+    if (combinedTags.length === 0) {
+      return Alert.alert('Fehler', 'Bitte wähle mindestens eine Tätigkeit oder Qualifikation aus');
+    }
+
+    // Koordinaten Warning (optional, aber empfohlen)
     if (!lat || !lon) {
       Alert.alert(
         'Hinweis',
-        'Koordinaten fehlen. Du kannst das Profil trotzdem speichern, aber das Radius-Matching funktioniert nur mit Koordinaten. Wähle deine Adresse aus der Vorschlagsliste für besseres Matching.',
+        'Koordinaten fehlen. Das Radius-Matching funktioniert nur mit Koordinaten. Wähle deine Adresse aus der Vorschlagsliste für besseres Matching.',
         [
           { text: 'Abbrechen', style: 'cancel' },
           { 
