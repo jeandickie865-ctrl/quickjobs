@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend Infrastructure Test Suite for ShiftMatch App
-Tests basic backend functionality after frontend address autocomplete fix
+Backend API Testing Suite for ShiftMatch Worker Profile System
+Tests the newly implemented Worker Profile API endpoints with MongoDB integration
 """
 
 import requests
@@ -9,133 +9,344 @@ import json
 import sys
 from datetime import datetime
 
-# Backend URL from frontend/.env
-BASE_URL = "https://jobfinder-de.preview.emergentagent.com"
-BACKEND_URL = f"{BASE_URL}/api"
+# Get backend URL from frontend .env
+BACKEND_URL = "https://jobfinder-de.preview.emergentagent.com/api"
 
-def test_health_check():
-    """Test GET /api/health endpoint"""
-    print("🔍 Testing Health Check Endpoint...")
+# Test data for Worker Profile API
+TEST_USER_ID = "user_testworker_test_de"
+AUTH_HEADER = {"Authorization": f"Bearer {TEST_USER_ID}"}
+
+WORKER_PROFILE_DATA = {
+    "categories": ["gastronomie", "lager_logistik"],
+    "selectedTags": ["service_kellner", "kommissionierung"],
+    "radiusKm": 25,
+    "homeAddress": {
+        "street": "Teststraße 123",
+        "postalCode": "10115",
+        "city": "Berlin",
+        "country": "DE"
+    },
+    "homeLat": 52.5200,
+    "homeLon": 13.4050,
+    "firstName": "Test",
+    "shortBio": "Erfahrener Worker"
+}
+
+PROFILE_UPDATE_DATA = {
+    "categories": ["gastronomie", "lager_logistik", "reinigung"],
+    "selectedTags": ["service_kellner", "kommissionierung", "buero_reinigung"],
+    "radiusKm": 30,
+    "firstName": "Test Updated",
+    "shortBio": "Sehr erfahrener Worker mit neuen Skills"
+}
+
+def print_test_header(test_name):
+    print(f"\n{'='*60}")
+    print(f"🧪 {test_name}")
+    print(f"{'='*60}")
+
+def print_success(message):
+    print(f"✅ {message}")
+
+def print_error(message):
+    print(f"❌ {message}")
+
+def print_info(message):
+    print(f"ℹ️  {message}")
+
+def test_backend_health():
+    """Test basic backend connectivity"""
+    print_test_header("Backend Health Check")
+    
     try:
-        response = requests.get(f"{BACKEND_URL}/health", timeout=10)
+        response = requests.get(f"{BACKEND_URL}/", timeout=10)
         if response.status_code == 200:
-            data = response.json()
-            if data.get("status") == "healthy":
-                print("✅ Health Check: PASSED - GET /api/health returns healthy")
-                return True
-            else:
-                print(f"❌ Health Check: FAILED - Unexpected response: {data}")
-                return False
+            print_success(f"Backend is running: {response.json()}")
+            return True
         else:
-            print(f"❌ Health Check: FAILED - Status {response.status_code}")
+            print_error(f"Backend health check failed: {response.status_code}")
             return False
     except Exception as e:
-        print(f"❌ Health Check: FAILED - Error: {str(e)}")
+        print_error(f"Backend connection failed: {str(e)}")
         return False
 
-def test_frontend_serving():
-    """Test that frontend is being served at root"""
-    print("🔍 Testing Frontend Serving...")
+def test_create_worker_profile():
+    """Test POST /api/profiles/worker - Create worker profile"""
+    print_test_header("Create Worker Profile")
+    
     try:
-        response = requests.get(f"{BASE_URL}/", timeout=10)
-        if response.status_code == 200:
-            content = response.text
-            if "<!DOCTYPE html>" in content and "expo" in content.lower():
-                print("✅ Frontend Serving: PASSED - Root serves frontend HTML")
-                return True
-            else:
-                print(f"❌ Frontend Serving: FAILED - Unexpected content type")
-                return False
+        # Create new profile
+        response = requests.post(
+            f"{BACKEND_URL}/profiles/worker",
+            headers={**AUTH_HEADER, "Content-Type": "application/json"},
+            json=WORKER_PROFILE_DATA,
+            timeout=10
+        )
+        
+        print_info(f"Response Status: {response.status_code}")
+        print_info(f"Response Headers: {dict(response.headers)}")
+        
+        if response.status_code in [200, 201]:
+            profile = response.json()
+            print_success("Worker profile created successfully")
+            print_info(f"Profile ID: {profile.get('userId')}")
+            print_info(f"Categories: {profile.get('categories')}")
+            print_info(f"Selected Tags: {profile.get('selectedTags')}")
+            print_info(f"Home Address: {profile.get('homeAddress')}")
+            print_info(f"Created At: {profile.get('createdAt')}")
+            return True, profile
+        elif response.status_code == 400:
+            # Profile might already exist, try to get it
+            print_info("Profile might already exist (400), checking existing profile...")
+            return test_get_worker_profile()
         else:
-            print(f"❌ Frontend Serving: FAILED - Status {response.status_code}")
-            return False
+            print_error(f"Profile creation failed: {response.status_code}")
+            print_error(f"Response: {response.text}")
+            return False, None
+            
     except Exception as e:
-        print(f"❌ Frontend Serving: FAILED - Error: {str(e)}")
-        return False
+        print_error(f"Profile creation error: {str(e)}")
+        return False, None
 
-def check_backend_service():
-    """Check if backend service is running"""
-    print("🔍 Checking Backend Service Status...")
+def test_get_worker_profile():
+    """Test GET /api/profiles/worker/{user_id} - Get worker profile"""
+    print_test_header("Get Worker Profile")
+    
     try:
-        # Test health endpoint to verify backend is running
-        response = requests.get(f"{BACKEND_URL}/health", timeout=5)
+        response = requests.get(
+            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
+            headers=AUTH_HEADER,
+            timeout=10
+        )
+        
+        print_info(f"Response Status: {response.status_code}")
+        
         if response.status_code == 200:
-            data = response.json()
-            if data.get("status") == "healthy":
-                print("✅ Backend Service: RUNNING - Health check successful")
-                return True
-            else:
-                print(f"❌ Backend Service: ISSUE - Unexpected health response: {data}")
-                return False
+            profile = response.json()
+            print_success("Worker profile retrieved successfully")
+            print_info(f"Profile ID: {profile.get('userId')}")
+            print_info(f"Categories: {profile.get('categories')}")
+            print_info(f"Selected Tags: {profile.get('selectedTags')}")
+            print_info(f"Radius: {profile.get('radiusKm')} km")
+            print_info(f"First Name: {profile.get('firstName')}")
+            return True, profile
+        elif response.status_code == 404:
+            print_error("Profile not found (404)")
+            print_info("This is expected if profile hasn't been created yet")
+            return False, None
         else:
-            print(f"❌ Backend Service: ISSUE - Health check failed with status {response.status_code}")
-            return False
-    except requests.exceptions.ConnectionError:
-        print("❌ Backend Service: DOWN - Cannot connect to backend")
-        return False
+            print_error(f"Profile retrieval failed: {response.status_code}")
+            print_error(f"Response: {response.text}")
+            return False, None
+            
     except Exception as e:
-        print(f"❌ Backend Service: ERROR - {str(e)}")
-        return False
+        print_error(f"Profile retrieval error: {str(e)}")
+        return False, None
 
-def test_api_docs():
-    """Test API documentation endpoint"""
-    print("🔍 Testing API Documentation...")
+def test_update_worker_profile():
+    """Test PUT /api/profiles/worker/{user_id} - Update worker profile"""
+    print_test_header("Update Worker Profile")
+    
     try:
-        response = requests.get(f"{BACKEND_URL}/docs", timeout=10)
+        response = requests.put(
+            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
+            headers={**AUTH_HEADER, "Content-Type": "application/json"},
+            json=PROFILE_UPDATE_DATA,
+            timeout=10
+        )
+        
+        print_info(f"Response Status: {response.status_code}")
+        
         if response.status_code == 200:
-            content = response.text
-            if "swagger" in content.lower() or "openapi" in content.lower():
-                print("✅ API Documentation: PASSED - Swagger docs accessible")
-                return True
-            else:
-                print("❌ API Documentation: FAILED - Not Swagger/OpenAPI docs")
-                return False
+            profile = response.json()
+            print_success("Worker profile updated successfully")
+            print_info(f"Updated Categories: {profile.get('categories')}")
+            print_info(f"Updated Tags: {profile.get('selectedTags')}")
+            print_info(f"Updated Radius: {profile.get('radiusKm')} km")
+            print_info(f"Updated Name: {profile.get('firstName')}")
+            print_info(f"Updated At: {profile.get('updatedAt')}")
+            return True, profile
+        elif response.status_code == 404:
+            print_error("Profile not found for update (404)")
+            return False, None
         else:
-            print(f"❌ API Documentation: FAILED - Status {response.status_code}")
-            return False
+            print_error(f"Profile update failed: {response.status_code}")
+            print_error(f"Response: {response.text}")
+            return False, None
+            
     except Exception as e:
-        print(f"❌ API Documentation: FAILED - Error: {str(e)}")
+        print_error(f"Profile update error: {str(e)}")
+        return False, None
+
+def test_authorization():
+    """Test authorization - user can only access their own profile"""
+    print_test_header("Authorization Testing")
+    
+    try:
+        # Test with different user ID in URL vs token
+        different_user_id = "different_user_123"
+        
+        response = requests.get(
+            f"{BACKEND_URL}/profiles/worker/{different_user_id}",
+            headers=AUTH_HEADER,  # Token for TEST_USER_ID
+            timeout=10
+        )
+        
+        print_info(f"Response Status: {response.status_code}")
+        
+        if response.status_code == 404:
+            print_success("Authorization working: Different user profile not accessible")
+            return True
+        elif response.status_code == 403:
+            print_success("Authorization working: Access forbidden for different user")
+            return True
+        else:
+            print_error(f"Authorization test unexpected result: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print_error(f"Authorization test error: {str(e)}")
         return False
 
-def main():
-    """Run all backend tests"""
-    print("=" * 60)
-    print("🚀 BACKEND INFRASTRUCTURE TEST SUITE")
-    print("=" * 60)
-    print(f"Base URL: {BASE_URL}")
-    print(f"API URL: {BACKEND_URL}")
-    print(f"Test Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("-" * 60)
+def test_invalid_auth():
+    """Test invalid authorization header"""
+    print_test_header("Invalid Authorization Testing")
     
-    tests_passed = 0
-    total_tests = 4
+    try:
+        # Test without authorization header
+        response = requests.get(
+            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
+            timeout=10
+        )
+        
+        print_info(f"No auth header - Status: {response.status_code}")
+        
+        if response.status_code == 401:
+            print_success("Unauthorized access correctly blocked (401)")
+        else:
+            print_error(f"Expected 401, got {response.status_code}")
+            
+        # Test with invalid authorization format
+        response = requests.get(
+            f"{BACKEND_URL}/profiles/worker/{TEST_USER_ID}",
+            headers={"Authorization": "InvalidFormat"},
+            timeout=10
+        )
+        
+        print_info(f"Invalid auth format - Status: {response.status_code}")
+        
+        if response.status_code == 401:
+            print_success("Invalid auth format correctly blocked (401)")
+            return True
+        else:
+            print_error(f"Expected 401, got {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print_error(f"Invalid auth test error: {str(e)}")
+        return False
+
+def test_mongodb_storage():
+    """Test that profiles are actually stored in MongoDB"""
+    print_test_header("MongoDB Storage Verification")
     
-    # Test 1: Backend Service Status
-    if check_backend_service():
-        tests_passed += 1
+    try:
+        # Create a profile and then retrieve it to verify persistence
+        create_success, created_profile = test_create_worker_profile()
+        
+        if not create_success:
+            print_error("Cannot test MongoDB storage - profile creation failed")
+            return False
+            
+        # Wait a moment and retrieve again to ensure it's persisted
+        import time
+        time.sleep(1)
+        
+        get_success, retrieved_profile = test_get_worker_profile()
+        
+        if not get_success:
+            print_error("MongoDB storage test failed - cannot retrieve created profile")
+            return False
+            
+        # Verify data integrity
+        if (retrieved_profile.get('categories') == WORKER_PROFILE_DATA['categories'] and
+            retrieved_profile.get('selectedTags') == WORKER_PROFILE_DATA['selectedTags'] and
+            retrieved_profile.get('radiusKm') == WORKER_PROFILE_DATA['radiusKm']):
+            print_success("MongoDB storage verified - data persisted correctly")
+            return True
+        else:
+            print_error("MongoDB storage test failed - data integrity issues")
+            return False
+            
+    except Exception as e:
+        print_error(f"MongoDB storage test error: {str(e)}")
+        return False
+
+def run_comprehensive_test():
+    """Run complete test suite for Worker Profile API"""
+    print("🚀 Starting Comprehensive Worker Profile API Testing")
+    print(f"Backend URL: {BACKEND_URL}")
+    print(f"Test User ID: {TEST_USER_ID}")
     
-    # Test 2: Frontend Serving
-    if test_frontend_serving():
-        tests_passed += 1
+    results = {
+        "backend_health": False,
+        "create_profile": False,
+        "get_profile": False,
+        "update_profile": False,
+        "authorization": False,
+        "invalid_auth": False,
+        "mongodb_storage": False
+    }
     
-    # Test 3: Health Check
-    if test_health_check():
-        tests_passed += 1
+    # Test 1: Backend Health
+    results["backend_health"] = test_backend_health()
     
-    # Test 4: API Documentation
-    if test_api_docs():
-        tests_passed += 1
+    if not results["backend_health"]:
+        print_error("Backend is not accessible. Stopping tests.")
+        return results
     
-    print("-" * 60)
-    print(f"📊 TEST RESULTS: {tests_passed}/{total_tests} tests passed")
+    # Test 2: Create Profile
+    results["create_profile"], created_profile = test_create_worker_profile()
     
-    if tests_passed == total_tests:
-        print("🎉 ALL TESTS PASSED - Backend Infrastructure is stable")
-        return True
+    # Test 3: Get Profile
+    results["get_profile"], retrieved_profile = test_get_worker_profile()
+    
+    # Test 4: Update Profile (only if profile exists)
+    if results["get_profile"]:
+        results["update_profile"], updated_profile = test_update_worker_profile()
+    
+    # Test 5: Authorization
+    results["authorization"] = test_authorization()
+    
+    # Test 6: Invalid Auth
+    results["invalid_auth"] = test_invalid_auth()
+    
+    # Test 7: MongoDB Storage
+    results["mongodb_storage"] = test_mongodb_storage()
+    
+    # Summary
+    print_test_header("TEST SUMMARY")
+    passed = sum(results.values())
+    total = len(results)
+    
+    for test_name, passed_test in results.items():
+        status = "✅ PASS" if passed_test else "❌ FAIL"
+        print(f"{status} {test_name.replace('_', ' ').title()}")
+    
+    print(f"\n🎯 Overall Result: {passed}/{total} tests passed")
+    
+    if passed == total:
+        print_success("🎉 ALL TESTS PASSED - Worker Profile API is fully functional!")
     else:
-        print(f"⚠️  {total_tests - tests_passed} tests failed - Backend has issues")
-        return False
+        print_error(f"⚠️  {total - passed} tests failed - Issues need to be addressed")
+    
+    return results
 
 if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    results = run_comprehensive_test()
+    
+    # Exit with appropriate code
+    if all(results.values()):
+        sys.exit(0)  # Success
+    else:
+        sys.exit(1)  # Failure
