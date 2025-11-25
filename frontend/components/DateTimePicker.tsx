@@ -163,12 +163,12 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 8,
   },
   label: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#C8FF16',
+    color: '#5941FF',
     marginBottom: 8,
   },
   button: {
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#FFF',
     borderWidth: 2,
-    borderColor: '#C8FF16',
+    borderColor: '#5941FF',
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 14,
