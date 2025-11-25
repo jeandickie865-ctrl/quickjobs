@@ -66,447 +66,374 @@ class DistanceMatchingTester:
         except Exception as e:
             print(f"Request failed: {e}")
             return None
-    
-    def test_backend_health(self) -> bool:
+
+    def test_backend_health(self):
         """Test basic backend connectivity"""
         print("\n=== BACKEND HEALTH CHECK ===")
         
-        # Test root endpoint
-        success, response, status = self.make_request("GET", "/")
-        if success and status == 200:
-            self.log_result("Backend Root Endpoint", True, f"Response: {response.json()}")
-            return True
-        else:
-            self.log_result("Backend Root Endpoint", False, f"Status: {status if success else 'No response'}")
-            return False
-    
-    def setup_test_data(self) -> bool:
-        """Create test jobs and applications for chat testing"""
-        print("\n=== SETTING UP TEST DATA ===")
-        
-        # Create test job
-        job_data = {
-            "title": "Test Chat Job - Sicherheitsdienst",
-            "description": "Job für Chat-System Testing",
-            "category": "sicherheit",
-            "timeMode": "fixed_time",
-            "startAt": "2024-12-20T10:00:00",
-            "endAt": "2024-12-20T18:00:00",
-            "address": {
-                "street": "Teststraße 1",
-                "postalCode": "10115",
-                "city": "Berlin",
-                "country": "DE"
-            },
-            "lat": 52.5200,
-            "lon": 13.4050,
-            "workerAmountCents": 15000,
-            "paymentToWorker": "cash",
-            "required_all_tags": ["security_guard"],
-            "required_any_tags": ["first_aid"]
-        }
-        
-        # Create job as employer
-        headers = {"Authorization": f"Bearer {TEST_EMPLOYER}"}
-        success, response, status = self.make_request("POST", "/jobs", headers, job_data)
-        if not success or status != 200:
-            self.log_result("Setup - Job Creation", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        job = response.json()
-        self.test_jobs.append(job)
-        self.log_result("Setup - Job Creation", True, f"Job ID: {job['id']}")
-        
-        # Create application as worker
-        app_data = {
-            "jobId": job["id"],
-            "workerId": TEST_WORKER,
-            "employerId": TEST_EMPLOYER
-        }
-        
-        worker_headers = {"Authorization": f"Bearer {TEST_WORKER}"}
-        success, response, status = self.make_request("POST", "/applications", worker_headers, app_data)
-        if not success or status != 200:
-            self.log_result("Setup - Application Creation", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        application = response.json()
-        self.test_applications.append(application)
-        self.log_result("Setup - Application Creation", True, f"Application ID: {application['id']}")
-        
-        return True
-    
-    def test_chat_system(self) -> bool:
-        """Test Chat Messages API - Critical Priority"""
-        print("\n=== CHAT SYSTEM TESTING (CRITICAL) ===")
-        
-        if not self.test_applications:
-            self.log_result("Chat System", False, "No test applications available")
-            return False
-        
-        app_id = self.test_applications[0]["id"]
-        
-        # Test 1: Worker sends message to Employer
-        message_data = {
-            "applicationId": app_id,
-            "message": "Hallo, ich bin interessiert an diesem Job!"
-        }
-        
-        worker_headers = {"Authorization": f"Bearer {TEST_WORKER}"}
-        success, response, status = self.make_request("POST", "/chat/messages", worker_headers, message_data)
-        if not success or status != 200:
-            self.log_result("POST /api/chat/messages (Worker)", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        worker_msg = response.json()
-        expected_fields = ["id", "applicationId", "senderId", "senderRole", "message", "createdAt", "read"]
-        missing_fields = [field for field in expected_fields if field not in worker_msg]
-        
-        if missing_fields:
-            self.log_result("POST /api/chat/messages (Worker)", False, f"Missing fields: {missing_fields}")
-            return False
-        
-        if worker_msg["senderRole"] != "worker":
-            self.log_result("POST /api/chat/messages (Worker)", False, f"Expected senderRole 'worker', got '{worker_msg['senderRole']}'")
-            return False
-        
-        self.log_result("POST /api/chat/messages (Worker)", True, f"Message ID: {worker_msg['id']}, Sender: {worker_msg['senderRole']}")
-        
-        # Test 2: Employer retrieves messages (should mark worker message as read)
-        employer_headers = {"Authorization": f"Bearer {TEST_EMPLOYER}"}
-        success, response, status = self.make_request("GET", f"/chat/messages/{app_id}", employer_headers)
-        if not success or status != 200:
-            self.log_result("GET /api/chat/messages/{applicationId} (Employer)", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        messages = response.json()
-        if len(messages) != 1:
-            self.log_result("GET /api/chat/messages/{applicationId} (Employer)", False, f"Expected 1 message, got {len(messages)}")
-            return False
-        
-        # Check if message was marked as read (auto-read functionality)
-        if messages[0]["read"] != True:
-            self.log_result("Auto-Read Functionality", False, f"Message should be marked as read=true, got read={messages[0]['read']}")
-            return False
-        
-        self.log_result("GET /api/chat/messages/{applicationId} (Employer)", True, f"Retrieved {len(messages)} messages")
-        self.log_result("Auto-Read Functionality", True, "Worker message marked as read when employer fetched messages")
-        
-        # Test 3: Employer sends reply
-        reply_data = {
-            "applicationId": app_id,
-            "message": "Hallo! Ja, Sie sind perfekt für diesen Job. Wann können Sie anfangen?"
-        }
-        
-        success, response, status = self.make_request("POST", "/chat/messages", employer_headers, reply_data)
-        if not success or status != 200:
-            self.log_result("POST /api/chat/messages (Employer Reply)", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        employer_msg = response.json()
-        if employer_msg["senderRole"] != "employer":
-            self.log_result("POST /api/chat/messages (Employer Reply)", False, f"Expected senderRole 'employer', got '{employer_msg['senderRole']}'")
-            return False
-        
-        self.log_result("POST /api/chat/messages (Employer Reply)", True, f"Message ID: {employer_msg['id']}, Sender: {employer_msg['senderRole']}")
-        
-        # Test 4: Worker retrieves all messages (should see both messages)
-        success, response, status = self.make_request("GET", f"/chat/messages/{app_id}", worker_headers)
-        if not success or status != 200:
-            self.log_result("GET /api/chat/messages/{applicationId} (Worker Final)", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        final_messages = response.json()
-        if len(final_messages) != 2:
-            self.log_result("GET /api/chat/messages/{applicationId} (Worker Final)", False, f"Expected 2 messages, got {len(final_messages)}")
-            return False
-        
-        # Check message order (should be sorted by createdAt)
-        if final_messages[0]["senderRole"] != "worker" or final_messages[1]["senderRole"] != "employer":
-            self.log_result("Message Ordering", False, "Messages not in correct chronological order")
-            return False
-        
-        # Check if employer message was marked as read
-        if final_messages[1]["read"] != True:
-            self.log_result("Auto-Read Functionality (Employer Message)", False, f"Employer message should be marked as read=true, got read={final_messages[1]['read']}")
-            return False
-        
-        self.log_result("GET /api/chat/messages/{applicationId} (Worker Final)", True, f"Retrieved {len(final_messages)} messages in correct order")
-        self.log_result("Auto-Read Functionality (Employer Message)", True, "Employer message marked as read when worker fetched messages")
-        
-        return True
-    
-    def test_reviews_system(self) -> bool:
-        """Test Reviews/Ratings System"""
-        print("\n=== REVIEWS/RATINGS SYSTEM TESTING ===")
-        
-        if not self.test_jobs:
-            self.log_result("Reviews System", False, "No test jobs available")
-            return False
-        
-        job_id = self.test_jobs[0]["id"]
-        
-        # Test 1: Create Review
-        review_data = {
-            "jobId": job_id,
-            "workerId": TEST_WORKER,
-            "employerId": TEST_EMPLOYER,
-            "rating": 5,
-            "comment": "Ausgezeichneter Worker! Sehr zuverlässig und professionell."
-        }
-        
-        employer_headers = {"Authorization": f"Bearer {TEST_EMPLOYER}"}
-        success, response, status = self.make_request("POST", "/reviews", employer_headers, review_data)
-        if not success or status != 200:
-            self.log_result("POST /api/reviews", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        review = response.json()
-        expected_fields = ["id", "jobId", "workerId", "employerId", "rating", "comment", "createdAt"]
-        missing_fields = [field for field in expected_fields if field not in review]
-        
-        if missing_fields:
-            self.log_result("POST /api/reviews", False, f"Missing fields: {missing_fields}")
-            return False
-        
-        if review["rating"] != 5:
-            self.log_result("POST /api/reviews", False, f"Expected rating 5, got {review['rating']}")
-            return False
-        
-        self.test_reviews.append(review)
-        self.log_result("POST /api/reviews", True, f"Review created: {review['id']}, Rating: {review['rating']}")
-        
-        # Test 2: Duplicate Review Check (should update existing)
-        updated_review_data = {
-            "jobId": job_id,
-            "workerId": TEST_WORKER,
-            "employerId": TEST_EMPLOYER,
-            "rating": 4,
-            "comment": "Guter Worker, aber könnte pünktlicher sein."
-        }
-        
-        success, response, status = self.make_request("POST", "/reviews", employer_headers, updated_review_data)
-        if not success or status != 200:
-            self.log_result("POST /api/reviews (Duplicate Check)", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        updated_review = response.json()
-        if updated_review["rating"] != 4:
-            self.log_result("Duplicate Review Update", False, f"Rating should be updated to 4, got {updated_review['rating']}")
-            return False
-        
-        self.log_result("POST /api/reviews (Duplicate Check)", True, "Existing review updated instead of creating duplicate")
-        self.log_result("Duplicate Review Update", True, f"Rating updated from 5 to {updated_review['rating']}")
-        
-        # Test 3: Get Reviews for Worker
-        success, response, status = self.make_request("GET", f"/reviews/worker/{TEST_WORKER}", employer_headers)
-        if not success or status != 200:
-            self.log_result("GET /api/reviews/worker/{workerId}", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        worker_reviews = response.json()
-        if len(worker_reviews) < 1:
-            self.log_result("GET /api/reviews/worker/{workerId}", False, f"Expected at least 1 review, got {len(worker_reviews)}")
-            return False
-        
-        self.log_result("GET /api/reviews/worker/{workerId}", True, f"Retrieved {len(worker_reviews)} reviews for worker")
-        
-        # Test 4: Get Reviews for Employer
-        worker_headers = {"Authorization": f"Bearer {TEST_WORKER}"}
-        success, response, status = self.make_request("GET", f"/reviews/employer/{TEST_EMPLOYER}", worker_headers)
-        if not success or status != 200:
-            self.log_result("GET /api/reviews/employer/{employerId}", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        employer_reviews = response.json()
-        self.log_result("GET /api/reviews/employer/{employerId}", True, f"Retrieved {len(employer_reviews)} reviews for employer")
-        
-        return True
-    
-    def test_employer_profiles(self) -> bool:
-        """Test Employer Profile System"""
-        print("\n=== EMPLOYER PROFILE SYSTEM TESTING ===")
-        
-        # Test 1: Create Employer Profile
-        profile_data = {
-            "firstName": "Max",
-            "lastName": "Mustermann",
-            "company": "Mustermann GmbH",
-            "phone": "+49 30 12345678",
-            "email": "max.mustermann@example.com",
-            "street": "Musterstraße 123",
-            "postalCode": "10115",
-            "city": "Berlin",
-            "lat": 52.5200,
-            "lon": 13.4050,
-            "paymentMethod": "card",
-            "shortBio": "Erfahrener Arbeitgeber mit über 10 Jahren Erfahrung."
-        }
-        
-        employer_headers = {"Authorization": f"Bearer {TEST_EMPLOYER}"}
-        success, response, status = self.make_request("POST", "/profiles/employer", employer_headers, profile_data)
-        
-        if success and status == 400:
-            # Profile might already exist, try to get it
-            self.log_result("POST /api/profiles/employer", "INFO", "Profile already exists, testing GET instead")
-        elif not success or status != 200:
-            self.log_result("POST /api/profiles/employer", False, f"Status: {status if success else 'No response'}")
-            return False
-        else:
-            created_profile = response.json()
-            expected_fields = ["userId", "firstName", "lastName", "phone", "email", "street", "postalCode", "city"]
-            missing_fields = [field for field in expected_fields if field not in created_profile]
-            
-            if missing_fields:
-                self.log_result("POST /api/profiles/employer", False, f"Missing fields: {missing_fields}")
-                return False
-            
-            self.log_result("POST /api/profiles/employer", True, f"Profile created for user: {created_profile['userId']}")
-        
-        # Test 2: Get Employer Profile
-        success, response, status = self.make_request("GET", f"/profiles/employer/{TEST_EMPLOYER}", employer_headers)
-        if not success or status != 200:
-            self.log_result("GET /api/profiles/employer/{userId}", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        profile = response.json()
-        required_fields = ["firstName", "lastName", "phone", "email", "street", "postalCode", "city"]
-        missing_fields = [field for field in required_fields if not profile.get(field)]
-        
-        if missing_fields:
-            self.log_result("GET /api/profiles/employer/{userId}", False, f"Missing required fields: {missing_fields}")
-            return False
-        
-        self.log_result("GET /api/profiles/employer/{userId}", True, "Profile retrieved with all required fields")
-        
-        # Test 3: Update Employer Profile
-        update_data = {
-            "company": "Updated Mustermann AG",
-            "shortBio": "Aktualisierte Biografie mit neuen Informationen.",
-            "paymentMethod": "paypal"
-        }
-        
-        success, response, status = self.make_request("PUT", f"/profiles/employer/{TEST_EMPLOYER}", employer_headers, update_data)
-        if not success or status != 200:
-            self.log_result("PUT /api/profiles/employer/{userId}", False, f"Status: {status if success else 'No response'}")
-            return False
-        
-        updated_profile = response.json()
-        if updated_profile.get("company") != "Updated Mustermann AG":
-            self.log_result("PUT /api/profiles/employer/{userId}", False, "Company not updated correctly")
-            return False
-        
-        self.log_result("PUT /api/profiles/employer/{userId}", True, "Profile updated successfully")
-        
-        return True
-    
-    def test_previous_systems_smoke(self) -> bool:
-        """Smoke test for previously implemented systems"""
-        print("\n=== PREVIOUS SYSTEMS SMOKE TEST ===")
-        
-        # Test Worker Profiles
-        worker_headers = {"Authorization": f"Bearer {TEST_WORKER}"}
-        success, response, status = self.make_request("GET", f"/profiles/worker/{TEST_WORKER}", worker_headers)
-        if success and status == 200:
-            self.log_result("Worker Profiles (GET)", True, "Worker profile endpoint accessible")
-        else:
-            self.log_result("Worker Profiles (GET)", "WARN", f"Status: {status if success else 'No response'}")
-        
-        # Test Jobs (GET employer jobs)
-        employer_headers = {"Authorization": f"Bearer {TEST_EMPLOYER}"}
-        success, response, status = self.make_request("GET", f"/jobs/employer/{TEST_EMPLOYER}", employer_headers)
-        if success and status == 200:
-            jobs = response.json()
-            self.log_result("Jobs System (GET employer jobs)", True, f"Retrieved {len(jobs)} jobs for employer")
-        else:
-            self.log_result("Jobs System (GET employer jobs)", "WARN", f"Status: {status if success else 'No response'}")
-        
-        # Test Applications (GET worker applications)
-        success, response, status = self.make_request("GET", f"/applications/worker/{TEST_WORKER}", worker_headers)
-        if success and status == 200:
-            apps = response.json()
-            self.log_result("Applications System (GET worker applications)", True, f"Retrieved {len(apps)} applications for worker")
-        else:
-            self.log_result("Applications System (GET worker applications)", "WARN", f"Status: {status if success else 'No response'}")
-        
-        return True
-    
-    def run_comprehensive_test(self) -> bool:
-        """Run the complete test suite as requested in German review"""
-        print("🚀 STARTING COMPREHENSIVE BACKEND API TESTING")
-        print("=" * 60)
-        print(f"Base URL: {self.base_url}")
-        print(f"Test Worker ID: {TEST_WORKER}")
-        print(f"Test Employer ID: {TEST_EMPLOYER}")
-        
-        # Track test results
-        test_results = {}
-        
-        # Step 1: Backend Health Check
-        test_results["Backend Health"] = self.test_backend_health()
-        if not test_results["Backend Health"]:
-            print("❌ Backend health check failed - aborting")
-            return False
-        
-        # Step 2: Setup test data
-        test_results["Test Data Setup"] = self.setup_test_data()
-        if not test_results["Test Data Setup"]:
-            print("❌ Failed to setup test data - aborting")
-            return False
-        
-        # Step 3: Test Chat System (Critical Priority)
-        test_results["Chat System"] = self.test_chat_system()
-        
-        # Step 4: Test Reviews System
-        test_results["Reviews System"] = self.test_reviews_system()
-        
-        # Step 5: Test Employer Profiles
-        test_results["Employer Profiles"] = self.test_employer_profiles()
-        
-        # Step 6: Smoke test previous systems
-        test_results["Previous Systems"] = self.test_previous_systems_smoke()
-        
-        # Summary
-        print("\n" + "=" * 60)
-        print("🎯 TEST SUMMARY")
-        print("=" * 60)
-        
-        passed = sum(1 for result in test_results.values() if result is True)
-        total = len(test_results)
-        
-        for test_name, result in test_results.items():
-            if result is True:
-                status = "✅ PASS"
-            elif result is False:
-                status = "❌ FAIL"
+        response = self.make_request("GET", "/")
+        if response and response.status_code == 200:
+            data = response.json()
+            if data.get("message") == "Hello World":
+                self.log_test("Backend Health Check", True, "Backend is responding correctly")
+                return True
             else:
-                status = "⚠️  WARN"
-            print(f"{status} {test_name}")
+                self.log_test("Backend Health Check", False, f"Unexpected response: {data}")
+                return False
+        else:
+            status_code = response.status_code if response else "No response"
+            self.log_test("Backend Health Check", False, f"Backend not responding: {status_code}")
+            return False
+
+    def test_create_worker_profile(self):
+        """Test creating worker profile for distance testing"""
+        print("\n=== CREATING TEST WORKER PROFILE ===")
         
-        print(f"\n📊 RESULTS: {passed}/{total} test suites passed")
+        worker_data = {
+            "categories": ["sicherheit", "gastronomie"],
+            "selectedTags": ["service_kellner", "Sachkunde nach § 34a GewO"],
+            "radiusKm": 20,
+            "homeAddress": {
+                "street": "Brandenburger Tor",
+                "postalCode": "10117",
+                "city": "Berlin"
+            },
+            "homeLat": 52.5163,
+            "homeLon": 13.3777,
+            "firstName": "Test Distance",
+            "contactPhone": "0123456789",
+            "contactEmail": "test@distance.de"
+        }
         
-        # Detailed results
-        print("\n📋 DETAILED RESULTS:")
-        for success, result in self.results:
-            print(result)
+        response = self.make_request("POST", "/profiles/worker", worker_data, TEST_WORKER)
         
-        if passed == total:
-            print("\n🎉 ALL TESTS PASSED - Backend is fully functional!")
+        if response and response.status_code in [200, 201]:
+            self.created_worker_profile = response.json()
+            self.log_test("Create Worker Profile", True, 
+                         f"Profile created with radius {worker_data['radiusKm']}km at Berlin Brandenburger Tor")
+            return True
+        elif response and response.status_code == 400:
+            # Profile might already exist, try to get it
+            get_response = self.make_request("GET", f"/profiles/worker/{TEST_WORKER}", token=TEST_WORKER)
+            if get_response and get_response.status_code == 200:
+                self.created_worker_profile = get_response.json()
+                self.log_test("Create Worker Profile", True, "Profile already exists, retrieved successfully")
+                return True
+            else:
+                self.log_test("Create Worker Profile", False, f"Profile exists but cannot retrieve: {get_response.status_code if get_response else 'No response'}")
+                return False
+        else:
+            error_msg = response.text if response else "No response"
+            self.log_test("Create Worker Profile", False, f"Failed to create profile: {error_msg}")
+            return False
+
+    def test_create_test_jobs(self):
+        """Create 4 test jobs at different distances and requirements"""
+        print("\n=== CREATING TEST JOBS ===")
+        
+        jobs_data = [
+            {
+                "name": "Job 1: Nahe (5km) - Security mit Sachkunde",
+                "data": {
+                    "title": "Security Nahbereich (5km)",
+                    "category": "sicherheit",
+                    "timeMode": "fixed_time",
+                    "address": {
+                        "street": "Potsdamer Platz 1",
+                        "postalCode": "10785",
+                        "city": "Berlin"
+                    },
+                    "lat": 52.5096,
+                    "lon": 13.3762,
+                    "workerAmountCents": 15000,
+                    "required_all_tags": ["Sachkunde nach § 34a GewO"],
+                    "status": "open"
+                },
+                "expected_match": True,
+                "reason": "5km distance + has required Sachkunde tag"
+            },
+            {
+                "name": "Job 2: Mittel (15km) - Gastronomie ohne spezielle Tags",
+                "data": {
+                    "title": "Kellner Mittlere Distanz (15km)",
+                    "category": "gastronomie",
+                    "timeMode": "fixed_time",
+                    "address": {
+                        "street": "Alexanderplatz 1",
+                        "postalCode": "10178",
+                        "city": "Berlin"
+                    },
+                    "lat": 52.5219,
+                    "lon": 13.4132,
+                    "workerAmountCents": 12000,
+                    "required_all_tags": [],
+                    "status": "open"
+                },
+                "expected_match": True,
+                "reason": "15km distance + no special tags required"
+            },
+            {
+                "name": "Job 3: Weit (30km) - Außerhalb Radius",
+                "data": {
+                    "title": "Job Außerhalb (30km)",
+                    "category": "gastronomie",
+                    "timeMode": "fixed_time",
+                    "address": {
+                        "street": "Schönefeld",
+                        "postalCode": "12529",
+                        "city": "Berlin"
+                    },
+                    "lat": 52.3667,
+                    "lon": 13.5167,
+                    "workerAmountCents": 10000,
+                    "required_all_tags": [],
+                    "status": "open"
+                },
+                "expected_match": False,
+                "reason": "30km > 20km radius limit"
+            },
+            {
+                "name": "Job 4: Nahe aber fehlende Qualifikation",
+                "data": {
+                    "title": "Security mit Bewacher-ID (Worker hat nicht)",
+                    "category": "sicherheit",
+                    "timeMode": "fixed_time",
+                    "address": {
+                        "street": "Unter den Linden",
+                        "postalCode": "10117",
+                        "city": "Berlin"
+                    },
+                    "lat": 52.5170,
+                    "lon": 13.3888,
+                    "workerAmountCents": 18000,
+                    "required_all_tags": ["Bewacher-ID"],
+                    "status": "open"
+                },
+                "expected_match": False,
+                "reason": "Worker doesn't have required Bewacher-ID tag"
+            }
+        ]
+        
+        success_count = 0
+        
+        for job_info in jobs_data:
+            job_name = job_info["name"]
+            job_data = job_info["data"]
+            
+            response = self.make_request("POST", "/jobs", job_data, TEST_EMPLOYER)
+            
+            if response and response.status_code in [200, 201]:
+                created_job = response.json()
+                self.created_jobs.append({
+                    "job": created_job,
+                    "expected_match": job_info["expected_match"],
+                    "reason": job_info["reason"],
+                    "name": job_name
+                })
+                self.log_test(f"Create {job_name}", True, f"Job created at lat={job_data['lat']}, lon={job_data['lon']}")
+                success_count += 1
+            else:
+                error_msg = response.text if response else "No response"
+                self.log_test(f"Create {job_name}", False, f"Failed: {error_msg}")
+        
+        return success_count == len(jobs_data)
+
+    def calculate_distance(self, lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+        """Calculate distance between two points using Haversine formula"""
+        # Convert to radians
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+        
+        # Haversine formula
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+        c = 2 * math.asin(math.sqrt(a))
+        
+        # Earth radius in kilometers
+        r = 6371
+        
+        return c * r
+
+    def test_job_matching_logic(self):
+        """Test the matching logic for all created jobs"""
+        print("\n=== TESTING JOB MATCHING LOGIC ===")
+        
+        if not self.created_worker_profile:
+            self.log_test("Job Matching Logic", False, "No worker profile available for testing")
+            return False
+        
+        if not self.created_jobs:
+            self.log_test("Job Matching Logic", False, "No jobs available for testing")
+            return False
+        
+        # Get all jobs from backend
+        response = self.make_request("GET", "/jobs", token=TEST_WORKER)
+        
+        if not response or response.status_code != 200:
+            self.log_test("Job Matching Logic", False, "Failed to retrieve jobs from backend")
+            return False
+        
+        all_jobs = response.json()
+        worker_profile = self.created_worker_profile
+        
+        # Worker data for matching
+        worker_lat = worker_profile.get("homeLat")
+        worker_lon = worker_profile.get("homeLon")
+        worker_radius = worker_profile.get("radiusKm", 20)
+        worker_categories = worker_profile.get("categories", [])
+        worker_tags = worker_profile.get("selectedTags", [])
+        
+        print(f"Worker Profile: lat={worker_lat}, lon={worker_lon}, radius={worker_radius}km")
+        print(f"Worker Categories: {worker_categories}")
+        print(f"Worker Tags: {worker_tags}")
+        
+        matching_results = []
+        
+        for job_info in self.created_jobs:
+            job = job_info["job"]
+            expected_match = job_info["expected_match"]
+            reason = job_info["reason"]
+            job_name = job_info["name"]
+            
+            # Calculate distance
+            job_lat = job.get("lat")
+            job_lon = job.get("lon")
+            
+            if job_lat is None or job_lon is None or worker_lat is None or worker_lon is None:
+                distance = float('inf')
+                distance_ok = False
+            else:
+                distance = self.calculate_distance(worker_lat, worker_lon, job_lat, job_lon)
+                distance_ok = distance <= worker_radius
+            
+            # Check category match
+            job_category = job.get("category")
+            category_ok = job_category in worker_categories
+            
+            # Check required tags
+            required_all_tags = job.get("required_all_tags", [])
+            tags_ok = all(tag in worker_tags for tag in required_all_tags)
+            
+            # Overall match
+            should_match = distance_ok and category_ok and tags_ok
+            
+            # Log detailed analysis
+            print(f"\n--- {job_name} ---")
+            print(f"Distance: {distance:.1f}km ({'✅' if distance_ok else '❌'} <= {worker_radius}km)")
+            print(f"Category: {job_category} ({'✅' if category_ok else '❌'} in {worker_categories})")
+            print(f"Required Tags: {required_all_tags} ({'✅' if tags_ok else '❌'} all in {worker_tags})")
+            print(f"Expected Match: {expected_match}, Calculated Match: {should_match}")
+            print(f"Reason: {reason}")
+            
+            # Verify against expected result
+            if should_match == expected_match:
+                self.log_test(f"Match Logic - {job_name}", True, 
+                             f"Correct: {'ENABLED' if should_match else 'DISABLED'} ({reason})")
+                matching_results.append(True)
+            else:
+                self.log_test(f"Match Logic - {job_name}", False, 
+                             f"Expected {expected_match}, got {should_match} ({reason})")
+                matching_results.append(False)
+        
+        # Overall matching test result
+        all_correct = all(matching_results)
+        self.log_test("Overall Job Matching Logic", all_correct, 
+                     f"{sum(matching_results)}/{len(matching_results)} jobs matched correctly")
+        
+        return all_correct
+
+    def test_get_all_jobs(self):
+        """Test retrieving all jobs"""
+        print("\n=== TESTING GET ALL JOBS ===")
+        
+        response = self.make_request("GET", "/jobs", token=TEST_WORKER)
+        
+        if response and response.status_code == 200:
+            jobs = response.json()
+            job_count = len(jobs)
+            
+            # Verify our created jobs are in the list
+            created_job_ids = [job_info["job"]["id"] for job_info in self.created_jobs]
+            found_jobs = [job for job in jobs if job["id"] in created_job_ids]
+            
+            self.log_test("Get All Jobs", True, 
+                         f"Retrieved {job_count} total jobs, {len(found_jobs)}/{len(created_job_ids)} test jobs found")
             return True
         else:
-            print(f"\n⚠️  {total - passed} test suites failed - Check logs above for details")
+            error_msg = response.text if response else "No response"
+            self.log_test("Get All Jobs", False, f"Failed to retrieve jobs: {error_msg}")
+            return False
+
+    def cleanup_test_data(self):
+        """Clean up created test data"""
+        print("\n=== CLEANUP TEST DATA ===")
+        
+        # Delete created jobs
+        deleted_jobs = 0
+        for job_info in self.created_jobs:
+            job_id = job_info["job"]["id"]
+            response = self.make_request("DELETE", f"/jobs/{job_id}", token=TEST_EMPLOYER)
+            
+            if response and response.status_code in [200, 204]:
+                deleted_jobs += 1
+        
+        self.log_test("Cleanup Jobs", True, f"Deleted {deleted_jobs}/{len(self.created_jobs)} test jobs")
+
+    def run_comprehensive_test(self):
+        """Run the complete test suite"""
+        print("🚀 STARTING COMPREHENSIVE JOBS MATCHING SYSTEM TEST")
+        print("=" * 60)
+        
+        # Test sequence
+        tests = [
+            ("Backend Health", self.test_backend_health),
+            ("Create Worker Profile", self.test_create_worker_profile),
+            ("Create Test Jobs", self.test_create_test_jobs),
+            ("Get All Jobs", self.test_get_all_jobs),
+            ("Job Matching Logic", self.test_job_matching_logic),
+        ]
+        
+        passed_tests = 0
+        total_tests = len(tests)
+        
+        for test_name, test_func in tests:
+            try:
+                if test_func():
+                    passed_tests += 1
+                else:
+                    print(f"❌ {test_name} failed - stopping test sequence")
+                    break
+            except Exception as e:
+                print(f"❌ {test_name} crashed: {e}")
+                break
+        
+        # Cleanup regardless of test results
+        try:
+            self.cleanup_test_data()
+        except Exception as e:
+            print(f"⚠️ Cleanup failed: {e}")
+        
+        # Final results
+        print("\n" + "=" * 60)
+        print("🏁 TEST RESULTS SUMMARY")
+        print("=" * 60)
+        
+        success_rate = (passed_tests / total_tests) * 100
+        print(f"Tests Passed: {passed_tests}/{total_tests} ({success_rate:.1f}%)")
+        
+        if passed_tests == total_tests:
+            print("🎉 ALL TESTS PASSED - Jobs matching system is working correctly!")
+            return True
+        else:
+            print("❌ SOME TESTS FAILED - Jobs matching system needs attention")
             return False
 
 def main():
     """Main test execution"""
-    print("Comprehensive Backend API Testing Suite for ShiftMatch")
-    print(f"Testing against: {BACKEND_URL}")
-    print(f"Test Worker: {TEST_WORKER}")
-    print(f"Test Employer: {TEST_EMPLOYER}")
-    
-    tester = ComprehensiveBackendTester()
+    tester = DistanceMatchingTester()
     success = tester.run_comprehensive_test()
     
+    # Exit with appropriate code
     sys.exit(0 if success else 1)
 
 if __name__ == "__main__":
