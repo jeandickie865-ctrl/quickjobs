@@ -725,7 +725,7 @@ async def create_job(
     """Create a new job"""
     logger.info("Creating new job")
     
-    employerId = get_user_id_from_token(authorization)
+    employerId = await get_user_id_from_token(authorization)
     
     # Create job document
     job_dict = job_data.dict()
