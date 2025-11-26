@@ -257,6 +257,57 @@ export default function WorkerProfileScreen() {
         {/* Content Area */}
         <View style={{ paddingHorizontal: 20, marginTop: -20 }}>
           
+          {/* Meine Matches Button */}
+          <Pressable
+            onPress={() => router.push('/(worker)/matches')}
+            style={({ pressed }) => ({
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 16,
+              marginBottom: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+              opacity: pressed ? 0.9 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <View style={{
+                backgroundColor: COLORS.neon,
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Ionicons name="people" size={24} color={COLORS.black} />
+              </View>
+              <View>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                  Meine Matches
+                </Text>
+                <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                  Angenommene Aufträge
+                </Text>
+              </View>
+            </View>
+            <View style={{
+              backgroundColor: COLORS.purple,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 12,
+            }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
+                5
+              </Text>
+            </View>
+          </Pressable>
+          
           {/* 2) Über mich / Profiltext */}
           {profile.shortBio && (
             <View style={{
