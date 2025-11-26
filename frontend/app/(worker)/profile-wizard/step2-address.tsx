@@ -29,7 +29,7 @@ export default function Step2Address() {
   const [city, setCity] = useState(wizardData.city || '');
   const [lat, setLat] = useState<number | undefined>(wizardData.lat);
   const [lon, setLon] = useState<number | undefined>(wizardData.lon);
-  const [radius, setRadius] = useState(wizardData.radiusKm || 25); // km
+  const [radius, setRadius] = useState(wizardData.radiusKm || 25);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = (): boolean => {
@@ -45,14 +45,14 @@ export default function Step2Address() {
 
   const handleNext = () => {
     if (validate()) {
-      // Save to context
       updateWizardData({ street, postalCode, city, lat, lon, radiusKm: radius });
       router.push('/(worker)/profile-wizard/step3-categories');
     }
   };
 
   const handleBack = () => {
-    router.back();
+    updateWizardData({ street, postalCode, city, lat, lon, radiusKm: radius });
+    router.push('/(worker)/profile-wizard/step1-basic');
   };
 
   const isFormValid = street.trim() && postalCode.trim() && city.trim();
@@ -60,17 +60,14 @@ export default function Step2Address() {
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.safeArea}>
-        {/* Progress */}
         <ProgressBar currentStep={2} totalSteps={5} />
 
-        {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Adresse & Arbeitsbereich</Text>
           <Text style={styles.subtitle}>
             Wo bist du tätig und wie weit möchtest du fahren?
           </Text>
 
-          {/* Address Input */}
           <AddressAutocompleteInput
             street={street}
             postalCode={postalCode}
@@ -82,7 +79,6 @@ export default function Step2Address() {
             onLonChange={setLon}
           />
 
-          {/* Radius Slider */}
           <View style={styles.radiusSection}>
             <Text style={styles.label}>Arbeitsradius: {radius} km</Text>
             <Slider
@@ -106,7 +102,6 @@ export default function Step2Address() {
           </View>
         </ScrollView>
 
-        {/* Navigation */}
         <NavigationButtons
           onNext={handleNext}
           onBack={handleBack}
