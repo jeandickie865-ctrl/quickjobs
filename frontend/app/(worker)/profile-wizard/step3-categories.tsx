@@ -109,6 +109,15 @@ export default function Step3Categories() {
           </View>
         </ScrollView>
 
+        {/* Validation Hint */}
+        {!isFormValid && (
+          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
+            <Text style={styles.validationHint}>
+              ℹ️ Bitte wähle mindestens eine Kategorie aus, um fortzufahren
+            </Text>
+          </View>
+        )}
+
         {/* Navigation */}
         <NavigationButtons
           onNext={handleNext}
