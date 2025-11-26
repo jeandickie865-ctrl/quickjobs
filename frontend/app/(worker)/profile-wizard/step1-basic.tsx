@@ -147,7 +147,8 @@ export default function Step1Basic() {
     }
   };
 
-  const isFormValid = photoUrl && firstName.trim() && lastName.trim() && phone.trim();
+  // Foto ist optional - nur Name und Telefon sind Pflicht
+  const isFormValid = firstName.trim() && lastName.trim() && phone.trim();
 
   if (isLoading) {
     return (
