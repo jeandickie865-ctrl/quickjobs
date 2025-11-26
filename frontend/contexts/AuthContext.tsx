@@ -43,9 +43,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       ]);
 
       if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-        console.log('✅ Auth loaded from AsyncStorage');
+        // WICHTIG: Token gegen Backend validieren!
+        const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+        
+        try {
+          // Teste, ob Token noch gültig ist
+          const response = await fetch(`${API_BASE}/api/jobs`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${storedToken}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (response.ok) {
+            // Token ist gültig
+            setToken(storedToken);
+            setUser(JSON.parse(storedUser));
+            console.log('✅ Auth loaded from AsyncStorage - Token validated');
+          } else {
+            // Token ungültig → AsyncStorage löschen
+            console.log('⚠️ Stored token is invalid - clearing AsyncStorage');
+            await AsyncStorage.clear();
+          }
+        } catch (validationError) {
+          console.error('❌ Token validation failed:', validationError);
+          await AsyncStorage.clear();
+        }
       }
     } catch (error) {
       console.error('Error loading auth:', error);
