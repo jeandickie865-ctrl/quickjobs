@@ -381,6 +381,13 @@ async def signup(request: SignUpRequest):
     # Create token
     token = f"token_{datetime.utcnow().timestamp()}_{hashlib.md5(email.encode()).hexdigest()[:8]}"
     
+    # Store token in database with userId mapping
+    await db.tokens.update_one(
+        {"token": token},
+        {"$set": {"token": token, "userId": userId, "createdAt": datetime.utcnow().isoformat()}},
+        upsert=True
+    )
+    
     logger.info(f"✅ User registered: {email} as {request.role}")
     
     return AuthResponse(
