@@ -3,8 +3,8 @@ import { Job } from '../types/job';
 import { API_BASE, getUserId, getAuthHeaders } from './api';
 
 // ===== ADD JOB =====
-export async function addJob(job: Job): Promise<void> {
-  console.log('➕ addJob: Creating job', job.title);
+export async function addJob(jobCreate: any): Promise<void> {
+  console.log('➕ addJob: Creating job', jobCreate.title);
   
   try {
     const headers = await getAuthHeaders();
@@ -12,7 +12,7 @@ export async function addJob(job: Job): Promise<void> {
     const response = await fetch(`${API_BASE}/jobs`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(job),
+      body: JSON.stringify(jobCreate),  // Send JobCreate, not Job
     });
     
     if (!response.ok) {
