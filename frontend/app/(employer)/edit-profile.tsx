@@ -510,6 +510,11 @@ export default function EmployerProfileScreen() {
                   style={{ fontSize: 16, color: COLORS.black }}
                 />
               </View>
+              {!phone.trim() && (
+                <Text style={{ fontSize: 12, color: '#FF4D4D', marginTop: 4 }}>
+                  ℹ️ Bitte gib deine Telefonnummer ein
+                </Text>
+              )}
             </View>
 
             {/* E-Mail */}
