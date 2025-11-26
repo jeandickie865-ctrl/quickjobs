@@ -446,17 +446,23 @@ async def get_status_checks():
     return [StatusCheck(**status_check) for status_check in status_checks]
 
 # Helper: Get userId from Authorization header (simplified for MVP)
-def get_user_id_from_token(authorization: Optional[str] = Header(None)) -> str:
+async def get_user_id_from_token(authorization: Optional[str] = Header(None)) -> str:
     if not authorization:
         raise HTTPException(status_code=401, detail="Authorization header missing")
     
-    # Simple token format: "Bearer {userId}"
-    # In production, this should be a proper JWT token
+    # Token format: "Bearer {token}"
     parts = authorization.split(" ")
     if len(parts) != 2 or parts[0] != "Bearer":
         raise HTTPException(status_code=401, detail="Invalid authorization format")
     
-    return parts[1]
+    token = parts[1]
+    
+    # Look up token in database
+    token_doc = await db.tokens.find_one({"token": token})
+    if not token_doc:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    return token_doc["userId"]
 
 # Worker Profile Endpoints
 
