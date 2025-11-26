@@ -102,6 +102,15 @@ export default function Step2Address() {
           </View>
         </ScrollView>
 
+        {/* Validation Hint */}
+        {!isFormValid && (
+          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
+            <Text style={styles.validationHint}>
+              ℹ️ Bitte gib deine vollständige Adresse ein, um fortzufahren
+            </Text>
+          </View>
+        )}
+
         <NavigationButtons
           onNext={handleNext}
           onBack={handleBack}
