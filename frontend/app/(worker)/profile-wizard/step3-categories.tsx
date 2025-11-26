@@ -213,4 +213,12 @@ const styles = StyleSheet.create({
     top: 8,
     right: 8,
   },
+  validationHint: {
+    fontSize: 13,
+    color: COLORS.neon,
+    backgroundColor: 'rgba(200, 255, 22, 0.1)',
+    padding: 12,
+    borderRadius: 8,
+    textAlign: 'center',
+  },
 });
