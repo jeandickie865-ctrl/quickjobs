@@ -7,6 +7,7 @@ import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
 import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
 import Slider from '@react-native-community/slider';
+import { useWizard } from '../../../contexts/WizardContext';
 
 const COLORS = {
   purple: '#5941FF',
@@ -21,13 +22,14 @@ const COLORS = {
 
 export default function Step2Address() {
   const router = useRouter();
+  const { wizardData, updateWizardData } = useWizard();
   
-  const [street, setStreet] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [city, setCity] = useState('');
-  const [lat, setLat] = useState<number | undefined>();
-  const [lon, setLon] = useState<number | undefined>();
-  const [radius, setRadius] = useState(25); // km
+  const [street, setStreet] = useState(wizardData.street || '');
+  const [postalCode, setPostalCode] = useState(wizardData.postalCode || '');
+  const [city, setCity] = useState(wizardData.city || '');
+  const [lat, setLat] = useState<number | undefined>(wizardData.lat);
+  const [lon, setLon] = useState<number | undefined>(wizardData.lon);
+  const [radius, setRadius] = useState(wizardData.radiusKm || 25); // km
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = (): boolean => {
