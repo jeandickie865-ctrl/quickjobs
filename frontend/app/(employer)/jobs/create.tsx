@@ -182,34 +182,31 @@ export default function CreateJob() {
     };
 
     // Create job object
-    const job: Job = {
-      id: 'job-' + Date.now().toString(),
-      employerId: user.id,
+    // Create JobCreate object (no id, employerId, status, createdAt, matchedWorkerId)
+    // Backend will set these from token
+    const jobCreate: JobCreate = {
       employerType: user.accountType === 'business' ? 'business' : 'private',
       title: title.trim(),
-      description: description.trim() || '',
+      description: description.trim() || undefined,
       category,
       timeMode,
       startAt: startAtIso,
       endAt: endAtIso,
       hours: hoursNumber,
       dueAt: dueAtIso,
-      address: location,  // Strukturierte Adresse statt String
-      lat: lat,  // Koordinaten aus Geocoder (falls vorhanden)
-      lon: lon,  // Koordinaten aus Geocoder (falls vorhanden)
+      address: location,
+      lat: lat,
+      lon: lon,
       workerAmountCents,
       paymentToWorker: paymentMethod,
       required_all_tags: requiredAllTags,
       required_any_tags: requiredAnyTags,
-      status: 'open',
-      matchedWorkerId: undefined,  // Set when application is accepted
-      createdAt: new Date().toISOString(),
     };
 
     try {
       setIsSaving(true);
-      console.log('📝 createJob: newJob', { id: job.id, title: job.title, employerId: job.employerId });
-      await addJob(job);
+      console.log('📝 createJob: Sending JobCreate', { title: jobCreate.title, category: jobCreate.category });
+      await addJob(jobCreate);
       console.log('✅ createJob: Auftrag saved successfully');
       router.replace('/(employer)');
     } catch (e) {
