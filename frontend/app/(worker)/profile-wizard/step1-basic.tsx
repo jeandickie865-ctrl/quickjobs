@@ -149,6 +149,16 @@ export default function Step1Basic() {
 
   const isFormValid = photoUrl && firstName.trim() && lastName.trim() && phone.trim();
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <SafeAreaView edges={['top']} style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+          <Text style={{ color: COLORS.white, fontSize: 16 }}>Lade Profil...</Text>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.safeArea}>
@@ -157,7 +167,7 @@ export default function Step1Basic() {
           <Pressable onPress={() => router.back()}>
             <Ionicons name="close" size={28} color={COLORS.white} />
           </Pressable>
-          <Text style={styles.headerTitle}>Profil erstellen</Text>
+          <Text style={styles.headerTitle}>Profil bearbeiten</Text>
           <View style={{ width: 28 }} />
         </View>
 
