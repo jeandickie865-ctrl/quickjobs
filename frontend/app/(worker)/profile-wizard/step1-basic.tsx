@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useWizard } from '../../../contexts/WizardContext';
 
 const COLORS = {
   purple: '#5941FF',
