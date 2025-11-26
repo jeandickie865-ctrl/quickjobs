@@ -63,10 +63,11 @@ export default function WorkerProfileScreen() {
       setAvgRating(calculateAverageRating(reviews));
       setReviewCount(reviews.length);
 
-      // Load matches count
-      const matches = await getMatchesForWorker(user.id);
-      setMatchCount(matches.length);
-      console.log('✅ Matches geladen:', matches.length);
+      // Load matches count (accepted applications)
+      const apps = await getWorkerApplications(user.id);
+      const accepted = apps.filter(a => a.status === 'accepted');
+      setMatchCount(accepted.length);
+      console.log('✅ Accepted applications geladen:', accepted.length);
     } catch (err) {
       console.error('❌ Fehler beim Laden des Profils:', err);
     } finally {
