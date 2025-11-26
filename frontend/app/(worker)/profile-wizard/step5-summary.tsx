@@ -1,5 +1,5 @@
 // app/(worker)/profile-wizard/step5-summary.tsx - ZUSAMMENFASSUNG
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, Image, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -25,6 +25,15 @@ export default function Step5Summary() {
   const { wizardData, resetWizard } = useWizard();
   const { user, token } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Track if component is still mounted to prevent Alert on unmounted component
+  const isMounted = useRef(true);
+  
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   // Get all data from context
   const profileData = {
