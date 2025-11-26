@@ -6,15 +6,15 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getApplicationsForWorker } from '../../utils/applicationStore';
 import { getJobById } from '../../utils/jobStore';
-import { Auftrag } from '../../types/job';
+import { Job } from '../../types/job';
 import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
 import { formatAddress } from '../../types/address';
 import { euro } from '../../utils/pricing';
 
-type ApplicationWithAuftrag = {
+type ApplicationWithJob = {
   app: JobApplication;
-  job: Auftrag | null;
+  job: Job | null;
 };
 
 export default function WorkerApplicationsScreen() {
