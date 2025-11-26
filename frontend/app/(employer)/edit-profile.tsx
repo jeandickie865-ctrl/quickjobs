@@ -542,6 +542,11 @@ export default function EmployerProfileScreen() {
                   style={{ fontSize: 16, color: COLORS.black }}
                 />
               </View>
+              {!email.trim() && (
+                <Text style={{ fontSize: 12, color: '#FF4D4D', marginTop: 4 }}>
+                  ℹ️ Bitte gib eine gültige E-Mail-Adresse ein
+                </Text>
+              )}
             </View>
           </View>
 
