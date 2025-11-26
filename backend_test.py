@@ -13,7 +13,7 @@ import uuid
 import math
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://karriereportal.preview.emergentagent.com/api"
+BACKEND_URL = "https://jobnexus.preview.emergentagent.com/api"
 
 # Test users as specified in the review request
 TEST_WORKER = "user_test_distance_worker"
@@ -453,7 +453,7 @@ def run_basic_infrastructure_check():
     # Test 2: Frontend Serving
     print("\n🔍 TEST 2: Frontend Serving")
     try:
-        response = requests.get("https://karriereportal.preview.emergentagent.com/", timeout=10)
+        response = requests.get("https://jobnexus.preview.emergentagent.com/", timeout=10)
         if response.status_code == 200 and "html" in response.headers.get("content-type", "").lower():
             print("✅ Frontend Serving CORRECTLY - Root URL delivers HTML content")
             frontend_ok = True

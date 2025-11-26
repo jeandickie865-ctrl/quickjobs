@@ -1,99 +1,69 @@
 <analysis>
-The trajectory documents a complex, iterative development and debugging process for a German-language, two-sided job-matching mobile application. The primary language of the user is German, and all future communications must be in German.
+The trajectory documents an extensive development and debugging process for a German-language, two-sided job-matching mobile application. The user's primary language is German, and all subsequent interactions must be conducted in German.
 
-The work began by tackling a critical bug where accepted job matches weren't appearing for workers. The debugging journey was fraught with challenges, including a stopped backend service, a major misdiagnosis involving  vs. MongoDB, and a critical database name mismatch ( vs. ). These infrastructure-level problems were eventually resolved by restarting services, correcting the engineer's assumptions based on user feedback, and creating a Python script to seed the database with consistent test data.
+The work began with fixing critical bugs: a non-functional logout, routing errors, and a backend issue where new profiles couldn't be created ( was missing, only  existed). This led to UI/UX enhancements, including the major task of replacing a single-page profile form with a 5-step wizard.
 
-Following the bug fixes, development shifted to implementing user-requested features. This included:
-- A 5-second auto-refresh/polling mechanism on key screens.
-- A complete redesign and implementation of the worker profile view () and its corresponding edit screen (), including robust frontend and backend validation.
-- A sophisticated privacy feature involving a masked view of the worker's profile for employers, which reveals full details only after a match is confirmed. This involved creating a new reusable component and modifying several employer-facing screens.
+Implementing the wizard was fraught with issues. The initial problem was an Unmatched Route error because the files for steps 2-5 did not exist. After creating them, the next bug was that data was not passed between steps, which was resolved by implementing a . This was followed by a series of fixes for syntax errors, data display issues on the summary page, incorrect navigation, and, most critically, a  error when saving the profile. The authorization bug was particularly difficult, involving multiple attempts to fix the  header format.
 
-The most recent request is a large-scale refactoring task to standardize navigation, restore a previous UI design for the profile screen, add a global logout function, and fix several other UI/UX inconsistencies across the application. The previous engineer had just begun work on this final, large request.
+Throughout the process, the user reported numerous bugs related to data persistence, UI layout on different devices (especially the date picker), and core business logic like job matching and radius filtering. The most persistent and difficult bugs stemmed from inconsistent API communication, including hardcoded backend URLs in multiple store files. This instability culminated in the user providing an explicit, multi-step plan to refactor the entire API communication layer for consistency and reliability. The previous engineer had just begun this major refactoring task.
 </analysis>
-
 <product_requirements>
 The application is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
-**Core Functionality:**
-*   **Dual Roles:** Users are either Employers or Workers.
-*   **Job & Profile Management:** Employers post jobs. Workers create detailed profiles with qualifications, contact info, and a work radius. Profile completion is mandatory for applying to jobs.
-*   **Matching Flow:**
-    1.  Workers view jobs in two feeds: Passende Jobs (filtered by skills/location) and Alle Jobs (all nearby).
-    2.  Worker applies to a job.
-    3.  Employer reviews applicants. A **masked profile** is shown (e.g., John D., no contact info).
-    4.  Employer accepts and pays a fee (simulated).
-    5.  The application status becomes accepted. The match now appears in the Matches tab for both users, and the worker's **full profile** (full name, address, contact) becomes visible to the employer.
-*   **Real-time Updates:** Key data screens (feeds, applications, matches) must auto-refresh every 5 seconds to reflect new data without manual intervention.
-*   **Chat:** A chat feature is unlocked between an employer and a worker only after a match is confirmed and paid for.
-*   **Navigation:** The app uses a tab-based layout, with distinct navigation stacks for Workers and Employers.
+**Core User Flows:**
+*   **User Roles:** Users register and operate as either an Employer or a Worker.
+*   **Profile Creation/Editing:** To apply for jobs, Workers complete a multi-step profile wizard. This wizard was a major refactoring effort to replace a single, long form. It covers: 1. Basic Info & Photo, 2. Address & Work Radius, 3. Categories, 4. Skills, and 5. Summary. When editing, the wizard must be pre-filled with existing data.
+*   **Job Management:** Employers post jobs, specifying details like description, location, and payment type.
+*   **Application & Matching:** Workers see a feed of relevant jobs filtered by category and radius. They can apply for jobs. Employers see incoming applications and can accept them. An accepted application becomes a Match.
+*   **Data Visibility:** An employer can only see a worker's full contact details after a match is confirmed.
+*   **UI/UX:** The app uses tab-based navigation. Employers and Workers have distinct UIs, including separate Matches and Applications views. It's critical that notifications/badges for new applications are clearly visible.
 </product_requirements>
-
 <key_technical_concepts>
-- **Backend:** FastAPI (Python) with Pydantic for data modeling and validation.
+- **Backend:** FastAPI (Python) with Pydantic for data modeling.
 - **Database:** MongoDB.
 - **Frontend:** React Native with Expo.
-- **Routing:** File-based routing with .
-- **State Management:** , , .
-- **Data Fetching & Caching:**
-    - API calls managed in  files.
-    -  from React Navigation to trigger actions on screen focus.
-    -  with  for implementing a 5-second polling/auto-refresh mechanism.
-- **UI/UX:** Custom components, , and a card-based layout.
-- **Privacy:** Implemented logic for staged data visibility (masked vs. full profiles) based on application status.
+- **Routing:** File-based routing via .
+- **State Management:** React Context (, ) for global and feature-specific state.
+- **API Communication:** Centralized API logic is being refactored into a single  file to manage a consistent  URL and authorization headers, moving away from inconsistent, hardcoded URLs in multiple store files (, , etc.).
 </key_technical_concepts>
-
 <code_architecture>
-The project is a monorepo with a  and  directory.
+The project is a monorepo with  and  directories.
 
 
 
-- ****
-    - **Importance:** The single source of all API logic, data validation, and database interaction.
-    - **Changes:** Pydantic models (, , etc.) were heavily modified to enforce required fields (, , etc.) and add optional ones. The  endpoint was updated with strict validation logic to reject invalid data with a  status code.
+- ****: The core FastAPI application. It was modified to add a  endpoint for new profiles (previously only  for updates existed), an  proxy, and most recently a  endpoint to fetch all jobs regardless of status, which was needed to fix the worker's Matches view.
 
-- ****
-    - **Importance:** Displays the worker's own profile.
-    - **Changes:** This file was completely rewritten to create a modern, card-based UI. It now correctly fetches and displays all fields from the MongoDB  collection, including nested address data and mapped  and  as chips. It is a display-only component.
+- ****: This directory contains the 5-step worker profile creation/editing wizard. This feature was built from scratch and underwent extensive debugging related to routing, state management (), data persistence via API calls, and pre-filling data for profile edits.
 
-- ****
-    - **Importance:** Allows workers to create and update their profile.
-    - **Changes:** This file was significantly overhauled to include input fields for all profile data. It features a robust validation function () that checks for all required fields, displays inline error messages, and disables the Save button until the form is valid. The save handler () was fixed to correctly call the  API function and navigate back to the profile view upon success.
+- ****: The form for creating jobs. It was heavily modified to fix a critical bug with a non-functional date/time picker on certain devices. The original  was replaced with a more robust  using  and then further debugged for CSS/layout issues.
 
-- ****
-    - **Importance:** Shows job details and a list of workers who have applied.
-    - **Changes:** Logic was added to make each applicant card pressable, opening a modal that displays the worker's profile. It passes the application status () to the profile view component to control data masking.
+- ****: Manages global user authentication. It was refactored to use backend API endpoints for  and  instead of a local mock user database. It provides the user object and token, which are essential for all authenticated API requests.
 
-- ****
-    - **Importance:** A new, reusable component created to display a worker's profile from an employer's perspective.
-    - **Changes:** This component contains the core privacy logic. It accepts a worker profile and an  boolean. If  is , it displays a masked version of the profile (e.g., John D., no contact info). If , it displays all data. This ensures consistent privacy rules.
+- ** (New)**: This file was just created as the first step of a major API communication refactor. Its purpose is to centralize the  URL and helper functions like  and  to eliminate hardcoded URLs and inconsistent authorization logic spread across the various  files.
 
-- ****
-    - **Importance:** The main job discovery screen for workers.
-    - **Changes:** This file was debugged extensively. Fixes included correcting data structure access ( vs ), fixing filters to handle  job objects gracefully, and ensuring both the Matching and All tabs display the correct job lists fetched from the API. The auto-refresh logic was also added here.
+- ** (e.g., , , )**: These files contain the application's business logic for fetching and updating data. They were the source of numerous critical bugs due to hardcoded, incorrect backend URLs. They are currently being refactored to use the new centralized .
 </code_architecture>
-
 <pending_tasks>
-The last user request (Chat Message 445) is a large refactoring and cleanup task that was not completed. It includes:
-- **Part 1:** Implement a global logout button, accessible from every screen.
-- **Part 2:** Fix and enforce all navigation and routing rules.
-- **Part 3:** Restore a Matches badge counter in the worker's bottom tab navigation.
-- **Part 4:** Restore a previous, specific design for the worker profile screen.
-- **Part 5:** Fix filtering logic in the worker's job feed.
-- **Part 6 & 7:** Fix and standardize the Matches screen and overall page flow for both user roles.
-- **Chat Logic:** Implement the full chat unlocking logic as requested in Chat Message 440.
+- **Complete the API Communication Refactor:** The main pending task is to finish the multi-step refactor of the entire API layer as explicitly instructed by the user. This involves modifying all store files (, , , etc.) to use the new centralized  and ensuring all API calls use the correct  header.
+- **Fix Date Picker on Mobile:** The date picker component needs to be made fully cross-platform compatible.
 </pending_tasks>
-
 <current_work>
-The most recent work was the start of a large-scale refactoring and UI/UX restoration task outlined by the user in Chat Message 445. The previous engineer had just acknowledged this comprehensive request and was about to begin the very first part of it.
+The AI engineer was in the middle of a large-scale, user-directed refactoring of the entire frontend API communication layer. This was initiated after a series of persistent, critical bugs related to data not loading (e.g., empty Matches lists, missing reviews), which were traced back to multiple utility files (, , , etc.) containing hardcoded and incorrect backend URLs.
 
-**Specifically, the task was to:**
-- **Part 1: GLOBAL LOGOUT (REQUIRED)**
-  - Add a logout button that works from every screen.
-  - The implementation plan was to add it to the  first.
+The user provided a very explicit, multi-step plan to fix this systemic issue. The goal is to centralize all API logic, remove all hardcoded URLs, and standardize authorization headers.
 
-The work concluded immediately after the engineer decided on this first step. No code was written for this task yet. All previous tasks, including the implementation of the worker profile edit screen, validation, and the employer's view of the worker profile, were completed and considered Production Ready by the previous engineer. The system is in a state where backend and frontend services are running, the database is seeded with test data, and core features are functional but require the UI/UX and navigational cleanup outlined in the pending tasks.
+The work stopped immediately after starting **Step 1** of this plan. The engineer successfully created the new central API file:
+- ****: This file will contain the single source of truth for the backend URL () and helper functions to retrieve the auth token and user ID from .
+
+The very next action was to begin **Step 2**: Modifying all the store files to import and use this new  file, removing their local, incorrect URL constants. The engineer had generated  commands to overwrite , , and  with the refactored code, but the execution and verification of these changes are still pending.
 </current_work>
-
 <optional_next_step>
-Continue with the plan from the last message: Implement Part 1 of the user's refactoring request by adding the logout functionality to the worker profile screen ().
+Continue the API refactoring by executing **SCHRITT 2 – ALLE STORES UMSTELLEN**, ensuring , , and  are correctly modified to use the new  file.
 </optional_next_step>
+> User: SCHRITT 2 – ALLE STORES UMSTELLEN
+Die folgenden Dateien müssen vollständig so umgebaut werden,
+dass sie NUR api.ts verwenden:
+  /utils/profileStore.ts
+  /utils/jobStore.ts
+  /utils/applicationStore.ts
+Ersetze in ALLEN Stores: ... Durch: import { API_BASE, getUserId, getAuthToken } from ./api;

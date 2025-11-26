@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ===== BACKEND URL =====
 // WICHTIG: Hier die Backend-URL eintragen!
-export const API_BASE = 'https://jobmatch-dev.preview.emergentagent.com/api';
+export const API_BASE = 'https://jobnexus.preview.emergentagent.com/api';
 
 // ===== STORAGE KEYS =====
 const TOKEN_KEY = '@shiftmatch:token';
