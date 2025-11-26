@@ -1,0 +1,283 @@
+// app/(worker)/profile-wizard/step5-summary.tsx - ZUSAMMENFASSUNG
+import React, { useState } from 'react';
+import { ScrollView, View, Text, Image, ActivityIndicator, Alert, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { ProgressBar } from '../../../components/wizard/ProgressBar';
+import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
+
+const COLORS = {
+  purple: '#5941FF',
+  purpleDark: '#3E2DD9',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  black: '#000000',
+  gray: '#999',
+  lightGray: '#F5F5F5',
+  error: '#FF4D4D',
+};
+
+export default function Step5Summary() {
+  const router = useRouter();
+  const [isSaving, setIsSaving] = useState(false);
+
+  // TODO: Get all data from context/AsyncStorage
+  const profileData = {
+    photoUrl: '',
+    firstName: 'Max',
+    lastName: 'Mustermann',
+    phone: '+49 123 456789',
+    email: 'max@example.com',
+    street: 'Hauptstraße 123',
+    postalCode: '10115',
+    city: 'Berlin',
+    radius: 25,
+    categories: ['Handwerk', 'Garten'],
+    skills: ['Malerarbeiten', 'Verputzarbeiten', 'Rasenpflege'],
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // TODO: Call API to save profile
+      // const response = await fetch(...)
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      Alert.alert(
+        'Profil erstellt! 🎉',
+        'Dein Profil wurde erfolgreich erstellt.',
+        [{
+          text: 'OK',
+          onPress: () => router.replace('/(worker)/profile')
+        }]
+      );
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      Alert.alert(
+        'Fehler',
+        'Profil konnte nicht gespeichert werden. Bitte versuche es erneut.'
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  return (
+    <View style={styles.container}>
+      <SafeAreaView edges={['top']} style={styles.safeArea}>
+        {/* Progress */}
+        <ProgressBar currentStep={5} totalSteps={5} />
+
+        {/* Content */}
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.title}>Zusammenfassung</Text>
+          <Text style={styles.subtitle}>
+            Überprüfe deine Angaben
+          </Text>
+
+          {/* Profile Photo */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Profilbild</Text>
+            <View style={styles.photoContainer}>
+              {profileData.photoUrl ? (
+                <Image source={{ uri: profileData.photoUrl }} style={styles.photo} />
+              ) : (
+                <View style={styles.photoPlaceholder}>
+                  <Text style={styles.photoInitials}>
+                    {profileData.firstName.charAt(0)}{profileData.lastName.charAt(0)}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* Basic Info */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Basisdaten</Text>
+            <View style={styles.infoRow}>
+              <Ionicons name="person" size={20} color={COLORS.white} />
+              <Text style={styles.infoText}>
+                {profileData.firstName} {profileData.lastName}
+              </Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="call" size={20} color={COLORS.white} />
+              <Text style={styles.infoText}>{profileData.phone}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="mail" size={20} color={COLORS.white} />
+              <Text style={styles.infoText}>{profileData.email}</Text>
+            </View>
+          </View>
+
+          {/* Address */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Adresse & Arbeitsbereich</Text>
+            <View style={styles.infoRow}>
+              <Ionicons name="location" size={20} color={COLORS.white} />
+              <Text style={styles.infoText}>
+                {profileData.street}, {profileData.postalCode} {profileData.city}
+              </Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="navigate" size={20} color={COLORS.white} />
+              <Text style={styles.infoText}>Arbeitsradius: {profileData.radius} km</Text>
+            </View>
+          </View>
+
+          {/* Categories */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Kategorien</Text>
+            <View style={styles.tagContainer}>
+              {profileData.categories.map((cat, index) => (
+                <View key={index} style={styles.tag}>
+                  <Text style={styles.tagText}>{cat}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Skills */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Fähigkeiten</Text>
+            <View style={styles.tagContainer}>
+              {profileData.skills.map((skill, index) => (
+                <View key={index} style={styles.tag}>
+                  <Text style={styles.tagText}>{skill}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+
+        {/* Navigation */}
+        <NavigationButtons
+          onNext={handleSave}
+          onBack={handleBack}
+          nextDisabled={isSaving}
+          showBack={true}
+          nextLabel={isSaving ? 'Speichern...' : 'Profil erstellen'}
+        />
+
+        {isSaving && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color={COLORS.neon} />
+            <Text style={styles.loadingText}>Profil wird erstellt...</Text>
+          </View>
+        )}
+      </SafeAreaView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.purple,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: COLORS.white,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.white,
+    opacity: 0.9,
+    marginBottom: 32,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: COLORS.neon,
+    marginBottom: 16,
+  },
+  photoContainer: {
+    alignItems: 'center',
+  },
+  photo: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: COLORS.neon,
+  },
+  photoPlaceholder: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: COLORS.neon,
+  },
+  photoInitials: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: COLORS.purple,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 12,
+  },
+  infoText: {
+    fontSize: 16,
+    color: COLORS.white,
+    flex: 1,
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tag: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: COLORS.neon,
+    borderRadius: 20,
+  },
+  tagText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.purple,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: COLORS.white,
+  },
+});
