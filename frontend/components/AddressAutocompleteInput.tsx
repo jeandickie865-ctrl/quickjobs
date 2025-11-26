@@ -77,12 +77,16 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
 
     console.log('📍 Selected address from OSM:', {
       fullItem: item,
+      road: addr.road,
+      house_number: addr.house_number,
       extractedStreet: streetName,
       extractedPostcode: postal,
       extractedCity: cityName,
       lat: latitude,
       lon: longitude
     });
+
+    console.log('🏠 Street changed:', streetName);
 
     // WICHTIG: Erst alle Callbacks aufrufen, DANN State ändern
     if (onStreetChange) onStreetChange(streetName);
