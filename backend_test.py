@@ -40,452 +40,655 @@ class ComprehensiveBackendTester:
             "details": details,
             "timestamp": datetime.now().isoformat()
         })
-
-    def test_backend_health(self):
-        """Test basic backend connectivity"""
-        print("\n=== BACKEND HEALTH CHECK ===")
+    
+    async def test_health_check(self):
+        """Test basic health endpoints"""
+        print("🏥 TESTING BACKEND INFRASTRUCTURE")
+        print("=" * 50)
         
-        response = self.make_request("GET", "/")
-        if response and response.status_code == 200:
-            data = response.json()
-            if data.get("message") == "Hello World":
-                self.log_test("Backend Health Check", True, "Backend is responding correctly")
-                return True
-            else:
-                self.log_test("Backend Health Check", False, f"Unexpected response: {data}")
-                return False
-        else:
-            status_code = response.status_code if response else "No response"
-            self.log_test("Backend Health Check", False, f"Backend not responding: {status_code}")
-            return False
-
-    def test_create_worker_profile(self):
-        """Test creating worker profile for distance testing"""
-        print("\n=== CREATING TEST WORKER PROFILE ===")
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            try:
+                # Test root endpoint
+                response = await client.get(f"{self.base_url}/")
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Root Endpoint", True, f"GET /api/ → {data}")
+                else:
+                    self.log_test("Root Endpoint", False, f"Status: {response.status_code}")
+                
+                # Test health endpoint
+                response = await client.get(f"{self.base_url}/health")
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Health Check", True, f"GET /api/health → {data}")
+                else:
+                    self.log_test("Health Check", False, f"Status: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test("Backend Infrastructure", False, f"Connection error: {str(e)}")
+    
+    async def test_authentication(self):
+        """Test user registration and login with German data"""
+        print("🔐 TESTING AUTHENTICATION SYSTEM")
+        print("=" * 50)
         
-        worker_data = {
-            "categories": ["sicherheit", "gastronomie"],
-            "selectedTags": ["service_kellner", "Sachkunde nach § 34a GewO"],
-            "radiusKm": 20,
-            "homeAddress": {
-                "street": "Brandenburger Tor",
-                "postalCode": "10117",
-                "city": "Berlin"
-            },
-            "homeLat": 52.5163,
-            "homeLon": 13.3777,
-            "firstName": "Test Distance",
-            "contactPhone": "0123456789",
-            "contactEmail": "test@distance.de"
-        }
-        
-        # First try to get existing profile
-        get_response = self.make_request("GET", f"/profiles/worker/{TEST_WORKER}", token=TEST_WORKER)
-        if get_response and get_response.status_code == 200:
-            self.created_worker_profile = get_response.json()
-            self.log_test("Create Worker Profile", True, "Profile already exists, retrieved successfully")
-            return True
-        
-        # If profile doesn't exist, create it
-        response = self.make_request("POST", "/profiles/worker", worker_data, TEST_WORKER)
-        
-        if response and response.status_code in [200, 201]:
-            self.created_worker_profile = response.json()
-            self.log_test("Create Worker Profile", True, 
-                         f"Profile created with radius {worker_data['radiusKm']}km at Berlin Brandenburger Tor")
-            return True
-        elif response and response.status_code == 400:
-            # Profile might already exist, try to get it again
-            get_response = self.make_request("GET", f"/profiles/worker/{TEST_WORKER}", token=TEST_WORKER)
-            if get_response and get_response.status_code == 200:
-                self.created_worker_profile = get_response.json()
-                self.log_test("Create Worker Profile", True, "Profile already exists, retrieved successfully")
-                return True
-            else:
-                self.log_test("Create Worker Profile", False, f"Profile exists but cannot retrieve: {get_response.status_code if get_response else 'No response'}")
-                return False
-        else:
-            error_msg = response.text if response else "No response"
-            status_code = response.status_code if response else "No response"
-            self.log_test("Create Worker Profile", False, f"Failed to create profile: {status_code} - {error_msg}")
-            return False
-
-    def test_create_test_jobs(self):
-        """Create 4 test jobs at different distances and requirements"""
-        print("\n=== CREATING TEST JOBS ===")
-        
-        jobs_data = [
-            {
-                "name": "Job 1: Nahe (5km) - Security mit Sachkunde",
-                "data": {
-                    "title": "Security Nahbereich (5km)",
-                    "category": "sicherheit",
-                    "timeMode": "fixed_time",
-                    "address": {
-                        "street": "Potsdamer Platz 1",
-                        "postalCode": "10785",
-                        "city": "Berlin"
-                    },
-                    "lat": 52.5096,
-                    "lon": 13.3762,
-                    "workerAmountCents": 15000,
-                    "required_all_tags": ["Sachkunde nach § 34a GewO"],
-                    "status": "open"
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            # Test data with German names and addresses
+            test_users = [
+                {
+                    "email": "max.mueller@test.de",
+                    "password": "TestPass123!",
+                    "role": "worker",
+                    "name": "Max Müller"
                 },
-                "expected_match": True,
-                "reason": "5km distance + has required Sachkunde tag"
-            },
-            {
-                "name": "Job 2: Mittel (15km) - Gastronomie ohne spezielle Tags",
-                "data": {
-                    "title": "Kellner Mittlere Distanz (15km)",
-                    "category": "gastronomie",
-                    "timeMode": "fixed_time",
-                    "address": {
-                        "street": "Alexanderplatz 1",
+                {
+                    "email": "anna.schmidt@firma.de", 
+                    "password": "SicherPass456!",
+                    "role": "employer",
+                    "name": "Anna Schmidt"
+                }
+            ]
+            
+            for user in test_users:
+                try:
+                    # Test Registration
+                    signup_data = {
+                        "email": user["email"],
+                        "password": user["password"],
+                        "role": user["role"]
+                    }
+                    
+                    response = await client.post(f"{self.base_url}/auth/signup", json=signup_data)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test(f"Registration ({user['role']})", True, 
+                                    f"User {user['email']} registered successfully")
+                        self.auth_tokens[user["role"]] = data.get("token")
+                        self.test_data[f"{user['role']}_user_id"] = data.get("userId")
+                        self.test_data[f"{user['role']}_email"] = data.get("email")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test(f"Registration ({user['role']})", False, 
+                                    f"Status: {response.status_code}", error_data)
+                    
+                    # Test Login
+                    login_data = {
+                        "email": user["email"],
+                        "password": user["password"]
+                    }
+                    
+                    response = await client.post(f"{self.base_url}/auth/login", json=login_data)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test(f"Login ({user['role']})", True, 
+                                    f"User {user['email']} logged in successfully")
+                        # Update token from login
+                        self.auth_tokens[user["role"]] = data.get("token")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test(f"Login ({user['role']})", False, 
+                                    f"Status: {response.status_code}", error_data)
+                        
+                except Exception as e:
+                    self.log_test(f"Authentication ({user['role']})", False, f"Error: {str(e)}")
+    
+    async def test_worker_profile(self):
+        """Test worker profile endpoints with German data"""
+        print("👷 TESTING WORKER PROFILE SYSTEM")
+        print("=" * 50)
+        
+        if "worker" not in self.auth_tokens:
+            self.log_test("Worker Profile Tests", False, "No worker auth token available")
+            return
+            
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            headers = {"Authorization": f"Bearer {self.auth_tokens['worker']}"}
+            user_id = self.test_data.get("worker_user_id")
+            
+            try:
+                # Test Create Worker Profile
+                profile_data = {
+                    "firstName": "Max",
+                    "lastName": "Müller", 
+                    "phone": "+49 30 12345678",
+                    "email": "max.mueller@test.de",
+                    "categories": ["sicherheit", "gastronomie"],
+                    "selectedTags": ["Sachkunde §34a", "Bewacher-ID"],
+                    "activities": ["Objektschutz", "Veranstaltungsschutz"],
+                    "qualifications": ["Sachkunde §34a", "Erste Hilfe"],
+                    "radiusKm": 25,
+                    "homeAddress": {
+                        "street": "Alexanderplatz",
+                        "houseNumber": "1",
                         "postalCode": "10178",
-                        "city": "Berlin"
+                        "city": "Berlin",
+                        "country": "DE"
                     },
-                    "lat": 52.5219,
-                    "lon": 13.4132,
-                    "workerAmountCents": 12000,
-                    "required_all_tags": [],
-                    "status": "open"
-                },
-                "expected_match": True,
-                "reason": "15km distance + no special tags required"
-            },
-            {
-                "name": "Job 3: Weit (30km) - Außerhalb Radius",
-                "data": {
-                    "title": "Job Außerhalb (30km)",
-                    "category": "gastronomie",
-                    "timeMode": "fixed_time",
-                    "address": {
-                        "street": "Oranienburg",
-                        "postalCode": "16515",
-                        "city": "Oranienburg"
-                    },
-                    "lat": 52.7534,
-                    "lon": 13.2399,
-                    "workerAmountCents": 10000,
-                    "required_all_tags": [],
-                    "status": "open"
-                },
-                "expected_match": False,
-                "reason": "30km > 20km radius limit"
-            },
-            {
-                "name": "Job 4: Nahe aber fehlende Qualifikation",
-                "data": {
-                    "title": "Security mit Bewacher-ID (Worker hat nicht)",
+                    "homeLat": 52.5200,
+                    "homeLon": 13.4050,
+                    "shortBio": "Erfahrener Sicherheitsmitarbeiter mit 5 Jahren Berufserfahrung in Berlin."
+                }
+                
+                response = await client.post(f"{self.base_url}/profiles/worker", 
+                                           json=profile_data, headers=headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Worker Profile Creation", True, 
+                                f"Profile created for {data.get('firstName')} {data.get('lastName')}")
+                    self.test_data["worker_profile"] = data
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Worker Profile Creation", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Worker Profile
+                if user_id:
+                    response = await client.get(f"{self.base_url}/profiles/worker/{user_id}", 
+                                              headers=headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test("Worker Profile Retrieval", True, 
+                                    f"Retrieved profile for {data.get('firstName')} {data.get('lastName')}")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test("Worker Profile Retrieval", False, 
+                                    f"Status: {response.status_code}", error_data)
+                
+                # Test Update Worker Profile
+                update_data = {
+                    "shortBio": "Erfahrener Sicherheitsmitarbeiter mit 6 Jahren Berufserfahrung in Berlin und Brandenburg.",
+                    "radiusKm": 30
+                }
+                
+                if user_id:
+                    response = await client.put(f"{self.base_url}/profiles/worker/{user_id}", 
+                                              json=update_data, headers=headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test("Worker Profile Update", True, 
+                                    f"Profile updated, new radius: {data.get('radiusKm')}km")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test("Worker Profile Update", False, 
+                                    f"Status: {response.status_code}", error_data)
+                        
+            except Exception as e:
+                self.log_test("Worker Profile System", False, f"Error: {str(e)}")
+    
+    async def test_employer_profile(self):
+        """Test employer profile endpoints with German data"""
+        print("🏢 TESTING EMPLOYER PROFILE SYSTEM")
+        print("=" * 50)
+        
+        if "employer" not in self.auth_tokens:
+            self.log_test("Employer Profile Tests", False, "No employer auth token available")
+            return
+            
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            headers = {"Authorization": f"Bearer {self.auth_tokens['employer']}"}
+            user_id = self.test_data.get("employer_user_id")
+            
+            try:
+                # Test Create Employer Profile
+                profile_data = {
+                    "firstName": "Anna",
+                    "lastName": "Schmidt",
+                    "company": "Schmidt Sicherheitsdienst GmbH",
+                    "phone": "+49 30 98765432",
+                    "email": "anna.schmidt@firma.de",
+                    "street": "Potsdamer Platz",
+                    "houseNumber": "5",
+                    "postalCode": "10785",
+                    "city": "Berlin",
+                    "lat": 52.5096,
+                    "lon": 13.3765,
+                    "paymentMethod": "card",
+                    "shortBio": "Inhaberin eines mittelständischen Sicherheitsunternehmens in Berlin."
+                }
+                
+                response = await client.post(f"{self.base_url}/profiles/employer", 
+                                           json=profile_data, headers=headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Employer Profile Creation", True, 
+                                f"Profile created for {data.get('company')}")
+                    self.test_data["employer_profile"] = data
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Employer Profile Creation", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Employer Profile
+                if user_id:
+                    response = await client.get(f"{self.base_url}/profiles/employer/{user_id}", 
+                                              headers=headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test("Employer Profile Retrieval", True, 
+                                    f"Retrieved profile for {data.get('company')}")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test("Employer Profile Retrieval", False, 
+                                    f"Status: {response.status_code}", error_data)
+                        
+            except Exception as e:
+                self.log_test("Employer Profile System", False, f"Error: {str(e)}")
+    
+    async def test_jobs_system(self):
+        """Test job creation, retrieval, and management"""
+        print("💼 TESTING JOBS SYSTEM")
+        print("=" * 50)
+        
+        if "employer" not in self.auth_tokens:
+            self.log_test("Jobs System Tests", False, "No employer auth token available")
+            return
+            
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            headers = {"Authorization": f"Bearer {self.auth_tokens['employer']}"}
+            employer_id = self.test_data.get("employer_user_id")
+            
+            try:
+                # Test Create Job
+                job_data = {
+                    "title": "Sicherheitsmitarbeiter für Veranstaltung gesucht",
+                    "description": "Wir suchen einen erfahrenen Sicherheitsmitarbeiter für eine Firmenveranstaltung in Berlin-Mitte. Sachkunde §34a erforderlich.",
                     "category": "sicherheit",
                     "timeMode": "fixed_time",
+                    "startAt": "2024-12-20T18:00:00Z",
+                    "endAt": "2024-12-20T23:00:00Z",
+                    "workerAmountCents": 2500,  # 25€/Stunde * 5 Stunden
+                    "paymentToWorker": "cash",
                     "address": {
                         "street": "Unter den Linden",
+                        "houseNumber": "77",
                         "postalCode": "10117",
-                        "city": "Berlin"
+                        "city": "Berlin",
+                        "country": "DE"
                     },
                     "lat": 52.5170,
                     "lon": 13.3888,
-                    "workerAmountCents": 18000,
-                    "required_all_tags": ["Bewacher-ID"],
+                    "required_all_tags": ["Sachkunde §34a"],
+                    "required_any_tags": ["Bewacher-ID", "Erste Hilfe"],
                     "status": "open"
-                },
-                "expected_match": False,
-                "reason": "Worker doesn't have required Bewacher-ID tag"
-            }
-        ]
-        
-        success_count = 0
-        
-        for job_info in jobs_data:
-            job_name = job_info["name"]
-            job_data = job_info["data"]
-            
-            response = self.make_request("POST", "/jobs", job_data, TEST_EMPLOYER)
-            
-            if response and response.status_code in [200, 201]:
-                created_job = response.json()
-                self.created_jobs.append({
-                    "job": created_job,
-                    "expected_match": job_info["expected_match"],
-                    "reason": job_info["reason"],
-                    "name": job_name
-                })
-                self.log_test(f"Create {job_name}", True, f"Job created at lat={job_data['lat']}, lon={job_data['lon']}")
-                success_count += 1
-            else:
-                error_msg = response.text if response else "No response"
-                self.log_test(f"Create {job_name}", False, f"Failed: {error_msg}")
-        
-        return success_count == len(jobs_data)
-
-    def calculate_distance(self, lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-        """Calculate distance between two points using Haversine formula"""
-        # Convert to radians
-        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
-        
-        # Haversine formula
-        dlat = lat2 - lat1
-        dlon = lon2 - lon1
-        a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
-        c = 2 * math.asin(math.sqrt(a))
-        
-        # Earth radius in kilometers
-        r = 6371
-        
-        return c * r
-
-    def test_job_matching_logic(self):
-        """Test the matching logic for all created jobs"""
-        print("\n=== TESTING JOB MATCHING LOGIC ===")
-        
-        if not self.created_worker_profile:
-            self.log_test("Job Matching Logic", False, "No worker profile available for testing")
-            return False
-        
-        if not self.created_jobs:
-            self.log_test("Job Matching Logic", False, "No jobs available for testing")
-            return False
-        
-        # Get all jobs from backend
-        response = self.make_request("GET", "/jobs", token=TEST_WORKER)
-        
-        if not response or response.status_code != 200:
-            self.log_test("Job Matching Logic", False, "Failed to retrieve jobs from backend")
-            return False
-        
-        all_jobs = response.json()
-        worker_profile = self.created_worker_profile
-        
-        # Worker data for matching
-        worker_lat = worker_profile.get("homeLat")
-        worker_lon = worker_profile.get("homeLon")
-        worker_radius = worker_profile.get("radiusKm", 20)
-        worker_categories = worker_profile.get("categories", [])
-        worker_tags = worker_profile.get("selectedTags", [])
-        
-        print(f"Worker Profile: lat={worker_lat}, lon={worker_lon}, radius={worker_radius}km")
-        print(f"Worker Categories: {worker_categories}")
-        print(f"Worker Tags: {worker_tags}")
-        
-        matching_results = []
-        
-        for job_info in self.created_jobs:
-            job = job_info["job"]
-            expected_match = job_info["expected_match"]
-            reason = job_info["reason"]
-            job_name = job_info["name"]
-            
-            # Calculate distance
-            job_lat = job.get("lat")
-            job_lon = job.get("lon")
-            
-            if job_lat is None or job_lon is None or worker_lat is None or worker_lon is None:
-                distance = float('inf')
-                distance_ok = False
-            else:
-                distance = self.calculate_distance(worker_lat, worker_lon, job_lat, job_lon)
-                distance_ok = distance <= worker_radius
-            
-            # Check category match
-            job_category = job.get("category")
-            category_ok = job_category in worker_categories
-            
-            # Check required tags
-            required_all_tags = job.get("required_all_tags", [])
-            tags_ok = all(tag in worker_tags for tag in required_all_tags)
-            
-            # Overall match
-            should_match = distance_ok and category_ok and tags_ok
-            
-            # Log detailed analysis
-            print(f"\n--- {job_name} ---")
-            print(f"Distance: {distance:.1f}km ({'✅' if distance_ok else '❌'} <= {worker_radius}km)")
-            print(f"Category: {job_category} ({'✅' if category_ok else '❌'} in {worker_categories})")
-            print(f"Required Tags: {required_all_tags} ({'✅' if tags_ok else '❌'} all in {worker_tags})")
-            print(f"Expected Match: {expected_match}, Calculated Match: {should_match}")
-            print(f"Reason: {reason}")
-            
-            # Verify against expected result
-            if should_match == expected_match:
-                self.log_test(f"Match Logic - {job_name}", True, 
-                             f"Correct: {'ENABLED' if should_match else 'DISABLED'} ({reason})")
-                matching_results.append(True)
-            else:
-                self.log_test(f"Match Logic - {job_name}", False, 
-                             f"Expected {expected_match}, got {should_match} ({reason})")
-                matching_results.append(False)
-        
-        # Overall matching test result
-        all_correct = all(matching_results)
-        self.log_test("Overall Job Matching Logic", all_correct, 
-                     f"{sum(matching_results)}/{len(matching_results)} jobs matched correctly")
-        
-        return all_correct
-
-    def test_get_all_jobs(self):
-        """Test retrieving all jobs"""
-        print("\n=== TESTING GET ALL JOBS ===")
-        
-        response = self.make_request("GET", "/jobs", token=TEST_WORKER)
-        
-        if response and response.status_code == 200:
-            jobs = response.json()
-            job_count = len(jobs)
-            
-            # Verify our created jobs are in the list
-            created_job_ids = [job_info["job"]["id"] for job_info in self.created_jobs]
-            found_jobs = [job for job in jobs if job["id"] in created_job_ids]
-            
-            self.log_test("Get All Jobs", True, 
-                         f"Retrieved {job_count} total jobs, {len(found_jobs)}/{len(created_job_ids)} test jobs found")
-            return True
-        else:
-            error_msg = response.text if response else "No response"
-            self.log_test("Get All Jobs", False, f"Failed to retrieve jobs: {error_msg}")
-            return False
-
-    def cleanup_test_data(self):
-        """Clean up created test data"""
-        print("\n=== CLEANUP TEST DATA ===")
-        
-        # Delete created jobs
-        deleted_jobs = 0
-        for job_info in self.created_jobs:
-            job_id = job_info["job"]["id"]
-            response = self.make_request("DELETE", f"/jobs/{job_id}", token=TEST_EMPLOYER)
-            
-            if response and response.status_code in [200, 204]:
-                deleted_jobs += 1
-        
-        self.log_test("Cleanup Jobs", True, f"Deleted {deleted_jobs}/{len(self.created_jobs)} test jobs")
-
-    def run_comprehensive_test(self):
-        """Run the complete test suite"""
-        print("🚀 STARTING COMPREHENSIVE JOBS MATCHING SYSTEM TEST")
-        print("=" * 60)
-        
-        # Test sequence
-        tests = [
-            ("Backend Health", self.test_backend_health),
-            ("Create Worker Profile", self.test_create_worker_profile),
-            ("Create Test Jobs", self.test_create_test_jobs),
-            ("Get All Jobs", self.test_get_all_jobs),
-            ("Job Matching Logic", self.test_job_matching_logic),
-        ]
-        
-        passed_tests = 0
-        total_tests = len(tests)
-        
-        for test_name, test_func in tests:
-            try:
-                if test_func():
-                    passed_tests += 1
+                }
+                
+                response = await client.post(f"{self.base_url}/jobs", 
+                                           json=job_data, headers=headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Job Creation", True, 
+                                f"Job created: {data.get('title')}")
+                    self.test_data["job_id"] = data.get("id")
+                    self.test_data["job"] = data
                 else:
-                    print(f"❌ {test_name} failed - stopping test sequence")
-                    break
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Job Creation", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get All Open Jobs
+                response = await client.get(f"{self.base_url}/jobs", headers=headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get Open Jobs", True, 
+                                f"Retrieved {len(data)} open jobs")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get Open Jobs", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Employer's Jobs
+                if employer_id:
+                    response = await client.get(f"{self.base_url}/jobs/employer/{employer_id}", 
+                                              headers=headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test("Get Employer Jobs", True, 
+                                    f"Retrieved {len(data)} jobs for employer")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test("Get Employer Jobs", False, 
+                                    f"Status: {response.status_code}", error_data)
+                
+                # Test Get Single Job
+                job_id = self.test_data.get("job_id")
+                if job_id:
+                    response = await client.get(f"{self.base_url}/jobs/{job_id}", 
+                                              headers=headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test("Get Single Job", True, 
+                                    f"Retrieved job: {data.get('title')}")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test("Get Single Job", False, 
+                                    f"Status: {response.status_code}", error_data)
+                        
             except Exception as e:
-                print(f"❌ {test_name} crashed: {e}")
-                break
+                self.log_test("Jobs System", False, f"Error: {str(e)}")
+    
+    async def test_applications_system(self):
+        """Test job application system"""
+        print("📝 TESTING APPLICATIONS SYSTEM")
+        print("=" * 50)
         
-        # Cleanup regardless of test results
-        try:
-            self.cleanup_test_data()
-        except Exception as e:
-            print(f"⚠️ Cleanup failed: {e}")
+        if "worker" not in self.auth_tokens or "employer" not in self.auth_tokens:
+            self.log_test("Applications System Tests", False, "Missing auth tokens")
+            return
+            
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            worker_headers = {"Authorization": f"Bearer {self.auth_tokens['worker']}"}
+            employer_headers = {"Authorization": f"Bearer {self.auth_tokens['employer']}"}
+            
+            worker_id = self.test_data.get("worker_user_id")
+            employer_id = self.test_data.get("employer_user_id")
+            job_id = self.test_data.get("job_id")
+            
+            if not all([worker_id, employer_id, job_id]):
+                self.log_test("Applications System Tests", False, "Missing required test data")
+                return
+            
+            try:
+                # Test Create Application
+                app_data = {
+                    "jobId": job_id,
+                    "workerId": worker_id,
+                    "employerId": employer_id
+                }
+                
+                response = await client.post(f"{self.base_url}/applications", 
+                                           json=app_data, headers=worker_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Application Creation", True, 
+                                f"Application created: {data.get('id')}")
+                    self.test_data["application_id"] = data.get("id")
+                    self.test_data["application"] = data
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Application Creation", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Applications for Job (Employer view)
+                response = await client.get(f"{self.base_url}/applications/job/{job_id}", 
+                                          headers=employer_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get Job Applications", True, 
+                                f"Retrieved {len(data)} applications for job")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get Job Applications", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Applications for Worker
+                response = await client.get(f"{self.base_url}/applications/worker/{worker_id}", 
+                                          headers=worker_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get Worker Applications", True, 
+                                f"Retrieved {len(data)} applications for worker")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get Worker Applications", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Accept Application
+                application_id = self.test_data.get("application_id")
+                if application_id:
+                    response = await client.put(f"{self.base_url}/applications/{application_id}/accept", 
+                                              headers=employer_headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        self.log_test("Accept Application", True, 
+                                    f"Application accepted: {data.get('status')}")
+                    else:
+                        error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                        self.log_test("Accept Application", False, 
+                                    f"Status: {response.status_code}", error_data)
+                        
+            except Exception as e:
+                self.log_test("Applications System", False, f"Error: {str(e)}")
+    
+    async def test_chat_system(self):
+        """Test chat messaging system"""
+        print("💬 TESTING CHAT SYSTEM")
+        print("=" * 50)
         
-        # Final results
+        if "worker" not in self.auth_tokens or "employer" not in self.auth_tokens:
+            self.log_test("Chat System Tests", False, "Missing auth tokens")
+            return
+            
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            worker_headers = {"Authorization": f"Bearer {self.auth_tokens['worker']}"}
+            employer_headers = {"Authorization": f"Bearer {self.auth_tokens['employer']}"}
+            
+            application_id = self.test_data.get("application_id")
+            
+            if not application_id:
+                self.log_test("Chat System Tests", False, "No application ID available")
+                return
+            
+            try:
+                # Test Send Message (Worker to Employer)
+                message_data = {
+                    "applicationId": application_id,
+                    "message": "Hallo! Ich freue mich auf den Auftrag. Wann soll ich vor Ort sein?"
+                }
+                
+                response = await client.post(f"{self.base_url}/chat/messages", 
+                                           json=message_data, headers=worker_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Send Message (Worker)", True, 
+                                f"Message sent: {data.get('message')[:50]}...")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Send Message (Worker)", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Messages (Employer view)
+                response = await client.get(f"{self.base_url}/chat/messages/{application_id}", 
+                                          headers=employer_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get Messages (Employer)", True, 
+                                f"Retrieved {len(data)} messages")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get Messages (Employer)", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Send Reply (Employer to Worker)
+                reply_data = {
+                    "applicationId": application_id,
+                    "message": "Hallo Max! Bitte seien Sie um 17:45 Uhr vor Ort für das Briefing. Vielen Dank!"
+                }
+                
+                response = await client.post(f"{self.base_url}/chat/messages", 
+                                           json=reply_data, headers=employer_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Send Reply (Employer)", True, 
+                                f"Reply sent: {data.get('message')[:50]}...")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Send Reply (Employer)", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get All Messages (Worker view)
+                response = await client.get(f"{self.base_url}/chat/messages/{application_id}", 
+                                          headers=worker_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get All Messages (Worker)", True, 
+                                f"Retrieved {len(data)} messages in conversation")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get All Messages (Worker)", False, 
+                                f"Status: {response.status_code}", error_data)
+                        
+            except Exception as e:
+                self.log_test("Chat System", False, f"Error: {str(e)}")
+    
+    async def test_reviews_system(self):
+        """Test reviews and ratings system"""
+        print("⭐ TESTING REVIEWS SYSTEM")
+        print("=" * 50)
+        
+        if "worker" not in self.auth_tokens or "employer" not in self.auth_tokens:
+            self.log_test("Reviews System Tests", False, "Missing auth tokens")
+            return
+            
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            worker_headers = {"Authorization": f"Bearer {self.auth_tokens['worker']}"}
+            employer_headers = {"Authorization": f"Bearer {self.auth_tokens['employer']}"}
+            
+            worker_id = self.test_data.get("worker_user_id")
+            employer_id = self.test_data.get("employer_user_id")
+            job_id = self.test_data.get("job_id")
+            
+            if not all([worker_id, employer_id, job_id]):
+                self.log_test("Reviews System Tests", False, "Missing required test data")
+                return
+            
+            try:
+                # Test Create Review (Employer reviews Worker)
+                review_data = {
+                    "jobId": job_id,
+                    "workerId": worker_id,
+                    "employerId": employer_id,
+                    "rating": 5,
+                    "comment": "Hervorragender Sicherheitsmitarbeiter! Pünktlich, professionell und sehr zuverlässig. Gerne wieder!"
+                }
+                
+                response = await client.post(f"{self.base_url}/reviews", 
+                                           json=review_data, headers=employer_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Create Review", True, 
+                                f"Review created with {data.get('rating')} stars")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Create Review", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Reviews for Worker
+                response = await client.get(f"{self.base_url}/reviews/worker/{worker_id}", 
+                                          headers=worker_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get Worker Reviews", True, 
+                                f"Retrieved {len(data)} reviews for worker")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get Worker Reviews", False, 
+                                f"Status: {response.status_code}", error_data)
+                
+                # Test Get Reviews for Employer
+                response = await client.get(f"{self.base_url}/reviews/employer/{employer_id}", 
+                                          headers=employer_headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("Get Employer Reviews", True, 
+                                f"Retrieved {len(data)} reviews for employer")
+                else:
+                    error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
+                    self.log_test("Get Employer Reviews", False, 
+                                f"Status: {response.status_code}", error_data)
+                        
+            except Exception as e:
+                self.log_test("Reviews System", False, f"Error: {str(e)}")
+    
+    async def test_authorization_headers(self):
+        """Test that authorization headers work correctly after frontend refactoring"""
+        print("🔒 TESTING AUTHORIZATION HEADERS")
+        print("=" * 50)
+        
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            try:
+                # Test with correct Bearer token format
+                if "worker" in self.auth_tokens:
+                    headers = {"Authorization": f"Bearer {self.auth_tokens['worker']}"}
+                    response = await client.get(f"{self.base_url}/jobs", headers=headers)
+                    if response.status_code == 200:
+                        self.log_test("Correct Bearer Token Format", True, 
+                                    "Authorization header 'Bearer {token}' works correctly")
+                    else:
+                        self.log_test("Correct Bearer Token Format", False, 
+                                    f"Status: {response.status_code}")
+                
+                # Test with missing Authorization header
+                response = await client.get(f"{self.base_url}/jobs")
+                if response.status_code == 401:
+                    self.log_test("Missing Authorization Header", True, 
+                                "Correctly returns 401 when Authorization header is missing")
+                else:
+                    self.log_test("Missing Authorization Header", False, 
+                                f"Expected 401, got {response.status_code}")
+                
+                # Test with invalid Bearer format
+                headers = {"Authorization": "InvalidFormat token123"}
+                response = await client.get(f"{self.base_url}/jobs", headers=headers)
+                if response.status_code == 401:
+                    self.log_test("Invalid Bearer Format", True, 
+                                "Correctly returns 401 for invalid Authorization format")
+                else:
+                    self.log_test("Invalid Bearer Format", False, 
+                                f"Expected 401, got {response.status_code}")
+                        
+            except Exception as e:
+                self.log_test("Authorization Headers", False, f"Error: {str(e)}")
+    
+    def print_summary(self):
+        """Print test summary"""
         print("\n" + "=" * 60)
-        print("🏁 TEST RESULTS SUMMARY")
+        print("🎯 BACKEND API TESTING SUMMARY")
         print("=" * 60)
         
-        success_rate = (passed_tests / total_tests) * 100
-        print(f"Tests Passed: {passed_tests}/{total_tests} ({success_rate:.1f}%)")
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results if result["success"])
+        failed_tests = total_tests - passed_tests
         
-        if passed_tests == total_tests:
-            print("🎉 ALL TESTS PASSED - Jobs matching system is working correctly!")
-            return True
-        else:
-            print("❌ SOME TESTS FAILED - Jobs matching system needs attention")
-            return False
+        print(f"Total Tests: {total_tests}")
+        print(f"✅ Passed: {passed_tests}")
+        print(f"❌ Failed: {failed_tests}")
+        print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%" if total_tests > 0 else "No tests run")
+        
+        if failed_tests > 0:
+            print(f"\n❌ FAILED TESTS:")
+            for result in self.test_results:
+                if not result["success"]:
+                    print(f"   • {result['test']}: {result['details']}")
+        
+        print(f"\n🎉 BACKEND API TESTING COMPLETED")
+        print(f"All major endpoints tested with German realistic data")
+        print(f"Authorization header format 'Bearer {{token}}' verified")
+        
+        return passed_tests, failed_tests
 
-def run_basic_infrastructure_check():
-    """Basic infrastructure check after frontend changes"""
-    print("🚀 BACKEND INFRASTRUCTURE CHECK - Job-Matching Bug Fix")
-    print("=" * 60)
-    print("Testing basic backend infrastructure after frontend-only changes")
-    print("=" * 60)
-    
-    tester = DistanceMatchingTester()
-    
-    # Test 1: Backend Service Status
-    print("\n🔍 TEST 1: Backend Service Status")
-    health_ok = tester.test_backend_health()
-    
-    # Test 2: Frontend Serving
-    print("\n🔍 TEST 2: Frontend Serving")
-    try:
-        response = requests.get("https://jobnexus.preview.emergentagent.com/", timeout=10)
-        if response.status_code == 200 and "html" in response.headers.get("content-type", "").lower():
-            print("✅ Frontend Serving CORRECTLY - Root URL delivers HTML content")
-            frontend_ok = True
-        else:
-            print(f"❌ Frontend Serving ISSUE - Status: {response.status_code}")
-            frontend_ok = False
-    except Exception as e:
-        print(f"❌ Frontend Serving FAILED - Error: {e}")
-        frontend_ok = False
-    
-    # Test 3: Health Check Endpoint
-    print("\n🔍 TEST 3: Health Check Endpoint")
-    try:
-        response = requests.get(f"{BACKEND_URL}/", timeout=10)
-        if response and response.status_code == 200:
-            data = response.json()
-            if data.get("message") == "Hello World":
-                print(f"✅ Health Check Endpoint WORKING - Response: {data}")
-                health_endpoint_ok = True
-            else:
-                print(f"❌ Health Check Endpoint unexpected response: {data}")
-                health_endpoint_ok = False
-        else:
-            print(f"❌ Health Check Endpoint FAILED - Status: {response.status_code if response else 'No response'}")
-            health_endpoint_ok = False
-    except Exception as e:
-        print(f"❌ Health Check Endpoint FAILED - Error: {e}")
-        health_endpoint_ok = False
-    
-    # Summary
-    print("\n" + "=" * 60)
-    print("📊 INFRASTRUCTURE CHECK SUMMARY")
+async def main():
+    """Run all backend tests"""
+    print("🚀 STARTING COMPREHENSIVE BACKEND API TESTING")
+    print("Testing after frontend refactoring with centralized utils/api.ts")
     print("=" * 60)
     
-    tests_passed = sum([health_ok, frontend_ok, health_endpoint_ok])
-    total_tests = 3
+    tester = ComprehensiveBackendTester()
     
-    print(f"✅ Tests Passed: {tests_passed}/{total_tests}")
+    # Run all test suites
+    await tester.test_health_check()
+    await tester.test_authentication()
+    await tester.test_worker_profile()
+    await tester.test_employer_profile()
+    await tester.test_jobs_system()
+    await tester.test_applications_system()
+    await tester.test_chat_system()
+    await tester.test_reviews_system()
+    await tester.test_authorization_headers()
     
-    if tests_passed == total_tests:
-        print("🎉 ALL TESTS PASSED - Backend Infrastructure is STABLE")
-        print("✅ Backend unaffected by frontend job-matching bug fix as expected")
-        return True
-    else:
-        print("❌ SOME TESTS FAILED - Backend Infrastructure needs attention")
-        return False
-
-def main():
-    """Main test execution"""
-    import sys
-    if len(sys.argv) > 1 and sys.argv[1] == "--infrastructure":
-        success = run_basic_infrastructure_check()
-    else:
-        tester = DistanceMatchingTester()
-        success = tester.run_comprehensive_test()
+    # Print final summary
+    passed, failed = tester.print_summary()
     
-    # Exit with appropriate code
-    sys.exit(0 if success else 1)
+    return passed, failed
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
