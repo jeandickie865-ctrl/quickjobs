@@ -405,7 +405,7 @@ export default function WorkerFeed() {
                         🕐 {timeDisplay}
                       </Text>
                       <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                        📍 {formatAddress(job.location)}
+                        📍 {formatAddress(job.address)}
                       </Text>
                     </View>
 
@@ -535,7 +535,7 @@ export default function WorkerFeed() {
                         🕐 {timeDisplay}
                       </Text>
                       <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                        📍 {formatAddress(job.location)}
+                        📍 {formatAddress(job.address)}
                       </Text>
                     </View>
 
