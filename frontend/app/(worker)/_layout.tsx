@@ -18,22 +18,27 @@ export default function WorkerLayout() {
   const { user, isLoading } = useAuth();
   const [matchesCount, setMatchesCount] = useState(0);
 
-  // Load matches count
-  useEffect(() => {
-    if (!user) return;
-    
-    async function loadMatchesCount() {
-      try {
-        const apps = await getApplicationsForWorker(user.id);
-        const acceptedApps = apps.filter(app => app.status === 'accepted');
-        setMatchesCount(acceptedApps.length);
-      } catch (error) {
-        console.error('Error loading matches count:', error);
+  // Load matches count on mount and on focus
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!user) return;
+      
+      async function loadMatchesCount() {
+        try {
+          console.log('🔄 Loading matches count for:', user.id);
+          const apps = await getApplicationsForWorker(user.id);
+          console.log('📋 Total applications:', apps.length);
+          const acceptedApps = apps.filter(app => app.status === 'accepted');
+          console.log('✅ Accepted applications:', acceptedApps.length);
+          setMatchesCount(acceptedApps.length);
+        } catch (error) {
+          console.error('❌ Error loading matches count:', error);
+        }
       }
-    }
-    
-    loadMatchesCount();
-  }, [user]);
+      
+      loadMatchesCount();
+    }, [user])
+  );
 
   if (isLoading) {
     return (
