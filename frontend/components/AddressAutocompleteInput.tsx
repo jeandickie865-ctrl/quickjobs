@@ -141,23 +141,25 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
     <View style={styles.container}>
       {/* Straße & Hausnummer */}
       <Text style={styles.label}>Straße & Hausnummer *</Text>
-      <TextInput
-        value={query}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => {
-          setTimeout(() => {
-            setIsFocused(false);
-            setSuggestions([]);
-          }, 150);
-        }}
-        onChangeText={(text) => {
-          setQuery(text);
-          if (onStreetChange) onStreetChange(text);
-        }}
-        placeholder="z. B. Am Stadtpark 10"
-        placeholderTextColor="#777"
-        style={styles.input}
-      />
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <TextInput
+          value={query}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => {
+            setTimeout(() => {
+              setIsFocused(false);
+              setSuggestions([]);
+            }, 150);
+          }}
+          onChangeText={(text) => {
+            setQuery(text);
+            if (onStreetChange) onStreetChange(text);
+          }}
+          placeholder="z. B. Am Stadtpark"
+          placeholderTextColor="#777"
+          style={[styles.input, { flex: 1 }]}
+        />
+      </View>
 
       {/* AUTOCOMPLETE DROPDOWN */}
       {isFocused && suggestions.length > 0 && (
