@@ -90,7 +90,7 @@ export default function WorkerProfileScreen() {
             Noch kein Profil vorhanden
           </Text>
           <Pressable
-            onPress={() => router.push('/(worker)/edit-profile')}
+            onPress={() => router.push('/(worker)/profile-wizard/step1-basic')}
             style={{
               backgroundColor: COLORS.neon,
               paddingVertical: 14,
