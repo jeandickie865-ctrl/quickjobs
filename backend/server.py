@@ -511,7 +511,7 @@ async def get_worker_profile(
     logger.info(f"Fetching worker profile for user {user_id}")
     
     # Verify token (optional: check if requester is the same user)
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Find profile
     profile = await db.worker_profiles.find_one({"userId": user_id})
@@ -539,7 +539,7 @@ async def get_worker_profile_for_employer(
     logger.info(f"Fetching worker profile for employer view: {user_id}, application: {application_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     if not requesting_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
@@ -621,7 +621,7 @@ async def update_worker_profile(
     logger.info(f"Updating worker profile for user {user_id}")
     
     # Verify token - user can only update their own profile
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     if requesting_user != user_id:
         raise HTTPException(status_code=403, detail="Cannot update another user's profile")
     
@@ -797,7 +797,7 @@ async def get_employer_jobs(
     logger.info(f"📋 Authorization header: {authorization}")
     
     # Verify token - employer can only see their own jobs
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     logger.info(f"👤 Requesting user from token: '{requesting_user}'")
     logger.info(f"🎯 Employer ID from URL: '{employer_id}'")
     logger.info(f"✅ Match: {requesting_user == employer_id}")
@@ -848,7 +848,7 @@ async def update_job(
     logger.info(f"Updating job {job_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Check if job exists and user is the owner
     existing = await db.jobs.find_one({"id": job_id})
@@ -892,7 +892,7 @@ async def delete_job(
     logger.info(f"Deleting job {job_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Check if job exists and user is the owner
     existing = await db.jobs.find_one({"id": job_id})
@@ -919,7 +919,7 @@ async def create_application(
     logger.info(f"Creating application: worker {app_data.workerId} -> job {app_data.jobId}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Worker can only apply for themselves
     if requesting_user != app_data.workerId:
@@ -961,7 +961,7 @@ async def get_applications_for_job(
     logger.info(f"Fetching applications for job {job_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Check if job exists and user is the employer
     job = await db.jobs.find_one({"id": job_id})
@@ -990,7 +990,7 @@ async def get_applications_for_worker(
     logger.info(f"Fetching applications for worker {worker_id}")
     
     # Verify token - worker can only see their own applications
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     if requesting_user != worker_id:
         raise HTTPException(status_code=403, detail="Cannot view another worker's applications")
     
@@ -1013,7 +1013,7 @@ async def get_applications_for_employer(
     logger.info(f"Fetching applications for employer {employer_id}")
     
     # Verify token - employer can only see their own applications
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     if requesting_user != employer_id:
         raise HTTPException(status_code=403, detail="Cannot view another employer's applications")
     
@@ -1036,7 +1036,7 @@ async def get_application(
     logger.info(f"Fetching application {application_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Find application
     application = await db.applications.find_one({"id": application_id})
@@ -1063,7 +1063,7 @@ async def accept_application(
     logger.info(f"Accepting application {application_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Find application
     application = await db.applications.find_one({"id": application_id})
@@ -1124,7 +1124,7 @@ async def update_application(
     logger.info(f"Updating application {application_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Find application
     existing = await db.applications.find_one({"id": application_id})
@@ -1200,7 +1200,7 @@ async def get_employer_profile(
     logger.info(f"Fetching employer profile for user {user_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # SECURITY FIX: Only allow access to own profile
     if requesting_user != user_id:
@@ -1228,7 +1228,7 @@ async def update_employer_profile(
     logger.info(f"Updating employer profile for user {user_id}")
     
     # Verify token - user can only update their own profile
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     if requesting_user != user_id:
         raise HTTPException(status_code=403, detail="Cannot update another user's profile")
     
@@ -1272,7 +1272,7 @@ async def create_review(
     logger.info(f"Creating review for job {review_data.jobId}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # User must be either the worker or employer to create a review
     if requesting_user not in [review_data.workerId, review_data.employerId]:
@@ -1372,7 +1372,7 @@ async def send_message(
     logger.info(f"Sending message for application {message_data.applicationId}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Get application to verify user is part of it
     application = await db.applications.find_one({"id": message_data.applicationId})
@@ -1416,7 +1416,7 @@ async def get_messages(
     logger.info(f"Fetching messages for application {application_id}")
     
     # Verify token
-    requesting_user = get_user_id_from_token(authorization)
+    requesting_user = await get_user_id_from_token(authorization)
     
     # Get application to verify user is part of it
     application = await db.applications.find_one({"id": application_id})
