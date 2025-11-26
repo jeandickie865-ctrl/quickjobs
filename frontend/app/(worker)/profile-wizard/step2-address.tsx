@@ -45,7 +45,8 @@ export default function Step2Address() {
 
   const handleNext = () => {
     if (validate()) {
-      // Store data in context/AsyncStorage
+      // Save to context
+      updateWizardData({ street, postalCode, city, lat, lon, radiusKm: radius });
       router.push('/(worker)/profile-wizard/step3-categories');
     }
   };
