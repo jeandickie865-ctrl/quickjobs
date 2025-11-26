@@ -8,7 +8,7 @@ import { Button } from '../../../components/ui/Button';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import Chip from '../../../components/ui/Chip';
 import { listCategories, CategoryKey, groupTagsByType } from '../../../src/taxonomy';
-import { JobTimeMode, Job } from '../../../types/job';
+import { JobTimeMode, JobCreate } from '../../../types/job';
 import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
