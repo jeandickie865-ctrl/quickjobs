@@ -62,6 +62,11 @@ export default function WorkerProfileScreen() {
       const reviews = await getReviewsForWorker(user.id);
       setAvgRating(calculateAverageRating(reviews));
       setReviewCount(reviews.length);
+
+      // Load matches count
+      const matches = await getMatchesForWorker(user.id);
+      setMatchCount(matches.length);
+      console.log('✅ Matches geladen:', matches.length);
     } catch (err) {
       console.error('❌ Fehler beim Laden des Profils:', err);
     } finally {
