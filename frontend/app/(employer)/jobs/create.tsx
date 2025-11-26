@@ -13,7 +13,7 @@ import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
 import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
-import UniversalDateTimePicker from '../../../components/UniversalDateTimePicker';
+import UniversalUniversalDateTimePicker from '../../../components/UniversalUniversalDateTimePicker';
 
 export default function CreateJob() {
   const { colors, spacing } = useTheme();
@@ -36,7 +36,7 @@ export default function CreateJob() {
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
   
-  // fixed_time - Date objects for DateTimePicker
+  // fixed_time - Date objects for UniversalDateTimePicker
   const [startDateTime, setStartDateTime] = useState<Date | undefined>(undefined);
   const [endDateTime, setEndDateTime] = useState<Date | undefined>(undefined);
   
@@ -473,7 +473,7 @@ export default function CreateJob() {
               <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Start</Text>
               <View style={{ flexDirection: 'row', gap: 12 }}>
                 <View style={{ flex: 1 }}>
-                  <UniversalDateTimePicker
+                  <UniversalUniversalDateTimePicker
                     label="Datum"
                     value={startDateTime}
                     onChange={setStartDateTime}
@@ -482,7 +482,7 @@ export default function CreateJob() {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <DateTimePicker
+                  <UniversalDateTimePicker
                     label="Uhrzeit"
                     value={startDateTime}
                     onChange={setStartDateTime}
@@ -496,7 +496,7 @@ export default function CreateJob() {
               <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Ende</Text>
               <View style={{ flexDirection: 'row', gap: 12 }}>
                 <View style={{ flex: 1 }}>
-                  <DateTimePicker
+                  <UniversalDateTimePicker
                     label="Datum"
                     value={endDateTime}
                     onChange={setEndDateTime}
@@ -505,7 +505,7 @@ export default function CreateJob() {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <DateTimePicker
+                  <UniversalDateTimePicker
                     label="Uhrzeit"
                     value={endDateTime}
                     onChange={setEndDateTime}
@@ -591,7 +591,7 @@ export default function CreateJob() {
 
             {/* Date Inputs based on selection */}
             {hoursDateType === 'specific' && (
-              <DateTimePicker
+              <UniversalDateTimePicker
                 label="Datum"
                 value={hoursSpecificDate}
                 onChange={setHoursSpecificDate}
@@ -602,14 +602,14 @@ export default function CreateJob() {
 
             {hoursDateType === 'range' && (
               <View style={{ gap: 12 }}>
-                <DateTimePicker
+                <UniversalDateTimePicker
                   label="Von Datum"
                   value={hoursStartDate}
                   onChange={setHoursStartDate}
                   mode="date"
                   minimumDate={new Date()}
                 />
-                <DateTimePicker
+                <UniversalDateTimePicker
                   label="Bis Datum"
                   value={hoursEndDate}
                   onChange={setHoursEndDate}
