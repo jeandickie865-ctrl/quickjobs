@@ -200,6 +200,11 @@ export default function Step1Basic() {
             <Pressable onPress={pickImage} style={styles.changePhotoButton}>
               <Text style={styles.changePhotoText}>Foto ändern</Text>
             </Pressable>
+            {!photoUrl && (
+              <Text style={styles.hintText}>
+                💡 Ein Foto hilft Arbeitgebern, dich besser kennenzulernen (optional)
+              </Text>
+            )}
             {errors.photoUrl && <Text style={styles.errorText}>{errors.photoUrl}</Text>}
           </View>
 
