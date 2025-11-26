@@ -926,19 +926,21 @@ async def create_application(
     authorization: Optional[str] = Header(None)
 ):
     """Create a new job application"""
-    logger.info(f"Creating application: worker {app_data.workerId} -> job {app_data.jobId}")
+    # Get workerId from token (validates token and returns userId)
+    workerId = await get_user_id_from_token(authorization)
+    logger.info(f"✅ Token validated - workerId: {workerId}")
+    logger.info(f"Creating application: worker {workerId} -> job {app_data.jobId}")
     
-    # Verify token
-    requesting_user = await get_user_id_from_token(authorization)
-    
-    # Worker can only apply for themselves
-    if requesting_user != app_data.workerId:
-        raise HTTPException(status_code=403, detail="Cannot apply on behalf of another worker")
+    # Verify user is a worker
+    user = await db.users.find_one({"userId": workerId})
+    if not user or user.get("role") != "worker":
+        logger.error(f"❌ User {workerId} is not a worker (role: {user.get('role') if user else 'not found'})")
+        raise HTTPException(status_code=403, detail="Only workers can create applications")
     
     # Check if application already exists
     existing = await db.applications.find_one({
         "jobId": app_data.jobId,
-        "workerId": app_data.workerId
+        "workerId": workerId
     })
     
     if existing:
@@ -949,8 +951,11 @@ async def create_application(
     # Create application document
     app_dict = app_data.dict()
     app_dict["id"] = f"app_{str(uuid.uuid4())}"
+    app_dict["workerId"] = workerId  # Set workerId from token
     app_dict["createdAt"] = datetime.utcnow().isoformat()
     app_dict["status"] = "pending"
+    
+    logger.info(f"📝 Creating application with workerId: {workerId}")
     
     # Insert into MongoDB
     result = await db.applications.insert_one(app_dict)
