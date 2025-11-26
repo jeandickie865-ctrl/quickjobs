@@ -436,4 +436,18 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     marginTop: 4,
   },
+  hintText: {
+    fontSize: 12,
+    color: COLORS.neon,
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+  validationHint: {
+    fontSize: 13,
+    color: COLORS.neon,
+    backgroundColor: 'rgba(200, 255, 22, 0.1)',
+    padding: 12,
+    borderRadius: 8,
+    textAlign: 'center',
+  },
 });
