@@ -62,8 +62,29 @@ export async function addJob(job: Job): Promise<void> {
 }
 
 export async function getJobs(): Promise<Job[]> {
-  console.log('🔍 getJobs (API): Fetching all jobs');
-  return await getOpenJobs();
+  console.log('🔍 getJobs (API): Fetching ALL jobs (including completed)');
+  try {
+    const userId = await getUserId();
+    
+    const response = await fetch(`${API_BASE}/jobs/all`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${userId}`,
+      },
+    });
+    
+    if (!response.ok) {
+      console.error('❌ getJobs (API): Failed', response.status);
+      return [];
+    }
+    
+    const jobs: Job[] = await response.json();
+    console.log('✅ getJobs (API): Fetched', jobs.length, 'jobs (including completed)');
+    return jobs;
+  } catch (error) {
+    console.error('❌ getJobs (API): Error', error);
+    return [];
+  }
 }
 
 export async function updateJob(id: string, patch: Partial<Job>): Promise<void> {
