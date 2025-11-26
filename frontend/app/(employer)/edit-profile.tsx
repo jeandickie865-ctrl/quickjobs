@@ -439,6 +439,11 @@ export default function EmployerProfileScreen() {
                   style={{ fontSize: 16, color: COLORS.black }}
                 />
               </View>
+              {!lastName.trim() && (
+                <Text style={{ fontSize: 12, color: '#FF4D4D', marginTop: 4 }}>
+                  ℹ️ Bitte gib deinen Nachnamen ein
+                </Text>
+              )}
             </View>
 
             {/* Firma */}
