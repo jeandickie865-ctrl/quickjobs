@@ -123,8 +123,8 @@ class ComprehensiveBackendTester:
                         data = response.json()
                         self.log_test(f"Login ({user['role']})", True, 
                                     f"User {user['email']} logged in successfully")
-                        # Update token from login
-                        self.auth_tokens[user["role"]] = data.get("token")
+                        # Update token from login - use userId for authorization
+                        self.auth_tokens[user["role"]] = data.get("userId")
                     else:
                         error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text
                         self.log_test(f"Login ({user['role']})", False, 
