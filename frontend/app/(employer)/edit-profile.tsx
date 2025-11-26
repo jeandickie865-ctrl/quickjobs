@@ -574,6 +574,11 @@ export default function EmployerProfileScreen() {
               onLatChange={setLat}
               onLonChange={setLon}
             />
+            {(!street.trim() || !postalCode.trim() || !city.trim()) && (
+              <Text style={{ fontSize: 12, color: '#FF4D4D', marginTop: 8 }}>
+                ℹ️ Bitte gib deine Geschäftsadresse ein, um fortzufahren
+              </Text>
+            )}
           </View>
 
           {/* Zahlungsdaten */}
