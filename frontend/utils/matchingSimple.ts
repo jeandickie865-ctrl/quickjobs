@@ -1,6 +1,7 @@
 // utils/matchingSimple.ts - SUPER SIMPLE MATCHING - FUNKTIONIERT IMMER!
 import { WorkerProfile } from '../types/profile';
 import { Job } from '../types/job';
+import { calculateDistance } from './distance';
 
 /**
  * EINFACHSTES MATCHING - NUR DAS NÖTIGSTE
