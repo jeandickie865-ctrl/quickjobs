@@ -44,11 +44,44 @@ export default function Step5Summary() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // TODO: Call API to save profile
-      // const response = await fetch(...)
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Prepare profile data for backend
+      const profilePayload = {
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        phone: profileData.phone,
+        email: profileData.email,
+        shortBio: wizardData.shortBio || '',
+        photoUrl: profileData.photoUrl || '',
+        categories: profileData.categories || [],
+        selectedTags: profileData.skills || [],
+        radiusKm: profileData.radius || 25,
+        homeAddress: {
+          street: profileData.street || '',
+          city: profileData.city || '',
+          postalCode: profileData.postalCode || '',
+          country: 'Deutschland'
+        },
+        homeLat: wizardData.lat,
+        homeLon: wizardData.lon,
+      };
+
+      console.log('Saving profile:', profilePayload);
+
+      const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+      const response = await fetch(`${backendUrl}/api/profiles/worker`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profilePayload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const savedProfile = await response.json();
+      console.log('Profile saved successfully:', savedProfile);
       
       Alert.alert(
         'Profil erstellt! 🎉',
