@@ -310,7 +310,7 @@ export default function WorkerProfileScreen() {
               borderRadius: 12,
             }}>
               <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
-                5
+                {matchCount}
               </Text>
             </View>
           </Pressable>
