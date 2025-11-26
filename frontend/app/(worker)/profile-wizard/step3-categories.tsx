@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
 import { CATEGORY_MAPPING } from '../../../utils/categoryMapping';
+import { useWizard } from '../../../contexts/WizardContext';
 
 const COLORS = {
   purple: '#5941FF',
