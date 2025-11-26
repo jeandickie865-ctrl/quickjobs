@@ -663,6 +663,11 @@ export default function EmployerProfileScreen() {
                 PayPal
               </Text>
             </Pressable>
+            {!paymentMethod && (
+              <Text style={{ fontSize: 12, color: '#FF4D4D', marginTop: 12 }}>
+                ℹ️ Bitte wähle eine Zahlungsart aus
+              </Text>
+            )}
           </View>
 
           {/* Über dich */}
