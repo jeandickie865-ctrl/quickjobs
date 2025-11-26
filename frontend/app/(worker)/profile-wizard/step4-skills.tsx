@@ -60,7 +60,8 @@ export default function Step4Skills() {
   };
 
   const handleBack = () => {
-    router.back();
+    updateWizardData({ selectedSkills });
+    router.push('/(worker)/profile-wizard/step3-categories');
   };
 
   const isFormValid = selectedSkills.length > 0;
