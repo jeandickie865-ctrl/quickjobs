@@ -29,7 +29,20 @@ export function simpleMatch(job: Job, worker: WorkerProfile): boolean {
     return false;
   }
 
-  // REGEL 3: Kategorie-Match
+  // REGEL 3: Distanz-Check (WICHTIG!)
+  if (worker.homeLat && worker.homeLon && job.lat && job.lon) {
+    const distance = calculateDistance(
+      { lat: job.lat, lon: job.lon },
+      { lat: worker.homeLat, lon: worker.homeLon }
+    );
+    
+    if (distance > worker.radiusKm) {
+      console.log(`❌ Job "${job.title}" ist ${distance.toFixed(1)} km entfernt (Radius: ${worker.radiusKm} km)`);
+      return false;
+    }
+  }
+
+  // REGEL 4: Kategorie-Match
   const jobCategory = job.category || '';
   const workerCategories = worker.categories || [];
 
