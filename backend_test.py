@@ -103,7 +103,8 @@ class ComprehensiveBackendTester:
                         data = response.json()
                         self.log_test(f"Registration ({user['role']})", True, 
                                     f"User {user['email']} registered successfully")
-                        self.auth_tokens[user["role"]] = data.get("token")
+                        # Use userId as token for authorization (backend expects Bearer {userId})
+                        self.auth_tokens[user["role"]] = data.get("userId")
                         self.test_data[f"{user['role']}_user_id"] = data.get("userId")
                         self.test_data[f"{user['role']}_email"] = data.get("email")
                     else:
