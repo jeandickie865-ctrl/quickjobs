@@ -2,6 +2,27 @@ import { Address } from './address';
 
 export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
 
+// JobCreate: What frontend sends to backend (no id, employerId, etc.)
+export type JobCreate = {
+  employerType?: 'private' | 'business';
+  title: string;
+  description?: string;
+  category: string;
+  timeMode: JobTimeMode;
+  startAt?: string;
+  endAt?: string;
+  hours?: number;
+  dueAt?: string;
+  address: Address;
+  lat?: number;
+  lon?: number;
+  workerAmountCents: number;
+  paymentToWorker: 'cash' | 'bank' | 'paypal';
+  required_all_tags: string[];
+  required_any_tags: string[];
+};
+
+// Job: Complete job object (from backend)
 export type Job = {
   id: string;
   employerId: string;
