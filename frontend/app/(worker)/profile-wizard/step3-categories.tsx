@@ -21,7 +21,10 @@ const COLORS = {
 
 export default function Step3Categories() {
   const router = useRouter();
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const { wizardData, updateWizardData } = useWizard();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    wizardData.selectedCategories || []
+  );
 
   const toggleCategory = (category: string) => {
     setSelectedCategories(prev => 
@@ -33,7 +36,8 @@ export default function Step3Categories() {
 
   const handleNext = () => {
     if (selectedCategories.length > 0) {
-      // Store in context/AsyncStorage
+      // Save to context
+      updateWizardData({ selectedCategories: selectedCategories as any });
       router.push('/(worker)/profile-wizard/step4-skills');
     }
   };
