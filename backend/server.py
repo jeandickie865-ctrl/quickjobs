@@ -725,13 +725,23 @@ async def create_job(
     """Create a new job"""
     logger.info("Creating new job")
     
+    # Get employerId from token (validates token and returns userId)
     employerId = await get_user_id_from_token(authorization)
+    logger.info(f"✅ Token validated - employerId: {employerId}")
+    
+    # Verify user is an employer
+    user = await db.users.find_one({"userId": employerId})
+    if not user or user.get("role") != "employer":
+        logger.error(f"❌ User {employerId} is not an employer (role: {user.get('role') if user else 'not found'})")
+        raise HTTPException(status_code=403, detail="Only employers can create jobs")
     
     # Create job document
     job_dict = job_data.dict()
     job_dict["id"] = f"job_{str(uuid.uuid4())}"
-    job_dict["employerId"] = employerId
+    job_dict["employerId"] = employerId  # Set employerId from token
     job_dict["createdAt"] = datetime.utcnow().isoformat()
+    
+    logger.info(f"📝 Creating job with employerId: {employerId}")
     
     # Convert nested Address to dict if needed
     if isinstance(job_dict.get("address"), Address):
