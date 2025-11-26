@@ -68,7 +68,9 @@ export default function Step5Summary() {
       console.log('Saving profile:', profilePayload);
 
       const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
-      const response = await fetch(`${backendUrl}/api/profiles/worker`, {
+      
+      // Try POST first (create new profile)
+      let response = await fetch(`${backendUrl}/api/profiles/worker`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,21 +79,41 @@ export default function Step5Summary() {
         body: JSON.stringify(profilePayload),
       });
 
+      // If profile already exists (400), use PUT to update
+      if (response.status === 400) {
+        console.log('Profile exists, updating instead...');
+        response = await fetch(`${backendUrl}/api/profiles/worker/${user?.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token || '',
+          },
+          body: JSON.stringify(profilePayload),
+        });
+      }
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Backend error:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const savedProfile = await response.json();
       console.log('Profile saved successfully:', savedProfile);
       
-      Alert.alert(
-        'Profil erstellt! 🎉',
-        'Dein Profil wurde erfolgreich erstellt.',
-        [{
-          text: 'OK',
-          onPress: () => router.replace('/(worker)/profile')
-        }]
-      );
+      // Reset wizard data after successful save
+      resetWizard();
+      
+      // Navigate to profile page
+      router.replace('/(worker)/profile');
+      
+      // Show success message after navigation
+      setTimeout(() => {
+        Alert.alert(
+          'Profil gespeichert! 🎉',
+          'Dein Profil wurde erfolgreich gespeichert.'
+        );
+      }, 500);
     } catch (error) {
       console.error('Error saving profile:', error);
       Alert.alert(
