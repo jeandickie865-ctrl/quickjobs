@@ -229,6 +229,14 @@ export default function EditWorkerProfileScreen() {
     console.log('🎬 showPhotoOptions: Opening photo selection menu...');
     console.log('🎬 showPhotoOptions: Platform:', Platform.OS);
     
+    // WEB: Direkt File-Dialog öffnen
+    if (Platform.OS === 'web') {
+      console.log('🎬 -> Web: Opening file picker...');
+      pickImage();
+      return;
+    }
+    
+    // iOS: ActionSheet
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
         {
@@ -246,17 +254,19 @@ export default function EditWorkerProfileScreen() {
           }
         }
       );
-    } else {
-      Alert.alert(
-        'Profilbild ändern',
-        'Wähle eine Option',
-        [
-          { text: 'Abbrechen', style: 'cancel', onPress: () => console.log('🎬 Cancelled') },
-          { text: 'Foto aufnehmen', onPress: () => { console.log('🎬 -> Taking photo...'); takePhoto(); } },
-          { text: 'Aus Galerie wählen', onPress: () => { console.log('🎬 -> Picking image from gallery...'); pickImage(); } },
-        ]
-      );
+      return;
     }
+    
+    // Android: Alert
+    Alert.alert(
+      'Profilbild ändern',
+      'Wähle eine Option',
+      [
+        { text: 'Abbrechen', style: 'cancel', onPress: () => console.log('🎬 Cancelled') },
+        { text: 'Foto aufnehmen', onPress: () => { console.log('🎬 -> Taking photo...'); takePhoto(); } },
+        { text: 'Aus Galerie wählen', onPress: () => { console.log('🎬 -> Picking image from gallery...'); pickImage(); } },
+      ]
+    );
   }
 
   const getInitials = () => {
