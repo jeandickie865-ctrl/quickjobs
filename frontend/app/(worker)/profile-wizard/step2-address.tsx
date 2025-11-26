@@ -65,7 +65,7 @@ export default function Step2Address() {
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Adresse & Arbeitsbereich</Text>
           <Text style={styles.subtitle}>
-            Wo bist du tätig und wie weit möchtest du fahren?
+            Wo wohnst du und wie weit möchtest du fahren?
           </Text>
 
           <AddressAutocompleteInput
