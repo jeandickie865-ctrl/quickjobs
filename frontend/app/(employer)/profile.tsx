@@ -28,6 +28,7 @@ export default function EmployerProfileViewScreen() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<EmployerProfile | null>(null);
   const [matchesCount, setMatchesCount] = useState(0);
+  const [applicationsCount, setApplicationsCount] = useState(0);
   const [avgRating, setAvgRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
 
