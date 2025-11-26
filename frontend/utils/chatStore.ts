@@ -46,7 +46,7 @@ export async function addMessage(
       body: JSON.stringify({
         applicationId,
         senderRole,
-        text,
+        message: text,
       }),
     });
     
