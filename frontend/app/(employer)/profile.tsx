@@ -170,6 +170,43 @@ export default function EmployerProfileViewScreen() {
             </View>
           </Pressable>
 
+          {/* Meine Bewerbungen Button */}
+          <Pressable
+            onPress={() => router.push('/(employer)/applications')}
+            style={({ pressed }) => ({
+              backgroundColor: COLORS.white,
+              borderRadius: 16,
+              padding: 16,
+              marginBottom: 24,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              opacity: pressed ? 0.9 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <View style={{
+                backgroundColor: COLORS.neon,
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Ionicons name="mail-unread" size={24} color={COLORS.black} />
+              </View>
+              <View>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                  Meine Bewerbungen
+                </Text>
+                <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                  Neue Bewerbungen
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={COLORS.purple} />
+          </Pressable>
+
           {/* Profile Card */}
           <View style={{
             backgroundColor: COLORS.white,
