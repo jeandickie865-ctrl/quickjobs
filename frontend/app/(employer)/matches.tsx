@@ -295,25 +295,25 @@ export default function MatchesScreen() {
                       </View>
                     )}
                     
-                    {match.workerProfile.contactEmail && (
+                    {match.workerProfile.email && (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                         <Ionicons name="mail" size={18} color={COLORS.black} />
                         <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
-                          {match.workerProfile.contactEmail}
+                          {match.workerProfile.email}
                         </Text>
                       </View>
                     )}
                     
-                    {match.workerProfile.contactPhone && (
+                    {match.workerProfile.phone && (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <Ionicons name="call" size={18} color={COLORS.black} />
                         <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
-                          {match.workerProfile.contactPhone}
+                          {match.workerProfile.phone}
                         </Text>
                       </View>
                     )}
                     
-                    {!match.workerProfile.contactEmail && !match.workerProfile.contactPhone && (
+                    {!match.workerProfile.email && !match.workerProfile.phone && (
                       <Text style={{ fontSize: 13, color: COLORS.black, opacity: 0.6, fontStyle: 'italic' }}>
                         Worker hat noch keine Kontaktdaten hinterlegt
                       </Text>
