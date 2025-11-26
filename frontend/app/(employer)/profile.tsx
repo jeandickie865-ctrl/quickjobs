@@ -207,7 +207,16 @@ export default function EmployerProfileViewScreen() {
                 </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={24} color={COLORS.purple} />
+            <View style={{
+              backgroundColor: COLORS.purple,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 12,
+            }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
+                {applicationsCount}
+              </Text>
+            </View>
           </Pressable>
 
           {/* Profile Card */}
