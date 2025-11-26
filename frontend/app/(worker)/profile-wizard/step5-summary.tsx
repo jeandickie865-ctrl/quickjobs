@@ -70,7 +70,7 @@ export default function Step5Summary() {
   };
 
   const handleBack = () => {
-    router.back();
+    router.push('/(worker)/profile-wizard/step4-skills');
   };
 
   return (
