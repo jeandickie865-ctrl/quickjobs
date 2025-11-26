@@ -70,6 +70,12 @@ export default function Step5Summary() {
       const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
       const userId = user?.id || '';
       
+      console.log('🔑 Authorization info:', {
+        userId,
+        user,
+        authHeader: `Bearer ${userId}`
+      });
+      
       // Try POST first (create new profile)
       let response = await fetch(`${backendUrl}/api/profiles/worker`, {
         method: 'POST',
