@@ -6,6 +6,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
+import { useWizard } from '../../../contexts/WizardContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const COLORS = {
   purple: '#5941FF',
@@ -20,21 +22,23 @@ const COLORS = {
 
 export default function Step5Summary() {
   const router = useRouter();
+  const { wizardData } = useWizard();
+  const { user } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
 
-  // TODO: Get all data from context/AsyncStorage
+  // Get all data from context
   const profileData = {
-    photoUrl: '',
-    firstName: 'Max',
-    lastName: 'Mustermann',
-    phone: '+49 123 456789',
-    email: 'max@example.com',
-    street: 'Hauptstraße 123',
-    postalCode: '10115',
-    city: 'Berlin',
-    radius: 25,
-    categories: ['Handwerk', 'Garten'],
-    skills: ['Malerarbeiten', 'Verputzarbeiten', 'Rasenpflege'],
+    photoUrl: wizardData.photoUrl,
+    firstName: wizardData.firstName,
+    lastName: wizardData.lastName,
+    phone: wizardData.phone,
+    email: user?.email || '',
+    street: wizardData.street,
+    postalCode: wizardData.postalCode,
+    city: wizardData.city,
+    radius: wizardData.radiusKm,
+    categories: wizardData.selectedCategories,
+    skills: wizardData.selectedSkills,
   };
 
   const handleSave = async () => {
