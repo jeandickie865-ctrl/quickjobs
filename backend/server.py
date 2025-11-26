@@ -474,7 +474,7 @@ async def create_worker_profile(
     """Create a new worker profile"""
     logger.info("Creating worker profile")
     
-    userId = get_user_id_from_token(authorization)
+    userId = await get_user_id_from_token(authorization)
     
     # Check if profile already exists
     existing = await db.worker_profiles.find_one({"userId": userId})
@@ -1167,7 +1167,7 @@ async def create_employer_profile(
     """Create a new employer profile"""
     logger.info("Creating employer profile")
     
-    userId = get_user_id_from_token(authorization)
+    userId = await get_user_id_from_token(authorization)
     
     # Check if profile already exists
     existing = await db.employer_profiles.find_one({"userId": userId})
