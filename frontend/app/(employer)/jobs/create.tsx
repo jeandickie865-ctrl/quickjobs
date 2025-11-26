@@ -13,7 +13,7 @@ import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
 import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
-import UniversalUniversalDateTimePicker from '../../../components/UniversalUniversalDateTimePicker';
+import UniversalDateTimePicker from '../../../components/UniversalDateTimePicker';
 
 export default function CreateJob() {
   const { colors, spacing } = useTheme();
