@@ -178,4 +178,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontStyle: 'italic',
   },
+  validationHint: {
+    fontSize: 13,
+    color: COLORS.neon,
+    backgroundColor: 'rgba(200, 255, 22, 0.1)',
+    padding: 12,
+    borderRadius: 8,
+    textAlign: 'center',
+  },
 });
