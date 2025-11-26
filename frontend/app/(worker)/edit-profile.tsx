@@ -140,9 +140,28 @@ export default function EditWorkerProfileScreen() {
 
   async function pickImage() {
     try {
+      // WEB: Use HTML file input
+      if (Platform.OS === 'web') {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e: any) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event: any) => {
+              setPhotoUrl(event.target.result);
+              Alert.alert('Erfolg', 'Foto wurde ausgewählt');
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+        input.click();
+        return;
+      }
+
+      // MOBILE: Use expo-image-picker
       console.log('📷 pickImage: Requesting media library permissions...');
-      
-      // Request permissions first
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       console.log('📷 pickImage: Permission result:', permissionResult.granted);
       
