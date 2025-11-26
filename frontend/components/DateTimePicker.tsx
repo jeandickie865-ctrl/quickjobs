@@ -193,7 +193,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           </View>
           <input
             ref={inputRef}
-            type="date"
+            type={getInputType()}
             value={formatDateTime(value) || ''}
             onChange={handleDateChange}
             min={getMinimum()}
