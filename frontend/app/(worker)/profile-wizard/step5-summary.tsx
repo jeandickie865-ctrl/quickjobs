@@ -68,13 +68,14 @@ export default function Step5Summary() {
       console.log('Saving profile:', profilePayload);
 
       const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+      const userId = user?.id || '';
       
       // Try POST first (create new profile)
       let response = await fetch(`${backendUrl}/api/profiles/worker`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token || '',
+          'Authorization': `Bearer ${userId}`,
         },
         body: JSON.stringify(profilePayload),
       });
@@ -82,11 +83,11 @@ export default function Step5Summary() {
       // If profile already exists (400), use PUT to update
       if (response.status === 400) {
         console.log('Profile exists, updating instead...');
-        response = await fetch(`${backendUrl}/api/profiles/worker/${user?.id}`, {
+        response = await fetch(`${backendUrl}/api/profiles/worker/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': token || '',
+            'Authorization': `Bearer ${userId}`,
           },
           body: JSON.stringify(profilePayload),
         });
