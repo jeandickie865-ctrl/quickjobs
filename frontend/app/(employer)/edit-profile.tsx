@@ -201,7 +201,7 @@ export default function EmployerProfileScreen() {
         email: profile.email,
         paymentMethod: profile.paymentMethod
       });
-      await saveEmployerProfile(profile);
+      await saveEmployerProfile(user.id, profile);
       console.log('✅ Profile saved via API successfully!');
       console.log('🎉 EMPLOYER-PROFIL ERFOLGREICH GESPEICHERT! Weiterleitung...');
       
