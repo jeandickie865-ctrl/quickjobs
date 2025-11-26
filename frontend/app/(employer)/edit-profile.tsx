@@ -51,6 +51,9 @@ export default function EmployerProfileScreen() {
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const glimmerAnim = useRef(new Animated.Value(0)).current;
+  
+  // Track if component is mounted to prevent Alert on unmounted component
+  const isMounted = useRef(true);
 
   useEffect(() => {
     // Fade-in
