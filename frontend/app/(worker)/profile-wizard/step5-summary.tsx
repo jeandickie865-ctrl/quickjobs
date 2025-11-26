@@ -78,8 +78,8 @@ export default function Step5Summary() {
       
       console.log('🔑 Authorization info:', {
         userId,
-        user,
-        authHeader: `Bearer ${userId}`
+        token,
+        authHeader: `Bearer ${token}`
       });
       
       // Try POST first (create new profile)
@@ -87,7 +87,7 @@ export default function Step5Summary() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userId}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(profilePayload),
       });
