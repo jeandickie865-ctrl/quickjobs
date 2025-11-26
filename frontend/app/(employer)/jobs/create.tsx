@@ -473,7 +473,7 @@ export default function CreateJob() {
               <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Start</Text>
               <View style={{ flexDirection: 'row', gap: 12 }}>
                 <View style={{ flex: 1 }}>
-                  <DateTimePicker
+                  <UniversalDateTimePicker
                     label="Datum"
                     value={startDateTime}
                     onChange={setStartDateTime}
