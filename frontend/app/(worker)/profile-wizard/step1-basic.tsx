@@ -33,6 +33,58 @@ export default function Step1Basic() {
   const [shortBio, setShortBio] = useState(wizardData.shortBio || '');
   const [phone, setPhone] = useState(wizardData.phone || '');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load existing profile when component mounts
+  useEffect(() => {
+    const loadExistingProfile = async () => {
+      if (!user?.id) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        console.log('📥 Lade existierendes Profil für Bearbeitung...');
+        const profile = await getWorkerProfile(user.id);
+        
+        if (profile) {
+          console.log('✅ Profil gefunden, fülle Wizard-Daten:', profile);
+          
+          // Update wizard context with existing profile data
+          updateWizardData({
+            photoUrl: profile.photoUrl || profile.profilePhotoUri || '',
+            firstName: profile.firstName || '',
+            lastName: profile.lastName || '',
+            shortBio: profile.shortBio || '',
+            phone: profile.phone || '',
+            street: profile.homeAddress?.street || '',
+            postalCode: profile.homeAddress?.postalCode || '',
+            city: profile.homeAddress?.city || '',
+            lat: profile.homeLat,
+            lon: profile.homeLon,
+            radiusKm: profile.radiusKm || 25,
+            selectedCategories: profile.categories || [],
+            selectedSkills: profile.selectedTags || [],
+          });
+          
+          // Update local state
+          setPhotoUrl(profile.photoUrl || profile.profilePhotoUri || '');
+          setFirstName(profile.firstName || '');
+          setLastName(profile.lastName || '');
+          setShortBio(profile.shortBio || '');
+          setPhone(profile.phone || '');
+        } else {
+          console.log('ℹ️ Kein Profil gefunden - neues Profil wird erstellt');
+        }
+      } catch (error) {
+        console.error('❌ Fehler beim Laden des Profils:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadExistingProfile();
+  }, [user?.id]);
 
   const getInitials = () => {
     const first = firstName.charAt(0) || '';
