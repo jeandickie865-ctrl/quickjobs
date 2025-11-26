@@ -39,9 +39,9 @@ export async function getUser(): Promise<{ id: string; email: string; role: stri
 
 // ===== HELPER: Build Headers =====
 export async function getAuthHeaders(): Promise<Record<string, string>> {
-  const userId = await getUserId();
+  const token = await getAuthToken();
   return {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${userId}`,
+    'Authorization': `Bearer ${token}`,
   };
 }
