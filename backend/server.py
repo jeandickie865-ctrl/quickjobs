@@ -727,6 +727,26 @@ async def create_job(
     logger.info(f"Job created: {job_dict['id']} by employer {employerId}")
     return Job(**created_job)
 
+@api_router.get("/jobs/all", response_model=List[Job])
+async def get_all_jobs(
+    authorization: Optional[str] = Header(None)
+):
+    """Get ALL jobs (including completed/closed) - needed for worker matches"""
+    logger.info("Fetching ALL jobs (including completed)")
+    
+    # Verify token (optional)
+    get_user_id_from_token(authorization)
+    
+    # Find ALL jobs (no status filter)
+    jobs = await db.jobs.find({}).to_list(1000)
+    
+    # Remove MongoDB _id field
+    for job in jobs:
+        job.pop("_id", None)
+    
+    logger.info(f"Found {len(jobs)} total jobs")
+    return [Job(**job) for job in jobs]
+
 @api_router.get("/jobs", response_model=List[Job])
 async def get_all_open_jobs(
     authorization: Optional[str] = Header(None)
