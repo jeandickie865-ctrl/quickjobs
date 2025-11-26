@@ -30,6 +30,7 @@ export default function WorkerProfileScreen() {
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
   const [avgRating, setAvgRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
+  const [matchCount, setMatchCount] = useState(0);
 
   // Load profile on mount
   useEffect(() => {
