@@ -99,7 +99,7 @@ export default function Step5Summary() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userId}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify(profilePayload),
         });
