@@ -247,3 +247,9 @@ export const getSkillsForCategories = (categoryKeys: CategoryKey[]): string[] =>
   // Remove duplicates
   return Array.from(new Set(allSkills));
 };
+
+// Object mapping for backward compatibility
+export const CATEGORY_MAPPING: Record<string, Category> = CATEGORIES.reduce((acc, cat) => {
+  acc[cat.label] = cat;
+  return acc;
+}, {} as Record<string, Category>);
