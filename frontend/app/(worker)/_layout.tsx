@@ -271,6 +271,13 @@ export default function WorkerLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="profile-wizard"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
