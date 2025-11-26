@@ -1182,6 +1182,10 @@ async def get_employer_profile(
     # Verify token
     requesting_user = get_user_id_from_token(authorization)
     
+    # SECURITY FIX: Only allow access to own profile
+    if requesting_user != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: You can only access your own profile")
+    
     # Find profile
     profile = await db.employer_profiles.find_one({"userId": user_id})
     
