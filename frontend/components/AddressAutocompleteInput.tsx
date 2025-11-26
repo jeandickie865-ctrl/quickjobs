@@ -46,11 +46,9 @@ export const AddressAutocompleteInput: React.FC<AddressAutocompleteInputProps> =
 
     debounceRef.current = setTimeout(async () => {
       try {
+        const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(
-            query
-          )}`,
-          { headers: { 'User-Agent': 'GIGMATCH-App/1.0' } }
+          `${backendUrl}/api/geocode?query=${encodeURIComponent(query)}`
         );
 
         const data = await response.json();
