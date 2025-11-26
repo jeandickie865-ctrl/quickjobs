@@ -82,16 +82,14 @@ export default function MatchesScreen() {
       // Load employer's jobs
       const employerJobs = await getEmployerJobs(user.id);
       
-      // Find ALLE applications (pending + accepted) and load worker profiles
+      // Find only ACCEPTED applications
       const allMatches: Match[] = [];
       for (const job of employerJobs) {
         const jobApps = await getApplicationsForJob(job.id);
-        // WICHTIG: Zeige sowohl pending als auch accepted!
-        const relevantApps = jobApps.filter(app => 
-          app.status === 'pending' || app.status === 'accepted'
-        );
+        // NUR akzeptierte Bewerbungen = echte Matches
+        const acceptedApps = jobApps.filter(app => app.status === 'accepted');
         
-        for (const app of relevantApps) {
+        for (const app of acceptedApps) {
           // Load worker profile to get contact details
           const workerProfile = await getWorkerProfile(app.workerId);
           // Load worker reviews
