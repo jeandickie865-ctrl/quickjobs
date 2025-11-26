@@ -17,53 +17,29 @@ from datetime import datetime
 # Backend URL from frontend/.env
 BACKEND_URL = "https://jobnexus.preview.emergentagent.com/api"
 
-class DistanceMatchingTester:
+class ComprehensiveBackendTester:
     def __init__(self):
         self.base_url = BACKEND_URL
-        self.session = requests.Session()
         self.test_results = []
+        self.auth_tokens = {}
+        self.test_data = {}
         
-        # Test data storage
-        self.created_worker_profile = None
-        self.created_jobs = []
-        
-    def log_test(self, test_name: str, success: bool, details: str = ""):
+    def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test result"""
         status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status}: {test_name}")
+        print(f"{status} {test_name}")
         if details:
-            print(f"   Details: {details}")
+            print(f"   {details}")
+        if response_data and not success:
+            print(f"   Response: {response_data}")
+        print()
         
         self.test_results.append({
             "test": test_name,
             "success": success,
-            "details": details
+            "details": details,
+            "timestamp": datetime.now().isoformat()
         })
-    
-    def make_request(self, method: str, endpoint: str, data: Dict = None, token: str = None) -> requests.Response:
-        """Make HTTP request with proper headers"""
-        url = f"{self.base_url}{endpoint}"
-        headers = {"Content-Type": "application/json"}
-        
-        if token:
-            headers["Authorization"] = f"Bearer {token}"
-        
-        try:
-            if method.upper() == "GET":
-                response = self.session.get(url, headers=headers)
-            elif method.upper() == "POST":
-                response = self.session.post(url, headers=headers, json=data)
-            elif method.upper() == "PUT":
-                response = self.session.put(url, headers=headers, json=data)
-            elif method.upper() == "DELETE":
-                response = self.session.delete(url, headers=headers)
-            else:
-                raise ValueError(f"Unsupported method: {method}")
-            
-            return response
-        except Exception as e:
-            print(f"Request failed: {e}")
-            return None
 
     def test_backend_health(self):
         """Test basic backend connectivity"""
