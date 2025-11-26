@@ -274,6 +274,15 @@ export default function Step1Basic() {
           </View>
         </ScrollView>
 
+        {/* Validation Hints */}
+        {!isFormValid && (
+          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
+            <Text style={styles.validationHint}>
+              ℹ️ Bitte fülle alle Pflichtfelder (*) aus, um fortzufahren
+            </Text>
+          </View>
+        )}
+
         {/* Navigation */}
         <NavigationButtons
           onNext={handleNext}
