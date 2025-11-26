@@ -109,20 +109,15 @@ export default function CreateJob() {
     let dueAtIso: string | undefined;
 
     if (timeMode === 'fixed_time') {
-      if (!date.trim() || !startTime.trim() || !endTime.trim()) {
-        setError('Bitte Datum und Zeiten ausfüllen (Format: TT.MM.JJJJ und HH:MM)');
+      if (!startDateTime || !endDateTime) {
+        setError('Bitte Start- und Enddatum/Zeit auswählen');
         return;
       }
 
-      startAtIso = parseGermanDateTime(date, startTime);
-      endAtIso = parseGermanDateTime(date, endTime);
+      startAtIso = startDateTime.toISOString();
+      endAtIso = endDateTime.toISOString();
 
-      if (!startAtIso || !endAtIso) {
-        setError('Ungültiges Datum oder Zeitformat. Bitte TT.MM.JJJJ und HH:MM verwenden.');
-        return;
-      }
-
-      if (new Date(endAtIso) <= new Date(startAtIso)) {
+      if (endDateTime <= startDateTime) {
         setError('Endzeit muss nach Startzeit liegen.');
         return;
       }
