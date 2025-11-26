@@ -755,7 +755,7 @@ async def get_all_jobs(
     logger.info("Fetching ALL jobs (including completed)")
     
     # Verify token (optional)
-    get_user_id_from_token(authorization)
+    await get_user_id_from_token(authorization)
     
     # Find ALL jobs (no status filter)
     jobs = await db.jobs.find({}).to_list(1000)
@@ -775,7 +775,7 @@ async def get_all_open_jobs(
     logger.info("Fetching all open jobs")
     
     # Verify token (optional)
-    get_user_id_from_token(authorization)
+    await get_user_id_from_token(authorization)
     
     # Find all open jobs
     jobs = await db.jobs.find({"status": "open"}).to_list(1000)
@@ -825,7 +825,7 @@ async def get_job(
     logger.info(f"Fetching job {job_id}")
     
     # Verify token (optional)
-    get_user_id_from_token(authorization)
+    await get_user_id_from_token(authorization)
     
     # Find job
     job = await db.jobs.find_one({"id": job_id})
@@ -1328,7 +1328,7 @@ async def get_reviews_for_worker(
     logger.info(f"Fetching reviews for worker {worker_id}")
     
     # Verify token (optional - reviews are semi-public)
-    get_user_id_from_token(authorization)
+    await get_user_id_from_token(authorization)
     
     # Find all reviews for this worker
     reviews = await db.reviews.find({"workerId": worker_id}).to_list(1000)
@@ -1349,7 +1349,7 @@ async def get_reviews_for_employer(
     logger.info(f"Fetching reviews for employer {employer_id}")
     
     # Verify token (optional - reviews are semi-public)
-    get_user_id_from_token(authorization)
+    await get_user_id_from_token(authorization)
     
     # Find all reviews for this employer
     reviews = await db.reviews.find({"employerId": employer_id}).to_list(1000)
