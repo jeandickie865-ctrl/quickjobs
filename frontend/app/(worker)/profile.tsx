@@ -173,14 +173,21 @@ export default function WorkerProfileScreen() {
           <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>
             Mein Profil
           </Text>
-          <Pressable 
-            onPress={async () => {
-              await signOut();
-              router.replace('/auth/login');
-            }}
-          >
-            <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
-          </Pressable>
+          <View style={{ flexDirection: 'row', gap: 16 }}>
+            <Pressable 
+              onPress={() => router.push('/(worker)/profile-wizard/step1-basic')}
+            >
+              <Ionicons name="create-outline" size={26} color={COLORS.neon} />
+            </Pressable>
+            <Pressable 
+              onPress={async () => {
+                await signOut();
+                router.replace('/auth/login');
+              }}
+            >
+              <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
+            </Pressable>
+          </View>
         </View>
       </SafeAreaView>
 
