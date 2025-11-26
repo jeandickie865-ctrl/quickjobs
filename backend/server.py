@@ -194,8 +194,8 @@ class JobApplication(BaseModel):
 
 class ApplicationCreate(BaseModel):
     jobId: str
-    workerId: str
     employerId: str
+    # workerId is set from token, not from request body
 
 class ApplicationUpdate(BaseModel):
     status: Optional[str] = None
