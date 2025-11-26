@@ -72,6 +72,7 @@ export default function Step5Summary() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': token || '',
         },
         body: JSON.stringify(profilePayload),
       });
