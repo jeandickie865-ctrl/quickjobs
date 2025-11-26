@@ -52,7 +52,8 @@ export default function Step4Skills() {
 
   const handleNext = () => {
     if (selectedSkills.length > 0) {
-      // Store in context/AsyncStorage
+      // Save to context
+      updateWizardData({ selectedSkills });
       router.push('/(worker)/profile-wizard/step5-summary');
     }
   };
