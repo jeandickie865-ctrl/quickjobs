@@ -1372,6 +1372,53 @@ test_plan:
 
 
 agent_communication:
+  - agent: "main"
+    message: |
+      **🔧 API-KOMMUNIKATION KOMPLETT REFACTORED - VEREINHEITLICHT & STABILISIERT**
+      
+      **Aufgabe durchgeführt:** Vollständige Zentralisierung der API-Kommunikation gemäß User-Anweisung
+      
+      **SCHRITT 1 – API BASISDATEI:**
+      ✅ `/app/frontend/utils/api.ts` bereits vorhanden
+      ✅ `API_BASE = 'https://jobnexus.preview.emergentagent.com/api'`
+      ✅ Helper-Funktionen `getAuthToken()`, `getUserId()`, `getAuthHeaders()` implementiert
+      
+      **SCHRITT 2 – ALLE STORES UMGESTELLT:**
+      ✅ profileStore.ts - Verwendet API_BASE, getAuthHeaders (bereits umgestellt)
+      ✅ jobStore.ts - Verwendet API_BASE, getAuthHeaders (bereits umgestellt)
+      ✅ applicationStore.ts - Verwendet API_BASE, getAuthHeaders (bereits umgestellt)
+      ✅ employerProfileStore.ts - Verwendet API_BASE, getAuthHeaders (bereits umgestellt)
+      ✅ reviewStore.ts - Verwendet API_BASE, getAuthHeaders (bereits umgestellt)
+      ✅ chatStore.ts - **JETZT UMGESTELLT:** AsyncStorage-Code vollständig entfernt, API-Calls implementiert
+      
+      **SCHRITT 3 – AUTH HEADER KORRIGIERT:**
+      ✅ **KRITISCHER FIX:** `api.ts` Zeile 42-46 geändert von `Authorization: Bearer ${userId}` zu `Authorization: Bearer ${token}`
+      
+      **SCHRITT 4 – PROFILSPEICHERUNG:**
+      ✅ Flow korrekt: PUT → 404 → POST (profileStore.ts Zeilen 54-73)
+      ✅ Alle erforderlichen Felder werden gesendet (edit-profile.tsx)
+      
+      **SCHRITT 5 – WORKER-MATCHES:**
+      ✅ Verwendet NUR `status==="accepted"` (matches.tsx Zeile 75-77)
+      ✅ Verwendet `getJobs()` korrekt (Zeile 81)
+      
+      **SCHRITT 6 – EMPLOYER-MATCHES:**
+      ✅ Verwendet NUR `status==="accepted"` (matches.tsx Zeile 90)
+      ✅ Lädt Worker-Profile korrekt (Zeile 94)
+      
+      **Entfernte Probleme:**
+      ❌ Keine hardcodierten URLs mehr
+      ❌ Keine process.env Aufrufe in Stores
+      ❌ Keine Constants.expoConfig Aufrufe
+      ❌ Keine inkonsistenten Authorization Header
+      ❌ Keine AsyncStorage in Chat-Store
+      
+      **Status:**
+      - Alle Stores verwenden EINE zentrale API-Datei
+      - Authorization Header konsistent: `Bearer ${token}` (nicht userId)
+      - Backend & Frontend neu gestartet
+      - Bereit für Backend-Testing
+
   - agent: "testing"
     message: |
       **🎉 COMPREHENSIVE BACKEND TESTING COMPLETED - ALL SYSTEMS FULLY FUNCTIONAL**
