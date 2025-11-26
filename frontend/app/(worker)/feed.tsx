@@ -171,9 +171,13 @@ export default function WorkerFeed() {
     console.log('🔍 allJobsInRadius: allOpenJobs count:', allOpenJobs.length);
     console.log('🔍 allJobsInRadius: profile:', profile);
     const nearby = nearbyJobs(allOpenJobs, profile);
+    
+    // WICHTIG: Jobs außerhalb des Radius rausfiltern!
+    const inRadius = nearby.filter(job => job.distance <= profile.radiusKm);
+    
     console.log('🔍 allJobsInRadius: nearby count:', nearby.length);
-    console.log('🔍 allJobsInRadius: nearby jobs:', nearby);
-    return nearby.sort((a, b) => a.distance - b.distance);
+    console.log('🔍 allJobsInRadius: in radius count:', inRadius.length);
+    return inRadius.sort((a, b) => a.distance - b.distance);
   }, [allOpenJobs, profile]);
 
   const handleApply = async (job: Job) => {
