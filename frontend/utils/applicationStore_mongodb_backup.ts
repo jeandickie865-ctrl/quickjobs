@@ -3,7 +3,7 @@ import { JobApplication, ApplicationStatus } from '../types/application';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://jobnexus.preview.emergentagent.com';
+const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://accessaudit-jobapp.preview.emergentagent.com';
 const API_BASE = `${BACKEND_URL}/api`;
 
 const TOKEN_KEY = '@shiftmatch:token';

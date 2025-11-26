@@ -1,69 +1,84 @@
 <analysis>
-The trajectory documents an extensive development and debugging process for a German-language, two-sided job-matching mobile application. The user's primary language is German, and all subsequent interactions must be conducted in German.
+The trajectory documents a comprehensive development, debugging, and refactoring process for a German-language, two-sided job-matching mobile application. The user's primary language is German, and all subsequent interactions must be conducted in German.
 
-The work began with fixing critical bugs: a non-functional logout, routing errors, and a backend issue where new profiles couldn't be created ( was missing, only  existed). This led to UI/UX enhancements, including the major task of replacing a single-page profile form with a 5-step wizard.
+The work began with a user-mandated, multi-step refactoring to centralize API communication into a new  file. This was necessary to fix systemic bugs caused by hardcoded backend URLs and inconsistent authorization headers across various  files. A major bug was the use of  instead of the correct , which was fixed in  and the legacy profile wizard.
 
-Implementing the wizard was fraught with issues. The initial problem was an Unmatched Route error because the files for steps 2-5 did not exist. After creating them, the next bug was that data was not passed between steps, which was resolved by implementing a . This was followed by a series of fixes for syntax errors, data display issues on the summary page, incorrect navigation, and, most critically, a  error when saving the profile. The authorization bug was particularly difficult, involving multiple attempts to fix the  header format.
+A deeper authentication issue was then discovered: the backend was not correctly mapping tokens to user IDs. This was resolved by a significant backend refactoring in  to create a  collection in MongoDB for session management. Subsequently, the frontend's  was enhanced to validate tokens against the backend on app start-up, ensuring old, invalid sessions from  are cleared.
 
-Throughout the process, the user reported numerous bugs related to data persistence, UI layout on different devices (especially the date picker), and core business logic like job matching and radius filtering. The most persistent and difficult bugs stemmed from inconsistent API communication, including hardcoded backend URLs in multiple store files. This instability culminated in the user providing an explicit, multi-step plan to refactor the entire API communication layer for consistency and reliability. The previous engineer had just begun this major refactoring task.
+Throughout the process, multiple bugs related to frontend/backend payload mismatches (e.g.,  vs.  in chat,  vs.  in job creation) and missing security checks (cross-role authorization) were identified via extensive testing and fixed.
+
+The most recent work involved multiple user-requested Safe Audits and Runtime Tests to verify the stability of the worker wizard, employer profile, and job creation flows. The final user request, which is the current task, is to perform a complete accessibility audit of the entire frontend.
 </analysis>
+
 <product_requirements>
 The application is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
 **Core User Flows:**
-*   **User Roles:** Users register and operate as either an Employer or a Worker.
-*   **Profile Creation/Editing:** To apply for jobs, Workers complete a multi-step profile wizard. This wizard was a major refactoring effort to replace a single, long form. It covers: 1. Basic Info & Photo, 2. Address & Work Radius, 3. Categories, 4. Skills, and 5. Summary. When editing, the wizard must be pre-filled with existing data.
-*   **Job Management:** Employers post jobs, specifying details like description, location, and payment type.
-*   **Application & Matching:** Workers see a feed of relevant jobs filtered by category and radius. They can apply for jobs. Employers see incoming applications and can accept them. An accepted application becomes a Match.
-*   **Data Visibility:** An employer can only see a worker's full contact details after a match is confirmed.
-*   **UI/UX:** The app uses tab-based navigation. Employers and Workers have distinct UIs, including separate Matches and Applications views. It's critical that notifications/badges for new applications are clearly visible.
+*   **User Roles & Authentication:** Users register and log in as either an Employer or a Worker. The authentication system uses a custom token-to-userID mapping stored in a MongoDB collection on the backend. The frontend validates the session token on app start.
+*   **Worker Profile Creation:** New workers must complete a multi-step profile wizard covering basic info, address, categories, and skills. This wizard was a major focus of debugging, particularly fixing an incorrect Authorization header that prevented profile saving.
+*   **Job Management:** Employers can post jobs, specifying details like title, category, location (address object), and payment. This flow was debugged to fix a payload mismatch between the frontend and backend.
+*   **Matching & Application:** Workers see a feed of jobs. The matching logic is currently client-side () and filters based on category and distance. Workers can apply for jobs.
+*   **Matches & Communication:** An Employer accepting a Worker's application creates a Match. Matched users can communicate via a chat feature. The logic for displaying matches (filtering by ) was verified and confirmed correct.
 </product_requirements>
+
 <key_technical_concepts>
-- **Backend:** FastAPI (Python) with Pydantic for data modeling.
-- **Database:** MongoDB.
+- **Backend:** FastAPI (Python) with Pydantic.
+- **Database:** MongoDB, including a  collection for session management.
 - **Frontend:** React Native with Expo.
 - **Routing:** File-based routing via .
-- **State Management:** React Context (, ) for global and feature-specific state.
-- **API Communication:** Centralized API logic is being refactored into a single  file to manage a consistent  URL and authorization headers, moving away from inconsistent, hardcoded URLs in multiple store files (, , etc.).
+- **State Management:** React Context (), Zustand-like stores (, , etc.).
+- **API Communication:** Refactored to use a centralized  for a single  URL and standardized  headers via .
+- **Authentication:** Token validation on app-load in  to handle invalid sessions.
 </key_technical_concepts>
+
 <code_architecture>
 The project is a monorepo with  and  directories.
 
 
 
-- ****: The core FastAPI application. It was modified to add a  endpoint for new profiles (previously only  for updates existed), an  proxy, and most recently a  endpoint to fetch all jobs regardless of status, which was needed to fix the worker's Matches view.
+- ****
+    - **Importance:** The core FastAPI backend. Contains all API endpoints, data models, and business logic.
+    - **Changes:** Heavily modified. A  collection and associated logic were added to fix a fundamental authentication flaw. A security check was added to  to prevent cross-role data access. The  logic was verified to correctly reject other applications.
 
-- ****: This directory contains the 5-step worker profile creation/editing wizard. This feature was built from scratch and underwent extensive debugging related to routing, state management (), data persistence via API calls, and pre-filling data for profile edits.
+- ****
+    - **Importance:** Centralizes all API communication logic. It provides , , and .
+    - **Changes:** The  function was corrected to use the  for the  header, not the . This was a critical fix.
 
-- ****: The form for creating jobs. It was heavily modified to fix a critical bug with a non-functional date/time picker on certain devices. The original  was replaced with a more robust  using  and then further debugged for CSS/layout issues.
+- ****
+    - **Importance:** Manages the global authentication state (user, token).
+    - **Changes:** Significantly updated to include token validation on app start. It now makes a test API call to ensure the stored token is valid on the backend; if not, it clears  to force a re-login.
 
-- ****: Manages global user authentication. It was refactored to use backend API endpoints for  and  instead of a local mock user database. It provides the user object and token, which are essential for all authenticated API requests.
+- ****
+    - **Importance:** The final step of the worker profile creation, responsible for saving the data.
+    - **Changes:** Corrected to use the proper  header. Previously, it incorrectly used , which caused the profile saving to fail silently.
 
-- ** (New)**: This file was just created as the first step of a major API communication refactor. Its purpose is to centralize the  URL and helper functions like  and  to eliminate hardcoded URLs and inconsistent authorization logic spread across the various  files.
+- ****
+    - **Importance:** Manages chat functionality.
+    - **Changes:** The  function was corrected to send a payload with a  key instead of  to match the backend's expectation, fixing the broken chat feature.
 
-- ** (e.g., , , )**: These files contain the application's business logic for fetching and updating data. They were the source of numerous critical bugs due to hardcoded, incorrect backend URLs. They are currently being refactored to use the new centralized .
+- ** & **
+    - **Importance:** Core screens for the worker user.
+    - **Changes:** Corrected to use  instead of the non-existent  for displaying addresses. Hints were also added to  to guide users with incomplete profiles.
 </code_architecture>
+
 <pending_tasks>
-- **Complete the API Communication Refactor:** The main pending task is to finish the multi-step refactor of the entire API layer as explicitly instructed by the user. This involves modifying all store files (, , , etc.) to use the new centralized  and ensuring all API calls use the correct  header.
-- **Fix Date Picker on Mobile:** The date picker component needs to be made fully cross-platform compatible.
+- **Complete the Accessibility Audit:** The primary pending task is to finish the comprehensive accessibility audit of the entire frontend, as requested by the user. This includes checking for missing s, contrast ratios, touch target sizes, and focus management.
+- **Report Findings:** After the audit, a structured report detailing P1, P2, and P3 priority issues must be presented to the user.
 </pending_tasks>
+
 <current_work>
-The AI engineer was in the middle of a large-scale, user-directed refactoring of the entire frontend API communication layer. This was initiated after a series of persistent, critical bugs related to data not loading (e.g., empty Matches lists, missing reviews), which were traced back to multiple utility files (, , , etc.) containing hardcoded and incorrect backend URLs.
+Immediately before this summary request, the AI engineer was starting a comprehensive, analysis-only accessibility audit of the entire application, as explicitly requested by the user. This task was initiated after all major functional, security, and stability bugs (related to authentication, profile saving, and API communication) were resolved and verified through extensive testing.
 
-The user provided a very explicit, multi-step plan to fix this systemic issue. The goal is to centralize all API logic, remove all hardcoded URLs, and standardize authorization headers.
+The user's prompt was to analyze the app without making any changes and report on several key accessibility areas:
+-   Missing  or  on interactive elements.
+-   Contrast ratios (specifically the Purple/Lime theme) against WCAG-AA standards.
+-   Minimum touch target sizes (44x44).
+-   Focus management for screen readers, especially in modals.
+-   Readability of form errors and success messages for assistive technologies.
 
-The work stopped immediately after starting **Step 1** of this plan. The engineer successfully created the new central API file:
-- ****: This file will contain the single source of truth for the backend URL () and helper functions to retrieve the auth token and user ID from .
-
-The very next action was to begin **Step 2**: Modifying all the store files to import and use this new  file, removing their local, incorrect URL constants. The engineer had generated  commands to overwrite , , and  with the refactored code, but the execution and verification of these changes are still pending.
+The AI engineer had just begun **PHASE 1** of this audit, which involved analyzing the main UI components across the application to identify potential issues in these areas. The work is paused at the very beginning of this analysis phase.
 </current_work>
+
 <optional_next_step>
-Continue the API refactoring by executing **SCHRITT 2 – ALLE STORES UMSTELLEN**, ensuring , , and  are correctly modified to use the new  file.
+Continue the accessibility audit by analyzing the main components in files like , , and  to identify missing labels, contrast issues, and other accessibility violations.
 </optional_next_step>
-> User: SCHRITT 2 – ALLE STORES UMSTELLEN
-Die folgenden Dateien müssen vollständig so umgebaut werden,
-dass sie NUR api.ts verwenden:
-  /utils/profileStore.ts
-  /utils/jobStore.ts
-  /utils/applicationStore.ts
-Ersetze in ALLEN Stores: ... Durch: import { API_BASE, getUserId, getAuthToken } from ./api;
