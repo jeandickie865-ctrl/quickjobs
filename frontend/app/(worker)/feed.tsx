@@ -326,22 +326,87 @@ export default function WorkerFeed() {
           </View>
         )}
 
+        {/* PROFIL-VOLLSTÄNDIGKEITS-HINWEISE */}
+        {profile && (!profile.categories || profile.categories.length === 0) && (
+          <View style={{
+            padding: 20,
+            backgroundColor: COLORS.neon,
+            borderRadius: 18,
+            gap: 12,
+          }}>
+            <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '800' }}>
+              ⚠️ Keine Kategorien gewählt
+            </Text>
+            <Text style={{ color: COLORS.black, fontSize: 14, textAlign: 'center', lineHeight: 20 }}>
+              Dir werden keine Jobs angezeigt, weil du noch keine Kategorien gewählt hast. Ergänze dein Profil, um passende Jobs zu sehen.
+            </Text>
+            <Pressable
+              onPress={() => router.push('/(worker)/edit-profile')}
+              style={{
+                backgroundColor: COLORS.purple,
+                paddingVertical: 14,
+                paddingHorizontal: 20,
+                borderRadius: 12,
+                marginTop: 8,
+              }}
+            >
+              <Text style={{ color: COLORS.white, fontSize: 16, fontWeight: '700', textAlign: 'center' }}>
+                Profil bearbeiten
+              </Text>
+            </Pressable>
+          </View>
+        )}
+
+        {profile && (!profile.homeLat || !profile.homeLon) && (
+          <View style={{
+            padding: 20,
+            backgroundColor: '#FFE5B4',
+            borderRadius: 18,
+            gap: 12,
+            borderLeftWidth: 4,
+            borderLeftColor: '#FF8C00',
+          }}>
+            <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '800' }}>
+              📍 Standort fehlt
+            </Text>
+            <Text style={{ color: COLORS.black, fontSize: 14, textAlign: 'center', lineHeight: 20 }}>
+              Dein Standort ist noch nicht vollständig. Ergänze deine Adresse, damit wir dir Jobs in deiner Nähe anzeigen können.
+            </Text>
+            <Pressable
+              onPress={() => router.push('/(worker)/edit-profile')}
+              style={{
+                backgroundColor: COLORS.purple,
+                paddingVertical: 14,
+                paddingHorizontal: 20,
+                borderRadius: 12,
+                marginTop: 8,
+              }}
+            >
+              <Text style={{ color: COLORS.white, fontSize: 16, fontWeight: '700', textAlign: 'center' }}>
+                Profil bearbeiten
+              </Text>
+            </Pressable>
+          </View>
+        )}
+
         {activeTab === 'matching' && (
           matchingJobs.length === 0 ? (
-            <View style={{
-              padding: 32,
-              backgroundColor: COLORS.white,
-              borderRadius: 18,
-              alignItems: 'center',
-              gap: 12,
-            }}>
-              <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
-                Keine passenden Aufträge
-              </Text>
-              <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
-                Aktuell gibt es keine Aufträge, die zu deinem Profil passen.
-              </Text>
-            </View>
+            profile && profile.categories && profile.categories.length > 0 && profile.homeLat && profile.homeLon ? (
+              <View style={{
+                padding: 32,
+                backgroundColor: COLORS.white,
+                borderRadius: 18,
+                alignItems: 'center',
+                gap: 12,
+              }}>
+                <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
+                  Keine passenden Aufträge
+                </Text>
+                <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
+                  Aktuell gibt es keine Aufträge, die zu deinem Profil passen.
+                </Text>
+              </View>
+            ) : null
           ) : (
             <View style={{ gap: 16 }}>
               {matchingJobs.filter(job => job && job.id && job.startAt).map((job) => {
