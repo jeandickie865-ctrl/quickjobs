@@ -78,6 +78,11 @@ export default function EmployerProfileScreen() {
         }),
       ])
     ).start();
+    
+    // Cleanup function to mark component as unmounted
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   useEffect(() => {
