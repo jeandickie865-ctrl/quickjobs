@@ -1,293 +1,215 @@
-// utils/jobStore.ts - API-based job management (MongoDB)
+// utils/jobStore.ts - Job Store (REFACTORED)
 import { Job } from '../types/job';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+import { API_BASE, getUserId, getAuthHeaders } from './api';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || '';
-const API_BASE = `${BACKEND_URL}/api`;
-
-const TOKEN_KEY = '@shiftmatch:token';
-
-// Helper: Get auth token from AsyncStorage
-async function getAuthToken(): Promise<string> {
-  const token = await AsyncStorage.getItem(TOKEN_KEY);
-  if (!token) {
-    throw new Error('Not authenticated - no token found');
-  }
-  return token;
-}
-
-// Helper: Get userId from AsyncStorage
-async function getUserId(): Promise<string> {
-  console.log('🔍 [jobStore] Getting userId from AsyncStorage...');
-  const userJson = await AsyncStorage.getItem('@shiftmatch:user');
-  console.log('🔍 [jobStore] User JSON from AsyncStorage:', userJson);
-  if (!userJson) {
-    console.error('❌ [jobStore] No user found in AsyncStorage!');
-    throw new Error('Not authenticated - no user found');
-  }
-  const user = JSON.parse(userJson);
-  console.log('🔍 [jobStore] Parsed user:', user);
-  console.log('🔍 [jobStore] User ID:', user.id);
-  return user.id;
-}
-
+// ===== ADD JOB =====
 export async function addJob(job: Job): Promise<void> {
-  console.log('➕ addJob (API): Creating job', job.title);
+  console.log('➕ addJob: Creating job', job.title);
   
   try {
-    const userId = await getUserId();
+    const headers = await getAuthHeaders();
     
     const response = await fetch(`${API_BASE}/jobs`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(job),
     });
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('❌ addJob (API): Failed', response.status, error);
+      console.error('❌ addJob: Failed', response.status, error);
       throw new Error(`Failed to create job: ${response.status}`);
     }
     
     const createdJob = await response.json();
-    console.log('✅ addJob (API): Job created', createdJob.id);
+    console.log('✅ addJob: Job created', createdJob.id);
   } catch (error) {
-    console.error('❌ addJob (API): Error', error);
+    console.error('❌ addJob: Error', error);
     throw error;
   }
 }
 
+// ===== GET ALL JOBS (including completed) =====
 export async function getJobs(): Promise<Job[]> {
-  console.log('🔍 getJobs (API): Fetching ALL jobs (including completed)');
+  console.log('🔍 getJobs: Fetching ALL jobs (including completed)');
+  
   try {
-    const userId = await getUserId();
+    const headers = await getAuthHeaders();
     
     const response = await fetch(`${API_BASE}/jobs/all`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-      },
+      headers,
     });
     
     if (!response.ok) {
-      console.error('❌ getJobs (API): Failed', response.status);
+      console.error('❌ getJobs: Failed', response.status);
       return [];
     }
     
     const jobs: Job[] = await response.json();
-    console.log('✅ getJobs (API): Fetched', jobs.length, 'jobs (including completed)');
+    console.log('✅ getJobs: Fetched', jobs.length, 'jobs');
     return jobs;
   } catch (error) {
-    console.error('❌ getJobs (API): Error', error);
+    console.error('❌ getJobs: Error', error);
     return [];
   }
 }
 
-export async function updateJob(id: string, patch: Partial<Job>): Promise<void> {
-  console.log('🔄 updateJob (API): Updating job', id);
-  
-  try {
-    const userId = await getUserId();
-    
-    const response = await fetch(`${API_BASE}/jobs/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(patch),
-    });
-    
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('❌ updateJob (API): Failed', response.status, error);
-      throw new Error(`Failed to update job: ${response.status}`);
-    }
-    
-    console.log('✅ updateJob (API): Job updated', id);
-  } catch (error) {
-    console.error('❌ updateJob (API): Error', error);
-    throw error;
-  }
-}
-
-export async function clearJobs(): Promise<void> {
-  console.warn('⚠️ clearJobs (API): Not implemented - jobs are stored in MongoDB');
-  // This function is not meaningful with API-based storage
-  // Jobs should be deleted individually via deleteJob()
-}
-
-// Legacy/convenience functions
-export async function getAllJobs(): Promise<Job[]> {
-  return await getJobs();
-}
-
-export async function saveJob(job: Job): Promise<void> {
-  console.log('💾 saveJob (API): Saving job', job.id);
-  
-  try {
-    // Check if job exists by trying to fetch it
-    const existing = await getJobById(job.id);
-    
-    if (existing) {
-      // Update existing job
-      await updateJob(job.id, job);
-    } else {
-      // Create new job
-      await addJob(job);
-    }
-  } catch (error) {
-    // If fetch fails with 404, create new job
-    await addJob(job);
-  }
-}
-
-export async function getEmployerJobs(employerId: string): Promise<Job[]> {
-  console.log('📋 getEmployerJobs (API): Fetching jobs for employer', employerId);
-  
-  try {
-    const userId = await getUserId();
-    console.log('🔐 getEmployerJobs: userId from AsyncStorage:', userId);
-    console.log('🎯 getEmployerJobs: employerId from parameter:', employerId);
-    console.log('✅ getEmployerJobs: IDs match:', userId === employerId);
-    
-    const response = await fetch(`${API_BASE}/jobs/employer/${employerId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    console.log('📡 getEmployerJobs: Response status:', response.status);
-    
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('❌ getEmployerJobs (API): Failed', response.status, error);
-      console.error('❌ getEmployerJobs: Full error details:', {
-        status: response.status,
-        statusText: response.statusText,
-        errorText: error,
-        userId,
-        employerId
-      });
-      throw new Error(`Failed to fetch employer jobs: ${response.status}`);
-    }
-    
-    const jobs = await response.json();
-    console.log(`✅ getEmployerJobs (API): Found ${jobs.length} jobs for employer ${employerId}`);
-    
-    return jobs;
-  } catch (error) {
-    console.error('❌ getEmployerJobs (API): Error', error);
-    throw error;
-  }
-}
-
+// ===== GET OPEN JOBS =====
 export async function getOpenJobs(): Promise<Job[]> {
-  console.log('🔍 getOpenJobs (API): Fetching all open jobs');
+  console.log('🔍 getOpenJobs: Fetching open jobs');
   
   try {
-    const userId = await getUserId();
+    const headers = await getAuthHeaders();
     
     const response = await fetch(`${API_BASE}/jobs`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('❌ getOpenJobs (API): Failed', response.status, error);
+      console.error('❌ getOpenJobs: Failed', response.status, error);
       throw new Error(`Failed to fetch open jobs: ${response.status}`);
     }
     
     const jobs = await response.json();
-    console.log(`✅ getOpenJobs (API): Found ${jobs.length} open jobs`);
-    
+    console.log('✅ getOpenJobs: Found', jobs.length, 'open jobs');
     return jobs;
   } catch (error) {
-    console.error('❌ getOpenJobs (API): Error', error);
+    console.error('❌ getOpenJobs: Error', error);
     throw error;
   }
 }
 
-export async function getJobById(id: string): Promise<Job | null> {
-  console.log('🔍 getJobById (API): Fetching job', id);
+// ===== GET EMPLOYER JOBS =====
+export async function getEmployerJobs(employerId: string): Promise<Job[]> {
+  console.log('📋 getEmployerJobs: Fetching jobs for employer', employerId);
   
   try {
-    const userId = await getUserId();
+    const headers = await getAuthHeaders();
+    
+    const response = await fetch(`${API_BASE}/jobs/employer/${employerId}`, {
+      method: 'GET',
+      headers,
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getEmployerJobs: Failed', response.status, error);
+      throw new Error(`Failed to fetch employer jobs: ${response.status}`);
+    }
+    
+    const jobs = await response.json();
+    console.log('✅ getEmployerJobs: Found', jobs.length, 'jobs');
+    return jobs;
+  } catch (error) {
+    console.error('❌ getEmployerJobs: Error', error);
+    throw error;
+  }
+}
+
+// ===== GET JOB BY ID =====
+export async function getJobById(id: string): Promise<Job | null> {
+  console.log('🔍 getJobById: Fetching job', id);
+  
+  try {
+    const headers = await getAuthHeaders();
     
     const response = await fetch(`${API_BASE}/jobs/${id}`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     
     if (response.status === 404) {
-      console.log('⚠️ getJobById (API): Job not found');
+      console.log('⚠️ getJobById: Job not found');
       return null;
     }
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('❌ getJobById (API): Failed', response.status, error);
+      console.error('❌ getJobById: Failed', response.status, error);
       throw new Error(`Failed to fetch job: ${response.status}`);
     }
     
     const job = await response.json();
-    console.log('✅ getJobById (API): Job found', id);
-    
+    console.log('✅ getJobById: Job found', id);
     return job;
   } catch (error) {
-    console.error('❌ getJobById (API): Error', error);
+    console.error('❌ getJobById: Error', error);
     throw error;
   }
 }
 
-export async function deleteJob(id: string): Promise<void> {
-  console.log('🗑️ deleteJob (API): Deleting job', id);
+// ===== UPDATE JOB =====
+export async function updateJob(id: string, patch: Partial<Job>): Promise<void> {
+  console.log('🔄 updateJob: Updating job', id);
   
   try {
-    const userId = await getUserId();
+    const headers = await getAuthHeaders();
     
     const response = await fetch(`${API_BASE}/jobs/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${userId}`,
-        'Content-Type': 'application/json',
-      },
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(patch),
     });
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('❌ deleteJob (API): Failed', response.status, error);
-      throw new Error(`Failed to delete job: ${response.status}`);
+      console.error('❌ updateJob: Failed', response.status, error);
+      throw new Error(`Failed to update job: ${response.status}`);
     }
     
-    console.log('✅ deleteJob (API): Job deleted', id);
+    console.log('✅ updateJob: Job updated', id);
   } catch (error) {
-    console.error('❌ deleteJob (API): Error', error);
+    console.error('❌ updateJob: Error', error);
     throw error;
   }
 }
 
-// COMPATIBILITY ALIASES - For backwards compatibility
-export async function getEmployerAufträge(employerId: string): Promise<Job[]> {
-  console.warn('⚠️ Deprecated: getEmployerAufträge() is deprecated. Use getEmployerJobs() instead.');
-  return await getEmployerJobs(employerId);
+// ===== DELETE JOB =====
+export async function deleteJob(id: string): Promise<void> {
+  console.log('🗑️ deleteJob: Deleting job', id);
+  
+  try {
+    const headers = await getAuthHeaders();
+    
+    const response = await fetch(`${API_BASE}/jobs/${id}`, {
+      method: 'DELETE',
+      headers,
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ deleteJob: Failed', response.status, error);
+      throw new Error(`Failed to delete job: ${response.status}`);
+    }
+    
+    console.log('✅ deleteJob: Job deleted', id);
+  } catch (error) {
+    console.error('❌ deleteJob: Error', error);
+    throw error;
+  }
 }
 
-export async function getEmployerAuftraege(employerId: string): Promise<Job[]> {
-  console.warn('⚠️ Deprecated: getEmployerAuftraege() is deprecated. Use getEmployerJobs() instead.');
-  return await getEmployerJobs(employerId);
+// ===== LEGACY ALIASES =====
+export async function getAllJobs(): Promise<Job[]> {
+  return await getJobs();
 }
 
+export async function saveJob(job: Job): Promise<void> {
+  try {
+    const existing = await getJobById(job.id);
+    if (existing) {
+      await updateJob(job.id, job);
+    } else {
+      await addJob(job);
+    }
+  } catch {
+    await addJob(job);
+  }
+}
+
+export async function clearJobs(): Promise<void> {
+  console.warn('⚠️ clearJobs: Not implemented for API-based storage');
+}
