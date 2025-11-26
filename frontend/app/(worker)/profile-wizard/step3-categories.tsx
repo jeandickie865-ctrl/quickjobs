@@ -44,7 +44,8 @@ export default function Step3Categories() {
   };
 
   const handleBack = () => {
-    router.back();
+    updateWizardData({ selectedCategories: selectedCategories as any });
+    router.push('/(worker)/profile-wizard/step2-address');
   };
 
   const isFormValid = selectedCategories.length > 0;
