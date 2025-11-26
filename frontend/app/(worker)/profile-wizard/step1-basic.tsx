@@ -24,12 +24,13 @@ const COLORS = {
 export default function Step1Basic() {
   const router = useRouter();
   const { user } = useAuth();
+  const { wizardData, updateWizardData } = useWizard();
   
-  const [photoUrl, setPhotoUrl] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [shortBio, setShortBio] = useState('');
-  const [phone, setPhone] = useState('');
+  const [photoUrl, setPhotoUrl] = useState(wizardData.photoUrl || '');
+  const [firstName, setFirstName] = useState(wizardData.firstName || '');
+  const [lastName, setLastName] = useState(wizardData.lastName || '');
+  const [shortBio, setShortBio] = useState(wizardData.shortBio || '');
+  const [phone, setPhone] = useState(wizardData.phone || '');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const getInitials = () => {
