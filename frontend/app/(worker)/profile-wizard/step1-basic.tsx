@@ -88,8 +88,8 @@ export default function Step1Basic() {
 
   const handleNext = () => {
     if (validate()) {
-      // Store in context/AsyncStorage
-      // For now, navigate to step 2
+      // Save to context
+      updateWizardData({ photoUrl, firstName, lastName, shortBio, phone });
       router.push('/(worker)/profile-wizard/step2-address');
     }
   };
