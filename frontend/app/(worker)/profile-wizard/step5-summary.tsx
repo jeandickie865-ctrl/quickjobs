@@ -22,8 +22,8 @@ const COLORS = {
 
 export default function Step5Summary() {
   const router = useRouter();
-  const { wizardData } = useWizard();
-  const { user } = useAuth();
+  const { wizardData, resetWizard } = useWizard();
+  const { user, token } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
 
   // Get all data from context
