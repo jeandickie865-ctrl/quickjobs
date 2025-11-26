@@ -21,17 +21,19 @@ const COLORS = {
 
 export default function Step4Skills() {
   const router = useRouter();
+  const { wizardData, updateWizardData } = useWizard();
   
-  // TODO: Get selected categories from context/AsyncStorage
-  const [selectedCategories] = useState<string[]>(['Handwerk', 'Garten']);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const selectedCategories = wizardData.selectedCategories || [];
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(
+    wizardData.selectedSkills || []
+  );
   const [availableSkills, setAvailableSkills] = useState<string[]>([]);
 
   useEffect(() => {
     // Collect all skills from selected categories
     const skills: string[] = [];
-    selectedCategories.forEach(category => {
-      const categoryData = CATEGORY_MAPPING[category];
+    selectedCategories.forEach(categoryLabel => {
+      const categoryData = CATEGORY_MAPPING[categoryLabel];
       if (categoryData && categoryData.skills) {
         skills.push(...categoryData.skills);
       }
