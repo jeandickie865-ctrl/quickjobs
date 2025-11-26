@@ -129,12 +129,14 @@ export default function Step5Summary() {
       // Navigate to profile page
       router.replace('/(worker)/profile');
       
-      // Show success message after navigation
+      // Show success message after navigation (only if component is still mounted)
       setTimeout(() => {
-        Alert.alert(
-          'Profil gespeichert! 🎉',
-          'Dein Profil wurde erfolgreich gespeichert.'
-        );
+        if (isMounted.current) {
+          Alert.alert(
+            'Profil gespeichert! 🎉',
+            'Dein Profil wurde erfolgreich gespeichert.'
+          );
+        }
       }, 500);
     } catch (error) {
       console.error('Error saving profile:', error);
