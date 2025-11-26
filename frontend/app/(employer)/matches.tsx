@@ -264,8 +264,22 @@ export default function MatchesScreen() {
                       {match.application.workerName || 'Worker'}
                     </Text>
                     <Text style={{ fontSize: 13, color: COLORS.darkGray, marginTop: 2 }}>
-                      Match seit {formatDate(match.application.createdAt)}
+                      {match.application.status === 'pending' ? 'Neue Bewerbung' : 'Match seit'} {formatDate(match.application.createdAt)}
                     </Text>
+                    {match.application.status === 'pending' && (
+                      <View style={{ 
+                        backgroundColor: COLORS.neon, 
+                        paddingHorizontal: 8, 
+                        paddingVertical: 4, 
+                        borderRadius: 6, 
+                        alignSelf: 'flex-start',
+                        marginTop: 4
+                      }}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
+                          NEU
+                        </Text>
+                      </View>
+                    )}
                     <View style={{ marginTop: 6 }}>
                       <RatingDisplay
                         averageRating={match.avgRating}
