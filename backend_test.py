@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Suite for ShiftMatch App
-Tests the comprehensive Jobs matching system with distance/radius filtering
-As requested in the German review request for UMFASSENDE TESTS: Jobs im Umkreis / Matching-System
+Comprehensive Backend API Testing Suite for ShiftMatch App
+Tests all API endpoints after frontend refactoring with centralized utils/api.ts
+As requested in the German review request: BACKEND TESTING NACH API-REFACTORING
 """
 
-import requests
+import asyncio
+import httpx
 import json
 import sys
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import uuid
 import math
+from datetime import datetime
 
 # Backend URL from frontend/.env
 BACKEND_URL = "https://jobnexus.preview.emergentagent.com/api"
-
-# Test users as specified in the review request
-TEST_WORKER = "user_test_distance_worker"
-TEST_EMPLOYER = "user_test_employer_distance"
 
 class DistanceMatchingTester:
     def __init__(self):
