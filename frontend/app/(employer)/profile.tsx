@@ -54,10 +54,12 @@ export default function EmployerProfileViewScreen() {
       const prof = await getEmployerProfile(user.id);
       setProfile(prof);
 
-      // Load matches count
+      // Load matches count (accepted) and applications count (pending)
       const apps = await getApplicationsForEmployer(user.id);
       const acceptedApps = apps.filter(app => app.status === 'accepted');
+      const pendingApps = apps.filter(app => app.status === 'pending');
       setMatchesCount(acceptedApps.length);
+      setApplicationsCount(pendingApps.length);
 
       // Load reviews
       const reviews = await getReviewsForEmployer(user.id);
