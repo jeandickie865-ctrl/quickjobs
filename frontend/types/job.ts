@@ -5,6 +5,7 @@ export type JobTimeMode = 'fixed_time' | 'hour_package' | 'project';
 export type Job = {
   id: string;
   employerId: string;
+  employerName: string;
   employerType: 'private' | 'business';
 
   title: string;
