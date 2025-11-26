@@ -1,5 +1,5 @@
 // app/(worker)/profile-wizard/step1-basic.tsx - BASISDATEN + FOTO
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, Pressable, Image, Platform, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -9,6 +9,7 @@ import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useWizard } from '../../../contexts/WizardContext';
+import { getWorkerProfile } from '../../../utils/profileStore';
 
 const COLORS = {
   purple: '#5941FF',
