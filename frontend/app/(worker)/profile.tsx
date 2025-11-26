@@ -233,21 +233,6 @@ export default function WorkerProfileScreen() {
             {profile.firstName} {profile.lastName}
           </Text>
 
-          {/* Hauptkategorie als Neon Chip direkt unter Name */}
-          {categoryLabels.length > 0 && (
-            <View style={{
-              backgroundColor: COLORS.neon,
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-              borderRadius: 20,
-              marginBottom: 12,
-            }}>
-              <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '700' }}>
-                {categoryLabels[0]}
-              </Text>
-            </View>
-          )}
-
           {/* Bewertung */}
           {reviewCount > 0 && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
