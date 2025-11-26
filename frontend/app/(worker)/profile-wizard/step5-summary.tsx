@@ -44,28 +44,34 @@ export default function Step5Summary() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // Prepare profile data for backend
+      // Prepare profile data for backend - WICHTIG: Alles aus wizardData!
       const profilePayload = {
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        phone: profileData.phone,
-        email: profileData.email,
+        firstName: wizardData.firstName || '',
+        lastName: wizardData.lastName || '',
+        phone: wizardData.phone || '',
+        email: user?.email || '',
         shortBio: wizardData.shortBio || '',
-        photoUrl: profileData.photoUrl || '',
-        categories: profileData.categories || [],
-        selectedTags: profileData.skills || [],
-        radiusKm: profileData.radius || 25,
+        photoUrl: wizardData.photoUrl || '',
+        categories: wizardData.selectedCategories || [],
+        selectedTags: wizardData.selectedSkills || [],
+        radiusKm: wizardData.radiusKm || 25,
         homeAddress: {
-          street: profileData.street || '',
-          city: profileData.city || '',
-          postalCode: profileData.postalCode || '',
+          street: wizardData.street || '',
+          city: wizardData.city || '',
+          postalCode: wizardData.postalCode || '',
           country: 'Deutschland'
         },
         homeLat: wizardData.lat,
         homeLon: wizardData.lon,
       };
 
-      console.log('Saving profile:', profilePayload);
+      console.log('💾 Saving profile with data from wizardData:', profilePayload);
+      console.log('📊 Wizard Data Check:', {
+        categories: wizardData.selectedCategories,
+        skills: wizardData.selectedSkills,
+        lat: wizardData.lat,
+        lon: wizardData.lon
+      });
 
       const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
       const userId = user?.id || '';
