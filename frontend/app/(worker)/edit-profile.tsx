@@ -442,10 +442,7 @@ export default function EditWorkerProfileScreen() {
         router.replace('/(employer)/profile');
       }
       
-      // Show success message after navigation
-      setTimeout(() => {
-        Alert.alert('Erfolg', 'Profil erfolgreich aktualisiert');
-      }, 500);
+      // Success - no alert needed, user sees updated profile
 
     } catch (err: any) {
       console.error('❌ SAVE: Error saving profile:', err);
