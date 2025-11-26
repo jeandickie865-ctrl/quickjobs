@@ -6,7 +6,7 @@ import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
-import { getMatchesForWorker } from '../../utils/matchStore';
+import { getWorkerApplications } from '../../utils/applicationStore';
 import { Ionicons } from '@expo/vector-icons';
 
 // Import taxonomy data
