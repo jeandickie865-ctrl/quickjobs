@@ -549,25 +549,21 @@ async def create_worker_profile(
     
     # Validate categories and tags against taxonomy
     if profile_data.categories:
+        # Schritt 1: Jede Kategorie prüfen
         for cat in profile_data.categories:
             validate_category(cat)
     
-    # Validate tags for the first category (if worker has multiple categories, we check tags against all)
+    # Validate tags for worker (tags gelten für alle Kategorien kombiniert)
     if profile_data.selectedTags and profile_data.categories:
-        # Collect all valid tags for all worker's categories
-        all_valid_tags = set()
+        # Schritt 2: erlaubte Tags aller Kategorien zusammenführen
+        valid_tags = set()
         for cat in profile_data.categories:
-            cat_data = TAXONOMY.get(cat)
-            if cat_data:
-                all_valid_tags.update([t["value"] for t in cat_data["required"]])
-                all_valid_tags.update([t["value"] for t in cat_data["optional"]])
+            valid_tags |= get_valid_tag_values(cat)
         
-        # Validate each tag
+        # Schritt 3: prüfen, ob selectedTags gültig sind
         for tag in profile_data.selectedTags:
-            if tag not in all_valid_tags:
-                raise HTTPException(status_code=422, detail=f"INVALID_TAG: {tag}")
-        
-        logger.info(f"✅ Tags validated: {len(profile_data.selectedTags)} tags for categories {profile_data.categories}")
+            if tag not in valid_tags:
+                raise HTTPException(status_code=422, detail=f"INVALID_WORKER_TAG: {tag}")
     
     # Create profile document
     now = datetime.utcnow().isoformat()
