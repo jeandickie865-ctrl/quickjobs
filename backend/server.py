@@ -479,6 +479,38 @@ async def get_user_id_from_token(authorization: Optional[str] = Header(None)) ->
     return token_doc["userId"]
 
 # ==========================
+#   TAXONOMY VALIDATION
+# ==========================
+
+def validate_category(category: str):
+    """Validate that a category exists in taxonomy.json"""
+    if category not in TAXONOMY:
+        raise HTTPException(status_code=422, detail=f"INVALID_CATEGORY: {category}")
+    logger.info(f"✅ Category validated: {category}")
+
+def validate_tags(category: str, tags: List[str]):
+    """Validate that all tags are valid for the given category"""
+    if not tags:
+        return  # Empty tags are allowed
+    
+    cat = TAXONOMY.get(category)
+    if not cat:
+        raise HTTPException(status_code=422, detail=f"INVALID_CATEGORY: {category}")
+    
+    # Collect all valid tag values for this category
+    valid_values = set(
+        [t["value"] for t in cat["required"]] +
+        [t["value"] for t in cat["optional"]]
+    )
+    
+    # Check each tag
+    for tag in tags:
+        if tag not in valid_values:
+            raise HTTPException(status_code=422, detail=f"INVALID_TAG: {tag} for category {category}")
+    
+    logger.info(f"✅ Tags validated: {len(tags)} tags for category {category}")
+
+# ==========================
 #   GET /auth/me
 #   Validiert Token und gibt User-Daten zurück
 # ==========================
