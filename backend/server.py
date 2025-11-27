@@ -1588,49 +1588,43 @@ async def get_reviews_for_job(jobId: str):
 
 # Chat Message Endpoints
 
-@api_router.post("/chat/messages", response_model=ChatMessage)
+@api_router.post("/chat/messages")
 async def send_message(
-    message_data: ChatMessageCreate,
+    payload: dict,
     authorization: Optional[str] = Header(None)
 ):
     """Send a chat message"""
-    logger.info(f"Sending message for application {message_data.applicationId}")
+    user_id = await get_user_id_from_token(authorization)
     
-    # Verify token
-    requesting_user = await get_user_id_from_token(authorization)
+    # Get application
+    app = await db.applications.find_one({"id": payload["applicationId"]})
+    if not app:
+        raise HTTPException(status_code=404, detail="APPLICATION_NOT_FOUND")
     
-    # Get application to verify user is part of it
-    application = await db.applications.find_one({"id": message_data.applicationId})
-    if not application:
-        raise HTTPException(status_code=404, detail="Application not found")
+    # Check if chat is unlocked
+    if not app.get("chatUnlocked", True):
+        raise HTTPException(status_code=403, detail="CHAT_LOCKED")
     
-    # User must be either the worker or employer
-    if requesting_user not in [application.get("workerId"), application.get("employerId")]:
-        raise HTTPException(status_code=403, detail="Cannot send message for this application")
+    # Determine receiver
+    if user_id == app["employerId"]:
+        receiver_id = app["workerId"]
+    elif user_id == app["workerId"]:
+        receiver_id = app["employerId"]
+    else:
+        raise HTTPException(status_code=403, detail="NOT_AUTHORIZED")
     
-    # Determine sender role
-    sender_role = "worker" if requesting_user == application.get("workerId") else "employer"
-    
-    # Create message
-    message_dict = {
-        "id": f"msg_{str(uuid.uuid4())}",
-        "applicationId": message_data.applicationId,
-        "senderId": requesting_user,
-        "senderRole": sender_role,
-        "message": message_data.message,
+    # Create message document
+    doc = {
+        "applicationId": payload["applicationId"],
+        "senderId": user_id,
+        "receiverId": receiver_id,
+        "text": payload["text"],
+        "read": False,
         "createdAt": datetime.utcnow().isoformat(),
-        "read": False
     }
     
-    # Insert into MongoDB
-    result = await db.chat_messages.insert_one(message_dict)
-    
-    # Fetch and return created message
-    created_message = await db.chat_messages.find_one({"_id": result.inserted_id})
-    created_message.pop("_id", None)
-    
-    logger.info(f"Message sent: {message_dict['id']}")
-    return ChatMessage(**created_message)
+    await db.chat_messages.insert_one(doc)
+    return {"success": True}
 
 @api_router.get("/chat/messages/{application_id}", response_model=List[ChatMessage])
 async def get_messages(
