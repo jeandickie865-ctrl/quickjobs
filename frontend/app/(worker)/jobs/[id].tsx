@@ -242,6 +242,65 @@ export default function WorkerJobDetailScreen() {
                 </Text>
               </View>
             )}
+
+            {/* Tags anzeigen */}
+            {(job.required_all_tags?.length > 0 || job.required_any_tags?.length > 0) && (
+              <View style={{ marginTop: 20 }}>
+                {job.required_all_tags?.length > 0 && (
+                  <View style={{ marginBottom: 12 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.purple, marginBottom: 6 }}>
+                      PFLICHT
+                    </Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      {job.required_all_tags.map((tag) => (
+                        <View
+                          key={tag}
+                          style={{
+                            paddingHorizontal: 10,
+                            paddingVertical: 6,
+                            backgroundColor: '#5941FF',
+                            borderRadius: 6,
+                            marginRight: 6,
+                            marginBottom: 6,
+                          }}
+                        >
+                          <Text style={{ color: '#FFFFFF', fontWeight: '600' }}>
+                            {getTagLabel(job.category, tag)}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+
+                {job.required_any_tags?.length > 0 && (
+                  <View style={{ marginBottom: 12 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#8A8A8A', marginBottom: 6 }}>
+                      MINDESTENS EINE
+                    </Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      {job.required_any_tags.map((tag) => (
+                        <View
+                          key={tag}
+                          style={{
+                            paddingHorizontal: 10,
+                            paddingVertical: 6,
+                            backgroundColor: '#8A8A8A',
+                            borderRadius: 6,
+                            marginRight: 6,
+                            marginBottom: 6,
+                          }}
+                        >
+                          <Text style={{ color: '#FFFFFF', fontWeight: '600' }}>
+                            {getTagLabel(job.category, tag)}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+              </View>
+            )}
           </View>
 
           {/* Status Badge */}
