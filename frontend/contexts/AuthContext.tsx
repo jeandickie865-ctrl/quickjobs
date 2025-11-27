@@ -15,7 +15,6 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, role: 'worker' | 'employer') => Promise<void>;
   signOut: () => Promise<void>;
-  setRole: (role: 'worker' | 'employer') => Promise<void>;
   loading: boolean;
   isLoading: boolean;
 };
