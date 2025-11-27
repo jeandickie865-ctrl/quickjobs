@@ -32,7 +32,9 @@ export function AuthProvider({ children }) {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
       const data = await me.json();
-      setUser(data);
+      // Backend gibt userId zurück, aber Frontend erwartet id
+      const user = { ...data, id: data.userId };
+      setUser(user);
     }
 
     setLoading(false);
