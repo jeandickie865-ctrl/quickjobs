@@ -3,12 +3,18 @@
 
 import taxonomyData from '../shared/taxonomy.json';
 
-export type TagStructure = {
-  required: string[];
-  optional: string[];
+export type TagOption = {
+  value: string;
+  label: string;
 };
 
-export type TaxonomyData = Record<string, TagStructure>;
+export type CategoryData = {
+  label: string;
+  required: TagOption[];
+  optional: TagOption[];
+};
+
+export type TaxonomyData = Record<string, CategoryData>;
 
 // Type-safe taxonomy
 export const TAXONOMY: TaxonomyData = taxonomyData as TaxonomyData;
