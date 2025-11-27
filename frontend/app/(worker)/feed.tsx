@@ -60,6 +60,7 @@ export default function WorkerFeed() {
     }
 
     try {
+      // Load worker profile for display purposes
       const workerProfile = await getWorkerProfile(user.id);
       
       if (!workerProfile || !workerProfile.categories || workerProfile.categories.length === 0) {
@@ -70,26 +71,20 @@ export default function WorkerFeed() {
 
       setProfile(workerProfile);
 
-      const allJobs = await getJobs();
-      const openJobs = allJobs.filter(j => j.status === 'open');
+      // Get matched jobs from backend (Haversine + Tag matching)
+      const matchedJobs = await getMatchedJobs();
       
-      // Load applications FIRST to filter out already applied jobs
+      // Load applications to filter out already applied jobs
       const applications = await getWorkerApplications();
       const jobIdsSet = new Set(applications.map(app => app.jobId));
       setAppsJobIds(jobIdsSet);
       
       // Filter out jobs the worker already applied to
-      const notAppliedJobs = openJobs.filter(job => !jobIdsSet.has(job.id));
-      
-      // Store ALL open jobs (not applied yet) for "Alle" tab
-      setAllOpenJobs(notAppliedJobs);
-      
-      // SIMPLE MATCHING: Nur Kategorie-Check für "Passende" Tab!
-      const matchedJobs = getMatchingJobs(notAppliedJobs, workerProfile);
+      const notAppliedJobs = matchedJobs.filter(job => !jobIdsSet.has(job.id));
       
       // Load employer ratings for each job
       const ratings: Record<string, { avg: number; count: number }> = {};
-      for (const job of matchedJobs) {
+      for (const job of notAppliedJobs) {
         const reviews = await getReviewsForEmployer(job.employerId);
         ratings[job.employerId] = {
           avg: calculateAverageRating(reviews),
@@ -98,13 +93,25 @@ export default function WorkerFeed() {
       }
       setEmployerRatings(ratings);
       
-      setJobs(matchedJobs);
+      setJobs(notAppliedJobs);
+      setAllOpenJobs(notAppliedJobs); // Same jobs for both tabs now
 
       setError(null);
-    } catch (e) {
+    } catch (e: any) {
       console.error('Error loading feed:', e);
-      if (!silent) {
-        setError('Fehler beim Laden der Aufträge.');
+      
+      // Handle specific errors
+      if (e.message === 'UNAUTHORIZED') {
+        console.error('❌ Unauthorized - logging out');
+        // Trigger logout via AuthContext if available
+        setError('Sitzung abgelaufen. Bitte erneut anmelden.');
+        // Note: AuthContext should handle logout, but we show error message
+      } else if (e.message === 'PROFILE_NOT_FOUND') {
+        setError('Worker-Profil nicht gefunden. Bitte Profil vervollständigen.');
+      } else {
+        if (!silent) {
+          setError('Fehler beim Laden der Aufträge.');
+        }
       }
     } finally {
       if (!silent) {
