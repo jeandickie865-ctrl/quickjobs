@@ -15,13 +15,19 @@ const COLORS = {
 };
 
 export default function WorkerFeedScreen() {
-  const { logout } = useAuth();
+  const { user, token, loading, logout } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadJobs = async () => {
+    // Sicherstellen, dass user und token geladen sind
+    if (!token || !user) {
+      console.log("⏳ Waiting for auth to load...");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -32,7 +38,7 @@ export default function WorkerFeedScreen() {
       setJobs(data);
     } catch (err: any) {
       console.error("❌ Error loading jobs:", err);
-      if (err.message === "UNAUTHORIZED") {
+      if (err.message === "UNAUTHORIZED" || err.message?.includes("no token found")) {
         logout();
         return;
       }
@@ -43,8 +49,10 @@ export default function WorkerFeedScreen() {
   };
 
   useEffect(() => {
-    loadJobs();
-  }, []);
+    if (!loading && token && user) {
+      loadJobs();
+    }
+  }, [loading, token, user]);
 
   if (isLoading) {
     return (
