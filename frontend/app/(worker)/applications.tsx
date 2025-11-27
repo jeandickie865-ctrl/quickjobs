@@ -4,7 +4,7 @@ import { Redirect, useRouter, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
-import { getApplicationsForWorker } from '../../utils/applicationStore';
+import { getWorkerApplications } from '../../utils/applicationStore';
 import { getJobById } from '../../utils/jobStore';
 import { Job } from '../../types/job';
 import { JobApplication } from '../../types/application';
