@@ -13,7 +13,6 @@ const COLORS = {
 };
 
 export default function RoleSelection() {
-  const { setRole } = useAuth();
   const router = useRouter();
   const [selecting, setSelecting] = useState(false);
 
@@ -21,7 +20,8 @@ export default function RoleSelection() {
     if (selecting) return;
     setSelecting(true);
     try {
-      await setRole(role);
+      // Rolle wird vom Backend via /auth/me verwaltet
+      // Hier nur Navigation basierend auf gewählter Rolle
       if (role === 'worker') {
         router.replace('/(worker)/feed');
       } else {
