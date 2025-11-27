@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -7,13 +7,13 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { Button } from '../../../components/ui/Button';
 import { CostBreakdown } from '../../../components/CostBreakdown';
 import Chip from '../../../components/ui/Chip';
-import { listCategories, CategoryKey, groupTagsByType } from '../../../src/taxonomy';
 import { JobTimeMode, JobCreate } from '../../../types/job';
 import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
 import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
 import UniversalDateTimePicker from '../../../components/UniversalDateTimePicker';
+import taxonomy from '../../../shared/taxonomy.json';
 
 export default function CreateJob() {
   const { colors, spacing } = useTheme();
