@@ -22,7 +22,7 @@ const COLORS = {
 };
 
 export default function EmployerProfileViewScreen() {
-  const { user, isLoading: authLoading, signOut } = useAuth();
+  const { user, isLoading: authLoading, logout } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -115,7 +115,7 @@ export default function EmployerProfileViewScreen() {
           <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>Mein Profil</Text>
           <Pressable 
             onPress={async () => {
-              await signOut();
+              await logout();
               router.replace('/auth/login');
             }}
           >

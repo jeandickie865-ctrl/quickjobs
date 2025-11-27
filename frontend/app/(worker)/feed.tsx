@@ -15,7 +15,7 @@ const COLORS = {
 };
 
 export default function WorkerFeedScreen() {
-  const { signOut } = useAuth();
+  const { logout } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function WorkerFeedScreen() {
       setJobs(data);
     } catch (err: any) {
       if (err.message === "UNAUTHORIZED") {
-        signOut();
+        logout();
         return;
       }
       setError("Fehler beim Laden der Jobs");

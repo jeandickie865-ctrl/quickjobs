@@ -24,7 +24,7 @@ const COLORS = {
 };
 
 export default function WorkerProfileScreen() {
-  const { user, isLoading: authLoading, signOut } = useAuth();
+  const { user, isLoading: authLoading, logout } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -193,7 +193,7 @@ export default function WorkerProfileScreen() {
             </Pressable>
             <Pressable 
               onPress={async () => {
-                await signOut();
+                await logout();
                 router.replace('/auth/login');
               }}
             >

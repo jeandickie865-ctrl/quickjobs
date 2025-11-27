@@ -21,7 +21,7 @@ const COLORS = {
 };
 
 export default function EmployerProfileScreen() {
-  const { user, isLoading: authLoading, signOut } = useAuth();
+  const { user, isLoading: authLoading, logout } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -224,7 +224,7 @@ export default function EmployerProfileScreen() {
   }
 
   async function handleLogout() {
-    await signOut();
+    await logout();
     router.replace('/start');
   }
 

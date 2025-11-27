@@ -15,7 +15,7 @@ import { getEmployerProfile } from '../../utils/employerProfileStore';
 
 export default function EmployerDashboard() {
   const { colors, spacing } = useTheme();
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);

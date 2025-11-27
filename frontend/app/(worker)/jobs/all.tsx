@@ -31,7 +31,7 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number): numb
 }
 
 export default function AllJobsScreen() {
-  const { signOut } = useAuth();
+  const { logout } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -100,7 +100,7 @@ export default function AllJobsScreen() {
       setJobs(jobsInRadius);
     } catch (err: any) {
       if (err.message === "UNAUTHORIZED") {
-        signOut();
+        logout();
         return;
       }
       setError("Fehler beim Laden der Jobs");
