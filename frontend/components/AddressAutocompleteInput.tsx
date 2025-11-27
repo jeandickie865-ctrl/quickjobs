@@ -66,12 +66,12 @@ export default function AddressAutocompleteInput({
     <View>
       <TextInput
         ref={inputRef}
-        value={value}
+        value={safeValue}
         placeholder={placeholder}
         onChangeText={handleChange}
         style={styles.input}
         onFocus={() => {
-          if (value.length >= 2) {
+          if (safeValue.length >= 2) {
             setVisible(true)
             measureInput()
           }
