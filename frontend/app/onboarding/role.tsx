@@ -43,10 +43,11 @@ export default function RoleSelectionScreen() {
 
     setLoading(true);
     try {
-      await setRole(selectedRole);
+      // Rolle wird vom Backend via /auth/me verwaltet
+      // Hier nur Navigation zur Startseite
       router.replace('/start');
     } catch (error) {
-      console.error('Fehler beim Setzen der Rolle:', error);
+      console.error('Fehler beim Navigieren:', error);
     } finally {
       setLoading(false);
     }
