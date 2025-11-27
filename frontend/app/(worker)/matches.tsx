@@ -78,19 +78,20 @@ export default function WorkerMatchesScreen() {
       console.log('✅ loadMatches: Accepted applications:', relevantApps.length);
       console.log('✅ loadMatches: Accepted app details:', relevantApps.map(a => ({ id: a.id, jobId: a.jobId })));
       
-      const allJobs = await getJobs();
-      console.log('💼 loadMatches: All jobs loaded:', allJobs.length);
-
+      // Jobs einzeln per ID laden – sicherste Variante
       const combined: Match[] = [];
 
       for (const app of relevantApps) {
-        console.log(`🔎 loadMatches: Looking for job ${app.jobId} in ${allJobs.length} jobs`);
-        const job = allJobs.find((j) => j.id === app.jobId);
-        if (job) {
-          console.log(`✅ loadMatches: Job found for app ${app.id}: ${job.title}`);
+        try {
+          console.log(`🔎 loadMatches: Loading job ${app.jobId} for application ${app.id}`);
+          const job = await getJobById(app.jobId);
+          console.log(`✅ loadMatches: Job loaded: ${job.title}`);
           combined.push({ job, application: app });
-        } else {
-          console.error(`❌ loadMatches: Job NOT found for app ${app.id}, jobId: ${app.jobId}`);
+        } catch (err) {
+          console.error(
+            `❌ loadMatches: Job ${app.jobId} konnte nicht geladen werden`,
+            err
+          );
         }
       }
       
