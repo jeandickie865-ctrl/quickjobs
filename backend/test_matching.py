@@ -130,7 +130,7 @@ def main():
             "lastName": "Pro",
             "phone": "+492222222222",
             "email": "worker2@test.de",
-            "address": {
+            "homeAddress": {
                 "street": "Teststraße",
                 "houseNumber": "2",
                 "postalCode": "10115",
