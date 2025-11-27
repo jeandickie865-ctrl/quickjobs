@@ -4,11 +4,11 @@ import { API_BASE, getUserId, getAuthHeaders } from './api';
 
 // ===== ADD APPLICATION =====
 export async function addApplication(
-  jobId: string,
-  employerId: string
+  jobId: string
 ): Promise<JobApplication> {
-  console.log('➕ addApplication: Creating application', { jobId, employerId });
+  console.log('➕ addApplication: Creating application', { jobId });
   // workerId is set from token by backend
+  // employerId is set from job by backend
   
   try {
     const headers = await getAuthHeaders();
@@ -16,7 +16,7 @@ export async function addApplication(
     const response = await fetch(`${API_BASE}/applications`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ jobId, employerId }),  // No workerId - backend sets it from token
+      body: JSON.stringify({ jobId }),  // Only jobId - backend sets workerId from token and employerId from job
     });
     
     if (!response.ok) {
