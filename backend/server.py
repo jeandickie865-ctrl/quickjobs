@@ -223,6 +223,37 @@ class ApplicationUpdate(BaseModel):
     employerConfirmedLegal: Optional[bool] = None
     workerConfirmedLegal: Optional[bool] = None
 
+
+# Official Registration Models
+class WorkerOfficialDataAddress(BaseModel):
+    street: str
+    houseNumber: str
+    postalCode: str
+    city: str
+    country: str
+
+class WorkerOfficialDataWorkPermit(BaseModel):
+    required: bool
+    fileUrl: Optional[str] = None
+
+class WorkerOfficialData(BaseModel):
+    id: str = Field(default_factory=lambda: f"wod_{uuid.uuid4().hex[:12]}")
+    workerId: str
+    applicationId: str
+    birthDate: str
+    address: WorkerOfficialDataAddress
+    taxId: str
+    healthInsurance: str
+    iban: str
+    nationality: str
+    workPermit: WorkerOfficialDataWorkPermit
+    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    updatedAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class OfficialRegistrationRequest(BaseModel):
+    decision: str  # "accept" | "deny"
+    workerOfficialData: Optional[WorkerOfficialData] = None
+
 # Employer Profile Models
 class EmployerProfile(BaseModel):
     userId: str
