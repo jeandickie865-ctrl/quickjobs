@@ -46,7 +46,7 @@ export default function Step2Address() {
 
   const handleNext = () => {
     if (validate()) {
-      updateWizardData({ street, postalCode, city, lat, lon, radiusKm: radius });
+      updateWizardData({ street, houseNumber, postalCode, city, lat, lon, radiusKm: radius });
       router.push('/(worker)/profile-wizard/step3-categories');
     }
   };
