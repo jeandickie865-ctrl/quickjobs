@@ -191,7 +191,7 @@ export default function WorkerFeed() {
     setIsApplyingJobId(job.id);
 
     try {
-      await applyForJob(job.id, user.id, job.employerId);
+      await applyForJob(job.id);
       
       // Remove job from lists
       setJobs(prev => prev.filter(j => j.id !== job.id));
