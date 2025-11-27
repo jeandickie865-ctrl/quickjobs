@@ -7,9 +7,11 @@ Expected result matrix is hardcoded for validation
 
 import requests
 import json
+import time
 from typing import Dict, List
 
 BASE_URL = "https://jobmatcher-30.preview.emergentagent.com/api"
+TIMESTAMP = int(time.time())
 
 # Expected Results Matrix
 # Job    W1   W2   W3
