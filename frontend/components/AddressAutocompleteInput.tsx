@@ -6,19 +6,31 @@ type Suggestion = {
   place_id: string
 }
 
-type Props = {
-  value: string
-  onChangeText: (text: string) => void
-  onSelect: (item: Suggestion) => void
-  fetchSuggestions: (query: string) => Promise<Suggestion[]>
+interface Props {
+  street: string
+  postalCode: string
+  city: string
+  houseNumber?: string
+  onStreetChange?: (text: string) => void
+  onPostalCodeChange?: (text: string) => void
+  onCityChange?: (text: string) => void
+  onHouseNumberChange?: (text: string) => void
+  onLatChange?: (lat: number) => void
+  onLonChange?: (lon: number) => void
   placeholder?: string
 }
 
 export default function AddressAutocompleteInput({
-  value,
-  onChangeText,
-  onSelect,
-  fetchSuggestions,
+  street,
+  postalCode,
+  city,
+  houseNumber,
+  onStreetChange,
+  onPostalCodeChange,
+  onCityChange,
+  onHouseNumberChange,
+  onLatChange,
+  onLonChange,
   placeholder
 }: Props) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
