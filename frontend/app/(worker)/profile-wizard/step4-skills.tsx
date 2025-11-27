@@ -6,8 +6,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
-import { CATEGORY_MAPPING } from '../../../utils/categoryMapping';
 import { useWizard } from '../../../contexts/WizardContext';
+import { getAllTagsForCategories } from '../../../utils/taxonomy';
 
 const COLORS = {
   purple: '#5941FF',
