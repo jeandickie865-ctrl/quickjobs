@@ -66,3 +66,27 @@ export async function getJobById(jobId: string): Promise<Job> {
 
   return mappedJob;
 }
+
+/**
+ * Lädt alle Jobs eines Employers vom Backend.
+ * Wird vom Employer-Dashboard genutzt.
+ */
+export async function getEmployerJobs(employerId: string): Promise<Job[]> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${API_URL}/jobs/employer/${employerId}`, {
+    method: "GET",
+    headers,
+  });
+
+  if (res.status === 401) throw new Error("UNAUTHORIZED");
+  if (!res.ok) throw new Error("FAILED_TO_FETCH_EMPLOYER_JOBS");
+
+  const data = await res.json();
+
+  return data.map((job: any) => ({
+    ...job,
+    required_all_tags: job.required_all_tags ?? job.tags ?? [],
+    required_any_tags: job.required_any_tags ?? [],
+  }));
+}
