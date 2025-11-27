@@ -62,28 +62,28 @@ export async function getApplicationsForJob(jobId: string): Promise<JobApplicati
 }
 
 // ===== GET APPLICATIONS FOR WORKER =====
-export async function getApplicationsForWorker(workerId: string): Promise<JobApplication[]> {
-  console.log('🔍 getApplicationsForWorker: Fetching applications for worker', workerId);
+export async function getWorkerApplications(): Promise<JobApplication[]> {
+  console.log('📥 getWorkerApplications: Getting applications (from token)');
   
   try {
     const headers = await getAuthHeaders();
     
-    const response = await fetch(`${API_BASE}/applications/worker/${workerId}`, {
+    const response = await fetch(`${API_BASE}/applications/worker/me`, {
       method: 'GET',
       headers,
     });
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('❌ getApplicationsForWorker: Failed', response.status, error);
+      console.error('❌ getWorkerApplications: Failed', response.status, error);
       throw new Error(`Failed to fetch worker applications: ${response.status}`);
     }
     
     const applications = await response.json();
-    console.log('✅ getApplicationsForWorker: Found', applications.length, 'applications');
+    console.log('✅ getWorkerApplications: Applications fetched', applications.length);
     return applications;
   } catch (error) {
-    console.error('❌ getApplicationsForWorker: Error', error);
+    console.error('❌ getWorkerApplications: Error', error);
     throw error;
   }
 }
