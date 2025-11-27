@@ -73,9 +73,11 @@ export default function Step2Address() {
             street={street}
             postalCode={postalCode}
             city={city}
+            houseNumber={houseNumber}
             onStreetChange={setStreet}
             onPostalCodeChange={setPostalCode}
             onCityChange={setCity}
+            onHouseNumberChange={setHouseNumber}
             onLatChange={setLat}
             onLonChange={setLon}
           />
