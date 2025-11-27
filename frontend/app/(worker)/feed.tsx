@@ -147,11 +147,33 @@ export default function WorkerFeedScreen() {
   );
 
   return (
-    <FlatList
-      data={jobs}
-      keyExtractor={(item) => item.id}
-      renderItem={renderJobCard}
-      contentContainerStyle={{ paddingVertical: 10 }}
-    />
+    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+      {/* Header mit "Alle Jobs" Button */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 16,
+          backgroundColor: COLORS.purple,
+        }}
+      >
+        <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold" }}>
+          Passende Jobs
+        </Text>
+        <Pressable onPress={() => router.push("/(worker)/jobs/all")}>
+          <Text style={{ color: COLORS.neon, fontSize: 16, fontWeight: "600" }}>
+            Alle Jobs
+          </Text>
+        </Pressable>
+      </View>
+
+      <FlatList
+        data={jobs}
+        keyExtractor={(item) => item.id}
+        renderItem={renderJobCard}
+        contentContainerStyle={{ paddingVertical: 10 }}
+      />
+    </View>
   );
 }
