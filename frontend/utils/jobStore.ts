@@ -1,42 +1,31 @@
 // utils/jobStore.ts - Job Store (REFACTORED)
 import { Job } from '../types/job';
 import { API_BASE, getUserId, getAuthHeaders } from './api';
+import { API_URL } from "../config"
+import { getAuthToken } from "../contexts/AuthContext"
 
 // ===== GET MATCHED JOBS FOR CURRENT WORKER =====
-export async function getMatchedJobs(): Promise<Job[]> {
-  console.log('🎯 getMatchedJobs: Fetching matched jobs for current worker');
-  
-  try {
-    const headers = await getAuthHeaders();
-    
-    const response = await fetch(`${API_BASE}/jobs/matches/me`, {
-      method: 'GET',
-      headers,
-    });
-    
-    if (response.status === 401) {
-      console.error('❌ getMatchedJobs: Unauthorized (401) - Invalid token');
-      throw new Error('UNAUTHORIZED');
+export async function getMatchedJobs() {
+  const token = await getAuthToken()
+  if (!token) throw new Error("No token")
+
+  const res = await fetch(`${API_URL}/jobs/matches/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
     }
-    
-    if (response.status === 404) {
-      console.warn('⚠️ getMatchedJobs: Worker profile not found (404)');
-      throw new Error('PROFILE_NOT_FOUND');
-    }
-    
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('❌ getMatchedJobs: Failed', response.status, error);
-      throw new Error(`Failed to fetch matched jobs: ${response.status}`);
-    }
-    
-    const jobs: Job[] = await response.json();
-    console.log('✅ getMatchedJobs: Found', jobs.length, 'matching jobs');
-    return jobs;
-  } catch (error) {
-    console.error('❌ getMatchedJobs: Error', error);
-    throw error;
+  })
+
+  if (res.status === 401) {
+    throw new Error("UNAUTHORIZED")
   }
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch matched jobs")
+  }
+
+  return await res.json()
 }
 
 // ===== ADD JOB =====
