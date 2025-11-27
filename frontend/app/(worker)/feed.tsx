@@ -26,14 +26,17 @@ export default function WorkerFeedScreen() {
     setError(null);
 
     try {
+      console.log("📋 Loading matched jobs...");
       const data = await getMatchedJobs();
+      console.log("✅ Matched jobs loaded:", data.length);
       setJobs(data);
     } catch (err: any) {
+      console.error("❌ Error loading jobs:", err);
       if (err.message === "UNAUTHORIZED") {
         logout();
         return;
       }
-      setError("Fehler beim Laden der Jobs");
+      setError(`Fehler beim Laden der Jobs: ${err.message || 'Unbekannter Fehler'}`);
     }
 
     setIsLoading(false);
