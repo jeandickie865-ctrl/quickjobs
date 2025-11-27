@@ -471,4 +471,30 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     textAlign: 'center',
   },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: COLORS.white,
+    backgroundColor: 'transparent',
+    marginRight: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: COLORS.neon,
+    borderColor: COLORS.neon,
+  },
+  checkboxLabel: {
+    flex: 1,
+    fontSize: 15,
+    color: COLORS.white,
+    fontWeight: '500',
+  },
 });
