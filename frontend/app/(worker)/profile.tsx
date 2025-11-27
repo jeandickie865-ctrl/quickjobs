@@ -135,9 +135,8 @@ export default function WorkerProfileScreen() {
   // Map category keys to labels
   const getCategoryLabels = () => {
     if (!profile?.categories || profile.categories.length === 0) return [];
-    return profile.categories.map(catKey => {
-      const category = TAXONOMY_DATA.categories.find((c: any) => c.key === catKey);
-      return category?.label || catKey;
+    return profile.categories.map((catKey: string) => {
+      return taxonomy[catKey]?.label || catKey;
     });
   };
 
