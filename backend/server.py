@@ -1441,6 +1441,17 @@ async def get_reviews_for_employer(
     logger.info(f"Found {len(reviews)} reviews for employer {employer_id}")
     return [Review(**review) for review in reviews]
 
+@api_router.get("/reviews/job/{jobId}", response_model=List[Review])
+async def get_reviews_for_job(jobId: str):
+    """Get all reviews linked to a specific job."""
+    
+    reviews = await db.reviews.find({"jobId": jobId}).to_list(9999)
+    
+    for r in reviews:
+        r.pop("_id", None)
+    
+    return [Review(**r) for r in reviews]
+
 # Chat Message Endpoints
 
 @api_router.post("/chat/messages", response_model=ChatMessage)
