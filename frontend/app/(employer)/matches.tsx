@@ -356,9 +356,9 @@ export default function MatchesScreen() {
 
                 {/* Actions */}
                 <View style={{ gap: 10 }}>
+                  {/* Chat Button */}
                   <Pressable
                     onPress={() => {
-                      // Check payment status
                       if (match.application.paymentStatus === "paid") {
                         router.push(`/chat/${match.application.id}`);
                       } else {
@@ -394,6 +394,156 @@ export default function MatchesScreen() {
                     </View>
                   </Pressable>
 
+                  {/* Official Registration Section - nur nach Zahlung */}
+                  {match.application.paymentStatus === "paid" && (
+                    <>
+                      {match.workerProfile?.isSelfEmployed ? (
+                        // Worker ist selbstständig - keine Anmeldung nötig
+                        <View style={{ 
+                          backgroundColor: 'rgba(200, 255, 22, 0.1)', 
+                          padding: 12, 
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          borderColor: COLORS.neon,
+                        }}>
+                          <Text style={{ color: COLORS.neon, fontSize: 13, textAlign: 'center' }}>
+                            ℹ️ Diese Person ist selbstständig. Anmeldung nicht erforderlich.
+                          </Text>
+                        </View>
+                      ) : (
+                        // Worker ist NICHT selbstständig
+                        <>
+                          {match.application.officialRegistrationStatus === "none" && (
+                            // Noch keine Anfrage gestellt
+                            <>
+                              <Pressable
+                                onPress={async () => {
+                                  // Request official registration
+                                  try {
+                                    const headers = await import('../../utils/api').then(m => m.getAuthHeaders());
+                                    const res = await fetch(`${import('../../config').then(m => m.API_URL)}/applications/${match.application.id}/request-official-registration`, {
+                                      method: 'POST',
+                                      headers: await headers,
+                                    });
+                                    if (res.ok) {
+                                      loadMatches();
+                                    }
+                                  } catch (err) {
+                                    console.error('Request failed:', err);
+                                  }
+                                }}
+                                style={({ pressed }) => ({
+                                  backgroundColor: COLORS.white,
+                                  borderRadius: 12,
+                                  paddingVertical: 12,
+                                  alignItems: 'center',
+                                  opacity: pressed ? 0.8 : 1,
+                                })}
+                              >
+                                <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.purple }}>
+                                  📋 Offiziell anmelden
+                                </Text>
+                              </Pressable>
+                              
+                              <Pressable
+                                onPress={async () => {
+                                  // Set informal registration
+                                  try {
+                                    const headers = await import('../../utils/api').then(m => m.getAuthHeaders());
+                                    await fetch(`${import('../../config').then(m => m.API_URL)}/applications/${match.application.id}`, {
+                                      method: 'PATCH',
+                                      headers: await headers,
+                                      body: JSON.stringify({ registrationType: 'informal' }),
+                                    });
+                                    loadMatches();
+                                  } catch (err) {
+                                    console.error('Update failed:', err);
+                                  }
+                                }}
+                                style={({ pressed }) => ({
+                                  borderWidth: 2,
+                                  borderColor: COLORS.white,
+                                  borderRadius: 12,
+                                  paddingVertical: 10,
+                                  alignItems: 'center',
+                                  opacity: pressed ? 0.8 : 1,
+                                })}
+                              >
+                                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.white }}>
+                                  Ohne Anmeldung fortfahren
+                                </Text>
+                              </Pressable>
+                            </>
+                          )}
+
+                          {match.application.officialRegistrationStatus === "requested" && (
+                            // Anfrage wurde gestellt, warte auf Worker
+                            <View style={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+                              padding: 12, 
+                              borderRadius: 12 
+                            }}>
+                              <Text style={{ color: COLORS.white, fontSize: 13, textAlign: 'center' }}>
+                                ⏳ Wartet auf Daten vom Worker
+                              </Text>
+                            </View>
+                          )}
+
+                          {match.application.officialRegistrationStatus === "completed" && (
+                            // Registrierung abgeschlossen - PDF verfügbar
+                            <Pressable
+                              onPress={async () => {
+                                // Download PDF
+                                try {
+                                  const headers = await import('../../utils/api').then(m => m.getAuthHeaders());
+                                  const res = await fetch(`${import('../../config').then(m => m.API_URL)}/official/create-contract-pdf?application_id=${match.application.id}`, {
+                                    method: 'POST',
+                                    headers: await headers,
+                                  });
+                                  if (res.ok) {
+                                    const data = await res.json();
+                                    // Open PDF
+                                    console.log('PDF URL:', data.pdfUrl);
+                                    // TODO: Open PDF viewer
+                                  }
+                                } catch (err) {
+                                  console.error('PDF generation failed:', err);
+                                }
+                              }}
+                              style={({ pressed }) => ({
+                                backgroundColor: COLORS.white,
+                                borderRadius: 12,
+                                paddingVertical: 12,
+                                alignItems: 'center',
+                                opacity: pressed ? 0.8 : 1,
+                              })}
+                            >
+                              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.purple }}>
+                                📄 Arbeitsvertrag herunterladen
+                              </Text>
+                            </Pressable>
+                          )}
+
+                          {match.application.officialRegistrationStatus === "denied" && (
+                            // Worker hat abgelehnt
+                            <View style={{ 
+                              backgroundColor: 'rgba(255, 77, 77, 0.1)', 
+                              padding: 12, 
+                              borderRadius: 12,
+                              borderWidth: 1,
+                              borderColor: '#FF4D4D',
+                            }}>
+                              <Text style={{ color: '#FF4D4D', fontSize: 13, textAlign: 'center' }}>
+                                ❌ Worker hat offizielle Anmeldung abgelehnt
+                              </Text>
+                            </View>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {/* Job Details Button */}
                   <Pressable
                     onPress={() => router.push(`/(employer)/jobs/${match.job.id}`)}
                     style={({ pressed }) => ({
