@@ -208,6 +208,7 @@ class JobApplication(BaseModel):
     isPaid: bool = False  # NEU: Bezahlt-Status
     chatUnlocked: bool = False  # NEU: Chat-Freischaltung
     paidAt: Optional[str] = None  # NEU: Zahlungszeitpunkt
+    paymentStatus: str = "pending"  # NEU: "pending" | "paid"
 
 class ApplicationCreate(BaseModel):
     jobId: str
