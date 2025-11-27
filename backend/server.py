@@ -82,6 +82,7 @@ class WorkerProfile(BaseModel):
     photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
     shortBio: Optional[str] = None
+    isSelfEmployed: bool = False  # NEU: Selbstständig / Gewerbe
     # Deprecated fields for backward compatibility
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
