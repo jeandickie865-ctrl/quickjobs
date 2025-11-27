@@ -1706,7 +1706,7 @@ async def get_messages(
         raise HTTPException(status_code=403, detail="Cannot view messages for this application")
     
     # Check if chat is unlocked (NEU: Chat muss bezahlt sein)
-    if not application.get("chatUnlocked", False):
+    if not application.get("chatUnlocked", False) or application.get("paymentStatus") != "paid":
         raise HTTPException(status_code=402, detail="PAYMENT_REQUIRED")
     
     # Find all messages for this application, sorted by createdAt
