@@ -11,6 +11,8 @@ import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
 import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
+import { API_URL } from '../../config';
+import { getAuthHeaders } from '../../utils/api';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
