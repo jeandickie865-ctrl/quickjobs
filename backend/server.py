@@ -1689,6 +1689,10 @@ async def get_messages(
     if requesting_user not in [application.get("workerId"), application.get("employerId")]:
         raise HTTPException(status_code=403, detail="Cannot view messages for this application")
     
+    # Check if chat is unlocked (NEU: Chat muss bezahlt sein)
+    if not application.get("chatUnlocked", False):
+        raise HTTPException(status_code=402, detail="PAYMENT_REQUIRED")
+    
     # Find all messages for this application, sorted by createdAt
     messages = await db.chat_messages.find({"applicationId": application_id}).sort("createdAt", 1).to_list(1000)
     
