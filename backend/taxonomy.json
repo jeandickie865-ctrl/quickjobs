@@ -1,0 +1,211 @@
+{
+  "sicherheit": {
+    "required": [
+      "unterrichtung-34a"
+    ],
+    "optional": [
+      "bewacher-id",
+      "erste-hilfe",
+      "deeskalation",
+      "lageeinschaetzung",
+      "event-erfahrung",
+      "objektschutz",
+      "handfunkgeraet",
+      "nachtarbeit"
+    ]
+  },
+  "gastronomie": {
+    "required": [],
+    "optional": [
+      "service-erfahrung",
+      "zapfen",
+      "kassieren",
+      "tablett",
+      "fruehstueck",
+      "buffet",
+      "cocktail-kenntnisse"
+    ]
+  },
+  "lieferservice": {
+    "required": [],
+    "optional": [
+      "fahrrad",
+      "roller",
+      "auto",
+      "navigation",
+      "kundenkontakt"
+    ]
+  },
+  "lager_logistik": {
+    "required": [],
+    "optional": [
+      "hubwagen",
+      "scanner",
+      "kommissionieren",
+      "verpacken",
+      "regalpflege",
+      "pickpack",
+      "staplerschein"
+    ]
+  },
+  "einzelhandel": {
+    "required": [],
+    "optional": [
+      "kassieren",
+      "warenverraeumung",
+      "kundenberatung",
+      "umgang-mit-scanner",
+      "etikettieren",
+      "lagererfahrung"
+    ]
+  },
+  "event_messe": {
+    "required": [],
+    "optional": [
+      "aufbau",
+      "abbau",
+      "kundenbetreuung",
+      "kassenkenntnisse",
+      "promo-erfahrung",
+      "ticketing"
+    ]
+  },
+  "reinigung": {
+    "required": [],
+    "optional": [
+      "grundreinigung",
+      "hotelreinigung",
+      "fensterreinigung",
+      "schluesseluebergabe",
+      "buero-reinigung"
+    ]
+  },
+  "bau_helfer": {
+    "required": [],
+    "optional": [
+      "schutzkleidung",
+      "werkzeug-kenntnisse",
+      "schubkarre",
+      "abbruch",
+      "materialtransport",
+      "leiterkenntnisse"
+    ]
+  },
+  "haus_garten": {
+    "required": [],
+    "optional": [
+      "rasenmaehen",
+      "heckenschneiden",
+      "gartenpflege",
+      "bewaesserung",
+      "kleinreparaturen",
+      "werkzeug-kenntnisse"
+    ]
+  },
+  "babysitting_kinder": {
+    "required": [],
+    "optional": [
+      "erste-hilfe-kind",
+      "erfahrung-babysitting",
+      "hausaufgaben",
+      "haushalt-light"
+    ]
+  },
+  "kleinstreparaturen_handwerk": {
+    "required": [],
+    "optional": [
+      "bohren",
+      "schrauben",
+      "montage",
+      "werkzeug-kenntnisse",
+      "moebelaufbau"
+    ]
+  },
+  "haustiere": {
+    "required": [],
+    "optional": [
+      "hundeerfahrung",
+      "katzenpflege",
+      "gassiservice",
+      "tierbetreuung",
+      "tiermedizin-basic"
+    ]
+  },
+  "umzug_transport": {
+    "required": [],
+    "optional": [
+      "tragen",
+      "fahrzeug",
+      "verpacken",
+      "demontage",
+      "montage",
+      "schwerlast"
+    ]
+  },
+  "buero_service": {
+    "required": [],
+    "optional": [
+      "datenpflege",
+      "kundenkontakt",
+      "kassensysteme",
+      "crm",
+      "telefonie",
+      "postbearbeitung"
+    ]
+  },
+  "it_support": {
+    "required": [],
+    "optional": [
+      "hardware-basic",
+      "netzwerk-basic",
+      "drucker",
+      "windows",
+      "macos",
+      "software-installation",
+      "support-erfahrung"
+    ]
+  },
+  "foto_video": {
+    "required": [],
+    "optional": [
+      "kamera-bedienung",
+      "licht",
+      "schnitt",
+      "ton",
+      "bilder-bearbeiten",
+      "social-media"
+    ]
+  },
+  "nachhilfe": {
+    "required": [],
+    "optional": [
+      "mathe",
+      "englisch",
+      "deutsch",
+      "naturwissenschaften",
+      "hausaufgabenbetreuung",
+      "unterrichtserfahrung"
+    ]
+  },
+  "fahrdienst": {
+    "required": [
+      "fuehrerschein-b"
+    ],
+    "optional": [
+      "personenbefoerderung",
+      "navigation",
+      "kundenkontakt",
+      "fahrzeugpflege"
+    ]
+  },
+  "hauswirtschaft": {
+    "required": [],
+    "optional": [
+      "kochen",
+      "waschen",
+      "buegeln",
+      "betreuung-basic",
+      "einkaufen"
+    ]
+  }
+}
