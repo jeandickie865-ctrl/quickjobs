@@ -7,7 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getJobById, deleteJob, updateJob } from '../../../utils/jobStore';
 import { getApplicationsForJob, acceptApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
-import { getReviewsForJob, getReviewsForWorker, calculateAverageRating } from '../../../utils/reviewStore';
+import { getReviewsForEmployer, getReviewsForWorker, calculateAverageRating } from '../../../utils/reviewStore';
 import { Job } from '../../../types/job';
 import { JobApplication } from '../../../types/application';
 import { WorkerProfile } from '../../../types/profile';
