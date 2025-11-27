@@ -9,6 +9,7 @@ import { euro } from '../../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
 import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
 import { RatingDisplay } from '../../../components/RatingDisplay';
+import { getTagLabel } from '../../../utils/taxonomy';
 
 // NEON COLORS
 const COLORS = {
