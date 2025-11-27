@@ -39,19 +39,17 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
     """
     Check if a worker matches a job based on:
-    1. Category (must be identical)
+    1. Category (must be in worker's categories list)
     2. Radius (Haversine distance)
-    3. Required tags (all must be present)
-    4. Optional tags (at least one must be present if specified)
+    3. Tags (if job has tags, worker must have at least one matching tag)
     
     Args:
         worker: Worker profile document with:
-            - category: str
-            - lat: float
-            - lon: float
-            - radius: float (in km)
-            - tags_required_all: List[str] (optional)
-            - tags_required_any: List[str] (optional)
+            - categories: List[str]
+            - homeLat: float
+            - homeLon: float
+            - radiusKm: int
+            - selectedTags: List[str]
         job: Job document with:
             - category: str
             - lat: float
@@ -62,17 +60,20 @@ def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
         True if worker matches job, False otherwise
     """
     
-    # 1. Category check (must be identical)
-    if job.get("category") != worker.get("category"):
+    # 1. Category check
+    # Worker hat: categories: List[str]
+    worker_categories = worker.get("categories", [])
+    if job.get("category") not in worker_categories:
         return False
     
-    # 2. Radius check (Haversine distance)
+    # 2. Radius check
+    # Worker hat: homeLat, homeLon, radiusKm
     try:
-        worker_lat = float(worker.get("lat", 0))
-        worker_lon = float(worker.get("lon", 0))
+        worker_lat = float(worker.get("homeLat", 0))
+        worker_lon = float(worker.get("homeLon", 0))
         job_lat = float(job.get("lat", 0))
         job_lon = float(job.get("lon", 0))
-        worker_radius = float(worker.get("radius", 0))
+        worker_radius = float(worker.get("radiusKm", 0))
         
         distance = haversine(worker_lat, worker_lon, job_lat, job_lon)
         
@@ -82,19 +83,15 @@ def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
         # If coordinates are missing or invalid, no match
         return False
     
-    # Normalize tags to lowercase
+    # 3. Tags check
+    # Worker hat: selectedTags
+    # Jobs haben: job["tags"]
     job_tags = [t.lower() for t in job.get("tags", [])]
-    req_all = [t.lower() for t in worker.get("tags_required_all", [])]
-    req_any = [t.lower() for t in worker.get("tags_required_any", [])]
+    worker_tags = [t.lower() for t in worker.get("selectedTags", [])]
     
-    # 3. Required all tags (all must be present in job)
-    for tag in req_all:
-        if tag not in job_tags:
-            return False
-    
-    # 4. Required any tags (at least one must be present if specified)
-    if len(req_any) > 0:
-        if not any(tag in job_tags for tag in req_any):
+    # Wenn Job Tags hat, muss Worker mindestens einen davon besitzen
+    if len(job_tags) > 0:
+        if not any(tag in job_tags for tag in worker_tags):
             return False
     
     return True
