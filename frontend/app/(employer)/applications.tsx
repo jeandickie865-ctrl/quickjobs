@@ -52,7 +52,7 @@ export default function EmployerApplicationsScreen() {
       setError(null);
 
       // Alle Bewerbungen für diesen Arbeitgeber laden
-      const apps = await getApplicationsForEmployer(user.id);
+      const apps = await getApplicationsForEmployer();
       console.log(`📋 Gefunden: ${apps.length} Bewerbungen für Employer ${user.id}`);
 
       // Job- und Worker-Details für jede Bewerbung laden
