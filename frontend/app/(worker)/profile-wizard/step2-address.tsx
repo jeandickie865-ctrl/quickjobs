@@ -25,6 +25,7 @@ export default function Step2Address() {
   const { wizardData, updateWizardData } = useWizard();
   
   const [street, setStreet] = useState(wizardData.street || '');
+  const [houseNumber, setHouseNumber] = useState(wizardData.houseNumber || '');
   const [postalCode, setPostalCode] = useState(wizardData.postalCode || '');
   const [city, setCity] = useState(wizardData.city || '');
   const [lat, setLat] = useState<number | undefined>(wizardData.lat);
