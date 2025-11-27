@@ -467,21 +467,7 @@ export default function MatchesScreen() {
                             // Noch keine Anfrage gestellt
                             <>
                               <Pressable
-                                onPress={async () => {
-                                  // Request official registration
-                                  try {
-                                    const headers = await import('../../utils/api').then(m => m.getAuthHeaders());
-                                    const res = await fetch(`${import('../../config').then(m => m.API_URL)}/applications/${match.application.id}/request-official-registration`, {
-                                      method: 'POST',
-                                      headers: await headers,
-                                    });
-                                    if (res.ok) {
-                                      loadMatches();
-                                    }
-                                  } catch (err) {
-                                    console.error('Request failed:', err);
-                                  }
-                                }}
+                                onPress={() => requestOfficialRegistration(match.application.id)}
                                 style={({ pressed }) => ({
                                   backgroundColor: COLORS.white,
                                   borderRadius: 12,
