@@ -6,7 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const API_BASE = 'https://arbeitsmatch.preview.emergentagent.com/api';
 
 // ===== STORAGE KEYS =====
-const TOKEN_KEY = '@shiftmatch:token';
+// WICHTIG: Muss mit AuthContext.tsx übereinstimmen!
+const TOKEN_KEY = 'token';
 const USER_KEY = '@shiftmatch:user';
 
 // ===== HELPER: Get Auth Token =====
