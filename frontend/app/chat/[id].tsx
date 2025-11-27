@@ -53,14 +53,13 @@ export default function ChatScreen() {
     if (!applicationId || !user) return;
 
     try {
-      const userJson = await AsyncStorage.getItem('@shiftmatch:user');
-      if (!userJson) return;
-      const currentUser = JSON.parse(userJson);
+      const token = await AsyncStorage.getItem('@shiftmatch:token');
+      if (!token) return;
 
       const response = await fetch(`${API_BASE}/chat/messages/${applicationId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${currentUser.id}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
