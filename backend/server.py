@@ -803,6 +803,13 @@ async def create_job(
         logger.error(f"❌ User {employerId} is not an employer (role: {user.get('role') if user else 'not found'})")
         raise HTTPException(status_code=403, detail="Only employers can create jobs")
     
+    # Validate category and tags against taxonomy
+    validate_category(job_data.category)
+    if job_data.required_all_tags:
+        validate_tags(job_data.category, job_data.required_all_tags)
+    if job_data.required_any_tags:
+        validate_tags(job_data.category, job_data.required_any_tags)
+    
     # Create job document
     job_dict = job_data.dict()
     job_dict["id"] = f"job_{str(uuid.uuid4())}"
