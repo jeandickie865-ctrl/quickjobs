@@ -1,11 +1,12 @@
 // utils/jobStore.ts - Job Store (REFACTORED)
 import { Job } from '../types/job';
+import type { Job as JobType } from "../types/job"
 import { API_BASE, getUserId, getAuthHeaders } from './api';
 import { API_URL } from "../config"
 import { getAuthToken } from "../contexts/AuthContext"
 
 // ===== GET MATCHED JOBS FOR CURRENT WORKER =====
-export async function getMatchedJobs() {
+export async function getMatchedJobs(): Promise<JobType[]> {
   const token = await getAuthToken()
   if (!token) throw new Error("No token")
 
@@ -25,7 +26,15 @@ export async function getMatchedJobs() {
     throw new Error("Failed to fetch matched jobs")
   }
 
-  return await res.json()
+  const data = await res.json()
+
+  const mappedJobs: JobType[] = data.map((job: any) => ({
+    ...job,
+    required_all_tags: job.required_all_tags ?? job.tags ?? [],
+    required_any_tags: job.required_any_tags ?? []
+  }))
+
+  return mappedJobs
 }
 
 // ===== ADD JOB =====
