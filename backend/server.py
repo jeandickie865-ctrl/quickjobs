@@ -1373,6 +1373,47 @@ async def update_application(
     logger.info(f"Application {application_id} updated")
     return JobApplication(**updated_app)
 
+@api_router.post("/applications/{application_id}/pay", response_model=JobApplication)
+async def pay_for_application(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Employer zahlt für eine Application und schaltet den Chat frei
+    """
+    logger.info(f"💳 Processing payment for application {application_id}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the employer
+    if requesting_user != application.get("employerId"):
+        raise HTTPException(status_code=403, detail="Only the employer can pay for applications")
+    
+    # Mark as paid and unlock chat
+    now = datetime.utcnow().isoformat()
+    await db.applications.update_one(
+        {"id": application_id},
+        {"$set": {
+            "isPaid": True,
+            "chatUnlocked": True,
+            "paidAt": now
+        }}
+    )
+    
+    # Fetch and return updated application
+    updated_app = await db.applications.find_one({"id": application_id})
+    updated_app.pop("_id", None)
+    
+    logger.info(f"✅ Payment processed, chat unlocked for application {application_id}")
+    return JobApplication(**updated_app)
+
 # Employer Profile Endpoints
 
 @api_router.post("/profiles/employer", response_model=EmployerProfile)
