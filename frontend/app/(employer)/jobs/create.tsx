@@ -131,7 +131,7 @@ export default function CreateJob() {
 
       // Validate date selection
       if (hoursDateType === 'specific') {
-        if (!hoursSpecificDate.trim()) {
+        if (!hoursSpecificDate) {
           setError('Bitte ein Datum für das Stundenpaket eingeben.');
           return;
         }
