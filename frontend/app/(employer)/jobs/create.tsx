@@ -143,7 +143,7 @@ export default function CreateJob() {
         // Store as startAt for specific date
         startAtIso = specificDateIso;
       } else if (hoursDateType === 'range') {
-        if (!hoursStartDate.trim() || !hoursEndDate.trim()) {
+        if (!hoursStartDate || !hoursEndDate) {
           setError('Bitte Start- und Enddatum für den Zeitraum eingeben.');
           return;
         }
