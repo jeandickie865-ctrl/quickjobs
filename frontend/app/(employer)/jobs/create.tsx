@@ -298,16 +298,14 @@ export default function CreateJob() {
         }}>
           <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>Kategorie *</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {categories.map(cat => (
+            {categoryOptions.map((cat) => (
               <Chip
-                key={cat.key}
-                label={cat.title}
-                selected={category === cat.key}
+                key={cat.value}
+                label={cat.label}
+                selected={category === cat.value}
                 onPress={() => {
-                  setCategory(cat.key);
-                  // Reset tags when category changes
-                  setRequiredAllSet(new Set());
-                  setRequiredAnySet(new Set());
+                  setCategory(cat.value);
+                  // Tags werden automatisch per useEffect gesetzt
                 }}
               />
             ))}
