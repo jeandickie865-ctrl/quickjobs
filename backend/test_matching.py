@@ -99,7 +99,7 @@ def main():
             "lastName": "Basis",
             "phone": "+491111111111",
             "email": "worker1@test.de",
-            "address": {
+            "homeAddress": {
                 "street": "Teststraße",
                 "houseNumber": "1",
                 "postalCode": "10115",
