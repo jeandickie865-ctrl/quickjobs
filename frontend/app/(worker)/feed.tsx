@@ -58,7 +58,7 @@ export default function WorkerFeedScreen() {
   return (
     <FlatList
       data={jobs}
-      keyExtractor={(item) => item._id}
+      keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <View style={{ padding: 16, borderBottomWidth: 1, borderColor: "#eee" }}>
           <Text style={{ fontSize: 16, fontWeight: "600" }}>{item.title}</Text>
