@@ -15,9 +15,9 @@ const COLORS = {
 };
 
 export default function EmployerLayout() {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.purple }}>
         <ActivityIndicator size="large" color={COLORS.neon} />
