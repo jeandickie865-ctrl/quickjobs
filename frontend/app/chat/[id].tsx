@@ -82,25 +82,26 @@ export default function ChatScreen() {
 
     setSending(true);
     try {
-      const userJson = await AsyncStorage.getItem('@shiftmatch:user');
-      if (!userJson) return;
-      const currentUser = JSON.parse(userJson);
+      const token = await AsyncStorage.getItem('@shiftmatch:token');
+      if (!token) return;
 
       const response = await fetch(`${API_BASE}/chat/messages`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${currentUser.id}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           applicationId,
-          message: newMessage.trim(),
+          text: newMessage.trim(),
         }),
       });
 
       if (response.ok) {
         setNewMessage('');
         await loadMessages();
+        // Scroll to bottom after sending
+        setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
       }
     } catch (error) {
       console.error('Error sending message:', error);
