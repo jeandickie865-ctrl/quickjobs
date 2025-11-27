@@ -482,20 +482,7 @@ export default function MatchesScreen() {
                               </Pressable>
                               
                               <Pressable
-                                onPress={async () => {
-                                  // Set informal registration
-                                  try {
-                                    const headers = await import('../../utils/api').then(m => m.getAuthHeaders());
-                                    await fetch(`${import('../../config').then(m => m.API_URL)}/applications/${match.application.id}`, {
-                                      method: 'PATCH',
-                                      headers: await headers,
-                                      body: JSON.stringify({ registrationType: 'informal' }),
-                                    });
-                                    loadMatches();
-                                  } catch (err) {
-                                    console.error('Update failed:', err);
-                                  }
-                                }}
+                                onPress={() => setInformalRegistration(match.application.id)}
                                 style={({ pressed }) => ({
                                   borderWidth: 2,
                                   borderColor: COLORS.white,
