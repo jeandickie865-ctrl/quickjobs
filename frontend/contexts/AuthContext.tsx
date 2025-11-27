@@ -37,49 +37,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const loadStoredAuth = async () => {
     try {
-      const [storedToken, storedUser] = await Promise.all([
-        AsyncStorage.getItem(TOKEN_KEY),
-        AsyncStorage.getItem(USER_KEY)
-      ]);
+      const storedToken = await AsyncStorage.getItem(TOKEN_KEY);
+      const storedUserRaw = await AsyncStorage.getItem(USER_KEY);
 
-      if (storedToken && storedUser) {
-        // WICHTIG: Token gegen Backend validieren!
-        const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
-        
-        try {
-          // Teste, ob Token noch gültig ist mit /auth/me
-          const response = await fetch(`${API_BASE}/api/auth/me`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${storedToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          
-          if (response.ok) {
-            const me = await response.json();
-            const savedUser = JSON.parse(storedUser);
-
-            if (savedUser.id !== me.userId) {
-              console.log("⚠️ Token gehört nicht zu diesem User – lösche Auth");
-              await AsyncStorage.clear();
-              return;
-            }
-
-            setToken(storedToken);
-            setUser(savedUser);
-            console.log("✅ Token valid (from /auth/me)");
-          } else {
-            console.log("⚠️ Token invalid – clearing storage");
-            await AsyncStorage.clear();
-          }
-        } catch (validationError) {
-          console.error('❌ Token validation failed:', validationError);
-          await AsyncStorage.clear();
-        }
+      if (!storedToken || !storedUserRaw) {
+        setLoading(false);
+        return;
       }
-    } catch (error) {
-      console.error('Error loading auth:', error);
+
+      const storedUser = JSON.parse(storedUserRaw);
+      const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+
+      const response = await fetch(`${API_BASE}/api/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${storedToken}`
+        }
+      });
+
+      if (!response.ok) {
+        await AsyncStorage.clear();
+        setLoading(false);
+        return;
+      }
+
+      const backendUser = await response.json();
+
+      // WICHTIG: IDs müssen übereinstimmen
+      if (backendUser.userId !== storedUser.id) {
+        console.log("❌ Token/User mismatch – resetting auth");
+        await AsyncStorage.clear();
+        setLoading(false);
+        return;
+      }
+
+      // Erfolg → Benutze backendUser
+      setToken(storedToken);
+
+      setUser({
+        id: backendUser.userId,
+        email: backendUser.email,
+        role: backendUser.role,
+      });
+
+      console.log("✅ Auth restored & verified");
+    } catch (err) {
+      console.error("Auth load error:", err);
+      await AsyncStorage.clear();
     } finally {
       setLoading(false);
     }
