@@ -89,13 +89,13 @@ export async function getWorkerApplications(): Promise<JobApplication[]> {
 }
 
 // ===== GET APPLICATIONS FOR EMPLOYER =====
-export async function getApplicationsForEmployer(employerId: string): Promise<JobApplication[]> {
-  console.log('📋 getApplicationsForEmployer: Fetching applications for employer', employerId);
+export async function getApplicationsForEmployer(): Promise<JobApplication[]> {
+  console.log('📥 getApplicationsForEmployer: Getting applications (from token)');
   
   try {
     const headers = await getAuthHeaders();
     
-    const response = await fetch(`${API_BASE}/applications/employer/${employerId}`, {
+    const response = await fetch(`${API_BASE}/applications/employer/me`, {
       method: 'GET',
       headers,
     });
@@ -107,7 +107,7 @@ export async function getApplicationsForEmployer(employerId: string): Promise<Jo
     }
     
     const applications = await response.json();
-    console.log('✅ getApplicationsForEmployer: Found', applications.length, 'applications');
+    console.log('✅ getApplicationsForEmployer: Applications fetched', applications.length);
     return applications;
   } catch (error) {
     console.error('❌ getApplicationsForEmployer: Error', error);
