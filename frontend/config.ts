@@ -1,6 +1,6 @@
 export const API_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  "https://arbeitplatz-fix.preview.emergentagent.com/api";
+  "https://jobmatcher-30.preview.emergentagent.com/api";
 
 export const APP_VERSION = "1.0.0";
 

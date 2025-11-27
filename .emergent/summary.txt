@@ -1,0 +1,85 @@
+<analysis>
+The trajectory documents an extensive series of debugging, refactoring, and feature implementation tasks on a German-language, two-sided job marketplace mobile application. The user's primary language is German; therefore, all future communication must be in German.
+
+The work began by addressing a critical authentication flaw causing 403 errors due to a token/user ID mismatch. This was resolved by implementing token-based  endpoints in the backend and refactoring the entire frontend to use them, establishing the backend as the single source of truth for user identity.
+
+Subsequently, a persistent build cache issue on the frontend, where the preview served outdated code, was resolved by performing a full cache-clearing reset ([14:09:24] Starting project at /app/frontend).
+
+A major feature, an intelligent job-matching system, was then implemented end-to-end. This involved creating a new backend service () with Haversine distance calculations and a new  endpoint. A significant debugging effort was required to align the matching logic with the actual data models in the database (e.g., using  instead of  and reading from the correct  collection). The frontend worker feed was completely overhauled to consume this new endpoint, including significant UI/UX enhancements.
+
+The most recent tasks involved a series of smaller but critical fixes, including resolving a CORS error by creating a  file, fixing a React rendering error by correctly formatting an address object, and cleaning up the project by moving old backup files. The immediate last task was a performance optimization for the  screen.
+</analysis>
+
+<product_requirements>
+The application is a German-language, two-sided job marketplace named ShiftMatch, connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
+
+**Core Functionality:**
+*   **Authentication:** Users can sign up and log in as either a worker or an employer. A critical flaw causing 403 errors due to a user/token mismatch was resolved by implementing a  validation endpoint and refactoring all data fetching to be strictly token-based.
+*   **Profile Management:** Both user types have multi-step profile creation wizards and editing screens.
+*   **Job Lifecycle:** Employers post jobs, and workers can apply. The application creation process was secured to derive  and  from the backend token, not the client request.
+*   **Job Matching (Worker):** A key feature was implemented allowing workers to see a feed of intelligently matched jobs based on their profile's category, location, radius, and skills ().
+*   **Application/Match Management:** Workers and employers can view their pending applications and accepted matches, with options to chat and rate.
+
+The work has focused on hardening the security and data integrity of the auth and API layers, implementing the core job-matching feature, and performing numerous UI/UX fixes and code cleanups.
+</product_requirements>
+
+<key_technical_concepts>
+- **Backend:** Monolithic FastAPI (Python) server () with Pydantic models.
+- **Database:** MongoDB.
+- **Frontend:** React Native with Expo, using  for file-based routing.
+- **State Management:** Hybrid approach. Global authentication is managed via  (). Feature data is fetched using async functions in utility modules (, ) and stored in local component state ().
+- **Authentication:** Token-based (JWT) with secure  endpoints that derive user identity solely from the token.
+- **Geolocation:** Haversine formula for distance calculation in job matching.
+- **Styling:** Inline styles and  with a consistent color theme (purple/neon).
+</key_technical_concepts>
+
+<code_architecture>
+The project is a monorepo with  and  directories. The frontend uses Expo's file-based routing.
+
+
+
+- ****
+    - **Importance:** The single, monolithic FastAPI file containing all backend API logic, models, and routes.
+    - **Summary of Changes:** This file was heavily modified. Key changes include: adding token-based endpoints (, ), fixing a critical bug in  to correctly source  from the job document, adding a new endpoint (), moving logging configuration to the top for proper initialization, and correcting the CORS policy to be more specific. A critical fix was applied to the  endpoint to read from the correct  collection instead of .
+
+- ****
+    - **Importance:** A new service module created to contain the core business logic for job matching.
+    - **Summary of Changes:** Created from scratch. It contains the  function for distance calculation and the  function. This function was later refactored to use the actual field names from the worker's profile in the database (e.g., , , ), making the matching logic work with existing data structures without requiring a database migration.
+
+- ****
+    - **Importance:** The primary screen for workers to discover jobs.
+    - **Summary of Changes:** This file has been completely replaced multiple times. It was first refactored to use token-based API calls. Later, it was replaced with a clean, minimalist version using the new  endpoint. Finally, it was updated with a professional, styled UI using Neon-Tech design principles and made interactive with navigation to job details pages.
+
+- ****
+    - **Importance:** A utility module (acting as a stateless store) for all job-related API interactions.
+    - **Summary of Changes:** The file was created/refactored to be the single source for job API functions. The  function was added to call the new matching endpoint and correctly map the backend response to the frontend  type. The  function was added as part of the latest refactoring effort. Import paths and the  source were also fixed here to resolve build and CORS errors.
+
+- ****
+    - **Importance:** A new, crucial configuration file for the frontend.
+    - **Summary of Changes:** This file was created to solve a persistent CORS error. It exports the , sourcing it from environment variables, which resolved an issue where the frontend was calling a placeholder URL.
+
+- ****
+    - **Importance:** The screen where workers see jobs they have been accepted for.
+    - **Summary of Changes:** The initial change was to update the data fetching to use the token-based  function. The most recent work involves a performance refactor of this screen.
+
+</code_architecture>
+
+<pending_tasks>
+- The primary pending task is to complete the refactoring of  to improve its performance by fetching job details individually instead of loading all jobs into memory.
+</pending_tasks>
+
+<current_work>
+The last task was a two-part refactor to improve performance on the  screen. The user requested to stop fetching a list of all jobs and instead fetch each matched job's details individually.
+
+1.  **Part 1 (Completed):** A new function, , was added to . This function fetches a single job from the backend endpoint . This part is done and was verified.
+
+2.  **Part 2 (In Progress):** The second part is to modify  itself. This involves:
+    *   Changing the import from  to .
+    *   Replacing the large block of code inside the  function that iterates through a list of all jobs with a new loop that calls  for each application.
+
+The AI engineer had just successfully completed Part 1 and was about to begin implementing the code changes for Part 2 inside  when the trajectory ended.
+</current_work>
+
+<optional_next_step>
+Continue the refactor of  by changing the import and replacing the data-loading logic inside the  function as explicitly requested by the user.
+</optional_next_step>

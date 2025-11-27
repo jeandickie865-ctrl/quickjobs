@@ -1588,7 +1588,7 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://arbeitplatz-fix.preview.emergentagent.com",
+        "https://jobmatcher-30.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
