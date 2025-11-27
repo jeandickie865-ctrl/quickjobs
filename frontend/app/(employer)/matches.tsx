@@ -358,25 +358,38 @@ export default function MatchesScreen() {
                 <View style={{ gap: 10 }}>
                   <Pressable
                     onPress={() => {
-                      // TODO: Navigate to chat
-                      console.log('Navigate to chat for job', match.job.id);
+                      // Check payment status
+                      if (match.application.paymentStatus === "paid") {
+                        router.push(`/chat/${match.application.id}`);
+                      } else {
+                        router.push(`/payment/${match.application.id}`);
+                      }
                     }}
+                    disabled={match.application.paymentStatus === "pending"}
                     style={({ pressed }) => ({
-                      backgroundColor: COLORS.neon,
+                      backgroundColor: match.application.paymentStatus === "paid" ? COLORS.neon : COLORS.lightGray,
                       borderRadius: 12,
                       paddingVertical: 14,
                       alignItems: 'center',
                       opacity: pressed ? 0.9 : 1,
-                      shadowColor: COLORS.neon,
+                      shadowColor: match.application.paymentStatus === "paid" ? COLORS.neon : "transparent",
                       shadowOffset: { width: 0, height: 4 },
                       shadowOpacity: 0.3,
                       shadowRadius: 8,
                     })}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <Ionicons name="chatbubble-outline" size={18} color={COLORS.black} />
-                      <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
-                        Zum Chat
+                      <Ionicons 
+                        name={match.application.paymentStatus === "paid" ? "chatbubble-outline" : "lock-closed"} 
+                        size={18} 
+                        color={match.application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray} 
+                      />
+                      <Text style={{ 
+                        fontSize: 15, 
+                        fontWeight: '700', 
+                        color: match.application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
+                      }}>
+                        {match.application.paymentStatus === "paid" ? "Zum Chat" : "Zahlung abschließen"}
                       </Text>
                     </View>
                   </Pressable>
