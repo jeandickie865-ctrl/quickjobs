@@ -515,24 +515,7 @@ export default function MatchesScreen() {
                           {match.application.officialRegistrationStatus === "completed" && (
                             // Registrierung abgeschlossen - PDF verfügbar
                             <Pressable
-                              onPress={async () => {
-                                // Download PDF
-                                try {
-                                  const headers = await import('../../utils/api').then(m => m.getAuthHeaders());
-                                  const res = await fetch(`${import('../../config').then(m => m.API_URL)}/official/create-contract-pdf?application_id=${match.application.id}`, {
-                                    method: 'POST',
-                                    headers: await headers,
-                                  });
-                                  if (res.ok) {
-                                    const data = await res.json();
-                                    // Open PDF
-                                    console.log('PDF URL:', data.pdfUrl);
-                                    // TODO: Open PDF viewer
-                                  }
-                                } catch (err) {
-                                  console.error('PDF generation failed:', err);
-                                }
-                              }}
+                              onPress={() => downloadContract(match.application.id)}
                               style={({ pressed }) => ({
                                 backgroundColor: COLORS.white,
                                 borderRadius: 12,
