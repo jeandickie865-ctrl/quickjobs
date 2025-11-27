@@ -1129,6 +1129,7 @@ async def create_application(
     app_dict["status"] = "pending"
     app_dict["isPaid"] = False  # NEU: Chat muss freigeschaltet werden
     app_dict["chatUnlocked"] = False  # NEU: Chat ist gesperrt bis bezahlt
+    app_dict["paymentStatus"] = "pending"  # NEU: Payment-Status
     
     logger.info(f"📝 Creating application for employer {job['employerId']} by worker {workerId}")
     
