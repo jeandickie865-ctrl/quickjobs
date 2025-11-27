@@ -605,21 +605,12 @@ export default function CreateJob() {
 
         {timeMode === 'project' && (
           <View style={{ gap: 6 }}>
-            <Text style={{ color: colors.black, fontWeight: '600' }}>Fällig bis (optional)</Text>
-            <TextInput
+            <UniversalDateTimePicker
+              label="Fällig bis (optional)"
               value={dueDate}
-              onChangeText={setDueDate}
-              placeholder="TT.MM.JJJJ"
-              placeholderTextColor={colors.gray400}
-              style={{
-                borderWidth: 1,
-                borderColor: colors.gray200,
-                borderRadius: 12,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-                backgroundColor: colors.white,
-                color: colors.black
-              }}
+              onChange={setDueDate}
+              mode="date"
+              minimumDate={new Date()}
             />
           </View>
         )}
