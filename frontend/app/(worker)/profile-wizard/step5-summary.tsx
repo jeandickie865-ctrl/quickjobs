@@ -61,11 +61,13 @@ export default function Step5Summary() {
         email: user?.email || '',
         shortBio: wizardData.shortBio || '',
         photoUrl: wizardData.photoUrl || '',
+        isSelfEmployed: wizardData.isSelfEmployed || false,
         categories: wizardData.selectedCategories || [],
         selectedTags: wizardData.selectedSkills || [],
         radiusKm: wizardData.radiusKm || 25,
         homeAddress: {
           street: wizardData.street || '',
+          houseNumber: wizardData.houseNumber || '',
           city: wizardData.city || '',
           postalCode: wizardData.postalCode || '',
           country: 'Deutschland'
