@@ -61,21 +61,6 @@ export default function UniversalDateTimePicker({
             wrapperClassName="datepicker-wrapper"
             calendarClassName="datepicker-calendar"
             popperPlacement="bottom-start"
-            popperModifiers={[
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, 8],
-                },
-                fn: undefined,
-              },
-              {
-                name: 'preventOverflow',
-                options: {
-                  boundary: 'viewport',
-                },
-              },
-            ]}
             customInput={
               <input
                 style={{
