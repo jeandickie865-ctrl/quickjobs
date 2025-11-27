@@ -807,7 +807,7 @@ async def get_matched_jobs_for_me(
     logger.info(f"✅ /jobs/matches/me called for worker: {worker_id}")
     
     # Load worker profile
-    worker_profile = await db.profiles.find_one({"userId": worker_id})
+    worker_profile = await db.worker_profiles.find_one({"userId": worker_id})
     if not worker_profile:
         logger.error(f"❌ Worker profile not found for user {worker_id}")
         raise HTTPException(status_code=404, detail="Worker profile not found")
