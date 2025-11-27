@@ -146,18 +146,13 @@ export default function WorkerProfileScreen() {
     if (!profile?.selectedTags || profile.selectedTags.length === 0) return [];
     const tags: string[] = [];
     
-    profile.selectedTags.forEach((tagKey: string) => {
-      TAXONOMY_DATA.categories.forEach((cat: any) => {
-        // Check activities
-        const activity = cat.activities?.find((a: any) => a.key === tagKey);
-        if (activity) {
-          tags.push(activity.label);
-          return;
-        }
-        // Check qualifications
-        const qual = cat.qualifications?.find((q: any) => q.key === tagKey);
-        if (qual) {
-          tags.push(qual.label);
+    // Iterate through worker's categories to find tag labels
+    profile.categories?.forEach((categoryKey: string) => {
+      profile.selectedTags.forEach((tagValue: string) => {
+        const label = getTagLabel(categoryKey, tagValue);
+        // Only add if label was found and not already in array
+        if (label !== tagValue && !tags.includes(label)) {
+          tags.push(label);
         }
       });
     });
