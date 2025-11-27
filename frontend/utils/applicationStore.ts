@@ -201,20 +201,22 @@ export async function updateApplicationStatus(id: string, status: ApplicationSta
   }
 }
 
-// ===== APPLY FOR JOB (Alias) =====
+// ===== APPLY FOR JOB (CORRECTED) =====
 export async function applyForJob(
   jobId: string,
-  workerId: string,
   employerId: string
 ): Promise<JobApplication> {
-  console.log('🔍 applyForJob: Applying for job', { jobId, workerId, employerId });
-  
+  console.log('🔍 applyForJob: Applying for job', { jobId, employerId });
+
+  // employerId muss vorhanden sein
   if (!employerId) {
     console.error('❌ applyForJob: employerId missing');
     throw new Error('employerId fehlt beim Bewerben.');
   }
-  
-  return await addApplication(jobId, workerId, employerId);
+
+  // WICHTIG: workerId NICHT mitschicken!
+  // Backend setzt workerId aus dem Token automatisch.
+  return await addApplication(jobId, employerId);
 }
 
 // ===== SET EMPLOYER LEGAL CONFIRMATION =====
