@@ -111,7 +111,7 @@ export default function Step4Skills() {
         </ScrollView>
 
         {/* Validation Hint */}
-        {!isFormValid && availableSkills.length > 0 && (
+        {!isFormValid && availableTags.length > 0 && (
           <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
             <Text style={styles.validationHint}>
               ℹ️ Bitte wähle mindestens eine Qualifikation aus, um fortzufahren
