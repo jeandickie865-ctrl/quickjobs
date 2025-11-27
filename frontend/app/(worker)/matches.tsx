@@ -14,6 +14,8 @@ import { formatJobTimeDisplay } from '../../utils/date';
 import { isWithinLast24Hours } from '../../utils/stringHelpers';
 import { getInitials } from '../../utils/stringHelpers';
 import { Ionicons } from '@expo/vector-icons';
+import { API_URL } from '../../config';
+import { getAuthHeaders } from '../../utils/api';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
