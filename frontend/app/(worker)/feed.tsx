@@ -137,11 +137,70 @@ export default function WorkerFeedScreen() {
 
       {/* Vergütung */}
       {item.workerAmountCents && (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
           <Ionicons name="cash-outline" size={18} color={COLORS.neon} />
           <Text style={{ color: COLORS.white, marginLeft: 8, fontWeight: "700" }}>
             {(item.workerAmountCents / 100).toFixed(2)} €
           </Text>
+        </View>
+      )}
+
+      {/* Tags anzeigen */}
+      {(item.required_all_tags?.length > 0 || item.required_any_tags?.length > 0) && (
+        <View style={{ marginTop: 8, borderTopWidth: 1, borderTopColor: COLORS.neon, paddingTop: 10 }}>
+          {/* Pflicht-Tags */}
+          {item.required_all_tags?.length > 0 && (
+            <View style={{ marginBottom: 8 }}>
+              <Text style={{ color: COLORS.neon, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
+                PFLICHT
+              </Text>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
+                {item.required_all_tags.map((tag) => (
+                  <View
+                    key={tag}
+                    style={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 6,
+                      backgroundColor: "#5941FF",
+                      borderRadius: 6,
+                      borderWidth: 1,
+                      borderColor: COLORS.neon,
+                    }}
+                  >
+                    <Text style={{ color: COLORS.white, fontSize: 11, fontWeight: "600" }}>
+                      {getTagLabel(item.category, tag)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {/* Optional-Tags (mindestens eine) */}
+          {item.required_any_tags?.length > 0 && (
+            <View>
+              <Text style={{ color: COLORS.gray, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
+                MINDESTENS EINE
+              </Text>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
+                {item.required_any_tags.map((tag) => (
+                  <View
+                    key={tag}
+                    style={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 6,
+                      backgroundColor: "#8A8A8A",
+                      borderRadius: 6,
+                    }}
+                  >
+                    <Text style={{ color: COLORS.white, fontSize: 11, fontWeight: "600" }}>
+                      {getTagLabel(item.category, tag)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
         </View>
       )}
     </Pressable>
