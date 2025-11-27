@@ -177,9 +177,9 @@ export default function CreateJob() {
       }
     }
 
-    // Convert Sets to Arrays
-    const requiredAllTags = Array.from(requiredAllSet);
-    const requiredAnyTags = Array.from(requiredAnySet);
+    // Tags sind bereits Arrays (requiredAll, requiredAny)
+    const requiredAllTags = requiredAll;
+    const requiredAnyTags = requiredAny;
 
     // Build structured address
     const location: Address = {
