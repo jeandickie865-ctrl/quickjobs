@@ -64,7 +64,9 @@ export default function WorkerFeedScreen() {
           <Text style={{ fontSize: 16, fontWeight: "600" }}>{item.title}</Text>
           <Text>{item.description}</Text>
           <Text>{item.category}</Text>
-          <Text>{item.address}</Text>
+          <Text>
+            {item.address?.street} {item.address?.houseNumber}, {item.address?.postalCode} {item.address?.city}
+          </Text>
         </View>
       )}
     />
