@@ -1123,6 +1123,8 @@ async def create_application(
     app_dict["employerId"] = job["employerId"]  # Set employerId from job
     app_dict["createdAt"] = datetime.utcnow().isoformat()
     app_dict["status"] = "pending"
+    app_dict["isPaid"] = False  # NEU: Chat muss freigeschaltet werden
+    app_dict["chatUnlocked"] = False  # NEU: Chat ist gesperrt bis bezahlt
     
     logger.info(f"📝 Creating application for employer {job['employerId']} by worker {workerId}")
     
