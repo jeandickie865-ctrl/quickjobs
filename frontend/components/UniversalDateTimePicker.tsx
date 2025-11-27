@@ -108,21 +108,24 @@ export default function UniversalDateTimePicker({
         
         .datepicker-wrapper {
           width: 100%;
+          position: relative;
         }
         
         .react-datepicker {
           font-family: system-ui;
           border: 2px solid ${COLORS.purple};
           border-radius: 12px;
-          z-index: 99999 !important;
+          z-index: 9999 !important;
+          position: absolute !important;
         }
         
         .react-datepicker-popper {
-          z-index: 99999 !important;
+          z-index: 9999 !important;
+          position: absolute !important;
         }
         
         .react-datepicker__portal {
-          z-index: 99999 !important;
+          z-index: 9999 !important;
         }
         
         .react-datepicker__header {
