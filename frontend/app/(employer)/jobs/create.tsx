@@ -151,11 +151,7 @@ export default function CreateJob() {
       }
     } else if (timeMode === 'project') {
       if (dueDate) {
-        dueAtIso = parseGermanDateTime(dueDate, '23:59');
-        if (!dueAtIso) {
-          setError('Ungültiges Fälligkeitsdatum. Bitte TT.MM.JJJJ verwenden.');
-          return;
-        }
+        dueAtIso = dueDate.toISOString();
       }
     }
 
