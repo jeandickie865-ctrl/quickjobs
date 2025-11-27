@@ -32,6 +32,7 @@ export default function Step1Basic() {
   const [lastName, setLastName] = useState(wizardData.lastName || '');
   const [shortBio, setShortBio] = useState(wizardData.shortBio || '');
   const [phone, setPhone] = useState(wizardData.phone || '');
+  const [isSelfEmployed, setIsSelfEmployed] = useState(wizardData.isSelfEmployed || false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
 
