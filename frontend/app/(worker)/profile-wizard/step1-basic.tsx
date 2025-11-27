@@ -267,6 +267,24 @@ export default function Step1Basic() {
             {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
           </View>
 
+          {/* Self-Employed Checkbox */}
+          <View style={styles.inputGroup}>
+            <Pressable 
+              onPress={() => setIsSelfEmployed(!isSelfEmployed)}
+              style={styles.checkboxContainer}
+            >
+              <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
+                {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.purple} />}
+              </View>
+              <Text style={styles.checkboxLabel}>
+                Ich bin selbstständig / habe ein Gewerbe
+              </Text>
+            </Pressable>
+            <Text style={styles.helperText}>
+              💡 Als Selbstständiger benötigst du keine offizielle Anmeldung durch den Arbeitgeber
+            </Text>
+          </View>
+
           {/* Email (Read-only) */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>E-Mail</Text>
