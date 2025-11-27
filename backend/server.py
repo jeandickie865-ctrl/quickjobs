@@ -205,6 +205,9 @@ class JobApplication(BaseModel):
     status: str = "pending"  # 'pending', 'accepted', 'rejected', 'canceled'
     employerConfirmedLegal: Optional[bool] = None
     workerConfirmedLegal: Optional[bool] = None
+    isPaid: bool = False  # NEU: Bezahlt-Status
+    chatUnlocked: bool = False  # NEU: Chat-Freischaltung
+    paidAt: Optional[str] = None  # NEU: Zahlungszeitpunkt
 
 class ApplicationCreate(BaseModel):
     jobId: str
