@@ -55,7 +55,7 @@ export default function EmployerProfileViewScreen() {
       setProfile(prof);
 
       // Load matches count (accepted) and applications count (pending)
-      const apps = await getApplicationsForEmployer(user.id);
+      const apps = await getApplicationsForEmployer();
       const acceptedApps = apps.filter(app => app.status === 'accepted');
       const pendingApps = apps.filter(app => app.status === 'pending');
       setMatchesCount(acceptedApps.length);
