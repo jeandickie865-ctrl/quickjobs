@@ -42,8 +42,17 @@ export default function AllJobsScreen() {
     setError(null);
 
     try {
-      // 1. Worker-Profil laden (für Radius und Position)
-      const profile = await getWorkerProfile();
+      // 1. User ID holen
+      const userId = await getUserId();
+      
+      if (!userId) {
+        setError("Nicht angemeldet");
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Worker-Profil laden (für Radius und Position)
+      const profile = await getWorkerProfile(userId);
       
       if (!profile) {
         setError("Kein Worker-Profil gefunden");
