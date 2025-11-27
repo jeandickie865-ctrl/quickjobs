@@ -10,6 +10,13 @@ from typing import List, Optional
 import uuid
 from datetime import datetime
 
+# Configure logging BEFORE FastAPI is created
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger("shiftmatch")
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
