@@ -353,9 +353,14 @@ export default function WorkerMatchesScreen() {
                   {application.status === 'accepted' ? (
                     <View style={{ gap: 12 }}>
                       <Pressable
-                        onPress={() => router.push(`/chat/${application.id}`)}
+                        onPress={() => {
+                          if (application.paymentStatus === "paid") {
+                            router.push(`/chat/${application.id}`);
+                          }
+                        }}
+                        disabled={application.paymentStatus !== "paid"}
                         style={({ pressed }) => ({
-                          backgroundColor: COLORS.neon,
+                          backgroundColor: application.paymentStatus === "paid" ? COLORS.neon : COLORS.lightGray,
                           paddingVertical: 14,
                           borderRadius: 16,
                           alignItems: 'center',
@@ -363,8 +368,12 @@ export default function WorkerMatchesScreen() {
                           transform: [{ scale: pressed ? 0.98 : 1 }],
                         })}
                       >
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                          💬 Zum Chat
+                        <Text style={{ 
+                          fontSize: 16, 
+                          fontWeight: '700', 
+                          color: application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
+                        }}>
+                          {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
                         </Text>
                       </Pressable>
                       
