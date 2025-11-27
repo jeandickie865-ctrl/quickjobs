@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
         
         try {
-          // Teste, ob Token noch gültig ist
-          const response = await fetch(`${API_BASE}/api/jobs`, {
+          // Teste, ob Token noch gültig ist mit /auth/me
+          const response = await fetch(`${API_BASE}/api/auth/me`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${storedToken}`,
@@ -57,13 +57,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           });
           
           if (response.ok) {
-            // Token ist gültig
+            const me = await response.json();
+            const savedUser = JSON.parse(storedUser);
+
+            if (savedUser.id !== me.userId) {
+              console.log("⚠️ Token gehört nicht zu diesem User – lösche Auth");
+              await AsyncStorage.clear();
+              return;
+            }
+
             setToken(storedToken);
-            setUser(JSON.parse(storedUser));
-            console.log('✅ Auth loaded from AsyncStorage - Token validated');
+            setUser(savedUser);
+            console.log("✅ Token valid (from /auth/me)");
           } else {
-            // Token ungültig → AsyncStorage löschen
-            console.log('⚠️ Stored token is invalid - clearing AsyncStorage');
+            console.log("⚠️ Token invalid – clearing storage");
             await AsyncStorage.clear();
           }
         } catch (validationError) {
