@@ -2,227 +2,227 @@
   "sicherheit": {
     "label": "Sicherheit",
     "required": [
-      { "value": "unterrichtung-34a", "label": "Unterrichtung §34a" }
+      { "value": "sachkunde_34a", "label": "§34a Sachkunde" }
     ],
     "optional": [
-      { "value": "bewacher-id", "label": "Bewacher-ID" },
-      { "value": "deeskalation", "label": "Deeskalation" },
-      { "value": "event-erfahrung", "label": "Event-Erfahrung" },
-      { "value": "erste-hilfe", "label": "Erste Hilfe" },
-      { "value": "handfunkgeraet", "label": "Funkgerät" },
-      { "value": "lageeinschaetzung", "label": "Lageeinschätzung" },
-      { "value": "nachtarbeit", "label": "Nachtarbeit" },
-      { "value": "objektschutz", "label": "Objektschutz" }
+      { "value": "bewachung", "label": "Bewachung" },
+      { "value": "kaufhausdetektiv", "label": "Kaufhausdetektiv" },
+      { "value": "doorman", "label": "Doorman" },
+      { "value": "event_security", "label": "Event Security" },
+      { "value": "revierdienst", "label": "Revierdienst" },
+      { "value": "brandsicherheitswache", "label": "Brandsicherheitswache" },
+      { "value": "unterrichtung_34a", "label": "§34a Unterrichtung" },
+      { "value": "bewacher_id", "label": "Bewacher-ID" }
     ]
   },
   "gastronomie": {
     "label": "Gastronomie",
     "required": [],
     "optional": [
-      { "value": "buffet", "label": "Buffet" },
-      { "value": "cocktail-kenntnisse", "label": "Cocktail-Kenntnisse" },
-      { "value": "fruehstueck-service", "label": "Frühstücksservice" },
-      { "value": "kassieren", "label": "Kassieren" },
-      { "value": "service-erfahrung", "label": "Service-Erfahrung" },
-      { "value": "tablett-tragen", "label": "Tablett tragen" },
-      { "value": "zapfen", "label": "Zapfen" }
+      { "value": "spueler", "label": "Spüler" },
+      { "value": "servicekraft", "label": "Servicekraft" },
+      { "value": "koch", "label": "Koch" },
+      { "value": "bar", "label": "Bar" },
+      { "value": "theke", "label": "Theke" },
+      { "value": "haccp", "label": "Hygiene HACCP" },
+      { "value": "kueche", "label": "Küche" }
     ]
   },
   "lieferservice": {
     "label": "Lieferservice",
     "required": [],
     "optional": [
-      { "value": "auto", "label": "PKW" },
+      { "value": "fuehrerschein_b", "label": "Führerschein B" },
+      { "value": "eigener_pkw", "label": "Eigener PKW" },
       { "value": "fahrrad", "label": "Fahrrad" },
-      { "value": "kundenkontakt", "label": "Kundenkontakt" },
-      { "value": "motorroller", "label": "Motorroller" },
-      { "value": "navigation", "label": "Navigation" }
+      { "value": "roller", "label": "Roller" },
+      { "value": "e_bike", "label": "E-Bike" }
     ]
   },
   "lager_logistik": {
     "label": "Lager & Logistik",
     "required": [],
     "optional": [
-      { "value": "handscanner", "label": "Handscanner" },
-      { "value": "hubwagen", "label": "Hubwagen" },
-      { "value": "kommissionieren", "label": "Kommissionieren" },
-      { "value": "pick-pack", "label": "Pick & Pack" },
-      { "value": "regalpflege", "label": "Regalpflege" },
       { "value": "staplerschein", "label": "Staplerschein" },
-      { "value": "verpacken", "label": "Verpacken" }
+      { "value": "kommissionierung", "label": "Kommissionierung" },
+      { "value": "handscanner", "label": "Handscanner" },
+      { "value": "verpacken", "label": "Verpacken" },
+      { "value": "versand", "label": "Versand" },
+      { "value": "bestandsfuehrung", "label": "Bestandsführung" },
+      { "value": "palettieren", "label": "Palettieren" }
     ]
   },
   "einzelhandel": {
     "label": "Einzelhandel",
     "required": [],
     "optional": [
-      { "value": "etikettieren", "label": "Etikettieren" },
-      { "value": "kassieren", "label": "Kassieren" },
+      { "value": "kasse", "label": "Kasse" },
+      { "value": "inventur", "label": "Inventur" },
+      { "value": "regalpflege", "label": "Regalpflege" },
       { "value": "kundenberatung", "label": "Kundenberatung" },
-      { "value": "lagererfahrung", "label": "Lagererfahrung" },
-      { "value": "umgang-mit-scanner", "label": "Scanner bedienen" },
-      { "value": "warenverraeumung", "label": "Waren verräumen" }
+      { "value": "sortimentsgestaltung", "label": "Sortimentsgestaltung" },
+      { "value": "wareneingang", "label": "Wareneingang" }
     ]
   },
   "event_messe": {
     "label": "Event & Messe",
     "required": [],
     "optional": [
-      { "value": "abbau", "label": "Abbau" },
-      { "value": "aufbau", "label": "Aufbau" },
-      { "value": "gastbetreuung", "label": "Gastbetreuung" },
-      { "value": "kassenkenntnisse", "label": "Kassenkenntnisse" },
-      { "value": "promo-erfahrung", "label": "Promo-Erfahrung" },
-      { "value": "ticketing", "label": "Ticketing" }
+      { "value": "host_hostess", "label": "Host/Hostess" },
+      { "value": "aufbau_abbau", "label": "Aufbau/Abbau" },
+      { "value": "promotion", "label": "Promotion" },
+      { "value": "catering", "label": "Catering" },
+      { "value": "garderobe", "label": "Garderobe" },
+      { "value": "technik", "label": "Technik" }
     ]
   },
   "reinigung": {
     "label": "Reinigung",
     "required": [],
     "optional": [
-      { "value": "buero-reinigung", "label": "Büroreinigung" },
-      { "value": "fensterreinigung", "label": "Fensterreinigung" },
+      { "value": "unterhaltsreinigung", "label": "Unterhaltsreinigung" },
+      { "value": "glasreinigung", "label": "Glasreinigung" },
+      { "value": "maschinenfuehrung", "label": "Maschinenführung" },
       { "value": "grundreinigung", "label": "Grundreinigung" },
-      { "value": "hotelreinigung", "label": "Hotelreinigung" },
-      { "value": "schluesseluebergabe", "label": "Schlüsselübergabe" }
+      { "value": "treppenhaus", "label": "Treppenhaus" }
     ]
   },
   "bau_helfer": {
     "label": "Bauhelfer",
     "required": [],
     "optional": [
-      { "value": "abbruch", "label": "Abbrucharbeiten" },
-      { "value": "leiterkenntnisse", "label": "Leiterkenntnisse" },
+      { "value": "abbruch", "label": "Abbruch" },
       { "value": "materialtransport", "label": "Materialtransport" },
-      { "value": "schutzkleidung", "label": "Schutzkleidung" },
-      { "value": "schubkarre", "label": "Schubkarre" },
-      { "value": "werkzeug-kenntnisse", "label": "Werkzeugkenntnisse" }
+      { "value": "entrümpelung", "label": "Entrümpelung" },
+      { "value": "erdarbeiten", "label": "Erdarbeiten" },
+      { "value": "malerarbeiten", "label": "Malerarbeiten" },
+      { "value": "trockenbau", "label": "Trockenbau" }
     ]
   },
   "haus_garten": {
     "label": "Haus & Garten",
     "required": [],
     "optional": [
-      { "value": "bewaesserung", "label": "Bewässerung" },
-      { "value": "gartenpflege", "label": "Gartenpflege" },
-      { "value": "heckenschneiden", "label": "Heckenschneiden" },
-      { "value": "kleinreparaturen", "label": "Kleinreparaturen" },
-      { "value": "rasenmaehen", "label": "Rasenmähen" },
-      { "value": "werkzeug-kenntnisse", "label": "Werkzeugkenntnisse" }
+      { "value": "rasen_maehen", "label": "Rasenmähen" },
+      { "value": "hecke_schneiden", "label": "Heckenschneiden" },
+      { "value": "winterdienst", "label": "Winterdienst" },
+      { "value": "laub_entfernen", "label": "Laub entfernen" },
+      { "value": "gartengestaltung", "label": "Gartengestaltung" },
+      { "value": "pflanzenpflege", "label": "Pflanzenpflege" }
     ]
   },
-  "babysitting_kinder": {
-    "label": "Babysitting & Kinder",
+  "babysitting": {
+    "label": "Babysitting & Kinderbetreuung",
     "required": [],
     "optional": [
-      { "value": "erfahrung-babysitting", "label": "Erfahrung Babysitting" },
-      { "value": "erste-hilfe-kind", "label": "Erste Hilfe Kind" },
-      { "value": "hausaufgaben", "label": "Hausaufgabenhilfe" },
-      { "value": "haushalt-light", "label": "Haushalt (leicht)" }
+      { "value": "saeuglingspflege", "label": "Säuglingspflege" },
+      { "value": "hausaufgabenhilfe", "label": "Hausaufgabenhilfe" },
+      { "value": "spielbegleitung", "label": "Spielbegleitung" },
+      { "value": "erste_hilfe_kind", "label": "Erste Hilfe am Kind" }
     ]
   },
-  "kleinstreparaturen_handwerk": {
+  "kleinreparaturen": {
     "label": "Kleinstreparaturen",
     "required": [],
     "optional": [
-      { "value": "bohren", "label": "Bohren" },
-      { "value": "montage", "label": "Montage" },
-      { "value": "moebelaufbau", "label": "Möbelaufbau" },
-      { "value": "schrauben", "label": "Schrauben" },
-      { "value": "werkzeug-kenntnisse", "label": "Werkzeugkenntnisse" }
+      { "value": "moebel_aufbauen", "label": "Möbel aufbauen" },
+      { "value": "bilder_aufhaengen", "label": "Bilder aufhängen" },
+      { "value": "lampen_montieren", "label": "Lampen montieren" },
+      { "value": "tueren_justieren", "label": "Türen justieren" },
+      { "value": "fahrradreparatur", "label": "Fahrradreparatur" }
     ]
   },
   "haustiere": {
     "label": "Haustiere",
     "required": [],
     "optional": [
-      { "value": "gassiservice", "label": "Gassiservice" },
-      { "value": "hundeerfahrung", "label": "Hundeerfahrung" },
-      { "value": "katzenpflege", "label": "Katzenpflege" },
-      { "value": "tierbetreuung", "label": "Tierbetreuung" },
-      { "value": "tiermedizin-basic", "label": "Tiermedizin Grundlagen" }
+      { "value": "gassi_gehen", "label": "Gassi gehen" },
+      { "value": "fuettern", "label": "Füttern" },
+      { "value": "fellpflege", "label": "Fellpflege" },
+      { "value": "tierarzt_begleitung", "label": "Tierarzt-Begleitung" },
+      { "value": "katzenbetreuung", "label": "Katzenbetreuung" }
     ]
   },
   "umzug_transport": {
     "label": "Umzug & Transport",
     "required": [],
     "optional": [
-      { "value": "demontage", "label": "Demontage" },
-      { "value": "montage", "label": "Montage" },
-      { "value": "schwerlast", "label": "Schwerlast" },
-      { "value": "tragen", "label": "Tragen" },
-      { "value": "verpacken", "label": "Verpacken" }
+      { "value": "moebel_tragen", "label": "Möbel tragen" },
+      { "value": "kartons_packen", "label": "Kartons packen" },
+      { "value": "transporter_fahren", "label": "Transporter fahren" },
+      { "value": "montage_demontage", "label": "Montage/Demontage" },
+      { "value": "entsorgung", "label": "Entsorgung" }
     ]
   },
   "buero_service": {
     "label": "Büro & Service",
     "required": [],
     "optional": [
-      { "value": "crm", "label": "CRM" },
-      { "value": "datenpflege", "label": "Datenpflege" },
-      { "value": "kassensysteme", "label": "Kassensysteme" },
-      { "value": "kundenkontakt", "label": "Kundenkontakt" },
-      { "value": "postbearbeitung", "label": "Postbearbeitung" },
-      { "value": "telefonie", "label": "Telefonie" }
+      { "value": "dateneingabe", "label": "Dateneingabe" },
+      { "value": "ablage", "label": "Ablage" },
+      { "value": "telefondienst", "label": "Telefondienst" },
+      { "value": "post_bearbeiten", "label": "Post bearbeiten" },
+      { "value": "dokumentenmanagement", "label": "Dokumentenmanagement" },
+      { "value": "office_paket", "label": "Office Paket" }
     ]
   },
   "it_support": {
     "label": "IT Support",
     "required": [],
     "optional": [
-      { "value": "drucker", "label": "Drucker" },
-      { "value": "hardware-basic", "label": "Hardware Basics" },
-      { "value": "macos", "label": "macOS" },
-      { "value": "netzwerk-basic", "label": "Netzwerk Basics" },
-      { "value": "software-installation", "label": "Software Installation" },
-      { "value": "support-erfahrung", "label": "Support Erfahrung" },
-      { "value": "windows", "label": "Windows" }
+      { "value": "pc_einrichten", "label": "PC einrichten" },
+      { "value": "software_installation", "label": "Software-Installation" },
+      { "value": "drucker_installation", "label": "Drucker-Installation" },
+      { "value": "netzwerk_setup", "label": "Netzwerk-Setup" },
+      { "value": "datenrettung", "label": "Datenrettung" },
+      { "value": "smartphone_hilfe", "label": "Smartphone-Hilfe" },
+      { "value": "backup", "label": "Backup-Einrichtung" }
     ]
   },
   "foto_video": {
     "label": "Foto & Video",
     "required": [],
     "optional": [
-      { "value": "bilder-bearbeiten", "label": "Bildbearbeitung" },
-      { "value": "kamera-bedienung", "label": "Kamera bedienen" },
-      { "value": "licht", "label": "Licht" },
-      { "value": "schnitt", "label": "Videoschnitt" },
-      { "value": "social-media", "label": "Social Media" },
-      { "value": "ton", "label": "Ton" }
+      { "value": "eventfotografie", "label": "Eventfotografie" },
+      { "value": "produktfotografie", "label": "Produktfotografie" },
+      { "value": "videoschnitt", "label": "Videoschnitt" },
+      { "value": "drohnenaufnahmen", "label": "Drohnenaufnahmen" },
+      { "value": "bildbearbeitung", "label": "Bildbearbeitung" },
+      { "value": "social_media_content", "label": "Social Media Content" }
     ]
   },
   "nachhilfe": {
     "label": "Nachhilfe",
     "required": [],
     "optional": [
+      { "value": "mathe", "label": "Mathematik" },
       { "value": "deutsch", "label": "Deutsch" },
       { "value": "englisch", "label": "Englisch" },
-      { "value": "hausaufgabenbetreuung", "label": "Hausaufgabenbetreuung" },
-      { "value": "mathe", "label": "Mathe" },
-      { "value": "naturwissenschaften", "label": "Naturwissenschaften" },
-      { "value": "unterrichtserfahrung", "label": "Unterrichtserfahrung" }
+      { "value": "physik", "label": "Physik" },
+      { "value": "chemie", "label": "Chemie" },
+      { "value": "informatik", "label": "Informatik" }
     ]
   },
   "fahrdienst": {
     "label": "Fahrdienst",
     "required": [
-      { "value": "fuehrerschein-b", "label": "Führerschein (Klasse B)" }
+      { "value": "fuehrerschein_b", "label": "Führerschein B" }
     ],
     "optional": [
-      { "value": "fahrzeugpflege", "label": "Fahrzeugpflege" },
-      { "value": "kundenkontakt", "label": "Kundenkontakt" },
-      { "value": "navigation", "label": "Navigation" },
-      { "value": "personenbefoerderung", "label": "Personenbeförderung" }
+      { "value": "eigener_pkw", "label": "Eigener PKW" },
+      { "value": "arztfahrten", "label": "Arztfahrten" },
+      { "value": "einkaufsfahrten", "label": "Einkaufsfahrten" },
+      { "value": "flughafentransfer", "label": "Flughafentransfer" }
     ]
   },
   "hauswirtschaft": {
     "label": "Hauswirtschaft",
     "required": [],
     "optional": [
-      { "value": "betreuung-basic", "label": "Betreuung (Basic)" },
       { "value": "buegeln", "label": "Bügeln" },
-      { "value": "einkaufen", "label": "Einkaufen" },
       { "value": "kochen", "label": "Kochen" },
+      { "value": "einkaufen", "label": "Einkaufen" },
+      { "value": "fenster_putzen", "label": "Fenster putzen" },
       { "value": "waschen", "label": "Waschen" }
     ]
   }
