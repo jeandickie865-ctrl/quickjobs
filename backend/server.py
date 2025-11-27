@@ -12,6 +12,7 @@ from datetime import datetime
 
 # Import matching service
 from matching_service import match_worker_with_job
+import json
 
 # Configure logging BEFORE FastAPI is created
 logging.basicConfig(
@@ -23,6 +24,9 @@ logger = logging.getLogger("shiftmatch")
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Load taxonomy.json for validation
+TAXONOMY = json.loads((ROOT_DIR / "taxonomy.json").read_text())
 
 # MongoDB connection
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
