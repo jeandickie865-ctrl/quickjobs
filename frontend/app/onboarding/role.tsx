@@ -19,7 +19,6 @@ const COLORS = {
 type Role = 'employer' | 'worker';
 
 export default function RoleSelectionScreen() {
-  const { setRole } = useAuth();
   const router = useRouter();
   
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
