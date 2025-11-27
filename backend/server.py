@@ -1465,6 +1465,219 @@ async def confirm_payment(
     """
     return await pay_for_application(application_id, authorization)
 
+
+# ==================== OFFICIAL REGISTRATION ENDPOINTS ====================
+
+@api_router.post("/applications/{application_id}/request-official-registration", response_model=JobApplication)
+async def request_official_registration(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Employer fordert offizielle Anmeldung an
+    """
+    logger.info(f"📋 Employer requesting official registration for application {application_id}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the employer
+    if requesting_user != application.get("employerId"):
+        raise HTTPException(status_code=403, detail="Only the employer can request official registration")
+    
+    # Check if payment is completed
+    if application.get("paymentStatus") != "paid":
+        raise HTTPException(status_code=402, detail="Payment required before requesting official registration")
+    
+    # Update application
+    await db.applications.update_one(
+        {"id": application_id},
+        {"$set": {
+            "officialRegistrationStatus": "requested"
+        }}
+    )
+    
+    # Fetch and return updated application
+    updated_app = await db.applications.find_one({"id": application_id})
+    updated_app.pop("_id", None)
+    
+    logger.info(f"✅ Official registration requested for application {application_id}")
+    return JobApplication(**updated_app)
+
+@api_router.post("/applications/{application_id}/respond-official-registration", response_model=JobApplication)
+async def respond_official_registration(
+    application_id: str,
+    request: OfficialRegistrationRequest,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Worker antwortet auf offizielle Anmeldungsanfrage
+    """
+    logger.info(f"📝 Worker responding to official registration for application {application_id}: {request.decision}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the worker
+    if requesting_user != application.get("workerId"):
+        raise HTTPException(status_code=403, detail="Only the worker can respond to registration request")
+    
+    # Check if request was made
+    if application.get("officialRegistrationStatus") != "requested":
+        raise HTTPException(status_code=400, detail="No official registration request found")
+    
+    if request.decision == "accept":
+        if not request.workerOfficialData:
+            raise HTTPException(status_code=400, detail="Worker official data required")
+        
+        # Save worker official data
+        worker_data_dict = request.workerOfficialData.dict()
+        worker_data_dict["workerId"] = requesting_user
+        worker_data_dict["applicationId"] = application_id
+        worker_data_dict["updatedAt"] = datetime.utcnow().isoformat()
+        
+        await db.worker_official_data.insert_one(worker_data_dict)
+        
+        # Update application
+        await db.applications.update_one(
+            {"id": application_id},
+            {"$set": {
+                "registrationType": "official",
+                "officialRegistrationStatus": "completed"
+            }}
+        )
+        
+        logger.info(f"✅ Official registration completed for application {application_id}")
+        
+    elif request.decision == "deny":
+        # Update application
+        await db.applications.update_one(
+            {"id": application_id},
+            {"$set": {
+                "registrationType": "informal",
+                "officialRegistrationStatus": "denied"
+            }}
+        )
+        
+        logger.info(f"❌ Official registration denied for application {application_id}")
+    else:
+        raise HTTPException(status_code=400, detail="Invalid decision. Must be 'accept' or 'deny'")
+    
+    # Fetch and return updated application
+    updated_app = await db.applications.find_one({"id": application_id})
+    updated_app.pop("_id", None)
+    
+    return JobApplication(**updated_app)
+
+@api_router.get("/official/worker-data/{application_id}")
+async def get_worker_official_data(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Employer ruft offizielle Worker-Daten ab (nur bei completed)
+    """
+    logger.info(f"🔍 Fetching worker official data for application {application_id}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the employer
+    if requesting_user != application.get("employerId"):
+        raise HTTPException(status_code=403, detail="Only the employer can view worker official data")
+    
+    # Check if payment is completed
+    if application.get("paymentStatus") != "paid":
+        raise HTTPException(status_code=402, detail="Payment required")
+    
+    # Check if registration is completed
+    if application.get("officialRegistrationStatus") != "completed":
+        raise HTTPException(status_code=403, detail="Official registration not completed")
+    
+    # Fetch worker official data
+    worker_data = await db.worker_official_data.find_one({"applicationId": application_id})
+    
+    if not worker_data:
+        raise HTTPException(status_code=404, detail="Worker official data not found")
+    
+    worker_data.pop("_id", None)
+    
+    logger.info(f"✅ Worker official data retrieved for application {application_id}")
+    return worker_data
+
+@api_router.post("/official/create-contract-pdf")
+async def create_contract_pdf(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Erstellt Mini-Arbeitsvertrag als PDF
+    """
+    logger.info(f"📄 Creating contract PDF for application {application_id}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the employer
+    if requesting_user != application.get("employerId"):
+        raise HTTPException(status_code=403, detail="Only the employer can create contract")
+    
+    # Check if registration is completed
+    if application.get("officialRegistrationStatus") != "completed":
+        raise HTTPException(status_code=400, detail="Official registration not completed")
+    
+    # Fetch worker official data
+    worker_data = await db.worker_official_data.find_one({"applicationId": application_id})
+    if not worker_data:
+        raise HTTPException(status_code=404, detail="Worker official data not found")
+    
+    # Fetch job data
+    job = await db.jobs.find_one({"id": application.get("jobId")})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    # Fetch employer profile
+    employer_profile = await db.employer_profiles.find_one({"userId": application.get("employerId")})
+    if not employer_profile:
+        raise HTTPException(status_code=404, detail="Employer profile not found")
+    
+    # TODO: PDF generation logic here
+    # For now, return mock URL
+    pdf_url = f"https://example.com/contracts/{application_id}.pdf"
+    
+    logger.info(f"✅ Contract PDF created: {pdf_url}")
+    
+    return {
+        "pdfUrl": pdf_url,
+        "applicationId": application_id,
+        "createdAt": datetime.utcnow().isoformat()
+    }
+
+
 # Employer Profile Endpoints
 
 @api_router.post("/profiles/employer", response_model=EmployerProfile)
