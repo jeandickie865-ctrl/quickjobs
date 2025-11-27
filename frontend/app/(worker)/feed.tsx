@@ -76,7 +76,7 @@ export default function WorkerFeed() {
       const openJobs = allJobs.filter(j => j.status === 'open');
       
       // Load applications FIRST to filter out already applied jobs
-      const applications = await getApplicationsForWorker(user.id);
+      const applications = await getWorkerApplications();
       const jobIdsSet = new Set(applications.map(app => app.jobId));
       setAppsJobIds(jobIdsSet);
       
