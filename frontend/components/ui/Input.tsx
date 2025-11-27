@@ -18,10 +18,14 @@ export const Input: React.FC<InputProps> = ({
   style,
   showPasswordToggle = false,
   secureTextEntry,
+  value,
   ...textInputProps
 }) => {
   const { colors, spacing } = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  // Absichern: value darf nie undefined sein
+  const safeValue = value ?? "";
 
   const isSecure = showPasswordToggle ? !isPasswordVisible : secureTextEntry;
 
