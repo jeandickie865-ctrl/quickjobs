@@ -1408,6 +1408,7 @@ async def pay_for_application(
         {"$set": {
             "isPaid": True,
             "chatUnlocked": True,
+            "paymentStatus": "paid",
             "paidAt": now
         }}
     )
@@ -1418,6 +1419,16 @@ async def pay_for_application(
     
     logger.info(f"✅ Payment processed, chat unlocked for application {application_id}")
     return JobApplication(**updated_app)
+
+@api_router.post("/applications/{application_id}/confirm-payment", response_model=JobApplication)
+async def confirm_payment(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Bestätigt Zahlung für Application (Alias für /pay)
+    """
+    return await pay_for_application(application_id, authorization)
 
 # Employer Profile Endpoints
 
