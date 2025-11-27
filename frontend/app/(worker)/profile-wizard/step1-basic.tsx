@@ -241,7 +241,7 @@ export default function Step1Basic() {
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Über mich (optional)</Text>
             <TextInput
-              value={shortBio}
+              value={shortBio ?? ""}
               onChangeText={setShortBio}
               placeholder="Erzähl ein bisschen über dich..."
               style={[styles.input, styles.textArea]}
@@ -250,14 +250,14 @@ export default function Step1Basic() {
               numberOfLines={4}
               maxLength={300}
             />
-            <Text style={styles.characterCount}>{shortBio.length}/300</Text>
+            <Text style={styles.characterCount}>{(shortBio ?? "").length}/300</Text>
           </View>
 
           {/* Phone */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Telefonnummer *</Text>
             <TextInput
-              value={phone}
+              value={phone ?? ""}
               onChangeText={setPhone}
               placeholder="+49 123 456789"
               style={styles.input}
