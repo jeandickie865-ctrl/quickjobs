@@ -2,6 +2,43 @@
 import { Job } from '../types/job';
 import { API_BASE, getUserId, getAuthHeaders } from './api';
 
+// ===== GET MATCHED JOBS FOR CURRENT WORKER =====
+export async function getMatchedJobs(): Promise<Job[]> {
+  console.log('🎯 getMatchedJobs: Fetching matched jobs for current worker');
+  
+  try {
+    const headers = await getAuthHeaders();
+    
+    const response = await fetch(`${API_BASE}/jobs/matches/me`, {
+      method: 'GET',
+      headers,
+    });
+    
+    if (response.status === 401) {
+      console.error('❌ getMatchedJobs: Unauthorized (401) - Invalid token');
+      throw new Error('UNAUTHORIZED');
+    }
+    
+    if (response.status === 404) {
+      console.warn('⚠️ getMatchedJobs: Worker profile not found (404)');
+      throw new Error('PROFILE_NOT_FOUND');
+    }
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getMatchedJobs: Failed', response.status, error);
+      throw new Error(`Failed to fetch matched jobs: ${response.status}`);
+    }
+    
+    const jobs: Job[] = await response.json();
+    console.log('✅ getMatchedJobs: Found', jobs.length, 'matching jobs');
+    return jobs;
+  } catch (error) {
+    console.error('❌ getMatchedJobs: Error', error);
+    throw error;
+  }
+}
+
 // ===== ADD JOB =====
 export async function addJob(jobCreate: any): Promise<void> {
   console.log('➕ addJob: Creating job', jobCreate.title);
