@@ -60,8 +60,10 @@ export function AuthProvider({ children }) {
     const me = await fetch(`${API_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${data.token}` },
     });
-    const user = await me.json();
-
+    const userData = await me.json();
+    
+    // Backend gibt userId zurück, aber Frontend erwartet id
+    const user = { ...userData, id: userData.userId };
     setUser(user);
     return true;
   }
