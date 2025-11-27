@@ -28,20 +28,9 @@ export default function Step4Skills() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>(
     wizardData.selectedSkills || []
   );
-  const [availableSkills, setAvailableSkills] = useState<string[]>([]);
-
-  useEffect(() => {
-    // Collect all skills from selected categories
-    const skills: string[] = [];
-    selectedCategories.forEach(categoryLabel => {
-      const categoryData = CATEGORY_MAPPING[categoryLabel];
-      if (categoryData && categoryData.skills) {
-        skills.push(...categoryData.skills);
-      }
-    });
-    // Remove duplicates
-    setAvailableSkills([...new Set(skills)]);
-  }, [selectedCategories]);
+  
+  // Get all tags (required + optional) for selected categories
+  const availableTags = getAllTagsForCategories(selectedCategories);
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills(prev => 
