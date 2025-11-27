@@ -58,6 +58,7 @@ export default function Step1Basic() {
             lastName: profile.lastName || '',
             shortBio: profile.shortBio || '',
             phone: profile.phone || '',
+            isSelfEmployed: profile.isSelfEmployed || false,
             street: profile.homeAddress?.street || '',
             postalCode: profile.homeAddress?.postalCode || '',
             city: profile.homeAddress?.city || '',
@@ -74,6 +75,7 @@ export default function Step1Basic() {
           setLastName(profile.lastName || '');
           setShortBio(profile.shortBio || '');
           setPhone(profile.phone || '');
+          setIsSelfEmployed(profile.isSelfEmployed || false);
         } else {
           console.log('ℹ️ Kein Profil gefunden - neues Profil wird erstellt');
         }
