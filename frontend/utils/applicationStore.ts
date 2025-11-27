@@ -151,7 +151,7 @@ export async function getApplicationById(applicationId: string): Promise<JobAppl
 export async function acceptApplication(
   applicationId: string,
   employerConfirmedLegal: boolean = true
-): Promise<void> {
+): Promise<JobApplication> {
   console.log('🎯 acceptApplication: Accepting application', applicationId);
   
   try {
@@ -168,7 +168,9 @@ export async function acceptApplication(
       throw new Error(`Failed to accept application: ${response.status}`);
     }
     
-    console.log('✅ acceptApplication: Application accepted');
+    const application = await response.json();
+    console.log('✅ acceptApplication: Application accepted', application);
+    return application;
   } catch (error) {
     console.error('❌ acceptApplication: Error', error);
     throw error;
