@@ -313,88 +313,103 @@ export default function CreateJob() {
         </View>
 
         {/* Tags - nur wenn Kategorie gewählt */}
-        {category && (() => {
-          const groups = groupTagsByType(category as CategoryKey);
-          
-          const allTags = [
-            ...groups.activities,
-            ...groups.qualifications,
-          ];
-          
-          if (allTags.length === 0) return null;
-          
-          return (
-            <View style={{ 
-              borderWidth: 1, 
-              borderColor: colors.gray200, 
-              borderRadius: 12, 
-              padding: spacing.md, 
-              gap: 12,
-              backgroundColor: colors.white 
-            }}>
-              <Text style={{ color: colors.black, fontWeight: '600' }}>
-                Anforderungen (optional)
-              </Text>
-              <Text style={{ color: colors.gray600, fontSize: 13 }}>
-                Wähle Tätigkeiten und Qualifikationen, die für diesen Auftrag wichtig sind. Für einfache Hilfstätigkeiten kannst du dies leer lassen.
-              </Text>
-              
-              {/* Tätigkeiten */}
-              {groups.activities.length > 0 && (
-                <View style={{ gap: 8 }}>
-                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Tätigkeiten (optional)
+        {category && (requiredTagOptions.length > 0 || optionalTagOptions.length > 0) && (
+          <View style={{ 
+            borderWidth: 1, 
+            borderColor: colors.gray200, 
+            borderRadius: 12, 
+            padding: spacing.md, 
+            gap: 12,
+            backgroundColor: colors.white 
+          }}>
+            <Text style={{ color: colors.black, fontWeight: '600' }}>
+              Anforderungen
+            </Text>
+            <Text style={{ color: colors.gray600, fontSize: 13 }}>
+              Wähle Pflicht- und optionale Qualifikationen für diesen Job.
+            </Text>
+            
+            {/* Required Tags (MUST ALL) */}
+            {requiredTagOptions.length > 0 && (
+              <View style={{ gap: 8 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
+                    Pflichtqualifikationen (empfohlen)
                   </Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {groups.activities.sort((a, b) => a.localeCompare(b)).map(tagKey => (
-                      <Chip
-                        key={tagKey}
-                        label={tagKey}
-                        selected={requiredAllSet.has(tagKey)}
-                        onPress={() => {
-                          const nextAll = new Set(requiredAllSet);
-                          if (nextAll.has(tagKey)) {
-                            nextAll.delete(tagKey);
-                          } else {
-                            nextAll.add(tagKey);
-                          }
-                          setRequiredAllSet(nextAll);
-                        }}
-                      />
-                    ))}
+                  <View style={{ 
+                    backgroundColor: colors.purple, 
+                    paddingHorizontal: 6, 
+                    paddingVertical: 2, 
+                    borderRadius: 4 
+                  }}>
+                    <Text style={{ color: colors.white, fontSize: 10, fontWeight: '700' }}>
+                      MUSS ALLE HABEN
+                    </Text>
                   </View>
                 </View>
-              )}
+                <Text style={{ color: colors.gray500, fontSize: 12 }}>
+                  Worker müssen alle diese Qualifikationen haben
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                  {requiredTagOptions.map((tag: any) => (
+                    <Chip
+                      key={tag.value}
+                      label={tag.label}
+                      selected={requiredAll.includes(tag.value)}
+                      onPress={() => {
+                        if (requiredAll.includes(tag.value)) {
+                          setRequiredAll(requiredAll.filter(t => t !== tag.value));
+                        } else {
+                          setRequiredAll([...requiredAll, tag.value]);
+                        }
+                      }}
+                    />
+                  ))}
+                </View>
+              </View>
+            )}
 
-              {/* Qualifikationen */}
-              {groups.qualifications.length > 0 && (
-                <View style={{ gap: 8 }}>
-                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 12 }}>
-                    Qualifikationen (optional)
+            {/* Optional Tags (ANY) */}
+            {optionalTagOptions.length > 0 && (
+              <View style={{ gap: 8 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
+                    Zusatzqualifikationen (optional)
                   </Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {groups.qualifications.sort((a, b) => a.localeCompare(b)).map(tagKey => (
-                      <Chip
-                        key={tagKey}
-                        label={tagKey}
-                        selected={requiredAllSet.has(tagKey)}
-                        onPress={() => {
-                          const nextAll = new Set(requiredAllSet);
-                          if (nextAll.has(tagKey)) {
-                            nextAll.delete(tagKey);
-                          } else {
-                            nextAll.add(tagKey);
-                          }
-                          setRequiredAllSet(nextAll);
-                        }}
-                      />
-                    ))}
+                  <View style={{ 
+                    backgroundColor: colors.gray400, 
+                    paddingHorizontal: 6, 
+                    paddingVertical: 2, 
+                    borderRadius: 4 
+                  }}>
+                    <Text style={{ color: colors.white, fontSize: 10, fontWeight: '700' }}>
+                      MINDESTENS EINE
+                    </Text>
                   </View>
                 </View>
-              )}
-            </View>
-          );
-        })()}
+                <Text style={{ color: colors.gray500, fontSize: 12 }}>
+                  Worker müssen mindestens eine dieser Qualifikationen haben
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                  {optionalTagOptions.map((tag: any) => (
+                    <Chip
+                      key={tag.value}
+                      label={tag.label}
+                      selected={requiredAny.includes(tag.value)}
+                      onPress={() => {
+                        if (requiredAny.includes(tag.value)) {
+                          setRequiredAny(requiredAny.filter(t => t !== tag.value));
+                        } else {
+                          setRequiredAny([...requiredAny, tag.value]);
+                        }
+                      }}
+                    />
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* Time Mode */}
         <View style={{ gap: 6 }}>
