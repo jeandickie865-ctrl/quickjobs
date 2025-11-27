@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { getMatchedJobs } from "../../utils/jobStore";
 import { useAuth } from "../../contexts/AuthContext";
+import { getTagLabel } from "../../utils/taxonomy";
 
 const COLORS = {
   purple: "#4A35D9",
