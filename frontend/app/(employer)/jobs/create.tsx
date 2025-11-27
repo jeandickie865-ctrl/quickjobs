@@ -161,7 +161,7 @@ export default function CreateJob() {
         endAtIso = rangeEndIso;
       }
     } else if (timeMode === 'project') {
-      if (dueDate.trim()) {
+      if (dueDate) {
         dueAtIso = parseGermanDateTime(dueDate, '23:59');
         if (!dueAtIso) {
           setError('Ungültiges Fälligkeitsdatum. Bitte TT.MM.JJJJ verwenden.');
