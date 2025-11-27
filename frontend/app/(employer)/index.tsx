@@ -78,11 +78,16 @@ export default function EmployerDashboard() {
 
   const loadJobs = useCallback(async () => {
     if (!user) return;
-    setIsLoading(true);
-    const employerJobs = await getEmployerJobs(user.id);
-    console.log('📋 Loaded jobs for employer:', user.id, '| Count:', employerJobs.length);
-    setJobs(employerJobs);
-    setIsLoading(false);
+
+    try {
+      setIsLoading(true);
+      const jobs = await getEmployerJobs(user.id);
+      setJobs(jobs);
+    } catch (err) {
+      console.log("Employer Job Load Error:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [user]);
 
   // Reload jobs whenever screen comes into focus
