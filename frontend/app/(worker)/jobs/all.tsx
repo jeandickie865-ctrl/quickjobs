@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { getJobs } from "../../../utils/jobStore";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getWorkerProfile } from "../../../utils/profileStore";
+import { getUserId } from "../../../utils/api";
 
 const COLORS = {
   purple: "#4A35D9",
