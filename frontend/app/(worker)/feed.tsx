@@ -6,7 +6,7 @@ import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
 import { getJobs } from '../../utils/jobStore';
-import { applyForJob, getApplicationsForWorker } from '../../utils/applicationStore';
+import { applyForJob, getWorkerApplications } from '../../utils/applicationStore';
 import { getMatchingJobs } from '../../utils/matchingSimple';
 import { nearbyJobs, NearbyJob } from '../../utils/nearbyJobs';
 import { Job } from '../../types/job';
