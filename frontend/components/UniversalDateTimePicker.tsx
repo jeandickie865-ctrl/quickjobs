@@ -44,38 +44,49 @@ export default function UniversalDateTimePicker({
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       
-      <div style={{ width: '100%' }}>
-        <DatePicker
-          selected={value}
-          onChange={(date) => onChange(date || undefined)}
-          showTimeSelect={mode === 'time' || mode === 'datetime'}
-          showTimeSelectOnly={mode === 'time'}
-          timeIntervals={15}
-          timeFormat="HH:mm"
-          dateFormat={getDateFormat()}
-          placeholderText={getPlaceholder()}
-          minDate={minimumDate}
-          locale="de"
-          className="custom-datepicker"
-          wrapperClassName="datepicker-wrapper"
-          calendarClassName="datepicker-calendar"
-          customInput={
-            <input
-              style={{
-                width: '100%',
-                padding: 14,
-                borderRadius: 12,
-                border: '2px solid #E0E0E0',
-                fontSize: 16,
-                fontFamily: 'system-ui',
-                backgroundColor: COLORS.white,
-                color: COLORS.black,
-                cursor: 'pointer',
-              }}
-            />
-          }
-        />
-      </div>
+      <View style={{ position: 'relative' }}>
+        <div style={{ width: '100%' }}>
+          <DatePicker
+            selected={value}
+            onChange={(date) => onChange(date || undefined)}
+            showTimeSelect={mode === 'time' || mode === 'datetime'}
+            showTimeSelectOnly={mode === 'time'}
+            timeIntervals={15}
+            timeFormat="HH:mm"
+            dateFormat={getDateFormat()}
+            placeholderText={getPlaceholder()}
+            minDate={minimumDate}
+            locale="de"
+            className="custom-datepicker"
+            wrapperClassName="datepicker-wrapper"
+            calendarClassName="datepicker-calendar"
+            popperPlacement="bottom-start"
+            popperModifiers={[
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, 8],
+                },
+              },
+            ]}
+            customInput={
+              <input
+                style={{
+                  width: '100%',
+                  padding: 14,
+                  borderRadius: 12,
+                  border: '2px solid #E0E0E0',
+                  fontSize: 16,
+                  fontFamily: 'system-ui',
+                  backgroundColor: COLORS.white,
+                  color: COLORS.black,
+                  cursor: 'pointer',
+                }}
+              />
+            }
+          />
+        </div>
+      </View>
 
       <style>{`
         .custom-datepicker {
