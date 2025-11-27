@@ -145,7 +145,7 @@ export default function Step1Basic() {
   const handleNext = () => {
     if (validate()) {
       // Save to context
-      updateWizardData({ photoUrl, firstName, lastName, shortBio, phone });
+      updateWizardData({ photoUrl, firstName, lastName, shortBio, phone, isSelfEmployed });
       router.push('/(worker)/profile-wizard/step2-address');
     }
   };
