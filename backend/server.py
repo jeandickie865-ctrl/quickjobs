@@ -1056,6 +1056,21 @@ async def get_applications_for_worker(
     logger.info(f"Found {len(applications)} applications for worker {worker_id}")
     return [JobApplication(**app) for app in applications]
 
+@api_router.get("/applications/employer/me", response_model=List[JobApplication])
+async def get_my_employer_applications(user_id: str = Depends(get_user_id_from_token)):
+    """Get all applications for all jobs of the current employer (from token)"""
+    logger.info(f"✅ /applications/employer/me called for: {user_id}")
+    
+    # Find all applications for this employer
+    applications = await db.applications.find({"employerId": user_id}).to_list(9999)
+    
+    # Remove MongoDB _id field
+    for app in applications:
+        app.pop("_id", None)
+    
+    logger.info(f"Found {len(applications)} applications for employer {user_id}")
+    return [JobApplication(**app) for app in applications]
+
 @api_router.get("/applications/employer/{employer_id}", response_model=List[JobApplication])
 async def get_applications_for_employer(
     employer_id: str,
