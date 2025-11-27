@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, ActivityIndicator, FlatList, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { getMatchedJobs } from "../../utils/jobStore";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -14,6 +15,7 @@ const COLORS = {
 
 export default function WorkerFeedScreen() {
   const { signOut } = useAuth();
+  const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
