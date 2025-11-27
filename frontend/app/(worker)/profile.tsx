@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 // Import taxonomy data
 import taxonomy from '../../shared/taxonomy.json';
+import { getTagLabel } from '../../utils/taxonomy';
 
 const COLORS = {
   purple: '#5941FF',
