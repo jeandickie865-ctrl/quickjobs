@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
-import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
+import AddressAutocompleteInput from '../../../components/AddressAutocompleteInput';
 import Slider from '@react-native-community/slider';
 import { useWizard } from '../../../contexts/WizardContext';
 
