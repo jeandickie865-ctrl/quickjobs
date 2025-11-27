@@ -196,13 +196,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const setRole = async (role: 'worker' | 'employer') => {
-    if (!user) return;
-    const updated = { ...user, role };
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
-    setUser(updated);
-    console.log(`✅ Role updated to ${role}`);
-  };
+  // setRole entfernt - Rolle darf nicht lokal geändert werden
+  // Role kommt IMMER vom Backend via /auth/me
 
   return (
     <AuthContext.Provider value={{ 
