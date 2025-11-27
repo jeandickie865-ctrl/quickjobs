@@ -68,14 +68,14 @@ export default function Step3Categories() {
 
           {/* Categories Grid */}
           <View style={styles.grid}>
-            {Object.keys(CATEGORY_MAPPING).map((category) => {
-              const isSelected = selectedCategories.includes(category);
-              const categoryData = CATEGORY_MAPPING[category];
+            {getAllCategories().map((categoryKey) => {
+              const isSelected = selectedCategories.includes(categoryKey);
+              const categoryLabel = getCategoryLabel(categoryKey);
               
               return (
                 <Pressable
-                  key={category}
-                  onPress={() => toggleCategory(category)}
+                  key={categoryKey}
+                  onPress={() => toggleCategory(categoryKey)}
                   style={({ pressed }) => [
                     styles.categoryCard,
                     isSelected && styles.categoryCardSelected,
@@ -87,7 +87,7 @@ export default function Step3Categories() {
                     isSelected && styles.iconContainerSelected,
                   ]}>
                     <Ionicons
-                      name={categoryData.icon as any}
+                      name="briefcase"
                       size={32}
                       color={isSelected ? COLORS.purple : COLORS.white}
                     />
@@ -96,7 +96,7 @@ export default function Step3Categories() {
                     styles.categoryLabel,
                     isSelected && styles.categoryLabelSelected,
                   ]}>
-                    {categoryData.label}
+                    {categoryLabel}
                   </Text>
                   {isSelected && (
                     <View style={styles.checkmark}>
