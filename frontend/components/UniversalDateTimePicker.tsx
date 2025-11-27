@@ -67,6 +67,13 @@ export default function UniversalDateTimePicker({
                 options: {
                   offset: [0, 8],
                 },
+                fn: undefined,
+              },
+              {
+                name: 'preventOverflow',
+                options: {
+                  boundary: 'viewport',
+                },
               },
             ]}
             customInput={
