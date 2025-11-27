@@ -1118,7 +1118,7 @@ async def create_application(
     
     # Create application document
     app_dict = app_data.dict()
-    app_dict["id"] = f"app_{str(uuid.uuid4())}"
+    app_dict["id"] = f"app_{uuid.uuid4().hex[:12]}"  # Kurzes Format: app_xyz123
     app_dict["workerId"] = workerId  # Set workerId from token
     app_dict["employerId"] = job["employerId"]  # Set employerId from job
     app_dict["createdAt"] = datetime.utcnow().isoformat()
