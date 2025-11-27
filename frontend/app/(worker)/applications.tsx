@@ -39,7 +39,7 @@ export default function WorkerApplicationsScreen() {
 
     try {
       setError(null);
-      const apps = await getApplicationsForWorker(user.id);
+      const apps = await getWorkerApplications();
       
       // WICHTIG: Nur pending und rejected Applications zeigen
       // Accepted gehören in den "Matches" Tab!
