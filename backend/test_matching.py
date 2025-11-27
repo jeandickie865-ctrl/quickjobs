@@ -91,7 +91,7 @@ def main():
     
     # Worker 1 - Sicherheitskraft Basis
     print("\n👤 Worker 1 - Sicherheitskraft Basis")
-    w1_auth = signup_user("worker1@test.de", "Test123!", "worker")
+    w1_auth = signup_user(f"worker1_{TIMESTAMP}@test.de", "Test123!", "worker")
     workers["worker1"] = {"token": w1_auth["token"], "userId": w1_auth["userId"]}
     
     w1_profile = create_worker_profile(
