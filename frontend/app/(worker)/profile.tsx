@@ -10,7 +10,7 @@ import { getWorkerApplications } from '../../utils/applicationStore';
 import { Ionicons } from '@expo/vector-icons';
 
 // Import taxonomy data
-const TAXONOMY_DATA = require('../../shared/taxonomy.json');
+import taxonomy from '../../shared/taxonomy.json';
 
 const COLORS = {
   purple: '#5941FF',
