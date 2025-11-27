@@ -142,3 +142,61 @@ async def get_my_applications(
     applications = result.scalars().all()
     
     return applications
+
+@router.post("/{application_id}/pay", response_model=ApplicationResponse)
+async def pay_for_application(
+    application_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Employer zahlt für eine Application und schaltet den Chat frei
+    """
+    # Check if user is employer
+    if current_user.role != UserRole.EMPLOYER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only employers can pay for applications"
+        )
+    
+    try:
+        app_uuid = uuid.UUID(application_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid application ID format"
+        )
+    
+    # Get application
+    result = await db.execute(
+        select(Application).where(Application.id == app_uuid)
+    )
+    application = result.scalar_one_or_none()
+    
+    if not application:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Application not found"
+        )
+    
+    # Verify that the job belongs to this employer
+    job_result = await db.execute(
+        select(Job).where(Job.id == application.job_id)
+    )
+    job = job_result.scalar_one_or_none()
+    
+    if not job or job.employer_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only pay for applications on your own jobs"
+        )
+    
+    # Mark as paid and unlock chat
+    application.is_paid = True
+    application.chat_unlocked = True
+    application.status = ApplicationStatus.ACTIVE
+    
+    await db.commit()
+    await db.refresh(application)
+    
+    return application
