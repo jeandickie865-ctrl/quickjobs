@@ -56,6 +56,15 @@ export default function WorkerProfileScreen() {
       console.log('📥 Lade Worker-Profil für:', user.id);
       const data = await getWorkerProfile(user.id);
       console.log('✅ Profil geladen:', data);
+      
+      // Reparatur: Ensure arrays (some old data might be strings)
+      if (data && typeof data.categories === "string") {
+        data.categories = [data.categories];
+      }
+      if (data && typeof data.selectedTags === "string") {
+        data.selectedTags = [data.selectedTags];
+      }
+      
       setProfile(data);
 
       // Load reviews
