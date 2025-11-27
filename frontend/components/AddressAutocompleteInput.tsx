@@ -27,15 +27,19 @@ export default function AddressAutocompleteInput({
 
   const inputRef = useRef<TextInput>(null)
 
+  // Absichern: value darf nie undefined sein
+  const safeValue = value ?? "";
+
   const handleChange = async (text: string) => {
     onChangeText(text)
-    if (text.length < 2) {
+    const safeText = text ?? "";
+    if (safeText.length < 2) {
       setSuggestions([])
       setVisible(false)
       return
     }
 
-    const res = await fetchSuggestions(text)
+    const res = await fetchSuggestions(safeText)
     setSuggestions(res)
     setVisible(true)
   }
