@@ -789,6 +789,45 @@ async def create_job(
     logger.info(f"Job created: {job_dict['id']} by employer {employerId}")
     return Job(**created_job)
 
+@api_router.get("/jobs/matches/me", response_model=List[Job])
+async def get_matched_jobs_for_me(
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Get all jobs that match the current worker's profile
+    
+    Matching is based on:
+    - Category (must be identical)
+    - Radius (Haversine distance)
+    - Required tags (all must be present in job)
+    - Optional tags (at least one must be present if specified)
+    """
+    # Get workerId from token
+    worker_id = await get_user_id_from_token(authorization)
+    logger.info(f"✅ /jobs/matches/me called for worker: {worker_id}")
+    
+    # Load worker profile
+    worker_profile = await db.profiles.find_one({"userId": worker_id})
+    if not worker_profile:
+        logger.error(f"❌ Worker profile not found for user {worker_id}")
+        raise HTTPException(status_code=404, detail="Worker profile not found")
+    
+    logger.info(f"📋 Worker profile loaded: category={worker_profile.get('category')}, radius={worker_profile.get('radius')}")
+    
+    # Load all active jobs (status = 'open')
+    all_jobs = await db.jobs.find({"status": "open"}).to_list(9999)
+    logger.info(f"📊 Found {len(all_jobs)} open jobs to match against")
+    
+    # Apply matching logic
+    matched_jobs = []
+    for job in all_jobs:
+        if match_worker_with_job(worker_profile, job):
+            job.pop("_id", None)
+            matched_jobs.append(Job(**job))
+    
+    logger.info(f"✅ Found {len(matched_jobs)} matching jobs for worker {worker_id}")
+    return matched_jobs
+
 @api_router.get("/jobs/all", response_model=List[Job])
 async def get_all_jobs(
     authorization: Optional[str] = Header(None)
