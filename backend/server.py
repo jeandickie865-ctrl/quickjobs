@@ -966,6 +966,11 @@ async def create_application(
         logger.error(f"❌ User {workerId} is not a worker (role: {user.get('role') if user else 'not found'})")
         raise HTTPException(status_code=403, detail="Only workers can create applications")
     
+    # Load job to get employerId
+    job = await db.jobs.find_one({"id": app_data.jobId})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
     # Check if application already exists
     existing = await db.applications.find_one({
         "jobId": app_data.jobId,
@@ -981,10 +986,11 @@ async def create_application(
     app_dict = app_data.dict()
     app_dict["id"] = f"app_{str(uuid.uuid4())}"
     app_dict["workerId"] = workerId  # Set workerId from token
+    app_dict["employerId"] = job["employerId"]  # Set employerId from job
     app_dict["createdAt"] = datetime.utcnow().isoformat()
     app_dict["status"] = "pending"
     
-    logger.info(f"📝 Creating application with workerId: {workerId}")
+    logger.info(f"📝 Creating application for employer {job['employerId']} by worker {workerId}")
     
     # Insert into MongoDB
     result = await db.applications.insert_one(app_dict)
