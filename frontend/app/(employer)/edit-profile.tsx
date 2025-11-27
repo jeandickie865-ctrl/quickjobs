@@ -95,7 +95,7 @@ export default function EmployerProfileScreen() {
   async function loadMatchesCount() {
     if (!user) return;
     try {
-      const apps = await getApplicationsForEmployer(user.id);
+      const apps = await getApplicationsForEmployer();
       const acceptedCount = apps.filter(app => app.status === 'accepted').length;
       setMatchesCount(acceptedCount);
     } catch (err) {
