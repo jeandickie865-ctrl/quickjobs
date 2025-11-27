@@ -1,66 +1,74 @@
-// utils/chatStore.ts - Chat Store (REFACTORED)
-import { ChatMessage, ChatSenderRole } from '../types/chat';
-import { API_BASE, getUserId, getAuthHeaders } from './api';
+// app/frontend/utils/chatStore.ts
 
-// ===== GET MESSAGES FOR APPLICATION =====
-export async function getMessagesForApplication(applicationId: string): Promise<ChatMessage[]> {
-  console.log('🔍 getMessagesForApplication: Fetching messages for', applicationId);
-  
-  try {
-    const headers = await getAuthHeaders();
-    
-    const response = await fetch(`${API_BASE}/chat/messages/${applicationId}`, {
-      method: 'GET',
-      headers,
-    });
-    
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('❌ getMessagesForApplication: Failed', response.status, error);
-      throw new Error(`Failed to fetch messages: ${response.status}`);
-    }
-    
-    const messages = await response.json();
-    console.log('✅ getMessagesForApplication: Found', messages.length, 'messages');
-    return messages;
-  } catch (error) {
-    console.error('❌ getMessagesForApplication: Error', error);
-    throw error;
+import { API_URL } from "../config";
+import { getAuthHeaders } from "./api";
+import type { ChatMessage } from "../types/chat";
+
+/**
+ * Lädt alle Nachrichten für eine Application.
+ * Chat ist nur freigeschaltet, wenn application.chatUnlocked = true.
+ */
+export async function loadMessages(applicationId: string): Promise<ChatMessage[]> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${API_URL}/chat/messages/${applicationId}`, {
+    method: "GET",
+    headers,
+  });
+
+  if (res.status === 402) {
+    throw new Error("CHAT_LOCKED"); // Chat noch nicht bezahlt
   }
+  
+  if (!res.ok) {
+    throw new Error("FAILED_TO_LOAD_MESSAGES");
+  }
+
+  return await res.json();
 }
 
-// ===== ADD MESSAGE =====
-export async function addMessage(
+/**
+ * Sendet Nachricht.
+ */
+export async function sendMessage(
   applicationId: string,
-  senderRole: ChatSenderRole,
   text: string
 ): Promise<ChatMessage> {
-  console.log('➕ addMessage: Sending message', { applicationId, senderRole });
-  
-  try {
-    const headers = await getAuthHeaders();
-    
-    const response = await fetch(`${API_BASE}/chat/messages`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        applicationId,
-        senderRole,
-        message: text,
-      }),
-    });
-    
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('❌ addMessage: Failed', response.status, error);
-      throw new Error(`Failed to send message: ${response.status}`);
-    }
-    
-    const message = await response.json();
-    console.log('✅ addMessage: Message sent', message.id);
-    return message;
-  } catch (error) {
-    console.error('❌ addMessage: Error', error);
-    throw error;
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${API_URL}/chat/messages`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ applicationId, text }),
+  });
+
+  if (res.status === 402) {
+    throw new Error("CHAT_LOCKED");
   }
+
+  if (res.status === 422) {
+    throw new Error("EMPTY_MESSAGE");
+  }
+
+  if (!res.ok) {
+    throw new Error("FAILED_TO_SEND_MESSAGE");
+  }
+
+  return await res.json();
+}
+
+/**
+ * Initialer Check ob Chat freigeschaltet ist.
+ */
+export async function checkChatUnlocked(applicationId: string): Promise<boolean> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_URL}/applications/${applicationId}`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!res.ok) return false;
+
+  const data = await res.json();
+  return data.chatUnlocked === true;
 }
