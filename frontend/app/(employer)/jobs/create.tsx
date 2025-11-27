@@ -19,19 +19,24 @@ export default function CreateJob() {
   const { colors, spacing } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
-  const categories = listCategories();
+  
+  // Kategorie-Optionen aus taxonomy.json
+  const categoryOptions = Object.entries(taxonomy).map(([key, obj]: [string, any]) => ({
+    value: key,
+    label: obj.label
+  }));
 
   // Basic info
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<string>('');
+  const [category, setCategory] = useState<string | null>(null);
   const [address, setAddress] = useState<Address>({});
   const [lat, setLat] = useState<number | undefined>(undefined);
   const [lon, setLon] = useState<number | undefined>(undefined);
   
-  // Tags (using Sets for easier management)
-  const [requiredAllSet, setRequiredAllSet] = useState<Set<string>>(new Set());
-  const [requiredAnySet, setRequiredAnySet] = useState<Set<string>>(new Set());
+  // Tags - jetzt als Arrays statt Sets (required_all_tags, required_any_tags)
+  const [requiredAll, setRequiredAll] = useState<string[]>([]);
+  const [requiredAny, setRequiredAny] = useState<string[]>([]);
 
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
