@@ -71,7 +71,7 @@ export default function Step4Skills() {
             Wähle alle zutreffenden Fähigkeiten aus
           </Text>
 
-          {availableSkills.length === 0 && (
+          {availableTags.length === 0 && (
             <View style={styles.emptyState}>
               <Ionicons name="information-circle" size={48} color={COLORS.white} />
               <Text style={styles.emptyText}>
@@ -80,15 +80,15 @@ export default function Step4Skills() {
             </View>
           )}
 
-          {/* Skills List */}
+          {/* Skills/Tags List */}
           <View style={styles.skillsList}>
-            {availableSkills.map((skill, index) => {
-              const isSelected = selectedSkills.includes(skill);
+            {availableTags.map((tag, index) => {
+              const isSelected = selectedSkills.includes(tag.value);
               
               return (
                 <Pressable
                   key={index}
-                  onPress={() => toggleSkill(skill)}
+                  onPress={() => toggleSkill(tag.value)}
                   style={({ pressed }) => [
                     styles.skillChip,
                     isSelected && styles.skillChipSelected,
@@ -99,7 +99,7 @@ export default function Step4Skills() {
                     styles.skillText,
                     isSelected && styles.skillTextSelected,
                   ]}>
-                    {skill}
+                    {tag.label}
                   </Text>
                   {isSelected && (
                     <Ionicons name="checkmark" size={20} color={COLORS.purple} />
