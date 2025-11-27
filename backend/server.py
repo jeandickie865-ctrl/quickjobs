@@ -486,29 +486,27 @@ def validate_category(category: str):
     """Validate that a category exists in taxonomy.json"""
     if category not in TAXONOMY:
         raise HTTPException(status_code=422, detail=f"INVALID_CATEGORY: {category}")
-    logger.info(f"✅ Category validated: {category}")
+
+def get_valid_tag_values(category: str) -> set:
+    """Get all valid tag values (required + optional) for a category"""
+    cat = TAXONOMY.get(category)
+    if not cat:
+        return set()
+    
+    required = [t["value"] for t in cat["required"]]
+    optional = [t["value"] for t in cat["optional"]]
+    
+    return set(required + optional)
 
 def validate_tags(category: str, tags: List[str]):
     """Validate that all tags are valid for the given category"""
     if not tags:
         return  # Empty tags are allowed
     
-    cat = TAXONOMY.get(category)
-    if not cat:
-        raise HTTPException(status_code=422, detail=f"INVALID_CATEGORY: {category}")
-    
-    # Collect all valid tag values for this category
-    valid_values = set(
-        [t["value"] for t in cat["required"]] +
-        [t["value"] for t in cat["optional"]]
-    )
-    
-    # Check each tag
+    valid = get_valid_tag_values(category)
     for tag in tags:
-        if tag not in valid_values:
-            raise HTTPException(status_code=422, detail=f"INVALID_TAG: {tag} for category {category}")
-    
-    logger.info(f"✅ Tags validated: {len(tags)} tags for category {category}")
+        if tag not in valid:
+            raise HTTPException(status_code=422, detail=f"INVALID_TAG_FOR_CATEGORY: {tag}")
 
 # ==========================
 #   GET /auth/me
