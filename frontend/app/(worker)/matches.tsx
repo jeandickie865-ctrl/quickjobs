@@ -378,6 +378,72 @@ export default function WorkerMatchesScreen() {
                           {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
                         </Text>
                       </Pressable>
+
+                      {/* Official Registration Section - nur nach Zahlung */}
+                      {application.paymentStatus === "paid" && application.officialRegistrationStatus === "requested" && (
+                        <View style={{ 
+                          backgroundColor: 'rgba(200, 255, 22, 0.1)', 
+                          padding: 16, 
+                          borderRadius: 12,
+                          borderWidth: 2,
+                          borderColor: COLORS.neon,
+                          gap: 12,
+                        }}>
+                          <Text style={{ color: COLORS.neon, fontSize: 15, fontWeight: '700', textAlign: 'center' }}>
+                            📋 Offizielle Anmeldung angefragt
+                          </Text>
+                          <Text style={{ color: COLORS.white, fontSize: 13, textAlign: 'center' }}>
+                            Der Arbeitgeber möchte dich offiziell anmelden. Bitte übermittle deine Daten oder lehne ab.
+                          </Text>
+                          
+                          <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
+                            <Pressable
+                              onPress={() => router.push(`/official-data-form/${application.id}`)}
+                              style={({ pressed }) => ({
+                                flex: 1,
+                                backgroundColor: COLORS.neon,
+                                paddingVertical: 12,
+                                borderRadius: 12,
+                                alignItems: 'center',
+                                opacity: pressed ? 0.9 : 1,
+                              })}
+                            >
+                              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.black }}>
+                                📝 Daten senden
+                              </Text>
+                            </Pressable>
+
+                            <Pressable
+                              onPress={async () => {
+                                try {
+                                  const headers = await getAuthHeaders();
+                                  await fetch(`${API_URL}/applications/${application.id}/respond-official-registration`, {
+                                    method: 'POST',
+                                    headers,
+                                    body: JSON.stringify({ decision: 'deny' }),
+                                  });
+                                  loadApplications();
+                                } catch (err) {
+                                  console.error('Deny registration failed:', err);
+                                }
+                              }}
+                              style={({ pressed }) => ({
+                                flex: 1,
+                                borderWidth: 2,
+                                borderColor: COLORS.neon,
+                                paddingVertical: 10,
+                                borderRadius: 12,
+                                alignItems: 'center',
+                                opacity: pressed ? 0.9 : 1,
+                              })}
+                            >
+                              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
+                                ❌ Ablehnen
+                              </Text>
+                            </Pressable>
+                          </View>
+                        </View>
+                      )}
                       
                       <Pressable
                         onPress={() => router.push(`/(worker)/rate?jobId=${job.id}`)}
