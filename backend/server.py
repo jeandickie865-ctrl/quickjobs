@@ -1644,9 +1644,9 @@ async def send_message(
     if not app:
         raise HTTPException(status_code=404, detail="APPLICATION_NOT_FOUND")
     
-    # Check if chat is unlocked
-    if not app.get("chatUnlocked", True):
-        raise HTTPException(status_code=403, detail="CHAT_LOCKED")
+    # Check if chat is unlocked (NEU: Default ist False, Chat muss bezahlt werden)
+    if not app.get("chatUnlocked", False):
+        raise HTTPException(status_code=402, detail="PAYMENT_REQUIRED")
     
     # Determine receiver
     if user_id == app["employerId"]:
