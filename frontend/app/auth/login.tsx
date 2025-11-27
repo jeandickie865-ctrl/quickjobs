@@ -54,7 +54,7 @@ export default function LoginScreen() {
     setErrorMsg('');
     setLoading(true);
     try {
-      await signIn(email.trim().toLowerCase(), password);
+      await login(email.trim().toLowerCase(), password);
       router.replace('/start');
     } catch (err: any) {
       setErrorMsg(err.message || 'Login fehlgeschlagen');
