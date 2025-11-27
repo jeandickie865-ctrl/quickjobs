@@ -56,5 +56,23 @@ export function getAllTagsForCategory(categoryKey: string) {
   return getTagsForCategory(categoryKey);
 }
 
+/**
+ * Gibt alle Tags für mehrere Kategorien zurück (für Step4Skills)
+ */
+export function getAllTagsForCategories(categories: string[]) {
+  const all: { value: string; label: string }[] = [];
+  categories.forEach(catKey => {
+    const category = taxonomyData[catKey];
+    if (!category) return;
+    
+    const required = category.required || [];
+    const optional = category.optional || [];
+    const allTags = [...required, ...optional];
+    
+    allTags.forEach(t => all.push(t));
+  });
+  return all;
+}
+
 // Default export für backward compatibility
 export default taxonomyData;
