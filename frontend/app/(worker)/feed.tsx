@@ -67,8 +67,9 @@ export default function WorkerFeedScreen() {
   }
 
   const renderJobCard = ({ item }) => (
-    <View
-      style={{
+    <Pressable
+      onPress={() => router.push(`/jobs/${item.id}`)}
+      style={({ pressed }) => ({
         backgroundColor: COLORS.purple,
         borderRadius: 14,
         padding: 18,
@@ -80,7 +81,9 @@ export default function WorkerFeedScreen() {
         shadowOpacity: 0.2,
         shadowOffset: { width: 0, height: 3 },
         shadowRadius: 8,
-      }}
+        opacity: pressed ? 0.7 : 1,
+        transform: [{ scale: pressed ? 0.98 : 1 }],
+      })}
     >
       {/* Titel */}
       <Text
@@ -94,7 +97,7 @@ export default function WorkerFeedScreen() {
         {item.title}
       </Text>
 
-      {/* Kategorie */}
+      {/* Kategorie Badge */}
       <View
         style={{
           backgroundColor: COLORS.neon,
@@ -117,13 +120,13 @@ export default function WorkerFeedScreen() {
       </View>
 
       {/* Beschreibung */}
-      <View style={{ flexDirection: "row", alignItems: "flex-start", marginBottom: 10 }}>
+      <View style={{ flexDirection: "row", marginBottom: 10 }}>
         <Ionicons name="information-circle-outline" size={18} color={COLORS.neon} />
         <Text style={{ color: COLORS.white, marginLeft: 8, flex: 1 }}>{item.description}</Text>
       </View>
 
       {/* Adresse */}
-      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+      <View style={{ flexDirection: "row", marginBottom: 10 }}>
         <Ionicons name="location-outline" size={18} color={COLORS.neon} />
         <Text style={{ color: COLORS.white, marginLeft: 8 }}>
           {item.address?.street} {item.address?.houseNumber},{" "}
@@ -131,7 +134,7 @@ export default function WorkerFeedScreen() {
         </Text>
       </View>
 
-      {/* Optional: Vergütung */}
+      {/* Vergütung */}
       {item.workerAmountCents && (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons name="cash-outline" size={18} color={COLORS.neon} />
@@ -140,7 +143,7 @@ export default function WorkerFeedScreen() {
           </Text>
         </View>
       )}
-    </View>
+    </Pressable>
   );
 
   return (
