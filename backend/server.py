@@ -298,7 +298,7 @@ class ChatMessage(BaseModel):
 
 class ChatMessageCreate(BaseModel):
     applicationId: str
-    message: str
+    text: str
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
