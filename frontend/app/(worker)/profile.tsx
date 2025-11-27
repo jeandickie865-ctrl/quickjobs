@@ -64,7 +64,7 @@ export default function WorkerProfileScreen() {
       setReviewCount(reviews.length);
 
       // Load matches count (accepted applications)
-      const apps = await getWorkerApplications(user.id);
+      const apps = await getWorkerApplications();
       const accepted = apps.filter(a => a.status === 'accepted');
       setMatchCount(accepted.length);
       console.log('✅ Accepted applications geladen:', accepted.length);
