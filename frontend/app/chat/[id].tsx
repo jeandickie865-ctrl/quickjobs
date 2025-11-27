@@ -1,131 +1,245 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
-import { API_URL } from "@/config";
-import { getAuthHeaders } from "@/utils/api";
-import { useLocalSearchParams } from "expo-router";
+// app/chat/[id].tsx — FINAL WHATSAPP-STYLE CHAT
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, FlatList, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "../../contexts/AuthContext";
 
+import { loadMessages, sendMessage, checkChatUnlocked } from "../../utils/chatStore";
+import { getApplicationById } from "../../utils/applicationStore";
+
+const COLORS = {
+  purple: "#5941FF",
+  neon: "#C8FF16",
+  white: "#FFFFFF",
+  black: "#000000",
+  gray: "#DDDDDD",
+  darkGray: "#333333",
+};
 
 export default function ChatScreen() {
-  const { id: applicationId } = useLocalSearchParams();
-  const scrollRef = useRef(null);
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const applicationId = params.id as string;
 
+  const { user } = useAuth();
+
+  const [messages, setMessages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [locked, setLocked] = useState(false);
+  const [sending, setSending] = useState(false);
   const [text, setText] = useState("");
-  const [messages, setMessages] = useState([]);
 
-  const loadMessages = async () => {
-    try {
-      const headers = await getAuthHeaders();
-      const res = await fetch(`${API_URL}/chat/messages/${applicationId}`, {
-        method: "GET",
-        headers,
-      });
+  const flatListRef = useRef<FlatList>(null);
 
-      const data = await res.json();
-      setMessages(data);
-
-      setTimeout(() => {
-        scrollRef.current?.scrollToEnd({ animated: true });
-      }, 200);
-
-    } catch (err) {
-      console.log("Load Chat Error:", err);
-    }
-  };
-
+  // --------------------------------------------
+  // LOAD CHAT INITIAL
+  // --------------------------------------------
   useEffect(() => {
-    loadMessages();
-    const interval = setInterval(loadMessages, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    let mounted = true;
 
+    async function loadChat() {
+      try {
+        setLoading(true);
 
-  const sendMessage = async () => {
+        // Ist Chat bezahlt?
+        const isUnlocked = await checkChatUnlocked(applicationId);
+        if (!isUnlocked) {
+          setLocked(true);
+          setLoading(false);
+          return;
+        }
+
+        // Nachrichten laden
+        const msgs = await loadMessages(applicationId);
+        if (!mounted) return;
+        setMessages(msgs);
+
+      } catch (err) {
+        console.log("Chat load error:", err);
+        if (String(err).includes("CHAT_LOCKED")) setLocked(true);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadChat();
+    return () => { mounted = false; };
+  }, [applicationId]);
+
+  // --------------------------------------------
+  // AUTO SCROLL TO BOTTOM
+  // --------------------------------------------
+  useEffect(() => {
+    if (flatListRef.current) {
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: true });
+      }, 50);
+    }
+  }, [messages]);
+
+  // --------------------------------------------
+  // SEND MESSAGE
+  // --------------------------------------------
+  async function handleSend() {
+    if (sending) return;
     if (!text.trim()) return;
 
     try {
-      const headers = await getAuthHeaders();
-      await fetch(`${API_URL}/chat/messages`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          applicationId,
-          text,
-        }),
-      });
+      setSending(true);
 
+      const msg = await sendMessage(applicationId, text.trim());
+      setMessages((prev) => [...prev, msg]);
       setText("");
-      loadMessages();
+
     } catch (err) {
-      console.log("Send Error:", err);
+      console.log("Send error:", err);
+      if (String(err).includes("CHAT_LOCKED")) {
+        setLocked(true);
+      }
+    } finally {
+      setSending(false);
     }
-  };
+  }
 
+  // --------------------------------------------
+  // UI: Locked state
+  // --------------------------------------------
+  if (locked) {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ padding: 20 }}>
+          <Pressable onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+          </Pressable>
+        </SafeAreaView>
 
-  return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <ScrollView ref={scrollRef} style={{ padding: 20 }}>
-        {messages.length === 0 && (
-          <Text style={{ textAlign: "center", marginTop: 30 }}>
-            Noch keine Nachrichten. Schreiben Sie die erste Nachricht!
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 20 }}>
+          <Ionicons name="lock-closed" size={48} color={COLORS.neon} />
+          <Text style={{ color: COLORS.white, fontSize: 22, fontWeight: "700", marginTop: 12 }}>
+            Chat gesperrt
           </Text>
-        )}
+          <Text style={{ color: COLORS.white, marginTop: 6, textAlign: "center" }}>
+            Du kannst erst schreiben, nachdem die 20% Provision bezahlt wurde.
+          </Text>
 
-        {messages.map((m) => {
-          const isOwn = m.isOwn;
+          <Pressable
+            onPress={() => router.push(`/payment/${applicationId}`)}
+            style={{
+              backgroundColor: COLORS.neon,
+              paddingHorizontal: 24,
+              paddingVertical: 14,
+              borderRadius: 12,
+              marginTop: 24,
+            }}
+          >
+            <Text style={{ fontWeight: "700", color: COLORS.black }}>
+              Jetzt freischalten
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
+  // --------------------------------------------
+  // UI: Loading
+  // --------------------------------------------
+  if (loading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator color={COLORS.neon} size="large" />
+        <Text style={{ color: COLORS.white, marginTop: 10 }}>Lade Chat...</Text>
+      </View>
+    );
+  }
+
+  // --------------------------------------------
+  // UI: Chat
+  // --------------------------------------------
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: COLORS.purple }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={90}
+    >
+      {/* HEADER */}
+      <SafeAreaView edges={["top"]}>
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          padding: 16
+        }}>
+          <Pressable onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+          </Pressable>
+          <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: "700", marginLeft: 12 }}>
+            Chat
+          </Text>
+        </View>
+      </SafeAreaView>
+
+      {/* MESSAGES */}
+      <FlatList
+        ref={flatListRef}
+        data={messages}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => {
+          const isOwn = item.senderId === user.id;
 
           return (
             <View
-              key={m._id}
               style={{
-                alignSelf: isOwn ? "flex-end" : "flex-start",
-                backgroundColor: isOwn ? "#5941FF" : "#E5E5E5",
                 padding: 10,
-                borderRadius: 10,
-                marginVertical: 6,
+                marginVertical: 4,
                 maxWidth: "80%",
+                alignSelf: isOwn ? "flex-end" : "flex-start",
+                backgroundColor: isOwn ? COLORS.neon : COLORS.white,
+                borderRadius: 14,
               }}
             >
-              <Text style={{ color: isOwn ? "white" : "black" }}>
-                {m.text}
+              <Text style={{ color: isOwn ? COLORS.black : COLORS.darkGray }}>
+                {item.text}
               </Text>
             </View>
           );
-        })}
-      </ScrollView>
-
-      <View
-        style={{
-          flexDirection: "row",
-          padding: 10,
-          borderTopWidth: 1,
-          borderColor: "#ccc",
-          alignItems: "center",
         }}
-      >
+        contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+      />
+
+      {/* INPUT */}
+      <View style={{
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 14,
+        backgroundColor: COLORS.white,
+      }}>
         <TextInput
-          style={{
-            flex: 1,
-            backgroundColor: "#f0f0f0",
-            padding: 12,
-            borderRadius: 20,
-          }}
-          placeholder="Nachricht schreiben..."
           value={text}
           onChangeText={setText}
+          placeholder="Nachricht..."
+          style={{
+            flex: 1,
+            padding: 14,
+            backgroundColor: COLORS.gray,
+            borderRadius: 12,
+          }}
         />
 
         <Pressable
-          onPress={sendMessage}
+          onPress={handleSend}
+          disabled={sending || !text.trim()}
           style={{
-            backgroundColor: "#5941FF",
+            marginLeft: 12,
             padding: 12,
-            marginLeft: 10,
-            borderRadius: 20,
+            backgroundColor: sending ? COLORS.gray : COLORS.neon,
+            borderRadius: 12,
           }}
         >
-          <Text style={{ color: "white" }}>→</Text>
+          <Ionicons name="send" size={22} color={COLORS.black} />
         </Pressable>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
