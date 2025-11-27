@@ -111,21 +111,37 @@ export default function UniversalDateTimePicker({
           position: relative;
         }
         
+        /* Kalender Overlay - schwebt über allem */
+        .react-datepicker-popper {
+          position: absolute !important;
+          top: 100% !important;
+          left: 0 !important;
+          z-index: 9999 !important;
+          margin-top: 8px !important;
+        }
+        
         .react-datepicker {
           font-family: system-ui;
           border: 2px solid ${COLORS.purple};
           border-radius: 12px;
-          z-index: 9999 !important;
-          position: absolute !important;
-        }
-        
-        .react-datepicker-popper {
-          z-index: 9999 !important;
-          position: absolute !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          background-color: ${COLORS.white} !important;
+          position: relative !important;
         }
         
         .react-datepicker__portal {
           z-index: 9999 !important;
+        }
+        
+        /* Verhindere Layout-Verschiebung */
+        .react-datepicker-wrapper {
+          display: block !important;
+          width: 100% !important;
+        }
+        
+        .react-datepicker__input-container {
+          display: block !important;
+          width: 100% !important;
         }
         
         .react-datepicker__header {
