@@ -35,26 +35,12 @@ export default function AddressAutocompleteInput({
 }: Props) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [visible, setVisible] = useState(false)
-  const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 })
 
-  const inputRef = useRef<TextInput>(null)
-
-  // Absichern: value darf nie undefined sein
-  const safeValue = value ?? "";
-
-  const handleChange = async (text: string) => {
-    onChangeText(text)
-    const safeText = text ?? "";
-    if (safeText.length < 2) {
-      setSuggestions([])
-      setVisible(false)
-      return
-    }
-
-    const res = await fetchSuggestions(safeText)
-    setSuggestions(res)
-    setVisible(true)
-  }
+  // Absichern: alle values dürfen nie undefined sein
+  const safeStreet = street ?? "";
+  const safePostalCode = postalCode ?? "";
+  const safeCity = city ?? "";
+  const safeHouseNumber = houseNumber ?? "";
 
   const handleSelect = (item: Suggestion) => {
     onSelect(item)
