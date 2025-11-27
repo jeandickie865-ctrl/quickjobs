@@ -12,6 +12,8 @@ class ApplicationResponse(BaseModel):
     job_id: UUID
     worker_id: UUID
     status: str
+    is_paid: bool
+    chat_unlocked: bool
     created_at: datetime
     
     class Config:
