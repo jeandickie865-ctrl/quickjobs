@@ -142,18 +142,12 @@ export default function CreateJob() {
           setError('Bitte Start- und Enddatum für den Zeitraum eingeben.');
           return;
         }
-        const rangeStartIso = parseGermanDateTime(hoursStartDate, '00:00');
-        const rangeEndIso = parseGermanDateTime(hoursEndDate, '23:59');
-        if (!rangeStartIso || !rangeEndIso) {
-          setError('Ungültige Daten. Bitte TT.MM.JJJJ verwenden.');
-          return;
-        }
-        if (new Date(rangeEndIso) <= new Date(rangeStartIso)) {
+        if (hoursEndDate <= hoursStartDate) {
           setError('Enddatum muss nach Startdatum liegen.');
           return;
         }
-        startAtIso = rangeStartIso;
-        endAtIso = rangeEndIso;
+        startAtIso = hoursStartDate.toISOString();
+        endAtIso = hoursEndDate.toISOString();
       }
     } else if (timeMode === 'project') {
       if (dueDate) {
