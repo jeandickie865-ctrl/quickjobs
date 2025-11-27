@@ -464,6 +464,28 @@ async def get_user_id_from_token(authorization: Optional[str] = Header(None)) ->
     
     return token_doc["userId"]
 
+# ==========================
+#   GET /auth/me
+#   Validiert Token und gibt User-Daten zurück
+# ==========================
+@api_router.get("/auth/me")
+async def auth_me(user_id: str = Depends(get_user_id_from_token)):
+    """Get current user info from token"""
+    # user_id kommt direkt aus token -> db.tokens
+    
+    # user-Datensatz holen
+    user = await db.users.find_one({"userId": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    logger.info(f"✅ /auth/me called for user: {user_id}")
+    
+    return {
+        "userId": user_id,
+        "email": user["email"],
+        "role": user["role"]
+    }
+
 # Worker Profile Endpoints
 
 @api_router.post("/profiles/worker", response_model=WorkerProfile)
