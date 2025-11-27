@@ -20,62 +20,86 @@ export type TaxonomyData = Record<string, CategoryData>;
 export const TAXONOMY: TaxonomyData = taxonomyData as TaxonomyData;
 
 /**
- * Get all tags (required + optional) for a category
+ * Get all tag options (required + optional) for a category
  */
-export function getAllTagsForCategory(categoryKey: string): string[] {
-  const categoryTags = TAXONOMY[categoryKey];
-  if (!categoryTags) return [];
+export function getAllTagsForCategory(categoryKey: string): TagOption[] {
+  const category = TAXONOMY[categoryKey];
+  if (!category) return [];
   
-  return [...categoryTags.required, ...categoryTags.optional];
+  return [...category.required, ...category.optional];
 }
 
 /**
- * Get only required tags for a category
+ * Get all tag VALUES (required + optional) for a category
  */
-export function getRequiredTagsForCategory(categoryKey: string): string[] {
-  const categoryTags = TAXONOMY[categoryKey];
-  if (!categoryTags) return [];
-  
-  return categoryTags.required;
+export function getAllTagValuesForCategory(categoryKey: string): string[] {
+  const tags = getAllTagsForCategory(categoryKey);
+  return tags.map((tag) => tag.value);
 }
 
 /**
- * Get only optional tags for a category
+ * Get only required tag options for a category
  */
-export function getOptionalTagsForCategory(categoryKey: string): string[] {
-  const categoryTags = TAXONOMY[categoryKey];
-  if (!categoryTags) return [];
+export function getRequiredTagsForCategory(categoryKey: string): TagOption[] {
+  const category = TAXONOMY[categoryKey];
+  if (!category) return [];
   
-  return categoryTags.optional;
+  return category.required;
 }
 
 /**
- * Get all tags for multiple categories (union)
+ * Get only required tag VALUES for a category
  */
-export function getAllTagsForCategories(categoryKeys: string[]): string[] {
-  const allTags = new Set<string>();
+export function getRequiredTagValuesForCategory(categoryKey: string): string[] {
+  const tags = getRequiredTagsForCategory(categoryKey);
+  return tags.map((tag) => tag.value);
+}
+
+/**
+ * Get only optional tag options for a category
+ */
+export function getOptionalTagsForCategory(categoryKey: string): TagOption[] {
+  const category = TAXONOMY[categoryKey];
+  if (!category) return [];
+  
+  return category.optional;
+}
+
+/**
+ * Get only optional tag VALUES for a category
+ */
+export function getOptionalTagValuesForCategory(categoryKey: string): string[] {
+  const tags = getOptionalTagsForCategory(categoryKey);
+  return tags.map((tag) => tag.value);
+}
+
+/**
+ * Get all tag options for multiple categories (union)
+ */
+export function getAllTagsForCategories(categoryKeys: string[]): TagOption[] {
+  const allTagsMap = new Map<string, TagOption>();
   
   categoryKeys.forEach((categoryKey) => {
     const tags = getAllTagsForCategory(categoryKey);
-    tags.forEach((tag) => allTags.add(tag));
+    tags.forEach((tag) => allTagsMap.set(tag.value, tag));
   });
   
-  return Array.from(allTags);
+  return Array.from(allTagsMap.values());
 }
 
 /**
- * Get all required tags for a category (as suggestion for employer)
+ * Get all suggested required tags for a category (as suggestion for employer)
  */
-export function getSuggestedRequiredTags(categoryKey: string): string[] {
+export function getSuggestedRequiredTags(categoryKey: string): TagOption[] {
   return getRequiredTagsForCategory(categoryKey);
 }
 
 /**
  * Check if a tag is required for a category
  */
-export function isTagRequired(categoryKey: string, tagKey: string): boolean {
-  const requiredTags = getRequiredTagsForCategory(categoryKey);
-  return requiredTags.includes(tagKey);
+export function isTagRequired(categoryKey: string, tagValue: string): boolean {
+  const requiredTagValues = getRequiredTagValuesForCategory(categoryKey);
+  return requiredTagValues.includes(tagValue);
 }
 
 /**
@@ -83,4 +107,21 @@ export function isTagRequired(categoryKey: string, tagKey: string): boolean {
  */
 export function getAllCategories(): string[] {
   return Object.keys(TAXONOMY);
+}
+
+/**
+ * Get category label
+ */
+export function getCategoryLabel(categoryKey: string): string {
+  const category = TAXONOMY[categoryKey];
+  return category?.label || categoryKey;
+}
+
+/**
+ * Get tag label by value
+ */
+export function getTagLabel(categoryKey: string, tagValue: string): string {
+  const allTags = getAllTagsForCategory(categoryKey);
+  const tag = allTags.find((t) => t.value === tagValue);
+  return tag?.label || tagValue;
 }
