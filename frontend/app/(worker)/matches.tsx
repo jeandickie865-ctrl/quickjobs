@@ -67,7 +67,7 @@ export default function WorkerMatchesScreen() {
       setError(null);
 
       console.log('🔍 loadMatches: Fetching applications for user', user.id);
-      const apps = await getApplicationsForWorker(user.id);
+      const apps = await getWorkerApplications();
       console.log('📋 loadMatches: Total applications found:', apps.length);
       console.log('📋 loadMatches: All applications:', apps.map(a => ({ id: a.id, status: a.status, jobId: a.jobId })));
       
