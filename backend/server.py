@@ -10,6 +10,9 @@ from typing import List, Optional
 import uuid
 from datetime import datetime
 
+# Import matching service
+from matching_service import match_worker_with_job
+
 # Configure logging BEFORE FastAPI is created
 logging.basicConfig(
     level=logging.INFO,
