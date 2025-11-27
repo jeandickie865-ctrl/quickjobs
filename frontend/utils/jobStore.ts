@@ -1,9 +1,9 @@
 // utils/jobStore.ts - Job Store (REFACTORED)
 import { Job } from '../types/job';
-import type { Job as JobType } from "../types/job"
+import type { Job as JobType } from "../../types/job"
 import { API_BASE, getUserId, getAuthHeaders } from './api';
-import { API_URL } from "../config"
-import { getAuthToken } from "../contexts/AuthContext"
+import { API_URL } from "../../config"
+import { getAuthToken } from "../../contexts/AuthContext"
 
 // ===== GET MATCHED JOBS FOR CURRENT WORKER =====
 export async function getMatchedJobs(): Promise<JobType[]> {
