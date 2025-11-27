@@ -73,6 +73,7 @@ export const Input: React.FC<InputProps> = ({
           style={[inputStyle, style]}
           placeholderTextColor={colors.gray600}
           secureTextEntry={isSecure}
+          value={safeValue}
           {...textInputProps}
         />
         {showPasswordToggle && (
