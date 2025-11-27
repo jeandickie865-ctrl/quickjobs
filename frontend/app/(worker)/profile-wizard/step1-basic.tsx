@@ -215,7 +215,7 @@ export default function Step1Basic() {
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Vorname *</Text>
             <TextInput
-              value={firstName}
+              value={firstName ?? ""}
               onChangeText={setFirstName}
               placeholder="Max"
               style={styles.input}
@@ -228,7 +228,7 @@ export default function Step1Basic() {
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Nachname *</Text>
             <TextInput
-              value={lastName}
+              value={lastName ?? ""}
               onChangeText={setLastName}
               placeholder="Mustermann"
               style={styles.input}
