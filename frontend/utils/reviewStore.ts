@@ -93,6 +93,39 @@ export async function addReview(review: Omit<Review, 'id' | 'createdAt'>): Promi
   }
 }
 
+// ===== GET REVIEWS FOR JOB =====
+export async function getReviewsForJob(jobId: string): Promise<Review[]> {
+  console.log('🔍 getReviewsForJob: Fetching reviews for job', jobId);
+  
+  try {
+    const headers = await getAuthHeaders();
+    
+    const response = await fetch(`${API_BASE}/reviews/job/${jobId}`, {
+      method: 'GET',
+      headers,
+    });
+    
+    if (!response.ok) {
+      // If endpoint doesn't exist or returns 404, return empty array
+      if (response.status === 404) {
+        console.log('⚠️ getReviewsForJob: No reviews found for job');
+        return [];
+      }
+      const error = await response.text();
+      console.error('❌ getReviewsForJob: Failed', response.status, error);
+      throw new Error(`Failed to fetch reviews: ${response.status}`);
+    }
+    
+    const reviews = await response.json();
+    console.log('✅ getReviewsForJob: Found', reviews.length, 'reviews');
+    return reviews;
+  } catch (error) {
+    console.error('❌ getReviewsForJob: Error', error);
+    // Return empty array on error instead of throwing
+    return [];
+  }
+}
+
 // ===== CALCULATE AVERAGE RATING =====
 export function calculateAverageRating(reviews: Review[]): number {
   if (reviews.length === 0) return 0;
