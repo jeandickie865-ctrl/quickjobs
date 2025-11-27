@@ -152,7 +152,9 @@ export default function JobDetailScreen() {
       return;
     }
     (async () => {
-      const reviews = await getReviewsForJob(job.id);   // returns array
+      if (!job) return;
+
+      const reviews = await getReviewsForEmployer(job.employerId);
       setHasReview(reviews.length > 0);
     })();
   }, [job?.id, job?.status, job?.matchedWorkerId, user?.id]);
