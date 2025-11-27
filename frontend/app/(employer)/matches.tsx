@@ -156,6 +156,54 @@ export default function MatchesScreen() {
     });
   }
 
+
+  async function requestOfficialRegistration(applicationId: string) {
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch(`${API_URL}/applications/${applicationId}/request-official-registration`, {
+        method: 'POST',
+        headers,
+      });
+      if (res.ok) {
+        await loadMatches();
+      }
+    } catch (err) {
+      console.error('Request official registration failed:', err);
+    }
+  }
+
+  async function setInformalRegistration(applicationId: string) {
+    try {
+      const headers = await getAuthHeaders();
+      await fetch(`${API_URL}/applications/${applicationId}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ registrationType: 'informal' }),
+      });
+      await loadMatches();
+    } catch (err) {
+      console.error('Set informal registration failed:', err);
+    }
+  }
+
+  async function downloadContract(applicationId: string) {
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch(`${API_URL}/official/create-contract-pdf?application_id=${applicationId}`, {
+        method: 'POST',
+        headers,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('PDF URL:', data.pdfUrl);
+        // TODO: Open PDF viewer with data.pdfUrl
+      }
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+    }
+  }
+
+
   if (!user) return null;
 
   return (
