@@ -135,13 +135,8 @@ export default function CreateJob() {
           setError('Bitte ein Datum für das Stundenpaket eingeben.');
           return;
         }
-        const specificDateIso = parseGermanDateTime(hoursSpecificDate, '00:00');
-        if (!specificDateIso) {
-          setError('Ungültiges Datum. Bitte TT.MM.JJJJ verwenden.');
-          return;
-        }
-        // Store as startAt for specific date
-        startAtIso = specificDateIso;
+        // Store as startAt for specific date (convert Date to ISO)
+        startAtIso = hoursSpecificDate.toISOString();
       } else if (hoursDateType === 'range') {
         if (!hoursStartDate || !hoursEndDate) {
           setError('Bitte Start- und Enddatum für den Zeitraum eingeben.');
