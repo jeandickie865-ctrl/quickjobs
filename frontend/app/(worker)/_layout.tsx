@@ -26,7 +26,7 @@ export default function WorkerLayout() {
       async function loadMatchesCount() {
         try {
           console.log('🔄 Loading matches count for:', user.id);
-          const apps = await getApplicationsForWorker(user.id);
+          const apps = await getWorkerApplications();
           console.log('📋 Total applications:', apps.length);
           const acceptedApps = apps.filter(app => app.status === 'accepted');
           console.log('✅ Accepted applications:', acceptedApps.length);
