@@ -1,232 +1,131 @@
-// app/chat/[id].tsx - Shared Chat Screen for Worker & Employer
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../../contexts/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
+import { API_URL } from "@/config";
+import { getAuthHeaders } from "@/utils/api";
+import { useLocalSearchParams } from "expo-router";
 
-const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://jobmatcher-30.preview.emergentagent.com';
-const API_BASE = `${BACKEND_URL}/api`;
-
-const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
-  white: '#FFFFFF',
-  gray: '#999999',
-  lightGray: '#F5F5F5',
-};
-
-interface ChatMessage {
-  id: string;
-  applicationId: string;
-  senderId: string;
-  senderRole: string;
-  message: string;
-  createdAt: string;
-  read: boolean;
-}
 
 export default function ChatScreen() {
-  const { user } = useAuth();
-  const router = useRouter();
-  const params = useLocalSearchParams<{ id?: string }>();
-  const applicationId = params.id;
+  const { id: applicationId } = useLocalSearchParams();
+  const scrollRef = useRef(null);
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    if (applicationId) {
-      loadMessages();
-      // Poll for new messages every 3 seconds
-      const interval = setInterval(loadMessages, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [applicationId]);
-
-  async function loadMessages() {
-    if (!applicationId || !user) return;
-
+  const loadMessages = async () => {
     try {
-      const token = await AsyncStorage.getItem('@shiftmatch:token');
-      if (!token) return;
-
-      const response = await fetch(`${API_BASE}/chat/messages/${applicationId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+      const headers = await getAuthHeaders();
+      const res = await fetch(`${API_URL}/chat/messages/${applicationId}`, {
+        method: "GET",
+        headers,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data);
-        // Auto-scroll to bottom
-        setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
-      }
-    } catch (error) {
-      console.error('Error loading messages:', error);
-    } finally {
-      setLoading(false);
+      const data = await res.json();
+      setMessages(data);
+
+      setTimeout(() => {
+        scrollRef.current?.scrollToEnd({ animated: true });
+      }, 200);
+
+    } catch (err) {
+      console.log("Load Chat Error:", err);
     }
-  }
+  };
 
-  async function sendMessage() {
-    if (!newMessage.trim() || !applicationId || !user) return;
+  useEffect(() => {
+    loadMessages();
+    const interval = setInterval(loadMessages, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-    setSending(true);
+
+  const sendMessage = async () => {
+    if (!text.trim()) return;
+
     try {
-      const token = await AsyncStorage.getItem('@shiftmatch:token');
-      if (!token) return;
-
-      const response = await fetch(`${API_BASE}/chat/messages`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+      const headers = await getAuthHeaders();
+      await fetch(`${API_URL}/chat/messages`, {
+        method: "POST",
+        headers,
         body: JSON.stringify({
           applicationId,
-          text: newMessage.trim(),
+          text,
         }),
       });
 
-      if (response.ok) {
-        setNewMessage('');
-        await loadMessages();
-        // Scroll to bottom after sending
-        setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-    } finally {
-      setSending(false);
+      setText("");
+      loadMessages();
+    } catch (err) {
+      console.log("Send Error:", err);
     }
-  }
+  };
 
-  if (!user) return null;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      <KeyboardAvoidingView 
-        style={{ flex: 1 }} 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        {/* Header */}
-        <View style={{ 
-          flexDirection: 'row', 
-          alignItems: 'center', 
-          padding: 16, 
-          backgroundColor: COLORS.purple,
-          borderBottomWidth: 2,
-          borderBottomColor: COLORS.neon,
-        }}>
-          <Pressable onPress={() => router.back()} style={{ marginRight: 16 }}>
-            <Text style={{ color: COLORS.neon, fontSize: 28 }}>←</Text>
-          </Pressable>
-          <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700' }}>
-            Chat
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <ScrollView ref={scrollRef} style={{ padding: 20 }}>
+        {messages.length === 0 && (
+          <Text style={{ textAlign: "center", marginTop: 30 }}>
+            Noch keine Nachrichten. Schreiben Sie die erste Nachricht!
           </Text>
-        </View>
+        )}
 
-        {/* Messages */}
-        <ScrollView 
-          ref={scrollViewRef}
-          style={{ flex: 1, backgroundColor: COLORS.white, padding: 16 }}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        >
-          {loading ? (
-            <ActivityIndicator size="large" color={COLORS.purple} style={{ marginTop: 40 }} />
-          ) : messages.length === 0 ? (
-            <Text style={{ textAlign: 'center', color: COLORS.gray, marginTop: 40 }}>
-              Noch keine Nachrichten. Schreiben Sie die erste Nachricht!
-            </Text>
-          ) : (
-            messages.map((msg) => {
-              const isMe = msg.senderId === user.id;
-              return (
-                <View
-                  key={msg.id}
-                  style={{
-                    alignSelf: isMe ? 'flex-end' : 'flex-start',
-                    backgroundColor: isMe ? COLORS.neon : COLORS.lightGray,
-                    padding: 12,
-                    borderRadius: 16,
-                    marginBottom: 12,
-                    maxWidth: '75%',
-                  }}
-                >
-                  <Text style={{ fontSize: 15, color: isMe ? '#000' : '#333' }}>
-                    {msg.message}
-                  </Text>
-                  <Text style={{ 
-                    fontSize: 11, 
-                    color: isMe ? 'rgba(0,0,0,0.5)' : COLORS.gray, 
-                    marginTop: 4 
-                  }}>
-                    {new Date(msg.createdAt).toLocaleTimeString('de-DE', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </Text>
-                </View>
-              );
-            })
-          )}
-        </ScrollView>
+        {messages.map((m) => {
+          const isOwn = m.isOwn;
 
-        {/* Input */}
-        <View style={{ 
-          flexDirection: 'row', 
-          padding: 16, 
-          backgroundColor: COLORS.white,
+          return (
+            <View
+              key={m._id}
+              style={{
+                alignSelf: isOwn ? "flex-end" : "flex-start",
+                backgroundColor: isOwn ? "#5941FF" : "#E5E5E5",
+                padding: 10,
+                borderRadius: 10,
+                marginVertical: 6,
+                maxWidth: "80%",
+              }}
+            >
+              <Text style={{ color: isOwn ? "white" : "black" }}>
+                {m.text}
+              </Text>
+            </View>
+          );
+        })}
+      </ScrollView>
+
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 10,
           borderTopWidth: 1,
-          borderTopColor: '#E0E0E0',
-        }}>
-          <TextInput
-            value={newMessage}
-            onChangeText={setNewMessage}
-            placeholder="Nachricht schreiben..."
-            style={{
-              flex: 1,
-              backgroundColor: COLORS.lightGray,
-              borderRadius: 24,
-              paddingHorizontal: 16,
-              paddingVertical: 12,
-              fontSize: 15,
-              marginRight: 12,
-            }}
-            multiline
-            maxLength={500}
-          />
-          <Pressable
-            onPress={sendMessage}
-            disabled={!newMessage.trim() || sending}
-            style={({ pressed }) => ({
-              backgroundColor: newMessage.trim() ? COLORS.neon : COLORS.gray,
-              width: 48,
-              height: 48,
-              borderRadius: 24,
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: pressed ? 0.8 : 1,
-            })}
-          >
-            {sending ? (
-              <ActivityIndicator size="small" color="#000" />
-            ) : (
-              <Text style={{ fontSize: 24 }}>→</Text>
-            )}
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          borderColor: "#ccc",
+          alignItems: "center",
+        }}
+      >
+        <TextInput
+          style={{
+            flex: 1,
+            backgroundColor: "#f0f0f0",
+            padding: 12,
+            borderRadius: 20,
+          }}
+          placeholder="Nachricht schreiben..."
+          value={text}
+          onChangeText={setText}
+        />
+
+        <Pressable
+          onPress={sendMessage}
+          style={{
+            backgroundColor: "#5941FF",
+            padding: 12,
+            marginLeft: 10,
+            borderRadius: 20,
+          }}
+        >
+          <Text style={{ color: "white" }}>→</Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
