@@ -1023,6 +1023,22 @@ async def update_job(
         existing.pop("_id", None)
         return Job(**existing)
     
+    # Merge with existing for validation
+    merged_data = {**existing, **update_data}
+    
+    # Validate category and tags if they are being updated
+    if "category" in update_data:
+        validate_category(update_data["category"])
+    
+    # Get category (from update or existing)
+    category = merged_data.get("category")
+    
+    if "required_all_tags" in update_data and category:
+        validate_tags(category, update_data["required_all_tags"])
+    
+    if "required_any_tags" in update_data and category:
+        validate_tags(category, update_data["required_any_tags"])
+    
     # Convert nested Address to dict if needed
     if "address" in update_data and isinstance(update_data["address"], Address):
         update_data["address"] = update_data["address"].dict()
