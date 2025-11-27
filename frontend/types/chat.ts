@@ -1,9 +1,11 @@
-export type ChatSenderRole = 'worker' | 'employer';
+// app/frontend/types/chat.ts
 
-export type ChatMessage = {
-  id: string;
+export interface ChatMessage {
+  id?: string;
   applicationId: string;
-  senderRole: ChatSenderRole;
+  senderId: string;
   text: string;
   createdAt: string;
-};
+}
+
+export type ChatSenderRole = 'worker' | 'employer';
