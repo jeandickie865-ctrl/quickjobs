@@ -748,24 +748,21 @@ async def update_worker_profile(
         raise HTTPException(status_code=400, detail="Mindestens eine Kategorie muss ausgewählt werden")
     
     # Validate categories and tags against taxonomy
+    # Schritt 1: Jede Kategorie prüfen
     for cat in categories:
         validate_category(cat)
     
-    # Validate tags for all worker's categories
+    # Schritt 2: erlaubte Tags aller Kategorien zusammenführen
     selected_tags = merged_data.get("selectedTags", [])
     if selected_tags:
-        all_valid_tags = set()
+        valid_tags = set()
         for cat in categories:
-            cat_data = TAXONOMY.get(cat)
-            if cat_data:
-                all_valid_tags.update([t["value"] for t in cat_data["required"]])
-                all_valid_tags.update([t["value"] for t in cat_data["optional"]])
+            valid_tags |= get_valid_tag_values(cat)
         
+        # Schritt 3: prüfen, ob selectedTags gültig sind
         for tag in selected_tags:
-            if tag not in all_valid_tags:
-                raise HTTPException(status_code=422, detail=f"INVALID_TAG: {tag}")
-        
-        logger.info(f"✅ Tags validated for update: {len(selected_tags)} tags for categories {categories}")
+            if tag not in valid_tags:
+                raise HTTPException(status_code=422, detail=f"INVALID_WORKER_TAG: {tag}")
     
     # radiusKm validation
     radius = merged_data.get("radiusKm", 0)
