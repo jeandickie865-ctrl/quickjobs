@@ -37,6 +37,23 @@ export default function CreateJob() {
   // Tags - jetzt als Arrays statt Sets (required_all_tags, required_any_tags)
   const [requiredAll, setRequiredAll] = useState<string[]>([]);
   const [requiredAny, setRequiredAny] = useState<string[]>([]);
+  
+  // Tag-Optionen basierend auf gewählter Kategorie
+  const requiredTagOptions = category && (taxonomy as any)[category] ? (taxonomy as any)[category].required : [];
+  const optionalTagOptions = category && (taxonomy as any)[category] ? (taxonomy as any)[category].optional : [];
+
+  // Schritt 6: Required-All automatisch übernehmen
+  useEffect(() => {
+    if (category) {
+      const recommended = requiredTagOptions.map((t: any) => t.value);
+      setRequiredAll(recommended);
+      // requiredAny bleibt leer (Employer entscheidet)
+      setRequiredAny([]);
+    } else {
+      setRequiredAll([]);
+      setRequiredAny([]);
+    }
+  }, [category]);
 
   // Time mode
   const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
