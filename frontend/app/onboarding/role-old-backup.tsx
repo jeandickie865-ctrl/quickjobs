@@ -12,7 +12,6 @@ type Role = 'employer' | 'worker';
 
 export default function RoleSelectionScreen() {
   const { colors, spacing } = useTheme();
-  const { setRole } = useAuth();
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,10 +21,11 @@ export default function RoleSelectionScreen() {
 
     setLoading(true);
     try {
-      await setRole(selectedRole);
+      // Rolle wird vom Backend via /auth/me verwaltet
+      // Hier nur Navigation zur Startseite
       router.replace('/start');
     } catch (error) {
-      console.error('Fehler beim Setzen der Rolle:', error);
+      console.error('Fehler beim Navigieren:', error);
     } finally {
       setLoading(false);
     }
