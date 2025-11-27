@@ -122,7 +122,7 @@ def main():
     
     # Worker 2 - Sicherheit Pro
     print("\n👤 Worker 2 - Sicherheit Pro")
-    w2_auth = signup_user("worker2@test.de", "Test123!", "worker")
+    w2_auth = signup_user(f"worker2_{TIMESTAMP}@test.de", "Test123!", "worker")
     workers["worker2"] = {"token": w2_auth["token"], "userId": w2_auth["userId"]}
     
     w2_profile = create_worker_profile(
@@ -131,7 +131,7 @@ def main():
             "firstName": "Anna",
             "lastName": "Pro",
             "phone": "+492222222222",
-            "email": "worker2@test.de",
+            "email": f"worker2_{TIMESTAMP}@test.de",
             "homeAddress": {
                 "street": "Teststraße",
                 "houseNumber": "2",
