@@ -43,13 +43,14 @@ export default function ChatScreen() {
       try {
         setLoading(true);
 
-        // Ist Chat bezahlt?
-        const isUnlocked = await checkChatUnlocked(applicationId);
-        if (!isUnlocked) {
-          setLocked(true);
-          setLoading(false);
-          return;
-        }
+        // TEMPORÄR FÜR TESTING: Chat-Unlock-Prüfung deaktiviert
+        // TODO: Für Produktion wieder aktivieren!
+        // const isUnlocked = await checkChatUnlocked(applicationId);
+        // if (!isUnlocked) {
+        //   setLocked(true);
+        //   setLoading(false);
+        //   return;
+        // }
 
         // Nachrichten laden
         const msgs = await loadMessages(applicationId);
