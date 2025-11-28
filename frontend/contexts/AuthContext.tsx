@@ -8,7 +8,7 @@ interface AuthContextValue {
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   signUp: (email: string, password: string, role: string) => Promise<boolean>;
-  logout: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextValue>({
   token: null,
   loading: true,
   login: async () => false,
-  logout: async () => {},
+  signOut: async () => {},
 });
 
 export function AuthProvider({ children }) {
@@ -96,14 +96,14 @@ export function AuthProvider({ children }) {
     return true;
   }
 
-  async function logout() {
+  async function signOut() {
     await AsyncStorage.removeItem("token");
     setUser(null);
     setToken(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signUp, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
