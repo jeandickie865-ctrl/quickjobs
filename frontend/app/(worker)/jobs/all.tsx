@@ -100,7 +100,7 @@ export default function AllJobsScreen() {
       setJobs(jobsInRadius);
     } catch (err: any) {
       if (err.message === "UNAUTHORIZED") {
-        logout();
+        signOut();
         return;
       }
       setError("Fehler beim Laden der Jobs");
