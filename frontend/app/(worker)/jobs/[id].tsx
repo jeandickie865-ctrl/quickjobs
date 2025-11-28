@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
 import { RatingDisplay } from '../../../components/RatingDisplay';
 import { getTagLabel } from '../../../utils/taxonomy';
-import { createApplication } from '../../../utils/applicationStore';
+import { addApplication } from '../../../utils/applicationStore';
 
 // NEON COLORS
 const COLORS = {
