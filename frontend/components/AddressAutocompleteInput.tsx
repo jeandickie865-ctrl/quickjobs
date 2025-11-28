@@ -282,4 +282,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666666",
   },
+  geocodeButton: {
+    backgroundColor: "#5941FF",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    marginTop: 12,
+  },
+  geocodeButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "600",
+  },
 });
