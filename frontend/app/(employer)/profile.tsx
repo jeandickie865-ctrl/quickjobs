@@ -22,7 +22,7 @@ const COLORS = {
 };
 
 export default function EmployerProfileViewScreen() {
-  const { user, isLoading: authLoading, logout } = useAuth();
+  const { user, isLoading: authLoading, signOut } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
