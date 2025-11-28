@@ -21,7 +21,7 @@ import {
   saveEmployerProfile,
   EmployerProfile
 } from '../../utils/employerProfileStore';
-import { AddressAutocompleteInput } from '../../components/AddressAutocompleteInput';
+import AddressAutocompleteInput from '../../components/AddressAutocompleteInput';
 import { Ionicons } from '@expo/vector-icons';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
 
