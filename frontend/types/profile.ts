@@ -40,6 +40,24 @@ export type WorkerProfile = {
   pushToken?: string;        // Expo Push Token für Benachrichtigungen
 };
 
+export type EmployerProfile = {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  company?: string;
+  phone: string;
+  email: string;
+  street: string;
+  houseNumber?: string;
+  postalCode: string;
+  city: string;
+  lat?: number;
+  lon?: number;
+  paymentMethod: 'card' | 'paypal' | null;
+  shortBio?: string;
+  profilePhotoUri?: string;
+};
+
 export type Job = {
   _id: string;
   employerId: string;
