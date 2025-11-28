@@ -326,7 +326,7 @@ export default function WorkerJobDetailScreen() {
                 console.log('🚀 Button geklickt! Job ID:', job._id);
                 try {
                   console.log('📝 Erstelle Bewerbung...');
-                  await createApplication(job._id);
+                  await addApplication(job._id);
                   console.log('✅ Bewerbung erfolgreich erstellt!');
                   Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.');
                   router.push('/(worker)/applications');
