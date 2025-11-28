@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://arbeitsmatch.preview.emergentagent.com`
-- Backend: `https://arbeitsmatch.preview.emergentagent.com/api`
+- Frontend: `https://job-market-preview.preview.emergentagent.com`
+- Backend: `https://job-market-preview.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)

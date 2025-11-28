@@ -23,7 +23,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://arbeitsmatch.preview.emergentagent.com/api"
+BACKEND_URL = "https://job-market-preview.preview.emergentagent.com/api"
 
 class JobEndpointTester:
     def __init__(self):
