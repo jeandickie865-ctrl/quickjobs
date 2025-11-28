@@ -319,8 +319,8 @@ export default function WorkerJobDetailScreen() {
             </Text>
           </View>
 
-          {/* "Ich habe Zeit" Button - nur wenn Job offen ist */}
-          {job.status === 'open' && (
+          {/* "Ich habe Zeit" Button - nur wenn Job nicht matched ist */}
+          {job.status !== 'matched' && (
             <Pressable
               onPress={async () => {
                 try {
@@ -339,13 +339,20 @@ export default function WorkerJobDetailScreen() {
               }}
               style={{
                 backgroundColor: COLORS.neon,
-                paddingVertical: 18,
+                paddingVertical: 20,
+                paddingHorizontal: 24,
                 borderRadius: 16,
                 alignItems: 'center',
-                marginTop: 20,
+                marginTop: 24,
+                marginBottom: 40,
+                shadowColor: COLORS.black,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 8,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+              <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.black, letterSpacing: 0.5 }}>
                 ✓ Ich habe Zeit
               </Text>
             </Pressable>
