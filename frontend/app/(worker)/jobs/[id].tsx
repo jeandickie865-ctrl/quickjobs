@@ -324,17 +324,17 @@ export default function WorkerJobDetailScreen() {
             <Pressable
               onPress={async () => {
                 try {
-                  // Import hier damit es nur geladen wird wenn nötig
-                  const { createApplication } = await import('../../../utils/applicationStore');
-                  
                   await createApplication(job._id);
-                  
+                  Alert.alert('Erfolg!', 'Deine Bewerbung wurde abgeschickt.');
                   router.push('/(worker)/applications');
                 } catch (err: any) {
                   console.error('Application error:', err);
-                  alert(err.message === 'UNAUTHORIZED' 
-                    ? 'Bitte erneut einloggen' 
-                    : 'Bewerbung fehlgeschlagen. Bitte versuche es erneut.');
+                  Alert.alert(
+                    'Fehler',
+                    err.message === 'UNAUTHORIZED' 
+                      ? 'Bitte erneut einloggen' 
+                      : 'Bewerbung fehlgeschlagen. Bitte versuche es erneut.'
+                  );
                 }
               }}
               style={{
