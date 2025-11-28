@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { View, TextInput, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import { searchAddressSuggestions, geocodeAddress, AddressSuggestion } from "../utils/geocoding";
 
 interface Props {
   street?: string;
@@ -32,8 +33,108 @@ export default function AddressAutocompleteInput({
   const safeCity = city ?? "";
   const safeHouseNumber = houseNumber ?? "";
 
+  // Autocomplete State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  
+  // Geocoding State
+  const [isGeocoding, setIsGeocoding] = useState(false);
+
+  // Debounced address search
+  useEffect(() => {
+    if (searchQuery.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      const results = await searchAddressSuggestions(searchQuery);
+      setSuggestions(results);
+      setIsSearching(false);
+      setShowSuggestions(true);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Auto-geocode when all fields are filled
+  useEffect(() => {
+    if (!safeStreet || !safeHouseNumber || !safePostalCode || !safeCity) {
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsGeocoding(true);
+      const result = await geocodeAddress(
+        safeStreet,
+        safeHouseNumber,
+        safePostalCode,
+        safeCity
+      );
+      
+      if (result) {
+        onLatChange?.(result.lat);
+        onLonChange?.(result.lon);
+        console.log('📍 Auto-Geocoding erfolgreich:', result.lat, result.lon);
+      }
+      setIsGeocoding(false);
+    }, 1000); // 1s debounce für Geocoding
+
+    return () => clearTimeout(timer);
+  }, [safeStreet, safeHouseNumber, safePostalCode, safeCity]);
+
+  const handleSuggestionSelect = (suggestion: AddressSuggestion) => {
+    // Felder füllen
+    if (suggestion.street) onStreetChange?.(suggestion.street);
+    if (suggestion.houseNumber) onHouseNumberChange?.(suggestion.houseNumber);
+    if (suggestion.postalCode) onPostalCodeChange?.(suggestion.postalCode);
+    if (suggestion.city) onCityChange?.(suggestion.city);
+    
+    // Koordinaten setzen
+    onLatChange?.(suggestion.lat);
+    onLonChange?.(suggestion.lon);
+    
+    // UI zurücksetzen
+    setShowSuggestions(false);
+    setSearchQuery("");
+    setSuggestions([]);
+  };
+
   return (
     <View style={styles.container}>
+      {/* Adresssuche */}
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Adresse suchen (optional)</Text>
+        <TextInput
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="z.B. Hauptstraße 10, 40210 Düsseldorf"
+          style={styles.input}
+        />
+        {isSearching && <ActivityIndicator style={styles.loader} size="small" color="#5941FF" />}
+      </View>
+
+      {/* Vorschläge */}
+      {showSuggestions && suggestions.length > 0 && (
+        <View style={styles.suggestionsContainer}>
+          <FlatList
+            data={suggestions}
+            keyExtractor={(item, index) => `${index}`}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.suggestionItem}
+                onPress={() => handleSuggestionSelect(item)}
+              >
+                <Text style={styles.suggestionText}>{item.displayName}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
+
       {/* Straße */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Straße *</Text>
@@ -79,6 +180,14 @@ export default function AddressAutocompleteInput({
           />
         </View>
       </View>
+
+      {/* Geocoding Status */}
+      {isGeocoding && (
+        <View style={styles.statusRow}>
+          <ActivityIndicator size="small" color="#5941FF" />
+          <Text style={styles.statusText}>Koordinaten werden berechnet...</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -107,5 +216,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     fontSize: 16,
     color: "#000000",
+  },
+  loader: {
+    position: "absolute",
+    right: 12,
+    top: 36,
+  },
+  suggestionsContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    maxHeight: 200,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  suggestionItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  suggestionText: {
+    fontSize: 14,
+    color: "#333333",
+  },
+  statusRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 8,
+  },
+  statusText: {
+    fontSize: 12,
+    color: "#666666",
   },
 });
