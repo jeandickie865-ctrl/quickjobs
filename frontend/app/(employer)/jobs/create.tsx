@@ -11,7 +11,7 @@ import { JobTimeMode, JobCreate } from '../../../types/job';
 import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import { parseGermanDateTime } from '../../../utils/date';
-import { AddressAutocompleteInput } from '../../../components/AddressAutocompleteInput';
+import AddressAutocompleteInput from '../../../components/AddressAutocompleteInput';
 import UniversalDateTimePicker from '../../../components/UniversalDateTimePicker';
 import taxonomy from '../../../shared/taxonomy.json';
 
