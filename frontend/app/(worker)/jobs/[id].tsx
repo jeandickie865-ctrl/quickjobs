@@ -323,12 +323,15 @@ export default function WorkerJobDetailScreen() {
           {job.status !== 'matched' && (
             <Pressable
               onPress={async () => {
+                console.log('🚀 Button geklickt! Job ID:', job._id);
                 try {
+                  console.log('📝 Erstelle Bewerbung...');
                   await createApplication(job._id);
-                  Alert.alert('Erfolg!', 'Deine Bewerbung wurde abgeschickt.');
+                  console.log('✅ Bewerbung erfolgreich erstellt!');
+                  Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.');
                   router.push('/(worker)/applications');
                 } catch (err: any) {
-                  console.error('Application error:', err);
+                  console.error('❌ Application error:', err);
                   Alert.alert(
                     'Fehler',
                     err.message === 'UNAUTHORIZED' 
@@ -337,8 +340,8 @@ export default function WorkerJobDetailScreen() {
                   );
                 }
               }}
-              style={{
-                backgroundColor: COLORS.neon,
+              style={({ pressed }) => ({
+                backgroundColor: pressed ? '#B3E610' : COLORS.neon,
                 paddingVertical: 20,
                 paddingHorizontal: 24,
                 borderRadius: 16,
@@ -350,7 +353,8 @@ export default function WorkerJobDetailScreen() {
                 shadowOpacity: 0.3,
                 shadowRadius: 8,
                 elevation: 8,
-              }}
+                transform: [{ scale: pressed ? 0.98 : 1 }],
+              })}
             >
               <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.black, letterSpacing: 0.5 }}>
                 ✓ Ich habe Zeit
