@@ -1,6 +1,6 @@
 // app/(worker)/jobs/[id].tsx - Job Details für Worker
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getJobById } from '../../../utils/jobStore';
@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
 import { RatingDisplay } from '../../../components/RatingDisplay';
 import { getTagLabel } from '../../../utils/taxonomy';
+import { createApplication } from '../../../utils/applicationStore';
 
 // NEON COLORS
 const COLORS = {
