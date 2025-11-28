@@ -115,7 +115,7 @@ export default function EmployerProfileViewScreen() {
           <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>Mein Profil</Text>
           <Pressable 
             onPress={async () => {
-              await logout();
+              await signOut();
               router.replace('/auth/login');
             }}
           >
