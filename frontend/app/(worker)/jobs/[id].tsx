@@ -329,25 +329,28 @@ export default function WorkerJobDetailScreen() {
               paddingBottom: 40,
             }}>
               <Pressable
-                onPress={async () => {
-                  console.log('🚀🚀🚀 BUTTON WURDE GEKLICKT! 🚀🚀🚀');
-                  try {
-                    console.log('📝 Erstelle Bewerbung für Job:', job._id);
-                    await addApplication(job._id);
-                    console.log('✅ Bewerbung erfolgreich erstellt!');
-                    Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.', [
-                      {
-                        text: 'OK',
-                        onPress: () => router.push('/(worker)/applications')
+                onPress={() => {
+                  Alert.alert('TEST', 'Button reagiert!', [
+                    {
+                      text: 'Abbrechen',
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Jetzt bewerben',
+                      onPress: async () => {
+                        try {
+                          console.log('📝 Erstelle Bewerbung für Job:', job._id);
+                          await addApplication(job._id);
+                          console.log('✅ Bewerbung erfolgreich erstellt!');
+                          Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.');
+                          setTimeout(() => router.push('/(worker)/applications'), 1000);
+                        } catch (err: any) {
+                          console.error('❌ Application error:', err);
+                          Alert.alert('Fehler', err.message || 'Bewerbung fehlgeschlagen.');
+                        }
                       }
-                    ]);
-                  } catch (err: any) {
-                    console.error('❌ Application error:', err);
-                    Alert.alert(
-                      'Fehler',
-                      err.message || 'Bewerbung fehlgeschlagen. Bitte versuche es erneut.'
-                    );
-                  }
+                    }
+                  ]);
                 }}
                 style={{
                   backgroundColor: COLORS.neon,
