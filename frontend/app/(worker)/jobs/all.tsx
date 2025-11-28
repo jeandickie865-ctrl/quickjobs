@@ -31,7 +31,7 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number): numb
 }
 
 export default function AllJobsScreen() {
-  const { logout } = useAuth();
+  const { signOut } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
