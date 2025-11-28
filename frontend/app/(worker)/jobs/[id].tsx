@@ -319,47 +319,65 @@ export default function WorkerJobDetailScreen() {
             </Text>
           </View>
 
+          {/* SPACER */}
+          <View style={{ height: 20 }} />
+
           {/* "Ich habe Zeit" Button - nur wenn Job nicht matched ist */}
           {job.status !== 'matched' && (
-            <Pressable
-              onPress={async () => {
-                console.log('🚀 Button geklickt! Job ID:', job._id);
-                try {
-                  console.log('📝 Erstelle Bewerbung...');
-                  await addApplication(job._id);
-                  console.log('✅ Bewerbung erfolgreich erstellt!');
-                  Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.');
-                  router.push('/(worker)/applications');
-                } catch (err: any) {
-                  console.error('❌ Application error:', err);
-                  Alert.alert(
-                    'Fehler',
-                    err.message === 'UNAUTHORIZED' 
-                      ? 'Bitte erneut einloggen' 
-                      : 'Bewerbung fehlgeschlagen. Bitte versuche es erneut.'
-                  );
-                }
-              }}
-              style={({ pressed }) => ({
-                backgroundColor: pressed ? '#B3E610' : COLORS.neon,
-                paddingVertical: 20,
-                paddingHorizontal: 24,
-                borderRadius: 16,
-                alignItems: 'center',
-                marginTop: 24,
-                marginBottom: 40,
-                shadowColor: COLORS.black,
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 8,
-                elevation: 8,
-                transform: [{ scale: pressed ? 0.98 : 1 }],
-              })}
-            >
-              <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.black, letterSpacing: 0.5 }}>
-                ✓ Ich habe Zeit
-              </Text>
-            </Pressable>
+            <View style={{ 
+              paddingHorizontal: 20,
+              paddingBottom: 40,
+            }}>
+              <Pressable
+                onPress={() => {
+                  console.log('🚀🚀🚀 BUTTON WURDE GEKLICKT! 🚀🚀🚀');
+                  Alert.alert('TEST', 'Button funktioniert!', [
+                    {
+                      text: 'Abbrechen',
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Bewerbung abschicken',
+                      onPress: async () => {
+                        try {
+                          console.log('📝 Erstelle Bewerbung für Job:', job._id);
+                          await addApplication(job._id);
+                          console.log('✅ Bewerbung erfolgreich erstellt!');
+                          Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.');
+                          setTimeout(() => {
+                            router.push('/(worker)/applications');
+                          }, 500);
+                        } catch (err: any) {
+                          console.error('❌ Application error:', err);
+                          Alert.alert(
+                            'Fehler',
+                            err.message === 'UNAUTHORIZED' 
+                              ? 'Bitte erneut einloggen' 
+                              : `Bewerbung fehlgeschlagen: ${err.message}`
+                          );
+                        }
+                      }
+                    }
+                  ]);
+                }}
+                style={{
+                  backgroundColor: COLORS.neon,
+                  paddingVertical: 20,
+                  paddingHorizontal: 24,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  shadowColor: COLORS.black,
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 8,
+                }}
+              >
+                <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.black, letterSpacing: 0.5 }}>
+                  ✓ Ich habe Zeit
+                </Text>
+              </Pressable>
+            </View>
           )}
         </ScrollView>
       </SafeAreaView>
