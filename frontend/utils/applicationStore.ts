@@ -22,7 +22,9 @@ export async function addApplication(
     if (!response.ok) {
       const error = await response.text();
       console.error('❌ addApplication: Failed', response.status, error);
-      throw new Error(`Failed to create application: ${response.status}`);
+      console.error('❌ Request was:', JSON.stringify({ jobId }));
+      console.error('❌ Headers were:', headers);
+      throw new Error(`Failed to create application: ${response.status} - ${error}`);
     }
     
     const application = await response.json();
