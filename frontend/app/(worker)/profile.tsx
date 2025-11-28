@@ -193,7 +193,7 @@ export default function WorkerProfileScreen() {
             </Pressable>
             <Pressable 
               onPress={async () => {
-                await logout();
+                await signOut();
                 router.replace('/auth/login');
               }}
             >
