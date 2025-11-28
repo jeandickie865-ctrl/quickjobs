@@ -118,9 +118,10 @@ export default function CreateJob() {
       return;
     }
 
-    // Warnung wenn keine Koordinaten (aber nicht blockieren)
+    // KRITISCH: Koordinaten sind ZWINGEND für Matching!
     if (!lat || !lon) {
-      console.warn('⚠️ Keine Koordinaten vorhanden - Matching wird eingeschränkt sein');
+      setError('⚠️ KRITISCH: Keine GPS-Koordinaten gefunden!\n\nBitte verwende die Adresssuche oben und wähle einen Vorschlag aus der Liste.\n\nOder gib Straße, Hausnummer, PLZ und Stadt komplett ein und warte 2 Sekunden bis "Koordinaten werden berechnet..." erscheint.');
+      return;
     }
 
     // Time mode validation & parsing
