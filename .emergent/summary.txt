@@ -1,85 +1,82 @@
 <analysis>
-The trajectory documents an extensive series of debugging, refactoring, and feature implementation tasks on a German-language, two-sided job marketplace mobile application. The user's primary language is German; therefore, all future communication must be in German.
+The trajectory documents an extensive and complex development cycle for a German-language job marketplace mobile app, ShiftMatch. The user's primary language is German, and all future communications must be in German.
 
-The work began by addressing a critical authentication flaw causing 403 errors due to a token/user ID mismatch. This was resolved by implementing token-based  endpoints in the backend and refactoring the entire frontend to use them, establishing the backend as the single source of truth for user identity.
+The work can be divided into three main phases. First, a series of foundational refactors, including a complete overhaul of  (changing / to /), and a rewrite of  to align with a new, structured  file.
 
-Subsequently, a persistent build cache issue on the frontend, where the preview served outdated code, was resolved by performing a full cache-clearing reset ([14:09:24] Starting project at /app/frontend).
+The second phase involved implementing major new features, driven by detailed, multi-part user prompts. This included a full-stack payment flow where employers must pay to unlock the chat with accepted workers, and an even more complex official registration system built on top of that, allowing employers to request formal employment data from non-self-employed workers post-payment. This required significant backend changes in  (new models, new endpoints) and corresponding frontend UI/logic updates.
 
-A major feature, an intelligent job-matching system, was then implemented end-to-end. This involved creating a new backend service () with Haversine distance calculations and a new  endpoint. A significant debugging effort was required to align the matching logic with the actual data models in the database (e.g., using  instead of  and reading from the correct  collection). The frontend worker feed was completely overhauled to consume this new endpoint, including significant UI/UX enhancements.
-
-The most recent tasks involved a series of smaller but critical fixes, including resolving a CORS error by creating a  file, fixing a React rendering error by correctly formatting an address object, and cleaning up the project by moving old backup files. The immediate last task was a performance optimization for the  screen.
+The third and longest phase was an intense, iterative debugging process. The AI systematically tackled numerous crashes and bugs reported by the user via screenshots and logs. Key issues resolved include: multiple  crashes traced to  and unprotected state values;  errors due to the  refactor and mismatched component interfaces; a  error caused by an incorrect AsyncStorage key; and routing conflicts in Expo Router. The last action was acknowledging the user's request to view three specific employer-related files.
 </analysis>
 
 <product_requirements>
-The application is a German-language, two-sided job marketplace named ShiftMatch, connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
+The application, ShiftMatch, is a two-sided mobile job marketplace in German connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
-**Core Functionality:**
-*   **Authentication:** Users can sign up and log in as either a worker or an employer. A critical flaw causing 403 errors due to a user/token mismatch was resolved by implementing a  validation endpoint and refactoring all data fetching to be strictly token-based.
-*   **Profile Management:** Both user types have multi-step profile creation wizards and editing screens.
-*   **Job Lifecycle:** Employers post jobs, and workers can apply. The application creation process was secured to derive  and  from the backend token, not the client request.
-*   **Job Matching (Worker):** A key feature was implemented allowing workers to see a feed of intelligently matched jobs based on their profile's category, location, radius, and skills ().
-*   **Application/Match Management:** Workers and employers can view their pending applications and accepted matches, with options to chat and rate.
-
-The work has focused on hardening the security and data integrity of the auth and API layers, implementing the core job-matching feature, and performing numerous UI/UX fixes and code cleanups.
+**Core Product Features:**
+*   **Dual-Role System:** Users can register, log in, and operate as either a Worker or an Employer, with distinct UIs and workflows for each.
+*   **Profile & Job Management:** Workers create detailed profiles with skills based on a structured taxonomy. Employers post jobs with specific skill requirements.
+*   **Payment-Gated Matching & Chat:** When an employer accepts a worker's application, they are redirected to a payment screen. Only after paying a commission is the chat between the two parties unlocked.
+*   **Official Registration Flow:** Post-payment, employers have an optional flow to request formal registration data (tax ID, address, etc.) from workers who are not registered as self-employed. Workers can accept (and fill out a data form) or decline this request. A mini-contract PDF is generated upon completion.
+*   **Taxonomy-Driven Skills:** A central  file dictates all job categories and associated skills (e.g., Kaufhausdetektiv, Sachkunde nach §34a GewO), ensuring consistency across profile creation, job posting, and matching.
 </product_requirements>
 
 <key_technical_concepts>
 - **Backend:** Monolithic FastAPI (Python) server () with Pydantic models.
-- **Database:** MongoDB.
+- **Database:** Hybrid persistence using MongoDB for dynamic data like applications and chat messages.
 - **Frontend:** React Native with Expo, using  for file-based routing.
-- **State Management:** Hybrid approach. Global authentication is managed via  (). Feature data is fetched using async functions in utility modules (, ) and stored in local component state ().
-- **Authentication:** Token-based (JWT) with secure  endpoints that derive user identity solely from the token.
-- **Geolocation:** Haversine formula for distance calculation in job matching.
-- **Styling:** Inline styles and  with a consistent color theme (purple/neon).
+- **Authentication:** JWT-based. A critical refactor changed auth functions to // and fixed a  vs uid=0(root) gid=0(root) groups=0(root) mapping issue.
+- **State Management:** React Context () and Zustand for various stores (, ).
+- **Defensive Programming:** Extensive use of  and optional chaining () to prevent crashes from  values.
 </key_technical_concepts>
 
 <code_architecture>
-The project is a monorepo with  and  directories. The frontend uses Expo's file-based routing.
+The project is a monorepo with  and  directories.
 
 
 
-- ****
-    - **Importance:** The single, monolithic FastAPI file containing all backend API logic, models, and routes.
-    - **Summary of Changes:** This file was heavily modified. Key changes include: adding token-based endpoints (, ), fixing a critical bug in  to correctly source  from the job document, adding a new endpoint (), moving logging configuration to the top for proper initialization, and correcting the CORS policy to be more specific. A critical fix was applied to the  endpoint to read from the correct  collection instead of .
+-   ****
+    -   **Importance:** The core FastAPI server. It contains all API endpoints, Pydantic models, and business logic.
+    -   **Changes:** Heavily modified to support the payment and official registration flows. New Pydantic models () and fields (, ) were added. New endpoints were created, including , , and . Chat endpoints were updated to enforce payment status.
 
-- ****
-    - **Importance:** A new service module created to contain the core business logic for job matching.
-    - **Summary of Changes:** Created from scratch. It contains the  function for distance calculation and the  function. This function was later refactored to use the actual field names from the worker's profile in the database (e.g., , , ), making the matching logic work with existing data structures without requiring a database migration.
+-   ****
+    -   **Importance:** Manages user authentication state globally.
+    -   **Changes:** Underwent multiple critical refactors. Functions were changed from / to /, and a  function was added. A crucial fix was implemented to correctly map the  field from the backend's  response to  on the frontend, resolving numerous  API calls. The  property was also corrected to .
 
-- ****
-    - **Importance:** The primary screen for workers to discover jobs.
-    - **Summary of Changes:** This file has been completely replaced multiple times. It was first refactored to use token-based API calls. Later, it was replaced with a clean, minimalist version using the new  endpoint. Finally, it was updated with a professional, styled UI using Neon-Tech design principles and made interactive with navigation to job details pages.
+-   ****
+    -   **Importance:** A shared component for address input with autocomplete functionality.
+    -   **Changes:** This file was the source of multiple severe crashes ( on undefined,  is not a function). It was completely rewritten from scratch to be robust. The new version accepts separate props for each address field (street, city, etc.), uses optional chaining for all change handlers (), and provides a separate, editable input for the house number.
 
-- ****
-    - **Importance:** A utility module (acting as a stateless store) for all job-related API interactions.
-    - **Summary of Changes:** The file was created/refactored to be the single source for job API functions. The  function was added to call the new matching endpoint and correctly map the backend response to the frontend  type. The  function was added as part of the latest refactoring effort. Import paths and the  source were also fixed here to resolve build and CORS errors.
+-   ****
+    -   **Importance:** Provides helper functions to interact with the skill taxonomy.
+    -   **Changes:** Rewritten to provide a clean set of named exports (, , etc.) that work with the new  structure. A missing  function was added to fix a crash in the profile wizard.
 
-- ****
-    - **Importance:** A new, crucial configuration file for the frontend.
-    - **Summary of Changes:** This file was created to solve a persistent CORS error. It exports the , sourcing it from environment variables, which resolved an issue where the frontend was calling a placeholder URL.
+-   ****
+    -   **Importance:** The single source of truth for all job categories and skills.
+    -   **Changes:** The file was restored from an old backup () to bring back missing categories like Kaufhausdetektiv and Sachkunde nach §34a GewO, and was converted to the new, required format. A copy was placed in  to ensure server-side validation is consistent.
 
-- ****
-    - **Importance:** The screen where workers see jobs they have been accepted for.
-    - **Summary of Changes:** The initial change was to update the data fetching to use the token-based  function. The most recent work involves a performance refactor of this screen.
-
+-   ****
+    -   **Importance:** The main chat UI.
+    -   **Changes:** Replaced entirely with a WhatsApp-style implementation that uses the new  and displays a Chat Locked screen if payment for the application has not been completed. The payment check was later temporarily disabled for testing.
 </code_architecture>
 
 <pending_tasks>
-- The primary pending task is to complete the refactoring of  to improve its performance by fetching job details individually instead of loading all jobs into memory.
+- Show the user the contents of the three requested files: , , and .
+- Systematically fix the non-editable  bug by wrapping state setter calls in  (e.g., ), as diagnosed by the user.
+- Add visible logout buttons to the worker and employer layouts and profile screens.
+- Re-enable the payment check in the chat screen that was temporarily disabled for testing.
 </pending_tasks>
 
 <current_work>
-The last task was a two-part refactor to improve performance on the  screen. The user requested to stop fetching a list of all jobs and instead fetch each matched job's details individually.
+The most recent task was debugging a series of critical, app-breaking crashes. After fixing several issues related to  values and mismatched function names, the AI was in the middle of diagnosing why  fields were becoming non-editable. The user correctly identified this as a known React Native issue where passing  makes an input read-only and provided a solution: wrap state-setting values with .
 
-1.  **Part 1 (Completed):** A new function, , was added to . This function fetches a single job from the backend endpoint . This part is done and was verified.
+However, before the AI could implement this fix, the user interrupted with a new, explicit request in the very last message (Chat Message 645) to view the contents of three specific files related to the employer flow:
 
-2.  **Part 2 (In Progress):** The second part is to modify  itself. This involves:
-    *   Changing the import from  to .
-    *   Replacing the large block of code inside the  function that iterates through a list of all jobs with a new loop that calls  for each application.
+1.  
+2.  
+3.  
 
-The AI engineer had just successfully completed Part 1 and was about to begin implementing the code changes for Part 2 inside  when the trajectory ended.
+The AI acknowledged this request (Verstanden! Ich zeige Ihnen jetzt die drei Employer-Dateien:) but the trajectory ended before it could execute the file-reading command. The immediate work is therefore to fulfill this direct user request.
 </current_work>
 
 <optional_next_step>
-Continue the refactor of  by changing the import and replacing the data-loading logic inside the  function as explicitly requested by the user.
+Verstanden! Ich zeige Ihnen jetzt die drei angeforderten Employer-Dateien, beginnend mit .
 </optional_next_step>
