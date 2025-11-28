@@ -76,3 +76,32 @@ export async function getJobById(jobId: string): Promise<Job> {
     required_any_tags: job.required_any_tags ?? [],
   };
 }
+
+
+/* ---------------------------------------------------
+   CREATE JOB (EMPLOYER)
+--------------------------------------------------- */
+export async function addJob(jobData: any): Promise<Job> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${API_URL}/jobs`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(jobData),
+  });
+
+  if (res.status === 401) throw new Error("UNAUTHORIZED");
+  if (res.status === 403) throw new Error("FORBIDDEN");
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("❌ addJob error:", errorText);
+    throw new Error("FAILED_TO_CREATE_JOB");
+  }
+
+  const job = await res.json();
+  return {
+    ...job,
+    required_all_tags: job.required_all_tags ?? [],
+    required_any_tags: job.required_any_tags ?? [],
+  };
+}
