@@ -1,5 +1,6 @@
 export type Address = {
-  street?: string;      // z. B. "Musterstraße 5"
+  street?: string;      // z. B. "Musterstraße"
+  houseNumber?: string; // z. B. "5"
   postalCode?: string;  // z. B. "40210"
   city?: string;        // z. B. "Düsseldorf"
 };
