@@ -659,11 +659,16 @@ export default function CreateJob() {
           
           <AddressAutocompleteInput
             street={address.street || ''}
+            houseNumber={address.houseNumber || ''}
             postalCode={address.postalCode}
             city={address.city}
             onStreetChange={(value) => {
               console.log('🏠 Street changed:', value);
               setAddress(prev => ({ ...prev, street: value }));
+            }}
+            onHouseNumberChange={(value) => {
+              console.log('🏠 House number changed:', value);
+              setAddress(prev => ({ ...prev, houseNumber: value }));
             }}
             onPostalCodeChange={(value) => {
               console.log('📮 PostalCode changed:', value);
