@@ -15,7 +15,7 @@ const COLORS = {
 };
 
 export default function WorkerFeedScreen() {
-  const { user, token, loading, logout } = useAuth();
+  const { user, token, loading, signOut } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ export default function WorkerFeedScreen() {
     } catch (err: any) {
       console.error("❌ Error loading jobs:", err);
       if (err.message === "UNAUTHORIZED" || err.message?.includes("no token found")) {
-        logout();
+        signOut();
         return;
       }
       setError(`Fehler beim Laden der Jobs: ${err.message || 'Unbekannter Fehler'}`);
