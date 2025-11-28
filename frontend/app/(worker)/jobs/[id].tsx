@@ -322,8 +322,14 @@ export default function WorkerJobDetailScreen() {
           {/* SPACER */}
           <View style={{ height: 20 }} />
 
-          {/* "Ich habe Zeit" Button - nur wenn Job nicht matched ist */}
-          {job.status !== 'matched' && (
+          {/* DEBUG INFO */}
+          <View style={{ backgroundColor: 'yellow', padding: 10, margin: 20 }}>
+            <Text style={{ color: 'black' }}>DEBUG: Job Status = {job.status}</Text>
+            <Text style={{ color: 'black' }}>Button wird gerendert: {job.status !== 'matched' ? 'JA' : 'NEIN'}</Text>
+          </View>
+
+          {/* "Ich habe Zeit" Button - IMMER ANZEIGEN FÜR TEST */}
+          {true && (
             <View style={{ 
               paddingHorizontal: 20,
               paddingBottom: 40,
