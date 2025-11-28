@@ -181,6 +181,39 @@ export default function AddressAutocompleteInput({
         </View>
       </View>
 
+      {/* Manueller Geocode Button */}
+      <TouchableOpacity
+        style={styles.geocodeButton}
+        onPress={async () => {
+          if (!safeStreet || !safeHouseNumber || !safePostalCode || !safeCity) {
+            alert('Bitte alle Adressfelder ausfüllen!');
+            return;
+          }
+          
+          setIsGeocoding(true);
+          const result = await geocodeAddress(
+            safeStreet,
+            safeHouseNumber,
+            safePostalCode,
+            safeCity
+          );
+          
+          if (result) {
+            onLatChange?.(result.lat);
+            onLonChange?.(result.lon);
+            alert(`✅ Koordinaten gefunden!\n\nLat: ${result.lat.toFixed(6)}\nLon: ${result.lon.toFixed(6)}`);
+          } else {
+            alert('❌ Keine Koordinaten gefunden. Bitte Adresse überprüfen.');
+          }
+          setIsGeocoding(false);
+        }}
+        disabled={isGeocoding}
+      >
+        <Text style={styles.geocodeButtonText}>
+          {isGeocoding ? '⏳ Berechne...' : '📍 Koordinaten jetzt berechnen'}
+        </Text>
+      </TouchableOpacity>
+
       {/* Geocoding Status */}
       {isGeocoding && (
         <View style={styles.statusRow}>
