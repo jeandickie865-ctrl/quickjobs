@@ -24,7 +24,12 @@ export function formatAddress(address?: Address, compact: boolean = false): stri
   
   // Vollständig: "Musterstraße 5, 40210 Düsseldorf"
   const parts = [];
-  if (address.street) parts.push(address.street);
+  if (address.street) {
+    const streetPart = address.houseNumber 
+      ? `${address.street} ${address.houseNumber}` 
+      : address.street;
+    parts.push(streetPart);
+  }
   
   const cityPart = [];
   if (address.postalCode) cityPart.push(address.postalCode);
