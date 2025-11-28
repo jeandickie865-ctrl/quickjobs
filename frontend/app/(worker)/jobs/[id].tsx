@@ -317,6 +317,38 @@ export default function WorkerJobDetailScreen() {
                job.status === 'pending' ? '⏳ In Bearbeitung' : 'Status unbekannt'}
             </Text>
           </View>
+
+          {/* "Ich habe Zeit" Button - nur wenn Job offen ist */}
+          {job.status === 'open' && (
+            <Pressable
+              onPress={async () => {
+                try {
+                  // Import hier damit es nur geladen wird wenn nötig
+                  const { createApplication } = await import('../../../utils/applicationStore');
+                  
+                  await createApplication(job._id);
+                  
+                  router.push('/(worker)/applications');
+                } catch (err: any) {
+                  console.error('Application error:', err);
+                  alert(err.message === 'UNAUTHORIZED' 
+                    ? 'Bitte erneut einloggen' 
+                    : 'Bewerbung fehlgeschlagen. Bitte versuche es erneut.');
+                }
+              }}
+              style={{
+                backgroundColor: COLORS.neon,
+                paddingVertical: 18,
+                borderRadius: 16,
+                alignItems: 'center',
+                marginTop: 20,
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                ✓ Ich habe Zeit
+              </Text>
+            </Pressable>
+          )}
         </ScrollView>
       </SafeAreaView>
     </View>
