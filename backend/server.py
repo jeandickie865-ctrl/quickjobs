@@ -1127,6 +1127,9 @@ async def create_application(
     authorization: Optional[str] = Header(None)
 ):
     """Create a new job application"""
+    logger.info(f"🔥 POST /applications called - raw data: {app_data}")
+    logger.info(f"🔥 Authorization header: {authorization[:50] if authorization else 'None'}...")
+    
     # Get workerId from token (validates token and returns userId)
     workerId = await get_user_id_from_token(authorization)
     logger.info(f"✅ Token validated - workerId: {workerId}")
