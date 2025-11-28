@@ -118,10 +118,9 @@ export default function CreateJob() {
       return;
     }
 
-    // KRITISCH: Koordinaten müssen vorhanden sein für Radius-Matching
+    // Warnung wenn keine Koordinaten (aber nicht blockieren)
     if (!lat || !lon) {
-      setError('Bitte wähle eine Adresse aus der Vorschlagsliste, damit die Position bestimmt werden kann. Manuell eingegebene Adressen werden automatisch geocodiert.');
-      return;
+      console.warn('⚠️ Keine Koordinaten vorhanden - Matching wird eingeschränkt sein');
     }
 
     // Time mode validation & parsing
