@@ -944,13 +944,17 @@ async def get_worker_registration_status(worker_id: str):
         }
 
 
+# Request Body Model for registration data
+class WorkerRegistrationData(BaseModel):
+    steuerId: Optional[str] = None
+    geburtsdatum: Optional[str] = None
+    sozialversicherungsnummer: Optional[str] = None
+    krankenkasse: Optional[str] = None
+
 @api_router.put("/profiles/worker/{worker_id}/registration-data", response_model=WorkerProfile)
 async def update_worker_registration_data(
     worker_id: str,
-    steuerId: str = None,
-    geburtsdatum: str = None,
-    sozialversicherungsnummer: str = None,
-    krankenkasse: str = None
+    data: WorkerRegistrationData
 ):
     """
     Aktualisiert die Registrierungsdaten eines Workers.
@@ -962,10 +966,7 @@ async def update_worker_registration_data(
     
     Args:
         worker_id: Die userId des Workers
-        steuerId: Steuer-ID
-        geburtsdatum: Geburtsdatum (Format: TT.MM.JJJJ)
-        sozialversicherungsnummer: Sozialversicherungsnummer
-        krankenkasse: Name der Krankenkasse
+        data: JSON Body mit steuerId, geburtsdatum, sozialversicherungsnummer, krankenkasse
     
     Returns:
         Das aktualisierte Worker-Profil
@@ -979,14 +980,14 @@ async def update_worker_registration_data(
     
     # Update-Daten vorbereiten
     update_data = {}
-    if steuerId is not None:
-        update_data["steuerId"] = steuerId.strip() if steuerId else ""
-    if geburtsdatum is not None:
-        update_data["geburtsdatum"] = geburtsdatum.strip() if geburtsdatum else ""
-    if sozialversicherungsnummer is not None:
-        update_data["sozialversicherungsnummer"] = sozialversicherungsnummer.strip() if sozialversicherungsnummer else ""
-    if krankenkasse is not None:
-        update_data["krankenkasse"] = krankenkasse.strip() if krankenkasse else ""
+    if data.steuerId is not None:
+        update_data["steuerId"] = data.steuerId.strip() if data.steuerId else ""
+    if data.geburtsdatum is not None:
+        update_data["geburtsdatum"] = data.geburtsdatum.strip() if data.geburtsdatum else ""
+    if data.sozialversicherungsnummer is not None:
+        update_data["sozialversicherungsnummer"] = data.sozialversicherungsnummer.strip() if data.sozialversicherungsnummer else ""
+    if data.krankenkasse is not None:
+        update_data["krankenkasse"] = data.krankenkasse.strip() if data.krankenkasse else ""
     
     # Timestamp aktualisieren
     update_data["updatedAt"] = datetime.utcnow().isoformat()
