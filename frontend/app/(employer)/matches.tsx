@@ -461,19 +461,20 @@ export default function MatchesScreen() {
                       }}
                       style={({ pressed }) => ({
                         backgroundColor: '#FFD700',
-                        borderRadius: 12,
+                        borderRadius: 14,
                         paddingVertical: 14,
+                        paddingHorizontal: 16,
                         alignItems: 'center',
-                        opacity: pressed ? 0.9 : 1,
-                        shadowColor: '#FFD700',
+                        shadowColor: 'rgba(255,215,0,0.2)',
                         shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 4,
+                        shadowOpacity: 0.8,
+                        shadowRadius: 6,
+                        opacity: pressed ? 0.9 : 1,
                       })}
                     >
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                         <Ionicons name="star" size={18} color={COLORS.black} />
-                        <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                           Auftragnehmer bewerten
                         </Text>
                       </View>
