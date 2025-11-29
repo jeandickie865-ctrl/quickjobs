@@ -505,10 +505,8 @@ export default function MatchesScreen() {
                               </Pressable>
                             </>
                           )}
-                          */}
-
+                          
                           {match.application.officialRegistrationStatus === "requested" && (
-                            // Anfrage wurde gestellt, warte auf Worker
                             <View style={{ 
                               backgroundColor: 'rgba(255, 255, 255, 0.1)', 
                               padding: 12, 
@@ -521,7 +519,6 @@ export default function MatchesScreen() {
                           )}
 
                           {match.application.officialRegistrationStatus === "completed" && (
-                            // Registrierung abgeschlossen - PDF verfügbar
                             <Pressable
                               onPress={() => downloadContract(match.application.id)}
                               style={({ pressed }) => ({
@@ -537,6 +534,7 @@ export default function MatchesScreen() {
                               </Text>
                             </Pressable>
                           )}
+                          */}
 
                           {match.application.officialRegistrationStatus === "denied" && (
                             // Worker hat abgelehnt
