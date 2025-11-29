@@ -446,7 +446,10 @@ export default function WorkerMatchesScreen() {
                       )}
                       
                       <Pressable
-                        onPress={() => router.push(`/(worker)/rate?jobId=${job.id}`)}
+                        onPress={() => {
+                          console.log('🎯 Worker: Navigate to rate - jobId:', job.id, 'employerId:', job.employerId);
+                          router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
+                        }}
                         style={({ pressed }) => ({
                           backgroundColor: '#FFD700',
                           paddingVertical: 14,
