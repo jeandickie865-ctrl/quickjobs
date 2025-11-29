@@ -55,22 +55,8 @@ export default function CreateJob() {
     }
   }, [category]);
 
-  // Time mode
-  const [timeMode, setTimeMode] = useState<JobTimeMode>('fixed_time');
-  
-  // fixed_time - Date objects for UniversalDateTimePicker
-  const [startDateTime, setStartDateTime] = useState<Date | undefined>(undefined);
-  const [endDateTime, setEndDateTime] = useState<Date | undefined>(undefined);
-  
-  // hour_package
-  const [hours, setHours] = useState('');
-  const [hoursDateType, setHoursDateType] = useState<'specific' | 'range'>('specific');
-  const [hoursSpecificDate, setHoursSpecificDate] = useState<Date | undefined>(undefined);
-  const [hoursStartDate, setHoursStartDate] = useState<Date | undefined>(undefined);
-  const [hoursEndDate, setHoursEndDate] = useState<Date | undefined>(undefined);
-  
-  // project (deutsches Format TT.MM.JJJJ)
-  const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
+  // Simplified: Just text input for time/date info
+  const [timeInfo, setTimeInfo] = useState('');
 
   // Payment
   const [workerAmountInput, setWorkerAmountInput] = useState('');
