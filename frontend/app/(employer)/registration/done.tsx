@@ -20,6 +20,40 @@ export default function RegistrationDoneScreen() {
       <Pressable
         onPress={async () => {
           try {
+            const response = await fetch('/api/registrations/generate-contract', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ applicationId })
+            });
+
+            const data = await response.json();
+            console.log('Contract generated:', data);
+
+            if (data.contractUrl) {
+              const fullUrl = `${process.env.EXPO_PUBLIC_BACKEND_URL}${data.contractUrl}`;
+              Linking.openURL(fullUrl);
+            }
+
+          } catch (err) {
+            console.error('Error generating contract:', err);
+          }
+        }}
+        style={{
+          backgroundColor: '#FFD700',
+          padding: 14,
+          borderRadius: 12,
+          alignItems: 'center',
+          marginTop: 10
+        }}
+      >
+        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+          Arbeitsvertrag herunterladen
+        </Text>
+      </Pressable>
+
+      <Pressable
+        onPress={async () => {
+          try {
             const response = await fetch('/api/registrations/complete', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
