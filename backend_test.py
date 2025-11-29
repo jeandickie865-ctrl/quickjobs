@@ -17,19 +17,31 @@ BACKEND_URL = "https://schnellhire.preview.emergentagent.com/api"
 
 class RegistrationFlowTester:
     def __init__(self):
+        self.client = httpx.AsyncClient(timeout=30.0)
         self.test_results = []
-        self.test_data = {}
+        self.tokens = {}
         
-    def log_test(self, test_name, success, details):
-        """Log test results"""
+    async def log_test(self, test_name: str, success: bool, details: str = "", data: Any = None):
+        """Log test result"""
         status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status} {test_name}: {details}")
-        self.test_results.append({
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        
+        result = {
+            "timestamp": timestamp,
             "test": test_name,
+            "status": status,
             "success": success,
             "details": details,
-            "timestamp": datetime.now().isoformat()
-        })
+            "data": data
+        }
+        
+        self.test_results.append(result)
+        print(f"[{timestamp}] {status}: {test_name}")
+        if details:
+            print(f"    {details}")
+        if not success and data:
+            print(f"    Response: {data}")
+        print()
     
     def generate_unique_email(self, prefix="testuser"):
         """Generate unique email for testing"""
