@@ -465,8 +465,13 @@ export default function MatchesScreen() {
                       ) : (
                         // Worker ist NICHT selbstständig
                         <>
+                          {/* 
+                          ========================================
+                          FEATURE DEAKTIVIERT: Offizielle Anmeldung
+                          ========================================
+                          Später wieder aktivieren!
+                          
                           {match.application.officialRegistrationStatus === "none" && (
-                            // Noch keine Anfrage gestellt
                             <>
                               <Pressable
                                 onPress={() => requestOfficialRegistration(match.application.id)}
@@ -500,6 +505,7 @@ export default function MatchesScreen() {
                               </Pressable>
                             </>
                           )}
+                          */}
 
                           {match.application.officialRegistrationStatus === "requested" && (
                             // Anfrage wurde gestellt, warte auf Worker
