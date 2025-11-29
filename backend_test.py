@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 """
-Backend Auth Testing Suite
-Tests the authentication endpoints after AuthContext fix
-Focused testing as requested in German review request
+Backend Testing Suite for POST /api/registrations/complete Endpoint
+Tests the new endpoint comprehensively as requested in German.
 """
 
-import asyncio
-import httpx
+import requests
 import json
-import sys
 import time
-from typing import Dict, List, Any, Optional
 import uuid
-import math
 from datetime import datetime
 
 # Backend URL from frontend/.env
