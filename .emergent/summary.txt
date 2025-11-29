@@ -1,84 +1,106 @@
 <analysis>
-The trajectory documents an intensive, iterative debugging and feature development process for the ShiftMatch application. The user, who communicates exclusively in German, guided the AI engineer through resolving a cascade of critical bugs and implementing new features. All future interactions must be in German.
+The trajectory documents an extensive, iterative development process for the ShiftMatch application, guided by a German-speaking user. The primary focus was building a complete, multi-step Official Registration feature, transforming the app into a mini-HR system.
 
-The work began by fixing a login loop, which was a multi-layered problem involving missing exports in , incorrect state variable names ( vs. ), and a fundamental issue with legacy user accounts in MongoDB that lacked password fields. This required creating new test users.
+This involved:
+1.  **Backend Development (FastAPI):** Creating numerous Pydantic models and API endpoints (, , , etc.) to manage the registration process.
+2.  **PDF Generation:** Implementing three separate server-side functions using  to generate employment contracts, Sofortmeldung (immediate registration notice), and payroll documents. This included making the generated PDFs accessible via a static file server.
+3.  **Frontend Development (Expo/React Native):** Building a series of new screens (, , ) to guide the employer through data collection and document generation. A new screen for workers () was also created to allow them to pre-fill their personal information.
+4.  **Intensive Debugging:** A significant portion of the work involved resolving critical bugs. Key issues included:
+    *   **Data Inconsistency:** Handling multiple, conflicting address data structures in the MongoDB database for employers and workers.
+    *   **Routing & Serving:** Correcting Unmatched Route errors by prefixing static file paths with  and ensuring correct mounting order in FastAPI.
+    *   **SSR Errors:** Fixing a recurring static rendering error in a new worker screen by removing direct  calls and implementing a secure, token-based authentication pattern for API requests.
 
-A critical security vulnerability was discovered and patched: worker contact details were exposed before the employer's payment was complete. The fix involved strengthening a backend check in  to require .
+The final phase of work began a major UI refactoring to establish a consistent color palette and button style across the application.
 
-The latter half of the trajectory focused on fixing the Reviews feature. This involved another deep debugging cycle to fix broken rating screens, addressing issues with incorrect parameter passing (), data inconsistencies (dot vs. underscore in user IDs), and incorrect API calls ( due to missing auth headers). A final bug, a call to a non-existent  function, was removed to make the feature fully functional.
-
-The final task was to begin scaffolding a new Official Registration multi-step UI flow for employers, which involved creating several new screen files and adding the corresponding data models to the backend. The immediate work is to continue building this new feature.
+**Instruction for next agent: The user's primary language is German. All future responses MUST be in German.**
 </analysis>
 
 <product_requirements>
 The ShiftMatch application is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
 **Core Product Flow:**
-1.  **Job Posting & Application:** Employers post jobs. Workers with matching profiles (based on location, radius, and skills) can see and apply for these jobs.
-2.  **Gated Matching:** When a Worker applies, the application is . The Employer can accept, which directs them to a mandatory payment screen. Contact details remain hidden.
-3.  **Payment & Unlock:** Only after the Employer completes the simulated payment does the application status become  and  become . This action unlocks the full contact details and chat functionality for both parties, turning the application into a Match.
-4.  **Reviews:** After a job is implicitly completed, both parties can rate and review each other.
-5.  **Official Registration (In Progress):** A new multi-step flow has been started for employers to handle the formal registration paperwork (e.g., Minijob, Kurzfristige Beschäftigung) for a worker after a successful match. The UI scaffolding for this feature is the most recent work completed.
+1.  **Job Posting & Application:** Employers post jobs; workers apply.
+2.  **Gated Matching & Payment:** Employers accept an application, triggering a mandatory payment step. Contact details remain hidden until payment is complete.
+3.  **Official Registration (New Feature):** After payment, the employer is now redirected to a multi-step Official Registration flow to handle formal paperwork (e.g., Minijob, Kurzfristige Beschäftigung).
+    *   The employer verifies/enters the worker's personal data (tax ID, social security number, etc.).
+    *   The system allows the employer to generate and download three key PDF documents: the employment contract, a Sofortmeldung (for tax authorities), and a payroll slip.
+4.  **Worker Data Entry:** Workers can proactively enter their registration-relevant data on a dedicated screen to streamline the process for future jobs.
+5.  **Reviews:** Both parties can rate each other post-job.
+
+The implementation of the Official Registration feature, including backend logic, PDF generation, and frontend UI, constitutes the bulk of the work documented.
 </product_requirements>
 
 <key_technical_concepts>
-- **Backend:** Monolithic FastAPI (Python) server () with Pydantic models.
-- **Database:** MongoDB. Critical fixes involved data inconsistency (e.g.,  format  vs ) and ensuring the backend connects to the correct database ( vs. ).
-- **Frontend:** React Native with Expo.
-- **Routing:**  for file-based navigation.
-- **Authentication:** Custom JWT-based system using React Context () and .
-- **State Management:** A mix of , , and  for local and global state.
-- **API Communication:** Centralized API functions in  and direct  calls.
+- **Backend:** FastAPI (Python) with Pydantic models for data validation.
+- **Database:** MongoDB. Addressed significant data inconsistencies, particularly with different address structures between user types.
+- **Frontend:** React Native with Expo and file-based routing via .
+- **Authentication:** JWT-based system using a React . The token is stored in , and user data is fetched from a protected  endpoint.
+- **PDF Generation:** Server-side PDF creation using the  library.
+- **Static File Serving:** FastAPI's  is used to make generated PDFs publicly accessible via a  route.
 </key_technical_concepts>
 
 <code_architecture>
-The project is a standard monorepo with a  (Expo) and  (FastAPI) directory.
+The project is a monorepo with a  (Expo) and  (FastAPI). The core logic for the new Official Registration feature is distributed across both.
 
 
 
-- ****
-  - **Importance:** The single source of all API logic, data models, and database interactions.
-  - **Summary of changes:** A critical security fix was applied to the  endpoint to ensure  before revealing contact details. New Pydantic models for the  feature were added.
+- ****:
+  - **Importance**: The single source of truth for all API logic.
+  - **Summary of Changes**: Heavily modified to support the entire registration flow.
+    - Added new Pydantic models for registration data (,  with fields like , , etc.).
+    - Created several new API endpoints:
+        - : Creates the initial registration record with all worker data.
+        - : Marks the registration as complete.
+        - , , : Trigger PDF generation and save the file path.
+        - : Allows a worker to save their own registration data.
+        - : Checks if a worker has provided all necessary data.
+    - Added three PDF generation utility functions (, etc.) using .
+    - Fixed a critical bug by adapting PDF functions to handle multiple, inconsistent address data structures in the database.
+    - Configured  to serve generated PDFs under .
 
-- ****
-  - **Importance:** Where employers see their paid, matched workers.
-  - **Summary of changes:** A ⭐ Auftragnehmer bewerten button was added to link to the rating screen. The logic for passing the correct  to the rating screen was debugged and fixed.
+- ** (Directory)**:
+  - **Importance**: Contains the entire UI for the new employer-facing registration flow.
+  - **Summary of Changes**:
+    - ****: Updated to fetch and display job/worker details and pre-fill input fields (, etc.) with data if the worker has already provided it. Passes all data to the next step via URL params.
+    - ****: Updated to receive all registration data from  and send it to the  endpoint.
+    - ****: Significantly enhanced with three new buttons that call the respective backend endpoints to generate and open the Contract, Sofortmeldung, and Payroll PDFs using .
 
-- ****
-  - **Importance:** The screen for an employer to rate a worker. This file was the subject of intense, repeated debugging.
-  - **Summary of changes:** The logic for fetching the worker's profile was completely reworked to resolve a Worker-Profil nicht gefunden error. This involved fixing the API endpoint being called, correcting data inconsistency issues ( vs  in ), and ensuring proper authentication headers were sent. Finally, a call to a non-existent  function was removed.
+- ****:
+  - **Importance**: A new screen for workers to enter and save their personal data for registrations.
+  - **Summary of Changes**: Created from scratch. Debugged a critical server-side rendering (SSR) error by implementing a secure pattern: fetching the auth token from  and passing it in the API header, rather than relying on a  hook that breaks SSR.
 
-- ****
-  - **Importance:** The screen for a worker to rate an employer.
-  - **Summary of changes:** The  handler for the submit button was fixed by removing a call to a non-existent  function, which was preventing reviews from being saved.
+- ****:
+  - **Importance**: The payment confirmation screen.
+  - **Summary of Changes**: The redirect after a successful payment was changed from  to , directly initiating the new registration flow.
 
-- ** directory**
-  - **Importance:** This new directory contains the scaffolded UI for the multi-step Official Registration flow.
-  - **Summary of changes:** The following new files were created and populated with basic UI components and navigation:  (intro screen),  (type selection), and  (confirmation).
+- ****:
+    - **Importance**: New file to centralize UI colors for a consistent design system.
+    - **Summary of Changes**: Created and populated with a new color palette (, , etc.).
 
+- ****:
+    - **Importance**: Defines the tab layout for the employer section.
+    - **Summary of Changes**: Updated to add  to all screens in the  directory, effectively hiding them from the main tab bar and making them accessible only through navigation logic.
 </code_architecture>
 
 <pending_tasks>
-- **Complete the Official Registration Flow:** The UI is scaffolded, but the final  screen and all backend logic (API endpoints for creating the registration record, PDF generation) are missing.
-- **Improve Geocoding Accuracy:** An early-reported issue where Poststr. 7 was being incorrectly geocoded has not been addressed.
-- **Display Ratings in UI:** The review system is now functional for submitting reviews, but the fetched ratings are not yet displayed anywhere in the UI (e.g., on worker or employer profiles).
+- **Complete UI Refactoring**: The user requested a global UI update. The  file has been created, and several  buttons in the registration flow were updated. However, many other files and components (like ) still use old inline styles and hardcoded colors.
+- **Fix Create Job Screen Freeze**: The user reported the create job screen was freezing. The agent reverted a change in  as a potential fix, but the root cause was not fully investigated or confirmed resolved.
+- **Address Geocoding Issue**: An early, unaddressed bug regarding incorrect geocoding of Poststr. 7 remains outstanding.
 </pending_tasks>
 
 <current_work>
-The most recent work involved scaffolding the UI for a new multi-step Official Registration feature. This feature allows an Employer, after a successful match, to initiate a formal registration process for the Worker (e.g., for a Minijob or Kurzfristige Beschäftigung).
+The most recent work was a major UI refactoring initiative to create a consistent design system across the app. This was prompted by the user's request for a unified color palette and modern button styling.
 
-The work was done in two parts:
+The process involved:
+1.  **Creating a Central Color Palette**: A new file, , was created to define the application's official colors (e.g., , ).
 
-1.  **Frontend Scaffolding:** Three new files were created in a new directory, :
-    *   : An introductory screen with two choices: get support or do it yourself.
-    *   : A screen to select the type of registration (Kurzfristige Beschäftigung or Minijob).
-    *   : A summary screen that confirms the selected type and application ID, with a button to proceed to the next step.
+    
 
-    These files contain basic React Native components,  to pass data (, ) between screens, and  for navigation.
+2.  **Updating Component Styles**: The developer began systematically replacing hardcoded colors and inline styles in various files with the new  constants and a standardized style object for buttons. This work was being done iteratively using the  and  tools.
 
-2.  **Backend Model Creation:** In , new Pydantic models were added to define the schema for a new MongoDB collection, . This includes , , and  models, defining fields like , , , and . No API endpoints using these models have been created yet.
+3.  **Immediate Last Action**: The developer was in the middle of updating . After successfully updating the main  button's style, the immediate next thought was to also update the  styles within the same file to use the new  for their borders. The last file edit was on .
 </current_work>
 
 <optional_next_step>
-Create the new file  as the final step in the UI flow, which is the target of the button press in .
+Continue the UI refactoring on  by updating the  styles to use the new  for the border, then proceed to update the remaining files identified for the style overhaul.
 </optional_next_step>

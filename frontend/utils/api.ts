@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ===== BACKEND URL =====
 // WICHTIG: Hier die Backend-URL eintragen!
-export const API_BASE = 'https://schnellhire.preview.emergentagent.com/api';
+export const API_BASE = 'https://official-reg.preview.emergentagent.com/api';
 
 // ===== STORAGE KEYS =====
 // WICHTIG: Muss mit AuthContext.tsx übereinstimmen!

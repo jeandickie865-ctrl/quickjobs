@@ -3,7 +3,7 @@ import { WorkerProfile } from '../types/profile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://schnellhire.preview.emergentagent.com';
+const BACKEND_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://official-reg.preview.emergentagent.com';
 const API_BASE = `${BACKEND_URL}/api`;
 
 const TOKEN_KEY = '@shiftmatch:token';

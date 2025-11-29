@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 
 # Backend URL from environment
-BACKEND_URL = "https://schnellhire.preview.emergentagent.com/api"
+BACKEND_URL = "https://official-reg.preview.emergentagent.com/api"
 
 class RegistrationFlowTester:
     def __init__(self):
@@ -609,7 +609,7 @@ class RegistrationFlowTester:
                 # Additional verification: try to access one of the PDFs to confirm storage
                 contract_url = pdf_urls["contract"]
                 if contract_url.startswith("/api/"):
-                    full_url = f"https://schnellhire.preview.emergentagent.com{contract_url}"
+                    full_url = f"https://official-reg.preview.emergentagent.com{contract_url}"
                 else:
                     full_url = contract_url
                 
@@ -656,7 +656,7 @@ class RegistrationFlowTester:
             try:
                 # Convert relative URL to full URL if needed
                 if url.startswith("/api/"):
-                    full_url = f"https://schnellhire.preview.emergentagent.com{url}"
+                    full_url = f"https://official-reg.preview.emergentagent.com{url}"
                 else:
                     full_url = url
                 
