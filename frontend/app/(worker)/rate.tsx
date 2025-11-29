@@ -22,8 +22,9 @@ const COLORS = {
 export default function RateEmployerScreen() {
   const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  const params = useLocalSearchParams<{ jobId?: string }>();
+  const params = useLocalSearchParams<{ jobId?: string; employerId?: string }>();
   const jobId = params.jobId;
+  const employerId = params.employerId;
 
   const [job, setJob] = useState<Job | null>(null);
   const [employer, setEmployer] = useState<EmployerProfile | null>(null);
