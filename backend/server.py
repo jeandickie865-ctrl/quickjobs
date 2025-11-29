@@ -324,6 +324,32 @@ class ReviewCreate(BaseModel):
     rating: int  # 1-5
     comment: Optional[str] = None
 
+
+# Official Registration Models
+class OfficialRegistration(BaseModel):
+    id: str = Field(default_factory=lambda: f"reg_{str(uuid.uuid4())}")
+    applicationId: str
+    employerId: str
+    workerId: str
+    registrationType: str  # 'kurzfristig' or 'minijob'
+    status: str = "pending"  # 'pending' or 'completed'
+    contractUrl: Optional[str] = None
+    sofortmeldungUrl: Optional[str] = None
+    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    updatedAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class OfficialRegistrationCreate(BaseModel):
+    applicationId: str
+    employerId: str
+    workerId: str
+    registrationType: str  # 'kurzfristig' or 'minijob'
+
+class OfficialRegistrationUpdate(BaseModel):
+    status: Optional[str] = None
+    contractUrl: Optional[str] = None
+    sofortmeldungUrl: Optional[str] = None
+    updatedAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
 # Chat Message Models
 class ChatMessage(BaseModel):
     id: str = Field(default_factory=lambda: f"msg_{str(uuid.uuid4())}")
