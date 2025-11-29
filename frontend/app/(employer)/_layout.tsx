@@ -234,6 +234,13 @@ export default function EmployerLayout() {
           href: null, // Hide from tabs
         }}
       />
+
+      <Tabs.Screen
+        name="registration"
+        options={{
+          href: null, // Hide from tabs - Registration screens are accessed via buttons
+        }}
+      />
     </Tabs>
   );
 }
