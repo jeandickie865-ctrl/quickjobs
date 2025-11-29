@@ -13,6 +13,9 @@ from datetime import datetime
 # Import matching service
 from matching_service import match_worker_with_job
 import json
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import cm
 
 # Configure logging BEFORE FastAPI is created
 logging.basicConfig(
