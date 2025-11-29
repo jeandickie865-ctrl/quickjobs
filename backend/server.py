@@ -356,6 +356,10 @@ class OfficialRegistrationUpdate(BaseModel):
     status: Optional[str] = None
     contractUrl: Optional[str] = None
     sofortmeldungUrl: Optional[str] = None
+    steuerId: Optional[str] = None
+    krankenkasse: Optional[str] = None
+    geburtsdatum: Optional[str] = None
+    sozialversicherungsnummer: Optional[str] = None
     updatedAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 # Chat Message Models
