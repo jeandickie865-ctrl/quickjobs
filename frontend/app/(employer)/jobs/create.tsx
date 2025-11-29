@@ -345,244 +345,35 @@ export default function CreateJob() {
           </View>
         )}
 
-        {/* Time Mode */}
+        {/* Simplified Time/Date Info */}
         <View style={{ gap: 6 }}>
-          <Text style={{ color: colors.black, fontWeight: '600' }}>Zeitart</Text>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Pressable
-              onPress={() => setTimeMode('fixed_time')}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                paddingHorizontal: 12,
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: timeMode === 'fixed_time' ? colors.black : colors.gray200,
-                backgroundColor: timeMode === 'fixed_time' ? colors.black : colors.beige100,
-              }}
-            >
-              <Text style={{ 
-                color: timeMode === 'fixed_time' ? colors.white : colors.black,
-                textAlign: 'center',
-                fontWeight: '600',
-                fontSize: 12
-              }}>
-                Zeitgenau
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={() => setTimeMode('hour_package')}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                paddingHorizontal: 12,
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: timeMode === 'hour_package' ? colors.black : colors.gray200,
-                backgroundColor: timeMode === 'hour_package' ? colors.black : colors.beige100,
-              }}
-            >
-              <Text style={{ 
-                color: timeMode === 'hour_package' ? colors.white : colors.black,
-                textAlign: 'center',
-                fontWeight: '600',
-                fontSize: 12
-              }}>
-                Stundenpaket
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={() => setTimeMode('project')}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                paddingHorizontal: 12,
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: timeMode === 'project' ? colors.black : colors.gray200,
-                backgroundColor: timeMode === 'project' ? colors.black : colors.beige100,
-              }}
-            >
-              <Text style={{ 
-                color: timeMode === 'project' ? colors.white : colors.black,
-                textAlign: 'center',
-                fontWeight: '600',
-                fontSize: 12
-              }}>
-                Projekt
-              </Text>
-            </Pressable>
-          </View>
+          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>
+            Zeit/Datum-Informationen (optional)
+          </Text>
+          <TextInput
+            value={timeInfo}
+            onChangeText={setTimeInfo}
+            placeholder="z.B. Montag 15.12.2024, 14:00-18:00 Uhr"
+            placeholderTextColor={colors.gray400}
+            multiline
+            numberOfLines={2}
+            style={{
+              borderWidth: 1.5,
+              borderColor: colors.gray300,
+              borderRadius: 12,
+              paddingHorizontal: spacing.md,
+              paddingVertical: spacing.sm,
+              backgroundColor: colors.white,
+              color: colors.black,
+              minHeight: 80,
+              textAlignVertical: 'top',
+              fontSize: 15,
+            }}
+          />
+          <Text style={{ fontSize: 12, color: colors.gray500, marginTop: 4 }}>
+            Gib Datum und Uhrzeit als Freitext ein
+          </Text>
         </View>
-
-        {/* Time inputs based on mode */}
-        {timeMode === 'fixed_time' && (
-          <View style={{ gap: 16 }}>
-            <View style={{ gap: 12 }}>
-              <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Start</Text>
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <View style={{ flex: 1 }}>
-                  <UniversalDateTimePicker
-                    label="Datum"
-                    value={startDateTime}
-                    onChange={setStartDateTime}
-                    mode="date"
-                    minimumDate={new Date()}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <UniversalDateTimePicker
-                    label="Uhrzeit"
-                    value={startDateTime}
-                    onChange={setStartDateTime}
-                    mode="time"
-                  />
-                </View>
-              </View>
-            </View>
-            
-            <View style={{ gap: 12 }}>
-              <Text style={{ color: colors.purple, fontWeight: '700', fontSize: 14 }}>Ende</Text>
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <View style={{ flex: 1 }}>
-                  <UniversalDateTimePicker
-                    label="Datum"
-                    value={endDateTime}
-                    onChange={setEndDateTime}
-                    mode="date"
-                    minimumDate={startDateTime || new Date()}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <UniversalDateTimePicker
-                    label="Uhrzeit"
-                    value={endDateTime}
-                    onChange={setEndDateTime}
-                    mode="time"
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-
-        {timeMode === 'hour_package' && (
-          <View style={{ gap: 12 }}>
-            <View style={{ gap: 6 }}>
-              <Text style={{ color: colors.black, fontWeight: '600' }}>Stundenanzahl</Text>
-              <TextInput
-                value={hours}
-                onChangeText={setHours}
-                placeholder="z.B. 6"
-                placeholderTextColor={colors.gray400}
-                keyboardType="numeric"
-                style={{
-                  borderWidth: 1,
-                  borderColor: colors.gray200,
-                  borderRadius: 12,
-                  paddingHorizontal: 12,
-                  paddingVertical: 10,
-                  backgroundColor: colors.white,
-                  color: colors.black
-                }}
-              />
-            </View>
-
-            {/* Date Type Selection */}
-            <View style={{ gap: 6 }}>
-              <Text style={{ color: colors.black, fontWeight: '600' }}>Zeitraum</Text>
-              <View style={{ flexDirection: 'row', gap: 8 }}>
-                <Pressable
-                  onPress={() => setHoursDateType('specific')}
-                  style={{
-                    flex: 1,
-                    paddingVertical: 10,
-                    paddingHorizontal: 12,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: hoursDateType === 'specific' ? colors.black : colors.gray200,
-                    backgroundColor: hoursDateType === 'specific' ? colors.black : colors.beige100,
-                  }}
-                >
-                  <Text style={{ 
-                    color: hoursDateType === 'specific' ? colors.white : colors.black,
-                    textAlign: 'center',
-                    fontWeight: '600',
-                    fontSize: 12
-                  }}>
-                    Fester Tag
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={() => setHoursDateType('range')}
-                  style={{
-                    flex: 1,
-                    paddingVertical: 10,
-                    paddingHorizontal: 12,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: hoursDateType === 'range' ? colors.black : colors.gray200,
-                    backgroundColor: hoursDateType === 'range' ? colors.black : colors.beige100,
-                  }}
-                >
-                  <Text style={{ 
-                    color: hoursDateType === 'range' ? colors.white : colors.black,
-                    textAlign: 'center',
-                    fontWeight: '600',
-                    fontSize: 12
-                  }}>
-                    Zeitraum
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-
-            {/* Date Inputs based on selection */}
-            {hoursDateType === 'specific' && (
-              <UniversalDateTimePicker
-                label="Datum"
-                value={hoursSpecificDate}
-                onChange={setHoursSpecificDate}
-                mode="date"
-                minimumDate={new Date()}
-              />
-            )}
-
-            {hoursDateType === 'range' && (
-              <View style={{ gap: 12 }}>
-                <UniversalDateTimePicker
-                  label="Von Datum"
-                  value={hoursStartDate}
-                  onChange={setHoursStartDate}
-                  mode="date"
-                  minimumDate={new Date()}
-                />
-                <UniversalDateTimePicker
-                  label="Bis Datum"
-                  value={hoursEndDate}
-                  onChange={setHoursEndDate}
-                  mode="date"
-                  minimumDate={hoursStartDate || new Date()}
-                />
-              </View>
-            )}
-          </View>
-        )}
-
-        {timeMode === 'project' && (
-          <View style={{ gap: 6 }}>
-            <UniversalDateTimePicker
-              label="Fällig bis (optional)"
-              value={dueDate}
-              onChange={setDueDate}
-              mode="date"
-              minimumDate={new Date()}
-            />
-          </View>
-        )}
 
         {/* Address */}
         <View style={{ gap: 6 }}>
