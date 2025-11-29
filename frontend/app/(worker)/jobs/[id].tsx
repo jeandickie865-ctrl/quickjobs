@@ -352,12 +352,12 @@ export default function WorkerJobDetailScreen() {
                   const newCount = buttonClickCount + 1;
                   setButtonClickCount(newCount);
                   setDebugLogs(prev => [...prev, `🚀 Click #${newCount}`]);
-                  setDebugLogs(prev => [...prev, `Job ID: ${job._id}`]);
-                  setDebugLogs(prev => [...prev, `Job ID Type: ${typeof job._id}`]);
+                  setDebugLogs(prev => [...prev, `Job ID: ${job.id}`]);
+                  setDebugLogs(prev => [...prev, `Job ID Type: ${typeof job.id}`]);
                   
                   try {
                     setDebugLogs(prev => [...prev, '📝 Rufe addApplication...' ]);
-                    const result = await addApplication(job._id);
+                    const result = await addApplication(job.id);
                     setDebugLogs(prev => [...prev, '✅ Erfolg!']);
                     alert('✅ Erfolg! Bewerbung wurde erstellt.');
                     setTimeout(() => router.push('/(worker)/applications'), 500);
