@@ -68,16 +68,24 @@ export default function RateWorkerScreen() {
 
   async function loadData() {
     if (!jobId) {
+      console.log('❌ No jobId provided');
       setLoading(false);
       return;
     }
 
     try {
+      console.log('📋 Loading job:', jobId);
       const jobData = await getJobById(String(jobId));
-      if (jobData && jobData.matchedWorkerId) {
-        setJob(jobData);
-        const workerData = await getWorkerProfile(jobData.matchedWorkerId);
+      setJob(jobData);
+      
+      // Get workerId from params or from job
+      const targetWorkerId = params.workerId || jobData?.matchedWorkerId;
+      
+      console.log('👤 Loading worker:', targetWorkerId);
+      if (targetWorkerId) {
+        const workerData = await getWorkerProfile(String(targetWorkerId));
         setWorker(workerData);
+        console.log('✅ Worker loaded:', workerData?.firstName);
       }
     } catch (error) {
       console.error('Error loading data:', error);
