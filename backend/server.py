@@ -2258,8 +2258,14 @@ def generate_sofortmeldung_pdf(
         c.drawString(2*cm, y_pos, employer_data['companyName'])
         y_pos -= 0.5*cm
     
+    # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
     emp_addr = employer_data.get('homeAddress', {})
-    employer_address = f"{emp_addr.get('street', '')}, {emp_addr.get('postalCode', '')} {emp_addr.get('city', '')}"
+    if emp_addr:
+        # Neue Struktur: homeAddress Object
+        employer_address = f"{emp_addr.get('street', '')} {emp_addr.get('houseNumber', '')}, {emp_addr.get('postalCode', '')} {emp_addr.get('city', '')}"
+    else:
+        # Alte Struktur: Root-Level Felder
+        employer_address = f"{employer_data.get('street', '')} {employer_data.get('houseNumber', '')}, {employer_data.get('postalCode', '')} {employer_data.get('city', '')}"
     c.drawString(2*cm, y_pos, employer_address)
     y_pos -= 1*cm
     
@@ -2273,8 +2279,14 @@ def generate_sofortmeldung_pdf(
     c.drawString(2*cm, y_pos, worker_name)
     y_pos -= 0.5*cm
     
+    # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
     work_addr = worker_data.get('homeAddress', {})
-    worker_address = f"{work_addr.get('street', '')}, {work_addr.get('postalCode', '')} {work_addr.get('city', '')}"
+    if work_addr:
+        # Neue Struktur: homeAddress Object
+        worker_address = f"{work_addr.get('street', '')} {work_addr.get('houseNumber', '')}, {work_addr.get('postalCode', '')} {work_addr.get('city', '')}"
+    else:
+        # Alte Struktur: Root-Level Felder
+        worker_address = f"{worker_data.get('street', '')} {worker_data.get('houseNumber', '')}, {worker_data.get('postalCode', '')} {worker_data.get('city', '')}"
     c.drawString(2*cm, y_pos, worker_address)
     y_pos -= 0.5*cm
     
