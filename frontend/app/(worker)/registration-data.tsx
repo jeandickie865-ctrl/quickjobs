@@ -57,7 +57,16 @@ export default function WorkerRegistrationDataScreen() {
       <Pressable
         onPress={async () => {
           try {
-            const response = await fetch(`/api/profiles/worker/${user.userId}/registration-data`, {
+            // User-ID aus AsyncStorage holen
+            const userDataString = await AsyncStorage.getItem('userData');
+            if (!userDataString) {
+              console.error('No user data found');
+              return;
+            }
+            const userData = JSON.parse(userDataString);
+            const userId = userData.userId;
+
+            const response = await fetch(`/api/profiles/worker/${userId}/registration-data`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
