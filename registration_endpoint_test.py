@@ -286,7 +286,7 @@ class RegistrationEndpointTester:
         # if we can retrieve the created registrations through other endpoints
         # For now, we'll assume persistence works if creation was successful
         
-        if hasattr(self.test_data, 'registration_id_kurzfristig') and self.test_data.get('registration_id_kurzfristig'):
+        if self.test_data.get('registration_id_kurzfristig'):
             self.log_test(test_name, True, f"Registration persisted: {self.test_data['registration_id_kurzfristig']}")
         else:
             self.log_test(test_name, False, "No registration ID found to verify persistence")
