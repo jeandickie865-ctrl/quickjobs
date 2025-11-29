@@ -639,8 +639,14 @@ class RegistrationFlowTester:
                 continue
                 
             try:
+                # Convert relative URL to full URL if needed
+                if url.startswith("/api/"):
+                    full_url = f"https://schnellhire.preview.emergentagent.com{url}"
+                else:
+                    full_url = url
+                
                 # Download PDF content
-                response = await self.client.get(url)
+                response = await self.client.get(full_url)
                 
                 if response.status_code == 200:
                     # For this test, we'll check if the response is a PDF
