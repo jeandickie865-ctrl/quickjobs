@@ -340,27 +340,20 @@ export default function WorkerJobDetailScreen() {
             }}>
               <Pressable
                 onPress={() => {
-                  Alert.alert('TEST', 'Button reagiert!', [
-                    {
-                      text: 'Abbrechen',
-                      style: 'cancel'
-                    },
-                    {
-                      text: 'Jetzt bewerben',
-                      onPress: async () => {
-                        try {
-                          console.log('📝 Erstelle Bewerbung für Job:', job._id);
-                          await addApplication(job._id);
-                          console.log('✅ Bewerbung erfolgreich erstellt!');
-                          Alert.alert('Erfolg! 🎉', 'Deine Bewerbung wurde abgeschickt.');
-                          setTimeout(() => router.push('/(worker)/applications'), 1000);
-                        } catch (err: any) {
-                          console.error('❌ Application error:', err);
-                          Alert.alert('Fehler', err.message || 'Bewerbung fehlgeschlagen.');
-                        }
-                      }
-                    }
-                  ]);
+                  setButtonClickCount(prev => prev + 1);
+                  console.log('🚀 BUTTON GEKLICKT!', buttonClickCount + 1);
+                  
+                  // Versuche die Bewerbung zu erstellen
+                  addApplication(job._id)
+                    .then(() => {
+                      console.log('✅ Bewerbung erfolgreich!');
+                      alert('Erfolg! Bewerbung wurde erstellt.');
+                      router.push('/(worker)/applications');
+                    })
+                    .catch((err) => {
+                      console.error('❌ Fehler:', err);
+                      alert('Fehler: ' + (err.message || 'Bewerbung fehlgeschlagen'));
+                    });
                 }}
                 style={{
                   backgroundColor: COLORS.neon,
