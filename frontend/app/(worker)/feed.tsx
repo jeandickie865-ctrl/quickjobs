@@ -39,18 +39,20 @@ export default function WorkerFeedScreen() {
     } catch (err: any) {
       console.error("❌ Error loading jobs:", err);
       if (err.message === "UNAUTHORIZED" || err.message?.includes("no token found")) {
+        setIsLoading(false);
         signOut();
         return;
       }
       // Check if it's a "profile not found" error
       if (err.message?.includes("FAILED_TO_FETCH_MATCHED_JOBS")) {
         setError("Du musst zuerst dein Profil vervollständigen, um passende Jobs zu sehen. Bitte gehe zum Profil-Tab.");
+        setIsLoading(false);
         return;
       }
       setError(`Fehler beim Laden der Jobs: ${err.message || 'Unbekannter Fehler'}`);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {
