@@ -668,24 +668,173 @@ class AuthBackendTester:
         
         return passed_tests, failed_tests
 
+    async def test_auth_endpoints_focused(self):
+        """Focused auth testing as requested in German review"""
+        print("🔐 TESTING AUTH ENDPOINTS NACH AUTHCONTEXT FIX")
+        print("=" * 60)
+        
+        # Generate dynamic email to avoid conflicts as requested
+        timestamp = int(time.time())
+        
+        test_scenarios = [
+            {
+                "email": f"testuser_{timestamp}@test.de",
+                "password": "Test123!",
+                "role": "worker",
+                "name": "Test Worker"
+            },
+            {
+                "email": f"employer_{timestamp}@test.de", 
+                "password": "Test123!",
+                "role": "employer",
+                "name": "Test Employer"
+            }
+        ]
+        
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            for scenario in test_scenarios:
+                print(f"\n🧪 Testing {scenario['role'].upper()} Flow:")
+                print("-" * 40)
+                
+                # 1. SIGNUP FLOW
+                try:
+                    signup_data = {
+                        "email": scenario["email"],
+                        "password": scenario["password"],
+                        "role": scenario["role"]
+                    }
+                    
+                    response = await client.post(f"{self.base_url}/auth/signup", json=signup_data)
+                    
+                    if response.status_code in [200, 201]:
+                        data = response.json()
+                        if all(key in data for key in ["userId", "email", "role", "token"]):
+                            self.log_test(f"Signup Flow ({scenario['role']})", True, 
+                                        f"✅ User created: {data['email']}, Token received")
+                            scenario["userId"] = data["userId"]
+                            scenario["token"] = data["token"]
+                        else:
+                            self.log_test(f"Signup Flow ({scenario['role']})", False, 
+                                        f"Missing required fields in response")
+                            continue
+                    else:
+                        error_text = response.text
+                        self.log_test(f"Signup Flow ({scenario['role']})", False, 
+                                    f"Status: {response.status_code}, Error: {error_text}")
+                        continue
+                        
+                except Exception as e:
+                    self.log_test(f"Signup Flow ({scenario['role']})", False, f"Exception: {str(e)}")
+                    continue
+                
+                # 2. LOGIN FLOW
+                try:
+                    login_data = {
+                        "email": scenario["email"],
+                        "password": scenario["password"]
+                    }
+                    
+                    response = await client.post(f"{self.base_url}/auth/login", json=login_data)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        if (data.get("email") == scenario["email"] and 
+                            data.get("role") == scenario["role"] and
+                            "token" in data):
+                            self.log_test(f"Login Flow ({scenario['role']})", True, 
+                                        f"✅ Login successful, token valid")
+                            scenario["login_token"] = data["token"]
+                        else:
+                            self.log_test(f"Login Flow ({scenario['role']})", False, 
+                                        f"Data mismatch in login response")
+                    else:
+                        error_text = response.text
+                        self.log_test(f"Login Flow ({scenario['role']})", False, 
+                                    f"Status: {response.status_code}, Error: {error_text}")
+                        
+                except Exception as e:
+                    self.log_test(f"Login Flow ({scenario['role']})", False, f"Exception: {str(e)}")
+                
+                # 3. GET CURRENT USER
+                if "login_token" in scenario:
+                    try:
+                        headers = {"Authorization": f"Bearer {scenario['login_token']}"}
+                        response = await client.get(f"{self.base_url}/auth/me", headers=headers)
+                        
+                        if response.status_code == 200:
+                            data = response.json()
+                            if (data.get("email") == scenario["email"] and 
+                                data.get("role") == scenario["role"] and
+                                data.get("userId") == scenario["userId"]):
+                                self.log_test(f"Get Current User ({scenario['role']})", True, 
+                                            f"✅ User data verified correctly")
+                            else:
+                                self.log_test(f"Get Current User ({scenario['role']})", False, 
+                                            f"User data mismatch")
+                        else:
+                            error_text = response.text
+                            self.log_test(f"Get Current User ({scenario['role']})", False, 
+                                        f"Status: {response.status_code}, Error: {error_text}")
+                            
+                    except Exception as e:
+                        self.log_test(f"Get Current User ({scenario['role']})", False, f"Exception: {str(e)}")
+            
+            # 4. INVALID LOGIN TESTS
+            print(f"\n🚫 Testing Invalid Login Scenarios:")
+            print("-" * 40)
+            
+            try:
+                # Test with non-existent email
+                invalid_login = {
+                    "email": "nonexistent@test.de",
+                    "password": "Test123!"
+                }
+                
+                response = await client.post(f"{self.base_url}/auth/login", json=invalid_login)
+                
+                if response.status_code == 404:
+                    self.log_test("Invalid Login - Non-existent Email", True, 
+                                f"✅ Correctly returned 404 for non-existent user")
+                else:
+                    self.log_test("Invalid Login - Non-existent Email", False, 
+                                f"Expected 404, got {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test("Invalid Login - Non-existent Email", False, f"Exception: {str(e)}")
+            
+            try:
+                # Test with wrong password (using first test user)
+                if test_scenarios:
+                    wrong_password = {
+                        "email": test_scenarios[0]["email"],
+                        "password": "WrongPassword123!"
+                    }
+                    
+                    response = await client.post(f"{self.base_url}/auth/login", json=wrong_password)
+                    
+                    if response.status_code == 401:
+                        self.log_test("Invalid Login - Wrong Password", True, 
+                                    f"✅ Correctly returned 401 for wrong password")
+                    else:
+                        self.log_test("Invalid Login - Wrong Password", False, 
+                                    f"Expected 401, got {response.status_code}")
+                        
+            except Exception as e:
+                self.log_test("Invalid Login - Wrong Password", False, f"Exception: {str(e)}")
+
 async def main():
-    """Run all backend tests"""
-    print("🚀 STARTING COMPREHENSIVE BACKEND API TESTING")
-    print("Testing after frontend refactoring with centralized utils/api.ts")
+    """Run focused auth tests as requested"""
+    print("🔐 BACKEND AUTH TESTING NACH AUTHCONTEXT FIX")
+    print("Testing authentication endpoints with dynamic emails")
     print("=" * 60)
     
-    tester = ComprehensiveBackendTester()
+    tester = AuthBackendTester()
     
-    # Run all test suites
+    # Test backend health first
     await tester.test_health_check()
-    await tester.test_authentication()
-    await tester.test_worker_profile()
-    await tester.test_employer_profile()
-    await tester.test_jobs_system()
-    await tester.test_applications_system()
-    await tester.test_chat_system()
-    await tester.test_reviews_system()
-    await tester.test_authorization_headers()
+    
+    # Run focused auth testing
+    await tester.test_auth_endpoints_focused()
     
     # Print final summary
     passed, failed = tester.print_summary()
