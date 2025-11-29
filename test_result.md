@@ -1181,6 +1181,18 @@ backend:
         agent: "testing"
         comment: "🎯 GET /api/jobs/{jobId} ENDPOINT TESTING NACH MATCHES.TSX PERFORMANCE-REFAKTORIERUNG - 25/26 TESTS BESTANDEN (96.2%): ✅ Valid Job IDs (8/8 tests passed - both employer and worker tokens work correctly), ✅ Invalid Job IDs (8/9 tests passed - correctly returns 404 for non-existent jobs, minor issue with empty string returning 307 instead of 404), ✅ Authorization (3/3 tests passed - proper 401 responses for missing/invalid tokens), ✅ Performance Test (2/2 tests passed - retrieved 4 jobs in 0.05s, avg 0.012s per job, all under 1s benchmark), ✅ Data Integrity (2/2 tests passed - all required fields present with correct types), ✅ Backend Health (2/2 tests passed - service healthy). Backend logs show no errors. Endpoint is PRODUCTION-READY for matches.tsx performance optimization where frontend changed from loading all jobs to individual getJobById() calls."
 
+  - task: "POST /api/registrations/create Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "🎉 COMPREHENSIVE REGISTRATION ENDPOINT TESTING COMPLETED - ALL 8/8 TESTS PASSED (100% SUCCESS RATE): ✅ Successful Registration - Kurzfristig (creates OfficialRegistration with correct ID format reg_{uuid}, applicationId, employerId, workerId, registrationType='kurzfristig', status='pending', null URLs), ✅ Successful Registration - Minijob (creates registration with registrationType='minijob'), ✅ Application Not Found (correctly returns 404 'Application nicht gefunden' for non-existent applicationId), ✅ Data Persistence Check (registration persisted in MongoDB collection 'official_registrations'), ✅ Multiple Registrations Same Application (allows multiple registrations for same application as per requirements), ✅ Invalid Registration Type (handles invalid registrationType gracefully), ✅ Missing Required Fields (properly validates missing applicationId/registrationType with 422 errors). Endpoint fully functional with proper validation, error handling, and data persistence. All test scenarios from German review request successfully verified."
+
 
   - agent: "main"
     message: |
