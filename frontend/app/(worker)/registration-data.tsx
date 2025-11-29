@@ -59,17 +59,21 @@ export default function WorkerRegistrationDataScreen() {
           try {
             // Auth Token aus AsyncStorage holen (NUR für Authorization)
             const token = await AsyncStorage.getItem('authToken');
-            if (!token) {
-              console.error('No auth token found');
+            const userDataString = await AsyncStorage.getItem('userData');
+            
+            if (!token || !userDataString) {
+              console.error('No auth token or user data found');
               return;
             }
 
-            // Backend holt userId aus dem Token
-            const response = await fetch('/api/profiles/worker/me/registration-data', {
+            const userData = JSON.parse(userDataString);
+            const userId = userData.userId;
+
+            // Worker-Registrierungsdaten speichern
+            const response = await fetch(`/api/profiles/worker/${userId}/registration-data`, {
               method: 'PUT',
               headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
               },
               body: JSON.stringify({
                 steuerId,
