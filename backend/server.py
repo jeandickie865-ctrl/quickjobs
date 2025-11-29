@@ -1440,11 +1440,12 @@ async def pay_for_application(
     if requesting_user != application.get("employerId"):
         raise HTTPException(status_code=403, detail="Only the employer can pay for applications")
     
-    # Mark as paid and unlock chat
+    # Mark as paid and accepted (unlock chat)
     now = datetime.utcnow().isoformat()
     await db.applications.update_one(
         {"id": application_id},
         {"$set": {
+            "status": "accepted",
             "isPaid": True,
             "chatUnlocked": True,
             "paymentStatus": "paid",
