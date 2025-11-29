@@ -335,9 +335,14 @@ export default function EmployerProfileViewScreen() {
               onPress={() => router.push('/(employer)/edit-profile')}
               style={({ pressed }) => ({
                 backgroundColor: COLORS.neon,
-                paddingVertical: 16,
-                borderRadius: 12,
+                borderRadius: 14,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
                 alignItems: 'center',
+                shadowColor: COLORS.neonShadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8,
+                shadowRadius: 6,
                 marginTop: 32,
                 opacity: pressed ? 0.9 : 1,
               })}
