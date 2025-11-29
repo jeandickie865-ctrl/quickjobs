@@ -446,6 +446,31 @@ export default function MatchesScreen() {
                     </View>
                   </Pressable>
 
+                  {/* Rate Worker Button - nur nach Zahlung */}
+                  {match.application.paymentStatus === "paid" && (
+                    <Pressable
+                      onPress={() => router.push(`/(employer)/jobs/rate?jobId=${match.job.id}&workerId=${match.worker?.userId}`)}
+                      style={({ pressed }) => ({
+                        backgroundColor: '#FFD700',
+                        borderRadius: 12,
+                        paddingVertical: 14,
+                        alignItems: 'center',
+                        opacity: pressed ? 0.9 : 1,
+                        shadowColor: '#FFD700',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 4,
+                      })}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <Ionicons name="star" size={18} color={COLORS.black} />
+                        <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
+                          Auftragnehmer bewerten
+                        </Text>
+                      </View>
+                    </Pressable>
+                  )}
+
                   {/* Official Registration Section - nur nach Zahlung */}
                   {match.application.paymentStatus === "paid" && (
                     <>
