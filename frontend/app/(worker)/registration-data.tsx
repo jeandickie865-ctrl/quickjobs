@@ -1,17 +1,9 @@
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useState } from 'react';
 
 export default function WorkerRegistrationDataScreen() {
   const router = useRouter();
-  const { user } = useAuth();
-  
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const [geburtsdatum, setGeburtsdatum] = useState('');
   const [steuerId, setSteuerId] = useState('');
