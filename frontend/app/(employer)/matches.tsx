@@ -450,8 +450,12 @@ export default function MatchesScreen() {
                   {match.application.paymentStatus === "paid" && (
                     <Pressable
                       onPress={() => {
-                        const workerId = match.worker?.userId || match.application.workerId;
-                        console.log('🎯 Employer: Navigate to rate - jobId:', match.job.id, 'workerId:', workerId);
+                        // Use application.workerId directly
+                        const workerId = match.application?.workerId;
+                        console.log('🎯 Employer Button: application.workerId:', match.application?.workerId);
+                        console.log('🎯 Employer Button: worker?.userId:', match.worker?.userId);
+                        console.log('🎯 Employer Button: Final workerId:', workerId);
+                        console.log('🎯 Employer Button: Navigate to rate - jobId:', match.job.id, 'workerId:', workerId);
                         router.push(`/(employer)/jobs/rate?jobId=${match.job.id}&workerId=${workerId}`);
                       }}
                       style={({ pressed }) => ({
