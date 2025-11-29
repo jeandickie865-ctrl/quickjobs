@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import COLORS from '@/constants/colors';
 
 export default function RegistrationStartScreen() {
   const router = useRouter();
@@ -16,13 +17,18 @@ export default function RegistrationStartScreen() {
       <Pressable
         onPress={() => router.push(`/(employer)/registration/prepare?applicationId=${applicationId}&type=kurzfristig`)}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
-          alignItems: 'center'
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Kurzfristige Beschäftigung vorbereiten
         </Text>
       </Pressable>
@@ -30,13 +36,18 @@ export default function RegistrationStartScreen() {
       <Pressable
         onPress={() => router.push(`/(employer)/registration/prepare?applicationId=${applicationId}&type=minijob`)}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
-          alignItems: 'center'
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Minijob vorbereiten
         </Text>
       </Pressable>
