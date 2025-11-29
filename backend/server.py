@@ -1990,7 +1990,7 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://job-market-preview.preview.emergentagent.com",
+        "https://job-connector-7.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"

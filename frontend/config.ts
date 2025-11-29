@@ -1,6 +1,6 @@
 export const API_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  "https://job-market-preview.preview.emergentagent.com/api";
+  "https://job-connector-7.preview.emergentagent.com/api";
 
 export const APP_VERSION = "1.0.0";
 
