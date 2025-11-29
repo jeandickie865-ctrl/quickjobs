@@ -89,23 +89,10 @@ export default function RateWorkerScreen() {
       console.log('👤 Employer Rate: Loading worker with ID:', workerId);
       
       if (workerId) {
-        // DIRECT API CALL
-        const headers = await getAuthHeaders();
-        const response = await fetch(`${API_URL}/profiles/worker/${workerId}`, {
-          method: 'GET',
-          headers,
-        });
-        
-        console.log('📡 Employer Rate: Worker API response status:', response.status);
-        
-        if (response.ok) {
-          const workerData = await response.json();
-          setWorker(workerData);
-          console.log('✅ Employer Rate: Worker loaded:', workerData?.firstName, workerData?.lastName);
-        } else {
-          const errorText = await response.text();
-          console.error('❌ Employer Rate: Failed to load worker:', response.status, errorText);
-        }
+        // Use getWorkerProfile - it handles auth correctly
+        const workerData = await getWorkerProfile(String(workerId));
+        setWorker(workerData);
+        console.log('✅ Employer Rate: Worker loaded:', workerData?.firstName, workerData?.lastName);
       } else {
         console.error('❌ Employer Rate: No workerId available!');
       }
