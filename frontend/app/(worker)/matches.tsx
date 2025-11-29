@@ -488,11 +488,15 @@ export default function WorkerMatchesScreen() {
                         }}
                         style={({ pressed }) => ({
                           backgroundColor: '#FFD700',
+                          borderRadius: 14,
                           paddingVertical: 14,
-                          borderRadius: 16,
+                          paddingHorizontal: 16,
                           alignItems: 'center',
+                          shadowColor: 'rgba(255,215,0,0.2)',
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.8,
+                          shadowRadius: 6,
                           opacity: pressed ? 0.9 : 1,
-                          transform: [{ scale: pressed ? 0.98 : 1 }],
                         })}
                       >
                         <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
