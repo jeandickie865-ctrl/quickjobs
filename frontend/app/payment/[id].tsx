@@ -49,9 +49,9 @@ export default function PaymentScreen() {
       const data = await res.json();
       setApplication(data);
 
-      // Wenn bereits bezahlt, direkt zu Matches
+      // Wenn bereits bezahlt, direkt zu Registration
       if (data.paymentStatus === "paid") {
-        router.replace("/(employer)/matches");
+        router.replace(`/(employer)/registration/${applicationId}`);
       }
     } catch (err) {
       console.error("Load application error:", err);
