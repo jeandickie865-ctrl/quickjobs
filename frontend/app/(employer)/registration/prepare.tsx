@@ -99,7 +99,7 @@ export default function RegistrationPrepareScreen() {
           placeholder="Steuer-ID des Mitarbeiters"
           style={{
             borderWidth: 1,
-            borderColor: '#ccc',
+            borderColor: COLORS.gray,
             borderRadius: 8,
             padding: 10,
             marginTop: 4
@@ -113,7 +113,7 @@ export default function RegistrationPrepareScreen() {
           placeholder="Name der Krankenkasse"
           style={{
             borderWidth: 1,
-            borderColor: '#ccc',
+            borderColor: COLORS.gray,
             borderRadius: 8,
             padding: 10,
             marginTop: 4
@@ -127,7 +127,7 @@ export default function RegistrationPrepareScreen() {
           placeholder="TT.MM.JJJJ"
           style={{
             borderWidth: 1,
-            borderColor: '#ccc',
+            borderColor: COLORS.gray,
             borderRadius: 8,
             padding: 10,
             marginTop: 4
@@ -141,7 +141,7 @@ export default function RegistrationPrepareScreen() {
           placeholder="Sozialversicherungsnummer"
           style={{
             borderWidth: 1,
-            borderColor: '#ccc',
+            borderColor: COLORS.gray,
             borderRadius: 8,
             padding: 10,
             marginTop: 4
