@@ -347,6 +347,10 @@ class OfficialRegistrationCreate(BaseModel):
     employerId: str
     workerId: str
     registrationType: str  # 'kurzfristig' or 'minijob'
+    steuerId: Optional[str] = None
+    krankenkasse: Optional[str] = None
+    geburtsdatum: Optional[str] = None
+    sozialversicherungsnummer: Optional[str] = None
 
 class OfficialRegistrationUpdate(BaseModel):
     status: Optional[str] = None
