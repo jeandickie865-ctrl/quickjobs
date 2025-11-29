@@ -749,6 +749,50 @@ agent_communication:
       **SCREENSHOTS CAPTURED:**
       📸 01_app_loaded.png - Initial app state
       📸 02_after_login_click.png - After clicking login
+
+  - agent: "main"
+    message: |
+      **🎯 KRITISCHER BUG BEHOBEN: Auth-Seiten wiederhergestellt**
+      
+      **Gemeldetes Problem:**
+      Benutzer berichtete: "die anmelden registrieren seite ist weg"
+      
+      **Root Cause Analysis:**
+      - Die Auth-Dateien (login.tsx, signup.tsx, start.tsx) waren NICHT gelöscht
+      - Das Problem war im AuthContext.tsx: Die `signUp` Funktion wurde nicht im Provider Value exportiert
+      - Zeile 106-108: Provider hatte nur `{ user, token, loading, login, signOut }` - `signUp` fehlte!
+      
+      **Implementierter Fix:**
+      1. **contexts/AuthContext.tsx (Zeile 19):**
+         - Default Context Value ergänzt: `signUp: async () => false`
+      
+      2. **contexts/AuthContext.tsx (Zeile 107):**
+         - Provider Value aktualisiert: `{ user, token, loading, login, signUp, signOut }`
+         - Die signUp Funktion (Zeilen 72-97) war definiert, aber nicht exportiert
+      
+      **Verifikation:**
+      ✅ Screenshot-Tests durchgeführt (3 Screenshots):
+      1. Start Screen: "Willkommen bei BACKUP" mit Registrieren/Anmelden Buttons
+      2. Login Screen: "Willkommen zurück!" mit E-Mail/Passwort Feldern
+      3. Signup Screen: "Erstelle deinen BACKUP-Account" mit Rollenauswahl
+      
+      ✅ Navigation funktioniert:
+      - Start → Login funktioniert
+      - Start → Signup funktioniert
+      - Login ↔ Signup Navigation korrekt
+      
+      ✅ Backend Health Check: API läuft (http://localhost:8001/api/health)
+      
+      **Status:**
+      - Auth-Seiten sind vollständig wiederhergestellt
+      - Login und Signup Screens sind zugänglich
+      - Bereit für Backend-Testing der Auth-Funktionalität
+      
+      **Nächste Schritte:**
+      - Backend-Testing: Signup Flow (Benutzer erstellen)
+      - Backend-Testing: Login Flow (Benutzer anmelden)
+      - Ende-zu-Ende Test des kompletten Auth-Flows
+
       📸 03_credentials_entered.png - With worker@test.de credentials
       📸 04_after_login_submit.png - Shows "Diese E-Mail ist nicht registriert" error
       📸 05_profile_navigation_attempt.png - Redirected to /auth/start
