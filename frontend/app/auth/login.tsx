@@ -54,14 +54,12 @@ export default function LoginScreen() {
     setErrorMsg('');
     setLoading(true);
     try {
-      const success = await login(email.trim().toLowerCase(), password);
-      if (success) {
-        router.replace('/start');
-      } else {
-        setErrorMsg('Login fehlgeschlagen. Bitte überprüfe deine E-Mail und Passwort.');
-      }
+      await login(email.trim().toLowerCase(), password);
+      // Login successful - navigate to start which will handle routing
+      router.replace('/start');
     } catch (err: any) {
-      setErrorMsg(err.message || 'Login fehlgeschlagen');
+      console.error('Login error in handleLogin:', err);
+      setErrorMsg(err.message || 'Login fehlgeschlagen. Bitte überprüfe deine E-Mail und Passwort.');
     } finally {
       setLoading(false);
     }
