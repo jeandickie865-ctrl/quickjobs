@@ -160,8 +160,8 @@ export default function RateWorkerScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Job nicht gefunden</Text>
-        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}>
-          <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', shadowColor: 'rgba(200,255,22,0.2)', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.8, shadowRadius: 6 }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Zurück</Text>
         </Pressable>
       </View>
     );
@@ -173,8 +173,8 @@ export default function RateWorkerScreen() {
       <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Worker-Profil nicht gefunden</Text>
         <Text style={{ color: COLORS.whiteTransparent30, fontSize: 14, marginBottom: 16 }}>WorkerId: {params.workerId}</Text>
-        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}>
-          <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', shadowColor: 'rgba(200,255,22,0.2)', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.8, shadowRadius: 6 }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Zurück</Text>
         </Pressable>
       </View>
     );
