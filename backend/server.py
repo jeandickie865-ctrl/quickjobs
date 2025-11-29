@@ -2040,6 +2040,151 @@ class CreateRegistrationRequest(BaseModel):
     geburtsdatum: Optional[str] = None
     sozialversicherungsnummer: Optional[str] = None
 
+
+# PDF Generation Utility Function
+def generate_contract_pdf(
+    registration_id: str,
+    job_data: dict,
+    employer_data: dict,
+    worker_data: dict,
+    registration_type: str,
+    created_at: str
+) -> str:
+    """
+    Generiert ein PDF für den Arbeitsvertrag.
+    
+    Args:
+        registration_id: ID der Registration
+        job_data: Job-Daten (title, description, address, workerAmountCents, etc.)
+        employer_data: Employer-Daten (firstName, lastName, companyName, homeAddress, etc.)
+        worker_data: Worker-Daten (firstName, lastName, homeAddress, etc.)
+        registration_type: Art der Beschäftigung (kurzfristig oder minijob)
+        created_at: Erstellungsdatum
+    
+    Returns:
+        Relativer Pfad zur generierten PDF-Datei
+    """
+    # Ordner erstellen falls nicht vorhanden
+    contracts_dir = Path("/app/backend/generated_contracts")
+    contracts_dir.mkdir(exist_ok=True)
+    
+    # Dateiname
+    filename = f"contract_{registration_id}.pdf"
+    filepath = contracts_dir / filename
+    
+    # PDF erstellen
+    c = canvas.Canvas(str(filepath), pagesize=A4)
+    width, height = A4
+    
+    # Y-Position für Text
+    y_pos = height - 2*cm
+    
+    # Titel
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(2*cm, y_pos, "Arbeitsvertrag – einfacher Einsatzvertrag")
+    y_pos -= 1.5*cm
+    
+    # 1. Arbeitgeber
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2*cm, y_pos, "1. Arbeitgeber")
+    y_pos -= 0.7*cm
+    
+    c.setFont("Helvetica", 10)
+    employer_name = f"{employer_data.get('firstName', '')} {employer_data.get('lastName', '')}"
+    c.drawString(2*cm, y_pos, employer_name)
+    y_pos -= 0.5*cm
+    
+    if employer_data.get('companyName'):
+        c.drawString(2*cm, y_pos, employer_data['companyName'])
+        y_pos -= 0.5*cm
+    
+    emp_addr = employer_data.get('homeAddress', {})
+    employer_address = f"{emp_addr.get('street', '')}, {emp_addr.get('postalCode', '')} {emp_addr.get('city', '')}"
+    c.drawString(2*cm, y_pos, employer_address)
+    y_pos -= 1*cm
+    
+    # 2. Arbeitnehmer
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2*cm, y_pos, "2. Arbeitnehmer")
+    y_pos -= 0.7*cm
+    
+    c.setFont("Helvetica", 10)
+    worker_name = f"{worker_data.get('firstName', '')} {worker_data.get('lastName', '')}"
+    c.drawString(2*cm, y_pos, worker_name)
+    y_pos -= 0.5*cm
+    
+    work_addr = worker_data.get('homeAddress', {})
+    worker_address = f"{work_addr.get('street', '')}, {work_addr.get('postalCode', '')} {work_addr.get('city', '')}"
+    c.drawString(2*cm, y_pos, worker_address)
+    y_pos -= 1*cm
+    
+    # 3. Art der Beschäftigung
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2*cm, y_pos, "3. Art der Beschäftigung")
+    y_pos -= 0.7*cm
+    
+    c.setFont("Helvetica", 10)
+    registration_type_de = "Kurzfristige Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
+    c.drawString(2*cm, y_pos, registration_type_de)
+    y_pos -= 1*cm
+    
+    # 4. Einsatzdetails
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2*cm, y_pos, "4. Einsatzdetails")
+    y_pos -= 0.7*cm
+    
+    c.setFont("Helvetica", 10)
+    c.drawString(2*cm, y_pos, f"Tätigkeit: {job_data.get('title', 'Nicht angegeben')}")
+    y_pos -= 0.5*cm
+    
+    c.drawString(2*cm, y_pos, f"Beschreibung: {job_data.get('description', 'Nicht angegeben')}")
+    y_pos -= 0.5*cm
+    
+    job_addr = job_data.get('address', {})
+    job_address = f"{job_addr.get('street', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
+    c.drawString(2*cm, y_pos, f"Ort: {job_address}")
+    y_pos -= 0.5*cm
+    
+    worker_amount = job_data.get('workerAmountCents', 0) / 100
+    c.drawString(2*cm, y_pos, f"Gesamtlohn: {worker_amount:.2f} EUR")
+    y_pos -= 1*cm
+    
+    # 5. Dauer und Umfang
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2*cm, y_pos, "5. Dauer und Umfang")
+    y_pos -= 0.7*cm
+    
+    c.setFont("Helvetica", 10)
+    c.drawString(2*cm, y_pos, "Die Vereinbarung gilt ausschließlich für diesen einmaligen Einsatz.")
+    y_pos -= 0.5*cm
+    c.drawString(2*cm, y_pos, "Es entsteht kein dauerhaftes Arbeitsverhältnis.")
+    y_pos -= 1*cm
+    
+    # 6. Vertragsabschluss
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2*cm, y_pos, "6. Vertragsabschluss")
+    y_pos -= 0.7*cm
+    
+    c.setFont("Helvetica", 10)
+    c.drawString(2*cm, y_pos, "Mit Annahme des Einsatzes durch den Arbeitnehmer und der Bezahlung")
+    y_pos -= 0.5*cm
+    c.drawString(2*cm, y_pos, "durch den Arbeitgeber gilt dieser Vertrag als geschlossen.")
+    y_pos -= 0.5*cm
+    c.drawString(2*cm, y_pos, "Eine schriftliche Unterschrift ist nicht erforderlich.")
+    y_pos -= 1*cm
+    
+    # Datum
+    c.setFont("Helvetica", 9)
+    c.drawString(2*cm, y_pos, f"Erstellt am: {created_at}")
+    
+    # PDF speichern
+    c.save()
+    
+    logger.info(f"Generated contract PDF: {filename}")
+    
+    # Relativen Pfad zurückgeben
+    return f"/generated_contracts/{filename}"
+
 # Official Registration Endpoints
 @api_router.post("/registrations/create", response_model=OfficialRegistration)
 async def create_official_registration(request: CreateRegistrationRequest):
