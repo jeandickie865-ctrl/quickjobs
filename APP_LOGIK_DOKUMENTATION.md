@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://job-connector-7.preview.emergentagent.com`
-- Backend: `https://job-connector-7.preview.emergentagent.com/api`
+- Frontend: `https://schnellhire.preview.emergentagent.com`
+- Backend: `https://schnellhire.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)

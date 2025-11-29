@@ -1,0 +1,84 @@
+<analysis>
+The trajectory documents an intensive, iterative debugging and feature development process for the ShiftMatch application. The user, who communicates exclusively in German, guided the AI engineer through resolving a cascade of critical bugs and implementing new features. All future interactions must be in German.
+
+The work began by fixing a login loop, which was a multi-layered problem involving missing exports in , incorrect state variable names ( vs. ), and a fundamental issue with legacy user accounts in MongoDB that lacked password fields. This required creating new test users.
+
+A critical security vulnerability was discovered and patched: worker contact details were exposed before the employer's payment was complete. The fix involved strengthening a backend check in  to require .
+
+The latter half of the trajectory focused on fixing the Reviews feature. This involved another deep debugging cycle to fix broken rating screens, addressing issues with incorrect parameter passing (), data inconsistencies (dot vs. underscore in user IDs), and incorrect API calls ( due to missing auth headers). A final bug, a call to a non-existent  function, was removed to make the feature fully functional.
+
+The final task was to begin scaffolding a new Official Registration multi-step UI flow for employers, which involved creating several new screen files and adding the corresponding data models to the backend. The immediate work is to continue building this new feature.
+</analysis>
+
+<product_requirements>
+The ShiftMatch application is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
+
+**Core Product Flow:**
+1.  **Job Posting & Application:** Employers post jobs. Workers with matching profiles (based on location, radius, and skills) can see and apply for these jobs.
+2.  **Gated Matching:** When a Worker applies, the application is . The Employer can accept, which directs them to a mandatory payment screen. Contact details remain hidden.
+3.  **Payment & Unlock:** Only after the Employer completes the simulated payment does the application status become  and  become . This action unlocks the full contact details and chat functionality for both parties, turning the application into a Match.
+4.  **Reviews:** After a job is implicitly completed, both parties can rate and review each other.
+5.  **Official Registration (In Progress):** A new multi-step flow has been started for employers to handle the formal registration paperwork (e.g., Minijob, Kurzfristige Beschäftigung) for a worker after a successful match. The UI scaffolding for this feature is the most recent work completed.
+</product_requirements>
+
+<key_technical_concepts>
+- **Backend:** Monolithic FastAPI (Python) server () with Pydantic models.
+- **Database:** MongoDB. Critical fixes involved data inconsistency (e.g.,  format  vs ) and ensuring the backend connects to the correct database ( vs. ).
+- **Frontend:** React Native with Expo.
+- **Routing:**  for file-based navigation.
+- **Authentication:** Custom JWT-based system using React Context () and .
+- **State Management:** A mix of , , and  for local and global state.
+- **API Communication:** Centralized API functions in  and direct  calls.
+</key_technical_concepts>
+
+<code_architecture>
+The project is a standard monorepo with a  (Expo) and  (FastAPI) directory.
+
+
+
+- ****
+  - **Importance:** The single source of all API logic, data models, and database interactions.
+  - **Summary of changes:** A critical security fix was applied to the  endpoint to ensure  before revealing contact details. New Pydantic models for the  feature were added.
+
+- ****
+  - **Importance:** Where employers see their paid, matched workers.
+  - **Summary of changes:** A ⭐ Auftragnehmer bewerten button was added to link to the rating screen. The logic for passing the correct  to the rating screen was debugged and fixed.
+
+- ****
+  - **Importance:** The screen for an employer to rate a worker. This file was the subject of intense, repeated debugging.
+  - **Summary of changes:** The logic for fetching the worker's profile was completely reworked to resolve a Worker-Profil nicht gefunden error. This involved fixing the API endpoint being called, correcting data inconsistency issues ( vs  in ), and ensuring proper authentication headers were sent. Finally, a call to a non-existent  function was removed.
+
+- ****
+  - **Importance:** The screen for a worker to rate an employer.
+  - **Summary of changes:** The  handler for the submit button was fixed by removing a call to a non-existent  function, which was preventing reviews from being saved.
+
+- ** directory**
+  - **Importance:** This new directory contains the scaffolded UI for the multi-step Official Registration flow.
+  - **Summary of changes:** The following new files were created and populated with basic UI components and navigation:  (intro screen),  (type selection), and  (confirmation).
+
+</code_architecture>
+
+<pending_tasks>
+- **Complete the Official Registration Flow:** The UI is scaffolded, but the final  screen and all backend logic (API endpoints for creating the registration record, PDF generation) are missing.
+- **Improve Geocoding Accuracy:** An early-reported issue where Poststr. 7 was being incorrectly geocoded has not been addressed.
+- **Display Ratings in UI:** The review system is now functional for submitting reviews, but the fetched ratings are not yet displayed anywhere in the UI (e.g., on worker or employer profiles).
+</pending_tasks>
+
+<current_work>
+The most recent work involved scaffolding the UI for a new multi-step Official Registration feature. This feature allows an Employer, after a successful match, to initiate a formal registration process for the Worker (e.g., for a Minijob or Kurzfristige Beschäftigung).
+
+The work was done in two parts:
+
+1.  **Frontend Scaffolding:** Three new files were created in a new directory, :
+    *   : An introductory screen with two choices: get support or do it yourself.
+    *   : A screen to select the type of registration (Kurzfristige Beschäftigung or Minijob).
+    *   : A summary screen that confirms the selected type and application ID, with a button to proceed to the next step.
+
+    These files contain basic React Native components,  to pass data (, ) between screens, and  for navigation.
+
+2.  **Backend Model Creation:** In , new Pydantic models were added to define the schema for a new MongoDB collection, . This includes , , and  models, defining fields like , , , and . No API endpoints using these models have been created yet.
+</current_work>
+
+<optional_next_step>
+Create the new file  as the final step in the UI flow, which is the target of the button press in .
+</optional_next_step>

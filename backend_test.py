@@ -16,7 +16,7 @@ import math
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://job-connector-7.preview.emergentagent.com/api"
+BACKEND_URL = "https://schnellhire.preview.emergentagent.com/api"
 
 class AuthBackendTester:
     def __init__(self):
