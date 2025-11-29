@@ -149,37 +149,27 @@ export default function RateWorkerScreen() {
     );
   }
 
-  if (!job || !worker) {
-    console.log('❌ Missing data - job:', !!job, 'worker:', !!worker);
-    console.log('📋 JobId:', jobId);
-    console.log('👤 WorkerId:', params.workerId);
-    
+  if (!job) {
+    console.log('❌ Employer Rate: Job fehlt!', jobId);
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-          <Ionicons name="alert-circle" size={64} color={COLORS.neon} style={{ marginBottom: 16 }} />
-          <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 8 }}>
-            Daten konnten nicht geladen werden
-          </Text>
-          <Text style={{ color: COLORS.whiteTransparent30, fontSize: 14, textAlign: 'center', marginBottom: 16 }}>
-            {!job && 'Job nicht gefunden'}
-            {job && !worker && 'Worker-Profil nicht gefunden'}
-          </Text>
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => ({
-              backgroundColor: COLORS.neon,
-              paddingHorizontal: 24,
-              paddingVertical: 12,
-              borderRadius: 12,
-              opacity: pressed ? 0.8 : 1,
-            })}
-          >
-            <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '700' }}>
-              Zurück
-            </Text>
-          </Pressable>
-        </SafeAreaView>
+      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+        <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Job nicht gefunden</Text>
+        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}>
+          <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+        </Pressable>
+      </View>
+    );
+  }
+  
+  if (!worker) {
+    console.log('❌ Employer Rate: Worker fehlt!', params.workerId);
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+        <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Worker-Profil nicht gefunden</Text>
+        <Text style={{ color: COLORS.whiteTransparent30, fontSize: 14, marginBottom: 16 }}>WorkerId: {params.workerId}</Text>
+        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}>
+          <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+        </Pressable>
       </View>
     );
   }
