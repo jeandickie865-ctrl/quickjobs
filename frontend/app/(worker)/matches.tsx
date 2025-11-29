@@ -144,6 +144,33 @@ export default function WorkerMatchesScreen() {
     }, [user, authLoading])
   );
 
+  // Check registration status when matches are loaded
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      if (!user || matches.length === 0) return;
+
+      // Find any accepted match
+      const realMatch = matches.find(m => m.application.status === 'accepted');
+      
+      if (!realMatch) return;
+
+      // Check if worker has completed registration data
+      try {
+        const response = await fetch(`/api/profiles/worker/${user.userId}/registration-status`);
+        const data = await response.json();
+        
+        if (data.complete === false) {
+          console.log('Worker registration incomplete, redirecting...');
+          router.replace('/(worker)/registration-data');
+        }
+      } catch (error) {
+        console.error('Error checking registration status:', error);
+      }
+    };
+
+    checkRegistrationStatus();
+  }, [matches, user]);
+
   const handleRefresh = () => {
     setRefreshing(true);
     loadMatches();
