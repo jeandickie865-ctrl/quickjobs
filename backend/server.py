@@ -951,13 +951,13 @@ class WorkerRegistrationData(BaseModel):
     sozialversicherungsnummer: Optional[str] = None
     krankenkasse: Optional[str] = None
 
-@api_router.put("/profiles/worker/{worker_id}/registration-data", response_model=WorkerProfile)
+@api_router.put("/profiles/worker/me/registration-data", response_model=WorkerProfile)
 async def update_worker_registration_data(
-    worker_id: str,
-    data: WorkerRegistrationData
+    data: WorkerRegistrationData,
+    authorization: Optional[str] = Header(None)
 ):
     """
-    Aktualisiert die Registrierungsdaten eines Workers.
+    Aktualisiert die Registrierungsdaten des eingeloggten Workers.
     
     Speichert die 4 Pflichtfelder dauerhaft im Worker-Profil für:
     - Alle zukünftigen Einsätze
@@ -965,12 +965,14 @@ async def update_worker_registration_data(
     - Arbeitsvertrag, Sofortmeldung, Lohnabrechnung
     
     Args:
-        worker_id: Die userId des Workers
         data: JSON Body mit steuerId, geburtsdatum, sozialversicherungsnummer, krankenkasse
+        authorization: Bearer Token aus dem Header
     
     Returns:
         Das aktualisierte Worker-Profil
     """
+    # userId aus Token extrahieren
+    worker_id = await get_user_id_from_token(authorization)
     logger.info(f"Updating registration data for worker {worker_id}")
     
     # Worker-Profil laden
