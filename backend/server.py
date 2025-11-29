@@ -2015,6 +2015,63 @@ async def get_messages(
     logger.info(f"Found {len(messages)} messages for application {application_id}")
     return [ChatMessage(**msg) for msg in messages]
 
+
+# Official Registration Endpoints
+@api_router.post("/registrations/create", response_model=OfficialRegistration)
+async def create_official_registration(
+    applicationId: str = Field(..., description="ID der Application"),
+    registrationType: str = Field(..., description="Art der Anmeldung")
+):
+    """
+    Erstellt eine neue offizielle Anmeldung basierend auf einer Application.
+    
+    Args:
+        applicationId: Die ID der Application
+        registrationType: Art der Anmeldung ('kurzfristig' oder 'minijob')
+    
+    Returns:
+        Die erstellte OfficialRegistration
+    """
+    logger.info(f"Creating official registration for application {applicationId}, type: {registrationType}")
+    
+    # Application aus der Datenbank laden
+    application = await db.applications.find_one({"id": applicationId})
+    if not application:
+        logger.error(f"Application {applicationId} not found")
+        raise HTTPException(status_code=404, detail="Application nicht gefunden")
+    
+    # employerId und workerId aus der Application übernehmen
+    employer_id = application.get("employerId")
+    worker_id = application.get("workerId")
+    
+    if not employer_id or not worker_id:
+        logger.error(f"Application {applicationId} missing employerId or workerId")
+        raise HTTPException(
+            status_code=400, 
+            detail="Application hat keine gültige employerId oder workerId"
+        )
+    
+    # Neuen Eintrag erstellen
+    new_registration = OfficialRegistration(
+        applicationId=applicationId,
+        employerId=employer_id,
+        workerId=worker_id,
+        registrationType=registrationType,
+        status="pending",
+        contractUrl=None,
+        sofortmeldungUrl=None,
+        createdAt=datetime.utcnow().isoformat(),
+        updatedAt=datetime.utcnow().isoformat()
+    )
+    
+    # In die Datenbank einfügen
+    registration_dict = new_registration.dict()
+    result = await db.official_registrations.insert_one(registration_dict)
+    
+    logger.info(f"Created official registration with id {new_registration.id}")
+    
+    return new_registration
+
 # Include the router in the main app
 app.include_router(api_router)
 
