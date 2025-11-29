@@ -51,6 +51,29 @@ export default function RegistrationPrepareScreen() {
         Vorgang für Bewerbung {applicationId}. Die eigentliche Anmeldung wird im nächsten Schritt erstellt.
       </Text>
 
+      {job && (
+        <View>
+          <Text style={{ fontSize: 16, fontWeight: '600', marginTop: 20 }}>
+            Einsatzdetails
+          </Text>
+          <Text>Titel: {job.title}</Text>
+          <Text>Datum & Uhrzeit: {job.description}</Text>
+          <Text>Lohn: {job.workerAmountCents / 100} €</Text>
+          <Text>Adresse: {job.address.street} {job.address.postalCode} {job.address.city}</Text>
+        </View>
+      )}
+
+      {worker && (
+        <View>
+          <Text style={{ fontSize: 16, fontWeight: '600', marginTop: 20 }}>
+            Arbeitnehmer
+          </Text>
+          <Text>Name: {worker.firstName} {worker.lastName}</Text>
+          <Text>Telefon: {worker.phone}</Text>
+          <Text>Adresse: {worker.homeAddress.street} {worker.homeAddress.postalCode} {worker.homeAddress.city}</Text>
+        </View>
+      )}
+
       <Pressable
         onPress={() =>
           router.push(
