@@ -184,6 +184,117 @@ class RegistrationFlowTester:
             await self.log_test("Registration Status After Update", False, f"Exception: {str(e)}")
             return False
 
+    async def create_test_job(self) -> Optional[str]:
+        """Create a test job for the scenario"""
+        print("🔧 SETUP: Creating test job...")
+        
+        if "employer" not in self.tokens:
+            await self.log_test("Create Test Job", False, "No employer token available")
+            return None
+            
+        try:
+            job_data = {
+                "employerType": "private",
+                "title": "Test Security Job für Registration",
+                "description": "Test job for registration flow testing",
+                "category": "sicherheit",
+                "timeMode": "fixed_time",
+                "startAt": "2024-12-20T10:00:00",
+                "endAt": "2024-12-20T18:00:00",
+                "address": {
+                    "street": "Brandenburger Tor",
+                    "postalCode": "10117",
+                    "city": "Berlin",
+                    "country": "DE"
+                },
+                "lat": 52.5163,
+                "lon": 13.3777,
+                "workerAmountCents": 15000,
+                "paymentToWorker": "cash",
+                "required_all_tags": [],
+                "required_any_tags": [],
+                "status": "open"
+            }
+            
+            response = await self.client.post(
+                f"{BACKEND_URL}/jobs",
+                json=job_data,
+                headers={"Authorization": f"Bearer {self.tokens['employer']}"}
+            )
+            
+            if response.status_code == 200:
+                job = response.json()
+                await self.log_test("Create Test Job", True, f"Job created: {job['id']}")
+                return job["id"]
+            else:
+                await self.log_test("Create Test Job", False,
+                                  f"HTTP {response.status_code}", response.text)
+                return None
+                
+        except Exception as e:
+            await self.log_test("Create Test Job", False, f"Exception: {str(e)}")
+            return None
+
+    async def create_test_application(self, job_id: str) -> Optional[str]:
+        """Create a test application"""
+        print("🔧 SETUP: Creating test application...")
+        
+        if "worker" not in self.tokens:
+            await self.log_test("Create Test Application", False, "No worker token available")
+            return None
+            
+        try:
+            app_data = {
+                "jobId": job_id
+            }
+            
+            response = await self.client.post(
+                f"{BACKEND_URL}/applications",
+                json=app_data,
+                headers={"Authorization": f"Bearer {self.tokens['worker']}"}
+            )
+            
+            if response.status_code == 200:
+                application = response.json()
+                await self.log_test("Create Test Application", True, f"Application created: {application['id']}")
+                return application["id"]
+            else:
+                await self.log_test("Create Test Application", False,
+                                  f"HTTP {response.status_code}", response.text)
+                return None
+                
+        except Exception as e:
+            await self.log_test("Create Test Application", False, f"Exception: {str(e)}")
+            return None
+
+    async def accept_test_application(self, application_id: str) -> bool:
+        """Accept the test application"""
+        print("🔧 SETUP: Accepting test application...")
+        
+        if "employer" not in self.tokens:
+            await self.log_test("Accept Test Application", False, "No employer token available")
+            return False
+            
+        try:
+            response = await self.client.put(
+                f"{BACKEND_URL}/applications/{application_id}/accept",
+                headers={"Authorization": f"Bearer {self.tokens['employer']}"}
+            )
+            
+            if response.status_code == 200:
+                application = response.json()
+                await self.log_test("Accept Test Application", True, 
+                                  f"Application accepted: {application['status']}")
+                return True
+            else:
+                await self.log_test("Accept Test Application", False,
+                                  f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            await self.log_test("Accept Test Application", False, f"Exception: {str(e)}")
+            return False
+
     async def find_accepted_application(self) -> Optional[str]:
         """Find an accepted application between Milenka and Silke"""
         print("🔍 SETUP: Finding accepted application...")
@@ -205,15 +316,29 @@ class RegistrationFlowTester:
                 # Look for accepted application
                 for app in applications:
                     if (app.get("status") == "accepted" and 
-                        app.get("workerId") == "user_test3_dickies-helden_de"):
+                        app.get("workerId") == "user_user_test3_dickies-helden_de_test_com"):
                         await self.log_test("Find Accepted Application", True,
                                           f"Found application: {app['id']}")
                         return app["id"]
                 
-                # No accepted application found, create a mock one for testing
+                # No accepted application found, create the full scenario
                 await self.log_test("Find Accepted Application", False,
-                                  "No accepted application found - would need to create test scenario")
-                return None
+                                  "No accepted application found - creating test scenario")
+                
+                # Create job -> application -> accept flow
+                job_id = await self.create_test_job()
+                if not job_id:
+                    return None
+                    
+                app_id = await self.create_test_application(job_id)
+                if not app_id:
+                    return None
+                    
+                if await self.accept_test_application(app_id):
+                    return app_id
+                else:
+                    return None
+                    
             else:
                 await self.log_test("Find Accepted Application", False,
                                   f"HTTP {response.status_code}", response.text)
