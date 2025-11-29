@@ -34,7 +34,11 @@ export default function RegistrationConfirmScreen() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 applicationId,
-                registrationType
+                registrationType,
+                steuerId,
+                krankenkasse,
+                geburtsdatum,
+                sozialversicherungsnummer
               })
             });
 
