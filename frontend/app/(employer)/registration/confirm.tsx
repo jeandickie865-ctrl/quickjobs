@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
+import COLORS from '@/constants/colors';
 
 export default function RegistrationConfirmScreen() {
   const router = useRouter();
@@ -77,14 +78,19 @@ export default function RegistrationConfirmScreen() {
           }
         }}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
           alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6,
           marginTop: 20
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Anmeldung jetzt erstellen
         </Text>
       </Pressable>

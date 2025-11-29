@@ -2,6 +2,7 @@ import { View, Text, TextInput, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import COLORS from '@/constants/colors';
 
 export default function WorkerRegistrationDataScreen() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function WorkerRegistrationDataScreen() {
         value={geburtsdatum}
         onChangeText={setGeburtsdatum}
         placeholder="TT.MM.JJJJ"
-        style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10 }}
+        style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
       />
 
       <Text style={{ marginTop: 8 }}>Steuer-ID</Text>
@@ -35,7 +36,7 @@ export default function WorkerRegistrationDataScreen() {
         value={steuerId}
         onChangeText={setSteuerId}
         placeholder="Steuer-ID"
-        style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10 }}
+        style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
       />
 
       <Text style={{ marginTop: 8 }}>Sozialversicherungsnummer</Text>
@@ -43,7 +44,7 @@ export default function WorkerRegistrationDataScreen() {
         value={sozialversicherungsnummer}
         onChangeText={setSozialversicherungsnummer}
         placeholder="SV-Nummer"
-        style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10 }}
+        style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
       />
 
       <Text style={{ marginTop: 8 }}>Krankenkasse</Text>
@@ -51,7 +52,7 @@ export default function WorkerRegistrationDataScreen() {
         value={krankenkasse}
         onChangeText={setKrankenkasse}
         placeholder="Name der Krankenkasse"
-        style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10 }}
+        style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
       />
 
       <Pressable
@@ -92,13 +93,18 @@ export default function WorkerRegistrationDataScreen() {
         }}
         style={{
           marginTop: 16,
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
-          alignItems: 'center'
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>Daten speichern und weiter</Text>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Daten speichern und weiter</Text>
       </Pressable>
     </View>
   );
