@@ -161,13 +161,18 @@ export default function RegistrationPrepareScreen() {
           )
         }
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
-          alignItems: 'center'
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Weiter zur Anmeldung
         </Text>
       </Pressable>
