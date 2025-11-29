@@ -335,6 +335,10 @@ class OfficialRegistration(BaseModel):
     status: str = "pending"  # 'pending' or 'completed'
     contractUrl: Optional[str] = None
     sofortmeldungUrl: Optional[str] = None
+    steuerId: Optional[str] = None
+    krankenkasse: Optional[str] = None
+    geburtsdatum: Optional[str] = None
+    sozialversicherungsnummer: Optional[str] = None
     createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     updatedAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
