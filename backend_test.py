@@ -716,7 +716,7 @@ class RegistrationFlowTester:
             pdf_urls["payroll"] = await self.test_generate_payroll_pdf(application_id)
             
             # Test 8: Verify URLs stored in MongoDB
-            await self.test_mongodb_url_storage(application_id)
+            await self.test_mongodb_url_storage(pdf_urls)
             
             # Test 9: Verify PDF content
             await self.test_pdf_content_verification(pdf_urls)
