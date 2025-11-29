@@ -369,7 +369,7 @@ class RegistrationEndpointTester:
         setup_success = await self.setup_test_data()
         if not setup_success:
             print("❌ Test setup failed. Cannot proceed with tests.")
-            return
+            return 0, 1
         
         print(f"\n📋 Test Data Summary:")
         print(f"   - Worker: {self.test_data['worker_email']} (ID: {self.test_data['worker_id']})")
