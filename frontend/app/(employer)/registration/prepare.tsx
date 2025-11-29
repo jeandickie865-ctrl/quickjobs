@@ -12,6 +12,11 @@ export default function RegistrationPrepareScreen() {
   const [application, setApplication] = useState(null);
   const [job, setJob] = useState(null);
   const [worker, setWorker] = useState(null);
+  
+  const [steuerId, setSteuerId] = useState('');
+  const [krankenkasse, setKrankenkasse] = useState('');
+  const [geburtsdatum, setGeburtsdatum] = useState('');
+  const [sozialversicherungsnummer, setSozialversicherungsnummer] = useState('');
 
   useEffect(() => {
     if (!applicationId) return;
