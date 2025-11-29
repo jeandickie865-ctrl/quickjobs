@@ -2067,7 +2067,7 @@ async def create_official_registration(request: CreateRegistrationRequest):
     
     # In die Datenbank einfügen
     registration_dict = new_registration.dict()
-    result = await db.official_registrations.insert_one(registration_dict)
+    await db.official_registrations.insert_one(registration_dict)
     
     logger.info(f"Created official registration with id {new_registration.id}")
     
