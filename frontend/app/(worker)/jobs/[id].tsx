@@ -321,28 +321,8 @@ export default function WorkerJobDetailScreen() {
             </Text>
           </View>
 
-          {/* SPACER */}
-          <View style={{ height: 20 }} />
-
-          {/* DEBUG INFO */}
-          <View style={{ backgroundColor: 'yellow', padding: 10, margin: 20 }}>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}>DEBUG: Job Status = {job.status}</Text>
-            <Text style={{ color: 'black' }}>Job ID = {job.id}</Text>
-            <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 18, marginTop: 10 }}>
-              Button geklickt: {buttonClickCount} mal
-            </Text>
-            {debugLogs.length > 0 && (
-              <View style={{ marginTop: 10, backgroundColor: 'white', padding: 8, borderRadius: 4 }}>
-                <Text style={{ fontWeight: 'bold', marginBottom: 4 }}>LOGS:</Text>
-                {debugLogs.map((log, i) => (
-                  <Text key={i} style={{ fontSize: 11, color: 'black' }}>{log}</Text>
-                ))}
-              </View>
-            )}
-          </View>
-
-          {/* "Ich habe Zeit" Button - IMMER ANZEIGEN FÜR TEST */}
-          {true && (
+          {/* "Ich habe Zeit" Button - nur wenn Job nicht matched ist */}
+          {job.status !== 'matched' && (
             <View style={{ 
               paddingHorizontal: 20,
               paddingBottom: 40,
