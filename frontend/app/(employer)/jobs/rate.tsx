@@ -7,9 +7,12 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getJobById, updateJob } from '../../../utils/jobStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { addReview } from '../../../utils/reviewStore';
+import { getAuthHeaders } from '../../../utils/api';
 import { Job } from '../../../types/job';
 import { WorkerProfile } from '../../../types/profile';
 import { Ionicons } from '@expo/vector-icons';
+
+const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://job-connector-7.preview.emergentagent.com/api';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
