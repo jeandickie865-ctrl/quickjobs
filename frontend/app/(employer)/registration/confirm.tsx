@@ -43,7 +43,7 @@ export default function RegistrationConfirmScreen() {
       </Text>
 
       <Text style={{ fontSize: 16 }}>
-        Du erstellst jetzt die Anmeldung für die Bewerbung {applicationId}.
+        Du erstellst jetzt die Anmeldung für {worker ? `${worker.firstName} ${worker.lastName}` : 'den Mitarbeiter'}.
       </Text>
 
       <Text style={{ fontSize: 16 }}>
