@@ -62,13 +62,19 @@ export default function PaymentScreen() {
   }
 
   async function handlePayment() {
-    if (!paymentMethod) {
-      Alert.alert("Fehler", "Bitte wähle eine Zahlungsart");
+    console.log("💳 handlePayment called - paymentMethod:", paymentMethod);
+    console.log("💳 processing:", processing);
+    
+    // Prevent double-clicks
+    if (processing) {
+      console.log("⚠️ Already processing payment, ignoring click");
       return;
     }
 
     try {
       setProcessing(true);
+      console.log("🔄 Starting payment process...");
+      
       const headers = await getAuthHeaders();
 
       const res = await fetch(`${API_URL}/applications/${applicationId}/confirm-payment`, {
@@ -76,24 +82,20 @@ export default function PaymentScreen() {
         headers,
       });
 
+      console.log("📡 Payment response status:", res.status);
+
       if (!res.ok) {
         throw new Error("Zahlung fehlgeschlagen");
       }
 
-      Alert.alert(
-        "Erfolg",
-        "Zahlung erfolgreich! Der Chat wurde freigeschaltet.",
-        [
-          {
-            text: "OK",
-            onPress: () => router.replace("/(employer)/matches"),
-          },
-        ]
-      );
+      console.log("✅ Payment successful! Redirecting to matches...");
+      
+      // Direct redirect without Alert to avoid user confusion
+      router.replace("/(employer)/matches");
+      
     } catch (err) {
-      console.error("Payment error:", err);
+      console.error("❌ Payment error:", err);
       Alert.alert("Fehler", "Zahlung konnte nicht durchgeführt werden");
-    } finally {
       setProcessing(false);
     }
   }
