@@ -2890,7 +2890,7 @@ app.include_router(api_router)
 
 # Mount static files for generated contracts (must be after router)
 app.mount(
-    "/generated_contracts",
+    "/api/generated_contracts",
     StaticFiles(directory=os.path.join(os.path.dirname(__file__), "generated_contracts")),
     name="generated_contracts"
 )
