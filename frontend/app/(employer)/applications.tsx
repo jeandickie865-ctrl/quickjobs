@@ -319,13 +319,18 @@ export default function EmployerApplicationsScreen() {
                       }}
                       style={{
                         backgroundColor: COLORS.neon,
+                        borderRadius: 14,
                         paddingVertical: 14,
-                        borderRadius: 12,
+                        paddingHorizontal: 16,
                         alignItems: 'center',
+                        shadowColor: 'rgba(200,255,22,0.2)',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.8,
+                        shadowRadius: 6,
                         marginTop: 12,
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                         ✓ Annehmen & zur Zahlung
                       </Text>
                     </Pressable>
