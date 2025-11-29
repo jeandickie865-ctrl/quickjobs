@@ -47,27 +47,49 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email: string, password: string) {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      console.log('🔐 Attempting login for:', email);
+      
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!res.ok) return false;
+      console.log('📡 Login response status:', res.status);
 
-    const data = await res.json();
-    await AsyncStorage.setItem("token", data.token);
-    setToken(data.token);
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ detail: 'Login fehlgeschlagen' }));
+        console.error('❌ Login failed:', errorData);
+        throw new Error(errorData.detail || 'E-Mail oder Passwort falsch');
+      }
 
-    const me = await fetch(`${API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${data.token}` },
-    });
-    const userData = await me.json();
-    
-    // Backend gibt userId zurück, aber Frontend erwartet id
-    const user = { ...userData, id: userData.userId };
-    setUser(user);
-    return true;
+      const data = await res.json();
+      console.log('✅ Login successful, token received');
+      
+      await AsyncStorage.setItem("token", data.token);
+      setToken(data.token);
+
+      const me = await fetch(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${data.token}` },
+      });
+      
+      if (!me.ok) {
+        console.error('❌ Failed to fetch user data');
+        throw new Error('Fehler beim Laden der Benutzerdaten');
+      }
+      
+      const userData = await me.json();
+      console.log('✅ User data loaded:', userData.email, 'role:', userData.role);
+      
+      // Backend gibt userId zurück, aber Frontend erwartet id
+      const user = { ...userData, id: userData.userId };
+      setUser(user);
+      return true;
+    } catch (error) {
+      console.error('❌ Login error:', error);
+      throw error;
+    }
   }
 
   async function signUp(email: string, password: string, role: string) {
