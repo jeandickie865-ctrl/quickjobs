@@ -38,7 +38,14 @@ export default function RegistrationPrepareScreen() {
     if (!application || !application.workerId) return;
     fetch(`/api/profiles/worker/${application.workerId}`)
       .then(res => res.json())
-      .then(data => setWorker(data))
+      .then(data => {
+        setWorker(data);
+        // Felder automatisch mit Worker-Daten vorausfüllen
+        if (data.steuerId) setSteuerId(data.steuerId);
+        if (data.geburtsdatum) setGeburtsdatum(data.geburtsdatum);
+        if (data.sozialversicherungsnummer) setSozialversicherungsnummer(data.sozialversicherungsnummer);
+        if (data.krankenkasse) setKrankenkasse(data.krankenkasse);
+      })
       .catch(err => console.error('Error loading worker:', err));
   }, [application]);
 
