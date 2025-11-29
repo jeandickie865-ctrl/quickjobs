@@ -74,21 +74,38 @@ export default function RateWorkerScreen() {
     }
 
     try {
-      console.log('📋 Loading job:', jobId);
+      console.log('📋 Employer Rate: Loading job:', jobId);
       const jobData = await getJobById(String(jobId));
       setJob(jobData);
+      console.log('✅ Employer Rate: Job loaded:', jobData?.title);
       
       // Get workerId from params or from job
       const targetWorkerId = params.workerId || jobData?.matchedWorkerId;
+      console.log('👤 Employer Rate: Loading worker with ID:', targetWorkerId);
       
-      console.log('👤 Loading worker:', targetWorkerId);
       if (targetWorkerId) {
-        const workerData = await getWorkerProfile(String(targetWorkerId));
-        setWorker(workerData);
-        console.log('✅ Worker loaded:', workerData?.firstName);
+        // DIRECT API CALL - Bypass getWorkerProfile
+        const headers = await getAuthHeaders();
+        const response = await fetch(`${API_URL}/profiles/worker/${targetWorkerId}`, {
+          method: 'GET',
+          headers,
+        });
+        
+        console.log('📡 Employer Rate: Worker API response status:', response.status);
+        
+        if (response.ok) {
+          const workerData = await response.json();
+          setWorker(workerData);
+          console.log('✅ Employer Rate: Worker loaded:', workerData?.firstName, workerData?.lastName);
+        } else {
+          const errorText = await response.text();
+          console.error('❌ Employer Rate: Failed to load worker:', response.status, errorText);
+        }
+      } else {
+        console.error('❌ Employer Rate: No workerId available!');
       }
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('❌ Employer Rate: Error loading data:', error);
     } finally {
       setLoading(false);
     }
