@@ -82,8 +82,9 @@ export default function RateWorkerScreen() {
       setJob(jobData);
       console.log('✅ Employer Rate: Job loaded:', jobData?.title);
       
-      // Get workerId from params or from job
-      const targetWorkerId = params.workerId || jobData?.matchedWorkerId;
+      // Get workerId ONLY from params (passed from button)
+      const targetWorkerId = params.workerId;
+      console.log('👤 Employer Rate: workerId from params:', params.workerId);
       console.log('👤 Employer Rate: Loading worker with ID:', targetWorkerId);
       
       if (targetWorkerId) {
