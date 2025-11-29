@@ -42,6 +42,11 @@ export default function WorkerFeedScreen() {
         signOut();
         return;
       }
+      // Check if it's a "profile not found" error
+      if (err.message?.includes("FAILED_TO_FETCH_MATCHED_JOBS")) {
+        setError("Du musst zuerst dein Profil vervollständigen, um passende Jobs zu sehen. Bitte gehe zum Profil-Tab.");
+        return;
+      }
       setError(`Fehler beim Laden der Jobs: ${err.message || 'Unbekannter Fehler'}`);
     }
 
