@@ -88,6 +88,40 @@ export default function RegistrationDoneScreen() {
       <Pressable
         onPress={async () => {
           try {
+            const response = await fetch('/api/registrations/generate-payroll', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ applicationId })
+            });
+
+            const data = await response.json();
+            console.log('Payroll generated:', data);
+
+            if (data.payrollUrl) {
+              const fullUrl = `${process.env.EXPO_PUBLIC_BACKEND_URL}${data.payrollUrl}`;
+              Linking.openURL(fullUrl);
+            }
+
+          } catch (err) {
+            console.error('Error generating payroll:', err);
+          }
+        }}
+        style={{
+          backgroundColor: '#FFD700',
+          padding: 14,
+          borderRadius: 12,
+          alignItems: 'center',
+          marginTop: 10
+        }}
+      >
+        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+          Lohnabrechnung herunterladen
+        </Text>
+      </Pressable>
+
+      <Pressable
+        onPress={async () => {
+          try {
             const response = await fetch('/api/registrations/complete', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
