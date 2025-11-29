@@ -297,16 +297,21 @@ export default function RateEmployerScreen() {
                 disabled={saving || rating === 0}
                 style={({ pressed }) => ({
                   backgroundColor: rating === 0 ? 'rgba(200,255,22,0.3)' : COLORS.neon,
-                  borderRadius: 16,
-                  paddingVertical: 16,
+                  borderRadius: 14,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
                   alignItems: 'center',
+                  shadowColor: rating === 0 ? 'transparent' : 'rgba(200,255,22,0.2)',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.8,
+                  shadowRadius: 6,
                   opacity: pressed ? 0.8 : 1,
                 })}
               >
                 {saving ? (
                   <ActivityIndicator color={COLORS.black} />
                 ) : (
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                     Bewertung abgeben
                   </Text>
                 )}
