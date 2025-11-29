@@ -674,12 +674,17 @@ async def get_worker_profile_for_employer(
     # Remove MongoDB _id field
     profile.pop("_id", None)
     
-    # Check if application is accepted
+    # Check if application is accepted AND paid
     is_accepted = False
     if application_id:
         application = await db.applications.find_one({"id": application_id})
-        if application and application.get("status") == "accepted":
+        if application and application.get("status") == "accepted" and application.get("paymentStatus") == "paid":
             is_accepted = True
+            logger.info(f"Application {application_id} is ACCEPTED and PAID - showing full profile")
+        elif application and application.get("status") == "accepted":
+            logger.warning(f"Application {application_id} is ACCEPTED but NOT PAID - showing limited profile")
+        else:
+            logger.info(f"Application {application_id} not accepted - showing limited profile")
     
     # Return full or limited profile based on acceptance status
     if is_accepted:
