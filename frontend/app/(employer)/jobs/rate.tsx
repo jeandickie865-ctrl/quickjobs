@@ -30,10 +30,14 @@ export default function RateWorkerScreen() {
   const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string; jobId?: string; workerId?: string }>();
+  console.log('RateWorkerScreen params:', params);
 
   // Get jobId from either 'id' or 'jobId' param
   const jobId = params.id || params.jobId;
   const workerId = params.workerId || params.id;
+  
+  console.log('RateWorkerScreen jobId:', jobId);
+  console.log('RateWorkerScreen workerId (from params):', workerId);
 
   const [job, setJob] = useState<Job | null>(null);
   const [worker, setWorker] = useState<WorkerProfile | null>(null);
