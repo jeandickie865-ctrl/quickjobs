@@ -122,9 +122,21 @@ export default function CreateJob() {
     };
 
     // Build description with time info if provided
-    const fullDescription = timeInfo ? 
-      `${description.trim()}\n\nZeit/Datum: ${timeInfo}`.trim() : 
-      description.trim() || undefined;
+    let fullDescription = description.trim() || '';
+    
+    if (timeInfo) {
+      const parts = timeInfo.split('|');
+      const datum = parts[0] || '';
+      const uhrzeit = parts[1] || '';
+      
+      if (datum || uhrzeit) {
+        fullDescription += '\n\n📅 WANN:';
+        if (datum) fullDescription += `\nDatum: ${datum}`;
+        if (uhrzeit) fullDescription += `\nUhrzeit: ${uhrzeit}`;
+      }
+    }
+    
+    fullDescription = fullDescription.trim() || undefined;
 
     // Create job object - simplified without complex time fields
     const jobCreate: JobCreate = {
