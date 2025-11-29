@@ -2032,6 +2032,10 @@ async def get_messages(
 class CreateRegistrationRequest(BaseModel):
     applicationId: str
     registrationType: str
+    steuerId: Optional[str] = None
+    krankenkasse: Optional[str] = None
+    geburtsdatum: Optional[str] = None
+    sozialversicherungsnummer: Optional[str] = None
 
 # Official Registration Endpoints
 @api_router.post("/registrations/create", response_model=OfficialRegistration)
