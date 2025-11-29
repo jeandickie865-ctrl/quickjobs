@@ -2129,6 +2129,23 @@ def generate_contract_pdf(
         # Alte Struktur: Root-Level Felder
         worker_address = f"{worker_data.get('street', '')} {worker_data.get('houseNumber', '')}, {worker_data.get('postalCode', '')} {worker_data.get('city', '')}"
     c.drawString(2*cm, y_pos, worker_address)
+    y_pos -= 0.5*cm
+    
+    # Zusätzliche Worker-Daten
+    geburtsdatum = worker_data.get('geburtsdatum', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Geburtsdatum: {geburtsdatum}")
+    y_pos -= 0.5*cm
+    
+    steuer_id = worker_data.get('steuerId', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Steuer-ID: {steuer_id}")
+    y_pos -= 0.5*cm
+    
+    sv_nummer = worker_data.get('sozialversicherungsnummer', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Sozialversicherungsnummer: {sv_nummer}")
+    y_pos -= 0.5*cm
+    
+    krankenkasse = worker_data.get('krankenkasse', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Krankenkasse: {krankenkasse}")
     y_pos -= 1*cm
     
     # 3. Art der Beschäftigung
