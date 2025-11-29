@@ -17,7 +17,24 @@ export default function RegistrationDoneScreen() {
       </Text>
 
       <Pressable
-        onPress={() => {}}
+        onPress={async () => {
+          try {
+            const response = await fetch('/api/registrations/complete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                applicationId
+              })
+            });
+
+            const data = await response.json();
+            console.log('Registration completed:', data);
+
+            router.push('/(employer)/matches');
+          } catch (err) {
+            console.error('Error completing registration:', err);
+          }
+        }}
         style={{
           backgroundColor: '#FFD700',
           padding: 14,
