@@ -57,18 +57,20 @@ export default function WorkerRegistrationDataScreen() {
       <Pressable
         onPress={async () => {
           try {
-            // User-ID aus AsyncStorage holen
-            const userDataString = await AsyncStorage.getItem('userData');
-            if (!userDataString) {
-              console.error('No user data found');
+            // Auth Token aus AsyncStorage holen (NUR für Authorization)
+            const token = await AsyncStorage.getItem('authToken');
+            if (!token) {
+              console.error('No auth token found');
               return;
             }
-            const userData = JSON.parse(userDataString);
-            const userId = userData.userId;
 
-            const response = await fetch(`/api/profiles/worker/${userId}/registration-data`, {
+            // Backend holt userId aus dem Token
+            const response = await fetch('/api/profiles/worker/me/registration-data', {
               method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
               body: JSON.stringify({
                 steuerId,
                 geburtsdatum,
