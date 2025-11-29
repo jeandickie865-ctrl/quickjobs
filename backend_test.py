@@ -589,13 +589,12 @@ class RegistrationFlowTester:
                 # Test 3: Verify status is now complete
                 await self.test_registration_status_after_update()
             
-            # Setup: Find accepted application
+            # Setup: Find or create accepted application
             application_id = await self.find_accepted_application()
             
             if not application_id:
-                # Create a mock application for testing
-                print("⚠️  No accepted application found. Creating mock scenario...")
-                application_id = "app_mock_test_123"
+                await self.log_test("Complete Test Flow", False, "Failed to create test scenario")
+                return
             
             # Test 4: Create official registration
             registration_id = await self.test_create_official_registration(application_id)
