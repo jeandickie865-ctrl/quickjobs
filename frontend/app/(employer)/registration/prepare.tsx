@@ -144,7 +144,12 @@ export default function RegistrationPrepareScreen() {
       <Pressable
         onPress={() =>
           router.push(
-            `/(employer)/registration/confirm?applicationId=${applicationId}&type=${registrationType}`
+            `/(employer)/registration/confirm?applicationId=${applicationId}` +
+            `&type=${registrationType}` +
+            `&steuerId=${encodeURIComponent(steuerId || '')}` +
+            `&krankenkasse=${encodeURIComponent(krankenkasse || '')}` +
+            `&geburtsdatum=${encodeURIComponent(geburtsdatum || '')}` +
+            `&sozialversicherungsnummer=${encodeURIComponent(sozialversicherungsnummer || '')}`
           )
         }
         style={{
