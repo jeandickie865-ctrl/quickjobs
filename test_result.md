@@ -397,12 +397,10 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "Stundenpaket Date Functionality - Fixed Day"
-    - "Stundenpaket Date Functionality - Date Range"
-    - "Job Creation Validation"
-    - "Worker Job Display"
-  stuck_tasks: 
+    - "Authentication - Signup Screen"
+    - "Authentication - Login Screen"
     - "Authentication Flow"
+  stuck_tasks: 
     - "Worker Profile"
   test_all: false
   test_priority: "high_first"
