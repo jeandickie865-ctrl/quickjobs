@@ -1249,6 +1249,55 @@ backend:
 
   - agent: "main"
     message: |
+      **✅ NEUER ENDPOINT: POST /api/registrations/create IMPLEMENTIERT**
+      
+      **Benutzeranforderung:**
+      Einen neuen FastAPI-Endpoint erstellen, der eine offizielle Anmeldung basierend auf einer Application erstellt.
+      
+      **Implementierung:**
+      
+      **1. Neues Pydantic Model:**
+      - `CreateRegistrationRequest` (Zeile 2019): JSON Body mit applicationId und registrationType
+      
+      **2. Endpoint erstellt (Zeile 2022-2076):**
+      - Route: POST /api/registrations/create
+      - Input: JSON Body { "applicationId": "string", "registrationType": "string" }
+      - Logik:
+        1. Application aus `applications` Collection laden
+        2. employerId und workerId aus Application übernehmen
+        3. Neuen Eintrag in `official_registrations` Collection erstellen mit:
+           * applicationId
+           * employerId  
+           * workerId
+           * registrationType
+           * status = "pending"
+           * contractUrl = null
+           * sofortmeldungUrl = null
+           * createdAt = jetzt
+           * updatedAt = jetzt
+        4. Neuen Eintrag als JSON zurückgeben
+      
+      **3. Error Handling:**
+      - 404: Wenn Application nicht gefunden wird
+      - 400: Wenn employerId oder workerId fehlen
+      
+      **4. Verwendete Models:**
+      - `OfficialRegistration` Model (bereits vorhanden aus früherer Arbeit)
+      
+      **Änderungen:**
+      - `/app/backend/server.py` (Zeilen 2019-2076)
+      - Backend automatisch neu geladen via WatchFiles
+      - Python Linting: 1 harmloser Fehler (F841) in anderem Code-Teil
+      
+      **Status:** 
+      - Endpoint implementiert und Backend läuft
+      - Bereit für Backend-Testing
+      - Keine bestehenden Endpoints verändert
+      - Keine anderen Collections angefasst
+
+
+  - agent: "main"
+    message: |
       **🎉 ALLE VERBESSERUNGEN ABGESCHLOSSEN - VOLLSTÄNDIGE MONGODB-MIGRATION & CHAT**
       
       **Zusammenfassung aller Arbeiten:**
