@@ -390,11 +390,15 @@ export default function WorkerMatchesScreen() {
                         disabled={application.paymentStatus !== "paid"}
                         style={({ pressed }) => ({
                           backgroundColor: application.paymentStatus === "paid" ? COLORS.neon : COLORS.lightGray,
+                          borderRadius: 14,
                           paddingVertical: 14,
-                          borderRadius: 16,
+                          paddingHorizontal: 16,
                           alignItems: 'center',
+                          shadowColor: application.paymentStatus === "paid" ? COLORS.neonShadow : 'transparent',
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.8,
+                          shadowRadius: 6,
                           opacity: pressed ? 0.9 : 1,
-                          transform: [{ scale: pressed ? 0.98 : 1 }],
                         })}
                       >
                         <Text style={{ 
