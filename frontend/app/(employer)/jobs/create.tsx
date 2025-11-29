@@ -123,19 +123,18 @@ export default function CreateJob() {
       city: address.city?.trim() || undefined,
     };
 
-    // Create job object
-    // Create JobCreate object (no id, employerId, status, createdAt, matchedWorkerId)
-    // Backend will set these from token
+    // Build description with time info if provided
+    const fullDescription = timeInfo ? 
+      `${description.trim()}\n\nZeit/Datum: ${timeInfo}`.trim() : 
+      description.trim() || undefined;
+
+    // Create job object - simplified without complex time fields
     const jobCreate: JobCreate = {
       employerType: user.accountType === 'business' ? 'business' : 'private',
       title: title.trim(),
-      description: description.trim() || undefined,
+      description: fullDescription,
       category,
-      timeMode,
-      startAt: startAtIso,
-      endAt: endAtIso,
-      hours: hoursNumber,
-      dueAt: dueAtIso,
+      timeMode: 'project', // Default to project mode (most flexible)
       address: location,
       lat: lat,
       lon: lon,
