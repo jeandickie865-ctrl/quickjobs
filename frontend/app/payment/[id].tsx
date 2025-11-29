@@ -223,10 +223,14 @@ export default function PaymentScreen() {
 
         {/* Pay Button */}
         <Pressable
-          onPress={handlePayment}
-          disabled={processing || !paymentMethod}
+          onPress={() => {
+            console.log("🔔 Pay button clicked! Payment method:", paymentMethod);
+            console.log("🔔 Processing:", processing);
+            handlePayment();
+          }}
+          disabled={processing}
           style={{
-            backgroundColor: processing || !paymentMethod ? COLORS.gray : COLORS.neon,
+            backgroundColor: processing ? COLORS.gray : COLORS.neon,
             paddingVertical: 18,
             borderRadius: 16,
             alignItems: "center",
