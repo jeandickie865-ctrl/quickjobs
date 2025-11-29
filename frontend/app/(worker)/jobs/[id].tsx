@@ -325,8 +325,11 @@ export default function WorkerJobDetailScreen() {
 
           {/* DEBUG INFO */}
           <View style={{ backgroundColor: 'yellow', padding: 10, margin: 20 }}>
-            <Text style={{ color: 'black' }}>DEBUG: Job Status = {job.status}</Text>
+            <Text style={{ color: 'black', fontWeight: 'bold' }}>DEBUG: Job Status = {job.status}</Text>
             <Text style={{ color: 'black' }}>Button wird gerendert: {job.status !== 'matched' ? 'JA' : 'NEIN'}</Text>
+            <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 18, marginTop: 10 }}>
+              Button geklickt: {buttonClickCount} mal
+            </Text>
           </View>
 
           {/* "Ich habe Zeit" Button - IMMER ANZEIGEN FÜR TEST */}
