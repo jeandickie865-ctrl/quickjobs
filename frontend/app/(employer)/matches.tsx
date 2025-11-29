@@ -449,7 +449,11 @@ export default function MatchesScreen() {
                   {/* Rate Worker Button - nur nach Zahlung */}
                   {match.application.paymentStatus === "paid" && (
                     <Pressable
-                      onPress={() => router.push(`/(employer)/jobs/rate?jobId=${match.job.id}&workerId=${match.worker?.userId}`)}
+                      onPress={() => {
+                        const workerId = match.worker?.userId || match.application.workerId;
+                        console.log('🎯 Employer: Navigate to rate - jobId:', match.job.id, 'workerId:', workerId);
+                        router.push(`/(employer)/jobs/rate?jobId=${match.job.id}&workerId=${workerId}`);
+                      }}
                       style={({ pressed }) => ({
                         backgroundColor: '#FFD700',
                         borderRadius: 12,
