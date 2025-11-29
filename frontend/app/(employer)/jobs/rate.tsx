@@ -86,15 +86,12 @@ export default function RateWorkerScreen() {
       setJob(jobData);
       console.log('✅ Employer Rate: Job loaded:', jobData?.title);
       
-      // Get workerId ONLY from params (passed from button)
-      const targetWorkerId = params.workerId;
-      console.log('👤 Employer Rate: workerId from params:', params.workerId);
-      console.log('👤 Employer Rate: Loading worker with ID:', targetWorkerId);
+      console.log('👤 Employer Rate: Loading worker with ID:', workerId);
       
-      if (targetWorkerId) {
-        // DIRECT API CALL - Bypass getWorkerProfile
+      if (workerId) {
+        // DIRECT API CALL
         const headers = await getAuthHeaders();
-        const response = await fetch(`${API_URL}/profiles/worker/${targetWorkerId}`, {
+        const response = await fetch(`${API_URL}/profiles/worker/${workerId}`, {
           method: 'GET',
           headers,
         });
