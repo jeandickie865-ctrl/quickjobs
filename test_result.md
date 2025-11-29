@@ -1248,6 +1248,21 @@ backend:
 
   - task: "Official Registration API - Create Endpoint"
     implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Neuer Endpoint POST /api/registrations/create erstellt. Empfängt JSON Body {applicationId, registrationType}, lädt Application aus DB, übernimmt employerId und workerId, erstellt neuen Eintrag in official_registrations Collection mit status='pending', contractUrl=null, sofortmeldungUrl=null, timestamps. Verwendet CreateRegistrationRequest Pydantic Model. Backend neu gestartet und bereit für Testing."
+      - working: true
+        agent: "testing"
+        comment: "✅ ALL 8/8 TESTS PASSED (100% SUCCESS RATE): Kurzfristig Registration, Minijob Registration, Application Not Found (404), Data Persistence in MongoDB, Multiple Registrations allowed, Invalid Registration Type, Missing Required Fields. Backend logs confirm all registrations successfully created and persisted. Endpoint is PRODUCTION-READY."
+
+  - task: "Official Registration API - Complete Endpoint"
+    implemented: true
     working: false
     file: "backend/server.py"
     stuck_count: 0
@@ -1256,7 +1271,7 @@ backend:
     status_history:
       - working: false
         agent: "main"
-        comment: "Neuer Endpoint POST /api/registrations/create erstellt. Empfängt JSON Body {applicationId, registrationType}, lädt Application aus DB, übernimmt employerId und workerId, erstellt neuen Eintrag in official_registrations Collection mit status='pending', contractUrl=null, sofortmeldungUrl=null, timestamps. Verwendet CreateRegistrationRequest Pydantic Model. Backend neu gestartet und bereit für Testing."
+        comment: "Neuer Endpoint POST /api/registrations/complete erstellt. Empfängt JSON Body {applicationId}, sucht Eintrag in official_registrations Collection mit matching applicationId, setzt status='completed' und updatedAt=jetzt. Zusätzlich wird in applications Collection das Feld officialRegistrationStatus='completed' gesetzt. Gibt aktualisiertes OfficialRegistration Dokument zurück. Error Handling: 404 wenn keine Registration gefunden, 400 bei unvollständigem Body. Backend automatisch neu geladen und bereit für Testing."
 
 
   - agent: "main"
