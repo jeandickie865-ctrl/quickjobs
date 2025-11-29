@@ -338,20 +338,20 @@ export default function RateWorkerScreen() {
             disabled={rating === 0 || saving}
             style={({ pressed }) => ({
               backgroundColor: rating === 0 || saving ? '#E8E8E8' : COLORS.neon,
-              paddingVertical: 18,
-              borderRadius: 18,
+              borderRadius: 14,
+              paddingVertical: 14,
+              paddingHorizontal: 16,
               alignItems: 'center',
+              shadowColor: rating > 0 && !saving ? 'rgba(200,255,22,0.2)' : 'transparent',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
               marginTop: 20,
               opacity: pressed ? 0.9 : 1,
-              shadowColor: rating > 0 && !saving ? COLORS.neon : 'transparent',
-              shadowOffset: { width: 0, height: 6 },
-              shadowOpacity: 0.3,
-              shadowRadius: 12,
-              elevation: 6,
             })}
           >
             <Text style={{ 
-              fontSize: 17, 
+              fontSize: 16, 
               fontWeight: '700', 
               color: rating === 0 || saving ? COLORS.darkGray : COLORS.black,
             }}>
