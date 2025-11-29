@@ -102,7 +102,7 @@ class RegistrationEndpointTester:
                     "lon": 13.3777,
                     "workerAmountCents": 15000,
                     "paymentToWorker": "cash",
-                    "required_all_tags": ["sachkunde"],
+                    "required_all_tags": ["sachkunde_34a"],
                     "required_any_tags": [],
                     "status": "open"
                 }
