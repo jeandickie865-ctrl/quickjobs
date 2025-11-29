@@ -2885,6 +2885,13 @@ async def generate_payroll(request: GeneratePayrollRequest):
     return {"payrollUrl": payroll_url}
 
 
+# Mount static files for generated contracts
+app.mount(
+    "/generated_contracts",
+    StaticFiles(directory=os.path.join(os.path.dirname(__file__), "generated_contracts")),
+    name="generated_contracts"
+)
+
 # Include the router in the main app
 app.include_router(api_router)
 
