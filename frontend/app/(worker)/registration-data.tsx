@@ -61,7 +61,29 @@ export default function WorkerRegistrationDataScreen() {
       />
 
       <Pressable
-        onPress={() => {}}
+        onPress={async () => {
+          try {
+            const response = await fetch(`/api/profiles/worker/${user.userId}/registration-data`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                steuerId,
+                geburtsdatum,
+                sozialversicherungsnummer,
+                krankenkasse
+              })
+            });
+
+            const data = await response.json();
+            console.log('Registration data saved:', data);
+
+            // Nach dem Speichern zurück zur vorherigen Seite
+            router.back();
+
+          } catch (error) {
+            console.error('Error saving registration data:', error);
+          }
+        }}
         style={{
           marginTop: 16,
           backgroundColor: '#FFD700',
