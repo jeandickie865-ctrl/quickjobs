@@ -420,14 +420,15 @@ export default function MatchesScreen() {
                     disabled={match.application.paymentStatus === "pending"}
                     style={({ pressed }) => ({
                       backgroundColor: match.application.paymentStatus === "paid" ? COLORS.neon : COLORS.lightGray,
-                      borderRadius: 12,
+                      borderRadius: 14,
                       paddingVertical: 14,
+                      paddingHorizontal: 16,
                       alignItems: 'center',
+                      shadowColor: match.application.paymentStatus === "paid" ? COLORS.neonShadow : "transparent",
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.8,
+                      shadowRadius: 6,
                       opacity: pressed ? 0.9 : 1,
-                      shadowColor: match.application.paymentStatus === "paid" ? COLORS.neon : "transparent",
-                      shadowOffset: { width: 0, height: 4 },
-                      shadowOpacity: 0.3,
-                      shadowRadius: 8,
                     })}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -437,7 +438,7 @@ export default function MatchesScreen() {
                         color={match.application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray} 
                       />
                       <Text style={{ 
-                        fontSize: 15, 
+                        fontSize: 16, 
                         fontWeight: '700', 
                         color: match.application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
                       }}>
