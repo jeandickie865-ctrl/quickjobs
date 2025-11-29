@@ -84,12 +84,14 @@ export default function MatchesScreen() {
       // Load employer's jobs
       const employerJobs = await getEmployerJobs(user.id);
       
-      // Find only ACCEPTED applications
+      // Find only PAID applications (echte Matches)
       const allMatches: Match[] = [];
       for (const job of employerJobs) {
         const jobApps = await getApplicationsForJob(job.id);
-        // NUR akzeptierte Bewerbungen = echte Matches
-        const acceptedApps = jobApps.filter(app => app.status === 'accepted');
+        // NUR BEZAHLTE Bewerbungen = echte Matches!
+        const acceptedApps = jobApps.filter(app => 
+          app.status === 'accepted' && app.paymentStatus === 'paid'
+        );
         
         for (const app of acceptedApps) {
           // Load worker profile to get contact details
