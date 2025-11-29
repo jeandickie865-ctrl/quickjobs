@@ -1234,6 +1234,18 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
 
+  - task: "Official Registration API - Create Endpoint"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Neuer Endpoint POST /api/registrations/create erstellt. Empfängt JSON Body {applicationId, registrationType}, lädt Application aus DB, übernimmt employerId und workerId, erstellt neuen Eintrag in official_registrations Collection mit status='pending', contractUrl=null, sofortmeldungUrl=null, timestamps. Verwendet CreateRegistrationRequest Pydantic Model. Backend neu gestartet und bereit für Testing."
+
 
   - agent: "main"
     message: |
