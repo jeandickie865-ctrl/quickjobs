@@ -61,19 +61,28 @@ export default function RateEmployerScreen() {
 
   async function loadData() {
     if (!jobId) {
+      console.log('❌ No jobId provided for Worker Rate');
       setLoading(false);
       return;
     }
 
     try {
+      console.log('📋 Worker Rate: Loading job:', jobId);
       const jobData = await getJobById(String(jobId));
+      
       if (jobData) {
+        console.log('✅ Job loaded:', jobData.title);
         setJob(jobData);
+        
+        console.log('👔 Loading employer:', jobData.employerId);
         const employerData = await getEmployerProfile(jobData.employerId);
         setEmployer(employerData);
+        console.log('✅ Employer loaded:', employerData?.firstName);
+      } else {
+        console.log('❌ Job not found:', jobId);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('❌ Error loading data for Worker Rate:', error);
     } finally {
       setLoading(false);
     }
