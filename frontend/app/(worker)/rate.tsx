@@ -167,12 +167,17 @@ export default function RateEmployerScreen() {
             style={{
               marginTop: 20,
               backgroundColor: COLORS.neon,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 12,
+              borderRadius: 14,
+              paddingVertical: 14,
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              shadowColor: 'rgba(200,255,22,0.2)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
             }}
           >
-            <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Zurück</Text>
           </Pressable>
         </SafeAreaView>
       </View>
