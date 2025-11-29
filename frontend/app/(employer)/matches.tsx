@@ -339,8 +339,8 @@ export default function MatchesScreen() {
                   </View>
                 </View>
 
-                {/* Contact Details - ONLY VISIBLE AFTER MATCH */}
-                {match.workerProfile && (
+                {/* Contact Details - ONLY VISIBLE AFTER PAYMENT */}
+                {match.workerProfile && match.application.paymentStatus === 'paid' && (
                   <View style={{
                     backgroundColor: COLORS.neon,
                     borderRadius: 12,
