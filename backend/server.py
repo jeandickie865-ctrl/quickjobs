@@ -2469,13 +2469,22 @@ def generate_payroll_pdf(
     c.drawString(2*cm, y_pos, worker_address)
     y_pos -= 0.5*cm
     
-    # Geburtsdatum falls vorhanden
-    geburtsdatum = additional_data.get('geburtsdatum')
-    if geburtsdatum:
-        c.drawString(2*cm, y_pos, f"Geburtsdatum: {geburtsdatum}")
-        y_pos -= 0.5*cm
-    
+    # Zusätzliche Worker-Daten - Prüfe beide Quellen
+    geburtsdatum = worker_data.get('geburtsdatum') or additional_data.get('geburtsdatum', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Geburtsdatum: {geburtsdatum}")
     y_pos -= 0.5*cm
+    
+    steuer_id = worker_data.get('steuerId') or additional_data.get('steuerId', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Steuer-ID: {steuer_id}")
+    y_pos -= 0.5*cm
+    
+    sv_nummer = worker_data.get('sozialversicherungsnummer') or additional_data.get('sozialversicherungsnummer', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Sozialversicherungsnummer: {sv_nummer}")
+    y_pos -= 0.5*cm
+    
+    krankenkasse = worker_data.get('krankenkasse') or additional_data.get('krankenkasse', 'Nicht angegeben')
+    c.drawString(2*cm, y_pos, f"Krankenkasse: {krankenkasse}")
+    y_pos -= 1*cm
     
     # 3. Einsatzdetails
     c.setFont("Helvetica-Bold", 12)
