@@ -310,6 +310,27 @@ export default function EmployerApplicationsScreen() {
                     </View>
                   )}
 
+                  {/* Accept Button - nur bei pending */}
+                  {application.status === 'pending' && (
+                    <Pressable
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        router.push(`/payment/${application.id}`);
+                      }}
+                      style={{
+                        backgroundColor: COLORS.neon,
+                        paddingVertical: 14,
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        marginTop: 12,
+                      }}
+                    >
+                      <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.black }}>
+                        ✓ Annehmen & zur Zahlung
+                      </Text>
+                    </Pressable>
+                  )}
+
                   {/* Action Hint */}
                   <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                     <Ionicons name="open-outline" size={14} color={COLORS.purple} />
