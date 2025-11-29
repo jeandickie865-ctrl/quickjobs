@@ -23,7 +23,27 @@ export default function RegistrationConfirmScreen() {
       </Text>
 
       <Pressable
-        onPress={() => {}}
+        onPress={async () => {
+          try {
+            const response = await fetch('/api/registrations/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                applicationId,
+                registrationType
+              })
+            });
+
+            const data = await response.json();
+            console.log('Registration created:', data);
+
+            router.push(
+              `/(employer)/registration/done?applicationId=${applicationId}`
+            );
+          } catch (err) {
+            console.error('Error creating registration:', err);
+          }
+        }}
         style={{
           backgroundColor: '#FFD700',
           padding: 14,
