@@ -233,6 +233,50 @@ class RegistrationFlowTester:
             await self.log_test("Create Worker Profile", False, f"Exception: {str(e)}")
             return False
 
+    async def create_employer_profile(self):
+        """Create an employer profile for Milenka"""
+        print("🔧 SETUP: Creating employer profile...")
+        
+        if "employer" not in self.tokens:
+            await self.log_test("Create Employer Profile", False, "No employer token available")
+            return False
+            
+        try:
+            profile_data = {
+                "firstName": "Milenka",
+                "lastName": "Dickies-Helden",
+                "company": "Dickies Helden GmbH",
+                "phone": "+49 30 87654321",
+                "email": "user_test4_dickies-helden_de@test.com",
+                "street": "Unter den Linden",
+                "houseNumber": "77",
+                "postalCode": "10117",
+                "city": "Berlin",
+                "lat": 52.5170,
+                "lon": 13.3888,
+                "shortBio": "Professional event management company"
+            }
+            
+            response = await self.client.post(
+                f"{BACKEND_URL}/profiles/employer",
+                json=profile_data,
+                headers={"Authorization": f"Bearer {self.tokens['employer']}"}
+            )
+            
+            if response.status_code == 200:
+                profile = response.json()
+                await self.log_test("Create Employer Profile", True,
+                                  f"Profile created for {profile['firstName']} {profile['lastName']}")
+                return True
+            else:
+                await self.log_test("Create Employer Profile", False,
+                                  f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            await self.log_test("Create Employer Profile", False, f"Exception: {str(e)}")
+            return False
+
     async def create_test_job(self) -> Optional[str]:
         """Create a test job for the scenario"""
         print("🔧 SETUP: Creating test job...")
