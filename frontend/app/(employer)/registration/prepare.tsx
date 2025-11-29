@@ -79,6 +79,68 @@ export default function RegistrationPrepareScreen() {
         </View>
       )}
 
+      <View style={{ marginTop: 24 }}>
+        <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 8 }}>
+          Zusätzliche Daten für die Anmeldung
+        </Text>
+
+        <Text style={{ marginTop: 8 }}>Steuer-ID</Text>
+        <TextInput
+          value={steuerId}
+          onChangeText={setSteuerId}
+          placeholder="Steuer-ID des Mitarbeiters"
+          style={{
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 8,
+            padding: 10,
+            marginTop: 4
+          }}
+        />
+
+        <Text style={{ marginTop: 12 }}>Krankenkasse</Text>
+        <TextInput
+          value={krankenkasse}
+          onChangeText={setKrankenkasse}
+          placeholder="Name der Krankenkasse"
+          style={{
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 8,
+            padding: 10,
+            marginTop: 4
+          }}
+        />
+
+        <Text style={{ marginTop: 12 }}>Geburtsdatum</Text>
+        <TextInput
+          value={geburtsdatum}
+          onChangeText={setGeburtsdatum}
+          placeholder="TT.MM.JJJJ"
+          style={{
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 8,
+            padding: 10,
+            marginTop: 4
+          }}
+        />
+
+        <Text style={{ marginTop: 12 }}>Sozialversicherungsnummer</Text>
+        <TextInput
+          value={sozialversicherungsnummer}
+          onChangeText={setSozialversicherungsnummer}
+          placeholder="Sozialversicherungsnummer"
+          style={{
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 8,
+            padding: 10,
+            marginTop: 4
+          }}
+        />
+      </View>
+
       <Pressable
         onPress={() =>
           router.push(
