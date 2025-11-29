@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """
-Backend Testing Suite for POST /api/registrations/complete Endpoint
-Tests the new endpoint comprehensively as requested in German.
+Backend Test Suite for ShiftMatch Registration Data Flow
+Tests the complete registration data flow as requested in the review.
 """
 
-import requests
+import asyncio
+import httpx
 import json
-import time
-import uuid
+import os
+import sys
 from datetime import datetime
+from typing import Dict, Any, Optional
 
-# Backend URL from frontend/.env
+# Backend URL from environment
 BACKEND_URL = "https://schnellhire.preview.emergentagent.com/api"
 
-class RegistrationCompleteEndpointTester:
+class RegistrationFlowTester:
     def __init__(self):
         self.test_results = []
         self.test_data = {}
