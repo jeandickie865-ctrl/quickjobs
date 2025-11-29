@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Testing Suite for ShiftMatch App
-Tests all API endpoints after frontend refactoring with centralized utils/api.ts
-As requested in the German review request: BACKEND TESTING NACH API-REFACTORING
+Backend Auth Testing Suite
+Tests the authentication endpoints after AuthContext fix
+Focused testing as requested in German review request
 """
 
 import asyncio
 import httpx
 import json
 import sys
+import time
 from typing import Dict, List, Any, Optional
 import uuid
 import math
