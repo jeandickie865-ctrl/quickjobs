@@ -566,39 +566,41 @@ export default function JobDetailScreen() {
         )}
 
         {/* Action Buttons - NUR nach Zahlung! */}
-        {job.status === 'matched' && (() => {
-          const matchedApp = applications.find(app => app.workerId === job.matchedWorkerId && app.status === 'accepted');
-          const isPaid = matchedApp?.paymentStatus === 'paid';
-          
-          // Zeige Chat-Button NUR wenn bezahlt
-          if (isPaid) {
-            return (
-              <Pressable
-                onPress={() => {
-                  if (matchedApp) {
-                    router.push(`/chat/${matchedApp.id}`);
-                  } else {
-                    alert('Chat nicht verfügbar');
-                  }
-                }}
-                style={({ pressed }) => ({
-                  backgroundColor: COLORS.neon,
-                  paddingVertical: 16,
-                  borderRadius: 16,
-                  alignItems: 'center',
-                  opacity: pressed ? 0.9 : 1,
-                })}
-              >
-                <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                  💬 Zum Chat
-                </Text>
-              </Pressable>
-            );
-          }
-          
-          // Wenn nicht bezahlt: Zeige NICHTS (User muss zu Applications gehen)
-          return null;
-        })()}
+        {job.status === 'matched' && (
+          <View style={{ gap: 12 }}>
+            {(() => {
+              const matchedApp = applications.find(app => app.workerId === job.matchedWorkerId && app.status === 'accepted');
+              const isPaid = matchedApp?.paymentStatus === 'paid';
+              
+              // Zeige Chat-Button NUR wenn bezahlt
+              if (isPaid) {
+                return (
+                  <Pressable
+                    onPress={() => {
+                      if (matchedApp) {
+                        router.push(`/chat/${matchedApp.id}`);
+                      } else {
+                        alert('Chat nicht verfügbar');
+                      }
+                    }}
+                    style={({ pressed }) => ({
+                      backgroundColor: COLORS.neon,
+                      paddingVertical: 16,
+                      borderRadius: 16,
+                      alignItems: 'center',
+                      opacity: pressed ? 0.9 : 1,
+                    })}
+                  >
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                      💬 Zum Chat
+                    </Text>
+                  </Pressable>
+                );
+              }
+              
+              // Wenn nicht bezahlt: Zeige NICHTS (User muss zu Applications gehen)
+              return null;
+            })()}
 
             {/* Rate Button */}
             {!hasReview && (
