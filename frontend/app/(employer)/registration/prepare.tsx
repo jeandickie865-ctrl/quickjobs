@@ -1,6 +1,7 @@
 import { View, Text, Pressable, TextInput } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
+import COLORS from '@/constants/colors';
 
 export default function RegistrationPrepareScreen() {
   const router = useRouter();
