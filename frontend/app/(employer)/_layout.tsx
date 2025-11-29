@@ -153,6 +153,18 @@ export default function EmployerLayout() {
       <Tabs.Screen
         name="matches"
         options={{
+          tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: '#007AFF',
+            color: '#FFFFFF',
+            fontSize: 11,
+            fontWeight: '700',
+            minWidth: 20,
+            height: 20,
+            borderRadius: 10,
+            marginLeft: -8,
+            marginTop: -4,
+          },
           tabBarIcon: () => null,
           tabBarLabel: ({ focused }) => (
             <View style={{
