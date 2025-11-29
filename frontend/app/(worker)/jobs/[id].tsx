@@ -351,18 +351,18 @@ export default function WorkerJobDetailScreen() {
                 onPress={async () => {
                   const newCount = buttonClickCount + 1;
                   setButtonClickCount(newCount);
-                  console.log('🚀 BUTTON GEKLICKT!', newCount);
+                  setDebugLogs(prev => [...prev, `🚀 Click #${newCount}`]);
+                  setDebugLogs(prev => [...prev, `Job ID: ${job._id}`]);
+                  setDebugLogs(prev => [...prev, `Job ID Type: ${typeof job._id}`]);
                   
                   try {
-                    console.log('📝 Starte addApplication für Job:', job._id);
+                    setDebugLogs(prev => [...prev, '📝 Rufe addApplication...' ]);
                     const result = await addApplication(job._id);
-                    console.log('✅ Bewerbung erfolgreich!', result);
+                    setDebugLogs(prev => [...prev, '✅ Erfolg!']);
                     alert('✅ Erfolg! Bewerbung wurde erstellt.');
                     setTimeout(() => router.push('/(worker)/applications'), 500);
                   } catch (err: any) {
-                    console.error('❌ FEHLER beim Bewerben:', err);
-                    console.error('❌ Error message:', err.message);
-                    console.error('❌ Error stack:', err.stack);
+                    setDebugLogs(prev => [...prev, `❌ FEHLER: ${err.message}`]);
                     alert('❌ FEHLER: ' + (err.message || 'Unbekannter Fehler'));
                   }
                 }}
