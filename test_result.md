@@ -1324,6 +1324,52 @@ backend:
 
 
   - agent: "main"
+
+  - agent: "main"
+    message: |
+      **✅ NEUER ENDPOINT: POST /api/registrations/complete IMPLEMENTIERT**
+      
+      **Benutzeranforderung:**
+      Einen neuen FastAPI-Endpoint erstellen, der eine offizielle Anmeldung abschließt.
+      
+      **Implementierung:**
+      
+      **1. Neues Pydantic Model:**
+      - `CompleteRegistrationRequest` (Zeile 2077): JSON Body mit applicationId
+      
+      **2. Endpoint erstellt (Zeile 2079-2135):**
+      - Route: POST /api/registrations/complete
+      - Input: JSON Body { "applicationId": "string" }
+      - Logik:
+        1. Registrierung aus `official_registrations` Collection mit matching applicationId suchen
+        2. Status auf "completed" setzen
+        3. updatedAt auf aktuellen Timestamp setzen
+        4. In `applications` Collection officialRegistrationStatus auf "completed" setzen
+        5. Aktualisiertes OfficialRegistration Dokument zurückgeben
+      
+      **3. Error Handling:**
+      - 404: Wenn keine offizielle Anmeldung für die Application gefunden wird
+      - 400: Wird automatisch von FastAPI gehandelt bei unvollständigem Body (422 Unprocessable Entity)
+      
+      **4. Zwei Collections werden aktualisiert:**
+      - `official_registrations`: status und updatedAt
+      - `applications`: officialRegistrationStatus (neues Feld)
+      
+      **5. Verwendete Models:**
+      - `OfficialRegistration` Model (bereits vorhanden)
+      - `CompleteRegistrationRequest` Model (neu erstellt)
+      
+      **Änderungen:**
+      - `/app/backend/server.py` (Zeilen 2077-2135)
+      - Backend automatisch neu geladen via WatchFiles
+      - Python Linting: 1 harmloser Fehler (F841) in anderem Code-Teil
+      
+      **Status:** 
+      - Endpoint implementiert und Backend läuft
+      - Bereit für Backend-Testing
+      - Keine bestehenden Endpoints verändert
+      - Keine Business-Logik überschrieben
+
     message: |
       **🎉 ALLE VERBESSERUNGEN ABGESCHLOSSEN - VOLLSTÄNDIGE MONGODB-MIGRATION & CHAT**
       
