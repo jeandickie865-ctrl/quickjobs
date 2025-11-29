@@ -88,10 +88,10 @@ export default function PaymentScreen() {
         throw new Error("Zahlung fehlgeschlagen");
       }
 
-      console.log("✅ Payment successful! Redirecting to matches...");
+      console.log("✅ Payment successful! Redirecting to registration...");
       
       // Direct redirect without Alert to avoid user confusion
-      router.replace("/(employer)/matches");
+      router.replace(`/(employer)/registration/${applicationId}`);
       
     } catch (err) {
       console.error("❌ Payment error:", err);
