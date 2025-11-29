@@ -184,6 +184,55 @@ class RegistrationFlowTester:
             await self.log_test("Registration Status After Update", False, f"Exception: {str(e)}")
             return False
 
+    async def create_worker_profile(self):
+        """Create a worker profile for Silke"""
+        print("🔧 SETUP: Creating worker profile...")
+        
+        if "worker" not in self.tokens:
+            await self.log_test("Create Worker Profile", False, "No worker token available")
+            return False
+            
+        try:
+            profile_data = {
+                "firstName": "Silke",
+                "lastName": "Schmeinta", 
+                "phone": "+49 30 12345678",
+                "email": "user_test3_dickies-helden_de@test.com",
+                "categories": ["sicherheit"],
+                "selectedTags": [],
+                "radiusKm": 20,
+                "homeAddress": {
+                    "street": "Brandenburger Tor",
+                    "houseNumber": "1",
+                    "postalCode": "10117",
+                    "city": "Berlin",
+                    "country": "DE"
+                },
+                "homeLat": 52.5163,
+                "homeLon": 13.3777,
+                "shortBio": "Experienced security professional"
+            }
+            
+            response = await self.client.post(
+                f"{BACKEND_URL}/profiles/worker",
+                json=profile_data,
+                headers={"Authorization": f"Bearer {self.tokens['worker']}"}
+            )
+            
+            if response.status_code == 200:
+                profile = response.json()
+                await self.log_test("Create Worker Profile", True,
+                                  f"Profile created for {profile['firstName']} {profile['lastName']}")
+                return True
+            else:
+                await self.log_test("Create Worker Profile", False,
+                                  f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            await self.log_test("Create Worker Profile", False, f"Exception: {str(e)}")
+            return False
+
     async def create_test_job(self) -> Optional[str]:
         """Create a test job for the scenario"""
         print("🔧 SETUP: Creating test job...")
