@@ -320,9 +320,11 @@ export default function EmployerProfileScreen() {
 
             <AddressAutocompleteInput
               street={street}
+              houseNumber={houseNumber}
               postalCode={postalCode}
               city={city}
               onStreetChange={setStreet}
+              onHouseNumberChange={setHouseNumber}
               onPostalCodeChange={setPostalCode}
               onCityChange={setCity}
               onLatChange={setLat}
