@@ -2077,6 +2077,10 @@ async def create_official_registration(request: CreateRegistrationRequest):
         status="pending",
         contractUrl=None,
         sofortmeldungUrl=None,
+        steuerId=request.steuerId,
+        krankenkasse=request.krankenkasse,
+        geburtsdatum=request.geburtsdatum,
+        sozialversicherungsnummer=request.sozialversicherungsnummer,
         createdAt=datetime.utcnow().isoformat(),
         updatedAt=datetime.utcnow().isoformat()
     )
