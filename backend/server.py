@@ -2016,23 +2016,24 @@ async def get_messages(
     return [ChatMessage(**msg) for msg in messages]
 
 
+# Request Body Model for creating official registration
+class CreateRegistrationRequest(BaseModel):
+    applicationId: str
+    registrationType: str
+
 # Official Registration Endpoints
 @api_router.post("/registrations/create", response_model=OfficialRegistration)
-async def create_official_registration(
-    applicationId: str = Field(..., description="ID der Application"),
-    registrationType: str = Field(..., description="Art der Anmeldung")
-):
+async def create_official_registration(request: CreateRegistrationRequest):
     """
     Erstellt eine neue offizielle Anmeldung basierend auf einer Application.
     
     Args:
-        applicationId: Die ID der Application
-        registrationType: Art der Anmeldung ('kurzfristig' oder 'minijob')
+        request: JSON Body mit applicationId und registrationType
     
     Returns:
         Die erstellte OfficialRegistration
     """
-    logger.info(f"Creating official registration for application {applicationId}, type: {registrationType}")
+    logger.info(f"Creating official registration for application {request.applicationId}, type: {request.registrationType}")
     
     # Application aus der Datenbank laden
     application = await db.applications.find_one({"id": applicationId})
