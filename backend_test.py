@@ -672,8 +672,9 @@ class RegistrationFlowTester:
             # Setup: Create test users
             await self.create_test_users()
             
-            # Setup: Create worker profile (needed for PDF generation)
+            # Setup: Create profiles (needed for PDF generation)
             await self.create_worker_profile()
+            await self.create_employer_profile()
             
             # Test 1: Check worker registration status
             initial_status = await self.test_worker_registration_status()
