@@ -18,7 +18,7 @@ from datetime import datetime
 # Backend URL from frontend/.env
 BACKEND_URL = "https://job-connector-7.preview.emergentagent.com/api"
 
-class ComprehensiveBackendTester:
+class AuthBackendTester:
     def __init__(self):
         self.base_url = BACKEND_URL
         self.test_results = []
