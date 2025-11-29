@@ -588,9 +588,9 @@ export default function MatchesScreen() {
                     </>
                   )}
 
-                  {/* Job Details Button */}
+                  {/* Offizielle Anmeldung Button */}
                   <Pressable
-                    onPress={() => router.push(`/(employer)/jobs/${match.job.id}`)}
+                    onPress={() => router.push(`/(employer)/registration/${match.application.id}`)}
                     style={({ pressed }) => ({
                       borderWidth: 2,
                       borderColor: COLORS.neon,
@@ -601,7 +601,7 @@ export default function MatchesScreen() {
                     })}
                   >
                     <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
-                      Auftragsdetails
+                      📋 Offizielle Anmeldung
                     </Text>
                   </Pressable>
                 </View>
