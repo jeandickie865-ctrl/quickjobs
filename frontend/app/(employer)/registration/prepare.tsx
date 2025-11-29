@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useState, useEffect } from 'react';
 
 export default function RegistrationPrepareScreen() {
   const router = useRouter();
@@ -7,6 +8,34 @@ export default function RegistrationPrepareScreen() {
 
   const applicationId = params.applicationId;
   const registrationType = params.type;
+
+  const [application, setApplication] = useState(null);
+  const [job, setJob] = useState(null);
+  const [worker, setWorker] = useState(null);
+
+  useEffect(() => {
+    if (!applicationId) return;
+    fetch(`/api/applications/${applicationId}`)
+      .then(res => res.json())
+      .then(data => setApplication(data))
+      .catch(err => console.error('Error loading application:', err));
+  }, [applicationId]);
+
+  useEffect(() => {
+    if (!application || !application.jobId) return;
+    fetch(`/api/jobs/${application.jobId}`)
+      .then(res => res.json())
+      .then(data => setJob(data))
+      .catch(err => console.error('Error loading job:', err));
+  }, [application]);
+
+  useEffect(() => {
+    if (!application || !application.workerId) return;
+    fetch(`/api/profiles/worker/${application.workerId}`)
+      .then(res => res.json())
+      .then(data => setWorker(data))
+      .catch(err => console.error('Error loading worker:', err));
+  }, [application]);
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
