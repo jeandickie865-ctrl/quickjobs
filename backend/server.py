@@ -944,6 +944,68 @@ async def get_worker_registration_status(worker_id: str):
         }
 
 
+@api_router.put("/profiles/worker/{worker_id}/registration-data", response_model=WorkerProfile)
+async def update_worker_registration_data(
+    worker_id: str,
+    steuerId: str = None,
+    geburtsdatum: str = None,
+    sozialversicherungsnummer: str = None,
+    krankenkasse: str = None
+):
+    """
+    Aktualisiert die Registrierungsdaten eines Workers.
+    
+    Speichert die 4 Pflichtfelder dauerhaft im Worker-Profil für:
+    - Alle zukünftigen Einsätze
+    - Alle Arbeitgeber
+    - Arbeitsvertrag, Sofortmeldung, Lohnabrechnung
+    
+    Args:
+        worker_id: Die userId des Workers
+        steuerId: Steuer-ID
+        geburtsdatum: Geburtsdatum (Format: TT.MM.JJJJ)
+        sozialversicherungsnummer: Sozialversicherungsnummer
+        krankenkasse: Name der Krankenkasse
+    
+    Returns:
+        Das aktualisierte Worker-Profil
+    """
+    logger.info(f"Updating registration data for worker {worker_id}")
+    
+    # Worker-Profil laden
+    existing_profile = await db.worker_profiles.find_one({"userId": worker_id})
+    if not existing_profile:
+        raise HTTPException(status_code=404, detail="Worker profile not found")
+    
+    # Update-Daten vorbereiten
+    update_data = {}
+    if steuerId is not None:
+        update_data["steuerId"] = steuerId.strip() if steuerId else ""
+    if geburtsdatum is not None:
+        update_data["geburtsdatum"] = geburtsdatum.strip() if geburtsdatum else ""
+    if sozialversicherungsnummer is not None:
+        update_data["sozialversicherungsnummer"] = sozialversicherungsnummer.strip() if sozialversicherungsnummer else ""
+    if krankenkasse is not None:
+        update_data["krankenkasse"] = krankenkasse.strip() if krankenkasse else ""
+    
+    # Timestamp aktualisieren
+    update_data["updatedAt"] = datetime.utcnow().isoformat()
+    
+    # In MongoDB aktualisieren
+    await db.worker_profiles.update_one(
+        {"userId": worker_id},
+        {"$set": update_data}
+    )
+    
+    # Aktualisiertes Profil laden und zurückgeben
+    updated_profile = await db.worker_profiles.find_one({"userId": worker_id})
+    updated_profile.pop("_id", None)
+    
+    logger.info(f"Registration data updated for worker {worker_id}")
+    return WorkerProfile(**updated_profile)
+
+
+
 # Job Endpoints
 
 @api_router.post("/jobs", response_model=Job)
