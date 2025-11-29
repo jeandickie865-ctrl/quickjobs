@@ -625,9 +625,14 @@ export default function WorkerMatchesScreen() {
               onPress={() => setShowTaxModal(false)}
               style={({ pressed }) => ({
                 backgroundColor: COLORS.neon,
+                borderRadius: 14,
                 paddingVertical: 14,
-                borderRadius: 16,
+                paddingHorizontal: 16,
                 alignItems: 'center',
+                shadowColor: COLORS.neonShadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8,
+                shadowRadius: 6,
                 opacity: pressed ? 0.9 : 1,
               })}
             >
