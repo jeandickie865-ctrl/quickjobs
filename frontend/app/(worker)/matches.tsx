@@ -433,13 +433,18 @@ export default function WorkerMatchesScreen() {
                               style={({ pressed }) => ({
                                 flex: 1,
                                 backgroundColor: COLORS.neon,
-                                paddingVertical: 12,
-                                borderRadius: 12,
+                                borderRadius: 14,
+                                paddingVertical: 14,
+                                paddingHorizontal: 16,
                                 alignItems: 'center',
+                                shadowColor: COLORS.neonShadow,
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.8,
+                                shadowRadius: 6,
                                 opacity: pressed ? 0.9 : 1,
                               })}
                             >
-                              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.black }}>
+                              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                                 📝 Daten senden
                               </Text>
                             </Pressable>
