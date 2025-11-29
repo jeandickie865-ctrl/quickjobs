@@ -2036,9 +2036,9 @@ async def create_official_registration(request: CreateRegistrationRequest):
     logger.info(f"Creating official registration for application {request.applicationId}, type: {request.registrationType}")
     
     # Application aus der Datenbank laden
-    application = await db.applications.find_one({"id": applicationId})
+    application = await db.applications.find_one({"id": request.applicationId})
     if not application:
-        logger.error(f"Application {applicationId} not found")
+        logger.error(f"Application {request.applicationId} not found")
         raise HTTPException(status_code=404, detail="Application nicht gefunden")
     
     # employerId und workerId aus der Application übernehmen
@@ -2046,7 +2046,7 @@ async def create_official_registration(request: CreateRegistrationRequest):
     worker_id = application.get("workerId")
     
     if not employer_id or not worker_id:
-        logger.error(f"Application {applicationId} missing employerId or workerId")
+        logger.error(f"Application {request.applicationId} missing employerId or workerId")
         raise HTTPException(
             status_code=400, 
             detail="Application hat keine gültige employerId oder workerId"
@@ -2054,10 +2054,10 @@ async def create_official_registration(request: CreateRegistrationRequest):
     
     # Neuen Eintrag erstellen
     new_registration = OfficialRegistration(
-        applicationId=applicationId,
+        applicationId=request.applicationId,
         employerId=employer_id,
         workerId=worker_id,
-        registrationType=registrationType,
+        registrationType=request.registrationType,
         status="pending",
         contractUrl=None,
         sofortmeldungUrl=None,
