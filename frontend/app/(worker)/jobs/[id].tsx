@@ -31,6 +31,7 @@ export default function WorkerJobDetailScreen() {
   const [employerRating, setEmployerRating] = useState(0);
   const [employerReviewCount, setEmployerReviewCount] = useState(0);
   const [buttonClickCount, setButtonClickCount] = useState(0);
+  const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
   useEffect(() => {
     loadJob();
