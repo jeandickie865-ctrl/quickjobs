@@ -2073,6 +2073,70 @@ async def create_official_registration(request: CreateRegistrationRequest):
     
     return new_registration
 
+
+# Request Body Model for completing official registration
+class CompleteRegistrationRequest(BaseModel):
+    applicationId: str
+
+@api_router.post("/registrations/complete", response_model=OfficialRegistration)
+async def complete_official_registration(request: CompleteRegistrationRequest):
+    """
+    Schließt eine offizielle Anmeldung ab.
+    
+    Setzt status='completed' in official_registrations Collection
+    und officialRegistrationStatus='completed' in applications Collection.
+    
+    Args:
+        request: JSON Body mit applicationId
+    
+    Returns:
+        Das aktualisierte OfficialRegistration Dokument
+    """
+    logger.info(f"Completing official registration for application {request.applicationId}")
+    
+    # Registrierung aus der Datenbank laden
+    registration = await db.official_registrations.find_one({"applicationId": request.applicationId})
+    if not registration:
+        logger.error(f"Official registration for application {request.applicationId} not found")
+        raise HTTPException(
+            status_code=404, 
+            detail="Keine offizielle Anmeldung für diese Application gefunden"
+        )
+    
+    # Status auf "completed" setzen
+    updated_at = datetime.utcnow().isoformat()
+    update_result = await db.official_registrations.update_one(
+        {"applicationId": request.applicationId},
+        {"$set": {
+            "status": "completed",
+            "updatedAt": updated_at
+        }}
+    )
+    
+    if update_result.modified_count == 0:
+        logger.warning(f"No documents updated for application {request.applicationId}")
+    
+    # Auch in applications Collection den Status setzen
+    app_update_result = await db.applications.update_one(
+        {"id": request.applicationId},
+        {"$set": {
+            "officialRegistrationStatus": "completed"
+        }}
+    )
+    
+    if app_update_result.matched_count == 0:
+        logger.warning(f"Application {request.applicationId} not found for status update")
+    
+    # Aktualisiertes Dokument laden
+    updated_registration = await db.official_registrations.find_one({"applicationId": request.applicationId})
+    
+    # MongoDB _id entfernen
+    updated_registration.pop("_id", None)
+    
+    logger.info(f"Completed official registration for application {request.applicationId}")
+    
+    return OfficialRegistration(**updated_registration)
+
 # Include the router in the main app
 app.include_router(api_router)
 
