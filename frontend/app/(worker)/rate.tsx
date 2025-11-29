@@ -143,11 +143,17 @@ export default function RateEmployerScreen() {
   }
 
   if (!job) {
+    console.log('❌ Worker Rate: Job nicht gefunden. JobId:', jobId);
+    
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-          <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center' }}>
+          <Ionicons name="alert-circle" size={64} color={COLORS.neon} style={{ marginBottom: 16 }} />
+          <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 8 }}>
             Job konnte nicht geladen werden
+          </Text>
+          <Text style={{ color: COLORS.whiteTransparent30, fontSize: 14, textAlign: 'center', marginBottom: 16 }}>
+            JobId: {jobId || 'nicht vorhanden'}
           </Text>
           <Pressable
             onPress={() => router.back()}
