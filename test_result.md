@@ -412,9 +412,7 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "Authentication - Signup Screen"
-    - "Authentication - Login Screen"
-    - "Authentication Flow"
+    - "Worker Profile"
   stuck_tasks: 
     - "Worker Profile"
   test_all: false
