@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Linking from 'expo-linking';
+import COLORS from '@/constants/colors';
 
 export default function RegistrationDoneScreen() {
   const router = useRouter();
@@ -39,14 +40,19 @@ export default function RegistrationDoneScreen() {
           }
         }}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
           alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6,
           marginTop: 10
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Arbeitsvertrag herunterladen
         </Text>
       </Pressable>
@@ -73,14 +79,19 @@ export default function RegistrationDoneScreen() {
           }
         }}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
           alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6,
           marginTop: 10
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Sofortmeldung herunterladen
         </Text>
       </Pressable>
@@ -107,14 +118,19 @@ export default function RegistrationDoneScreen() {
           }
         }}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
           alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6,
           marginTop: 10
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Lohnabrechnung herunterladen
         </Text>
       </Pressable>
@@ -139,13 +155,18 @@ export default function RegistrationDoneScreen() {
           }
         }}
         style={{
-          backgroundColor: '#FFD700',
-          padding: 14,
-          borderRadius: 12,
-          alignItems: 'center'
+          backgroundColor: COLORS.neon,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          shadowColor: COLORS.neonShadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 6
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
           Anmeldung abschließen
         </Text>
       </Pressable>
@@ -153,15 +174,16 @@ export default function RegistrationDoneScreen() {
       <Pressable
         onPress={() => router.push('/(employer)/matches')}
         style={{
-          backgroundColor: '#E0E0E0',
-          padding: 14,
-          borderRadius: 12,
+          backgroundColor: COLORS.lightGray,
+          borderRadius: 14,
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          alignItems: 'center',
           borderWidth: 1,
-          borderColor: '#ccc',
-          alignItems: 'center'
+          borderColor: COLORS.gray
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: '600' }}>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.darkGray }}>
           Zurück zu meinen Matches
         </Text>
       </Pressable>
