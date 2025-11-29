@@ -343,33 +343,70 @@ export default function CreateJob() {
           </View>
         )}
 
-        {/* Simplified Time/Date Info */}
-        <View style={{ gap: 6 }}>
+        {/* Zeit & Datum */}
+        <View style={{ 
+          borderWidth: 1, 
+          borderColor: colors.gray200, 
+          borderRadius: 12, 
+          padding: spacing.md, 
+          gap: 12,
+          backgroundColor: colors.white 
+        }}>
           <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>
-            Zeit/Datum-Informationen (optional)
+            Wann findet der Job statt? *
           </Text>
-          <TextInput
-            value={timeInfo}
-            onChangeText={setTimeInfo}
-            placeholder="z.B. Montag 15.12.2024, 14:00-18:00 Uhr"
-            placeholderTextColor={colors.gray400}
-            multiline
-            numberOfLines={2}
-            style={{
-              borderWidth: 1.5,
-              borderColor: colors.gray300,
-              borderRadius: 12,
-              paddingHorizontal: spacing.md,
-              paddingVertical: spacing.sm,
-              backgroundColor: colors.white,
-              color: colors.black,
-              minHeight: 80,
-              textAlignVertical: 'top',
-              fontSize: 15,
-            }}
-          />
+          
+          {/* Datum */}
+          <View style={{ gap: 6 }}>
+            <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
+              Datum
+            </Text>
+            <TextInput
+              value={timeInfo}
+              onChangeText={setTimeInfo}
+              placeholder="z.B. Montag, 15.12.2024"
+              placeholderTextColor={colors.gray400}
+              style={{
+                borderWidth: 1.5,
+                borderColor: colors.gray300,
+                borderRadius: 12,
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.sm,
+                backgroundColor: colors.white,
+                color: colors.black,
+                fontSize: 15,
+              }}
+            />
+          </View>
+
+          {/* Uhrzeit */}
+          <View style={{ gap: 6 }}>
+            <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
+              Uhrzeit
+            </Text>
+            <TextInput
+              value={timeInfo.split('|')[1] || ''}
+              onChangeText={(text) => {
+                const datum = timeInfo.split('|')[0] || '';
+                setTimeInfo(datum ? `${datum}|${text}` : text);
+              }}
+              placeholder="z.B. 14:00 - 18:00 Uhr"
+              placeholderTextColor={colors.gray400}
+              style={{
+                borderWidth: 1.5,
+                borderColor: colors.gray300,
+                borderRadius: 12,
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.sm,
+                backgroundColor: colors.white,
+                color: colors.black,
+                fontSize: 15,
+              }}
+            />
+          </View>
+
           <Text style={{ fontSize: 12, color: colors.gray500, marginTop: 4 }}>
-            Gib Datum und Uhrzeit als Freitext ein
+            Diese Informationen sehen Worker im Job-Angebot
           </Text>
         </View>
 
