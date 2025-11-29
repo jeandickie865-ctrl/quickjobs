@@ -1,9 +1,11 @@
 // app/(employer)/_layout.tsx - FINAL NEON-TECH DESIGN WITH TABS
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { getEmployerJobs } from '../../utils/jobStore';
+import { getApplicationsForJob } from '../../utils/applicationStore';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
@@ -16,6 +18,37 @@ const COLORS = {
 
 export default function EmployerLayout() {
   const { user, loading } = useAuth();
+  const [matchesCount, setMatchesCount] = useState<number>(0);
+
+  // Count matches (accepted AND paid applications)
+  useEffect(() => {
+    if (!user || user.role !== 'employer') return;
+
+    const loadMatchesCount = async () => {
+      try {
+        const jobs = await getEmployerJobs(user.id);
+        let count = 0;
+        
+        for (const job of jobs) {
+          const apps = await getApplicationsForJob(job.id);
+          const paidMatches = apps.filter(app => 
+            app.status === 'accepted' && app.paymentStatus === 'paid'
+          );
+          count += paidMatches.length;
+        }
+        
+        setMatchesCount(count);
+      } catch (err) {
+        console.error('Error counting matches:', err);
+      }
+    };
+
+    loadMatchesCount();
+    
+    // Refresh every 5 seconds
+    const interval = setInterval(loadMatchesCount, 5000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   if (loading) {
     return (
