@@ -844,24 +844,24 @@ export default function EditWorkerProfileScreen() {
               Kategorien * (mind. 1)
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {TAXONOMY_DATA.categories.map((cat: any) => {
-                const isSelected = selectedCategories.includes(cat.key);
+              {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
+                const isSelected = selectedCategories.includes(key);
                 return (
                   <Pressable
-                    key={cat.key}
+                    key={key}
                     onPress={() => {
                       if (isSelected) {
-                        setSelectedCategories(prev => prev.filter(k => k !== cat.key));
+                        setSelectedCategories(prev => prev.filter(k => k !== key));
                         // Remove tags from unselected category
                         setSelectedTags(prev => {
                           const categoryTags = [
-                            ...(cat.activities?.map((a: any) => a.key) || []),
-                            ...(cat.qualifications?.map((q: any) => q.key) || []),
+                            ...(cat.required?.map((a: any) => a.value) || []),
+                            ...(cat.optional?.map((q: any) => q.value) || []),
                           ];
                           return prev.filter(tag => !categoryTags.includes(tag));
                         });
                       } else {
-                        setSelectedCategories(prev => [...prev, cat.key]);
+                        setSelectedCategories(prev => [...prev, key]);
                       }
                     }}
                     style={{
