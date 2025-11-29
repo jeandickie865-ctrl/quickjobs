@@ -2184,7 +2184,7 @@ def generate_contract_pdf(
     logger.info(f"Generated contract PDF: {filename}")
     
     # Relativen Pfad zurückgeben
-    return f"/generated_contracts/{filename}"
+    return f"/api/generated_contracts/{filename}"
 
 
 def generate_sofortmeldung_pdf(
@@ -2335,7 +2335,7 @@ def generate_sofortmeldung_pdf(
     logger.info(f"Generated Sofortmeldung PDF: {filename}")
     
     # Relativen Pfad zurückgeben
-    return f"/generated_contracts/{filename}"
+    return f"/api/generated_contracts/{filename}"
 
 
 def generate_payroll_pdf(
@@ -2483,7 +2483,7 @@ def generate_payroll_pdf(
     logger.info(f"Generated payroll PDF: {filename}")
     
     # Relativen Pfad zurückgeben
-    return f"/generated_contracts/{filename}"
+    return f"/api/generated_contracts/{filename}"
 
 # Official Registration Endpoints
 @api_router.post("/registrations/create", response_model=OfficialRegistration)
