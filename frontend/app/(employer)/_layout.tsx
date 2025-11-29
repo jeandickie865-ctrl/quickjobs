@@ -235,10 +235,39 @@ export default function EmployerLayout() {
         }}
       />
 
+      {/* Hide all registration screens from tabs */}
       <Tabs.Screen
-        name="registration"
+        name="registration/[applicationId]"
         options={{
-          href: null, // Hide from tabs - Registration screens are accessed via buttons
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="registration/start"
+        options={{
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="registration/prepare"
+        options={{
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="registration/confirm"
+        options={{
+          href: null,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="registration/done"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
