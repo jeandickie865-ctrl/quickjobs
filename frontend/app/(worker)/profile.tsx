@@ -544,21 +544,21 @@ export default function WorkerProfileScreen() {
             onPress={() => router.push('/(worker)/edit-profile')}
             style={({ pressed }) => ({
               backgroundColor: COLORS.neon,
-              paddingVertical: 16,
-              borderRadius: 16,
+              borderRadius: 14,
+              paddingVertical: 14,
+              paddingHorizontal: 16,
               alignItems: 'center',
+              shadowColor: COLORS.neonShadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
               marginBottom: 20,
               opacity: pressed ? 0.9 : 1,
-              shadowColor: COLORS.neon,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 12,
-              elevation: 4,
             })}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
               <Ionicons name="create-outline" size={22} color={COLORS.black} />
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                 Profil bearbeiten
               </Text>
             </View>
