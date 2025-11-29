@@ -110,58 +110,7 @@ export default function CreateJob() {
       return;
     }
 
-    // Time mode validation & parsing
-    let startAtIso: string | undefined;
-    let endAtIso: string | undefined;
-    let hoursNumber: number | undefined;
-    let dueAtIso: string | undefined;
-
-    if (timeMode === 'fixed_time') {
-      if (!startDateTime || !endDateTime) {
-        setError('Bitte Start- und Enddatum/Zeit auswählen');
-        return;
-      }
-
-      startAtIso = startDateTime.toISOString();
-      endAtIso = endDateTime.toISOString();
-
-      if (endDateTime <= startDateTime) {
-        setError('Endzeit muss nach Startzeit liegen.');
-        return;
-      }
-    } else if (timeMode === 'hour_package') {
-      const h = parseFloat(hours);
-      if (!hours || isNaN(h) || h <= 0) {
-        setError('Bitte gültige Stundenanzahl eingeben.');
-        return;
-      }
-      hoursNumber = h;
-
-      // Validate date selection
-      if (hoursDateType === 'specific') {
-        if (!hoursSpecificDate) {
-          setError('Bitte ein Datum für das Stundenpaket eingeben.');
-          return;
-        }
-        // Store as startAt for specific date (convert Date to ISO)
-        startAtIso = hoursSpecificDate.toISOString();
-      } else if (hoursDateType === 'range') {
-        if (!hoursStartDate || !hoursEndDate) {
-          setError('Bitte Start- und Enddatum für den Zeitraum eingeben.');
-          return;
-        }
-        if (hoursEndDate <= hoursStartDate) {
-          setError('Enddatum muss nach Startdatum liegen.');
-          return;
-        }
-        startAtIso = hoursStartDate.toISOString();
-        endAtIso = hoursEndDate.toISOString();
-      }
-    } else if (timeMode === 'project') {
-      if (dueDate) {
-        dueAtIso = dueDate.toISOString();
-      }
-    }
+    // Simplified: No complex time validation needed
 
     // Tags sind bereits Arrays (requiredAll, requiredAny)
     const requiredAllTags = requiredAll;
