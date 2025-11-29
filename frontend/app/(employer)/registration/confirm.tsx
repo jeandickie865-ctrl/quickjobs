@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useState, useEffect } from 'react';
 
 export default function RegistrationConfirmScreen() {
   const router = useRouter();
@@ -11,6 +12,29 @@ export default function RegistrationConfirmScreen() {
   const krankenkasse = params.krankenkasse || '';
   const geburtsdatum = params.geburtsdatum || '';
   const sozialversicherungsnummer = params.sozialversicherungsnummer || '';
+
+  const [worker, setWorker] = useState(null);
+
+  useEffect(() => {
+    if (!applicationId) return;
+    
+    // Application laden um workerId zu bekommen
+    fetch(`/api/applications/${applicationId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.workerId) {
+          // Worker-Profil laden
+          return fetch(`/api/profiles/worker/${data.workerId}`);
+        }
+      })
+      .then(res => res ? res.json() : null)
+      .then(workerData => {
+        if (workerData) {
+          setWorker(workerData);
+        }
+      })
+      .catch(err => console.error('Error loading worker:', err));
+  }, [applicationId]);
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
