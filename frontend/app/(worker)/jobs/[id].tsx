@@ -339,21 +339,23 @@ export default function WorkerJobDetailScreen() {
               paddingBottom: 40,
             }}>
               <Pressable
-                onPress={() => {
-                  setButtonClickCount(prev => prev + 1);
-                  console.log('🚀 BUTTON GEKLICKT!', buttonClickCount + 1);
+                onPress={async () => {
+                  const newCount = buttonClickCount + 1;
+                  setButtonClickCount(newCount);
+                  console.log('🚀 BUTTON GEKLICKT!', newCount);
                   
-                  // Versuche die Bewerbung zu erstellen
-                  addApplication(job._id)
-                    .then(() => {
-                      console.log('✅ Bewerbung erfolgreich!');
-                      alert('Erfolg! Bewerbung wurde erstellt.');
-                      router.push('/(worker)/applications');
-                    })
-                    .catch((err) => {
-                      console.error('❌ Fehler:', err);
-                      alert('Fehler: ' + (err.message || 'Bewerbung fehlgeschlagen'));
-                    });
+                  try {
+                    console.log('📝 Starte addApplication für Job:', job._id);
+                    const result = await addApplication(job._id);
+                    console.log('✅ Bewerbung erfolgreich!', result);
+                    alert('✅ Erfolg! Bewerbung wurde erstellt.');
+                    setTimeout(() => router.push('/(worker)/applications'), 500);
+                  } catch (err: any) {
+                    console.error('❌ FEHLER beim Bewerben:', err);
+                    console.error('❌ Error message:', err.message);
+                    console.error('❌ Error stack:', err.stack);
+                    alert('❌ FEHLER: ' + (err.message || 'Unbekannter Fehler'));
+                  }
                 }}
                 style={{
                   backgroundColor: COLORS.neon,
