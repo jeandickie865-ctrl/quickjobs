@@ -2789,6 +2789,101 @@ async def generate_sofortmeldung(request: GenerateSofortmeldungRequest):
     
     return {"sofortmeldungUrl": sofortmeldung_url}
 
+
+# Request Body Model for generating Payroll
+class GeneratePayrollRequest(BaseModel):
+    applicationId: str
+
+@api_router.post("/registrations/generate-payroll")
+async def generate_payroll(request: GeneratePayrollRequest):
+    """
+    Generiert eine PDF-Lohnabrechnung für eine offizielle Anmeldung.
+    
+    Args:
+        request: JSON Body mit applicationId
+    
+    Returns:
+        JSON mit payrollUrl
+    """
+    logger.info(f"Generating payroll for application {request.applicationId}")
+    
+    # Official Registration laden
+    registration = await db.official_registrations.find_one({"applicationId": request.applicationId})
+    if not registration:
+        logger.error(f"Official registration for application {request.applicationId} not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Keine offizielle Anmeldung für diese Application gefunden"
+        )
+    
+    registration_id = registration.get("id")
+    registration_type = registration.get("registrationType")
+    created_at = registration.get("createdAt")
+    
+    # Zusätzliche Daten aus Registration
+    additional_data = {
+        "geburtsdatum": registration.get("geburtsdatum")
+    }
+    
+    # Application laden
+    application = await db.applications.find_one({"id": request.applicationId})
+    if not application:
+        logger.error(f"Application {request.applicationId} not found")
+        raise HTTPException(status_code=404, detail="Application nicht gefunden")
+    
+    job_id = application.get("jobId")
+    worker_id = application.get("workerId")
+    employer_id = application.get("employerId")
+    
+    # Job laden
+    job = await db.jobs.find_one({"id": job_id})
+    if not job:
+        logger.error(f"Job {job_id} not found")
+        raise HTTPException(status_code=404, detail="Job nicht gefunden")
+    
+    job.pop("_id", None)
+    
+    # Worker laden
+    worker = await db.worker_profiles.find_one({"userId": worker_id})
+    if not worker:
+        logger.error(f"Worker {worker_id} not found")
+        raise HTTPException(status_code=404, detail="Worker nicht gefunden")
+    
+    worker.pop("_id", None)
+    
+    # Employer laden
+    employer = await db.employer_profiles.find_one({"userId": employer_id})
+    if not employer:
+        logger.error(f"Employer {employer_id} not found")
+        raise HTTPException(status_code=404, detail="Employer nicht gefunden")
+    
+    employer.pop("_id", None)
+    
+    # PDF generieren
+    payroll_url = generate_payroll_pdf(
+        registration_id=registration_id,
+        job_data=job,
+        employer_data=employer,
+        worker_data=worker,
+        registration_type=registration_type,
+        created_at=created_at,
+        additional_data=additional_data
+    )
+    
+    # payrollUrl in official_registrations speichern
+    await db.official_registrations.update_one(
+        {"id": registration_id},
+        {"$set": {
+            "payrollUrl": payroll_url,
+            "updatedAt": datetime.utcnow().isoformat()
+        }}
+    )
+    
+    logger.info(f"Payroll generated and saved: {payroll_url}")
+    
+    return {"payrollUrl": payroll_url}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
