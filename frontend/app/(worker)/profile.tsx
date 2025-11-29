@@ -111,9 +111,14 @@ export default function WorkerProfileScreen() {
             onPress={() => router.push('/(worker)/profile-wizard/step1-basic')}
             style={{
               backgroundColor: COLORS.neon,
+              borderRadius: 14,
               paddingVertical: 14,
-              paddingHorizontal: 24,
-              borderRadius: 12,
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              shadowColor: COLORS.neonShadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
               marginTop: 24,
             }}
           >
