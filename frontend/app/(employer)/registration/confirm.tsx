@@ -7,6 +7,10 @@ export default function RegistrationConfirmScreen() {
 
   const applicationId = params.applicationId;
   const registrationType = params.type;
+  const steuerId = params.steuerId || '';
+  const krankenkasse = params.krankenkasse || '';
+  const geburtsdatum = params.geburtsdatum || '';
+  const sozialversicherungsnummer = params.sozialversicherungsnummer || '';
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
