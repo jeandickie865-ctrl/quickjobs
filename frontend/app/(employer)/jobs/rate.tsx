@@ -34,10 +34,9 @@ export default function RateWorkerScreen() {
 
   // Get jobId from either 'id' or 'jobId' param
   const jobId = params.id || params.jobId;
-  const workerId = params.workerId || params.id;
   
-  console.log('RateWorkerScreen jobId:', jobId);
-  console.log('RateWorkerScreen workerId (from params):', workerId);
+  const workerId = params.workerId || params.id;
+  console.log('RateWorkerScreen workerId resolved:', workerId);
 
   const [job, setJob] = useState<Job | null>(null);
   const [worker, setWorker] = useState<WorkerProfile | null>(null);
