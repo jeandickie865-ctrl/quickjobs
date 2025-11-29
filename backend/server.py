@@ -901,6 +901,49 @@ async def update_worker_profile(
     logger.info(f"Worker profile updated successfully for user {user_id}")
     return WorkerProfile(**updated_profile)
 
+
+@api_router.get("/profiles/worker/{worker_id}/registration-status")
+async def get_worker_registration_status(worker_id: str):
+    """
+    Prüft, ob ein Worker alle erforderlichen Registrierungsdaten ausgefüllt hat.
+    
+    Args:
+        worker_id: Die userId des Workers
+    
+    Returns:
+        JSON mit complete Status und ggf. Liste fehlender Felder
+    """
+    logger.info(f"Checking registration status for worker {worker_id}")
+    
+    # Worker-Profil laden
+    profile = await db.worker_profiles.find_one({"userId": worker_id})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Worker profile not found")
+    
+    # Erforderliche Felder prüfen
+    required_fields = ["geburtsdatum", "steuerId", "sozialversicherungsnummer", "krankenkasse"]
+    missing_fields = []
+    
+    for field in required_fields:
+        value = profile.get(field)
+        # Prüfen ob Feld leer, None oder leerer String ist
+        if not value or value == "" or value is None:
+            missing_fields.append(field)
+    
+    # Ergebnis zurückgeben
+    if missing_fields:
+        logger.info(f"Worker {worker_id} registration incomplete. Missing: {missing_fields}")
+        return {
+            "complete": False,
+            "missing": missing_fields
+        }
+    else:
+        logger.info(f"Worker {worker_id} registration complete")
+        return {
+            "complete": True
+        }
+
+
 # Job Endpoints
 
 @api_router.post("/jobs", response_model=Job)
