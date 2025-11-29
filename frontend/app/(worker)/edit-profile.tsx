@@ -85,18 +85,18 @@ export default function EditWorkerProfileScreen() {
 
     const tags: {key: string, label: string}[] = [];
     selectedCategories.forEach(catKey => {
-      const category = TAXONOMY_DATA.categories.find((c: any) => c.key === catKey);
+      const category = TAXONOMY_DATA[catKey];
       if (category) {
-        // Add activities
-        category.activities?.forEach((act: any) => {
-          if (!tags.find(t => t.key === act.key)) {
-            tags.push({ key: act.key, label: act.label });
+        // Add required tags
+        category.required?.forEach((req: any) => {
+          if (!tags.find(t => t.key === req.value)) {
+            tags.push({ key: req.value, label: req.label });
           }
         });
-        // Add qualifications
-        category.qualifications?.forEach((qual: any) => {
-          if (!tags.find(t => t.key === qual.key)) {
-            tags.push({ key: qual.key, label: qual.label });
+        // Add optional tags
+        category.optional?.forEach((opt: any) => {
+          if (!tags.find(t => t.key === opt.value)) {
+            tags.push({ key: opt.value, label: opt.label });
           }
         });
       }
