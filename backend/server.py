@@ -2641,6 +2641,22 @@ async def create_official_registration(request: CreateRegistrationRequest):
             detail="Application hat keine gültige employerId oder workerId"
         )
     
+    # Worker-Daten laden und Pflichtfelder prüfen
+    worker = await db.worker_profiles.find_one({"userId": worker_id})
+    if not worker:
+        logger.error(f"Worker profile {worker_id} not found")
+        raise HTTPException(status_code=404, detail="Worker-Profil nicht gefunden")
+    
+    required_fields = ["geburtsdatum", "steuerId", "sozialversicherungsnummer", "krankenkasse"]
+    missing = [f for f in required_fields if not worker.get(f)]
+    
+    if missing:
+        logger.error(f"Worker {worker_id} missing required fields: {missing}")
+        raise HTTPException(
+            status_code=400,
+            detail="worker_data_incomplete"
+        )
+    
     # Neuen Eintrag erstellen
     new_registration = OfficialRegistration(
         applicationId=request.applicationId,
