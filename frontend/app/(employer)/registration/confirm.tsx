@@ -138,10 +138,10 @@ export default function RegistrationConfirmScreen() {
       {/* Modal für fehlende Worker-Daten */}
       <Modal
         visible={showModal}
-        transparent
+        transparent={true}
         animationType="fade"
       >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
           <View style={{ backgroundColor: COLORS.white, padding: 20, borderRadius: 12 }}>
             <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 10 }}>
               Angaben fehlen
