@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import COLORS from '@/constants/colors';
@@ -15,6 +15,9 @@ export default function RegistrationConfirmScreen() {
   const sozialversicherungsnummer = params.sozialversicherungsnummer || '';
 
   const [worker, setWorker] = useState(null);
+  const [application, setApplication] = useState(null);
+  const [workerDataComplete, setWorkerDataComplete] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (!applicationId) return;
