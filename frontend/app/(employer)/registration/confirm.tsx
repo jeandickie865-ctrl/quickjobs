@@ -120,6 +120,32 @@ export default function RegistrationConfirmScreen() {
           Anmeldung jetzt erstellen
         </Text>
       </Pressable>
+
+      {/* Modal für fehlende Worker-Daten */}
+      <Modal
+        visible={showModal}
+        transparent
+        animationType="fade"
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>
+          <View style={{ backgroundColor: COLORS.white, padding: 20, borderRadius: 12 }}>
+            <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 10 }}>
+              Angaben fehlen
+            </Text>
+
+            <Text style={{ fontSize: 15, marginBottom: 20 }}>
+              Die Angaben des Arbeitnehmers fehlen noch. Der Arbeitnehmer wird beim nächsten Öffnen der App automatisch aufgefordert, seine Daten einzugeben. Sobald die Angaben vollständig sind, können Sie die Anmeldung erneut durchführen.
+            </Text>
+
+            <Pressable
+              onPress={() => { setShowModal(false); router.push('/(employer)/matches'); }}
+              style={{ backgroundColor: COLORS.neon, padding: 12, borderRadius: 10, alignItems: 'center' }}
+            >
+              <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '600' }}>Verstanden</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
