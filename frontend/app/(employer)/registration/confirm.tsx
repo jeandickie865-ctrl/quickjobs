@@ -151,3 +151,11 @@ function ConfirmContent() {
     </View>
   );
 }
+
+export default function RegistrationConfirmScreen() {
+  const params = useLocalSearchParams();
+  const applicationId = params.applicationId as string;
+  
+  // Komponente neu mounten wenn applicationId sich ändert
+  return <ConfirmContent key={applicationId} />;
+}
