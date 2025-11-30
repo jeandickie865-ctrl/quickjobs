@@ -73,6 +73,12 @@ export default function RegistrationConfirmScreen() {
 
       <Pressable
         onPress={async () => {
+          // Prüfe zuerst ob Worker-Daten vollständig sind
+          if (!workerDataComplete) {
+            setShowModal(true);
+            return;
+          }
+
           try {
             const response = await fetch('/api/registrations/create', {
               method: 'POST',
