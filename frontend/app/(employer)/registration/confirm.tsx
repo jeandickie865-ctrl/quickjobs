@@ -3,7 +3,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import COLORS from '@/constants/colors';
 
-export default function RegistrationConfirmScreen() {
+function ConfirmContent() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -19,57 +19,45 @@ export default function RegistrationConfirmScreen() {
   const [workerDataComplete, setWorkerDataComplete] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
+  // Ein einziger useEffect der auf application reagiert
   useEffect(() => {
-    if (!applicationId) return;
+    if (!application) return;
     
-    // Application laden um workerId zu bekommen
-    fetch(`/api/applications/${applicationId}`)
-      .then(res => res.json())
-      .then(data => {
-        setApplication(data);
-        if (data.workerId) {
-          // Worker-Profil laden
-          return fetch(`/api/profiles/worker/${data.workerId}`);
-        }
-      })
-      .then(res => res ? res.json() : null)
-      .then(workerData => {
-        if (workerData) {
-          setWorker(workerData);
-        }
-      })
-      .catch(err => console.error('Error loading worker:', err));
-  }, [applicationId]);
-
-  // Prüfe ob Worker-Daten vollständig sind
-  useEffect(() => {
-    if (!application) return; // Schutz: nur ausführen, wenn Application geladen
-
     const workerId = application.workerId;
-    if (!workerId) return; // Schutz: workerId muss existieren
+    if (!workerId) return;
 
-    async function check() {
+    async function checkWorkerData() {
       try {
-        const res = await fetch(`/api/profiles/worker/${workerId}/registration-status`);
-        const status = await res.json();
+        // Worker-Profil laden
+        const workerRes = await fetch(`/api/profiles/worker/${workerId}`);
+        const workerData = await workerRes.json();
+        setWorker(workerData);
+
+        // Worker-Status prüfen
+        const statusRes = await fetch(`/api/profiles/worker/${workerId}/registration-status`);
+        const status = await statusRes.json();
 
         if (!status.complete) {
           setWorkerDataComplete(false);
+          setShowModal(true);
         }
       } catch (err) {
-        console.error('Worker status check failed:', err);
+        console.error('Worker check failed:', err);
       }
     }
 
-    check();
+    checkWorkerData();
   }, [application]);
 
-  // Modal anzeigen, wenn Worker-Daten unvollständig sind
+  // Application laden
   useEffect(() => {
-    if (!workerDataComplete) {
-      setShowModal(true);
-    }
-  }, [workerDataComplete]);
+    if (!applicationId) return;
+    
+    fetch(`/api/applications/${applicationId}`)
+      .then(res => res.json())
+      .then(data => setApplication(data))
+      .catch(err => console.error('Error loading application:', err));
+  }, [applicationId]);
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
