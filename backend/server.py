@@ -2183,31 +2183,24 @@ def generate_contract_pdf(
     filename = f"contract_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # PDF erstellen
-    c = canvas.Canvas(str(filepath), pagesize=A4)
-    width, height = A4
-    
-    # Y-Position für Text
-    y_pos = height - 2*cm
+    # PDF erstellen mit Flowables
+    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
+    styles = getSampleStyleSheet()
+    story = []
     
     # Titel
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(2*cm, y_pos, "Arbeitsvertrag – einfacher Einsatzvertrag")
-    y_pos -= 1.5*cm
+    story.append(Paragraph("Arbeitsvertrag – einfacher Einsatzvertrag", styles["Heading1"]))
+    story.append(Spacer(1, 12))
     
     # 1. Arbeitgeber
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(2*cm, y_pos, "1. Arbeitgeber")
-    y_pos -= 0.7*cm
+    story.append(Paragraph("1. Arbeitgeber", styles["Heading2"]))
+    story.append(Spacer(1, 6))
     
-    c.setFont("Helvetica", 10)
     employer_name = f"{employer_data.get('firstName', '')} {employer_data.get('lastName', '')}"
-    c.drawString(2*cm, y_pos, employer_name)
-    y_pos -= 0.5*cm
+    employer_lines = [employer_name]
     
     if employer_data.get('companyName'):
-        c.drawString(2*cm, y_pos, employer_data['companyName'])
-        y_pos -= 0.5*cm
+        employer_lines.append(employer_data['companyName'])
     
     # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
     emp_addr = employer_data.get('homeAddress', {})
@@ -2217,18 +2210,16 @@ def generate_contract_pdf(
     else:
         # Alte Struktur: Root-Level Felder
         employer_address = f"{employer_data.get('street', '')} {employer_data.get('houseNumber', '')}, {employer_data.get('postalCode', '')} {employer_data.get('city', '')}"
-    c.drawString(2*cm, y_pos, employer_address)
-    y_pos -= 1*cm
+    employer_lines.append(employer_address)
     
-    # 2. Arbeitnehmer
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(2*cm, y_pos, "2. Arbeitnehmer")
-    y_pos -= 0.7*cm
+    story.append(Paragraph("<br/>".join(employer_lines), styles["Normal"]))
+    story.append(Spacer(1, 12))
     
-    c.setFont("Helvetica", 10)
+    # 2. Arbeitnehmer (OHNE sensible Daten)
+    story.append(Paragraph("2. Arbeitnehmer", styles["Heading2"]))
+    story.append(Spacer(1, 6))
+    
     worker_name = f"{worker_data.get('firstName', '')} {worker_data.get('lastName', '')}"
-    c.drawString(2*cm, y_pos, worker_name)
-    y_pos -= 0.5*cm
     
     # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
     work_addr = worker_data.get('homeAddress', {})
@@ -2238,87 +2229,64 @@ def generate_contract_pdf(
     else:
         # Alte Struktur: Root-Level Felder
         worker_address = f"{worker_data.get('street', '')} {worker_data.get('houseNumber', '')}, {worker_data.get('postalCode', '')} {worker_data.get('city', '')}"
-    c.drawString(2*cm, y_pos, worker_address)
-    y_pos -= 0.5*cm
     
-    # Zusätzliche Worker-Daten
-    geburtsdatum = worker_data.get('geburtsdatum', 'Nicht angegeben')
-    c.drawString(2*cm, y_pos, f"Geburtsdatum: {geburtsdatum}")
-    y_pos -= 0.5*cm
-    
-    steuer_id = worker_data.get('steuerId', 'Nicht angegeben')
-    c.drawString(2*cm, y_pos, f"Steuer-ID: {steuer_id}")
-    y_pos -= 0.5*cm
-    
-    sv_nummer = worker_data.get('sozialversicherungsnummer', 'Nicht angegeben')
-    c.drawString(2*cm, y_pos, f"Sozialversicherungsnummer: {sv_nummer}")
-    y_pos -= 0.5*cm
-    
-    krankenkasse = worker_data.get('krankenkasse', 'Nicht angegeben')
-    c.drawString(2*cm, y_pos, f"Krankenkasse: {krankenkasse}")
-    y_pos -= 1*cm
+    worker_text = f"{worker_name}<br/>{worker_address}"
+    story.append(Paragraph(worker_text, styles["Normal"]))
+    story.append(Spacer(1, 12))
     
     # 3. Art der Beschäftigung
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(2*cm, y_pos, "3. Art der Beschäftigung")
-    y_pos -= 0.7*cm
+    story.append(Paragraph("3. Art der Beschäftigung", styles["Heading2"]))
+    story.append(Spacer(1, 6))
     
-    c.setFont("Helvetica", 10)
     registration_type_de = "Kurzfristige Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
-    c.drawString(2*cm, y_pos, registration_type_de)
-    y_pos -= 1*cm
+    story.append(Paragraph(registration_type_de, styles["Normal"]))
+    story.append(Spacer(1, 12))
     
     # 4. Einsatzdetails
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(2*cm, y_pos, "4. Einsatzdetails")
-    y_pos -= 0.7*cm
-    
-    c.setFont("Helvetica", 10)
-    c.drawString(2*cm, y_pos, f"Tätigkeit: {job_data.get('title', 'Nicht angegeben')}")
-    y_pos -= 0.5*cm
-    
-    c.drawString(2*cm, y_pos, f"Beschreibung: {job_data.get('description', 'Nicht angegeben')}")
-    y_pos -= 0.5*cm
+    story.append(Paragraph("4. Einsatzdetails", styles["Heading2"]))
+    story.append(Spacer(1, 6))
     
     job_addr = job_data.get('address', {})
     job_address = f"{job_addr.get('street', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
-    c.drawString(2*cm, y_pos, f"Ort: {job_address}")
-    y_pos -= 0.5*cm
-    
     worker_amount = job_data.get('workerAmountCents', 0) / 100
-    c.drawString(2*cm, y_pos, f"Gesamtlohn: {worker_amount:.2f} EUR")
-    y_pos -= 1*cm
+    
+    job_details = f"""
+    Tätigkeit: {job_data.get('title', 'Nicht angegeben')}<br/>
+    Beschreibung: {job_data.get('description', 'Nicht angegeben')}<br/>
+    Ort: {job_address}<br/>
+    Gesamtlohn: {worker_amount:.2f} EUR
+    """
+    story.append(Paragraph(job_details, styles["Normal"]))
+    story.append(Spacer(1, 12))
     
     # 5. Dauer und Umfang
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(2*cm, y_pos, "5. Dauer und Umfang")
-    y_pos -= 0.7*cm
+    story.append(Paragraph("5. Dauer und Umfang", styles["Heading2"]))
+    story.append(Spacer(1, 6))
     
-    c.setFont("Helvetica", 10)
-    c.drawString(2*cm, y_pos, "Die Vereinbarung gilt ausschließlich für diesen einmaligen Einsatz.")
-    y_pos -= 0.5*cm
-    c.drawString(2*cm, y_pos, "Es entsteht kein dauerhaftes Arbeitsverhältnis.")
-    y_pos -= 1*cm
+    duration_text = """
+    Die Vereinbarung gilt ausschließlich für diesen einmaligen Einsatz.<br/>
+    Es entsteht kein dauerhaftes Arbeitsverhältnis.
+    """
+    story.append(Paragraph(duration_text, styles["Normal"]))
+    story.append(Spacer(1, 12))
     
     # 6. Vertragsabschluss
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(2*cm, y_pos, "6. Vertragsabschluss")
-    y_pos -= 0.7*cm
+    story.append(Paragraph("6. Vertragsabschluss", styles["Heading2"]))
+    story.append(Spacer(1, 6))
     
-    c.setFont("Helvetica", 10)
-    c.drawString(2*cm, y_pos, "Mit Annahme des Einsatzes durch den Arbeitnehmer und der Bezahlung")
-    y_pos -= 0.5*cm
-    c.drawString(2*cm, y_pos, "durch den Arbeitgeber gilt dieser Vertrag als geschlossen.")
-    y_pos -= 0.5*cm
-    c.drawString(2*cm, y_pos, "Eine schriftliche Unterschrift ist nicht erforderlich.")
-    y_pos -= 1*cm
+    conclusion_text = """
+    Mit Annahme des Einsatzes durch den Arbeitnehmer und der Bezahlung durch den Arbeitgeber 
+    gilt dieser Vertrag als geschlossen.<br/>
+    Eine schriftliche Unterschrift ist nicht erforderlich.
+    """
+    story.append(Paragraph(conclusion_text, styles["Normal"]))
+    story.append(Spacer(1, 12))
     
     # Datum
-    c.setFont("Helvetica", 9)
-    c.drawString(2*cm, y_pos, f"Erstellt am: {created_at}")
+    story.append(Paragraph(f"<i>Erstellt am: {created_at}</i>", styles["Normal"]))
     
-    # PDF speichern
-    c.save()
+    # PDF erstellen
+    doc.build(story)
     
     logger.info(f"Generated contract PDF: {filename}")
     
