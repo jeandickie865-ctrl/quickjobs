@@ -2910,6 +2910,17 @@ async def generate_sofortmeldung(request: GenerateSofortmeldungRequest):
     
     worker.pop("_id", None)
     
+    # Pflichtfelder prüfen
+    required_fields = ["geburtsdatum", "steuerId", "sozialversicherungsnummer", "krankenkasse"]
+    missing = [f for f in required_fields if not worker.get(f)]
+    
+    if missing:
+        logger.error(f"Worker {worker_id} missing required fields: {missing}")
+        raise HTTPException(
+            status_code=400,
+            detail="worker_data_incomplete"
+        )
+    
     # Employer laden
     employer = await db.employer_profiles.find_one({"userId": employer_id})
     if not employer:
@@ -3003,6 +3014,17 @@ async def generate_payroll(request: GeneratePayrollRequest):
         raise HTTPException(status_code=404, detail="Worker nicht gefunden")
     
     worker.pop("_id", None)
+    
+    # Pflichtfelder prüfen
+    required_fields = ["geburtsdatum", "steuerId", "sozialversicherungsnummer", "krankenkasse"]
+    missing = [f for f in required_fields if not worker.get(f)]
+    
+    if missing:
+        logger.error(f"Worker {worker_id} missing required fields: {missing}")
+        raise HTTPException(
+            status_code=400,
+            detail="worker_data_incomplete"
+        )
     
     # Employer laden
     employer = await db.employer_profiles.find_one({"userId": employer_id})
