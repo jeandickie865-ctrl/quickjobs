@@ -481,6 +481,34 @@ export default function MatchesScreen() {
                     </Pressable>
                   )}
 
+                  {/* Anmeldedokumente Button - nur nach Zahlung */}
+                  {match.application.paymentStatus === "paid" && (
+                    <Pressable
+                      onPress={() => {
+                        router.push(`/(employer)/registration/${match.application.id}`);
+                      }}
+                      style={({ pressed }) => ({
+                        backgroundColor: COLORS.purple,
+                        borderRadius: 14,
+                        paddingVertical: 14,
+                        paddingHorizontal: 16,
+                        alignItems: 'center',
+                        shadowColor: 'rgba(89,65,255,0.2)',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.8,
+                        shadowRadius: 6,
+                        opacity: pressed ? 0.9 : 1,
+                      })}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <Ionicons name="document-text" size={18} color={COLORS.white} />
+                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
+                          Anmeldedokumente erstellen
+                        </Text>
+                      </View>
+                    </Pressable>
+                  )}
+
                   {/* Official Registration Section - nur nach Zahlung */}
                   {match.application.paymentStatus === "paid" && (
                     <>
