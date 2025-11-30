@@ -39,6 +39,7 @@ export default function MatchesScreen() {
   
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [workerDataStatus, setWorkerDataStatus] = useState<{[workerId: string]: boolean}>({});
 
   // Auto-refresh interval ref
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
