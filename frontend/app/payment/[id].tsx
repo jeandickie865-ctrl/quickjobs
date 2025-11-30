@@ -90,8 +90,8 @@ export default function PaymentScreen() {
 
       console.log("✅ Payment successful! Redirecting to registration...");
       
-      // Direct redirect without Alert to avoid user confusion
-      router.replace(`/(employer)/registration/${applicationId}`);
+      // Skip prepare.tsx and go directly to confirm
+      router.replace(`/(employer)/registration/confirm?applicationId=${applicationId}&type=kurzfristig`);
       
     } catch (err) {
       console.error("❌ Payment error:", err);
