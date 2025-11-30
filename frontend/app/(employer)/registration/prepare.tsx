@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput } from 'react-native';
+import { View, Text, Pressable, TextInput, Modal, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import COLORS from '@/constants/colors';
@@ -18,6 +18,9 @@ export default function RegistrationPrepareScreen() {
   const [krankenkasse, setKrankenkasse] = useState('');
   const [geburtsdatum, setGeburtsdatum] = useState('');
   const [sozialversicherungsnummer, setSozialversicherungsnummer] = useState('');
+  
+  const [showMissingDataModal, setShowMissingDataModal] = useState(false);
+  const [dataChecked, setDataChecked] = useState(false);
 
   useEffect(() => {
     if (!applicationId) return;
