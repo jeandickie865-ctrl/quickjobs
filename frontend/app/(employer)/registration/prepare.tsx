@@ -86,7 +86,7 @@ export default function RegistrationPrepareScreen() {
   }, [worker, steuerId, krankenkasse, geburtsdatum, sozialversicherungsnummer, dataChecked]);
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       {/* Modal für fehlende Daten */}
       <Modal
         visible={showMissingDataModal}
