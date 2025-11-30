@@ -116,6 +116,20 @@ export default function MatchesScreen() {
       
       setMatches(allMatches);
       
+      // Load worker data status for each match
+      const statusMap: {[workerId: string]: boolean} = {};
+      for (const match of allMatches) {
+        try {
+          const res = await fetch(`/api/profiles/worker/${match.application.workerId}/registration-status`);
+          const status = await res.json();
+          statusMap[match.application.workerId] = status.complete || false;
+        } catch (err) {
+          console.error(`Failed to check worker status for ${match.application.workerId}:`, err);
+          statusMap[match.application.workerId] = false;
+        }
+      }
+      setWorkerDataStatus(statusMap);
+      
     } catch (error) {
       console.error('Error loading matches:', error);
     } finally {
