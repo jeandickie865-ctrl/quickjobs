@@ -86,7 +86,13 @@ export default function SignupScreen() {
     setLoading(true);
     try {
       await signUp(result.data.email, result.data.password, selectedRole);
-      router.replace('/start');
+      
+      // Nach Registrierung: Worker direkt zur Profil-Erstellung, Employer zum Dashboard
+      if (selectedRole === 'worker') {
+        router.replace('/(worker)/profile-wizard/step1-basic');
+      } else {
+        router.replace('/(employer)');
+      }
     } catch (error: any) {
       setErrors({ email: error.message || 'Registrierung fehlgeschlagen' });
     } finally {
