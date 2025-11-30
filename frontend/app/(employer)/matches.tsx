@@ -485,7 +485,7 @@ export default function MatchesScreen() {
                   {match.application.paymentStatus === "paid" && (
                     <Pressable
                       onPress={() => {
-                        router.push(`/(employer)/registration/${match.application.id}`);
+                        router.push(`/(employer)/registration/confirm?applicationId=${match.application.id}&type=kurzfristig`);
                       }}
                       style={({ pressed }) => ({
                         backgroundColor: COLORS.purple,
