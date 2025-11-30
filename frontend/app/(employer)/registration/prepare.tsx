@@ -250,33 +250,35 @@ export default function RegistrationPrepareScreen() {
         />
       </View>
 
-      <Pressable
-        onPress={() =>
-          router.push(
-            `/(employer)/registration/confirm?applicationId=${applicationId}` +
-            `&type=${registrationType}` +
-            `&steuerId=${encodeURIComponent(steuerId || '')}` +
-            `&krankenkasse=${encodeURIComponent(krankenkasse || '')}` +
-            `&geburtsdatum=${encodeURIComponent(geburtsdatum || '')}` +
-            `&sozialversicherungsnummer=${encodeURIComponent(sozialversicherungsnummer || '')}`
-          )
-        }
-        style={{
-          backgroundColor: COLORS.neon,
-          borderRadius: 14,
-          paddingVertical: 14,
-          paddingHorizontal: 16,
-          alignItems: 'center',
-          shadowColor: COLORS.neonShadow,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.8,
-          shadowRadius: 6
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-          Weiter zur Anmeldung
-        </Text>
-      </Pressable>
+          <Pressable
+            onPress={() =>
+              router.push(
+                `/(employer)/registration/confirm?applicationId=${applicationId}` +
+                `&type=${registrationType}` +
+                `&steuerId=${encodeURIComponent(steuerId || '')}` +
+                `&krankenkasse=${encodeURIComponent(krankenkasse || '')}` +
+                `&geburtsdatum=${encodeURIComponent(geburtsdatum || '')}` +
+                `&sozialversicherungsnummer=${encodeURIComponent(sozialversicherungsnummer || '')}`
+              )
+            }
+            style={{
+              backgroundColor: COLORS.neon,
+              borderRadius: 14,
+              paddingVertical: 14,
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              shadowColor: COLORS.neonShadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 6
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+              Weiter zur Anmeldung
+            </Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
