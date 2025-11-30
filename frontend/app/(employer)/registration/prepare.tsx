@@ -87,6 +87,69 @@ export default function RegistrationPrepareScreen() {
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
+      {/* Modal für fehlende Daten */}
+      <Modal
+        visible={showMissingDataModal}
+        transparent={true}
+        animationType="fade"
+      >
+        <View style={{ 
+          flex: 1, 
+          backgroundColor: 'rgba(0,0,0,0.5)', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          padding: 20
+        }}>
+          <View style={{ 
+            backgroundColor: COLORS.white, 
+            borderRadius: 16, 
+            padding: 24,
+            width: '100%',
+            maxWidth: 400
+          }}>
+            <Text style={{ 
+              fontSize: 20, 
+              fontWeight: '700', 
+              color: COLORS.black,
+              marginBottom: 16,
+              textAlign: 'center'
+            }}>
+              Wichtige Daten fehlen
+            </Text>
+            
+            <Text style={{ 
+              fontSize: 16, 
+              color: COLORS.darkGray,
+              lineHeight: 24,
+              marginBottom: 24,
+              textAlign: 'center'
+            }}>
+              Vom Arbeitnehmer fehlen noch wichtige Daten zum Erstellen Ihrer Unterlagen. 
+              Bitte sprechen Sie mit Ihrem Arbeitnehmer.
+            </Text>
+            
+            <Pressable
+              onPress={() => router.back()}
+              style={{
+                backgroundColor: COLORS.neon,
+                borderRadius: 14,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                alignItems: 'center',
+                shadowColor: COLORS.neonShadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8,
+                shadowRadius: 6
+              }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                Zurück zu meinen Matches
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
       <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10 }}>
         Vorbereitung der Anmeldung
       </Text>
