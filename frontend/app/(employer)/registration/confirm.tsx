@@ -43,17 +43,24 @@ export default function RegistrationConfirmScreen() {
 
   // Prüfe ob Worker-Daten vollständig sind
   useEffect(() => {
+    if (!application) return; // Schutz: nur ausführen, wenn Application geladen
+
+    const workerId = application.workerId;
+    if (!workerId) return; // Schutz: workerId muss existieren
+
     async function check() {
-      if (!application) return;
+      try {
+        const res = await fetch(`/api/profiles/worker/${workerId}/registration-status`);
+        const status = await res.json();
 
-      const workerId = application.workerId;
-      const res = await fetch(`/api/profiles/worker/${workerId}/registration-status`);
-      const status = await res.json();
-
-      if (!status.complete) {
-        setWorkerDataComplete(false);
+        if (!status.complete) {
+          setWorkerDataComplete(false);
+        }
+      } catch (err) {
+        console.error('Worker status check failed:', err);
       }
     }
+
     check();
   }, [application]);
 
