@@ -150,12 +150,9 @@ export default function RegistrationPrepareScreen() {
         </View>
       </Modal>
 
-      {/* Zeige Seiteninhalt NUR wenn Modal NICHT aktiv ist und Daten geladen */}
-      {!showMissingDataModal && worker && (
-        <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
-          <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10 }}>
-            Vorbereitung der Anmeldung
-          </Text>
+      <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10 }}>
+        Vorbereitung der Anmeldung
+      </Text>
 
       <Text style={{ fontSize: 16 }}>
         Art der Anmeldung: {registrationType}
