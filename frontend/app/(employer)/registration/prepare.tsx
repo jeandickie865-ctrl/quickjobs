@@ -53,6 +53,38 @@ export default function RegistrationPrepareScreen() {
       .catch(err => console.error('Error loading worker:', err));
   }, [application]);
 
+  // Prüfe, ob alle Pflichtdaten vorhanden sind
+  useEffect(() => {
+    // Warte bis Worker-Daten geladen sind
+    if (!worker || dataChecked) return;
+    
+    // Prüfe ob ALLE 4 Felder ausgefüllt sind (entweder vom Worker oder bereits gesetzt)
+    const hasAllData = 
+      steuerId && steuerId.trim() !== '' &&
+      krankenkasse && krankenkasse.trim() !== '' &&
+      geburtsdatum && geburtsdatum.trim() !== '' &&
+      sozialversicherungsnummer && sozialversicherungsnummer.trim() !== '';
+    
+    setDataChecked(true);
+    
+    if (hasAllData) {
+      // Fall A: Alle Daten vorhanden → Automatisch zu confirm weiterleiten
+      console.log('✅ Alle Worker-Daten vorhanden, überspringe prepare.tsx');
+      router.push(
+        `/(employer)/registration/confirm?applicationId=${applicationId}` +
+        `&type=${registrationType}` +
+        `&steuerId=${encodeURIComponent(steuerId)}` +
+        `&krankenkasse=${encodeURIComponent(krankenkasse)}` +
+        `&geburtsdatum=${encodeURIComponent(geburtsdatum)}` +
+        `&sozialversicherungsnummer=${encodeURIComponent(sozialversicherungsnummer)}`
+      );
+    } else {
+      // Fall B: Daten fehlen → Modal anzeigen
+      console.log('⚠️ Worker-Daten fehlen, zeige Modal');
+      setShowMissingDataModal(true);
+    }
+  }, [worker, steuerId, krankenkasse, geburtsdatum, sozialversicherungsnummer, dataChecked]);
+
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
       <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10 }}>
