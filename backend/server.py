@@ -1610,11 +1610,31 @@ async def pay_for_application(
         }}
     )
     
+    # Reject all other pending applications for the same job
+    job_id = application.get("jobId")
+    await db.applications.update_many(
+        {
+            "jobId": job_id,
+            "id": {"$ne": application_id},
+            "status": "pending"
+        },
+        {"$set": {"status": "rejected"}}
+    )
+    
+    # Update job status to matched
+    await db.jobs.update_one(
+        {"id": job_id},
+        {"$set": {
+            "status": "matched",
+            "matchedWorkerId": application.get("workerId")
+        }}
+    )
+    
     # Fetch and return updated application
     updated_app = await db.applications.find_one({"id": application_id})
     updated_app.pop("_id", None)
     
-    logger.info(f"✅ Payment processed, chat unlocked for application {application_id}")
+    logger.info(f"✅ Payment processed, chat unlocked, job {job_id} matched to worker {application.get('workerId')}")
     return JobApplication(**updated_app)
 
 @api_router.post("/applications/{application_id}/confirm-payment", response_model=JobApplication)
