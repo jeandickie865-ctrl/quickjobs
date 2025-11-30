@@ -213,7 +213,7 @@ export default function ChatScreen() {
       <FlatList
         ref={flatListRef}
         data={messages}
-        keyExtractor={(item) => item._id ?? `${item.createdAt}-${item.senderId}`}
+        keyExtractor={(item, index) => item._id || `msg-${index}`}
         renderItem={({ item }) => {
           const isOwn = item.senderId === user.id;
 
