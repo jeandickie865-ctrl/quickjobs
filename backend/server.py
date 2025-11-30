@@ -3072,7 +3072,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://official-reg.preview.emergentagent.com",
+        "https://matchworker.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
