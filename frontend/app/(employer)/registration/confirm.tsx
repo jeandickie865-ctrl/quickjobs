@@ -26,6 +26,7 @@ export default function RegistrationConfirmScreen() {
     fetch(`/api/applications/${applicationId}`)
       .then(res => res.json())
       .then(data => {
+        setApplication(data);
         if (data.workerId) {
           // Worker-Profil laden
           return fetch(`/api/profiles/worker/${data.workerId}`);
@@ -39,6 +40,22 @@ export default function RegistrationConfirmScreen() {
       })
       .catch(err => console.error('Error loading worker:', err));
   }, [applicationId]);
+
+  // Prüfe ob Worker-Daten vollständig sind
+  useEffect(() => {
+    async function check() {
+      if (!application) return;
+
+      const workerId = application.workerId;
+      const res = await fetch(`/api/profiles/worker/${workerId}/registration-status`);
+      const status = await res.json();
+
+      if (!status.complete) {
+        setWorkerDataComplete(false);
+      }
+    }
+    check();
+  }, [application]);
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
