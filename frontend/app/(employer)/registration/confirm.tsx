@@ -64,6 +64,13 @@ export default function RegistrationConfirmScreen() {
     check();
   }, [application]);
 
+  // Modal anzeigen, wenn Worker-Daten unvollständig sind
+  useEffect(() => {
+    if (!workerDataComplete) {
+      setShowModal(true);
+    }
+  }, [workerDataComplete]);
+
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
       <Text style={{ fontSize: 20, fontWeight: '600' }}>
