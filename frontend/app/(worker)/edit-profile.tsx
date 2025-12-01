@@ -869,14 +869,16 @@ export default function EditWorkerProfileScreen() {
                     onPress={() => {
                       if (isSelected) {
                         setSelectedCategories(prev => prev.filter(k => k !== key));
-                        // Remove tags from unselected category
-                        setSelectedTags(prev => {
-                          const categoryTags = [
-                            ...(cat.required?.map((a: any) => a.value) || []),
-                            ...(cat.optional?.map((q: any) => q.value) || []),
-                          ];
-                          return prev.filter(tag => !categoryTags.includes(tag));
-                        });
+                        // Remove subcategories and qualifications from unselected category
+                        const categorySubcats = cat.subcategories?.map((s: any) => s.key) || [];
+                        const categoryQuals = cat.qualifications?.map((q: any) => q.key) || [];
+                        
+                        setSelectedSubcategories(prev => 
+                          prev.filter(sub => !categorySubcats.includes(sub))
+                        );
+                        setSelectedQualifications(prev => 
+                          prev.filter(qual => !categoryQuals.includes(qual))
+                        );
                       } else {
                         setSelectedCategories(prev => [...prev, key]);
                       }
