@@ -1298,9 +1298,9 @@ async def get_employer_jobs(
     employer_id: str,
     authorization: Optional[str] = Header(None)
 ):
-    """Get all jobs for a specific employer"""
-    # Cleanup old jobs before loading
-    await cleanup_old_jobs()
+    """B1: Get all jobs for a specific employer (nur zukünftige/heute)"""
+    # B1: Cleanup old jobs before loading
+    await delete_expired_jobs()
     
     logger.info(f"🔍 GET /jobs/employer/{employer_id}")
     logger.info(f"📋 Authorization header: {authorization}")
@@ -1315,14 +1315,18 @@ async def get_employer_jobs(
         logger.error(f"❌ 403 FORBIDDEN: User '{requesting_user}' tried to access jobs of employer '{employer_id}'")
         raise HTTPException(status_code=403, detail="Cannot view another employer's jobs")
     
-    # Find all jobs for this employer
-    jobs = await db.jobs.find({"employerId": employer_id}).to_list(1000)
+    # B1: Find only future/today jobs for this employer
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    jobs = await db.jobs.find({
+        "employerId": employer_id,
+        "date": {"$gte": today}
+    }).to_list(1000)
     
     # Remove MongoDB _id field
     for job in jobs:
         job.pop("_id", None)
     
-    logger.info(f"Found {len(jobs)} jobs for employer {employer_id}")
+    logger.info(f"Found {len(jobs)} future/today jobs for employer {employer_id} (date >= {today})")
     return [Job(**job) for job in jobs]
 
 @api_router.get("/jobs/{job_id}", response_model=Job)
