@@ -63,7 +63,7 @@ export default function Step5Summary() {
         shortBio: wizardData.shortBio || '',
         photoUrl: wizardData.photoUrl || '',
         isSelfEmployed: wizardData.isSelfEmployed || false,
-        categories: [wizardData.category], // Array with ONE category
+        categories: wizardData.categories || [], // Array with multiple categories
         subcategories: wizardData.subcategories || [],
         qualifications: wizardData.qualifications || [],
         radiusKm: wizardData.radiusKm || 25,
