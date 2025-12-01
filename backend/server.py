@@ -1363,6 +1363,33 @@ async def get_all_open_jobs(
     authorization: Optional[str] = Header(None)
 ):
     """B1: Get all open jobs (nur zukünftige/heute)"""
+    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
+    today_str = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    await db.jobs.update_many(
+        {
+            "$or": [
+                {"date": {"$exists": False}},
+                {"date": None},
+                {"start_at": {"$exists": False}},
+                {"start_at": None},
+                {"end_at": {"$exists": False}},
+                {"end_at": None},
+                {"time_mode": {"$exists": False}},
+                {"time_mode": None},
+                {"time_mode": "project"}
+            ]
+        },
+        {
+            "$set": {
+                "date": today_str,
+                "start_at": "09:00",
+                "end_at": "17:00",
+                "time_mode": "fixed_time"
+            }
+        }
+    )
+    
     logger.info("Fetching all open jobs")
     
     # B1: Cleanup old jobs first
