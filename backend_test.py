@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 """
-Backend Test Suite for ShiftMatch Registration Data Flow
-Tests the complete registration data flow as requested in the review.
+B1 Backend Testing Suite - Job Cleanup & Konsistenz
+Tests all B1 implementation features as requested in German review.
 """
 
 import asyncio
-import httpx
+import aiohttp
 import json
-import os
+from datetime import datetime, timedelta
+import uuid
 import sys
-from datetime import datetime
-from typing import Dict, Any, Optional
 
-# Backend URL from environment
+# Backend URL from frontend .env
 BACKEND_URL = "https://workermatch-dev.preview.emergentagent.com/api"
 
 class RegistrationFlowTester:
