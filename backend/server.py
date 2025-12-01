@@ -2369,128 +2369,171 @@ def generate_contract_pdf(
     created_at: str
 ) -> str:
     """
-    Generiert ein PDF für den Arbeitsvertrag.
+    Generiert ein PDF für den Arbeitsvertrag (MODERNISIERT).
     
-    Args:
-        registration_id: ID der Registration
-        job_data: Job-Daten (title, description, address, workerAmountCents, etc.)
-        employer_data: Employer-Daten (firstName, lastName, companyName, homeAddress, etc.)
-        worker_data: Worker-Daten (firstName, lastName, homeAddress, etc.)
-        registration_type: Art der Beschäftigung (kurzfristig oder minijob)
-        created_at: Erstellungsdatum
-    
-    Returns:
-        Relativer Pfad zur generierten PDF-Datei
+    Verwendet aktuelle MongoDB-Felder:
+    - Adressen: street, house_number, postal_code, city
+    - Zeit: date, start_at, end_at
+    - Keine "None" oder "Invalid Date" Ausgaben
     """
-    # Ordner erstellen falls nicht vorhanden
+    # Helper-Funktion für saubere Adressformatierung
+    def format_address(addr_dict):
+        if not addr_dict:
+            return ""
+        parts = []
+        street = addr_dict.get('street', '').strip()
+        house_num = addr_dict.get('house_number', '') or addr_dict.get('houseNumber', '')
+        if isinstance(house_num, (int, float)):
+            house_num = str(house_num)
+        house_num = house_num.strip() if house_num else ''
+        
+        if street:
+            if house_num:
+                parts.append(f"{street} {house_num}")
+            else:
+                parts.append(street)
+        
+        postal = addr_dict.get('postal_code', '') or addr_dict.get('postalCode', '')
+        city = addr_dict.get('city', '').strip()
+        
+        if postal and city:
+            parts.append(f"{postal} {city}")
+        elif city:
+            parts.append(city)
+        
+        return ", ".join(parts) if parts else ""
+    
+    # Helper für Datumsformatierung
+    def format_date(date_str):
+        if not date_str or date_str == 'None':
+            return ""
+        try:
+            from datetime import datetime
+            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            return dt.strftime("%d.%m.%Y")
+        except:
+            return ""
+    
+    # Ordner erstellen
     contracts_dir = Path("/app/backend/generated_contracts")
     contracts_dir.mkdir(exist_ok=True)
     
-    # Dateiname
     filename = f"contract_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # PDF erstellen mit Flowables
-    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
+    # PDF erstellen
+    doc = SimpleDocTemplate(str(filepath), pagesize=A4, 
+                           leftMargin=2*cm, rightMargin=2*cm, 
+                           topMargin=2*cm, bottomMargin=2*cm)
     styles = getSampleStyleSheet()
+    
+    # Einheitliche Styles
+    styles['Heading1'].fontSize = 16
+    styles['Heading1'].spaceAfter = 12
+    styles['Heading2'].fontSize = 12
+    styles['Heading2'].spaceAfter = 6
+    styles['Normal'].fontSize = 10
+    
     story = []
     
     # Titel
-    story.append(Paragraph("Arbeitsvertrag – einfacher Einsatzvertrag", styles["Heading1"]))
+    story.append(Paragraph("<b>Arbeitsvertrag – Einfacher Einsatzvertrag</b>", styles["Heading1"]))
     story.append(Spacer(1, 12))
     
     # 1. Arbeitgeber
-    story.append(Paragraph("1. Arbeitgeber", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    story.append(Paragraph("<b>1. Arbeitgeber</b>", styles["Heading2"]))
     
-    employer_name = f"{employer_data.get('firstName', '')} {employer_data.get('lastName', '')}"
-    employer_lines = [employer_name]
+    emp_first = employer_data.get('firstName', '').strip()
+    emp_last = employer_data.get('lastName', '').strip()
+    emp_name_parts = [p for p in [emp_first, emp_last] if p]
+    emp_name = " ".join(emp_name_parts) if emp_name_parts else "Nicht angegeben"
     
-    if employer_data.get('companyName'):
-        employer_lines.append(employer_data['companyName'])
+    employer_lines = [emp_name]
     
-    # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
+    emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
+    if emp_company and emp_company.strip():
+        employer_lines.append(emp_company.strip())
+    
     emp_addr = employer_data.get('homeAddress', {})
-    if emp_addr:
-        # Neue Struktur: homeAddress Object
-        employer_address = f"{emp_addr.get('street', '')} {emp_addr.get('houseNumber', '')}, {emp_addr.get('postalCode', '')} {emp_addr.get('city', '')}"
-    else:
-        # Alte Struktur: Root-Level Felder
-        employer_address = f"{employer_data.get('street', '')} {employer_data.get('houseNumber', '')}, {employer_data.get('postalCode', '')} {employer_data.get('city', '')}"
-    employer_lines.append(employer_address)
+    emp_address = format_address(emp_addr)
+    if emp_address:
+        employer_lines.append(emp_address)
     
     story.append(Paragraph("<br/>".join(employer_lines), styles["Normal"]))
     story.append(Spacer(1, 12))
     
-    # 2. Arbeitnehmer (OHNE sensible Daten)
-    story.append(Paragraph("2. Arbeitnehmer", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    # 2. Arbeitnehmer
+    story.append(Paragraph("<b>2. Arbeitnehmer</b>", styles["Heading2"]))
     
-    worker_name = f"{worker_data.get('firstName', '')} {worker_data.get('lastName', '')}"
+    work_first = worker_data.get('firstName', '').strip()
+    work_last = worker_data.get('lastName', '').strip()
+    work_name_parts = [p for p in [work_first, work_last] if p]
+    work_name = " ".join(work_name_parts) if work_name_parts else "Nicht angegeben"
     
-    # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
+    worker_lines = [work_name]
+    
     work_addr = worker_data.get('homeAddress', {})
-    if work_addr:
-        # Neue Struktur: homeAddress Object
-        worker_address = f"{work_addr.get('street', '')} {work_addr.get('houseNumber', '')}, {work_addr.get('postalCode', '')} {work_addr.get('city', '')}"
-    else:
-        # Alte Struktur: Root-Level Felder
-        worker_address = f"{worker_data.get('street', '')} {worker_data.get('houseNumber', '')}, {worker_data.get('postalCode', '')} {worker_data.get('city', '')}"
+    work_address = format_address(work_addr)
+    if work_address:
+        worker_lines.append(work_address)
     
-    worker_text = f"{worker_name}<br/>{worker_address}"
-    story.append(Paragraph(worker_text, styles["Normal"]))
+    story.append(Paragraph("<br/>".join(worker_lines), styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 3. Art der Beschäftigung
-    story.append(Paragraph("3. Art der Beschäftigung", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-    
+    story.append(Paragraph("<b>3. Art der Beschäftigung</b>", styles["Heading2"]))
     registration_type_de = "Kurzfristige Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
     story.append(Paragraph(registration_type_de, styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 4. Einsatzdetails
-    story.append(Paragraph("4. Einsatzdetails", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    story.append(Paragraph("<b>4. Einsatzdetails</b>", styles["Heading2"]))
+    
+    job_title = job_data.get('title', '').strip() or "Nicht angegeben"
+    job_desc = job_data.get('description', '').strip() or "Nicht angegeben"
     
     job_addr = job_data.get('address', {})
-    job_address = f"{job_addr.get('street', '')} {job_addr.get('houseNumber', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
+    job_address = format_address(job_addr) or "Nicht angegeben"
+    
     worker_amount = job_data.get('workerAmountCents', 0) / 100
     
-    job_details = f"""
-    Tätigkeit: {job_data.get('title', 'Nicht angegeben')}<br/>
-    Beschreibung: {job_data.get('description', 'Nicht angegeben')}<br/>
-    Ort: {job_address}<br/>
-    Gesamtlohn: {worker_amount:.2f} EUR
-    """
-    story.append(Paragraph(job_details, styles["Normal"]))
+    # Zeitangaben (modernisiert)
+    job_date = format_date(job_data.get('date', ''))
+    start_time = job_data.get('start_at', '') or job_data.get('startAt', '')
+    end_time = job_data.get('end_at', '') or job_data.get('endAt', '')
+    
+    details_parts = [
+        f"<b>Tätigkeit:</b> {job_title}",
+        f"<b>Beschreibung:</b> {job_desc}",
+        f"<b>Ort:</b> {job_address}"
+    ]
+    
+    if job_date:
+        if start_time and end_time:
+            details_parts.append(f"<b>Datum und Zeit:</b> {job_date}, {start_time} – {end_time} Uhr")
+        else:
+            details_parts.append(f"<b>Datum:</b> {job_date}")
+    
+    details_parts.append(f"<b>Gesamtlohn:</b> {worker_amount:.2f} EUR")
+    
+    story.append(Paragraph("<br/>".join(details_parts), styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 5. Dauer und Umfang
-    story.append(Paragraph("5. Dauer und Umfang", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-    
-    duration_text = """
-    Die Vereinbarung gilt ausschließlich für diesen einmaligen Einsatz.<br/>
-    Es entsteht kein dauerhaftes Arbeitsverhältnis.
-    """
+    story.append(Paragraph("<b>5. Dauer und Umfang</b>", styles["Heading2"]))
+    duration_text = "Die Vereinbarung gilt ausschließlich für diesen einmaligen Einsatz. Es entsteht kein dauerhaftes Arbeitsverhältnis."
     story.append(Paragraph(duration_text, styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 6. Vertragsabschluss
-    story.append(Paragraph("6. Vertragsabschluss", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-    
-    conclusion_text = """
-    Mit Annahme des Einsatzes durch den Arbeitnehmer und der Bezahlung durch den Arbeitgeber 
-    gilt dieser Vertrag als geschlossen.<br/>
-    Eine schriftliche Unterschrift ist nicht erforderlich.
-    """
+    story.append(Paragraph("<b>6. Vertragsabschluss</b>", styles["Heading2"]))
+    conclusion_text = "Mit Annahme des Einsatzes durch den Arbeitnehmer und der Bezahlung durch den Arbeitgeber gilt dieser Vertrag als geschlossen. Eine schriftliche Unterschrift ist nicht erforderlich."
     story.append(Paragraph(conclusion_text, styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # Datum
-    story.append(Paragraph(f"<i>Erstellt am: {created_at}</i>", styles["Normal"]))
+    created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
+    story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", styles["Normal"]))
     
     # PDF erstellen
     doc.build(story)
