@@ -40,14 +40,6 @@ export default function Step4Skills() {
     });
   }
 
-  const toggleSubcategory = (key: string) => {
-    setSelectedSubcategories(prev => 
-      prev.includes(key)
-        ? prev.filter(s => s !== key)
-        : [...prev, key]
-    );
-  };
-
   const toggleQualification = (key: string) => {
     setSelectedQualifications(prev => 
       prev.includes(key)
@@ -57,14 +49,11 @@ export default function Step4Skills() {
   };
 
   const handleNext = () => {
-    if (selectedSubcategories.length > 0) {
-      // Save to context
-      updateWizardData({ 
-        selectedSubcategories,
-        selectedQualifications
-      });
-      router.push('/(worker)/profile-wizard/step5-summary');
-    }
+    // No validation - qualifications are optional
+    updateWizardData({ 
+      qualifications: selectedQualifications
+    });
+    router.push('/(worker)/profile-wizard/step5-summary');
   };
 
   const handleBack = () => {
