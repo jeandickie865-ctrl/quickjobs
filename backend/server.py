@@ -1155,33 +1155,6 @@ async def get_matched_jobs_for_me(
     - Required tags (all must be present in job)
     - Optional tags (at least one must be present if specified)
     """
-    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
-    await db.jobs.update_many(
-        {
-            "$or": [
-                {"date": {"$exists": False}},
-                {"date": None},
-                {"start_at": {"$exists": False}},
-                {"start_at": None},
-                {"end_at": {"$exists": False}},
-                {"end_at": None},
-                {"timeMode": {"$exists": False}},
-                {"timeMode": None},
-                {"timeMode": "project"}
-            ]
-        },
-        {
-            "$set": {
-                "date": today_str,
-                "start_at": "09:00",
-                "end_at": "17:00",
-                "timeMode": "fixed_time"
-            }
-        }
-    )
-    
     # B1: Cleanup old jobs before matching
     await delete_expired_jobs()
     
@@ -1227,33 +1200,6 @@ async def get_matching_jobs_for_worker(
     """
     B3: Get matching jobs for a specific worker with strict filtering
     """
-    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
-    await db.jobs.update_many(
-        {
-            "$or": [
-                {"date": {"$exists": False}},
-                {"date": None},
-                {"start_at": {"$exists": False}},
-                {"start_at": None},
-                {"end_at": {"$exists": False}},
-                {"end_at": None},
-                {"timeMode": {"$exists": False}},
-                {"timeMode": None},
-                {"timeMode": "project"}
-            ]
-        },
-        {
-            "$set": {
-                "date": today_str,
-                "start_at": "09:00",
-                "end_at": "17:00",
-                "timeMode": "fixed_time"
-            }
-        }
-    )
-    
     # Verify token
     requesting_user = await get_user_id_from_token(authorization)
     
@@ -1316,33 +1262,6 @@ async def get_all_jobs(
     authorization: Optional[str] = Header(None)
 ):
     """Get ALL jobs (including completed/closed) - needed for worker matches"""
-    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
-    await db.jobs.update_many(
-        {
-            "$or": [
-                {"date": {"$exists": False}},
-                {"date": None},
-                {"start_at": {"$exists": False}},
-                {"start_at": None},
-                {"end_at": {"$exists": False}},
-                {"end_at": None},
-                {"timeMode": {"$exists": False}},
-                {"timeMode": None},
-                {"timeMode": "project"}
-            ]
-        },
-        {
-            "$set": {
-                "date": today_str,
-                "start_at": "09:00",
-                "end_at": "17:00",
-                "timeMode": "fixed_time"
-            }
-        }
-    )
-    
     logger.info("Fetching ALL jobs (including completed)")
     
     # Verify token (optional)
@@ -1363,33 +1282,6 @@ async def get_all_open_jobs(
     authorization: Optional[str] = Header(None)
 ):
     """B1: Get all open jobs (nur zukünftige/heute)"""
-    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
-    await db.jobs.update_many(
-        {
-            "$or": [
-                {"date": {"$exists": False}},
-                {"date": None},
-                {"start_at": {"$exists": False}},
-                {"start_at": None},
-                {"end_at": {"$exists": False}},
-                {"end_at": None},
-                {"timeMode": {"$exists": False}},
-                {"timeMode": None},
-                {"timeMode": "project"}
-            ]
-        },
-        {
-            "$set": {
-                "date": today_str,
-                "start_at": "09:00",
-                "end_at": "17:00",
-                "timeMode": "fixed_time"
-            }
-        }
-    )
-    
     logger.info("Fetching all open jobs")
     
     # B1: Cleanup old jobs first
@@ -1418,33 +1310,6 @@ async def get_employer_jobs(
     authorization: Optional[str] = Header(None)
 ):
     """B1: Get all jobs for a specific employer (nur zukünftige/heute)"""
-    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
-    await db.jobs.update_many(
-        {
-            "$or": [
-                {"date": {"$exists": False}},
-                {"date": None},
-                {"start_at": {"$exists": False}},
-                {"start_at": None},
-                {"end_at": {"$exists": False}},
-                {"end_at": None},
-                {"timeMode": {"$exists": False}},
-                {"timeMode": None},
-                {"timeMode": "project"}
-            ]
-        },
-        {
-            "$set": {
-                "date": today_str,
-                "start_at": "09:00",
-                "end_at": "17:00",
-                "timeMode": "fixed_time"
-            }
-        }
-    )
-    
     # B1: Cleanup old jobs before loading
     await delete_expired_jobs()
     
@@ -1481,33 +1346,6 @@ async def get_job(
     authorization: Optional[str] = Header(None)
 ):
     """Get a specific job by ID"""
-    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
-    await db.jobs.update_many(
-        {
-            "$or": [
-                {"date": {"$exists": False}},
-                {"date": None},
-                {"start_at": {"$exists": False}},
-                {"start_at": None},
-                {"end_at": {"$exists": False}},
-                {"end_at": None},
-                {"timeMode": {"$exists": False}},
-                {"timeMode": None},
-                {"timeMode": "project"}
-            ]
-        },
-        {
-            "$set": {
-                "date": today_str,
-                "start_at": "09:00",
-                "end_at": "17:00",
-                "timeMode": "fixed_time"
-            }
-        }
-    )
-    
     logger.info(f"Fetching job {job_id}")
     
     # Verify token (optional)
