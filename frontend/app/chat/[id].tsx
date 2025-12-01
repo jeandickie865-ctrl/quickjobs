@@ -44,25 +44,32 @@ export default function ChatScreen() {
 
     async function loadChat() {
       try {
+        if (!mounted) return;
+        setLoading(true);
+
         const msgs = await loadMessages(applicationId);
         if (!mounted) return;
+
         setMessages(msgs);
+
       } catch (err) {
         console.log("CHAT LOAD ERROR:", err);
+      } finally {
+        if (mounted) setLoading(false);
       }
     }
 
-    // Initial Load
     loadChat();
 
-    // Auto-Refresh (ohne inputFocused!)
     intervalRef.current = setInterval(() => {
-      if (mounted && !locked) loadChat();
+      if (mounted && !locked) {
+        loadChat();
+      }
     }, 4000);
 
     return () => {
       mounted = false;
-      clearInterval(intervalRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [applicationId]);
 
