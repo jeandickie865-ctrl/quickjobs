@@ -52,8 +52,8 @@ export default function EditWorkerProfileScreen() {
   const [lat, setLat] = useState<number | undefined>();
   const [lon, setLon] = useState<number | undefined>();
 
-  // Categories, Subcategories & Qualifications
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  // Category (exactly ONE), Subcategories & Qualifications
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
 
