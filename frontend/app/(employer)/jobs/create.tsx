@@ -73,8 +73,10 @@ export default function CreateJob() {
     }
   }, [category]);
 
-  // Simplified: Just text input for time/date info
-  const [timeInfo, setTimeInfo] = useState('');
+  // Time & Date fields
+  const [date, setDate] = useState('');
+  const [startAt, setStartAt] = useState('');
+  const [endAt, setEndAt] = useState('');
 
   // Payment
   const [workerAmountInput, setWorkerAmountInput] = useState('');
