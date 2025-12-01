@@ -2114,3 +2114,49 @@ agent_communication:
       
       **Status:** ✅ REGISTRATION DATA FLOW FULLY TESTED AND WORKING - Ready for production use
 
+
+  - agent: "main"
+    message: |
+      **B1 - Backend Cleanup & Konsistenz IMPLEMENTIERT**
+      
+      **Durchgeführte Änderungen (backend/server.py):**
+      
+      **1. delete_expired_jobs() Funktion (Zeile 51-89):**
+      - Ersetzt alte cleanup_old_jobs() Funktion
+      - Löscht Jobs mit `date < HEUTE`
+      - Beide Status: "open" UND "matched"
+      - Jobs von HEUTE bleiben bestehen (auch wenn Endzeit vorbei)
+      - Löscht auch zugehörige Applications für gematchte Jobs
+      
+      **2. Matching API Filter (Zeile 1189-1234):**
+      - GET /api/jobs/matches/me
+      - Filter: `status == "open"` + `date >= HEUTE` + `matchedWorkerId == None`
+      - Zeigt nur verfügbare, zukünftige/heutige, ungematchte Jobs
+      
+      **3. Job-GET-Endpoints aktualisiert:**
+      - GET /api/jobs - nur open + zukünftig/heute
+      - GET /api/jobs/employer/{id} - nur zukünftig/heute
+      - Alle rufen delete_expired_jobs() vor dem Laden auf
+      
+      **4. Job Models aktualisiert:**
+      - Job, JobCreate, JobUpdate haben jetzt: date, start_at, end_at
+      - Legacy Felder (startAt, endAt, hours, dueAt) bleiben für Kompatibilität
+      - timeMode = "fixed_time" standardmäßig
+      
+      **5. Background Scheduler (Zeile 3251-3275):**
+      - cleanup_scheduler() läuft stündlich (asyncio.sleep(3600))
+      - Startet automatisch bei App-Start (@app.on_event("startup"))
+      - Log: "⏰ B1 Auto-cleanup scheduler started"
+      
+      **Erwartetes Verhalten:**
+      - Alte Jobs (date < heute) werden automatisch gelöscht
+      - Worker sehen nur relevante, verfügbare Jobs
+      - Keine vergangenen Jobs mehr im Feed
+      - Scheduler läuft im Hintergrund alle 60 Minuten
+      
+      **Test-Szenarien:**
+      1. Job mit date = "2025-11-30" (gestern) → sollte gelöscht werden
+      2. Job mit date = "2025-12-01" (heute) → bleibt bestehen
+      3. Job mit date = "2025-12-05" (zukünftig) → bleibt bestehen
+      4. Worker GET /api/jobs/matches/me → nur zukünftige/heutige open Jobs
+      5. Scheduler läuft automatisch (Check Backend Logs)
