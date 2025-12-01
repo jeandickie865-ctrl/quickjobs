@@ -3225,14 +3225,15 @@ async def cleanup_scheduler():
     Runs delete_old_open_jobs_without_match() every hour
     """
     from jobs.router import delete_old_open_jobs_without_match
-    from core.database import get_db_session
+    from core.database import get_db
     
     while True:
         try:
             # Get DB session
-            async with get_db_session() as db_session:
+            async for db_session in get_db():
                 deleted_count = await delete_old_open_jobs_without_match(db_session)
                 logger.info(f"⏰ Scheduled cleanup completed: {deleted_count} jobs deleted")
+                break  # Only run once per iteration
         except Exception as e:
             logger.error(f"⏰ Scheduled cleanup error: {e}")
         
