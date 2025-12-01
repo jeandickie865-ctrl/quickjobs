@@ -1270,20 +1270,27 @@ async def get_all_jobs(
 async def get_all_open_jobs(
     authorization: Optional[str] = Header(None)
 ):
-    """Get all open jobs"""
+    """B1: Get all open jobs (nur zukünftige/heute)"""
     logger.info("Fetching all open jobs")
+    
+    # B1: Cleanup old jobs first
+    await delete_expired_jobs()
     
     # Verify token (optional)
     await get_user_id_from_token(authorization)
     
-    # Find all open jobs
-    jobs = await db.jobs.find({"status": "open"}).to_list(1000)
+    # B1: Find only future/today open jobs
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    jobs = await db.jobs.find({
+        "status": "open",
+        "date": {"$gte": today}
+    }).to_list(1000)
     
     # Remove MongoDB _id field
     for job in jobs:
         job.pop("_id", None)
     
-    logger.info(f"Found {len(jobs)} open jobs")
+    logger.info(f"Found {len(jobs)} open future/today jobs (date >= {today})")
     return [Job(**job) for job in jobs]
 
 @api_router.get("/jobs/employer/{employer_id}", response_model=List[Job])
