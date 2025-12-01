@@ -193,13 +193,13 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: COLORS.purple,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   iconContainerSelected: {
     backgroundColor: COLORS.white,
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.black,
     textAlign: 'center',
+    marginTop: 6,
   },
   categoryLabelSelected: {
     color: COLORS.black,
