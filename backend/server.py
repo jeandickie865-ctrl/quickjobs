@@ -2481,7 +2481,16 @@ def generate_contract_pdf(
     
     worker_lines = [work_name]
     
+    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     work_addr = worker_data.get('homeAddress', {})
+    if not work_addr:
+        # Fallback auf Root-Level Felder
+        work_addr = {
+            'street': worker_data.get('street'),
+            'house_number': worker_data.get('houseNumber') or worker_data.get('house_number'),
+            'postal_code': worker_data.get('postalCode') or worker_data.get('postal_code'),
+            'city': worker_data.get('city')
+        }
     work_address = format_address(work_addr)
     if work_address:
         worker_lines.append(work_address)
@@ -2665,7 +2674,16 @@ def generate_sofortmeldung_pdf(
     
     worker_lines = [work_name]
     
+    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     work_addr = worker_data.get('homeAddress', {})
+    if not work_addr:
+        # Fallback auf Root-Level Felder
+        work_addr = {
+            'street': worker_data.get('street'),
+            'house_number': worker_data.get('houseNumber') or worker_data.get('house_number'),
+            'postal_code': worker_data.get('postalCode') or worker_data.get('postal_code'),
+            'city': worker_data.get('city')
+        }
     work_address = format_address(work_addr)
     if work_address:
         worker_lines.append(work_address)
@@ -2860,7 +2878,16 @@ def generate_payroll_pdf(
     
     worker_lines = [work_name]
     
+    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     work_addr = worker_data.get('homeAddress', {})
+    if not work_addr:
+        # Fallback auf Root-Level Felder
+        work_addr = {
+            'street': worker_data.get('street'),
+            'house_number': worker_data.get('houseNumber') or worker_data.get('house_number'),
+            'postal_code': worker_data.get('postalCode') or worker_data.get('postal_code'),
+            'city': worker_data.get('city')
+        }
     work_address = format_address(work_addr)
     if work_address:
         worker_lines.append(work_address)
