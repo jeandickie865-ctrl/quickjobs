@@ -102,7 +102,7 @@ export default function Step4Skills() {
                     {tag.label}
                   </Text>
                   {isSelected && (
-                    <Ionicons name="checkmark" size={20} color={COLORS.purple} />
+                    <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
                   )}
                 </Pressable>
               );
