@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Button } from '../../../components/ui/Button';
@@ -17,6 +17,26 @@ export default function CreateJob() {
   const { colors, spacing } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
+  
+  // Reset form when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset all form fields
+      setTitle('');
+      setDescription('');
+      setCategory(null);
+      setAddress({});
+      setLat(undefined);
+      setLon(undefined);
+      setRequiredAll([]);
+      setRequiredAny([]);
+      setTimeInfo('');
+      setWorkerAmountInput('');
+      setWorkerAmountCents(0);
+      setPaymentMethod('cash');
+      setError(null);
+    }, [])
+  );
   
   // Kategorie-Optionen aus taxonomy.json
   const categoryOptions = Object.entries(taxonomy).map(([key, obj]: [string, any]) => ({
