@@ -20,15 +20,16 @@ interface WizardData {
   lon?: number;
   radiusKm: number;
   
-  // Step 3
-  selectedCategories: CategoryKey[];
+  // Step 3 - NEW STRUCTURE
+  category: string; // exactly ONE category
+  subcategories: string[]; // at least one subcategory
   
   // Step 4
-  selectedSubcategories: string[];
-  selectedQualifications: string[];
+  qualifications: string[]; // optional
   
   // Legacy (kept for backward compatibility)
-  selectedSkills: string[];
+  selectedCategories?: CategoryKey[];
+  selectedSkills?: string[];
   isSelfEmployed?: boolean;
 }
 
