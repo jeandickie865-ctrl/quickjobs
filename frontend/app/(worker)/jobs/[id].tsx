@@ -152,66 +152,28 @@ export default function WorkerJobDetailScreen() {
               </Text>
             </View>
 
-            {/* Zeitraum */}
+            {/* ZEITEN */}
             <View style={{ marginBottom: 20 }}>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 8 }}>
-                ZEITRAUM
-              </Text>
-              {job.timeMode === 'fixed_time' && job.startAt && job.endAt ? (
+              <Text style={{ color: "#C8FF16", fontSize: 14, marginBottom: 6 }}>ZEITEN</Text>
+
+              {job.startDate && job.endDate ? (
                 <>
-                  <Text style={{ fontSize: 16, color: COLORS.black }}>
-                    📅 {new Date(job.startAt).toLocaleDateString('de-DE', { 
-                      weekday: 'short', 
-                      day: '2-digit', 
-                      month: '2-digit', 
-                      year: 'numeric' 
-                    })}
+                  <Text style={{ color: "#000", fontSize: 16 }}>
+                    Datum: {job.startDate}
                   </Text>
-                  <Text style={{ fontSize: 16, color: COLORS.black, marginTop: 4 }}>
-                    🕐 {new Date(job.startAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} - {new Date(job.endAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
-                  </Text>
-                </>
-              ) : job.timeMode === 'hour_package' ? (
-                <>
-                  <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: '600' }}>
-                    ⏱️ {job.hours} Stunden
-                  </Text>
-                  {job.startAt && job.endAt ? (
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
-                      📅 Zeitraum: {new Date(job.startAt).toLocaleDateString('de-DE', { 
-                        day: '2-digit', 
-                        month: '2-digit', 
-                        year: 'numeric' 
-                      })} - {new Date(job.endAt).toLocaleDateString('de-DE', { 
-                        day: '2-digit', 
-                        month: '2-digit', 
-                        year: 'numeric' 
-                      })}
+
+                  {job.startTime && job.endTime && (
+                    <Text style={{ color: "#000", fontSize: 16 }}>
+                      Uhrzeit: {job.startTime} bis {job.endTime}
                     </Text>
-                  ) : job.startAt ? (
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
-                      📅 Fester Tag: {new Date(job.startAt).toLocaleDateString('de-DE', { 
-                        weekday: 'short',
-                        day: '2-digit', 
-                        month: '2-digit', 
-                        year: 'numeric' 
-                      })}
-                    </Text>
-                  ) : null}
+                  )}
                 </>
-              ) : job.timeMode === 'project' && job.dueAt ? (
-                <Text style={{ fontSize: 16, color: COLORS.black }}>
-                  📅 Fällig bis: {new Date(job.dueAt).toLocaleDateString('de-DE', { 
-                    weekday: 'short',
-                    day: '2-digit', 
-                    month: '2-digit', 
-                    year: 'numeric' 
-                  })}
+              ) : job.hoursPackage ? (
+                <Text style={{ color: "#000", fontSize: 16 }}>
+                  Stundenpaket: {job.hoursPackage} Stunden
                 </Text>
               ) : (
-                <Text style={{ fontSize: 16, color: COLORS.black }}>
-                  Keine Zeitangabe
-                </Text>
+                <Text style={{ color: "#000", fontSize: 16 }}>Keine Zeitangabe</Text>
               )}
             </View>
 
