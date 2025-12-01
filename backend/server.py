@@ -47,45 +47,50 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
-# ===== JOB CLEANUP FUNCTION =====
-async def cleanup_old_jobs():
+# ===== JOB CLEANUP FUNCTION (B1) =====
+async def delete_expired_jobs():
     """
-    Löscht alle Jobs, deren Datum in der Vergangenheit liegt.
-    Löscht auch zugehörige Applications und ChatMessages.
+    B1 Cleanup-Funktion: Löscht abgelaufene Jobs basierend auf 'date' Feld.
+    
+    Bedingungen:
+    - Jobs mit status "open" UND date < HEUTE → löschen
+    - Jobs mit status "matched" UND date < HEUTE → löschen
+    - Jobs von HEUTE bleiben bestehen (auch wenn Endzeit vorbei ist)
     """
     try:
-        now = datetime.utcnow()
+        from datetime import date as date_type
         
-        # Finde alle Jobs, deren startAt, endAt oder dueAt in der Vergangenheit liegen
+        today = datetime.utcnow().date()
+        today_str = today.strftime("%Y-%m-%d")
+        
+        # Finde Jobs mit date < heute (beide Status: open + matched)
         old_jobs = await db.jobs.find({
-            "$or": [
-                {"startAt": {"$lt": now.isoformat()}},
-                {"endAt": {"$lt": now.isoformat()}},
-                {"dueAt": {"$lt": now.isoformat()}}
-            ]
+            "status": {"$in": ["open", "matched"]},
+            "date": {"$lt": today_str}
         }).to_list(length=None)
         
         if not old_jobs:
-            logger.info("🧹 Cleanup: Keine alten Jobs gefunden")
-            return
+            logger.info("🧹 Cleanup: Keine abgelaufenen Jobs gefunden")
+            return 0
         
         old_job_ids = [job["id"] for job in old_jobs]
-        logger.info(f"🧹 Cleanup: {len(old_job_ids)} alte Jobs gefunden")
+        logger.info(f"🧹 Cleanup: {len(old_job_ids)} abgelaufene Jobs gefunden (date < {today_str})")
         
-        # Lösche zugehörige Applications
-        app_result = await db.applications.delete_many({"jobId": {"$in": old_job_ids}})
-        logger.info(f"🧹 Cleanup: {app_result.deleted_count} Applications gelöscht")
-        
-        # Lösche zugehörige ChatMessages
-        chat_result = await db.chat_messages.delete_many({"applicationId": {"$in": old_job_ids}})
-        logger.info(f"🧹 Cleanup: {chat_result.deleted_count} ChatMessages gelöscht")
+        # Lösche zugehörige Applications für gematchte Jobs
+        matched_jobs = [job["id"] for job in old_jobs if job.get("status") == "matched"]
+        if matched_jobs:
+            app_result = await db.applications.delete_many({"jobId": {"$in": matched_jobs}})
+            logger.info(f"🧹 Cleanup: {app_result.deleted_count} Applications gelöscht")
         
         # Lösche die Jobs selbst
         job_result = await db.jobs.delete_many({"id": {"$in": old_job_ids}})
         logger.info(f"🧹 Cleanup: {job_result.deleted_count} Jobs gelöscht")
         
+        return job_result.deleted_count
+        
     except Exception as e:
         logger.error(f"🧹 Cleanup Error: {e}")
+        return 0
 
 
 # Define Models
