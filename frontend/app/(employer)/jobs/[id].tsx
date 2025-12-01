@@ -356,24 +356,22 @@ export default function JobDetailScreen() {
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
             {(() => {
-              // DEBUG: Log job time fields
-              console.log('JOB TIME DEBUG:', {
-                date: job.date,
-                start_at: job.start_at,
-                end_at: job.end_at,
-                startAt: job.startAt,
-                endAt: job.endAt,
-                timeMode: job.timeMode
-              });
+              // DEBUG: Log ALL job fields
+              console.log('JOB FULL DEBUG:', JSON.stringify(job, null, 2));
               
-              // Neue Felder: date, start_at, end_at
+              // Format 1: date + start_at + end_at (snake_case)
               if (job.date && job.start_at && job.end_at) {
+                console.log('✅ Match: date + start_at + end_at');
                 return `${job.date} von ${job.start_at} bis ${job.end_at}`;
               }
-              // Legacy Format 1: date + startAt/endAt (nur Uhrzeiten)
+              
+              // Format 2: date + startAt + endAt (camelCase)
               if (job.date && job.startAt && job.endAt) {
+                console.log('✅ Match: date + startAt + endAt');
                 return `${job.date} von ${job.startAt} bis ${job.endAt}`;
               }
+              
+              console.log('❌ No time format matched');
               // Legacy Format 2: startAt, endAt (ISO datetime strings)
               if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
                 try {
