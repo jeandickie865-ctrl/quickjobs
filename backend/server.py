@@ -1155,6 +1155,33 @@ async def get_matched_jobs_for_me(
     - Required tags (all must be present in job)
     - Optional tags (at least one must be present if specified)
     """
+    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
+    today_str = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    await db.jobs.update_many(
+        {
+            "$or": [
+                {"date": {"$exists": False}},
+                {"date": None},
+                {"start_at": {"$exists": False}},
+                {"start_at": None},
+                {"end_at": {"$exists": False}},
+                {"end_at": None},
+                {"time_mode": {"$exists": False}},
+                {"time_mode": None},
+                {"time_mode": "project"}
+            ]
+        },
+        {
+            "$set": {
+                "date": today_str,
+                "start_at": "09:00",
+                "end_at": "17:00",
+                "time_mode": "fixed_time"
+            }
+        }
+    )
+    
     # B1: Cleanup old jobs before matching
     await delete_expired_jobs()
     
