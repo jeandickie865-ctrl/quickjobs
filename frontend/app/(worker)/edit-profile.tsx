@@ -475,7 +475,7 @@ export default function EditWorkerProfileScreen() {
       city.trim() &&
       country.trim() &&
       phone.trim() &&
-      selectedCategories.length > 0 &&
+      selectedCategory &&
       !isNaN(parseInt(radiusKm)) &&
       parseInt(radiusKm) >= 1 &&
       parseInt(radiusKm) <= 200
