@@ -65,14 +65,18 @@ def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
     
     # 1. Category check - must match exactly
     worker_categories = worker.get("categories", [])
-    if not worker_categories or job.get("category") != worker_categories[0]:
+    job_category = job.get("category")
+    if not worker_categories or job_category not in worker_categories:
         return False
     
-    # 2. Subcategory check - worker must have this subcategory
-    worker_subcategories = worker.get("subcategories", [])
+    # 2. Subcategory check - ONLY if job has subcategory
     job_subcategory = job.get("subcategory")
-    if job_subcategory and job_subcategory not in worker_subcategories:
-        return False
+    if job_subcategory:
+        # NEW JOBS: Must match subcategory
+        worker_subcategories = worker.get("subcategories", [])
+        if job_subcategory not in worker_subcategories:
+            return False
+    # OLD JOBS: No subcategory field - skip this check (fallback for compatibility)
     
     # 3. Qualifications check - worker must have ALL job qualifications
     job_qualifications = job.get("qualifications", [])
