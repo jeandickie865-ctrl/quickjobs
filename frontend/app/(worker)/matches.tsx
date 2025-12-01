@@ -369,7 +369,7 @@ export default function WorkerMatchesScreen() {
                       🕐 {timeDisplay}
                     </Text>
                     <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                      📍 {formatAddress(job.address)}
+                      📍 {job.address?.street} {job.address?.house_number}, {job.address?.postal_code} {job.address?.city}
                     </Text>
                   </View>
 
