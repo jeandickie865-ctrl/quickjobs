@@ -152,7 +152,15 @@ async def update_job(
     # Update fields
     update_data = job_data.model_dump(exclude_unset=True)
     for key, value in update_data.items():
-        setattr(job, key, value)
+        # Map camelCase to snake_case for time fields
+        if key == 'startAt':
+            setattr(job, 'start_at', value)
+        elif key == 'endAt':
+            setattr(job, 'end_at', value)
+        elif key == 'timeMode':
+            setattr(job, 'time_mode', value)
+        else:
+            setattr(job, key, value)
     
     # Manually update timestamp
     job.updated_at = datetime.utcnow()
