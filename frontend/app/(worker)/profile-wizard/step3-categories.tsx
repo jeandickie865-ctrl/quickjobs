@@ -24,20 +24,36 @@ export default function Step3Categories() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
   
-  const [selectedCategory, setSelectedCategory] = useState<string>(wizardData.category || '');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(wizardData.categories || []);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(
     wizardData.subcategories || []
   );
   const [errors, setErrors] = useState<{ category?: string; subcategories?: string }>({});
 
-  // Get subcategories for selected category
-  const availableSubcategories = selectedCategory && TAXONOMY_DATA[selectedCategory]
-    ? TAXONOMY_DATA[selectedCategory].subcategories || []
-    : [];
+  // Get subcategories for ALL selected categories
+  const availableSubcategories: {key: string, label: string}[] = [];
+  selectedCategories.forEach(catKey => {
+    const category = TAXONOMY_DATA[catKey];
+    if (category) {
+      category.subcategories?.forEach((sub: any) => {
+        if (!availableSubcategories.find(s => s.key === sub.key)) {
+          availableSubcategories.push({ key: sub.key, label: sub.label });
+        }
+      });
+    }
+  });
 
-  const handleCategorySelect = (catKey: string) => {
-    setSelectedCategory(catKey);
-    setSelectedSubcategories([]); // Reset subcategories when category changes
+  const handleCategoryToggle = (catKey: string) => {
+    const isSelected = selectedCategories.includes(catKey);
+    if (isSelected) {
+      setSelectedCategories(prev => prev.filter(k => k !== catKey));
+      // Remove subcategories from unselected category
+      const cat = TAXONOMY_DATA[catKey];
+      const categorySubcats = cat.subcategories?.map((s: any) => s.key) || [];
+      setSelectedSubcategories(prev => prev.filter(sub => !categorySubcats.includes(sub)));
+    } else {
+      setSelectedCategories(prev => [...prev, catKey]);
+    }
     setErrors({});
   };
 
