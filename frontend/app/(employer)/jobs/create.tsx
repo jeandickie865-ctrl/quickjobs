@@ -420,34 +420,37 @@ export default function CreateJob() {
             <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
               Datum
             </Text>
-            <TextInput
-              value={date}
-              onChangeText={(value) => {
-                // Benutzer gibt DD.MM.YYYY ein → wir konvertieren zu YYYY-MM-DD
-                const normalized = value.replace(/\s+/g, '');
-                
-                const parts = normalized.split('.');
-                if (parts.length === 3 && parts[2]?.length === 4) {
-                  const iso = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                  setDate(iso);
-                } else {
-                  setDate(value);
-                }
-              }}
-              placeholder="TT.MM.JJJJ"
-              keyboardType="numeric"
-              placeholderTextColor={colors.gray400}
-              style={{
-                borderWidth: 1.5,
-                borderColor: colors.gray300,
-                borderRadius: 12,
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.sm,
-                backgroundColor: colors.white,
-                color: colors.black,
-                fontSize: 15,
-              }}
-            />
+            {Platform.OS === 'web' ? (
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  border: '1.5px solid #ccc',
+                  borderRadius: 12,
+                  padding: 12,
+                  fontSize: 15,
+                  backgroundColor: '#fff',
+                  color: '#000',
+                }}
+              />
+            ) : (
+              <TextInput
+                value={date}
+                onChangeText={setDate}
+                placeholder="YYYY-MM-DD"
+                style={{
+                  borderWidth: 1.5,
+                  borderColor: '#ccc',
+                  borderRadius: 12,
+                  padding: 12,
+                  fontSize: 15,
+                  backgroundColor: '#fff',
+                  color: '#000',
+                }}
+              />
+            )}
           </View>
 
           {/* Startzeit */}
