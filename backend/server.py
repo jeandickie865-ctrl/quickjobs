@@ -1167,9 +1167,9 @@ async def get_matched_jobs_for_me(
                 {"start_at": None},
                 {"end_at": {"$exists": False}},
                 {"end_at": None},
-                {"time_mode": {"$exists": False}},
-                {"time_mode": None},
-                {"time_mode": "project"}
+                {"timeMode": {"$exists": False}},
+                {"timeMode": None},
+                {"timeMode": "project"}
             ]
         },
         {
@@ -1177,7 +1177,7 @@ async def get_matched_jobs_for_me(
                 "date": today_str,
                 "start_at": "09:00",
                 "end_at": "17:00",
-                "time_mode": "fixed_time"
+                "timeMode": "fixed_time"
             }
         }
     )
@@ -1239,9 +1239,9 @@ async def get_matching_jobs_for_worker(
                 {"start_at": None},
                 {"end_at": {"$exists": False}},
                 {"end_at": None},
-                {"time_mode": {"$exists": False}},
-                {"time_mode": None},
-                {"time_mode": "project"}
+                {"timeMode": {"$exists": False}},
+                {"timeMode": None},
+                {"timeMode": "project"}
             ]
         },
         {
@@ -1249,7 +1249,7 @@ async def get_matching_jobs_for_worker(
                 "date": today_str,
                 "start_at": "09:00",
                 "end_at": "17:00",
-                "time_mode": "fixed_time"
+                "timeMode": "fixed_time"
             }
         }
     )
@@ -1328,9 +1328,9 @@ async def get_all_jobs(
                 {"start_at": None},
                 {"end_at": {"$exists": False}},
                 {"end_at": None},
-                {"time_mode": {"$exists": False}},
-                {"time_mode": None},
-                {"time_mode": "project"}
+                {"timeMode": {"$exists": False}},
+                {"timeMode": None},
+                {"timeMode": "project"}
             ]
         },
         {
@@ -1338,7 +1338,7 @@ async def get_all_jobs(
                 "date": today_str,
                 "start_at": "09:00",
                 "end_at": "17:00",
-                "time_mode": "fixed_time"
+                "timeMode": "fixed_time"
             }
         }
     )
@@ -1375,9 +1375,9 @@ async def get_all_open_jobs(
                 {"start_at": None},
                 {"end_at": {"$exists": False}},
                 {"end_at": None},
-                {"time_mode": {"$exists": False}},
-                {"time_mode": None},
-                {"time_mode": "project"}
+                {"timeMode": {"$exists": False}},
+                {"timeMode": None},
+                {"timeMode": "project"}
             ]
         },
         {
@@ -1385,7 +1385,7 @@ async def get_all_open_jobs(
                 "date": today_str,
                 "start_at": "09:00",
                 "end_at": "17:00",
-                "time_mode": "fixed_time"
+                "timeMode": "fixed_time"
             }
         }
     )
@@ -1430,9 +1430,9 @@ async def get_employer_jobs(
                 {"start_at": None},
                 {"end_at": {"$exists": False}},
                 {"end_at": None},
-                {"time_mode": {"$exists": False}},
-                {"time_mode": None},
-                {"time_mode": "project"}
+                {"timeMode": {"$exists": False}},
+                {"timeMode": None},
+                {"timeMode": "project"}
             ]
         },
         {
@@ -1440,7 +1440,7 @@ async def get_employer_jobs(
                 "date": today_str,
                 "start_at": "09:00",
                 "end_at": "17:00",
-                "time_mode": "fixed_time"
+                "timeMode": "fixed_time"
             }
         }
     )
@@ -1493,9 +1493,9 @@ async def get_job(
                 {"start_at": None},
                 {"end_at": {"$exists": False}},
                 {"end_at": None},
-                {"time_mode": {"$exists": False}},
-                {"time_mode": None},
-                {"time_mode": "project"}
+                {"timeMode": {"$exists": False}},
+                {"timeMode": None},
+                {"timeMode": "project"}
             ]
         },
         {
@@ -1503,7 +1503,7 @@ async def get_job(
                 "date": today_str,
                 "start_at": "09:00",
                 "end_at": "17:00",
-                "time_mode": "fixed_time"
+                "timeMode": "fixed_time"
             }
         }
     )
