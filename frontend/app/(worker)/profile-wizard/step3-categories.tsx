@@ -92,13 +92,13 @@ export default function Step3Categories() {
 
   const handleBack = () => {
     updateWizardData({
-      category: selectedCategory,
+      categories: selectedCategories,
       subcategories: selectedSubcategories,
     });
     router.push('/(worker)/profile-wizard/step2-location');
   };
 
-  const isFormValid = selectedCategory && selectedSubcategories.length > 0;
+  const isFormValid = selectedCategories.length > 0 && selectedSubcategories.length > 0;
 
   return (
     <View style={styles.container}>
