@@ -74,56 +74,26 @@ export default function Step4Skills() {
 
         {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Tätigkeiten & Qualifikationen</Text>
+          <Text style={styles.title}>Qualifikationen</Text>
           <Text style={styles.subtitle}>
-            Wähle deine Tätigkeitsbereiche und Qualifikationen
+            Wähle deine Qualifikationen (optional)
           </Text>
 
-          {availableSubcategories.length === 0 && (
+          {!selectedCategory && (
             <View style={styles.emptyState}>
               <Ionicons name="information-circle" size={48} color={COLORS.black} />
               <Text style={styles.emptyText}>
-                Bitte wähle zuerst Kategorien aus.
+                Bitte wähle zuerst eine Kategorie in Schritt 3 aus.
               </Text>
             </View>
           )}
 
-          {/* Subcategories (PFLICHT) */}
-          {availableSubcategories.length > 0 && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                Tätigkeiten * (Pflicht)
+          {availableQualifications.length === 0 && selectedCategory && (
+            <View style={styles.emptyState}>
+              <Ionicons name="checkmark-circle" size={48} color={COLORS.neon} />
+              <Text style={styles.emptyText}>
+                Für diese Kategorie gibt es keine Qualifikationen. Du kannst fortfahren.
               </Text>
-              <Text style={styles.helperText}>
-                Wähle mindestens eine Tätigkeit aus
-              </Text>
-              <View style={styles.itemsList}>
-                {availableSubcategories.map((sub) => {
-                  const isSelected = selectedSubcategories.includes(sub.key);
-                  
-                  return (
-                    <Pressable
-                      key={sub.key}
-                      onPress={() => toggleSubcategory(sub.key)}
-                      style={({ pressed }) => [
-                        styles.itemCard,
-                        isSelected && styles.itemCardSelected,
-                        pressed && styles.itemCardPressed,
-                      ]}
-                    >
-                      <Text style={[
-                        styles.itemText,
-                        isSelected && styles.itemTextSelected,
-                      ]}>
-                        {sub.label}
-                      </Text>
-                      {isSelected && (
-                        <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
-                      )}
-                    </Pressable>
-                  );
-                })}
-              </View>
             </View>
           )}
 
@@ -131,10 +101,10 @@ export default function Step4Skills() {
           {availableQualifications.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>
-                Qualifikationen (Optional)
+                Verfügbare Qualifikationen
               </Text>
               <Text style={styles.helperText}>
-                Wähle deine vorhandenen Qualifikationen
+                Wähle alle Qualifikationen, die auf dich zutreffen
               </Text>
               <View style={styles.itemsList}>
                 {availableQualifications.map((qual) => {
