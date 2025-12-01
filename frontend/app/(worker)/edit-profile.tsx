@@ -416,7 +416,7 @@ export default function EditWorkerProfileScreen() {
         lastName: lastName.trim(),
         shortBio: profileText.trim() || undefined,
         photoUrl: photoUrl.trim() || undefined,
-        categories: [selectedCategory], // Send as array with ONE category
+        categories: selectedCategories, // Send as array with multiple categories
         subcategories: selectedSubcategories,
         qualifications: selectedQualifications,
         homeAddress: {
