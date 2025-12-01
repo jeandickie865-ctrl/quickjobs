@@ -1,6 +1,6 @@
 # jobs/schemas.py
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional, List
+from typing import Optional, List, Literal
 from uuid import UUID
 from datetime import datetime
 
@@ -15,6 +15,10 @@ class JobCreate(BaseModel):
     lon: Optional[float] = None
     categories: List[str] = Field(default_factory=list)
     qualifications: List[str] = Field(default_factory=list)
+    date: Optional[str] = None
+    startAt: Optional[str] = None
+    endAt: Optional[str] = None
+    timeMode: Literal['fixed_time'] = 'fixed_time'
     
     @field_validator('title')
     @classmethod
