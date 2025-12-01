@@ -149,8 +149,9 @@ class WorkerProfileCreate(BaseModel):
     firstName: str  # Required
     lastName: str   # Required
     phone: str      # Required
-    categories: List[str] = []
-    selectedTags: List[str] = []
+    categories: List[str] = []  # Should contain exactly ONE category
+    subcategories: List[str] = []  # NEW
+    qualifications: List[str] = []  # NEW
     radiusKm: int = 15
     homeAddress: Optional[Address] = None
     homeLat: Optional[float] = None
@@ -163,6 +164,8 @@ class WorkerProfileCreate(BaseModel):
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     pushToken: Optional[str] = None
+    # Deprecated
+    selectedTags: Optional[List[str]] = []
 
 class WorkerProfileUpdate(BaseModel):
     firstName: Optional[str] = None
