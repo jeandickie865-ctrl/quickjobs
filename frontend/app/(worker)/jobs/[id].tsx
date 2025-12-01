@@ -41,12 +41,15 @@ export default function WorkerJobDetailScreen() {
     try {
       if (!id) return;
       const data = await getJobById(String(id));
+
       console.log("========== JOB DATA ==========");
       console.log("job:", data);
       console.log("job.address:", data?.address);
-      console.log("house_number:", data?.address?.house_number);
-      console.log("houseNumber:", data?.address?.houseNumber);
+      console.log("job.address.street:", data?.address?.street);
+      console.log("job.address.house_number:", data?.address?.house_number);
+      console.log("job.address.houseNumber:", data?.address?.houseNumber);
       console.log("================================");
+
       setJob(data);
       
       // Load employer reviews
