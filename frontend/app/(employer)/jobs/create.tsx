@@ -30,7 +30,9 @@ export default function CreateJob() {
       setLon(undefined);
       setRequiredAll([]);
       setRequiredAny([]);
-      setTimeInfo('');
+      setDate('');
+      setStartAt('');
+      setEndAt('');
       setWorkerAmountInput('');
       setWorkerAmountCents(0);
       setPaymentMethod('cash');
