@@ -380,7 +380,7 @@ class ChatMessage(BaseModel):
     read: bool = False
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ChatMessageCreate(BaseModel):
     applicationId: str
