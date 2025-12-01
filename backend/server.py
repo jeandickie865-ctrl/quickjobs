@@ -3222,13 +3222,13 @@ app.add_middleware(
 # ===== BACKGROUND CLEANUP SCHEDULER =====
 async def cleanup_scheduler():
     """
-    Runs delete_old_open_jobs_without_match() every hour
+    Runs delete_expired_jobs() every hour
     """
-    from jobs.router import delete_old_open_jobs_without_match
+    from jobs.router import delete_expired_jobs
     
     while True:
         try:
-            deleted_count = await delete_old_open_jobs_without_match()
+            deleted_count = await delete_expired_jobs()
             logger.info(f"⏰ Scheduled cleanup completed: {deleted_count} jobs deleted")
         except Exception as e:
             logger.error(f"⏰ Scheduled cleanup error: {e}")
