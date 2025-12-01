@@ -252,5 +252,25 @@
     "qualifications": [
       "IT-Grundkenntnisse"
     ]
+  },
+  "gastronomie": {
+    "label": "Gastronomie",
+    "subcategories": [
+      "Kellner / Service",
+      "Runner",
+      "Spüler",
+      "Koch",
+      "Küchenhilfe",
+      "Theke",
+      "Bar",
+      "Buffet",
+      "Kasse"
+    ],
+    "qualifications": [
+      "Hygienebelehrung (HACCP)",
+      "Erfahrung Service > 3 Jahre",
+      "Barkeeper Erfahrung",
+      "Kassensystem Erfahrung"
+    ]
   }
 }
