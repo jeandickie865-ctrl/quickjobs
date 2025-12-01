@@ -36,6 +36,7 @@ class JobUpdate(BaseModel):
     title: Optional[str] = Field(default=None, min_length=1)
     description: Optional[str] = None
     street: Optional[str] = None
+    house_number: Optional[str] = None
     postal_code: Optional[str] = None
     city: Optional[str] = None
     lat: Optional[float] = None
