@@ -272,5 +272,196 @@
       "Barkeeper Erfahrung",
       "Kassensystem Erfahrung"
     ]
+  },
+  "security": {
+    "label": "Sicherheit",
+    "subcategories": [
+      "Doorman",
+      "Event Security",
+      "Revierdienst",
+      "Kaufhausdetektiv",
+      "Brandsicherheitswache",
+      "Parkplatzaufsicht",
+      "Einlasskontrolle",
+      "Objektschutz"
+    ],
+    "qualifications": [
+      "Sachkunde 34a",
+      "Unterrichtung 34a",
+      "Bewacher-ID",
+      "Polizeiliches Führungszeugnis",
+      "Brandschutzhelfer"
+    ]
+  },
+  "cleaning": {
+    "label": "Reinigung",
+    "subcategories": [
+      "Gebäudereinigung",
+      "Büroreinigung",
+      "Eventreinigung",
+      "Hotel Housekeeping",
+      "Küchenreinigung",
+      "Fensterreinigung"
+    ],
+    "qualifications": [
+      "Erfahrung Reinigung",
+      "Schnelles Arbeiten",
+      "Gründlichkeit"
+    ]
+  },
+  "logistics": {
+    "label": "Lager & Logistik",
+    "subcategories": [
+      "Kommissionierung",
+      "Sortierung",
+      "Verpackung",
+      "Wareneingang",
+      "Versand",
+      "Staplerfahrer"
+    ],
+    "qualifications": [
+      "Staplerschein",
+      "Erfahrung Lager",
+      "Heavy Lifting bis 30kg"
+    ]
+  },
+  "retail": {
+    "label": "Einzelhandel",
+    "subcategories": [
+      "Kassierer",
+      "Warenverräumer",
+      "Inventurhelfer",
+      "Beratung",
+      "Backshop"
+    ],
+    "qualifications": [
+      "Kassensystem Erfahrung",
+      "Kundenkontakt",
+      "Inventurerfahrung"
+    ]
+  },
+  "delivery": {
+    "label": "Lieferservice",
+    "subcategories": [
+      "Essenslieferung",
+      "Kurierfahrer",
+      "Last Mile Delivery",
+      "Getränke-/Lebensmittel-Lieferung",
+      "Expresslieferung",
+      "Paket-Light"
+    ],
+    "qualifications": [
+      "Führerschein B",
+      "Führerschein AM",
+      "Führerschein BE",
+      "Führerschein C1",
+      "Eigenes Auto",
+      "Eigener Roller",
+      "Eigenes E-Bike",
+      "Eigenes Fahrrad",
+      "Erfahrung Fahrer",
+      "Ortskenntnisse",
+      "Unfallfreie Fahrpraxis"
+    ]
+  },
+  "household": {
+    "label": "Haushalt & Hauswirtschaft",
+    "subcategories": [
+      "Putzhilfe",
+      "Haushaltshilfe",
+      "Bügeln",
+      "Einkaufen",
+      "Fensterputzen",
+      "Gartenarbeit"
+    ],
+    "qualifications": [
+      "Erfahrung Haushalt"
+    ]
+  },
+  "childcare": {
+    "label": "Kinderbetreuung",
+    "subcategories": [
+      "Babysitter",
+      "Betreuung zuhause",
+      "Freizeitbetreuung"
+    ],
+    "qualifications": [
+      "Erste Hilfe am Kind",
+      "Erfahrung Kinderbetreuung"
+    ]
+  },
+  "petcare": {
+    "label": "Haustiere",
+    "subcategories": [
+      "Dogsitting",
+      "Dogwalking",
+      "Katzensitting",
+      "Kleintiere"
+    ],
+    "qualifications": [
+      "Tiererfahrung"
+    ]
+  },
+  "handcraft": {
+    "label": "Handwerk & Reparaturen",
+    "subcategories": [
+      "Möbelaufbau",
+      "Regale montieren",
+      "Lampen montieren",
+      "Geräte anschließen",
+      "Kleinreparaturen allgemein"
+    ],
+    "qualifications": [
+      "Werkzeugkenntnisse",
+      "Eigenes Werkzeug",
+      "Erfahrung Möbelaufbau",
+      "Handwerkliche Grundkenntnisse"
+    ]
+  },
+  "office": {
+    "label": "Büro & Service",
+    "subcategories": [
+      "Datenerfassung",
+      "Telefonservice",
+      "Empfang",
+      "Sortieren / Scannen"
+    ],
+    "qualifications": [
+      "PC-Grundkenntnisse",
+      "Kundenkontakt"
+    ]
+  },
+  "photo_video": {
+    "label": "Foto & Video",
+    "subcategories": [
+      "Eventfotografie",
+      "Produktfotografie",
+      "Videografie",
+      "Videoschnitt"
+    ],
+    "qualifications": [
+      "Erfahrung Bildbearbeitung",
+      "Erfahrung Videoschnitt",
+      "Editing/Grading Basics",
+      "Eigenes Foto/Videoequipment"
+    ]
+  },
+  "tutoring": {
+    "label": "Nachhilfe",
+    "subcategories": [
+      "Mathe",
+      "Deutsch",
+      "Englisch",
+      "Grundschule"
+    ],
+    "qualifications": [
+      "Gute Noten",
+      "Erfahrung Nachhilfe"
+    ]
+  },
+  "care": {
+    "label": "Pflege & Betreuung",
+    "subcategories": [],
+    "qualifications": []
   }
 }
