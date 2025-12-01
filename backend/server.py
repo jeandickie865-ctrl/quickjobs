@@ -172,10 +172,9 @@ class WorkerProfileUpdate(BaseModel):
     lastName: Optional[str] = None
     email: Optional[str] = None
     phone: Optional[str] = None
-    categories: Optional[List[str]] = None
-    selectedTags: Optional[List[str]] = None
-    activities: Optional[List[str]] = None
-    qualifications: Optional[List[str]] = None
+    categories: Optional[List[str]] = None  # Should contain exactly ONE category
+    subcategories: Optional[List[str]] = None  # NEW
+    qualifications: Optional[List[str]] = None  # NEW
     radiusKm: Optional[int] = None
     homeAddress: Optional[Address] = None
     homeLat: Optional[float] = None
@@ -184,6 +183,8 @@ class WorkerProfileUpdate(BaseModel):
     profilePhotoUri: Optional[str] = None
     shortBio: Optional[str] = None
     # Deprecated fields for backward compatibility
+    selectedTags: Optional[List[str]] = None  # DEPRECATED
+    activities: Optional[List[str]] = None  # DEPRECATED
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     documents: Optional[List[WorkerDocument]] = None
