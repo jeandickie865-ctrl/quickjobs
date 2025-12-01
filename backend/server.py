@@ -3449,7 +3449,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://workermatch-dev.preview.emergentagent.com",
+        "https://shiftmatch-app.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
