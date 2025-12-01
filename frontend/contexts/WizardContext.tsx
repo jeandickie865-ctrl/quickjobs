@@ -51,10 +51,9 @@ const initialData: WizardData = {
   city: '',
   country: 'Deutschland',
   radiusKm: 20,
-  selectedCategories: [],
-  selectedSubcategories: [],
-  selectedQualifications: [],
-  selectedSkills: [],
+  category: '',
+  subcategories: [],
+  qualifications: [],
 };
 
 const WizardContext = createContext<WizardContextType | undefined>(undefined);
