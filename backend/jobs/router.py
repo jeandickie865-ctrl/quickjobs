@@ -15,9 +15,13 @@ router = APIRouter()
 
 
 # ===== CLEANUP FUNCTION =====
-async def delete_past_jobs(db: AsyncSession):
+async def delete_expired_jobs(db: AsyncSession):
     """
-    Löscht alle Jobs, die in der Vergangenheit liegen.
+    Löscht alle abgelaufenen Jobs.
+    Ein Job ist abgelaufen wenn:
+    - timeMode == "fixed_time" UND
+    - (date < HEUTE ODER (date == HEUTE UND endAt < JETZT))
+    
     Jobs mit status='matched' werden zusammen mit ihren Applications gelöscht.
     """
     now = datetime.utcnow()
@@ -47,14 +51,15 @@ async def delete_past_jobs(db: AsyncSession):
             else:
                 continue
             
-            # Check if job is past
-            is_past = False
+            # Check if job is EXPIRED
+            # EXPIRED = date < HEUTE ODER (date == HEUTE UND endAt < JETZT)
+            is_expired = False
             if job_date < today_date:
-                is_past = True
+                is_expired = True
             elif job_date == today_date and job_end_time < current_time:
-                is_past = True
+                is_expired = True
             
-            if is_past:
+            if is_expired:
                 jobs_to_delete.append(job)
                 
         except (ValueError, AttributeError):
@@ -70,16 +75,19 @@ async def delete_past_jobs(db: AsyncSession):
                 delete(Application).where(Application.job_id == job.id)
             )
         
-        # Delete the job
+        # Delete the job (both open and matched)
         await db.delete(job)
     
     if jobs_to_delete:
         await db.commit()
-        print(f"🧹 Deleted {len(jobs_to_delete)} past jobs")
+        print(f"🧹 Deleted {len(jobs_to_delete)} expired jobs")
 
 
-def is_job_past(job: Job) -> bool:
-    """Helper to check if a job is in the past"""
+def is_job_expired(job: Job) -> bool:
+    """
+    Helper to check if a job is expired.
+    EXPIRED = date < HEUTE ODER (date == HEUTE UND endAt < JETZT)
+    """
     if not job.date or not job.end_at:
         return False
         
@@ -96,6 +104,7 @@ def is_job_past(job: Job) -> bool:
         else:
             return False
         
+        # EXPIRED check
         if job_date < today_date:
             return True
         elif job_date == today_date and job_end_time < current_time:
