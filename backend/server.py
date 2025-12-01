@@ -2554,138 +2554,180 @@ def generate_sofortmeldung_pdf(
     additional_data: dict
 ) -> str:
     """
-    Generiert ein PDF für die Sofortmeldung.
+    Generiert ein PDF für die Sofortmeldung (MODERNISIERT).
     
-    Args:
-        registration_id: ID der Registration
-        job_data: Job-Daten
-        employer_data: Employer-Daten
-        worker_data: Worker-Daten
-        registration_type: Art der Beschäftigung
-        created_at: Erstellungsdatum
-        additional_data: Zusätzliche Daten (geburtsdatum, steuerId, krankenkasse, svNummer)
-    
-    Returns:
-        Relativer Pfad zur generierten PDF-Datei
+    Verwendet aktuelle MongoDB-Felder ohne "None"-Ausgaben.
     """
-    # Ordner erstellen falls nicht vorhanden
+    # Helper-Funktionen (wiederverwendbar)
+    def format_address(addr_dict):
+        if not addr_dict:
+            return ""
+        parts = []
+        street = addr_dict.get('street', '').strip()
+        house_num = addr_dict.get('house_number', '') or addr_dict.get('houseNumber', '')
+        if isinstance(house_num, (int, float)):
+            house_num = str(house_num)
+        house_num = house_num.strip() if house_num else ''
+        
+        if street:
+            if house_num:
+                parts.append(f"{street} {house_num}")
+            else:
+                parts.append(street)
+        
+        postal = addr_dict.get('postal_code', '') or addr_dict.get('postalCode', '')
+        city = addr_dict.get('city', '').strip()
+        
+        if postal and city:
+            parts.append(f"{postal} {city}")
+        elif city:
+            parts.append(city)
+        
+        return ", ".join(parts) if parts else ""
+    
+    def format_date(date_str):
+        if not date_str or date_str == 'None':
+            return ""
+        try:
+            from datetime import datetime
+            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            return dt.strftime("%d.%m.%Y")
+        except:
+            return ""
+    
+    # Ordner erstellen
     contracts_dir = Path("/app/backend/generated_contracts")
     contracts_dir.mkdir(exist_ok=True)
     
-    # Dateiname
     filename = f"sofortmeldung_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # PDF erstellen mit Flowables
-    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
+    # PDF erstellen
+    doc = SimpleDocTemplate(str(filepath), pagesize=A4,
+                           leftMargin=2*cm, rightMargin=2*cm,
+                           topMargin=2*cm, bottomMargin=2*cm)
     styles = getSampleStyleSheet()
+    styles['Heading1'].fontSize = 16
+    styles['Heading2'].fontSize = 12
+    styles['Normal'].fontSize = 10
+    
     story = []
     
     # Titel
     registration_type_title = "kurzfristigen Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
-    story.append(Paragraph(f"Sofortmeldung zur {registration_type_title}", styles["Heading1"]))
+    story.append(Paragraph(f"<b>Sofortmeldung zur {registration_type_title}</b>", styles["Heading1"]))
     story.append(Spacer(1, 12))
     
     # 1. Arbeitgeber
-    story.append(Paragraph("1. Arbeitgeber", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    story.append(Paragraph("<b>1. Arbeitgeber</b>", styles["Heading2"]))
     
-    employer_name = f"{employer_data.get('firstName', '')} {employer_data.get('lastName', '')}"
-    employer_lines = [employer_name]
+    emp_first = employer_data.get('firstName', '').strip()
+    emp_last = employer_data.get('lastName', '').strip()
+    emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Nicht angegeben"
     
-    if employer_data.get('companyName'):
-        employer_lines.append(employer_data['companyName'])
+    employer_lines = [emp_name]
+    emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
+    if emp_company and emp_company.strip():
+        employer_lines.append(emp_company.strip())
     
-    # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
     emp_addr = employer_data.get('homeAddress', {})
-    if emp_addr:
-        # Neue Struktur: homeAddress Object
-        employer_address = f"{emp_addr.get('street', '')} {emp_addr.get('houseNumber', '')}, {emp_addr.get('postalCode', '')} {emp_addr.get('city', '')}"
-    else:
-        # Alte Struktur: Root-Level Felder
-        employer_address = f"{employer_data.get('street', '')} {employer_data.get('houseNumber', '')}, {employer_data.get('postalCode', '')} {employer_data.get('city', '')}"
-    employer_lines.append(employer_address)
+    emp_address = format_address(emp_addr)
+    if emp_address:
+        employer_lines.append(emp_address)
     
     story.append(Paragraph("<br/>".join(employer_lines), styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 2. Arbeitnehmer
-    story.append(Paragraph("2. Arbeitnehmer", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    story.append(Paragraph("<b>2. Arbeitnehmer</b>", styles["Heading2"]))
     
-    worker_name = f"{worker_data.get('firstName', '')} {worker_data.get('lastName', '')}"
+    work_first = worker_data.get('firstName', '').strip()
+    work_last = worker_data.get('lastName', '').strip()
+    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Nicht angegeben"
     
-    # Unterstütze beide Datenstrukturen: homeAddress Object oder Root-Level
+    worker_lines = [work_name]
+    
     work_addr = worker_data.get('homeAddress', {})
-    if work_addr:
-        # Neue Struktur: homeAddress Object
-        worker_address = f"{work_addr.get('street', '')} {work_addr.get('houseNumber', '')}, {work_addr.get('postalCode', '')} {work_addr.get('city', '')}"
-    else:
-        # Alte Struktur: Root-Level Felder
-        worker_address = f"{worker_data.get('street', '')} {worker_data.get('houseNumber', '')}, {worker_data.get('postalCode', '')} {worker_data.get('city', '')}"
+    work_address = format_address(work_addr)
+    if work_address:
+        worker_lines.append(work_address)
     
-    # Zusätzliche Worker-Daten - Prüfe beide Quellen
-    geburtsdatum = worker_data.get('geburtsdatum') or additional_data.get('geburtsdatum', 'Nicht angegeben')
-    steuer_id = worker_data.get('steuerId') or additional_data.get('steuerId', 'Nicht angegeben')
-    sv_nummer = worker_data.get('sozialversicherungsnummer') or additional_data.get('sozialversicherungsnummer', 'Nicht angegeben')
-    krankenkasse = worker_data.get('krankenkasse') or additional_data.get('krankenkasse', 'Nicht angegeben')
+    # Zusätzliche Worker-Daten
+    geburtsdatum = worker_data.get('birthDate') or worker_data.get('geburtsdatum') or additional_data.get('geburtsdatum', '')
+    if geburtsdatum:
+        geburtsdatum_formatted = format_date(geburtsdatum)
+        if geburtsdatum_formatted:
+            worker_lines.append(f"<b>Geburtsdatum:</b> {geburtsdatum_formatted}")
     
-    worker_text = f"""
-    {worker_name}<br/>
-    {worker_address}<br/>
-    Geburtsdatum: {geburtsdatum}<br/>
-    Steuer-ID: {steuer_id}<br/>
-    Sozialversicherungsnummer: {sv_nummer}<br/>
-    Krankenkasse: {krankenkasse}
-    """
-    story.append(Paragraph(worker_text, styles["Normal"]))
+    steuer_id = worker_data.get('steuerId') or additional_data.get('steuerId', '')
+    if steuer_id and steuer_id.strip():
+        worker_lines.append(f"<b>Steuer-ID:</b> {steuer_id.strip()}")
+    
+    sv_nummer = worker_data.get('sozialversicherungsnummer') or additional_data.get('sozialversicherungsnummer', '')
+    if sv_nummer and sv_nummer.strip():
+        worker_lines.append(f"<b>Sozialversicherungsnummer:</b> {sv_nummer.strip()}")
+    
+    krankenkasse = worker_data.get('krankenkasse') or additional_data.get('krankenkasse', '')
+    if krankenkasse and krankenkasse.strip():
+        worker_lines.append(f"<b>Krankenkasse:</b> {krankenkasse.strip()}")
+    
+    story.append(Paragraph("<br/>".join(worker_lines), styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 3. Einsatzdetails
-    story.append(Paragraph("3. Einsatzdetails", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    story.append(Paragraph("<b>3. Einsatzdetails</b>", styles["Heading2"]))
+    
+    job_title = job_data.get('title', '').strip() or "Nicht angegeben"
+    job_desc = job_data.get('description', '').strip() or "Nicht angegeben"
     
     job_addr = job_data.get('address', {})
-    job_address = f"{job_addr.get('street', '')} {job_addr.get('houseNumber', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
+    job_address = format_address(job_addr) or "Nicht angegeben"
+    
     worker_amount = job_data.get('workerAmountCents', 0) / 100
     
-    job_details = f"""
-    Tätigkeit: {job_data.get('title', 'Nicht angegeben')}<br/>
-    Beschreibung: {job_data.get('description', 'Nicht angegeben')}<br/>
-    Ort: {job_address}<br/>
-    Gesamtlohn: {worker_amount:.2f} EUR
-    """
-    story.append(Paragraph(job_details, styles["Normal"]))
+    # Zeitangaben
+    job_date = format_date(job_data.get('date', ''))
+    start_time = job_data.get('start_at', '') or job_data.get('startAt', '')
+    end_time = job_data.get('end_at', '') or job_data.get('endAt', '')
+    
+    details_parts = [
+        f"<b>Tätigkeit:</b> {job_title}",
+        f"<b>Beschreibung:</b> {job_desc}",
+        f"<b>Ort:</b> {job_address}"
+    ]
+    
+    if job_date:
+        if start_time and end_time:
+            details_parts.append(f"<b>Datum und Zeit:</b> {job_date}, {start_time} – {end_time} Uhr")
+        else:
+            details_parts.append(f"<b>Datum:</b> {job_date}")
+    
+    details_parts.append(f"<b>Gesamtlohn:</b> {worker_amount:.2f} EUR")
+    
+    story.append(Paragraph("<br/>".join(details_parts), styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 4. Beschäftigungsart
-    story.append(Paragraph("4. Beschäftigungsart", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-    
+    story.append(Paragraph("<b>4. Beschäftigungsart</b>", styles["Heading2"]))
     registration_type_de = "Kurzfristige Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
     story.append(Paragraph(registration_type_de, styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # 5. Hinweis
-    story.append(Paragraph("5. Hinweis", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-    
-    notice_text = """
-    Dieses Dokument dient der Weitergabe an Steuerberatung, Lohnbüro 
-    oder Minijob-Zentrale zur Vorbereitung der erforderlichen Meldungen.
-    """
+    story.append(Paragraph("<b>5. Hinweis</b>", styles["Heading2"]))
+    notice_text = "Dieses Dokument dient der Weitergabe an Steuerberatung, Lohnbüro oder Minijob-Zentrale zur Vorbereitung der erforderlichen Meldungen."
     story.append(Paragraph(notice_text, styles["Normal"]))
     story.append(Spacer(1, 12))
     
     # Datum
-    story.append(Paragraph(f"<i>Erstellt am: {created_at}</i>", styles["Normal"]))
+    created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
+    story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", styles["Normal"]))
     
     # PDF erstellen
     doc.build(story)
     
     logger.info(f"Generated Sofortmeldung PDF: {filename}")
     
-    # Relativen Pfad zurückgeben
     return f"/api/generated_contracts/{filename}"
 
 
