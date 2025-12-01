@@ -3248,19 +3248,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ===== BACKGROUND CLEANUP SCHEDULER =====
+# ===== B1: BACKGROUND CLEANUP SCHEDULER =====
 async def cleanup_scheduler():
     """
-    Runs delete_expired_jobs() every hour
+    B1: Runs delete_expired_jobs() every hour
+    Löscht automatisch alte Jobs (date < heute)
     """
-    from jobs.router import delete_expired_jobs
-    
     while True:
         try:
             deleted_count = await delete_expired_jobs()
-            logger.info(f"⏰ Scheduled cleanup completed: {deleted_count} jobs deleted")
+            logger.info(f"⏰ B1 Scheduled cleanup completed: {deleted_count} jobs deleted")
         except Exception as e:
-            logger.error(f"⏰ Scheduled cleanup error: {e}")
+            logger.error(f"⏰ B1 Scheduled cleanup error: {e}")
         
         # Wait 1 hour
         await asyncio.sleep(3600)
@@ -3269,10 +3268,10 @@ async def cleanup_scheduler():
 @app.on_event("startup")
 async def start_cleanup_task():
     """
-    Start the hourly cleanup task on application startup
+    B1: Start the hourly cleanup task on application startup
     """
     asyncio.create_task(cleanup_scheduler())
-    logger.info("⏰ Auto-cleanup scheduler started (runs every hour)")
+    logger.info("⏰ B1 Auto-cleanup scheduler started (runs every hour)")
 
 
 @app.on_event("shutdown")
