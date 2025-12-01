@@ -16,6 +16,7 @@ class WorkerProfile(Base):
     
     # Address fields
     street = Column(String, nullable=True)
+    house_number = Column(String, nullable=True)
     postal_code = Column(String, nullable=True)
     city = Column(String, nullable=True)
     
