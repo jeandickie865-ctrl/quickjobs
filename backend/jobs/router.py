@@ -180,15 +180,15 @@ async def list_all_jobs(
     current_user: User = Depends(get_current_user)
 ):
     """List all jobs (for matching/browsing)"""
-    # Cleanup past jobs first
-    await delete_past_jobs(db)
+    # Cleanup expired jobs first
+    await delete_expired_jobs(db)
     
     result = await db.execute(select(Job))
     jobs = result.scalars().all()
     
-    # Filter out past jobs for workers
+    # Filter out expired jobs for workers
     if current_user.role == UserRole.WORKER:
-        jobs = [job for job in jobs if not is_job_past(job)]
+        jobs = [job for job in jobs if not is_job_expired(job)]
     
     return jobs
 
