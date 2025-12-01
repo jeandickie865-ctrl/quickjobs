@@ -1192,6 +1192,71 @@ async def get_matched_jobs_for_me(
     logger.info(f"✅ Found {len(matched_jobs)} matching jobs for worker {worker_id}")
     return matched_jobs
 
+@api_router.get("/matching/worker/{worker_id}")
+async def get_matching_jobs_for_worker(
+    worker_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    B3: Get matching jobs for a specific worker with strict filtering
+    """
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Load worker profile
+    worker_profile = await db.worker_profiles.find_one({"userId": worker_id})
+    if not worker_profile:
+        raise HTTPException(status_code=404, detail="Worker profile not found")
+    
+    # Load ALL jobs first
+    all_jobs = await db.jobs.find({}).to_list(9999)
+    
+    # B3: Apply filters
+    from datetime import datetime
+    
+    today = datetime.now().date()
+    
+    filtered = []
+    for job_doc in all_jobs:
+        # remove old jobs
+        if job_doc.get("date"):
+            try:
+                job_date = datetime.strptime(job_doc["date"], "%Y-%m-%d").date()
+                if job_date < today:
+                    continue
+            except:
+                continue
+        
+        # remove non-open jobs
+        if job_doc.get("status") != "open":
+            continue
+        
+        # remove matched jobs
+        match_id = job_doc.get("matchedWorkerId") or job_doc.get("match_id")
+        if match_id not in (None, "", "null"):
+            continue
+        
+        # remove jobs without coordinates
+        if not job_doc.get("lat") or not job_doc.get("lon"):
+            continue
+        
+        filtered.append(job_doc)
+    
+    # Sort by date
+    filtered.sort(key=lambda j: j.get("date") or "")
+    
+    # Debug log
+    logger.info(f"MATCHING → Input Jobs: {len(all_jobs)}, Output Jobs: {len(filtered)}")
+    
+    # Apply matching logic
+    matched_jobs = []
+    for job_doc in filtered:
+        if match_worker_with_job(worker_profile, job_doc):
+            job_doc.pop("_id", None)
+            matched_jobs.append(job_doc)
+    
+    return matched_jobs
+
 @api_router.get("/jobs/all", response_model=List[Job])
 async def get_all_jobs(
     authorization: Optional[str] = Header(None)
