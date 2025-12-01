@@ -128,7 +128,8 @@ export default function EditWorkerProfileScreen() {
         setCountry(profile.homeAddress?.country || 'Deutschland');
         setLat(profile.homeLat);
         setLon(profile.homeLon);
-        setSelectedCategories(profile.categories || []);
+        // Backend returns categories as array, we take the first one
+        setSelectedCategory(profile.categories?.[0] || '');
         setSelectedSubcategories(profile.subcategories || []);
         setSelectedQualifications(profile.qualifications || []);
         setPhone(profile.phone || '');
