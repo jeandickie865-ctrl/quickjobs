@@ -74,6 +74,10 @@ class JobResponse(BaseModel):
     qualifications: List[str]
     created_at: datetime
     updated_at: datetime
+    date: Optional[str] = None
+    startAt: Optional[str] = None
+    endAt: Optional[str] = None
+    timeMode: Literal['fixed_time'] = 'fixed_time'
     
     class Config:
         from_attributes = True
