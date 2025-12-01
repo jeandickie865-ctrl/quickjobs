@@ -1193,6 +1193,9 @@ async def get_employer_jobs(
     authorization: Optional[str] = Header(None)
 ):
     """Get all jobs for a specific employer"""
+    # Cleanup old jobs before loading
+    await cleanup_old_jobs()
+    
     logger.info(f"🔍 GET /jobs/employer/{employer_id}")
     logger.info(f"📋 Authorization header: {authorization}")
     
