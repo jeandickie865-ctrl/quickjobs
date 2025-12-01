@@ -54,7 +54,7 @@ export default function Step5Summary() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // Prepare profile data for backend - WICHTIG: Alles aus wizardData!
+      // Prepare profile data for backend - NEW STRUCTURE
       const profilePayload = {
         firstName: wizardData.firstName || '',
         lastName: wizardData.lastName || '',
@@ -63,14 +63,9 @@ export default function Step5Summary() {
         shortBio: wizardData.shortBio || '',
         photoUrl: wizardData.photoUrl || '',
         isSelfEmployed: wizardData.isSelfEmployed || false,
-        categories: wizardData.selectedCategories || [],
-        subcategories: wizardData.selectedSubcategories || [],
-        qualifications: wizardData.selectedQualifications || [],
-        // Backward compatibility: combine subcategories + qualifications into selectedTags
-        selectedTags: [
-          ...(wizardData.selectedSubcategories || []),
-          ...(wizardData.selectedQualifications || [])
-        ],
+        categories: [wizardData.category], // Array with ONE category
+        subcategories: wizardData.subcategories || [],
+        qualifications: wizardData.qualifications || [],
         radiusKm: wizardData.radiusKm || 25,
         homeAddress: {
           street: wizardData.street || '',
@@ -83,11 +78,11 @@ export default function Step5Summary() {
         homeLon: wizardData.lon,
       };
 
-      console.log('💾 Saving profile with data from wizardData:', profilePayload);
+      console.log('💾 Saving profile with NEW structure:', profilePayload);
       console.log('📊 Wizard Data Check:', {
-        categories: wizardData.selectedCategories,
-        subcategories: wizardData.selectedSubcategories,
-        qualifications: wizardData.selectedQualifications,
+        category: wizardData.category,
+        subcategories: wizardData.subcategories,
+        qualifications: wizardData.qualifications,
         lat: wizardData.lat,
         lon: wizardData.lon
       });
