@@ -88,7 +88,7 @@ export default function Step3Categories() {
                   ]}>
                     <Ionicons
                       name="briefcase"
-                      size={22}
+                      size={18}
                       color={isSelected ? COLORS.purple : COLORS.white}
                     />
                   </View>
