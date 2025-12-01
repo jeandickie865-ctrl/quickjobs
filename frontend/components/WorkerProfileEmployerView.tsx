@@ -49,8 +49,8 @@ export function WorkerProfileEmployerView({
       setError(null);
 
       // Get authorization token from AsyncStorage
-      const { getItem } = await import('@react-native-async-storage/async-storage');
-      const userJson = await getItem('user');
+      const AsyncStorage = await import('@react-native-async-storage/async-storage');
+      const userJson = await AsyncStorage.default.getItem('user');
       const user = userJson ? JSON.parse(userJson) : null;
       const token = user?.id;
 
