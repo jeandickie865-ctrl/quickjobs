@@ -358,15 +358,18 @@ frontend:
 backend:
   - task: "B1 - Job Cleanup & Konsistenz"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/server.py"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "B1 Implementation durchgeführt: 1) delete_expired_jobs() Funktion erstellt (löscht Jobs mit date < heute, beide Status: open + matched), 2) Scheduler läuft stündlich, 3) Matching API Filter angepasst (nur Jobs mit status=open, date>=heute, matchedWorkerId=None), 4) Job Models aktualisiert mit date, start_at, end_at Feldern. Alle GET Job-Endpoints rufen cleanup auf."
+      - working: true
+        agent: "testing"
+        comment: "🎉 B1 IMPLEMENTATION VOLLSTÄNDIG GETESTET UND FUNKTIONAL: Alle 31/31 Tests bestanden (100% Success Rate). ✅ Cleanup-Funktion: Jobs A+B (vergangen) korrekt gelöscht, Jobs C+D (heute/zukünftig) erhalten. ✅ Matching API Filter: GET /api/jobs/matches/me filtert korrekt (nur status=open, date>=heute, matchedWorkerId=None). ✅ Job GET Endpoints: /api/jobs und /api/jobs/employer/{id} zeigen nur zukünftige/heute Jobs. ✅ Scheduler: Backend Logs bestätigen '⏰ B1 Auto-cleanup scheduler started' und automatische Cleanup-Ausführung. ✅ Job Models: Neue Felder (date, start_at, end_at, timeMode=fixed_time) korrekt gespeichert und abgerufen. B1 Cleanup & Konsistenz System ist production-ready."
 
   - task: "Backend API"
     implemented: true
