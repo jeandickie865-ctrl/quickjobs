@@ -54,22 +54,28 @@ export default function CreateJob() {
   const [lat, setLat] = useState<number | undefined>(undefined);
   const [lon, setLon] = useState<number | undefined>(undefined);
   
-  // Tags - jetzt als Arrays statt Sets (required_all_tags, required_any_tags)
+  // NEW TAXONOMY: subcategory + qualifications
+  const [subcategory, setSubcategory] = useState<string | null>(null);
+  const [qualifications, setQualifications] = useState<string[]>([]);
+  
+  // Legacy tags - kept for backward compatibility
   const [requiredAll, setRequiredAll] = useState<string[]>([]);
   const [requiredAny, setRequiredAny] = useState<string[]>([]);
   
-  // Tag-Optionen basierend auf gewählter Kategorie
-  const requiredTagOptions = category && (taxonomy as any)[category] ? (taxonomy as any)[category].required : [];
-  const optionalTagOptions = category && (taxonomy as any)[category] ? (taxonomy as any)[category].optional : [];
+  // Get subcategories and qualifications for selected category
+  const subcategoryOptions = category && (taxonomy as any)[category] ? (taxonomy as any)[category].subcategories || [] : [];
+  const qualificationOptions = category && (taxonomy as any)[category] ? (taxonomy as any)[category].qualifications || [] : [];
 
-  // Schritt 6: Required-All automatisch übernehmen
+  // Reset subcategory and qualifications when category changes
   useEffect(() => {
     if (category) {
-      const recommended = requiredTagOptions.map((t: any) => t.value);
-      setRequiredAll(recommended);
-      // requiredAny bleibt leer (Employer entscheidet)
+      setSubcategory(null);
+      setQualifications([]);
+      setRequiredAll([]);
       setRequiredAny([]);
     } else {
+      setSubcategory(null);
+      setQualifications([]);
       setRequiredAll([]);
       setRequiredAny([]);
     }
