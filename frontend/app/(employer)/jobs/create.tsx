@@ -402,90 +402,192 @@ export default function CreateJob() {
           </View>
         )}
 
-        {/* Zeit & Datum */}
-        <View style={{ 
-          borderWidth: 1, 
-          borderColor: colors.gray200, 
-          borderRadius: 12, 
-          padding: spacing.md, 
+        {/* ===================================== */}
+        {/*        DATUM & UHRZEIT (DE)           */}
+        {/* ===================================== */}
+
+        <View style={{
+          borderWidth: 1,
+          borderColor: colors.gray200,
+          borderRadius: 12,
+          padding: spacing.md,
           gap: 12,
-          backgroundColor: colors.white 
+          backgroundColor: colors.white
         }}>
           <Text style={{ color: colors.black, fontWeight: '600', fontSize: 15 }}>
             Wann findet der Job statt? *
           </Text>
-          
-          {/* Datum */}
+
+          {/* DATUM */}
           <View style={{ gap: 6 }}>
             <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
-              Datum (YYYY-MM-DD) *
+              Datum (TT.MM.JJJJ)
             </Text>
-            <TextInput
-              value={date}
-              onChangeText={setDate}
-              placeholder="z.B. 2024-12-15"
-              placeholderTextColor={colors.gray400}
-              style={{
-                borderWidth: 1.5,
-                borderColor: colors.gray300,
-                borderRadius: 12,
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.sm,
-                backgroundColor: colors.white,
-                color: colors.black,
-                fontSize: 15,
-              }}
-            />
+
+            {Platform.OS === 'web' ? (
+              <input
+                type="date"
+                value={date ? date.split('.').reverse().join('-') : ''}
+                onChange={(e) => {
+                  const iso = e.target.value; // 2025-12-03
+                  if (iso) {
+                    const [y, m, d] = iso.split('-');
+                    setDate(`${d}.${m}.${y}`);
+                  } else {
+                    setDate('');
+                  }
+                }}
+                style={{
+                  width: '100%',
+                  padding: 12,
+                  borderRadius: 12,
+                  border: '1.5px solid #ccc',
+                  fontSize: 16
+                }}
+              />
+            ) : (
+              <Pressable
+                onPress={async () => {
+                  const now = new Date();
+                  const { DateTimePickerAndroid } = require('@react-native-community/datetimepicker');
+
+                  DateTimePickerAndroid.open({
+                    value: date ? new Date(date.split('.').reverse().join('-')) : now,
+                    onChange: (_, selected) => {
+                      if (!selected) return;
+                      const d = selected.getDate().toString().padStart(2,'0');
+                      const m = (selected.getMonth()+1).toString().padStart(2,'0');
+                      const y = selected.getFullYear();
+                      setDate(`${d}.${m}.${y}`);
+                    },
+                    mode: 'date'
+                  });
+                }}
+                style={{
+                  padding: 12,
+                  borderWidth: 1.5,
+                  borderColor: colors.gray300,
+                  borderRadius: 12,
+                  backgroundColor: colors.white
+                }}
+              >
+                <Text style={{ color: colors.black, fontSize: 16 }}>
+                  {date || 'Datum auswählen'}
+                </Text>
+              </Pressable>
+            )}
           </View>
 
-          {/* Startzeit */}
+          {/* STARTZEIT */}
           <View style={{ gap: 6 }}>
             <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
-              Startzeit (HH:MM) *
+              Startzeit (HH:MM)
             </Text>
-            <TextInput
-              value={startAt}
-              onChangeText={setStartAt}
-              placeholder="z.B. 14:00"
-              placeholderTextColor={colors.gray400}
-              style={{
-                borderWidth: 1.5,
-                borderColor: colors.gray300,
-                borderRadius: 12,
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.sm,
-                backgroundColor: colors.white,
-                color: colors.black,
-                fontSize: 15,
-              }}
-            />
+
+            {Platform.OS === 'web' ? (
+              <input
+                type="time"
+                value={startAt}
+                onChange={(e) => setStartAt(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 12,
+                  borderRadius: 12,
+                  border: '1.5px solid #ccc',
+                  fontSize: 16
+                }}
+              />
+            ) : (
+              <Pressable
+                onPress={() => {
+                  const now = new Date();
+                  const { DateTimePickerAndroid } = require('@react-native-community/datetimepicker');
+
+                  DateTimePickerAndroid.open({
+                    value: startAt
+                      ? new Date(`2000-01-01T${startAt}:00`)
+                      : now,
+                    mode: 'time',
+                    is24Hour: true,
+                    onChange: (_, selected) => {
+                      if (!selected) return;
+                      const hh = selected.getHours().toString().padStart(2,'0');
+                      const mm = selected.getMinutes().toString().padStart(2,'0');
+                      setStartAt(`${hh}:${mm}`);
+                    }
+                  });
+                }}
+                style={{
+                  padding: 12,
+                  borderWidth: 1.5,
+                  borderColor: colors.gray300,
+                  borderRadius: 12,
+                  backgroundColor: colors.white
+                }}
+              >
+                <Text style={{ color: colors.black, fontSize: 16 }}>
+                  {startAt || 'Startzeit auswählen'}
+                </Text>
+              </Pressable>
+            )}
           </View>
 
-          {/* Endzeit */}
+          {/* ENDZEIT */}
           <View style={{ gap: 6 }}>
             <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
-              Endzeit (HH:MM) *
+              Endzeit (HH:MM)
             </Text>
-            <TextInput
-              value={endAt}
-              onChangeText={setEndAt}
-              placeholder="z.B. 18:00"
-              placeholderTextColor={colors.gray400}
-              style={{
-                borderWidth: 1.5,
-                borderColor: colors.gray300,
-                borderRadius: 12,
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.sm,
-                backgroundColor: colors.white,
-                color: colors.black,
-                fontSize: 15,
-              }}
-            />
+
+            {Platform.OS === 'web' ? (
+              <input
+                type="time"
+                value={endAt}
+                onChange={(e) => setEndAt(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 12,
+                  borderRadius: 12,
+                  border: '1.5px solid #ccc',
+                  fontSize: 16
+                }}
+              />
+            ) : (
+              <Pressable
+                onPress={() => {
+                  const now = new Date();
+                  const { DateTimePickerAndroid } = require('@react-native-community/datetimepicker');
+
+                  DateTimePickerAndroid.open({
+                    value: endAt
+                      ? new Date(`2000-01-01T${endAt}:00`)
+                      : now,
+                    mode: 'time',
+                    is24Hour: true,
+                    onChange: (_, selected) => {
+                      if (!selected) return;
+                      const hh = selected.getHours().toString().padStart(2,'0');
+                      const mm = selected.getMinutes().toString().padStart(2,'0');
+                      setEndAt(`${hh}:${mm}`);
+                    }
+                  });
+                }}
+                style={{
+                  padding: 12,
+                  borderWidth: 1.5,
+                  borderColor: colors.gray300,
+                  borderRadius: 12,
+                  backgroundColor: colors.white
+                }}
+              >
+                <Text style={{ color: colors.black, fontSize: 16 }}>
+                  {endAt || 'Endzeit auswählen'}
+                </Text>
+              </Pressable>
+            )}
           </View>
 
-          <Text style={{ fontSize: 12, color: colors.gray500, marginTop: 4 }}>
-            Diese Informationen sehen Worker im Job-Angebot
+          <Text style={{ fontSize: 12, color: colors.gray500 }}>
+            Diese Angaben sehen Worker im Jobangebot
           </Text>
         </View>
 
