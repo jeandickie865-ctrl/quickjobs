@@ -265,7 +265,7 @@ class B1BackendTester:
             "phone": "+49123456789",
             "email": worker["email"],
             "categories": ["sicherheit"],
-            "selectedTags": ["objektschutz"],
+            "selectedTags": ["bewachung"],
             "radiusKm": 25,
             "homeAddress": {
                 "street": "Arbeiterstraße 1",
