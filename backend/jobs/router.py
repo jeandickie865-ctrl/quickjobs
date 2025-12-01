@@ -34,6 +34,7 @@ async def create_job(
         title=job_data.title,
         description=job_data.description,
         street=job_data.street,
+        house_number=job_data.house_number,
         postal_code=job_data.postal_code,
         city=job_data.city,
         lat=job_data.lat,
