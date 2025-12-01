@@ -916,23 +916,23 @@ export default function EditWorkerProfileScreen() {
             )}
           </View>
 
-          {/* Tags */}
-          {availableTags.length > 0 && (
-            <View>
+          {/* Subcategories */}
+          {availableSubcategories.length > 0 && (
+            <View style={{ marginBottom: 16 }}>
               <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
-                Qualifikationen & Tätigkeiten (optional)
+                Tätigkeiten *
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {availableTags.map((tag) => {
-                  const isSelected = selectedTags.includes(tag.key);
+                {availableSubcategories.map((sub) => {
+                  const isSelected = selectedSubcategories.includes(sub.key);
                   return (
                     <Pressable
-                      key={tag.key}
+                      key={sub.key}
                       onPress={() => {
                         if (isSelected) {
-                          setSelectedTags(prev => prev.filter(k => k !== tag.key));
+                          setSelectedSubcategories(prev => prev.filter(k => k !== sub.key));
                         } else {
-                          setSelectedTags(prev => [...prev, tag.key]);
+                          setSelectedSubcategories(prev => [...prev, sub.key]);
                         }
                       }}
                       style={{
@@ -951,7 +951,51 @@ export default function EditWorkerProfileScreen() {
                           color: isSelected ? COLORS.black : COLORS.darkGray,
                         }}
                       >
-                        {tag.label}
+                        {sub.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+          )}
+
+          {/* Qualifications */}
+          {availableQualifications.length > 0 && (
+            <View>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
+                Qualifikationen (optional)
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {availableQualifications.map((qual) => {
+                  const isSelected = selectedQualifications.includes(qual.key);
+                  return (
+                    <Pressable
+                      key={qual.key}
+                      onPress={() => {
+                        if (isSelected) {
+                          setSelectedQualifications(prev => prev.filter(k => k !== qual.key));
+                        } else {
+                          setSelectedQualifications(prev => [...prev, qual.key]);
+                        }
+                      }}
+                      style={{
+                        backgroundColor: isSelected ? COLORS.purple : COLORS.lightGray,
+                        borderWidth: 1,
+                        borderColor: isSelected ? COLORS.purple : COLORS.borderGray,
+                        paddingHorizontal: 14,
+                        paddingVertical: 8,
+                        borderRadius: 16,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          fontWeight: '600',
+                          color: isSelected ? COLORS.white : COLORS.darkGray,
+                        }}
+                      >
+                        {qual.label}
                       </Text>
                     </Pressable>
                   );
