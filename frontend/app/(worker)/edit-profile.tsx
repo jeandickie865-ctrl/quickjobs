@@ -846,10 +846,10 @@ export default function EditWorkerProfileScreen() {
             Tätigkeiten & Qualifikationen
           </Text>
 
-          {/* Category - Select exactly ONE */}
+          {/* Categories - Select multiple */}
           <View style={{ marginBottom: 16 }}>
             <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
-              Kategorie * (genau eine)
+              Kategorien * (mind. 1)
             </Text>
             <View
               style={{
@@ -860,15 +860,26 @@ export default function EditWorkerProfileScreen() {
               }}
             >
               {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
-                const isSelected = selectedCategory === key;
+                const isSelected = selectedCategories.includes(key);
                 return (
                   <Pressable
                     key={key}
                     onPress={() => {
-                      // Select new category - reset subcategories and qualifications
-                      setSelectedCategory(key);
-                      setSelectedSubcategories([]);
-                      setSelectedQualifications([]);
+                      if (isSelected) {
+                        setSelectedCategories(prev => prev.filter(k => k !== key));
+                        // Remove subcategories and qualifications from unselected category
+                        const categorySubcats = cat.subcategories?.map((s: any) => s.key) || [];
+                        const categoryQuals = cat.qualifications?.map((q: any) => q.key) || [];
+                        
+                        setSelectedSubcategories(prev => 
+                          prev.filter(sub => !categorySubcats.includes(sub))
+                        );
+                        setSelectedQualifications(prev => 
+                          prev.filter(qual => !categoryQuals.includes(qual))
+                        );
+                      } else {
+                        setSelectedCategories(prev => [...prev, key]);
+                      }
                     }}
                     style={{
                       width: '48%',
@@ -898,9 +909,9 @@ export default function EditWorkerProfileScreen() {
                 );
               })}
             </View>
-            {errors.category && (
+            {errors.categories && (
               <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 8 }}>
-                {errors.category}
+                {errors.categories}
               </Text>
             )}
           </View>
