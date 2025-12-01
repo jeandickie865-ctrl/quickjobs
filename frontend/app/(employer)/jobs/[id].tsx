@@ -360,9 +360,18 @@ export default function JobDetailScreen() {
               if (job.date && job.start_at && job.end_at) {
                 return `${job.date} von ${job.start_at} bis ${job.end_at}`;
               }
-              // Legacy: startAt, endAt (nur wenn valide)
+              // Legacy Format 1: date + startAt/endAt (nur Uhrzeiten)
+              if (job.date && job.startAt && job.endAt) {
+                return `${job.date} von ${job.startAt} bis ${job.endAt}`;
+              }
+              // Legacy Format 2: startAt, endAt (ISO datetime strings)
               if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
                 try {
+                  // Prüfe ob es schon formatierte Uhrzeiten sind (z.B. "11:00")
+                  if (job.startAt.includes(':') && job.startAt.length <= 5) {
+                    return `${job.date || 'Datum unbekannt'} von ${job.startAt} bis ${job.endAt}`;
+                  }
+                  // Versuche als ISO datetime zu parsen
                   const start = new Date(job.startAt);
                   const end = new Date(job.endAt);
                   if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
