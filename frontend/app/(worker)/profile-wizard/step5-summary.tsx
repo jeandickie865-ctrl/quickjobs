@@ -46,7 +46,7 @@ export default function Step5Summary() {
     postalCode: wizardData.postalCode,
     city: wizardData.city,
     radius: wizardData.radiusKm,
-    category: wizardData.category || '',
+    categories: wizardData.categories || [],
     subcategories: wizardData.subcategories || [],
     qualifications: wizardData.qualifications || [],
   };
