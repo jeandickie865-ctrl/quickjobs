@@ -41,6 +41,10 @@ async def create_job(
         lon=job_data.lon,
         categories=job_data.categories,
         qualifications=job_data.qualifications,
+        date=job_data.date,
+        start_at=job_data.startAt,
+        end_at=job_data.endAt,
+        time_mode=job_data.timeMode,
     )
     db.add(job)
     await db.commit()
