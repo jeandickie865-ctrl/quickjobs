@@ -21,7 +21,7 @@ interface WizardData {
   radiusKm: number;
   
   // Step 3 - NEW STRUCTURE
-  category: string; // exactly ONE category
+  categories: string[]; // multiple categories allowed
   subcategories: string[]; // at least one subcategory
   
   // Step 4
