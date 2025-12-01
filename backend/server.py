@@ -652,15 +652,16 @@ def validate_category(category: str):
         raise HTTPException(status_code=422, detail=f"INVALID_CATEGORY: {category}")
 
 def get_valid_tag_values(category: str) -> set:
-    """Get all valid tag values (required + optional) for a category"""
+    """Get all valid tag values (subcategories + qualifications) for a category"""
     cat = TAXONOMY.get(category)
     if not cat:
         return set()
     
-    required = [t["value"] for t in cat["required"]]
-    optional = [t["value"] for t in cat["optional"]]
+    # NEW STRUCTURE: subcategories and qualifications
+    subcats = [s["key"] if isinstance(s, dict) else s for s in cat.get("subcategories", [])]
+    quals = [q["key"] if isinstance(q, dict) else q for q in cat.get("qualifications", [])]
     
-    return set(required + optional)
+    return set(subcats + quals)
 
 def validate_tags(category: str, tags: List[str]):
     """Validate that all tags are valid for the given category"""
