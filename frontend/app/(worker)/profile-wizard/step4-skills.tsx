@@ -25,20 +25,24 @@ export default function Step4Skills() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
   
-  const selectedCategory = wizardData.category || '';
+  const selectedCategories = wizardData.categories || [];
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>(
     wizardData.qualifications || []
   );
   
-  // Get qualifications for the selected category
+  // Get qualifications for ALL selected categories
   const availableQualifications: {key: string, label: string}[] = [];
   
-  if (selectedCategory && TAXONOMY_DATA[selectedCategory]) {
-    const category = TAXONOMY_DATA[selectedCategory];
-    category.qualifications?.forEach((qual: any) => {
-      availableQualifications.push({ key: qual.key, label: qual.label });
-    });
-  }
+  selectedCategories.forEach(catKey => {
+    const category = TAXONOMY_DATA[catKey];
+    if (category) {
+      category.qualifications?.forEach((qual: any) => {
+        if (!availableQualifications.find(q => q.key === qual.key)) {
+          availableQualifications.push({ key: qual.key, label: qual.label });
+        }
+      });
+    }
+  });
 
   const toggleQualification = (key: string) => {
     setSelectedQualifications(prev => 
