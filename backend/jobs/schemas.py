@@ -57,6 +57,7 @@ class JobResponse(BaseModel):
     title: str
     description: Optional[str]
     street: Optional[str]
+    house_number: Optional[str]
     postal_code: Optional[str]
     city: Optional[str]
     lat: Optional[float]
