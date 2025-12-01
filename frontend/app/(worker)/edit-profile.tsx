@@ -52,9 +52,10 @@ export default function EditWorkerProfileScreen() {
   const [lat, setLat] = useState<number | undefined>();
   const [lon, setLon] = useState<number | undefined>();
 
-  // Categories & Tags
+  // Categories, Subcategories & Qualifications
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+  const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
 
   // Contact
   const [phone, setPhone] = useState('');
@@ -68,8 +69,9 @@ export default function EditWorkerProfileScreen() {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Available tags for selected categories
-  const [availableTags, setAvailableTags] = useState<{key: string, label: string}[]>([]);
+  // Available subcategories and qualifications for selected categories
+  const [availableSubcategories, setAvailableSubcategories] = useState<{key: string, label: string}[]>([]);
+  const [availableQualifications, setAvailableQualifications] = useState<{key: string, label: string}[]>([]);
 
   useEffect(() => {
     if (authLoading || !user) return;
