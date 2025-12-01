@@ -69,8 +69,8 @@ export default function Step3Categories() {
   const handleNext = () => {
     const newErrors: { category?: string; subcategories?: string } = {};
     
-    if (!selectedCategory) {
-      newErrors.category = 'Bitte wähle eine Kategorie';
+    if (selectedCategories.length === 0) {
+      newErrors.category = 'Bitte wähle mindestens eine Kategorie';
     }
     if (selectedSubcategories.length === 0) {
       newErrors.subcategories = 'Bitte wähle mindestens eine Tätigkeit';
@@ -83,7 +83,7 @@ export default function Step3Categories() {
 
     // Save to context
     updateWizardData({
-      category: selectedCategory,
+      categories: selectedCategories,
       subcategories: selectedSubcategories,
     });
     
