@@ -157,6 +157,8 @@ export function WorkerProfileEmployerView({
   if (!visible) return null;
 
   const categoryLabels = getCategoryLabels();
+  const subcategoryLabels = getSubcategoryLabels();
+  const qualificationLabels = getQualificationLabels();
   const tagLabels = getTagLabels();
   const isAccepted = profile?.isAcceptedMatch || false;
 
