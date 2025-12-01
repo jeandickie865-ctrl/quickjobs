@@ -212,6 +212,10 @@ class Job(BaseModel):
     lon: Optional[float] = None
     workerAmountCents: int
     paymentToWorker: str = "cash"  # 'cash', 'bank', 'paypal'
+    # NEW TAXONOMY STRUCTURE
+    subcategory: Optional[str] = None
+    qualifications: List[str] = []
+    # DEPRECATED - kept for backward compatibility
     required_all_tags: List[str] = []
     required_any_tags: List[str] = []
     status: str = "open"  # 'draft', 'open', 'matched', 'done', 'canceled'
