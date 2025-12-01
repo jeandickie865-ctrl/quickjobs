@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step4-skills.tsx - FÄHIGKEITEN
+// app/(worker)/profile-wizard/step4-skills.tsx - SUBCATEGORIES & QUALIFICATIONS
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,7 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
 import { useWizard } from '../../../contexts/WizardContext';
-import { getAllTagsForCategories } from '../../../utils/taxonomy';
+
+const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 const COLORS = {
   purple: '#5941FF',
@@ -25,35 +26,71 @@ export default function Step4Skills() {
   const { wizardData, updateWizardData } = useWizard();
   
   const selectedCategories = wizardData.selectedCategories || [];
-  const [selectedSkills, setSelectedSkills] = useState<string[]>(
-    wizardData.selectedSkills || []
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(
+    wizardData.selectedSubcategories || []
+  );
+  const [selectedQualifications, setSelectedQualifications] = useState<string[]>(
+    wizardData.selectedQualifications || []
   );
   
-  // Get all tags (required + optional) for selected categories
-  const availableTags = getAllTagsForCategories(selectedCategories);
+  // Get all subcategories and qualifications for selected categories
+  const availableSubcategories: {key: string, label: string}[] = [];
+  const availableQualifications: {key: string, label: string}[] = [];
+  
+  selectedCategories.forEach(catKey => {
+    const category = TAXONOMY_DATA[catKey];
+    if (category) {
+      // Add subcategories
+      category.subcategories?.forEach((sub: any) => {
+        if (!availableSubcategories.find(s => s.key === sub.key)) {
+          availableSubcategories.push({ key: sub.key, label: sub.label });
+        }
+      });
+      // Add qualifications
+      category.qualifications?.forEach((qual: any) => {
+        if (!availableQualifications.find(q => q.key === qual.key)) {
+          availableQualifications.push({ key: qual.key, label: qual.label });
+        }
+      });
+    }
+  });
 
-  const toggleSkill = (skill: string) => {
-    setSelectedSkills(prev => 
-      prev.includes(skill)
-        ? prev.filter(s => s !== skill)
-        : [...prev, skill]
+  const toggleSubcategory = (key: string) => {
+    setSelectedSubcategories(prev => 
+      prev.includes(key)
+        ? prev.filter(s => s !== key)
+        : [...prev, key]
+    );
+  };
+
+  const toggleQualification = (key: string) => {
+    setSelectedQualifications(prev => 
+      prev.includes(key)
+        ? prev.filter(q => q !== key)
+        : [...prev, key]
     );
   };
 
   const handleNext = () => {
-    if (selectedSkills.length > 0) {
+    if (selectedSubcategories.length > 0) {
       // Save to context
-      updateWizardData({ selectedSkills });
+      updateWizardData({ 
+        selectedSubcategories,
+        selectedQualifications
+      });
       router.push('/(worker)/profile-wizard/step5-summary');
     }
   };
 
   const handleBack = () => {
-    updateWizardData({ selectedSkills });
+    updateWizardData({ 
+      selectedSubcategories,
+      selectedQualifications
+    });
     router.push('/(worker)/profile-wizard/step3-categories');
   };
 
-  const isFormValid = selectedSkills.length > 0;
+  const isFormValid = selectedSubcategories.length > 0;
 
   return (
     <View style={styles.container}>
@@ -63,58 +100,104 @@ export default function Step4Skills() {
 
         {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Fähigkeiten & Qualifikationen</Text>
+          <Text style={styles.title}>Tätigkeiten & Qualifikationen</Text>
           <Text style={styles.subtitle}>
-            Was kannst du besonders gut?
-          </Text>
-          <Text style={styles.helperText}>
-            Wähle alle zutreffenden Fähigkeiten aus
+            Wähle deine Tätigkeitsbereiche und Qualifikationen
           </Text>
 
-          {availableTags.length === 0 && (
+          {availableSubcategories.length === 0 && (
             <View style={styles.emptyState}>
-              <Ionicons name="information-circle" size={48} color={COLORS.white} />
+              <Ionicons name="information-circle" size={48} color={COLORS.black} />
               <Text style={styles.emptyText}>
-                Keine Fähigkeiten verfügbar. Bitte wähle zuerst Kategorien aus.
+                Bitte wähle zuerst Kategorien aus.
               </Text>
             </View>
           )}
 
-          {/* Skills/Tags List */}
-          <View style={styles.skillsList}>
-            {availableTags.map((tag, index) => {
-              const isSelected = selectedSkills.includes(tag.value);
-              
-              return (
-                <Pressable
-                  key={index}
-                  onPress={() => toggleSkill(tag.value)}
-                  style={({ pressed }) => [
-                    styles.skillChip,
-                    isSelected && styles.skillChipSelected,
-                    pressed && styles.skillChipPressed,
-                  ]}
-                >
-                  <Text style={[
-                    styles.skillText,
-                    isSelected && styles.skillTextSelected,
-                  ]}>
-                    {tag.label}
-                  </Text>
-                  {isSelected && (
-                    <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
-                  )}
-                </Pressable>
-              );
-            })}
-          </View>
+          {/* Subcategories (PFLICHT) */}
+          {availableSubcategories.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>
+                Tätigkeiten * (Pflicht)
+              </Text>
+              <Text style={styles.helperText}>
+                Wähle mindestens eine Tätigkeit aus
+              </Text>
+              <View style={styles.itemsList}>
+                {availableSubcategories.map((sub) => {
+                  const isSelected = selectedSubcategories.includes(sub.key);
+                  
+                  return (
+                    <Pressable
+                      key={sub.key}
+                      onPress={() => toggleSubcategory(sub.key)}
+                      style={({ pressed }) => [
+                        styles.itemCard,
+                        isSelected && styles.itemCardSelected,
+                        pressed && styles.itemCardPressed,
+                      ]}
+                    >
+                      <Text style={[
+                        styles.itemText,
+                        isSelected && styles.itemTextSelected,
+                      ]}>
+                        {sub.label}
+                      </Text>
+                      {isSelected && (
+                        <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
+                      )}
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+          )}
+
+          {/* Qualifications (OPTIONAL) */}
+          {availableQualifications.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>
+                Qualifikationen (Optional)
+              </Text>
+              <Text style={styles.helperText}>
+                Wähle deine vorhandenen Qualifikationen
+              </Text>
+              <View style={styles.itemsList}>
+                {availableQualifications.map((qual) => {
+                  const isSelected = selectedQualifications.includes(qual.key);
+                  
+                  return (
+                    <Pressable
+                      key={qual.key}
+                      onPress={() => toggleQualification(qual.key)}
+                      style={({ pressed }) => [
+                        styles.itemCard,
+                        isSelected && styles.itemCardSelected,
+                        pressed && styles.itemCardPressed,
+                      ]}
+                    >
+                      <Text style={[
+                        styles.itemText,
+                        isSelected && styles.itemTextSelected,
+                      ]}>
+                        {qual.label}
+                      </Text>
+                      {isSelected && (
+                        <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
+                      )}
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+          )}
         </ScrollView>
 
         {/* Validation Hint */}
-        {!isFormValid && availableTags.length > 0 && (
+        {!isFormValid && availableSubcategories.length > 0 && (
           <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
             <Text style={styles.validationHint}>
-              ℹ️ Bitte wähle mindestens eine Qualifikation aus, um fortzufahren
+              ℹ️ Bitte wähle mindestens eine Tätigkeit aus, um fortzufahren
             </Text>
           </View>
         )}
@@ -155,13 +238,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.black,
     opacity: 0.8,
-    marginBottom: 16,
+    marginBottom: 24,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: COLORS.purple,
+    marginBottom: 8,
   },
   helperText: {
     fontSize: 12,
     color: COLORS.gray,
     opacity: 1,
-    marginBottom: 24,
+    marginBottom: 16,
     fontStyle: 'italic',
   },
   emptyState: {
@@ -176,11 +268,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     opacity: 0.8,
   },
-  skillsList: {
+  itemsList: {
     flexDirection: 'column',
     gap: 12,
   },
-  skillChip: {
+  itemCard: {
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 16,
@@ -190,7 +282,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderWidth: 0,
   },
-  skillChipSelected: {
+  itemCardSelected: {
     backgroundColor: COLORS.white,
     borderWidth: 2,
     borderColor: COLORS.neon,
@@ -198,15 +290,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 8,
   },
-  skillChipPressed: {
+  itemCardPressed: {
     opacity: 0.7,
   },
-  skillText: {
+  itemText: {
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.black,
   },
-  skillTextSelected: {
+  itemTextSelected: {
     color: COLORS.black,
   },
   validationHint: {
