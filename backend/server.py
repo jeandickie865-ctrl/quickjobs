@@ -124,10 +124,9 @@ class WorkerProfile(BaseModel):
     lastName: Optional[str] = None
     email: Optional[str] = None
     phone: Optional[str] = None
-    categories: List[str] = []
-    selectedTags: List[str] = []
-    activities: List[str] = []
-    qualifications: List[str] = []
+    categories: List[str] = []  # Should contain exactly ONE category
+    subcategories: List[str] = []  # NEW: Worker's subcategories
+    qualifications: List[str] = []  # NEW STRUCTURE: Worker's qualifications
     radiusKm: int = 15
     homeAddress: Address
     homeLat: Optional[float] = None
@@ -135,8 +134,10 @@ class WorkerProfile(BaseModel):
     photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
     shortBio: Optional[str] = None
-    isSelfEmployed: bool = False  # NEU: Selbstständig / Gewerbe
+    isSelfEmployed: bool = False
     # Deprecated fields for backward compatibility
+    selectedTags: Optional[List[str]] = []  # DEPRECATED - kept for compatibility
+    activities: Optional[List[str]] = []  # DEPRECATED
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     documents: Optional[List[WorkerDocument]] = []
