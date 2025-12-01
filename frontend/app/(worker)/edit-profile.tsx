@@ -843,7 +843,12 @@ export default function EditWorkerProfileScreen() {
             <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
               Kategorien * (mind. 1)
             </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            <View
+              style={{
+                flexDirection: 'column',
+                gap: 8,
+              }}
+            >
               {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
                 const isSelected = selectedCategories.includes(key);
                 return (
@@ -868,9 +873,10 @@ export default function EditWorkerProfileScreen() {
                       backgroundColor: isSelected ? COLORS.purple : COLORS.lightGray,
                       borderWidth: isSelected ? 0 : 1,
                       borderColor: COLORS.borderGray,
-                      paddingHorizontal: 16,
-                      paddingVertical: 10,
-                      borderRadius: 20,
+                      paddingHorizontal: 18,
+                      paddingVertical: 12,
+                      borderRadius: 14,
+                      justifyContent: 'center',
                     }}
                   >
                     <Text
