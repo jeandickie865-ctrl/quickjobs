@@ -845,8 +845,10 @@ export default function EditWorkerProfileScreen() {
             </Text>
             <View
               style={{
-                flexDirection: 'column',
-                gap: 8,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                gap: 12,
               }}
             >
               {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
@@ -870,20 +872,25 @@ export default function EditWorkerProfileScreen() {
                       }
                     }}
                     style={{
-                      backgroundColor: isSelected ? COLORS.purple : COLORS.lightGray,
-                      borderWidth: isSelected ? 0 : 1,
-                      borderColor: COLORS.borderGray,
-                      paddingHorizontal: 18,
-                      paddingVertical: 12,
+                      width: '48%',
+                      backgroundColor: isSelected ? COLORS.white : '#ECE9FF',
                       borderRadius: 14,
+                      paddingVertical: 16,
+                      paddingHorizontal: 12,
+                      borderWidth: isSelected ? 2 : 0,
+                      borderColor: isSelected ? COLORS.neon : 'transparent',
+                      shadowColor: isSelected ? 'rgba(200,255,22,0.2)' : 'transparent',
+                      shadowOpacity: isSelected ? 1 : 0,
+                      shadowRadius: isSelected ? 8 : 0,
                       justifyContent: 'center',
+                      alignItems: 'center',
                     }}
                   >
                     <Text
                       style={{
                         fontSize: 14,
                         fontWeight: '600',
-                        color: isSelected ? COLORS.white : COLORS.darkGray,
+                        color: COLORS.black,
                       }}
                     >
                       {cat.label}
