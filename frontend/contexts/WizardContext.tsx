@@ -24,7 +24,12 @@ interface WizardData {
   selectedCategories: CategoryKey[];
   
   // Step 4
+  selectedSubcategories: string[];
+  selectedQualifications: string[];
+  
+  // Legacy (kept for backward compatibility)
   selectedSkills: string[];
+  isSelfEmployed?: boolean;
 }
 
 interface WizardContextType {
