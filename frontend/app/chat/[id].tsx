@@ -43,10 +43,17 @@ export default function ChatScreen() {
   // --------------------------------------------
   useEffect(() => {
     let mounted = true;
+    let isFirstLoad = true;
 
     async function loadChat() {
       try {
         console.log("CHAT → loadChat() gestartet", applicationId);
+        
+        // Nur beim ersten Laden Loading anzeigen
+        if (isFirstLoad) {
+          setLoading(true);
+          isFirstLoad = false;
+        }
 
         // 1. Unlock-Check
         const isUnlocked = await checkChatUnlocked(applicationId);
@@ -77,14 +84,16 @@ export default function ChatScreen() {
     loadChat();
 
     intervalRef.current = setInterval(() => {
-      if (mounted && !locked) loadChat();
+      if (mounted && isFocused && !locked) {
+        loadChat();
+      }
     }, 4000);
 
     return () => {
       mounted = false;
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [applicationId, locked]);
+  }, [applicationId]);
 
   // --------------------------------------------
   // AUTO SCROLL TO BOTTOM
