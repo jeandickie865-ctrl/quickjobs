@@ -416,12 +416,12 @@ export default function CreateJob() {
           {/* Datum */}
           <View style={{ gap: 6 }}>
             <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
-              Datum
+              Datum (YYYY-MM-DD) *
             </Text>
             <TextInput
-              value={timeInfo}
-              onChangeText={setTimeInfo}
-              placeholder="z.B. Montag, 15.12.2024"
+              value={date}
+              onChangeText={setDate}
+              placeholder="z.B. 2024-12-15"
               placeholderTextColor={colors.gray400}
               style={{
                 borderWidth: 1.5,
@@ -436,18 +436,38 @@ export default function CreateJob() {
             />
           </View>
 
-          {/* Uhrzeit */}
+          {/* Startzeit */}
           <View style={{ gap: 6 }}>
             <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
-              Uhrzeit
+              Startzeit (HH:MM) *
             </Text>
             <TextInput
-              value={timeInfo.split('|')[1] || ''}
-              onChangeText={(text) => {
-                const datum = timeInfo.split('|')[0] || '';
-                setTimeInfo(datum ? `${datum}|${text}` : text);
+              value={startAt}
+              onChangeText={setStartAt}
+              placeholder="z.B. 14:00"
+              placeholderTextColor={colors.gray400}
+              style={{
+                borderWidth: 1.5,
+                borderColor: colors.gray300,
+                borderRadius: 12,
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.sm,
+                backgroundColor: colors.white,
+                color: colors.black,
+                fontSize: 15,
               }}
-              placeholder="z.B. 14:00 - 18:00 Uhr"
+            />
+          </View>
+
+          {/* Endzeit */}
+          <View style={{ gap: 6 }}>
+            <Text style={{ color: colors.gray700, fontWeight: '600', fontSize: 14 }}>
+              Endzeit (HH:MM) *
+            </Text>
+            <TextInput
+              value={endAt}
+              onChangeText={setEndAt}
+              placeholder="z.B. 18:00"
               placeholderTextColor={colors.gray400}
               style={{
                 borderWidth: 1.5,
