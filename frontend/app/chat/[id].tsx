@@ -25,6 +25,7 @@ export default function ChatScreen() {
   const applicationId = params.id as string;
 
   const { user } = useAuth();
+  const isFocused = useIsFocused();
 
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
