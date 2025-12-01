@@ -1,23 +1,29 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "Backup",
+    "slug": "backup",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontend",
+    "scheme": "backup",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "de.dickie.backup",
+      "buildNumber": "1",
+      "supportsTablet": false
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "de.dickie.backup"
     },
+
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -27,6 +33,7 @@
         "google": "notranslate"
       }
     },
+
     "plugins": [
       "expo-router",
       [
@@ -39,9 +46,11 @@
         }
       ]
     ],
+
     "experiments": {
       "typedRoutes": true
     },
+
     "extra": {
       "backendUrl": ""
     }
