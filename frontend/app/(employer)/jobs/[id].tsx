@@ -355,15 +355,41 @@ export default function JobDetailScreen() {
             ZEITEN
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
-            {job.date && job.start_at && job.end_at
-              ? `${job.date} von ${job.start_at} bis ${job.end_at}`
-              : job.startAt && job.endAt 
-              ? `${new Date(job.startAt).toLocaleString('de-DE')} - ${new Date(job.endAt).toLocaleString('de-DE')}`
-              : job.dueAt 
-              ? `Deadline: ${new Date(job.dueAt).toLocaleDateString('de-DE')}`
-              : job.hours
-              ? `Stundenpaket: ${job.hours} Stunden`
-              : 'Keine Zeitangaben'}
+            {(() => {
+              // Neue Felder: date, start_at, end_at
+              if (job.date && job.start_at && job.end_at) {
+                return `${job.date} von ${job.start_at} bis ${job.end_at}`;
+              }
+              // Legacy: startAt, endAt (nur wenn valide)
+              if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
+                try {
+                  const start = new Date(job.startAt);
+                  const end = new Date(job.endAt);
+                  if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+                    return `${start.toLocaleString('de-DE')} - ${end.toLocaleString('de-DE')}`;
+                  }
+                } catch (e) {
+                  // Parsing fehlgeschlagen
+                }
+              }
+              // Deadline
+              if (job.dueAt && job.dueAt !== 'null') {
+                try {
+                  const due = new Date(job.dueAt);
+                  if (!isNaN(due.getTime())) {
+                    return `Deadline: ${due.toLocaleDateString('de-DE')}`;
+                  }
+                } catch (e) {
+                  // Parsing fehlgeschlagen
+                }
+              }
+              // Stundenpaket
+              if (job.hours && job.hours > 0) {
+                return `Stundenpaket: ${job.hours} Stunden`;
+              }
+              // Fallback
+              return 'Keine Zeitangaben';
+            })()}
           </Text>
         </View>
 
