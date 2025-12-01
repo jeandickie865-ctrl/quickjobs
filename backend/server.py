@@ -370,13 +370,17 @@ class OfficialRegistrationUpdate(BaseModel):
 
 # Chat Message Models
 class ChatMessage(BaseModel):
-    id: str = Field(default_factory=lambda: f"msg_{str(uuid.uuid4())}")
+    id: str | None = None
     applicationId: str
-    senderId: str
-    senderRole: str  # 'worker' or 'employer'
-    message: str
-    createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    senderId: str | None = None
+    senderRole: str | None = None
+    text: str | None = None
+    createdAt: str | None = None
+    timestamp: datetime | None = None
     read: bool = False
+    
+    class Config:
+        orm_mode = True
 
 class ChatMessageCreate(BaseModel):
     applicationId: str
