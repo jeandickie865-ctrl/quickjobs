@@ -99,6 +99,40 @@ export function WorkerProfileEmployerView({
     });
   };
 
+  const getSubcategoryLabels = () => {
+    if (!profile?.subcategories) return [];
+    const labels: string[] = [];
+    
+    profile.subcategories.forEach((subKey: string) => {
+      // Try to find label in taxonomy
+      Object.values(TAXONOMY_DATA).forEach((cat: any) => {
+        const subcat = cat.subcategories?.find((s: any) => s.key === subKey);
+        if (subcat) {
+          labels.push(subcat.label);
+        }
+      });
+    });
+    
+    return labels.length > 0 ? labels : profile.subcategories; // Fallback to keys if no labels found
+  };
+
+  const getQualificationLabels = () => {
+    if (!profile?.qualifications) return [];
+    const labels: string[] = [];
+    
+    profile.qualifications.forEach((qualKey: string) => {
+      // Try to find label in taxonomy
+      Object.values(TAXONOMY_DATA).forEach((cat: any) => {
+        const qual = cat.qualifications?.find((q: any) => q.key === qualKey);
+        if (qual) {
+          labels.push(qual.label);
+        }
+      });
+    });
+    
+    return labels.length > 0 ? labels : profile.qualifications; // Fallback to keys if no labels found
+  };
+
   const getTagLabels = () => {
     if (!profile?.selectedTags) return [];
     const tags: string[] = [];
