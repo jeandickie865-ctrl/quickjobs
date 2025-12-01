@@ -221,17 +221,17 @@ export default function Step5Summary() {
             </View>
           </View>
 
-          {/* Categories */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Kategorien</Text>
-            <View style={styles.tagContainer}>
-              {profileData.categories.map((cat, index) => (
-                <View key={index} style={styles.tag}>
-                  <Text style={styles.tagText}>{cat}</Text>
+          {/* Category */}
+          {profileData.category && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Kategorie</Text>
+              <View style={styles.tagContainer}>
+                <View style={styles.tag}>
+                  <Text style={styles.tagText}>{profileData.category}</Text>
                 </View>
-              ))}
+              </View>
             </View>
-          </View>
+          )}
 
           {/* Subcategories */}
           {profileData.subcategories.length > 0 && (
