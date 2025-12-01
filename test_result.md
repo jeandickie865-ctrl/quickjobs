@@ -439,9 +439,8 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "Worker Profile"
-  stuck_tasks: 
-    - "Worker Profile"
+    - "B1 - Job Cleanup & Konsistenz"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
