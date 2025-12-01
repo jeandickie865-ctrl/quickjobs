@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthContext";
+import { useIsFocused } from "@react-navigation/native";
 
 import { loadMessages, sendMessage, checkChatUnlocked } from "../../utils/chatStore";
 import { getApplicationById } from "../../utils/applicationStore";
