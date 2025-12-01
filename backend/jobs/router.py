@@ -15,9 +15,9 @@ router = APIRouter()
 
 
 # ===== AUTO CLEANUP FUNCTION FOR OLD OPEN JOBS =====
-async def delete_old_open_jobs_without_match(db: AsyncSession):
+async def delete_old_open_jobs_without_match():
     """
-    Löscht alte offene Jobs OHNE Match.
+    Löscht alte offene Jobs OHNE Match (MongoDB Version).
     
     Bedingungen:
     - status == "open"
@@ -25,61 +25,61 @@ async def delete_old_open_jobs_without_match(db: AsyncSession):
     - KEINE Application mit status "matched" oder "accepted"
     """
     from datetime import datetime, date as date_type
+    from motor.motor_asyncio import AsyncIOMotorClient
+    import os
+    
+    # Get MongoDB connection
+    mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[os.environ.get('DB_NAME', 'test_database')]
     
     today = datetime.now().date()
     
     # Hole alle offenen Jobs
-    result = await db.execute(
-        select(Job).where(Job.status == 'open')
-    )
-    open_jobs = result.scalars().all()
+    open_jobs = await db.jobs.find({"status": "open"}).to_list(length=None)
     
     jobs_to_delete = []
     
     for job in open_jobs:
-        if not job.date:
+        job_date_str = job.get("date")
+        if not job_date_str:
             continue
         
         try:
             # Parse date (Format: DD.MM.YYYY oder YYYY-MM-DD)
-            if '.' in job.date:
+            if '.' in job_date_str:
                 # DD.MM.YYYY
-                parts = job.date.split('.')
+                parts = job_date_str.split('.')
                 job_date = date_type(int(parts[2]), int(parts[1]), int(parts[0]))
             else:
                 # YYYY-MM-DD
-                job_date = datetime.strptime(job.date, "%Y-%m-%d").date()
+                job_date = datetime.strptime(job_date_str, "%Y-%m-%d").date()
             
             # Nur Jobs VOR heute (nicht heute selbst!)
             if job_date >= today:
                 continue
             
             # Prüfe ob Applications mit Match existieren
-            from applications.models import Application
-            app_result = await db.execute(
-                select(Application).where(
-                    Application.job_id == job.id,
-                    Application.status.in_(['matched', 'accepted'])
-                )
-            )
-            matched_apps = app_result.scalars().all()
+            job_id = job.get("id")
+            matched_apps = await db.applications.find({
+                "jobId": job_id,
+                "status": {"$in": ["matched", "accepted"]}
+            }).to_list(length=None)
             
             # Nur löschen wenn KEIN Match existiert
             if len(matched_apps) == 0:
-                jobs_to_delete.append(job)
+                jobs_to_delete.append(job_id)
                 
         except (ValueError, AttributeError, IndexError):
             continue
     
     # Lösche Jobs
-    for job in jobs_to_delete:
-        await db.delete(job)
-    
     if jobs_to_delete:
-        await db.commit()
-        print(f"🧹 Auto-Cleanup: {len(jobs_to_delete)} alte offene Jobs ohne Match gelöscht")
+        result = await db.jobs.delete_many({"id": {"$in": jobs_to_delete}})
+        print(f"🧹 Auto-Cleanup: {result.deleted_count} alte offene Jobs ohne Match gelöscht")
+        return result.deleted_count
     
-    return len(jobs_to_delete)
+    return 0
 
 
 # ===== CLEANUP FUNCTION =====
