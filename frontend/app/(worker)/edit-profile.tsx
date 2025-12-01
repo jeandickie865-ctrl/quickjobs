@@ -381,7 +381,7 @@ export default function EditWorkerProfileScreen() {
     if (!city.trim()) newErrors.city = 'Stadt ist erforderlich';
     if (!country.trim()) newErrors.country = 'Land ist erforderlich';
     if (!phone.trim()) newErrors.phone = 'Telefonnummer ist erforderlich';
-    if (!selectedCategory) newErrors.category = 'Bitte wähle eine Kategorie';
+    if (selectedCategories.length === 0) newErrors.categories = 'Bitte wähle mindestens eine Kategorie';
 
     const radius = parseInt(radiusKm);
     if (isNaN(radius) || radius < 1 || radius > 200) {
