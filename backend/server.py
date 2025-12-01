@@ -2454,7 +2454,16 @@ def generate_contract_pdf(
     if emp_company and emp_company.strip():
         employer_lines.append(emp_company.strip())
     
+    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     emp_addr = employer_data.get('homeAddress', {})
+    if not emp_addr:
+        # Fallback auf Root-Level Felder
+        emp_addr = {
+            'street': employer_data.get('street'),
+            'house_number': employer_data.get('houseNumber') or employer_data.get('house_number'),
+            'postal_code': employer_data.get('postalCode') or employer_data.get('postal_code'),
+            'city': employer_data.get('city')
+        }
     emp_address = format_address(emp_addr)
     if emp_address:
         employer_lines.append(emp_address)
@@ -2630,7 +2639,16 @@ def generate_sofortmeldung_pdf(
     if emp_company and emp_company.strip():
         employer_lines.append(emp_company.strip())
     
+    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     emp_addr = employer_data.get('homeAddress', {})
+    if not emp_addr:
+        # Fallback auf Root-Level Felder
+        emp_addr = {
+            'street': employer_data.get('street'),
+            'house_number': employer_data.get('houseNumber') or employer_data.get('house_number'),
+            'postal_code': employer_data.get('postalCode') or employer_data.get('postal_code'),
+            'city': employer_data.get('city')
+        }
     emp_address = format_address(emp_addr)
     if emp_address:
         employer_lines.append(emp_address)
@@ -2816,7 +2834,16 @@ def generate_payroll_pdf(
     if emp_company and emp_company.strip():
         employer_lines.append(emp_company.strip())
     
+    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     emp_addr = employer_data.get('homeAddress', {})
+    if not emp_addr:
+        # Fallback auf Root-Level Felder
+        emp_addr = {
+            'street': employer_data.get('street'),
+            'house_number': employer_data.get('houseNumber') or employer_data.get('house_number'),
+            'postal_code': employer_data.get('postalCode') or employer_data.get('postal_code'),
+            'city': employer_data.get('city')
+        }
     emp_address = format_address(emp_addr)
     if emp_address:
         employer_lines.append(emp_address)
