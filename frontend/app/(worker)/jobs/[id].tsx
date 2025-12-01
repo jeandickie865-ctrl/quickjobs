@@ -158,59 +158,61 @@ export default function WorkerJobDetailScreen() {
                 ZEITRAUM
               </Text>
 
-              {/* 1. FIXED TIME */}
-              {job.timeMode === 'fixed_time' && job.startAt && job.endAt ? (
-                <>
+              {/* ZEIT-ANZEIGE (MODERNISIERT) */}
+              {(() => {
+                // Format date: YYYY-MM-DD → DD.MM.YYYY
+                const formatDate = (dateStr) => {
+                  if (!dateStr || dateStr === 'None') return null;
+                  try {
+                    const [year, month, day] = dateStr.split('-');
+                    return `${day}.${month}.${year}`;
+                  } catch {
+                    return null;
+                  }
+                };
+
+                // Neue Felder: date, start_at, end_at
+                const jobDate = formatDate(job.date);
+                const startTime = job.start_at || job.startAt;
+                const endTime = job.end_at || job.endAt;
+
+                // 1. FIXED TIME mit neuen Feldern
+                if (job.timeMode === 'fixed_time' && jobDate && startTime && endTime) {
+                  return (
+                    <>
+                      <Text style={{ fontSize: 16, color: COLORS.black }}>
+                        📅 {jobDate}
+                      </Text>
+                      <Text style={{ fontSize: 16, color: COLORS.black, marginTop: 4 }}>
+                        🕐 {startTime} – {endTime} Uhr
+                      </Text>
+                    </>
+                  );
+                }
+
+                // 2. STUNDENPAKET
+                if (job.timeMode === 'hour_package' && job.hours) {
+                  return (
+                    <>
+                      <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: '600' }}>
+                        ⏱️ {job.hours} Stunden
+                      </Text>
+                      {jobDate && (
+                        <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
+                          📅 Datum: {jobDate}
+                        </Text>
+                      )}
+                    </>
+                  );
+                }
+
+                // 3. FALLBACK
+                return (
                   <Text style={{ fontSize: 16, color: COLORS.black }}>
-                    📅 {new Date(job.startAt).toLocaleDateString('de-DE', {
-                      weekday: 'short',
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric'
-                    })}
+                    Keine Zeitangabe
                   </Text>
-
-                  <Text style={{ fontSize: 16, color: COLORS.black, marginTop: 4 }}>
-                    🕐 {new Date(job.startAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
-                    {' '}–{' '}
-                    {new Date(job.endAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
-                  </Text>
-                </>
-              ) : null}
-
-              {/* 2. STUNDENPAKET */}
-              {job.timeMode === 'hour_package' && job.hours ? (
-                <>
-                  <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: '600' }}>
-                    ⏱️ {job.hours} Stunden
-                  </Text>
-
-                  {job.startAt && job.endAt && (
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
-                      📅 Zeitraum:
-                      {' '}
-                      {new Date(job.startAt).toLocaleDateString('de-DE', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                      })}
-                      {' '}–{' '}
-                      {new Date(job.endAt).toLocaleDateString('de-DE', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                      })}
-                    </Text>
-                  )}
-                </>
-              ) : null}
-
-              {/* 3. FALLBACK */}
-              {(!job.timeMode || (!job.startAt && !job.endAt && !job.hours)) && (
-                <Text style={{ fontSize: 16, color: COLORS.black }}>
-                  Keine Zeitangabe
-                </Text>
-              )}
+                );
+              })()}
             </View>
 
             {/* Standort */}
