@@ -2276,7 +2276,7 @@ def generate_contract_pdf(
     story.append(Spacer(1, 6))
     
     job_addr = job_data.get('address', {})
-    job_address = f"{job_addr.get('street', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
+    job_address = f"{job_addr.get('street', '')} {job_addr.get('houseNumber', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
     worker_amount = job_data.get('workerAmountCents', 0) / 100
     
     job_details = f"""
@@ -2425,7 +2425,7 @@ def generate_sofortmeldung_pdf(
     story.append(Spacer(1, 6))
     
     job_addr = job_data.get('address', {})
-    job_address = f"{job_addr.get('street', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
+    job_address = f"{job_addr.get('street', '')} {job_addr.get('houseNumber', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
     worker_amount = job_data.get('workerAmountCents', 0) / 100
     
     job_details = f"""
@@ -2569,7 +2569,7 @@ def generate_payroll_pdf(
     story.append(Spacer(1, 6))
     
     job_addr = job_data.get('address', {})
-    job_address = f"{job_addr.get('street', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
+    job_address = f"{job_addr.get('street', '')} {job_addr.get('houseNumber', '')}, {job_addr.get('postalCode', '')} {job_addr.get('city', '')}"
     
     job_details = f"""
     Tätigkeit: {job_data.get('title', 'Nicht angegeben')}<br/>
