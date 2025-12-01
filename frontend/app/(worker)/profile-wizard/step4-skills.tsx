@@ -25,35 +25,20 @@ export default function Step4Skills() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
   
-  const selectedCategories = wizardData.selectedCategories || [];
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(
-    wizardData.selectedSubcategories || []
-  );
+  const selectedCategory = wizardData.category || '';
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>(
-    wizardData.selectedQualifications || []
+    wizardData.qualifications || []
   );
   
-  // Get all subcategories and qualifications for selected categories
-  const availableSubcategories: {key: string, label: string}[] = [];
+  // Get qualifications for the selected category
   const availableQualifications: {key: string, label: string}[] = [];
   
-  selectedCategories.forEach(catKey => {
-    const category = TAXONOMY_DATA[catKey];
-    if (category) {
-      // Add subcategories
-      category.subcategories?.forEach((sub: any) => {
-        if (!availableSubcategories.find(s => s.key === sub.key)) {
-          availableSubcategories.push({ key: sub.key, label: sub.label });
-        }
-      });
-      // Add qualifications
-      category.qualifications?.forEach((qual: any) => {
-        if (!availableQualifications.find(q => q.key === qual.key)) {
-          availableQualifications.push({ key: qual.key, label: qual.label });
-        }
-      });
-    }
-  });
+  if (selectedCategory && TAXONOMY_DATA[selectedCategory]) {
+    const category = TAXONOMY_DATA[selectedCategory];
+    category.qualifications?.forEach((qual: any) => {
+      availableQualifications.push({ key: qual.key, label: qual.label });
+    });
+  }
 
   const toggleSubcategory = (key: string) => {
     setSelectedSubcategories(prev => 
