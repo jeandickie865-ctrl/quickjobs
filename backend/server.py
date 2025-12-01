@@ -185,7 +185,7 @@ class WorkerProfileUpdate(BaseModel):
     documents: Optional[List[WorkerDocument]] = None
     pushToken: Optional[str] = None
 
-# Job Models
+# Job Models (B1: aktualisiert mit date, start_at, end_at)
 class Job(BaseModel):
     id: str = Field(default_factory=lambda: f"job_{str(uuid.uuid4())}")
     employerId: str
@@ -193,7 +193,11 @@ class Job(BaseModel):
     title: str
     description: Optional[str] = None
     category: str
-    timeMode: str  # 'fixed_time', 'hour_package', 'project'
+    timeMode: str = "fixed_time"  # B1: nur fixed_time erlaubt
+    date: Optional[str] = None  # B1: Format YYYY-MM-DD
+    start_at: Optional[str] = None  # B1: Format HH:MM
+    end_at: Optional[str] = None  # B1: Format HH:MM
+    # Legacy fields (können entfernt werden, aber für Kompatibilität behalten)
     startAt: Optional[str] = None
     endAt: Optional[str] = None
     hours: Optional[float] = None
