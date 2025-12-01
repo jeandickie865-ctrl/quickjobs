@@ -44,54 +44,27 @@ export default function ChatScreen() {
 
     async function loadChat() {
       try {
-        setLoading(true);
-
-        console.log("CHAT DEBUG → applicationId:", applicationId);
-
-        // Unlock-Check wieder eingebaut
-        const isUnlocked = await checkChatUnlocked(applicationId);
-        if (!isUnlocked) {
-          setLocked(true);
-          setLoading(false);
-          return;
-        }
-
-        // Nachrichten laden
         const msgs = await loadMessages(applicationId);
-        console.log("CHAT DEBUG → raw response:", msgs);
-        console.log("CHAT DEBUG → typeof:", typeof msgs);
-        
         if (!mounted) return;
         setMessages(msgs);
-
       } catch (err) {
-        console.log("CHAT ERROR:", err);
-        console.log("CHAT ERROR response:", err?.response?.data);
-        if (String(err).includes("CHAT_LOCKED")) setLocked(true);
-      } finally {
-        if (mounted) setLoading(false);
+        console.log("CHAT LOAD ERROR:", err);
       }
     }
 
-    // Sofort beim Mount laden
+    // Initial Load
     loadChat();
 
-    // Auto-Refresh alle 3 Sekunden (nur wenn Input NICHT fokussiert ist)
+    // Auto-Refresh (ohne inputFocused!)
     intervalRef.current = setInterval(() => {
-      if (mounted && !locked && !inputFocused) {
-        loadChat();
-      }
-    }, 3000);
+      if (mounted && !locked) loadChat();
+    }, 4000);
 
-    // Cleanup beim Unmount
-    return () => { 
+    return () => {
       mounted = false;
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      clearInterval(intervalRef.current);
     };
-  }, [applicationId, inputFocused]);
+  }, [applicationId]);
 
   // --------------------------------------------
   // AUTO SCROLL TO BOTTOM
