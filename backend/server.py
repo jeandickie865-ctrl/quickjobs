@@ -2158,12 +2158,17 @@ async def get_messages(
             )
             msg["read"] = True
     
-    # Remove MongoDB _id field
+    # Remove MongoDB _id field and prepare for ChatMessage model
+    result_messages = []
     for msg in messages:
         msg.pop("_id", None)
+        # Transform DB field names to match model
+        if "text" in msg and "message" not in msg:
+            msg["message"] = msg.get("text")
+        result_messages.append(ChatMessage(**msg))
     
     logger.info(f"Found {len(messages)} messages for application {application_id}")
-    return [ChatMessage(**msg) for msg in messages]
+    return result_messages
 
 
 # Request Body Model for creating official registration
