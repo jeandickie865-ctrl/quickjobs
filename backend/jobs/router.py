@@ -14,6 +14,74 @@ from jobs.schemas import JobCreate, JobUpdate, JobResponse
 router = APIRouter()
 
 
+# ===== AUTO CLEANUP FUNCTION FOR OLD OPEN JOBS =====
+async def delete_old_open_jobs_without_match(db: AsyncSession):
+    """
+    Löscht alte offene Jobs OHNE Match.
+    
+    Bedingungen:
+    - status == "open"
+    - date < heute (nicht heute!)
+    - KEINE Application mit status "matched" oder "accepted"
+    """
+    from datetime import datetime, date as date_type
+    
+    today = datetime.now().date()
+    
+    # Hole alle offenen Jobs
+    result = await db.execute(
+        select(Job).where(Job.status == 'open')
+    )
+    open_jobs = result.scalars().all()
+    
+    jobs_to_delete = []
+    
+    for job in open_jobs:
+        if not job.date:
+            continue
+        
+        try:
+            # Parse date (Format: DD.MM.YYYY oder YYYY-MM-DD)
+            if '.' in job.date:
+                # DD.MM.YYYY
+                parts = job.date.split('.')
+                job_date = date_type(int(parts[2]), int(parts[1]), int(parts[0]))
+            else:
+                # YYYY-MM-DD
+                job_date = datetime.strptime(job.date, "%Y-%m-%d").date()
+            
+            # Nur Jobs VOR heute (nicht heute selbst!)
+            if job_date >= today:
+                continue
+            
+            # Prüfe ob Applications mit Match existieren
+            from applications.models import Application
+            app_result = await db.execute(
+                select(Application).where(
+                    Application.job_id == job.id,
+                    Application.status.in_(['matched', 'accepted'])
+                )
+            )
+            matched_apps = app_result.scalars().all()
+            
+            # Nur löschen wenn KEIN Match existiert
+            if len(matched_apps) == 0:
+                jobs_to_delete.append(job)
+                
+        except (ValueError, AttributeError, IndexError):
+            continue
+    
+    # Lösche Jobs
+    for job in jobs_to_delete:
+        await db.delete(job)
+    
+    if jobs_to_delete:
+        await db.commit()
+        print(f"🧹 Auto-Cleanup: {len(jobs_to_delete)} alte offene Jobs ohne Match gelöscht")
+    
+    return len(jobs_to_delete)
+
+
 # ===== CLEANUP FUNCTION =====
 async def delete_expired_jobs(db: AsyncSession):
     """
