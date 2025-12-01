@@ -1227,6 +1227,33 @@ async def get_matching_jobs_for_worker(
     """
     B3: Get matching jobs for a specific worker with strict filtering
     """
+    # AUTO-REPAIR FOR OLD JOBS WITHOUT TIME FIELDS (MongoDB)
+    today_str = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    await db.jobs.update_many(
+        {
+            "$or": [
+                {"date": {"$exists": False}},
+                {"date": None},
+                {"start_at": {"$exists": False}},
+                {"start_at": None},
+                {"end_at": {"$exists": False}},
+                {"end_at": None},
+                {"time_mode": {"$exists": False}},
+                {"time_mode": None},
+                {"time_mode": "project"}
+            ]
+        },
+        {
+            "$set": {
+                "date": today_str,
+                "start_at": "09:00",
+                "end_at": "17:00",
+                "time_mode": "fixed_time"
+            }
+        }
+    )
+    
     # Verify token
     requesting_user = await get_user_id_from_token(authorization)
     
