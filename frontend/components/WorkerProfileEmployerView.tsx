@@ -397,11 +397,59 @@ export function WorkerProfileEmployerView({
                       </View>
                     )}
 
-                    {/* Tags */}
+                    {/* Subcategories (NEW) */}
+                    {subcategoryLabels.length > 0 && (
+                      <View style={{ marginBottom: 16 }}>
+                        <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                          TÄTIGKEITEN
+                        </Text>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                          {subcategoryLabels.map((label, idx) => (
+                            <View key={idx} style={{
+                              backgroundColor: COLORS.neon,
+                              paddingHorizontal: 14,
+                              paddingVertical: 8,
+                              borderRadius: 20,
+                            }}>
+                              <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.black }}>
+                                {label}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    )}
+
+                    {/* Qualifications (NEW) */}
+                    {qualificationLabels.length > 0 && (
+                      <View style={{ marginBottom: 16 }}>
+                        <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
+                          QUALIFIKATIONEN
+                        </Text>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                          {qualificationLabels.map((label, idx) => (
+                            <View key={idx} style={{
+                              backgroundColor: COLORS.lightGray,
+                              borderWidth: 1,
+                              borderColor: COLORS.borderGray,
+                              paddingHorizontal: 12,
+                              paddingVertical: 6,
+                              borderRadius: 16,
+                            }}>
+                              <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.darkGray }}>
+                                {label}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    )}
+
+                    {/* Tags (DEPRECATED - kept for backward compatibility) */}
                     {tagLabels.length > 0 && (
                       <View>
                         <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
-                          QUALIFIKATIONEN
+                          WEITERE QUALIFIKATIONEN (LEGACY)
                         </Text>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                           {tagLabels.map((label, idx) => (
