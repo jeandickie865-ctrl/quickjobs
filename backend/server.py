@@ -1118,6 +1118,9 @@ async def get_matched_jobs_for_me(
     - Required tags (all must be present in job)
     - Optional tags (at least one must be present if specified)
     """
+    # Cleanup old jobs before matching
+    await cleanup_old_jobs()
+    
     # Get workerId from token
     worker_id = await get_user_id_from_token(authorization)
     logger.info(f"✅ /jobs/matches/me called for worker: {worker_id}")
