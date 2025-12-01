@@ -51,6 +51,8 @@ const initialData: WizardData = {
   country: 'Deutschland',
   radiusKm: 20,
   selectedCategories: [],
+  selectedSubcategories: [],
+  selectedQualifications: [],
   selectedSkills: [],
 };
 
