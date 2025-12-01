@@ -14,15 +14,14 @@ from jobs.schemas import JobCreate, JobUpdate, JobResponse
 router = APIRouter()
 
 
-# ===== AUTO CLEANUP FUNCTION FOR OLD OPEN JOBS =====
-async def delete_old_open_jobs_without_match():
+# ===== AUTO CLEANUP FUNCTION FOR EXPIRED JOBS =====
+async def delete_expired_jobs():
     """
-    Löscht alte offene Jobs OHNE Match (MongoDB Version).
+    Löscht abgelaufene Jobs (MongoDB Version).
     
     Bedingungen:
-    - status == "open"
-    - date < heute (nicht heute!)
-    - KEINE Application mit status "matched" oder "accepted"
+    - date < HEUTE (nicht heute!) → löschen
+    - Gilt für status "open" UND "matched"
     """
     from datetime import datetime, date as date_type
     from motor.motor_asyncio import AsyncIOMotorClient
@@ -34,14 +33,17 @@ async def delete_old_open_jobs_without_match():
     db = client[os.environ.get('DB_NAME', 'test_database')]
     
     today = datetime.now().date()
-    
-    # Hole alle offenen Jobs
-    open_jobs = await db.jobs.find({"status": "open"}).to_list(length=None)
+    today_str = today.strftime("%Y-%m-%d")
     
     jobs_to_delete = []
     
-    for job in open_jobs:
+    # Hole ALLE Jobs (open + matched)
+    all_jobs = await db.jobs.find({}).to_list(length=None)
+    
+    for job in all_jobs:
         job_date_str = job.get("date")
+        job_status = job.get("status")
+        
         if not job_date_str:
             continue
         
@@ -55,20 +57,11 @@ async def delete_old_open_jobs_without_match():
                 # YYYY-MM-DD
                 job_date = datetime.strptime(job_date_str, "%Y-%m-%d").date()
             
-            # Nur Jobs VOR heute (nicht heute selbst!)
-            if job_date >= today:
-                continue
-            
-            # Prüfe ob Applications mit Match existieren
-            job_id = job.get("id")
-            matched_apps = await db.applications.find({
-                "jobId": job_id,
-                "status": {"$in": ["matched", "accepted"]}
-            }).to_list(length=None)
-            
-            # Nur löschen wenn KEIN Match existiert
-            if len(matched_apps) == 0:
-                jobs_to_delete.append(job_id)
+            # Nur Jobs VOR heute löschen (nicht heute!)
+            if job_date < today:
+                # Offene Jobs ODER gematchte Jobs löschen
+                if job_status in ["open", "matched"]:
+                    jobs_to_delete.append(job.get("id"))
                 
         except (ValueError, AttributeError, IndexError):
             continue
@@ -76,7 +69,7 @@ async def delete_old_open_jobs_without_match():
     # Lösche Jobs
     if jobs_to_delete:
         result = await db.jobs.delete_many({"id": {"$in": jobs_to_delete}})
-        print(f"🧹 Auto-Cleanup: {result.deleted_count} alte offene Jobs ohne Match gelöscht")
+        print(f"🧹 Cleanup: {result.deleted_count} abgelaufene Jobs gelöscht")
         return result.deleted_count
     
     return 0
