@@ -417,7 +417,10 @@ export default function EditWorkerProfileScreen() {
         shortBio: profileText.trim() || undefined,
         photoUrl: photoUrl.trim() || undefined,
         categories: selectedCategories,
-        selectedTags: selectedTags,
+        subcategories: selectedSubcategories,
+        qualifications: selectedQualifications,
+        // Backward compatibility: combine subcategories + qualifications
+        selectedTags: [...selectedSubcategories, ...selectedQualifications],
         homeAddress: {
           street: street.trim(),
           houseNumber: houseNumber.trim() || undefined,
