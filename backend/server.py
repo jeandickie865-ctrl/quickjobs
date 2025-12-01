@@ -942,17 +942,9 @@ async def update_worker_profile(
     for cat in categories:
         validate_category(cat)
     
-    # Schritt 2: erlaubte Tags aller Kategorien zusammenführen
-    selected_tags = merged_data.get("selectedTags", [])
-    if selected_tags:
-        valid_tags = set()
-        for cat in categories:
-            valid_tags |= get_valid_tag_values(cat)
-        
-        # Schritt 3: prüfen, ob selectedTags gültig sind
-        for tag in selected_tags:
-            if tag not in valid_tags:
-                raise HTTPException(status_code=422, detail=f"INVALID_WORKER_TAG: {tag}")
+    # DEPRECATED: Old tag validation - relaxed for new taxonomy structure
+    # We accept any subcategories and qualifications without strict validation
+    pass
     
     # radiusKm validation
     radius = merged_data.get("radiusKm", 0)
