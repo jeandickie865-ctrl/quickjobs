@@ -241,6 +241,10 @@ class JobCreate(BaseModel):
     lon: Optional[float] = None
     workerAmountCents: int
     paymentToWorker: str = "cash"
+    # NEW TAXONOMY STRUCTURE
+    subcategory: Optional[str] = None
+    qualifications: List[str] = []
+    # DEPRECATED
     required_all_tags: List[str] = []
     required_any_tags: List[str] = []
     status: str = "open"
