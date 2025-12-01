@@ -1,13 +1,23 @@
-const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
-  gray: '#DDDDDD',
-  darkGray: '#333333',
-  lightGray: '#F5F5F5',
+export const colors = {
+  primary: '#5941FF',
+  accent: '#C8FF16',
+  accentGlow: 'rgba(200,255,22,0.2)',
+
+  background: '#FFFFFF',
+  backgroundSoft: '#F5F5F5',
+
+  textPrimary: '#000000',
+  textSecondary: '#333333',
+
+  border: '#DDDDDD',
+
   error: '#FF4D4D',
-  neonShadow: 'rgba(200,255,22,0.2)'
+
+  // Modern additions
+  primaryDark: '#3C2BC8',     // Für dunkle Buttons / Headers
+  primarySoft: '#ECE9FF',     // Für ruhige Purple-Karten
+  neonDark: '#A7D012',        // Für dezentere Neon-Effekte
 };
 
-export default COLORS;
+// Legacy export for backwards compatibility
+export default colors;
