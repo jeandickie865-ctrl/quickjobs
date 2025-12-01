@@ -25,6 +25,8 @@ export default function CreateJob() {
       setTitle('');
       setDescription('');
       setCategory(null);
+      setSubcategory(null);
+      setQualifications([]);
       setAddress({});
       setLat(undefined);
       setLon(undefined);
