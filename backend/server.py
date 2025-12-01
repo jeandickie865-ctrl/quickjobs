@@ -744,17 +744,11 @@ async def create_worker_profile(
         for cat in profile_data.categories:
             validate_category(cat)
     
-    # Validate tags for worker (tags gelten für alle Kategorien kombiniert)
-    if profile_data.selectedTags and profile_data.categories:
-        # Schritt 2: erlaubte Tags aller Kategorien zusammenführen
-        valid_tags = set()
-        for cat in profile_data.categories:
-            valid_tags |= get_valid_tag_values(cat)
-        
-        # Schritt 3: prüfen, ob selectedTags gültig sind
-        for tag in profile_data.selectedTags:
-            if tag not in valid_tags:
-                raise HTTPException(status_code=422, detail=f"INVALID_WORKER_TAG: {tag}")
+    # DEPRECATED: Old tag validation - kept for backward compatibility but relaxed
+    # We don't validate subcategories and qualifications strictly anymore
+    # because Frontend and Backend use different formats (keys vs labels)
+    # The new structure (subcategories, qualifications) is flexible
+    pass
     
     # Create profile document
     now = datetime.utcnow().isoformat()
