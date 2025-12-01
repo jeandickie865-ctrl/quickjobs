@@ -209,6 +209,28 @@ async def list_all_jobs(
     result = await db.execute(select(Job))
     jobs = result.scalars().all()
     
+    # Clean up old jobs
+    today = datetime.now().date()
+    
+    cleaned = []
+    for job in jobs:
+        if not job.date:
+            continue
+        try:
+            job_date = datetime.strptime(job.date, "%Y-%m-%d").date()
+        except:
+            continue
+        
+        if job_date < today:
+            # löschen
+            await db.delete(job)
+            await db.commit()
+            continue
+        
+        cleaned.append(job)
+    
+    jobs = cleaned
+    
     # Filter out expired jobs for workers
     if current_user.role == UserRole.WORKER:
         jobs = [job for job in jobs if not is_job_expired(job)]
