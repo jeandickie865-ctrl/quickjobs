@@ -621,7 +621,7 @@ class B1BackendTester:
             "workerAmountCents": 2000,
             "paymentToWorker": "cash",
             "required_all_tags": ["bewachung"],
-            "required_any_tags": ["nachtdienst"],
+            "required_any_tags": ["doorman"],
             "status": "open"
         }
         
