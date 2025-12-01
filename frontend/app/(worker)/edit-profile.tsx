@@ -78,33 +78,37 @@ export default function EditWorkerProfileScreen() {
     loadProfile();
   }, [user, authLoading]);
 
-  // Update available tags when categories change
+  // Update available subcategories and qualifications when categories change
   useEffect(() => {
     if (selectedCategories.length === 0) {
-      setAvailableTags([]);
+      setAvailableSubcategories([]);
+      setAvailableQualifications([]);
       return;
     }
 
-    const tags: {key: string, label: string}[] = [];
+    const subcats: {key: string, label: string}[] = [];
+    const quals: {key: string, label: string}[] = [];
+    
     selectedCategories.forEach(catKey => {
       const category = TAXONOMY_DATA[catKey];
       if (category) {
-        // Add required tags
-        category.required?.forEach((req: any) => {
-          if (!tags.find(t => t.key === req.value)) {
-            tags.push({ key: req.value, label: req.label });
+        // Add subcategories
+        category.subcategories?.forEach((sub: any) => {
+          if (!subcats.find(s => s.key === sub.key)) {
+            subcats.push({ key: sub.key, label: sub.label });
           }
         });
-        // Add optional tags
-        category.optional?.forEach((opt: any) => {
-          if (!tags.find(t => t.key === opt.value)) {
-            tags.push({ key: opt.value, label: opt.label });
+        // Add qualifications
+        category.qualifications?.forEach((qual: any) => {
+          if (!quals.find(q => q.key === qual.key)) {
+            quals.push({ key: qual.key, label: qual.label });
           }
         });
       }
     });
 
-    setAvailableTags(tags);
+    setAvailableSubcategories(subcats);
+    setAvailableQualifications(quals);
   }, [selectedCategories]);
 
   async function loadProfile() {
