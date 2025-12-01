@@ -131,7 +131,8 @@ export default function EditWorkerProfileScreen() {
         setLat(profile.homeLat);
         setLon(profile.homeLon);
         setSelectedCategories(profile.categories || []);
-        setSelectedTags(profile.selectedTags || []);
+        setSelectedSubcategories(profile.subcategories || []);
+        setSelectedQualifications(profile.qualifications || []);
         setPhone(profile.phone || '');
         setEmail(profile.email || user.email || '');
         setRadiusKm(String(profile.radiusKm || 20));
