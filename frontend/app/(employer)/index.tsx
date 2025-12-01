@@ -76,13 +76,39 @@ export default function EmployerDashboard() {
     }, [user])
   );
 
+  const isUpcomingJob = (job) => {
+    if (!job.date || !job.startAt || !job.endAt) return false;
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const jobDate = new Date(job.date);
+    if (isNaN(jobDate)) return false;
+
+    // Heute oder Zukunft zulassen
+    if (jobDate < today) return false;
+
+    // Heute: Endzeit prüfen
+    if (jobDate.getTime() === today.getTime()) {
+      const now = new Date();
+      const [endH, endM] = job.endAt.split(':').map(Number);
+      const endTime = new Date();
+      endTime.setHours(endH, endM, 0, 0);
+      if (endTime < now) return false;
+    }
+
+    return true;
+  };
+
   const loadJobs = useCallback(async () => {
     if (!user) return;
 
     try {
       setIsLoading(true);
       const jobs = await getEmployerJobs(user.id);
-      setJobs(jobs);
+      
+      const filtered = jobs.filter(isUpcomingJob);
+      setJobs(filtered);
     } catch (err) {
       console.log("Employer Job Load Error:", err);
     } finally {
