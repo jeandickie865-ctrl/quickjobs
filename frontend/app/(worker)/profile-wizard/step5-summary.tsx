@@ -47,7 +47,8 @@ export default function Step5Summary() {
     city: wizardData.city,
     radius: wizardData.radiusKm,
     categories: wizardData.selectedCategories,
-    skills: wizardData.selectedSkills,
+    subcategories: wizardData.selectedSubcategories || [],
+    qualifications: wizardData.selectedQualifications || [],
   };
 
   const handleSave = async () => {
