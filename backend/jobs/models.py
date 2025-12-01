@@ -29,6 +29,12 @@ class Job(Base):
     categories = Column(ARRAY(String), server_default="{}")
     qualifications = Column(ARRAY(String), server_default="{}")
     
+    # Time fields
+    date = Column(String, nullable=True)
+    start_at = Column(String, nullable=True)
+    end_at = Column(String, nullable=True)
+    time_mode = Column(String, nullable=True, default='fixed_time')
+    
     # Timestamps
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
