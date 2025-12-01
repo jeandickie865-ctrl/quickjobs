@@ -196,7 +196,7 @@ export default function Step3Categories() {
         {!isFormValid && (
           <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
             <Text style={styles.validationHint}>
-              ℹ️ Bitte wähle eine Kategorie und mindestens eine Tätigkeit
+              ℹ️ Bitte wähle mindestens eine Kategorie und eine Tätigkeit
             </Text>
           </View>
         )}
