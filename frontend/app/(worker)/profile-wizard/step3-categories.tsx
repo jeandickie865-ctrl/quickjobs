@@ -108,23 +108,23 @@ export default function Step3Categories() {
 
         {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Kategorie & Tätigkeiten</Text>
+          <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
           <Text style={styles.subtitle}>
-            Wähle eine Kategorie und deine Tätigkeiten
+            Wähle deine Kategorien und Tätigkeiten
           </Text>
 
-          {/* SECTION 1: Select ONE Category */}
+          {/* SECTION 1: Select Multiple Categories */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>1. Kategorie auswählen *</Text>
-            <Text style={styles.helperText}>Wähle genau eine Kategorie</Text>
+            <Text style={styles.sectionTitle}>1. Kategorien auswählen *</Text>
+            <Text style={styles.helperText}>Wähle eine oder mehrere Kategorien</Text>
             
             <View style={styles.categoriesGrid}>
               {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
-                const isSelected = selectedCategory === key;
+                const isSelected = selectedCategories.includes(key);
                 return (
                   <Pressable
                     key={key}
-                    onPress={() => handleCategorySelect(key)}
+                    onPress={() => handleCategoryToggle(key)}
                     style={({ pressed }) => [
                       styles.categoryCard,
                       isSelected && styles.categoryCardSelected,
