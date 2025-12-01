@@ -180,13 +180,16 @@ export default function CreateJob() {
     // Build description (NO time appended)
     const fullDescription = description.trim() || undefined;
 
-    // Create job object - simplified without complex time fields
+    // Create job object
     const jobCreate: JobCreate = {
       employerType: user.accountType === 'business' ? 'business' : 'private',
       title: title.trim(),
       description: fullDescription,
       category,
-      timeMode: 'project', // Default to project mode (most flexible)
+      timeMode: 'fixed_time',
+      date,
+      startAt,
+      endAt,
       address: location,
       lat: lat,
       lon: lon,
