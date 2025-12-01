@@ -670,10 +670,24 @@ def get_valid_tag_values(category: str) -> set:
         return set()
     
     # NEW STRUCTURE: subcategories and qualifications
-    subcats = [s["key"] if isinstance(s, dict) else s for s in cat.get("subcategories", [])]
-    quals = [q["key"] if isinstance(q, dict) else q for q in cat.get("qualifications", [])]
+    # Backend taxonomy has strings, frontend has objects with key/label
+    subcats = cat.get("subcategories", [])
+    quals = cat.get("qualifications", [])
     
-    return set(subcats + quals)
+    # Handle both formats: strings or objects with "key" field
+    result = []
+    for s in subcats:
+        if isinstance(s, dict):
+            result.append(s.get("key", s.get("label", "")))
+        else:
+            result.append(s)
+    for q in quals:
+        if isinstance(q, dict):
+            result.append(q.get("key", q.get("label", "")))
+        else:
+            result.append(q)
+    
+    return set(result)
 
 def validate_tags(category: str, tags: List[str]):
     """Validate that all tags are valid for the given category"""
