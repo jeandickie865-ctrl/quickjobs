@@ -64,7 +64,13 @@ export default function Step5Summary() {
         photoUrl: wizardData.photoUrl || '',
         isSelfEmployed: wizardData.isSelfEmployed || false,
         categories: wizardData.selectedCategories || [],
-        selectedTags: wizardData.selectedSkills || [],
+        subcategories: wizardData.selectedSubcategories || [],
+        qualifications: wizardData.selectedQualifications || [],
+        // Backward compatibility: combine subcategories + qualifications into selectedTags
+        selectedTags: [
+          ...(wizardData.selectedSubcategories || []),
+          ...(wizardData.selectedQualifications || [])
+        ],
         radiusKm: wizardData.radiusKm || 25,
         homeAddress: {
           street: wizardData.street || '',
@@ -80,7 +86,8 @@ export default function Step5Summary() {
       console.log('💾 Saving profile with data from wizardData:', profilePayload);
       console.log('📊 Wizard Data Check:', {
         categories: wizardData.selectedCategories,
-        skills: wizardData.selectedSkills,
+        subcategories: wizardData.selectedSubcategories,
+        qualifications: wizardData.selectedQualifications,
         lat: wizardData.lat,
         lon: wizardData.lon
       });
