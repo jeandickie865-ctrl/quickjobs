@@ -47,6 +47,10 @@ class JobUpdate(BaseModel):
     lon: Optional[float] = None
     categories: Optional[List[str]] = None
     qualifications: Optional[List[str]] = None
+    date: Optional[str] = None
+    startAt: Optional[str] = None
+    endAt: Optional[str] = None
+    timeMode: Literal['fixed_time'] = 'fixed_time'
     
     @field_validator('title')
     @classmethod
