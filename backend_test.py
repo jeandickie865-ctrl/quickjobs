@@ -620,7 +620,7 @@ class B1BackendTester:
             "lon": 13.4050,
             "workerAmountCents": 2000,
             "paymentToWorker": "cash",
-            "required_all_tags": ["objektschutz"],
+            "required_all_tags": ["bewachung"],
             "required_any_tags": ["nachtdienst"],
             "status": "open"
         }
