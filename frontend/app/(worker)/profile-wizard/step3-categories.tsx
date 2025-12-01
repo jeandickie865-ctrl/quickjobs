@@ -82,11 +82,14 @@ export default function Step3Categories() {
                     pressed && styles.categoryCardPressed,
                   ]}
                 >
-                  <View style={styles.iconContainer}>
+                  <View style={[
+                    styles.iconContainer,
+                    isSelected && styles.iconContainerSelected,
+                  ]}>
                     <Ionicons
                       name="briefcase"
-                      size={36}
-                      color={COLORS.purple}
+                      size={22}
+                      color={isSelected ? COLORS.purple : COLORS.white}
                     />
                   </View>
                   <Text style={[
