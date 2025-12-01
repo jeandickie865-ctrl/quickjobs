@@ -137,20 +137,11 @@ export default function Step4Skills() {
           )}
         </ScrollView>
 
-        {/* Validation Hint */}
-        {!isFormValid && availableSubcategories.length > 0 && (
-          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
-            <Text style={styles.validationHint}>
-              ℹ️ Bitte wähle mindestens eine Tätigkeit aus, um fortzufahren
-            </Text>
-          </View>
-        )}
-
         {/* Navigation */}
         <NavigationButtons
           onNext={handleNext}
           onBack={handleBack}
-          nextDisabled={!isFormValid}
+          nextDisabled={false}
           showBack={true}
         />
       </SafeAreaView>
