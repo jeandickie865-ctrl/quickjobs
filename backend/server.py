@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 import uuid
 from datetime import datetime
+import asyncio
 
 # Import matching service
 from matching_service import match_worker_with_job
