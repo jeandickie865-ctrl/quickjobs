@@ -48,6 +48,20 @@ export default function WorkerFeedScreen() {
     return true;
   };
 
+  const hideMatchedJobs = (job) => {
+    // Wenn Job ein Match hat, nicht anzeigen
+    if (job.status === "matched" || job.status === "done" || job.status === "cancelled") {
+      return false;
+    }
+
+    // Falls backend ein Feld matchedApplication oder similar zurückgibt:
+    if (job.matchedApplication || job.matchedWorkerId || job.chosenApplicationId) {
+      return false;
+    }
+
+    return true;
+  };
+
   const loadJobs = async () => {
     // Sicherstellen, dass user und token geladen sind
     if (!token || !user) {
@@ -63,7 +77,8 @@ export default function WorkerFeedScreen() {
       const data = await getMatchedJobs();
       console.log("✅ Matched jobs loaded:", data.length);
       
-      const filtered = data.filter(isUpcomingJob);
+      let filtered = data.filter(isUpcomingJob);
+      filtered = filtered.filter(hideMatchedJobs);
       setJobs(filtered);
     } catch (err: any) {
       console.error("❌ Error loading jobs:", err);
