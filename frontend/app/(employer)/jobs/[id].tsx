@@ -355,11 +355,15 @@ export default function JobDetailScreen() {
             ZEITEN
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
-            {job.startAt && job.endAt 
+            {job.date && job.start_at && job.end_at
+              ? `${job.date} von ${job.start_at} bis ${job.end_at}`
+              : job.startAt && job.endAt 
               ? `${new Date(job.startAt).toLocaleString('de-DE')} - ${new Date(job.endAt).toLocaleString('de-DE')}`
               : job.dueAt 
               ? `Deadline: ${new Date(job.dueAt).toLocaleDateString('de-DE')}`
-              : `Stundenpaket: ${job.hours} Stunden`}
+              : job.hours
+              ? `Stundenpaket: ${job.hours} Stunden`
+              : 'Keine Zeitangaben'}
           </Text>
         </View>
 
