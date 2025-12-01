@@ -268,7 +268,7 @@ class JobUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     category: Optional[str] = None
-    timeMode: Optional[str] = None
+    timeMode: Optional[str] = "fixed_time"  # Nur fixed_time erlaubt
     startAt: Optional[str] = None
     endAt: Optional[str] = None
     hours: Optional[float] = None
@@ -282,6 +282,45 @@ class JobUpdate(BaseModel):
     required_any_tags: Optional[List[str]] = None
     status: Optional[str] = None
     matchedWorkerId: Optional[str] = None
+    
+    @field_validator('timeMode')
+    @classmethod
+    def validate_timemode(cls, v):
+        if v is not None and v != 'fixed_time':
+            raise ValueError('timeMode must be "fixed_time"')
+        return v
+    
+    @field_validator('startAt')
+    @classmethod
+    def validate_startat(cls, v):
+        if v is not None:
+            try:
+                start_dt = datetime.fromisoformat(v.replace('Z', '+00:00'))
+                now = datetime.utcnow()
+                if start_dt < now:
+                    raise ValueError('startAt must be in the future')
+            except ValueError as e:
+                if 'Invalid isoformat' in str(e):
+                    raise ValueError('startAt must be a valid ISO format datetime')
+                raise
+        return v
+    
+    @field_validator('endAt')
+    @classmethod
+    def validate_endat(cls, v, info):
+        if v is not None:
+            start_at = info.data.get('startAt')
+            if start_at:
+                try:
+                    start_dt = datetime.fromisoformat(start_at.replace('Z', '+00:00'))
+                    end_dt = datetime.fromisoformat(v.replace('Z', '+00:00'))
+                    if end_dt <= start_dt:
+                        raise ValueError('endAt must be after startAt')
+                except ValueError as e:
+                    if 'Invalid isoformat' in str(e):
+                        raise ValueError('endAt must be a valid ISO format datetime')
+                    raise
+        return v
 
 # Application Models
 class JobApplication(BaseModel):
