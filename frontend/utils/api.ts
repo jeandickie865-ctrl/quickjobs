@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ===== BACKEND URL =====
 // WICHTIG: Hier die Backend-URL eintragen!
-export const API_BASE = 'https://matchworker.preview.emergentagent.com/api';
+export const API_BASE = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`;
 
 // ===== STORAGE KEYS =====
 // WICHTIG: Muss mit AuthContext.tsx übereinstimmen!
