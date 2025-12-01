@@ -156,6 +156,9 @@ async def get_my_jobs(
             detail="Only employers can access this endpoint"
         )
     
+    # Cleanup past jobs first
+    await delete_past_jobs(db)
+    
     result = await db.execute(
         select(Job).where(Job.employer_id == current_user.id)
     )
