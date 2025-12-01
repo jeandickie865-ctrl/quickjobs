@@ -275,6 +275,10 @@ class JobUpdate(BaseModel):
     lon: Optional[float] = None
     workerAmountCents: Optional[int] = None
     paymentToWorker: Optional[str] = None
+    # NEW TAXONOMY STRUCTURE
+    subcategory: Optional[str] = None
+    qualifications: Optional[List[str]] = None
+    # DEPRECATED
     required_all_tags: Optional[List[str]] = None
     required_any_tags: Optional[List[str]] = None
     status: Optional[str] = None
