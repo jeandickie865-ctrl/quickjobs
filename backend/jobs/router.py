@@ -172,6 +172,29 @@ async def get_my_jobs(
         select(Job).where(Job.employer_id == current_user.id)
     )
     jobs = result.scalars().all()
+    
+    # Clean up old jobs
+    today = datetime.now().date()
+    
+    cleaned = []
+    for job in jobs:
+        if not job.date:
+            continue
+        try:
+            job_date = datetime.strptime(job.date, "%Y-%m-%d").date()
+        except:
+            continue
+        
+        if job_date < today:
+            # löschen
+            await db.delete(job)
+            await db.commit()
+            continue
+        
+        cleaned.append(job)
+    
+    jobs = cleaned
+    
     return jobs
 
 @router.get("", response_model=List[JobResponse])
