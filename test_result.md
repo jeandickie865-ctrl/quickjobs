@@ -356,6 +356,18 @@ frontend:
         comment: "🎉 AUTHENTICATION FLOW VOLLSTÄNDIG FUNKTIONAL nach AuthContext Fix: Backend Auth-Endpoints umfassend getestet mit 100% Success Rate (10/10 Tests). ✅ Signup Flow (Worker & Employer mit dynamischen E-Mails), ✅ Login Flow (Token-Generierung und -Validierung), ✅ GET /api/auth/me (User-Daten-Abruf), ✅ Invalid Login Handling (404/401 Responses). Alle Auth-Komponenten arbeiten korrekt zusammen: Frontend AuthContext → Backend API → MongoDB. Authentication System ist vollständig wiederhergestellt und funktional."
 
 backend:
+  - task: "B1 - Job Cleanup & Konsistenz"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "B1 Implementation durchgeführt: 1) delete_expired_jobs() Funktion erstellt (löscht Jobs mit date < heute, beide Status: open + matched), 2) Scheduler läuft stündlich, 3) Matching API Filter angepasst (nur Jobs mit status=open, date>=heute, matchedWorkerId=None), 4) Job Models aktualisiert mit date, start_at, end_at Feldern. Alle GET Job-Endpoints rufen cleanup auf."
+
   - task: "Backend API"
     implemented: true
     working: true
