@@ -46,6 +46,8 @@ export default function ChatScreen() {
       try {
         setLoading(true);
 
+        console.log("CHAT DEBUG → applicationId:", applicationId);
+
         // Unlock-Check wieder eingebaut
         const isUnlocked = await checkChatUnlocked(applicationId);
         if (!isUnlocked) {
@@ -56,11 +58,15 @@ export default function ChatScreen() {
 
         // Nachrichten laden
         const msgs = await loadMessages(applicationId);
+        console.log("CHAT DEBUG → raw response:", msgs);
+        console.log("CHAT DEBUG → typeof:", typeof msgs);
+        
         if (!mounted) return;
         setMessages(msgs);
 
       } catch (err) {
-        console.log("Chat load error:", err);
+        console.log("CHAT ERROR:", err);
+        console.log("CHAT ERROR response:", err?.response?.data);
         if (String(err).includes("CHAT_LOCKED")) setLocked(true);
       } finally {
         if (mounted) setLoading(false);
