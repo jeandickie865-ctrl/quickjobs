@@ -58,12 +58,9 @@ export default function Step3Categories() {
 
         {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Kategorien</Text>
+          <Text style={styles.title}>Fähigkeiten & Kategorien</Text>
           <Text style={styles.subtitle}>
-            In welchen Bereichen bist du tätig?
-          </Text>
-          <Text style={styles.helperText}>
-            Wähle mindestens eine Kategorie aus (Mehrfachauswahl möglich)
+            Wähle deine Hauptkategorien
           </Text>
 
           {/* Categories Grid */}
