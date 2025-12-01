@@ -130,7 +130,40 @@ export default function CreateJob() {
       return;
     }
 
-    // Simplified: No complex time validation needed
+    // Validate time fields
+    if (!date) {
+      setError('Bitte Datum eingeben (YYYY-MM-DD)');
+      return;
+    }
+    if (!startAt) {
+      setError('Bitte Startzeit eingeben (HH:MM)');
+      return;
+    }
+    if (!endAt) {
+      setError('Bitte Endzeit eingeben (HH:MM)');
+      return;
+    }
+
+    // Validate date is not in past
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const jobDate = new Date(date);
+    if (jobDate < today) {
+      setError('Das Datum darf nicht in der Vergangenheit liegen');
+      return;
+    }
+
+    // If date is today, check if end time is not in past
+    if (jobDate.getTime() === today.getTime()) {
+      const now = new Date();
+      const [endHour, endMin] = endAt.split(':').map(Number);
+      const endTime = new Date();
+      endTime.setHours(endHour, endMin, 0, 0);
+      if (endTime < now) {
+        setError('Die Endzeit darf nicht in der Vergangenheit liegen');
+        return;
+      }
+    }
 
     // Tags sind bereits Arrays (requiredAll, requiredAny)
     const requiredAllTags = requiredAll;
@@ -144,22 +177,8 @@ export default function CreateJob() {
       city: address.city?.trim() || undefined,
     };
 
-    // Build description with time info if provided
-    let fullDescription = description.trim() || '';
-    
-    if (timeInfo) {
-      const parts = timeInfo.split('|');
-      const datum = parts[0] || '';
-      const uhrzeit = parts[1] || '';
-      
-      if (datum || uhrzeit) {
-        fullDescription += '\n\n📅 WANN:';
-        if (datum) fullDescription += `\nDatum: ${datum}`;
-        if (uhrzeit) fullDescription += `\nUhrzeit: ${uhrzeit}`;
-      }
-    }
-    
-    fullDescription = fullDescription.trim() || undefined;
+    // Build description (NO time appended)
+    const fullDescription = description.trim() || undefined;
 
     // Create job object - simplified without complex time fields
     const jobCreate: JobCreate = {
