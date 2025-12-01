@@ -175,10 +175,6 @@ export default function CreateJob() {
       }
     }
 
-    // Tags sind bereits Arrays (requiredAll, requiredAny)
-    const requiredAllTags = requiredAll;
-    const requiredAnyTags = requiredAny;
-
     // Build structured address
     const location: Address = {
       street: address.street?.trim() || undefined,
@@ -190,12 +186,14 @@ export default function CreateJob() {
     // Build description (NO time appended)
     const fullDescription = description.trim() || undefined;
 
-    // Create job object
+    // Create job object with NEW TAXONOMY
     const jobCreate: JobCreate = {
       employerType: user.accountType === 'business' ? 'business' : 'private',
       title: title.trim(),
       description: fullDescription,
       category,
+      subcategory: subcategory || undefined,
+      qualifications: qualifications,
       timeMode: 'fixed_time',
       date,
       startAt,
@@ -205,8 +203,9 @@ export default function CreateJob() {
       lon: lon,
       workerAmountCents,
       paymentToWorker: paymentMethod,
-      required_all_tags: requiredAllTags,
-      required_any_tags: requiredAnyTags,
+      // Legacy tags - kept empty for backward compatibility
+      required_all_tags: [],
+      required_any_tags: [],
     };
 
     try {
