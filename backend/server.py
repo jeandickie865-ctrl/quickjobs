@@ -1121,6 +1121,16 @@ async def create_job(
     job_dict["employerId"] = employerId  # Set employerId from token
     job_dict["createdAt"] = datetime.utcnow().isoformat()
     
+    # SYNC TIME FIELDS: Ensure both camelCase and snake_case are set
+    if job_dict.get("startAt") and not job_dict.get("start_at"):
+        job_dict["start_at"] = job_dict["startAt"]
+    if job_dict.get("endAt") and not job_dict.get("end_at"):
+        job_dict["end_at"] = job_dict["endAt"]
+    if job_dict.get("start_at") and not job_dict.get("startAt"):
+        job_dict["startAt"] = job_dict["start_at"]
+    if job_dict.get("end_at") and not job_dict.get("endAt"):
+        job_dict["endAt"] = job_dict["end_at"]
+    
     logger.info(f"📝 Creating job with employerId: {employerId}")
     
     # Convert nested Address to dict if needed
