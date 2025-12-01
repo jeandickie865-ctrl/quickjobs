@@ -238,17 +238,33 @@ export default function Step5Summary() {
             </View>
           </View>
 
-          {/* Skills */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Fähigkeiten</Text>
-            <View style={styles.tagContainer}>
-              {profileData.skills.map((skill, index) => (
-                <View key={index} style={styles.tag}>
-                  <Text style={styles.tagText}>{skill}</Text>
-                </View>
-              ))}
+          {/* Subcategories */}
+          {profileData.subcategories.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Tätigkeiten</Text>
+              <View style={styles.tagContainer}>
+                {profileData.subcategories.map((sub, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Text style={styles.tagText}>{sub}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
+          )}
+
+          {/* Qualifications */}
+          {profileData.qualifications.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Qualifikationen</Text>
+              <View style={styles.tagContainer}>
+                {profileData.qualifications.map((qual, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Text style={styles.tagText}>{qual}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
         </ScrollView>
 
         {/* Navigation */}
