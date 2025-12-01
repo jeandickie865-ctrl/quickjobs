@@ -356,6 +356,16 @@ export default function JobDetailScreen() {
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
             {(() => {
+              // DEBUG: Log job time fields
+              console.log('JOB TIME DEBUG:', {
+                date: job.date,
+                start_at: job.start_at,
+                end_at: job.end_at,
+                startAt: job.startAt,
+                endAt: job.endAt,
+                timeMode: job.timeMode
+              });
+              
               // Neue Felder: date, start_at, end_at
               if (job.date && job.start_at && job.end_at) {
                 return `${job.date} von ${job.start_at} bis ${job.end_at}`;
