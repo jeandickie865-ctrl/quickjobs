@@ -168,8 +168,16 @@ async def list_all_jobs(
     current_user: User = Depends(get_current_user)
 ):
     """List all jobs (for matching/browsing)"""
+    # Cleanup past jobs first
+    await delete_past_jobs(db)
+    
     result = await db.execute(select(Job))
     jobs = result.scalars().all()
+    
+    # Filter out past jobs for workers
+    if current_user.role == UserRole.WORKER:
+        jobs = [job for job in jobs if not is_job_past(job)]
+    
     return jobs
 
 @router.get("/{job_id}", response_model=JobResponse)
