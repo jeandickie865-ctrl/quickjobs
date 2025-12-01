@@ -117,6 +117,7 @@ export default function CreateJob() {
     // Build structured address
     const location: Address = {
       street: address.street?.trim() || undefined,
+      houseNumber: address.houseNumber?.trim() || undefined,
       postalCode: address.postalCode?.trim() || undefined,
       city: address.city?.trim() || undefined,
     };
