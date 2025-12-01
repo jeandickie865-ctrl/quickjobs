@@ -21,6 +21,33 @@ export default function WorkerFeedScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isUpcomingJob = (job) => {
+    if (!job.date || !job.startAt || !job.endAt) return false;
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const jobDate = new Date(job.date);
+    if (isNaN(jobDate)) return false;
+
+    // In der Vergangenheit? → raus
+    if (jobDate < today) return false;
+
+    // Heute → Endzeit prüfen
+    if (jobDate.getTime() === today.getTime()) {
+      const now = new Date();
+      const [endH, endM] = job.endAt.split(':').map(Number);
+      const endTime = new Date();
+      endTime.setHours(endH, endM, 0, 0);
+      if (endTime < now) return false;
+    }
+
+    // Status muss 'open' sein
+    if (job.status !== 'open') return false;
+
+    return true;
+  };
+
   const loadJobs = async () => {
     // Sicherstellen, dass user und token geladen sind
     if (!token || !user) {
@@ -35,7 +62,9 @@ export default function WorkerFeedScreen() {
       console.log("📋 Loading matched jobs...");
       const data = await getMatchedJobs();
       console.log("✅ Matched jobs loaded:", data.length);
-      setJobs(data);
+      
+      const filtered = data.filter(isUpcomingJob);
+      setJobs(filtered);
     } catch (err: any) {
       console.error("❌ Error loading jobs:", err);
       if (err.message === "UNAUTHORIZED" || err.message?.includes("no token found")) {
