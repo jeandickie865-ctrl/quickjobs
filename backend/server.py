@@ -208,7 +208,7 @@ class JobCreate(BaseModel):
     title: str
     description: Optional[str] = None
     category: str
-    timeMode: str
+    timeMode: str = "fixed_time"  # Nur fixed_time erlaubt
     startAt: Optional[str] = None
     endAt: Optional[str] = None
     hours: Optional[float] = None
@@ -221,6 +221,47 @@ class JobCreate(BaseModel):
     required_all_tags: List[str] = []
     required_any_tags: List[str] = []
     status: str = "open"
+    
+    @field_validator('timeMode')
+    @classmethod
+    def validate_timemode(cls, v):
+        if v != 'fixed_time':
+            raise ValueError('timeMode must be "fixed_time"')
+        return v
+    
+    @field_validator('startAt')
+    @classmethod
+    def validate_startat(cls, v):
+        if not v:
+            raise ValueError('startAt is required')
+        try:
+            start_dt = datetime.fromisoformat(v.replace('Z', '+00:00'))
+            now = datetime.utcnow()
+            if start_dt < now:
+                raise ValueError('startAt must be in the future')
+        except ValueError as e:
+            if 'Invalid isoformat' in str(e):
+                raise ValueError('startAt must be a valid ISO format datetime')
+            raise
+        return v
+    
+    @field_validator('endAt')
+    @classmethod
+    def validate_endat(cls, v, info):
+        if not v:
+            raise ValueError('endAt is required')
+        start_at = info.data.get('startAt')
+        if start_at:
+            try:
+                start_dt = datetime.fromisoformat(start_at.replace('Z', '+00:00'))
+                end_dt = datetime.fromisoformat(v.replace('Z', '+00:00'))
+                if end_dt <= start_dt:
+                    raise ValueError('endAt must be after startAt')
+            except ValueError as e:
+                if 'Invalid isoformat' in str(e):
+                    raise ValueError('endAt must be a valid ISO format datetime')
+                raise
+        return v
 
 class JobUpdate(BaseModel):
     employerType: Optional[str] = None
