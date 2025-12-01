@@ -1196,7 +1196,12 @@ async def get_matched_jobs_for_me(
     authorization: Optional[str] = Header(None)
 ):
     """
-    Get all jobs that match the current worker's profile
+    B1: Get all jobs that match the current worker's profile
+    
+    Filter: NUR Jobs mit:
+    - status == "open"
+    - date >= HEUTE (Jobs von heute + Zukunft)
+    - matchedWorkerId == None (keine Matches)
     
     Matching is based on:
     - Category (must be identical)
@@ -1204,8 +1209,8 @@ async def get_matched_jobs_for_me(
     - Required tags (all must be present in job)
     - Optional tags (at least one must be present if specified)
     """
-    # Cleanup old jobs before matching
-    await cleanup_old_jobs()
+    # B1: Cleanup old jobs before matching
+    await delete_expired_jobs()
     
     # Get workerId from token
     worker_id = await get_user_id_from_token(authorization)
@@ -1219,9 +1224,17 @@ async def get_matched_jobs_for_me(
     
     logger.info(f"📋 Worker profile loaded: category={worker_profile.get('category')}, radius={worker_profile.get('radius')}")
     
-    # Load all active jobs (status = 'open')
-    all_jobs = await db.jobs.find({"status": "open"}).to_list(9999)
-    logger.info(f"📊 Found {len(all_jobs)} open jobs to match against")
+    # B1: Load only future/today jobs that are open and unmatched
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    all_jobs = await db.jobs.find({
+        "status": "open",
+        "date": {"$gte": today},
+        "$or": [
+            {"matchedWorkerId": None},
+            {"matchedWorkerId": {"$exists": False}}
+        ]
+    }).to_list(9999)
+    logger.info(f"📊 Found {len(all_jobs)} open, future/today, unmatched jobs to match against (date >= {today})")
     
     # Apply matching logic
     matched_jobs = []
