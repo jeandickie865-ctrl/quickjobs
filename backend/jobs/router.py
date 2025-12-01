@@ -1,10 +1,10 @@
 # jobs/router.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from typing import List
 import uuid
-from datetime import datetime
+from datetime import datetime, date, time
 from core.database import get_db
 from core.security import get_current_user
 from users.models import User, UserRole
@@ -12,6 +12,99 @@ from jobs.models import Job
 from jobs.schemas import JobCreate, JobUpdate, JobResponse
 
 router = APIRouter()
+
+
+# ===== CLEANUP FUNCTION =====
+async def delete_past_jobs(db: AsyncSession):
+    """
+    Löscht alle Jobs, die in der Vergangenheit liegen.
+    Jobs mit status='matched' werden zusammen mit ihren Applications gelöscht.
+    """
+    now = datetime.utcnow()
+    today_date = now.date()
+    current_time = now.time()
+    
+    # Hole alle fixed_time Jobs
+    result = await db.execute(
+        select(Job).where(Job.time_mode == 'fixed_time')
+    )
+    all_jobs = result.scalars().all()
+    
+    jobs_to_delete = []
+    
+    for job in all_jobs:
+        if not job.date or not job.end_at:
+            continue
+            
+        try:
+            # Parse date
+            job_date = datetime.fromisoformat(job.date).date() if isinstance(job.date, str) else job.date
+            
+            # Parse end_at (Format: HH:MM)
+            if ':' in str(job.end_at):
+                end_hour, end_min = map(int, job.end_at.split(':'))
+                job_end_time = time(end_hour, end_min)
+            else:
+                continue
+            
+            # Check if job is past
+            is_past = False
+            if job_date < today_date:
+                is_past = True
+            elif job_date == today_date and job_end_time < current_time:
+                is_past = True
+            
+            if is_past:
+                jobs_to_delete.append(job)
+                
+        except (ValueError, AttributeError):
+            # Skip jobs with invalid date/time format
+            continue
+    
+    # Delete jobs and their applications
+    for job in jobs_to_delete:
+        # If matched, delete applications first
+        if job.status == 'matched':
+            from applications.models import Application
+            await db.execute(
+                delete(Application).where(Application.job_id == job.id)
+            )
+        
+        # Delete the job
+        await db.delete(job)
+    
+    if jobs_to_delete:
+        await db.commit()
+        print(f"🧹 Deleted {len(jobs_to_delete)} past jobs")
+
+
+def is_job_past(job: Job) -> bool:
+    """Helper to check if a job is in the past"""
+    if not job.date or not job.end_at:
+        return False
+        
+    now = datetime.utcnow()
+    today_date = now.date()
+    current_time = now.time()
+    
+    try:
+        job_date = datetime.fromisoformat(job.date).date() if isinstance(job.date, str) else job.date
+        
+        if ':' in str(job.end_at):
+            end_hour, end_min = map(int, job.end_at.split(':'))
+            job_end_time = time(end_hour, end_min)
+        else:
+            return False
+        
+        if job_date < today_date:
+            return True
+        elif job_date == today_date and job_end_time < current_time:
+            return True
+            
+    except (ValueError, AttributeError):
+        pass
+    
+    return False
 
 @router.post("", response_model=JobResponse, status_code=status.HTTP_201_CREATED)
 async def create_job(
