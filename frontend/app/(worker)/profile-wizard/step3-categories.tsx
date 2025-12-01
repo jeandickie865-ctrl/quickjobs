@@ -147,8 +147,8 @@ export default function Step3Categories() {
             )}
           </View>
 
-          {/* SECTION 2: Select Subcategories (only if category selected) */}
-          {selectedCategory && availableSubcategories.length > 0 && (
+          {/* SECTION 2: Select Subcategories (only if categories selected) */}
+          {selectedCategories.length > 0 && availableSubcategories.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>2. Tätigkeiten auswählen *</Text>
               <Text style={styles.helperText}>
