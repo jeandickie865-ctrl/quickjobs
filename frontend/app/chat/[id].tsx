@@ -44,16 +44,29 @@ export default function ChatScreen() {
 
     async function loadChat() {
       try {
-        if (!mounted) return;
-        setLoading(true);
+        console.log("CHAT → loadChat() gestartet", applicationId);
 
+        // 1. Unlock-Check
+        const isUnlocked = await checkChatUnlocked(applicationId);
+        console.log("CHAT → isUnlocked:", isUnlocked);
+
+        if (!isUnlocked) {
+          setLocked(true);
+          setLoading(false);
+          return;
+        }
+
+        // 2. Messages laden
         const msgs = await loadMessages(applicationId);
-        if (!mounted) return;
+        console.log("CHAT → messages loaded:", msgs);
 
-        setMessages(msgs);
+        if (mounted) {
+          setMessages(msgs || []);
+        }
 
       } catch (err) {
-        console.log("CHAT LOAD ERROR:", err);
+        console.log("CHAT ERROR:", err);
+        console.log("CHAT ERROR RESPONSE:", err?.response?.data);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -62,16 +75,14 @@ export default function ChatScreen() {
     loadChat();
 
     intervalRef.current = setInterval(() => {
-      if (mounted && !locked) {
-        loadChat();
-      }
+      if (mounted && !locked) loadChat();
     }, 4000);
 
     return () => {
       mounted = false;
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [applicationId]);
+  }, [applicationId, locked]);
 
   // --------------------------------------------
   // AUTO SCROLL TO BOTTOM
