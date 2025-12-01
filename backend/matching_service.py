@@ -38,36 +38,51 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 
 def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
     """
-    Check if a worker matches a job based on:
-    1. Category (must be in worker's categories list)
-    2. Radius (Haversine distance)
-    3. Tags (if job has tags, worker must have at least one matching tag)
+    Check if a worker matches a job based on NEW TAXONOMY STRUCTURE:
+    1. Category (job.category must equal worker.categories[0])
+    2. Subcategory (worker.subcategories must include job.subcategory)
+    3. Qualifications (if job.qualifications exists, worker must have ALL of them)
+    4. Radius (Haversine distance)
     
     Args:
         worker: Worker profile document with:
-            - categories: List[str]
+            - categories: List[str] (contains exactly ONE category)
+            - subcategories: List[str]
+            - qualifications: List[str]
             - homeLat: float
             - homeLon: float
             - radiusKm: int
-            - selectedTags: List[str]
         job: Job document with:
             - category: str
+            - subcategory: str
+            - qualifications: List[str] (optional)
             - lat: float
             - lon: float
-            - tags: List[str] (optional)
     
     Returns:
         True if worker matches job, False otherwise
     """
     
-    # 1. Category check
-    # Worker hat: categories: List[str]
+    # 1. Category check - must match exactly
     worker_categories = worker.get("categories", [])
-    if job.get("category") not in worker_categories:
+    if not worker_categories or job.get("category") != worker_categories[0]:
         return False
     
-    # 2. Radius check
-    # Worker hat: homeLat, homeLon, radiusKm
+    # 2. Subcategory check - worker must have this subcategory
+    worker_subcategories = worker.get("subcategories", [])
+    job_subcategory = job.get("subcategory")
+    if job_subcategory and job_subcategory not in worker_subcategories:
+        return False
+    
+    # 3. Qualifications check - worker must have ALL job qualifications
+    job_qualifications = job.get("qualifications", [])
+    if job_qualifications:
+        worker_qualifications = worker.get("qualifications", [])
+        for qual in job_qualifications:
+            if qual not in worker_qualifications:
+                return False
+    
+    # 4. Radius check (unchanged)
     try:
         worker_lat = float(worker.get("homeLat", 0))
         worker_lon = float(worker.get("homeLon", 0))
@@ -82,16 +97,5 @@ def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
     except (ValueError, TypeError):
         # If coordinates are missing or invalid, no match
         return False
-    
-    # 3. Tags check
-    # Worker hat: selectedTags
-    # Jobs haben: job["tags"]
-    job_tags = [t.lower() for t in job.get("tags", [])]
-    worker_tags = [t.lower() for t in worker.get("selectedTags", [])]
-    
-    # Wenn Job Tags hat, muss Worker mindestens einen davon besitzen
-    if len(job_tags) > 0:
-        if not any(tag in job_tags for tag in worker_tags):
-            return False
     
     return True
