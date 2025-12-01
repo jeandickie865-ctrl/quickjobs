@@ -46,6 +46,47 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
+# ===== JOB CLEANUP FUNCTION =====
+async def cleanup_old_jobs():
+    """
+    Löscht alle Jobs, deren Datum in der Vergangenheit liegt.
+    Löscht auch zugehörige Applications und ChatMessages.
+    """
+    try:
+        now = datetime.utcnow()
+        
+        # Finde alle Jobs, deren startAt, endAt oder dueAt in der Vergangenheit liegen
+        old_jobs = await db.jobs.find({
+            "$or": [
+                {"startAt": {"$lt": now.isoformat()}},
+                {"endAt": {"$lt": now.isoformat()}},
+                {"dueAt": {"$lt": now.isoformat()}}
+            ]
+        }).to_list(length=None)
+        
+        if not old_jobs:
+            logger.info("🧹 Cleanup: Keine alten Jobs gefunden")
+            return
+        
+        old_job_ids = [job["id"] for job in old_jobs]
+        logger.info(f"🧹 Cleanup: {len(old_job_ids)} alte Jobs gefunden")
+        
+        # Lösche zugehörige Applications
+        app_result = await db.applications.delete_many({"jobId": {"$in": old_job_ids}})
+        logger.info(f"🧹 Cleanup: {app_result.deleted_count} Applications gelöscht")
+        
+        # Lösche zugehörige ChatMessages
+        chat_result = await db.chat_messages.delete_many({"applicationId": {"$in": old_job_ids}})
+        logger.info(f"🧹 Cleanup: {chat_result.deleted_count} ChatMessages gelöscht")
+        
+        # Lösche die Jobs selbst
+        job_result = await db.jobs.delete_many({"id": {"$in": old_job_ids}})
+        logger.info(f"🧹 Cleanup: {job_result.deleted_count} Jobs gelöscht")
+        
+    except Exception as e:
+        logger.error(f"🧹 Cleanup Error: {e}")
+
+
 # Define Models
 class StatusCheck(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
