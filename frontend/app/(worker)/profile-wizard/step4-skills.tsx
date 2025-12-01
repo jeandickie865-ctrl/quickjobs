@@ -134,7 +134,7 @@ export default function Step4Skills() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.purple,
+    backgroundColor: COLORS.white,
   },
   safeArea: {
     flex: 1,
@@ -148,19 +148,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: COLORS.white,
+    color: COLORS.black,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.white,
-    opacity: 0.9,
+    color: COLORS.black,
+    opacity: 0.8,
     marginBottom: 16,
   },
   helperText: {
     fontSize: 12,
-    color: COLORS.white,
-    opacity: 0.7,
+    color: COLORS.gray,
+    opacity: 1,
     marginBottom: 24,
     fontStyle: 'italic',
   },
@@ -171,30 +171,32 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: COLORS.white,
+    color: COLORS.black,
     textAlign: 'center',
     marginTop: 16,
     opacity: 0.8,
   },
   skillsList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     gap: 12,
   },
   skillChip: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    backgroundColor: '#ECE9FF',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    justifyContent: 'space-between',
+    borderWidth: 0,
   },
   skillChipSelected: {
-    backgroundColor: COLORS.neon,
-    borderColor: COLORS.white,
+    backgroundColor: COLORS.white,
+    borderWidth: 2,
+    borderColor: COLORS.neon,
+    shadowColor: 'rgba(200,255,22,0.2)',
+    shadowOpacity: 1,
+    shadowRadius: 8,
   },
   skillChipPressed: {
     opacity: 0.7,
@@ -202,10 +204,10 @@ const styles = StyleSheet.create({
   skillText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.white,
+    color: COLORS.black,
   },
   skillTextSelected: {
-    color: COLORS.purple,
+    color: COLORS.black,
   },
   validationHint: {
     fontSize: 13,
