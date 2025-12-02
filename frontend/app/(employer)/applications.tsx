@@ -294,6 +294,74 @@ export default function EmployerApplicationsScreen() {
                     </View>
                   </View>
 
+                  {/* Worker Qualifikationen - WICHTIG FÜR ENTSCHEIDUNG */}
+                  {worker && (worker.subcategories?.length > 0 || worker.qualifications?.length > 0) && (
+                    <View style={{
+                      backgroundColor: 'rgba(200, 255, 22, 0.1)',
+                      padding: 12,
+                      borderRadius: 12,
+                      borderWidth: 2,
+                      borderColor: COLORS.neon,
+                      marginBottom: 12,
+                    }}>
+                      <Text style={{ fontSize: 13, fontWeight: '700', color: COLORS.black, marginBottom: 8 }}>
+                        🎯 Qualifikationen & Tätigkeiten
+                      </Text>
+                      
+                      {worker.subcategories && worker.subcategories.length > 0 && (
+                        <View style={{ marginBottom: 8 }}>
+                          <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.darkGray, marginBottom: 4 }}>
+                            Tätigkeiten:
+                          </Text>
+                          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                            {worker.subcategories.map((sub, idx) => (
+                              <View 
+                                key={idx}
+                                style={{
+                                  backgroundColor: COLORS.white,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 4,
+                                  borderRadius: 8,
+                                  borderWidth: 1,
+                                  borderColor: COLORS.neon,
+                                }}
+                              >
+                                <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.black }}>
+                                  {sub}
+                                </Text>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      )}
+
+                      {worker.qualifications && worker.qualifications.length > 0 && (
+                        <View>
+                          <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.darkGray, marginBottom: 4 }}>
+                            Qualifikationen:
+                          </Text>
+                          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                            {worker.qualifications.map((qual, idx) => (
+                              <View 
+                                key={idx}
+                                style={{
+                                  backgroundColor: COLORS.neon,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 4,
+                                  borderRadius: 8,
+                                }}
+                              >
+                                <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
+                                  ✓ {qual}
+                                </Text>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  )}
+
                   {/* Job Info */}
                   {job && (
                     <View style={{
