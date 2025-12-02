@@ -51,6 +51,13 @@ export default function PaymentScreen() {
       const data = await res.json();
       setApplication(data);
 
+      // Worker-Profil laden
+      const workerRes = await fetch(`${API_URL}/profiles/worker/${data.workerId}`, { headers });
+      if (workerRes.ok) {
+        const workerData = await workerRes.json();
+        setWorkerProfile(workerData);
+      }
+
       // Wenn bereits bezahlt, direkt zu Registration
       if (data.paymentStatus === "paid") {
         router.replace(`/(employer)/registration/${applicationId}`);
@@ -60,6 +67,34 @@ export default function PaymentScreen() {
       Alert.alert("Fehler", "Application konnte nicht geladen werden");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function requestOfficialRegistration(appId: string) {
+    try {
+      const headers = await getAuthHeaders();
+      await fetch(`${API_URL}/applications/${appId}/request-registration`, {
+        method: "POST",
+        headers,
+      });
+      router.replace(`/(employer)/registration/confirm?applicationId=${appId}&type=kurzfristig`);
+    } catch (err) {
+      console.error("Request registration error:", err);
+      Alert.alert("Fehler", "Anfrage fehlgeschlagen");
+    }
+  }
+
+  async function setInformalRegistration(appId: string) {
+    try {
+      const headers = await getAuthHeaders();
+      await fetch(`${API_URL}/applications/${appId}/set-informal`, {
+        method: "POST",
+        headers,
+      });
+      router.replace(`/(employer)/matches`);
+    } catch (err) {
+      console.error("Set informal error:", err);
+      Alert.alert("Fehler", "Fehler beim Setzen");
     }
   }
 
