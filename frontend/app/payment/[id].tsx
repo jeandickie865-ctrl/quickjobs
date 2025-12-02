@@ -165,6 +165,7 @@ export default function PaymentScreen() {
         return; // ❗ Alles stoppen, Modal B NICHT zeigen
       }
 
+      // Stelle sicher, dass vorher keine Navigation stattfindet
       // 🔹 MODAL B: Firma + Worker nicht selbstständig
       if (isBusinessEmployer && workerNotSelfEmployed) {
         setProcessing(false);
