@@ -52,6 +52,13 @@ export default function PaymentScreen() {
       const data = await res.json();
       setApplication(data);
 
+      // Job-Daten laden
+      const jobRes = await fetch(`${API_URL}/jobs/${data.jobId}`, { headers });
+      if (jobRes.ok) {
+        const jobData = await jobRes.json();
+        setJob(jobData);
+      }
+
       // Worker-Profil laden
       const workerRes = await fetch(`${API_URL}/profiles/worker/${data.workerId}`, { headers });
       if (workerRes.ok) {
