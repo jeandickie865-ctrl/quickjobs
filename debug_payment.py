@@ -83,6 +83,21 @@ async def debug_payment_status():
         print(f"   chatUnlocked: {accepted_data.get('chatUnlocked')}")
         print(f"   isPaid: {accepted_data.get('isPaid')}")
         
+        # Pay for application
+        pay_resp = await client.post(f"{BACKEND_URL}/applications/{app_data['id']}/pay", 
+                                   headers=employer_headers)
+        
+        if pay_resp.status_code == 200:
+            paid_data = pay_resp.json()
+            print(f"✅ Payment successful")
+            print(f"📊 After payment:")
+            print(f"   status: {paid_data.get('status')}")
+            print(f"   paymentStatus: {paid_data.get('paymentStatus')}")
+            print(f"   chatUnlocked: {paid_data.get('chatUnlocked')}")
+            print(f"   isPaid: {paid_data.get('isPaid')}")
+        else:
+            print(f"❌ Payment failed: {pay_resp.status_code} - {pay_resp.text}")
+        
         # Get fresh application data
         fresh_resp = await client.get(f"{BACKEND_URL}/applications/{app_data['id']}", 
                                     headers=worker_headers)
