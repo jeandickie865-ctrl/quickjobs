@@ -26,6 +26,7 @@ export default function Step4Skills() {
   const { wizardData, updateWizardData } = useWizard();
   
   const selectedCategories = wizardData.categories || [];
+  const selectedSubcategories = wizardData.subcategories || [];
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>(
     wizardData.qualifications || []
   );
