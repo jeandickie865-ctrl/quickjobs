@@ -184,14 +184,23 @@ export default function WorkerMatchesScreen() {
       
       if (!realMatch) return;
 
-      // Check if worker has completed registration data
+      // Check if worker has completed registration data (nur für NICHT-selbstständige)
       try {
-        const response = await fetch(`/api/profiles/worker/${user.userId}/registration-status`);
-        const data = await response.json();
+        // Zuerst Worker-Profil laden um isSelfEmployed zu prüfen
+        const profileResponse = await fetch(`/api/profiles/worker/${user.userId}`, {
+          headers: await getAuthHeaders()
+        });
+        const profileData = await profileResponse.json();
         
-        if (data.complete === false) {
-          console.log('Worker registration incomplete, redirecting...');
-          router.replace('/(worker)/registration-data');
+        // Nur prüfen wenn NICHT selbstständig
+        if (!profileData.isSelfEmployed) {
+          const response = await fetch(`/api/profiles/worker/${user.userId}/registration-status`);
+          const data = await response.json();
+          
+          if (data.complete === false) {
+            console.log('Worker registration incomplete, redirecting...');
+            router.replace('/(worker)/registration-data');
+          }
         }
       } catch (error) {
         console.error('Error checking registration status:', error);
