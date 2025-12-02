@@ -154,6 +154,12 @@ export default function MatchesScreen() {
       }
       setWorkerDataStatus(statusMap);
       
+      // Load unread counts for all matches
+      const applicationIds = allMatches.map(m => m.application.id);
+      if (applicationIds.length > 0) {
+        loadUnreadCounts(applicationIds);
+      }
+      
     } catch (error) {
       console.error('Error loading matches:', error);
     } finally {
