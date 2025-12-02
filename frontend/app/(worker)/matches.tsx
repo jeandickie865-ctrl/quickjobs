@@ -58,6 +58,29 @@ export default function WorkerMatchesScreen() {
     }).start();
   }, []);
 
+  const loadUnreadCounts = async (applicationIds: string[]) => {
+    const counts: Record<string, number> = {};
+    
+    for (const appId of applicationIds) {
+      try {
+        const response = await fetch(`${API_URL}/chat/unread-count/${appId}`, {
+          headers: await getAuthHeaders(),
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          counts[appId] = data.unreadCount || 0;
+        } else {
+          counts[appId] = 0;
+        }
+      } catch (error) {
+        counts[appId] = 0;
+      }
+    }
+    
+    setUnreadCounts(counts);
+  };
+
   const loadMatches = async (silent = false) => {
     if (!user) return;
 
