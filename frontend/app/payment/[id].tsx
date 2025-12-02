@@ -133,8 +133,27 @@ export default function PaymentScreen() {
         // Selbstständig - direkt weiter
         router.replace(`/(employer)/matches`);
       } else {
-        // Nicht selbstständig - Modal zeigen
-        setShowRegistrationModal(true);
+        // Nicht selbstständig
+        // Prüfe ob Arbeitgeber private Person ist
+        if (user?.accountType === "private" && !workerProfile?.isSelfEmployed) {
+          // Popup für private Arbeitgeber anzeigen
+          Alert.alert(
+            "Hinweis für private Auftraggeber",
+            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\nDie App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\nWir haben alle Unterlagen unter „Meine Matches" für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  // Modal für Anmeldung zeigen
+                  setShowRegistrationModal(true);
+                }
+              }
+            ]
+          );
+        } else {
+          // Nicht-private Arbeitgeber - Modal direkt zeigen
+          setShowRegistrationModal(true);
+        }
       }
       
     } catch (err) {
