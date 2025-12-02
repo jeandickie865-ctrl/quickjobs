@@ -37,7 +37,17 @@ export default function WorkerJobDetailScreen() {
 
   useEffect(() => {
     loadJob();
+    loadWorkerProfile();
   }, [id]);
+
+  const loadWorkerProfile = async () => {
+    try {
+      const profile = await getWorkerProfile();
+      setWorker(profile);
+    } catch (err) {
+      console.log('Worker profile load error:', err);
+    }
+  };
 
   const loadJob = async () => {
     try {
