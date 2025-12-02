@@ -150,8 +150,16 @@ export default function PaymentScreen() {
       const workerNotSelfEmployed = workerProfile?.isSelfEmployed === false;
       const isSmallJob = job?.workerAmountCents < 30000; // Job < 300€ (einmalige Hilfe)
 
+      console.log("🔍 DEBUG - user.accountType:", user?.accountType);
+      console.log("🔍 DEBUG - workerProfile.isSelfEmployed:", workerProfile?.isSelfEmployed);
+      console.log("🔍 DEBUG - job.workerAmountCents:", job?.workerAmountCents);
+      console.log("🔍 DEBUG - isPrivateEmployer:", isPrivateEmployer);
+      console.log("🔍 DEBUG - workerNotSelfEmployed:", workerNotSelfEmployed);
+      console.log("🔍 DEBUG - isSmallJob:", isSmallJob);
+
       // 🔹 MODAL A: Privatperson + Worker nicht selbstständig + Job < 300€
       if (isPrivateEmployer && workerNotSelfEmployed && isSmallJob) {
+        console.log("✅ MODAL A: Showing private employer modal!");
         setShowPrivateEmployerModal(true);
         return; // ❗ Alles stoppen, Modal B NICHT zeigen
       }
