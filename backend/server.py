@@ -3569,6 +3569,72 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ===== GEOCODING / ADDRESS SEARCH ENDPOINTS =====
+@api_router.get("/geocoding/search")
+async def search_addresses(
+    query: str,
+    authorization: str = Header(None)
+):
+    """
+    Sucht Adressvorschläge über Nominatim API
+    Wird vom Frontend für Autocomplete verwendet
+    """
+    # Token validation (optional - kann auch ohne Auth verwendet werden)
+    # requesting_user = await decode_token_simple(authorization)
+    # if not requesting_user:
+    #     raise HTTPException(status_code=401, detail="UNAUTHORIZED")
+    
+    if len(query.strip()) < 3:
+        return []
+    
+    try:
+        import httpx
+        
+        # Nur in Deutschland suchen
+        search_query = f"{query}, Germany"
+        url = "https://nominatim.openstreetmap.org/search"
+        params = {
+            "q": search_query,
+            "format": "json",
+            "limit": 5,
+            "addressdetails": 1,
+            "countrycodes": "de"
+        }
+        headers = {
+            "User-Agent": "ShiftMatch-App/1.0"
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, params=params, headers=headers, timeout=5.0)
+            
+            if response.status_code != 200:
+                logger.error(f"❌ Nominatim API error: {response.status_code}")
+                return []
+            
+            data = response.json()
+            
+            # Formatiere Ergebnisse
+            suggestions = []
+            for item in data:
+                address = item.get("address", {})
+                suggestions.append({
+                    "displayName": item.get("display_name"),
+                    "street": address.get("road"),
+                    "houseNumber": address.get("house_number"),
+                    "postalCode": address.get("postcode"),
+                    "city": address.get("city") or address.get("town") or address.get("village"),
+                    "lat": float(item.get("lat")),
+                    "lon": float(item.get("lon"))
+                })
+            
+            logger.info(f"✅ Address search: '{query}' -> {len(suggestions)} results")
+            return suggestions
+            
+    except Exception as e:
+        logger.error(f"❌ Address search error: {e}")
+        return []
+
+
 # ===== B1: BACKGROUND CLEANUP SCHEDULER =====
 async def cleanup_scheduler():
     """
