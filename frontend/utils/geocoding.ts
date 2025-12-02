@@ -73,6 +73,7 @@ export async function geocodeAddress(
 /**
  * Sucht Adressvorschläge basierend auf Eingabe
  * Für Autocomplete-Funktionalität
+ * JETZT ÜBER BACKEND (um CORS-Probleme zu vermeiden)
  */
 export async function searchAddressSuggestions(
   query: string
@@ -82,16 +83,14 @@ export async function searchAddressSuggestions(
   }
   
   try {
-    // Nur in Deutschland suchen
-    const searchQuery = `${query}, Germany`;
-    const encodedQuery = encodeURIComponent(searchQuery);
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodedQuery}&format=json&limit=5&addressdetails=1&countrycodes=de`;
+    // Über Backend-Endpoint suchen
+    const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+    const encodedQuery = encodeURIComponent(query);
+    const url = `${API_URL}/api/geocoding/search?query=${encodedQuery}`;
     
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'ShiftMatch-App/1.0'
-      }
-    });
+    console.log('🔍 Searching addresses via backend:', query);
+    
+    const response = await fetch(url);
     
     if (!response.ok) {
       console.error('❌ Address search API error:', response.status);
@@ -99,16 +98,9 @@ export async function searchAddressSuggestions(
     }
     
     const data = await response.json();
+    console.log('✅ Found', data.length, 'address suggestions');
     
-    return data.map((item: any) => ({
-      displayName: item.display_name,
-      street: item.address?.road,
-      houseNumber: item.address?.house_number,
-      postalCode: item.address?.postcode,
-      city: item.address?.city || item.address?.town || item.address?.village,
-      lat: parseFloat(item.lat),
-      lon: parseFloat(item.lon)
-    }));
+    return data;
   } catch (error) {
     console.error('❌ Address search error:', error);
     return [];
