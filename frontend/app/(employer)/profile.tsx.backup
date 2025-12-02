@@ -19,9 +19,6 @@ const COLORS = {
   darkGray: '#333333',
   whiteTransparent: 'rgba(255,255,255,0.7)',
   neonShadow: 'rgba(200,255,22,0.2)',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function EmployerProfileViewScreen() {

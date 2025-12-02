@@ -14,9 +14,6 @@ const COLORS = {
   white: '#FFFFFF',
   whiteTransparent45: 'rgba(255,255,255,0.45)',
   whiteTransparent55: 'rgba(255,255,255,0.55)',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function EmployerLayout() {
