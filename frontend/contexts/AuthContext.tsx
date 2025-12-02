@@ -7,7 +7,7 @@ interface AuthContextValue {
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  signUp: (email: string, password: string, role: string) => Promise<boolean>;
+  signUp: (email: string, password: string, role: string, accountType?: string) => Promise<boolean>;
   signOut: () => Promise<void>;
 }
 
