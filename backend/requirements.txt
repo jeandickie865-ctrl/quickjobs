@@ -1,8 +1,12 @@
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.2
+aiosignal==1.4.0
 alembic==1.12.1
 annotated-types==0.7.0
 anyio==3.7.1
 async-timeout==5.0.1
 asyncpg==0.29.0
+attrs==25.4.0
 bcrypt==4.1.3
 black==25.11.0
 boto3==1.40.76
@@ -17,6 +21,7 @@ ecdsa==0.19.1
 email-validator==2.1.0
 fastapi==0.104.1
 flake8==7.3.0
+frozenlist==1.8.0
 greenlet==3.2.4
 h11==0.16.0
 httpcore==1.0.9
@@ -33,6 +38,7 @@ MarkupSafe==3.0.3
 mccabe==0.7.0
 mdurl==0.1.2
 motor==3.3.2
+multidict==6.7.0
 mypy==1.18.2
 mypy_extensions==1.1.0
 numpy==2.3.5
@@ -44,6 +50,7 @@ pathspec==0.12.1
 pillow==12.0.0
 platformdirs==4.5.0
 pluggy==1.6.0
+propcache==0.4.1
 pyasn1==0.6.1
 pycodestyle==2.14.0
 pycparser==2.23
@@ -83,3 +90,4 @@ uvicorn==0.24.0
 uvloop==0.22.1
 watchfiles==1.1.1
 websockets==15.0.1
+yarl==1.22.0
