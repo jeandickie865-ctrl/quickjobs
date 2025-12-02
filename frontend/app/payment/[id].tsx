@@ -135,44 +135,52 @@ export default function PaymentScreen() {
       }
 
       console.log("✅ Payment successful!");
+      console.log("🔍 RAW DATA - user:", user);
+      console.log("🔍 RAW DATA - workerProfile:", workerProfile);
+      console.log("🔍 RAW DATA - job:", job);
+      
+      // WICHTIG: Prüfen ob Daten vorhanden sind
+      if (!user || !workerProfile) {
+        console.error("❌ FEHLER: User oder WorkerProfile nicht geladen!");
+        alert("Fehler: Daten nicht vollständig geladen. Bitte versuche es erneut.");
+        setProcessing(false);
+        return;
+      }
+
+      console.log("🔍 DEBUG - user.accountType:", user.accountType);
+      console.log("🔍 DEBUG - workerProfile.isSelfEmployed:", workerProfile.isSelfEmployed);
       
       // Wenn Worker selbstständig ist → direkt weiter ohne Popup
-      if (workerProfile?.isSelfEmployed === true) {
+      if (workerProfile.isSelfEmployed === true) {
+        console.log("➡️ Worker ist selbstständig, keine Modals");
         setProcessing(false);
         router.replace("/(employer)/matches");
         return;
       }
 
-      // Definitionen für die Modal-Logik
-      const isPrivateEmployer = user?.accountType === "private";
-      const isBusinessEmployer = user?.accountType === "business";
-      const workerNotSelfEmployed = workerProfile?.isSelfEmployed === false;
-
-      console.log("🔍 DEBUG - user.accountType:", user?.accountType);
-      console.log("🔍 DEBUG - workerProfile.isSelfEmployed:", workerProfile?.isSelfEmployed);
-      console.log("🔍 DEBUG - isPrivateEmployer:", isPrivateEmployer);
-      console.log("🔍 DEBUG - isBusinessEmployer:", isBusinessEmployer);
-      console.log("🔍 DEBUG - workerNotSelfEmployed:", workerNotSelfEmployed);
-
+      // Worker ist NICHT selbstständig - jetzt Modal anzeigen
+      console.log("⚠️ Worker ist NICHT selbstständig!");
+      
       // 🔹 MODAL 1: Firma (business) + Worker nicht selbstständig
-      if (isBusinessEmployer && workerNotSelfEmployed) {
-        console.log("✅ MODAL 1: Showing business registration modal!");
+      if (user.accountType === "business") {
+        console.log("✅ MODAL 1 WIRD ANGEZEIGT: Business Registration Modal!");
         setProcessing(false);
         setShowRegistrationModal(true);
         return;
       }
 
       // 🔹 MODAL 2: Privatperson (private) + Worker nicht selbstständig
-      if (isPrivateEmployer && workerNotSelfEmployed) {
-        console.log("✅ MODAL 2: Showing private employer modal!");
+      if (user.accountType === "private") {
+        console.log("✅ MODAL 2 WIRD ANGEZEIGT: Private Employer Modal!");
         setProcessing(false);
         setShowPrivateEmployerModal(true);
         return;
       }
 
-      // Alle anderen Fälle: direkt zu Matches
+      // Sollte nie hier ankommen
+      console.error("⚠️ WARNUNG: Keine Modal-Bedingung erfüllt, gehe zu Matches");
       setProcessing(false);
-      router.replace(`/(employer)/matches`);
+      router.replace("/(employer)/matches");
       
     } catch (err) {
       console.error("❌ Payment error:", err);
