@@ -5,7 +5,6 @@ import { useRouter } from "expo-router";
 import { getJobs } from "../../../utils/jobStore";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getWorkerProfile } from "../../../utils/profileStore";
-import { getUserId } from "../../../utils/api";
 
 const COLORS = {
   purple: "#4A35D9",
@@ -31,7 +30,7 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number): numb
 }
 
 export default function AllJobsScreen() {
-  const { signOut } = useAuth();
+  const { user, token, loading, signOut } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
