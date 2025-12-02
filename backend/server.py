@@ -565,6 +565,7 @@ async def signup(request: SignUpRequest):
         "email": email,
         "password": password_hash,
         "role": request.role,
+        "accountType": request.accountType or "private",
         "createdAt": datetime.utcnow().isoformat()
     }
     
