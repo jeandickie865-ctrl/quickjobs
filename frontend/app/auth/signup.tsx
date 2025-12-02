@@ -86,7 +86,7 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      await signUp(result.data.email, result.data.password, selectedRole);
+      await signUp(result.data.email, result.data.password, selectedRole, selectedAccountType);
       
       // Nach Registrierung: Worker direkt zur Profil-Erstellung, Employer zum Dashboard
       if (selectedRole === 'worker') {
