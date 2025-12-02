@@ -137,14 +137,18 @@ export default function PaymentScreen() {
         // Prüfe ob Arbeitgeber private Person ist
         if (user?.accountType === "private" && !workerProfile?.isSelfEmployed) {
           // Popup für private Arbeitgeber anzeigen
+          const alertMessage = 
+            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
+            "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
+            "Wir haben alle Unterlagen unter „Meine Matches" für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.";
+          
           Alert.alert(
             "Hinweis für private Auftraggeber",
-            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\nDie App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\nWir haben alle Unterlagen unter „Meine Matches" für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.",
+            alertMessage,
             [
               {
                 text: "OK",
                 onPress: () => {
-                  // Modal für Anmeldung zeigen
                   setShowRegistrationModal(true);
                 }
               }
