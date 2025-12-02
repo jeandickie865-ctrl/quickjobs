@@ -12,9 +12,6 @@ const COLORS = {
   white: "#FFFFFF",
   black: "#000000",
   gray: "#8A8A8A",
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 // Haversine-Formel zur Berechnung der Distanz zwischen zwei Koordinaten
@@ -155,7 +152,7 @@ export default function AllJobsScreen() {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.white, padding: 20 }}>
         <Ionicons name="alert-circle-outline" size={64} color={COLORS.gray} />
-        <Text style={{ marginTop: 16, color: COLORS.textSecondary, fontSize: 16, textAlign: "center" }}>{error}</Text>
+        <Text style={{ marginTop: 16, color: COLORS.gray, fontSize: 16, textAlign: "center" }}>{error}</Text>
         <Pressable
           onPress={() => router.back()}
           style={{
@@ -195,7 +192,7 @@ export default function AllJobsScreen() {
         {/* Leer-Zustand */}
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
           <Ionicons name="briefcase-outline" size={64} color={COLORS.gray} />
-          <Text style={{ marginTop: 16, color: COLORS.textSecondary, fontSize: 16, textAlign: "center" }}>
+          <Text style={{ marginTop: 16, color: COLORS.gray, fontSize: 16, textAlign: "center" }}>
             Keine Jobs in deinem Umkreis gefunden
           </Text>
         </View>
