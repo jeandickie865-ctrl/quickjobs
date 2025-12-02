@@ -79,6 +79,30 @@ export async function getJobById(jobId: string): Promise<Job> {
 
 
 /* ---------------------------------------------------
+   GET ALL OPEN JOBS (No filters)
+--------------------------------------------------- */
+export async function getJobs(): Promise<Job[]> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${API_URL}/jobs`, {
+    method: "GET",
+    headers,
+  });
+
+  if (res.status === 401) throw new Error("UNAUTHORIZED");
+  if (!res.ok) throw new Error("FAILED_TO_FETCH_JOBS");
+
+  const data = await res.json();
+
+  return data.map((job: any) => ({
+    ...job,
+    required_all_tags: job.required_all_tags ?? job.tags ?? [],
+    required_any_tags: job.required_any_tags ?? [],
+  }));
+}
+
+
+/* ---------------------------------------------------
    CREATE JOB (EMPLOYER)
 --------------------------------------------------- */
 export async function addJob(jobData: any): Promise<Job> {
