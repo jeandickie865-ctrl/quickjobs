@@ -2396,9 +2396,16 @@ async def get_messages(
     # Mark messages as read if they are from the other person
     sender_role = "worker" if requesting_user == application.get("workerId") else "employer"
     other_role = "employer" if sender_role == "worker" else "worker"
+    other_user_id = application.get("employerId") if sender_role == "worker" else application.get("workerId")
     
     for msg in messages:
-        if msg.get("senderRole") == other_role and not msg.get("read"):
+        # Check if message is from the other person (support both old and new format)
+        is_from_other = (
+            msg.get("senderRole") == other_role or  # New format with senderRole
+            msg.get("senderId") == other_user_id     # Old format with senderId
+        )
+        
+        if is_from_other and not msg.get("read"):
             await db.chat_messages.update_one(
                 {"_id": msg["_id"]},
                 {"$set": {"read": True}}
