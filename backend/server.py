@@ -2294,11 +2294,13 @@ async def send_message(
     if not app.get("chatUnlocked", False) or app.get("paymentStatus") != "paid":
         raise HTTPException(status_code=402, detail="PAYMENT_REQUIRED")
     
-    # Determine receiver
+    # Determine receiver and sender role
     if user_id == app["employerId"]:
         receiver_id = app["workerId"]
+        sender_role = "employer"
     elif user_id == app["workerId"]:
         receiver_id = app["employerId"]
+        sender_role = "worker"
     else:
         raise HTTPException(status_code=403, detail="NOT_AUTHORIZED")
     
@@ -2307,6 +2309,7 @@ async def send_message(
         "applicationId": payload["applicationId"],
         "senderId": user_id,
         "receiverId": receiver_id,
+        "senderRole": sender_role,
         "text": payload["text"],
         "read": False,
         "createdAt": datetime.utcnow().isoformat(),
