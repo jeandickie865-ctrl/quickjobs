@@ -3,7 +3,16 @@ import { WorkerProfile } from '../types/profile';
 import { API_BASE, getUserId, getAuthHeaders } from './api';
 
 // ===== GET WORKER PROFILE =====
-export async function getWorkerProfile(userId: string): Promise<WorkerProfile | null> {
+export async function getWorkerProfile(userId?: string): Promise<WorkerProfile | null> {
+  // If no userId provided, get it from auth
+  if (!userId) {
+    userId = await getUserId();
+    if (!userId) {
+      console.error('❌ getWorkerProfile: No userId provided and not authenticated');
+      throw new Error('Not authenticated');
+    }
+  }
+  
   console.log('🔍 getWorkerProfile: Loading profile for user', userId);
   
   try {
