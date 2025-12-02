@@ -2601,6 +2601,14 @@ def generate_contract_pdf(
     story.append(Paragraph("<br/>".join(details_parts), styles["Normal"]))
     story.append(Spacer(1, 12))
     
+    story.append(Paragraph(
+        "Kurzfristige Beschäftigung gemäß § 40a EStG. "
+        "Der Arbeitgeber übernimmt sämtliche pauschalen Abgaben. "
+        "Für den Arbeitnehmer entstehen keine Abzüge. Brutto = Netto.",
+        styles['Normal']
+    ))
+    story.append(Spacer(1, 12))
+    
     # 5. Dauer und Umfang
     story.append(Paragraph("<b>5. Dauer und Umfang</b>", styles["Heading2"]))
     duration_text = "Die Vereinbarung gilt ausschließlich für diesen einmaligen Einsatz. Es entsteht kein dauerhaftes Arbeitsverhältnis."
