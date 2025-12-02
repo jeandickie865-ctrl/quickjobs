@@ -15,9 +15,6 @@ const COLORS = {
   black: "#000000",
   gray: "#DDDDDD",
   darkGray: "#333333",
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function PaymentScreen() {

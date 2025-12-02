@@ -16,9 +16,6 @@ const COLORS = {
   error: '#FF4D4D',
   errorBg: 'rgba(255,77,77,0.12)',
   placeholder: '#8A8A8A',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 const signupSchema = z.object({

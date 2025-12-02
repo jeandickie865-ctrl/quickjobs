@@ -29,9 +29,6 @@ const COLORS = {
   neonTransparent20: 'rgba(200,255,22,0.2)',
   neonShadow: 'rgba(200,255,22,0.15)',
   error: '#FF4D4D',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function JobDetailScreen() {

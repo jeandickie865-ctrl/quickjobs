@@ -21,9 +21,6 @@ const COLORS = {
   lightGray: '#F5F5F5',
   errorBg: 'rgba(255,77,77,0.12)',
   error: '#FF4D4D',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 type ApplicationWithDetails = {

@@ -24,9 +24,6 @@ const COLORS = {
   whiteTransparent30: 'rgba(255,255,255,0.3)',
   neonShadow: 'rgba(200,255,22,0.15)',
   dimmed: 'rgba(0,0,0,0.7)',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function RateWorkerScreen() {

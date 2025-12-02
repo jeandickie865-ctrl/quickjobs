@@ -19,9 +19,6 @@ const COLORS = {
   lightGray: '#E8E8E8',
   neonShadow: 'rgba(200,255,22,0.2)',
   dimmed: 'rgba(0,0,0,0.7)',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 type PaymentMethod = 'card' | 'paypal' | 'sepa';
