@@ -212,6 +212,32 @@ export default function WorkerLayout() {
         }}
       />
 
+      {/* Tab 5: Alle Jobs */}
+      <Tabs.Screen
+        name="jobs/all"
+        options={{
+          tabBarIcon: () => null,
+          tabBarLabel: ({ focused }) => (
+            <View style={{
+              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              minWidth: 100,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontWeight: '700',
+                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+              }}>
+                Jobs/All
+              </Text>
+            </View>
+          ),
+        }}
+      />
+
       {/* Hidden Routes */}
       <Tabs.Screen
         name="index"
