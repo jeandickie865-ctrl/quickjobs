@@ -586,6 +586,41 @@ export default function WorkerMatchesScreen() {
                           📄 Jobdetails ansehen
                         </Text>
                       </Pressable>
+
+                      <Pressable
+                        onPress={async () => {
+                          if (confirm('Möchtest du diesen Match wirklich löschen?')) {
+                            try {
+                              const headers = await getAuthHeaders();
+                              const res = await fetch(`${API_URL}/applications/${match.application.id}`, {
+                                method: 'DELETE',
+                                headers,
+                              });
+                              if (res.ok) {
+                                loadMatches();
+                              } else {
+                                alert('Fehler beim Löschen');
+                              }
+                            } catch (err) {
+                              console.error(err);
+                              alert('Fehler beim Löschen');
+                            }
+                          }
+                        }}
+                        style={({ pressed }) => ({
+                          backgroundColor: '#FF4D4D',
+                          borderRadius: 14,
+                          paddingVertical: 12,
+                          paddingHorizontal: 16,
+                          alignItems: 'center',
+                          marginTop: 8,
+                          opacity: pressed ? 0.7 : 1,
+                        })}
+                      >
+                        <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.white }}>
+                          🗑️ Löschen
+                        </Text>
+                      </Pressable>
                     </View>
                   ) : (
                     <View style={{
