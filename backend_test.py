@@ -127,29 +127,22 @@ class UnreadChatCountTester:
         print(f"✅ Application accepted: {data['id']}")
         return data
     
-    async def update_application_payment_status(self, token: str, application_id: str):
-        """Update application to mark as paid and unlock chat"""
-        print(f"💳 Updating application payment status: {application_id}")
+    async def pay_for_application(self, token: str, application_id: str):
+        """Pay for application to unlock chat"""
+        print(f"💳 Paying for application: {application_id}")
         
         headers = {"Authorization": f"Bearer {token}"}
         
-        # Update application with payment status and chat unlock
-        # Since there's no direct endpoint, we'll use the application update endpoint
-        response = await self.client.put(f"{BACKEND_URL}/applications/{application_id}", 
-                                       json={
-                                           "paymentStatus": "paid",
-                                           "chatUnlocked": True,
-                                           "isPaid": True
-                                       }, headers=headers)
+        # Use the correct payment endpoint
+        response = await self.client.post(f"{BACKEND_URL}/applications/{application_id}/pay", 
+                                        headers=headers)
         
         if response.status_code != 200:
-            print(f"❌ Payment status update failed: {response.status_code} - {response.text}")
-            # Try alternative approach - this might be handled differently
-            print(f"💡 Assuming payment is handled by separate system...")
-            return True
+            print(f"❌ Payment failed: {response.status_code} - {response.text}")
+            return None
             
         data = response.json()
-        print(f"✅ Payment status updated: {data['id']}")
+        print(f"✅ Payment successful: {data['id']}")
         return data
     
     async def create_chat_message(self, token: str, application_id: str, text: str):
