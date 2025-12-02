@@ -32,7 +32,7 @@ const COLORS = {
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
-  whiteTransparent: 'rgba(255,255,255,0.7)'
+  whiteTransparent: 'rgba(255,255,255,0.7)',
   textPrimary: "#000000",
   textSecondary: "#333333",
   accentNeon: "#C8FF16",
