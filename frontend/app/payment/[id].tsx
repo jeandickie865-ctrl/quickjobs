@@ -140,50 +140,46 @@ export default function PaymentScreen() {
       if (workerProfile?.isSelfEmployed) {
         // Selbstständig - direkt weiter
         router.replace(`/(employer)/matches`);
-      } else {
-        // Nicht selbstständig
-        // Popup soll nur angezeigt werden, wenn:
-        // 1. Arbeitgeber = private
-        // 2. Worker NICHT selbstständig
-        // 3. Theoretisch eine kurzfristige Beschäftigung möglich ist
-        //    (keine unter-300-Euro-Einmalhilfe)
-        
-        const requiresRegistration = job?.workerAmountCents >= 30000; // nur wenn Job >= 300 € brutto
-        
-        const shouldShowPopup =
-          user?.accountType === "private" &&
-          workerProfile?.isSelfEmployed === false &&
-          requiresRegistration;
-        
-        if (shouldShowPopup) {
-          const alertMessage = 
-            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
-            "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
-            "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.";
-          
-          Alert.alert(
-            "Hinweis für private Auftraggeber",
-            alertMessage,
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  setShowRegistrationModal(true);
-                }
-              }
-            ]
-          );
-        } else {
-          // Kein Popup nötig (entweder Business-Arbeitgeber oder Job < 300€)
-          // Modal direkt zeigen oder direkt zu Matches
-          if (user?.accountType === "business") {
-            setShowRegistrationModal(true);
-          } else {
-            // Private Arbeitgeber mit Job < 300€ - direkt zu Matches
-            router.replace(`/(employer)/matches`);
-          }
-        }
+        return;
       }
+
+      // Definitionen für die Popup-Logik
+      const isPrivateEmployer = user?.accountType === "private";
+      const isBusinessEmployer = user?.accountType === "business";
+      const workerNotSelfEmployed = workerProfile?.isSelfEmployed === false;
+      const requiresRegistration = job?.workerAmountCents >= 30000;
+
+      // 🔹 POPUP A: Privatperson + Worker nicht selbstständig + Job >= 300€
+      if (isPrivateEmployer && workerNotSelfEmployed && requiresRegistration) {
+        const alertMessage =
+          "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
+          "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
+          "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.";
+
+        Alert.alert(
+          "Hinweis für private Auftraggeber",
+          alertMessage,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                setShowRegistrationModal(true);
+              }
+            }
+          ]
+        );
+
+        return; // ❗ Alles stoppen, Popup B NICHT zeigen
+      }
+
+      // 🔹 POPUP B: Firma + Worker nicht selbstständig
+      if (isBusinessEmployer && workerNotSelfEmployed) {
+        setShowRegistrationModal(true);
+        return;
+      }
+
+      // Alle anderen Fälle: direkt zu Matches
+      router.replace(`/(employer)/matches`);
       
     } catch (err) {
       console.error("❌ Payment error:", err);
