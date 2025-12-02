@@ -135,11 +135,11 @@ export default function PaymentScreen() {
       }
 
       console.log("✅ Payment successful!");
-      setProcessing(false);
       
       // Prüfe ob Worker selbstständig ist
       if (workerProfile?.isSelfEmployed) {
         // Selbstständig - direkt weiter
+        setProcessing(false);
         router.replace(`/(employer)/matches`);
         return;
       }
@@ -160,17 +160,20 @@ export default function PaymentScreen() {
       // 🔹 MODAL A: Privatperson + Worker nicht selbstständig + Job < 300€
       if (isPrivateEmployer && workerNotSelfEmployed && isSmallJob) {
         console.log("✅ MODAL A: Showing private employer modal!");
+        setProcessing(false);
         setShowPrivateEmployerModal(true);
         return; // ❗ Alles stoppen, Modal B NICHT zeigen
       }
 
       // 🔹 MODAL B: Firma + Worker nicht selbstständig
       if (isBusinessEmployer && workerNotSelfEmployed) {
+        setProcessing(false);
         setShowRegistrationModal(true);
         return;
       }
 
       // Alle anderen Fälle: direkt zu Matches
+      setProcessing(false);
       router.replace(`/(employer)/matches`);
       
     } catch (err) {
