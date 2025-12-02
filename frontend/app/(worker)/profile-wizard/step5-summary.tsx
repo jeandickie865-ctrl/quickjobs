@@ -262,6 +262,19 @@ export default function Step5Summary() {
               </View>
             </View>
           )}
+
+          {/* Verdienst - nur für nicht-Selbstständige */}
+          {!wizardData.isSelfEmployed && (
+            <View style={{ marginTop: 12 }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>
+                Verdienst
+              </Text>
+              <Text style={{ fontSize: 14, color: '#333', marginTop: 4 }}>
+                Brutto = Netto – kurzfristige Beschäftigung nach § 40a EStG  
+                Der Arbeitgeber trägt alle Pauschalabgaben.
+              </Text>
+            </View>
+          )}
         </ScrollView>
 
         {/* Navigation */}
