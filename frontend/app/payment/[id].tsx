@@ -29,6 +29,7 @@ export default function PaymentScreen() {
   const [application, setApplication] = useState<any>(null);
   const [paymentMethod, setPaymentMethod] = useState<"card" | "paypal" | null>(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [showPrivateEmployerModal, setShowPrivateEmployerModal] = useState(false);
   const [workerProfile, setWorkerProfile] = useState<any>(null);
   const [job, setJob] = useState<any>(null);
 
