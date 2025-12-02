@@ -1,6 +1,6 @@
 // app/(employer)/applications.tsx - ALLE BEWERBUNGEN FÜR ARBEITGEBER
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, View, Text, ActivityIndicator, Pressable, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, ActivityIndicator, Pressable, RefreshControl, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
