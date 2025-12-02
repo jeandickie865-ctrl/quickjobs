@@ -121,11 +121,16 @@ export default function WorkerFeedScreen() {
   }, [loading, token, user]);
 
   // Reload jobs when screen is focused (z.B. nach einer Bewerbung)
+  // Mit 1 Sekunde Delay um Race Condition zu vermeiden
   useFocusEffect(
     React.useCallback(() => {
       if (!loading && token && user) {
-        console.log("🔄 Feed screen focused - reloading jobs");
-        loadJobs();
+        const timer = setTimeout(() => {
+          console.log("🔄 Feed screen focused - reloading jobs after delay");
+          loadJobs();
+        }, 1000); // 1 Sekunde warten
+        
+        return () => clearTimeout(timer);
       }
     }, [loading, token, user])
   );
