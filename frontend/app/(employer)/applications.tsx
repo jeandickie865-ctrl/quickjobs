@@ -440,29 +440,6 @@ export default function EmployerApplicationsScreen() {
                     <Pressable
                       onPress={(e) => {
                         e.stopPropagation();
-                        
-                        // Popup VOR Weiterleitung zur Zahlung einfügen
-                        if (user?.accountType === "private" && worker && worker.isSelfEmployed === false) {
-                          const msg =
-                            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
-                            "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
-                            "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt.";
-
-                          Alert.alert(
-                            "Hinweis für private Auftraggeber",
-                            msg,
-                            [
-                              {
-                                text: "OK",
-                                onPress: () => {
-                                  router.push(`/payment/${application.id}`);
-                                }
-                              }
-                            ]
-                          );
-                          return;
-                        }
-                        
                         router.push(`/payment/${application.id}`);
                       }}
                       style={{
