@@ -327,6 +327,27 @@ export default function EmployerApplicationsScreen() {
                     </View>
                   )}
 
+                  {/* Beschäftigungsstatus - WICHTIG! */}
+                  {worker && (
+                    <View style={{
+                      backgroundColor: worker.isSelfEmployed ? 'rgba(200, 255, 22, 0.1)' : 'rgba(89, 65, 255, 0.1)',
+                      padding: 12,
+                      borderRadius: 12,
+                      borderWidth: 2,
+                      borderColor: worker.isSelfEmployed ? COLORS.neon : COLORS.purple,
+                      marginBottom: 12,
+                    }}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black, marginBottom: 4 }}>
+                        {worker.isSelfEmployed ? '💼 Selbstständig' : '📋 Nicht selbstständig'}
+                      </Text>
+                      <Text style={{ fontSize: 11, color: COLORS.darkGray }}>
+                        {worker.isSelfEmployed 
+                          ? 'Kann sofort loslegen nach der Zahlung der Provision an Backup'
+                          : 'Backup kann bei der Anmeldung helfen'}
+                      </Text>
+                    </View>
+                  )}
+
                   {/* Worker Qualifikationen - WICHTIG FÜR ENTSCHEIDUNG */}
                   {worker && (worker.subcategories?.length > 0 || worker.qualifications?.length > 0) && (
                     <View style={{
