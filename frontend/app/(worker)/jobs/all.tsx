@@ -74,6 +74,9 @@ export default function AllJobsScreen() {
       console.log("✅ [ALL JOBS] Loaded", allJobs.length, "jobs from backend");
 
       // 3. Nur Jobs im Radius filtern (KEINE Kategorie oder Tags)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
       const jobsInRadius = allJobs.filter((job) => {
         // Job muss Position haben
         if (!job.lat || !job.lon) {
@@ -83,6 +86,22 @@ export default function AllJobsScreen() {
         // Job muss offen sein
         if (job.status !== "open") {
           return false;
+        }
+
+        // Job darf nicht vergeben sein
+        if (job.matchedWorkerId) {
+          return false;
+        }
+
+        // Job darf nicht abgelaufen sein (date >= heute)
+        if (job.date) {
+          const jobDate = new Date(job.date);
+          if (isNaN(jobDate.getTime())) {
+            return false; // Ungültiges Datum
+          }
+          if (jobDate < today) {
+            return false; // Abgelaufener Job
+          }
         }
 
         // Distanz berechnen
