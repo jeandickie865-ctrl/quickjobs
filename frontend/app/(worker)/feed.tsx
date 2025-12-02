@@ -166,7 +166,7 @@ export default function WorkerFeedScreen() {
       {/* Titel */}
       <Text
         style={{
-          color: COLORS.white,
+          color: COLORS.textPrimary,
           fontSize: 18,
           fontWeight: "800",
           marginBottom: 6,
