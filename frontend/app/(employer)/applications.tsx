@@ -63,12 +63,15 @@ export default function EmployerApplicationsScreen() {
         withDetails.push({ application: app, job, worker });
       }
 
+      // Nur PENDING Bewerbungen anzeigen (accepted sind in Matches, rejected werden versteckt)
+      const pendingOnly = withDetails.filter(item => item.application.status === 'pending');
+
       // Sortieren: Neueste zuerst
-      withDetails.sort((a, b) => 
+      pendingOnly.sort((a, b) => 
         b.application.createdAt.localeCompare(a.application.createdAt)
       );
 
-      setItems(withDetails);
+      setItems(pendingOnly);
     } catch (e) {
       console.error('Error loading applications:', e);
       if (!silent) {
