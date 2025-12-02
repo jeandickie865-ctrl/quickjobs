@@ -161,6 +161,7 @@ class WorkerProfileCreate(BaseModel):
     documents: Optional[List[WorkerDocument]] = []
     shortBio: Optional[str] = None
     email: Optional[str] = None
+    isSelfEmployed: bool = False
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     pushToken: Optional[str] = None
