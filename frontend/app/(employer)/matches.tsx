@@ -600,47 +600,6 @@ export default function MatchesScreen() {
                       ) : (
                         // Worker ist NICHT selbstständig
                         <>
-                          {match.application.officialRegistrationStatus === "none" && (
-                            <>
-                              <Pressable
-                                onPress={() => requestOfficialRegistration(match.application.id)}
-                                style={({ pressed }) => ({
-                                  backgroundColor: COLORS.neon,
-                                  borderRadius: 14,
-                                  paddingVertical: 14,
-                                  paddingHorizontal: 16,
-                                  alignItems: 'center',
-                                  shadowColor: COLORS.neonShadow,
-                                  shadowOffset: { width: 0, height: 2 },
-                                  shadowOpacity: 0.8,
-                                  shadowRadius: 6,
-                                  opacity: pressed ? 0.9 : 1,
-                                })}
-                              >
-                                <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                                  📋 Brauchen Sie Hilfe bei der Anmeldung?
-                                </Text>
-                              </Pressable>
-                              
-                              <Pressable
-                                onPress={() => setInformalRegistration(match.application.id)}
-                                style={({ pressed }) => ({
-                                  borderWidth: 2,
-                                  borderColor: COLORS.neon,
-                                  borderRadius: 14,
-                                  paddingVertical: 12,
-                                  paddingHorizontal: 16,
-                                  alignItems: 'center',
-                                  opacity: pressed ? 0.9 : 1,
-                                })}
-                              >
-                                <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
-                                  Ich kümmere mich selbst um die Anmeldung
-                                </Text>
-                              </Pressable>
-                            </>
-                          )}
-                          
                           {match.application.officialRegistrationStatus === "requested" && (
                             <View style={{ 
                               backgroundColor: 'rgba(200, 255, 22, 0.1)', 
