@@ -1140,6 +1140,7 @@ async def create_job(
     job_dict = job_data.dict()
     job_dict["id"] = f"job_{str(uuid.uuid4())}"
     job_dict["employerId"] = employerId  # Set employerId from token
+    job_dict["employerType"] = user.get("accountType", "private")  # Set from user accountType
     job_dict["createdAt"] = datetime.utcnow().isoformat()
     
     # SYNC TIME FIELDS: Ensure both camelCase and snake_case are set
