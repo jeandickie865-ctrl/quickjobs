@@ -143,33 +143,30 @@ export default function PaymentScreen() {
         return;
       }
 
-      // Definitionen für die Popup-Logik
+      // Definitionen für die Modal-Logik
       const isPrivateEmployer = user?.accountType === "private";
       const isBusinessEmployer = user?.accountType === "business";
       const workerNotSelfEmployed = workerProfile?.isSelfEmployed === false;
-      const isSmallJob = job?.workerAmountCents < 30000; // Job < 300€ (einmalige Hilfe)
 
       console.log("🔍 DEBUG - user.accountType:", user?.accountType);
       console.log("🔍 DEBUG - workerProfile.isSelfEmployed:", workerProfile?.isSelfEmployed);
-      console.log("🔍 DEBUG - job.workerAmountCents:", job?.workerAmountCents);
       console.log("🔍 DEBUG - isPrivateEmployer:", isPrivateEmployer);
+      console.log("🔍 DEBUG - isBusinessEmployer:", isBusinessEmployer);
       console.log("🔍 DEBUG - workerNotSelfEmployed:", workerNotSelfEmployed);
-      console.log("🔍 DEBUG - isSmallJob:", isSmallJob);
 
-      // Stelle sicher, dass vorher keine Navigation stattfindet
-      // 🔹 MODAL A: Privatperson + Worker nicht selbstständig + Job < 300€
-      if (isPrivateEmployer && workerNotSelfEmployed && isSmallJob) {
-        console.log("✅ MODAL A: Showing private employer modal!");
-        setProcessing(false);
-        setShowPrivateEmployerModal(true);
-        return; // ❗ Alles stoppen, Modal B NICHT zeigen
-      }
-
-      // Stelle sicher, dass vorher keine Navigation stattfindet
-      // 🔹 MODAL B: Firma + Worker nicht selbstständig
+      // 🔹 MODAL 1: Firma (business) + Worker nicht selbstständig
       if (isBusinessEmployer && workerNotSelfEmployed) {
+        console.log("✅ MODAL 1: Showing business registration modal!");
         setProcessing(false);
         setShowRegistrationModal(true);
+        return;
+      }
+
+      // 🔹 MODAL 2: Privatperson (private) + Worker nicht selbstständig
+      if (isPrivateEmployer && workerNotSelfEmployed) {
+        console.log("✅ MODAL 2: Showing private employer modal!");
+        setProcessing(false);
+        setShowPrivateEmployerModal(true);
         return;
       }
 
