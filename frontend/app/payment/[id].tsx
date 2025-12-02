@@ -135,20 +135,25 @@ export default function PaymentScreen() {
       }
 
       console.log("✅ Payment successful!");
-      console.log("🔍 RAW DATA - user:", user);
-      console.log("🔍 RAW DATA - workerProfile:", workerProfile);
-      console.log("🔍 RAW DATA - job:", job);
+      alert("DEBUG 1: Payment successful!");
+      
+      console.log("🔍 RAW DATA - user:", JSON.stringify(user));
+      console.log("🔍 RAW DATA - workerProfile:", JSON.stringify(workerProfile));
+      console.log("🔍 RAW DATA - job:", JSON.stringify(job));
       
       // WICHTIG: Prüfen ob Daten vorhanden sind
       if (!user || !workerProfile) {
         console.error("❌ FEHLER: User oder WorkerProfile nicht geladen!");
-        alert("Fehler: Daten nicht vollständig geladen. Bitte versuche es erneut.");
+        console.error("user exists?", !!user);
+        console.error("workerProfile exists?", !!workerProfile);
+        alert("FEHLER: User=" + !!user + ", WorkerProfile=" + !!workerProfile);
         setProcessing(false);
         return;
       }
 
       console.log("🔍 DEBUG - user.accountType:", user.accountType);
       console.log("🔍 DEBUG - workerProfile.isSelfEmployed:", workerProfile.isSelfEmployed);
+      alert("DEBUG 2: accountType=" + user.accountType + ", isSelfEmployed=" + workerProfile.isSelfEmployed);
       
       // Wenn Worker selbstständig ist → direkt weiter ohne Popup
       if (workerProfile.isSelfEmployed === true) {
