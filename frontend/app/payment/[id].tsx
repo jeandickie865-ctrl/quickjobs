@@ -108,18 +108,21 @@ export default function PaymentScreen() {
   }
 
   async function handlePayment() {
+    alert("🔔 handlePayment aufgerufen!");
     console.log("💳 handlePayment called - paymentMethod:", paymentMethod);
     console.log("💳 processing:", processing);
     
     // Prevent double-clicks
     if (processing) {
       console.log("⚠️ Already processing payment, ignoring click");
+      alert("⚠️ Already processing");
       return;
     }
 
     try {
       setProcessing(true);
       console.log("🔄 Starting payment process...");
+      alert("🔄 Starting payment...");
       
       const headers = await getAuthHeaders();
 
@@ -129,8 +132,10 @@ export default function PaymentScreen() {
       });
 
       console.log("📡 Payment response status:", res.status);
+      alert("📡 Response status: " + res.status);
 
       if (!res.ok) {
+        alert("❌ Payment failed - status: " + res.status);
         throw new Error("Zahlung fehlgeschlagen");
       }
 
