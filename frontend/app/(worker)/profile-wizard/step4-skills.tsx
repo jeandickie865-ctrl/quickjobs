@@ -63,13 +63,10 @@ export default function Step4Skills() {
 
   const handleBack = () => {
     updateWizardData({ 
-      selectedSubcategories,
-      selectedQualifications
+      qualifications: selectedQualifications
     });
     router.push('/(worker)/profile-wizard/step3-categories');
   };
-
-  const isFormValid = selectedSubcategories.length > 0;
 
   return (
     <View style={styles.container}>
