@@ -163,7 +163,7 @@ export default function WorkerJobDetailScreen() {
 
                 {!worker?.isSelfEmployed && (
                   <Text style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
-                    Kurzfristige Beschäftigung nach § 40a EStG – keine Abzüge für dich.
+                    § 40a EStG – keine Abzüge
                   </Text>
                 )}
               </View>
