@@ -352,18 +352,18 @@ export default function WorkerProfileScreen() {
 
           {/* 2.5) Selbstständig Status - WICHTIG FÜR AUFTRAGGEBER */}
           <View style={{
-            backgroundColor: profile.selfEmployed ? 'rgba(200, 255, 22, 0.1)' : 'rgba(89, 65, 255, 0.1)',
+            backgroundColor: profile.isSelfEmployed ? 'rgba(200, 255, 22, 0.1)' : 'rgba(89, 65, 255, 0.1)',
             borderRadius: 16,
             padding: 20,
             marginBottom: 16,
             borderWidth: 2,
-            borderColor: profile.selfEmployed ? COLORS.neon : COLORS.purple,
+            borderColor: profile.isSelfEmployed ? COLORS.neon : COLORS.purple,
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
               <Ionicons 
-                name={profile.selfEmployed ? "briefcase" : "people"} 
+                name={profile.isSelfEmployed ? "briefcase" : "people"} 
                 size={22} 
-                color={profile.selfEmployed ? COLORS.black : COLORS.purple} 
+                color={profile.isSelfEmployed ? COLORS.black : COLORS.purple} 
               />
               <Text style={{ 
                 fontSize: 18, 
@@ -379,14 +379,14 @@ export default function WorkerProfileScreen() {
               fontWeight: '700',
               color: COLORS.black,
             }}>
-              {profile.selfEmployed ? '✅ Selbstständig' : '📋 Nicht selbstständig (Anmeldung erforderlich)'}
+              {profile.isSelfEmployed ? '✅ Selbstständig' : '📋 Nicht selbstständig (Anmeldung erforderlich)'}
             </Text>
             <Text style={{ 
               fontSize: 13, 
               color: COLORS.darkGray,
               marginTop: 6,
             }}>
-              {profile.selfEmployed 
+              {profile.isSelfEmployed 
                 ? 'Kann sofort loslegen nach Zahlung'
                 : 'Backup kann bei der Anmeldung helfen'}
             </Text>
