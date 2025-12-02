@@ -2636,11 +2636,14 @@ def generate_sofortmeldung_pdf(
     additional_data: dict
 ) -> str:
     """
-    Generiert ein PDF für die Sofortmeldung (MODERNISIERT).
-    
-    Verwendet aktuelle MongoDB-Felder ohne "None"-Ausgaben.
+    Modern Sofortmeldung PDF with Deep-In design - Behörden-konform
     """
-    # Helper-Funktionen (wiederverwendbar)
+    from reportlab.lib.pagesizes import A4
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors as rl_colors
+    
+    # Helper functions
     def format_address(addr_dict):
         if not addr_dict:
             return ""
@@ -2650,21 +2653,14 @@ def generate_sofortmeldung_pdf(
         if isinstance(house_num, (int, float)):
             house_num = str(house_num)
         house_num = house_num.strip() if house_num else ''
-        
         if street:
-            if house_num:
-                parts.append(f"{street} {house_num}")
-            else:
-                parts.append(street)
-        
+            parts.append(f"{street} {house_num}" if house_num else street)
         postal = addr_dict.get('postal_code', '') or addr_dict.get('postalCode', '')
         city = addr_dict.get('city', '').strip()
-        
         if postal and city:
             parts.append(f"{postal} {city}")
         elif city:
             parts.append(city)
-        
         return ", ".join(parts) if parts else ""
     
     def format_date(date_str):
@@ -2677,162 +2673,170 @@ def generate_sofortmeldung_pdf(
         except:
             return ""
     
-    # Ordner erstellen
+    # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
     contracts_dir.mkdir(exist_ok=True)
-    
     filename = f"sofortmeldung_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # PDF erstellen
-    doc = SimpleDocTemplate(str(filepath), pagesize=A4,
-                           leftMargin=2*cm, rightMargin=2*cm,
-                           topMargin=2*cm, bottomMargin=2*cm)
+    # Styles
     styles = getSampleStyleSheet()
-    styles['Heading1'].fontSize = 16
-    styles['Heading2'].fontSize = 12
-    styles['Normal'].fontSize = 10
+    title_style = ParagraphStyle(
+        "TitleCustom",
+        parent=styles["Title"],
+        textColor="#5941FF",
+        fontSize=18,
+        spaceAfter=12
+    )
+    section_title = ParagraphStyle(
+        "SectionTitle",
+        parent=styles["Heading2"],
+        textColor="#5941FF",
+        fontSize=13,
+        fontName="Helvetica-Bold",
+        spaceAfter=8
+    )
+    normal = styles["Normal"]
+    field_label = ParagraphStyle(
+        "FieldLabel",
+        parent=styles["Normal"],
+        textColor="#333333",
+        fontSize=10
+    )
+    field_value = ParagraphStyle(
+        "FieldValue",
+        parent=styles["Normal"],
+        textColor="#000000",
+        fontSize=10,
+        fontName="Helvetica-Bold"
+    )
     
-    story = []
-    
-    # Titel
-    registration_type_title = "kurzfristigen Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
-    story.append(Paragraph(f"<b>Sofortmeldung zur {registration_type_title}</b>", styles["Heading1"]))
-    story.append(Spacer(1, 12))
-    
-    # 1. Arbeitgeber
-    story.append(Paragraph("<b>1. Arbeitgeber</b>", styles["Heading2"]))
-    
+    # Data extraction
     emp_first = employer_data.get('firstName', '').strip()
     emp_last = employer_data.get('lastName', '').strip()
-    emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Nicht angegeben"
-    
-    employer_lines = [emp_name]
+    emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Arbeitgeber"
     emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
-    if emp_company and emp_company.strip():
-        employer_lines.append(emp_company.strip())
-    
-    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
     emp_addr = employer_data.get('homeAddress', {})
-    if not emp_addr:
-        # Fallback auf Root-Level Felder
-        emp_addr = {
-            'street': employer_data.get('street'),
-            'house_number': employer_data.get('houseNumber') or employer_data.get('house_number'),
-            'postal_code': employer_data.get('postalCode') or employer_data.get('postal_code'),
-            'city': employer_data.get('city')
-        }
-    emp_address = format_address(emp_addr)
-    if emp_address:
-        employer_lines.append(emp_address)
-    
-    story.append(Paragraph("<br/>".join(employer_lines), styles["Normal"]))
-    story.append(Spacer(1, 12))
-    
-    # 2. Arbeitnehmer
-    story.append(Paragraph("<b>2. Arbeitnehmer</b>", styles["Heading2"]))
+    emp_address = format_address(emp_addr) or "Nicht angegeben"
     
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
-    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Nicht angegeben"
-    
-    worker_lines = [work_name]
-    
-    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
+    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Arbeitnehmer"
     work_addr = worker_data.get('homeAddress', {})
-    if not work_addr:
-        # Fallback auf Root-Level Felder
-        work_addr = {
-            'street': worker_data.get('street'),
-            'house_number': worker_data.get('houseNumber') or worker_data.get('house_number'),
-            'postal_code': worker_data.get('postalCode') or worker_data.get('postal_code'),
-            'city': worker_data.get('city')
-        }
-    work_address = format_address(work_addr)
-    if work_address:
-        worker_lines.append(work_address)
+    work_address = format_address(work_addr) or "Nicht angegeben"
     
-    # Zusätzliche Worker-Daten
     geburtsdatum = worker_data.get('birthDate') or worker_data.get('geburtsdatum') or additional_data.get('geburtsdatum', '')
-    if geburtsdatum:
-        geburtsdatum_formatted = format_date(geburtsdatum)
-        if geburtsdatum_formatted:
-            worker_lines.append(f"<b>Geburtsdatum:</b> {geburtsdatum_formatted}")
+    geburtsdatum_formatted = format_date(geburtsdatum) if geburtsdatum else "Nicht angegeben"
     
-    steuer_id = worker_data.get('steuerId') or additional_data.get('steuerId', '')
-    if steuer_id and steuer_id.strip():
-        worker_lines.append(f"<b>Steuer-ID:</b> {steuer_id.strip()}")
-    
-    sv_nummer = worker_data.get('sozialversicherungsnummer') or additional_data.get('sozialversicherungsnummer', '')
-    if sv_nummer and sv_nummer.strip():
-        worker_lines.append(f"<b>Sozialversicherungsnummer:</b> {sv_nummer.strip()}")
-    
-    krankenkasse = worker_data.get('krankenkasse') or additional_data.get('krankenkasse', '')
-    if krankenkasse and krankenkasse.strip():
-        worker_lines.append(f"<b>Krankenkasse:</b> {krankenkasse.strip()}")
-    
-    story.append(Paragraph("<br/>".join(worker_lines), styles["Normal"]))
-    story.append(Spacer(1, 12))
-    
-    # 3. Einsatzdetails
-    story.append(Paragraph("<b>3. Einsatzdetails</b>", styles["Heading2"]))
+    steuer_id = worker_data.get('steuerId') or additional_data.get('steuerId', '') or "Nicht angegeben"
+    sv_nummer = worker_data.get('sozialversicherungsnummer') or additional_data.get('sozialversicherungsnummer', '') or "Nicht angegeben"
+    krankenkasse = worker_data.get('krankenkasse') or additional_data.get('krankenkasse', '') or "Nicht angegeben"
     
     job_title = job_data.get('title', '').strip() or "Nicht angegeben"
-    job_desc = job_data.get('description', '').strip() or "Nicht angegeben"
-    
     job_addr = job_data.get('address', {})
     job_address = format_address(job_addr) or "Nicht angegeben"
+    job_date = format_date(job_data.get('date', '')) or "Nicht angegeben"
     
-    worker_amount = job_data.get('workerAmountCents', 0) / 100
+    # Build PDF
+    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
+    story = []
     
-    # Zeitangaben
-    job_date = format_date(job_data.get('date', ''))
-    start_time = job_data.get('start_at', '') or job_data.get('startAt', '')
-    end_time = job_data.get('end_at', '') or job_data.get('endAt', '')
+    # Header
+    story.append(Paragraph("Sofortmeldung zur Sozialversicherung – Kurzfristige Beschäftigung", title_style))
+    story.append(Spacer(1, 12))
     
-    details_parts = [
-        f"<b>Tätigkeit:</b> {job_title}",
-        f"<b>Beschreibung:</b> {job_desc}",
-        f"<b>Ort:</b> {job_address}"
+    # Neon info box
+    info_data = [[Paragraph(
+        "Kurzfristige Beschäftigung gemäß § 40a EStG. Für den Arbeitnehmer entstehen keine Abzüge.",
+        normal
+    )]]
+    info_table = Table(info_data, colWidths=[470])
+    info_table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,-1), rl_colors.HexColor("#C8FF16")),
+        ("TEXTCOLOR", (0,0), (-1,-1), rl_colors.black),
+        ("PADDING", (0,0), (-1,-1), 12),
+        ("BOX", (0,0), (-1,-1), 2, rl_colors.HexColor("#C8FF16")),
+    ]))
+    story.append(info_table)
+    story.append(Spacer(1, 16))
+    
+    # Arbeitgeber
+    story.append(Paragraph("Arbeitgeber", section_title))
+    ag_data = [
+        ["Name:", emp_name],
+    ]
+    if emp_company:
+        ag_data.append(["Firma:", emp_company])
+    ag_data.append(["Adresse:", emp_address])
+    
+    ag_table = Table(ag_data, colWidths=[120, 350])
+    ag_table.setStyle(TableStyle([
+        ("TEXTCOLOR", (0,0), (0,-1), rl_colors.HexColor("#333333")),
+        ("TEXTCOLOR", (1,0), (1,-1), rl_colors.black),
+        ("FONTNAME", (1,0), (1,-1), "Helvetica-Bold"),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+    ]))
+    story.append(ag_table)
+    story.append(Spacer(1, 16))
+    
+    # Arbeitnehmer
+    story.append(Paragraph("Arbeitnehmer", section_title))
+    an_data = [
+        ["Name:", work_name],
+        ["Adresse:", work_address],
+        ["Geburtsdatum:", geburtsdatum_formatted],
+        ["Steuer-ID:", steuer_id],
+        ["Sozialversicherungsnr.:", sv_nummer],
+        ["Krankenkasse:", krankenkasse],
     ]
     
-    if job_date:
-        if start_time and end_time:
-            details_parts.append(f"<b>Datum und Zeit:</b> {job_date}, {start_time} – {end_time} Uhr")
-        else:
-            details_parts.append(f"<b>Datum:</b> {job_date}")
+    an_table = Table(an_data, colWidths=[140, 330])
+    an_table.setStyle(TableStyle([
+        ("TEXTCOLOR", (0,0), (0,-1), rl_colors.HexColor("#333333")),
+        ("TEXTCOLOR", (1,0), (1,-1), rl_colors.black),
+        ("FONTNAME", (1,0), (1,-1), "Helvetica-Bold"),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+    ]))
+    story.append(an_table)
+    story.append(Spacer(1, 16))
     
-    details_parts.append(f"<b>Gesamtlohn:</b> {worker_amount:.2f} EUR")
-    
-    story.append(Paragraph("<br/>".join(details_parts), styles["Normal"]))
+    # Beschäftigungsbeginn
+    story.append(Paragraph("Beschäftigungsbeginn", section_title))
+    story.append(Paragraph(f"<b>{job_date}</b>", normal))
     story.append(Spacer(1, 12))
     
+    # Einsatzort
+    story.append(Paragraph("Einsatzort", section_title))
+    story.append(Paragraph(f"<b>{job_title}</b>", normal))
+    story.append(Paragraph(f"{job_address}", normal))
+    story.append(Spacer(1, 16))
+    
+    # Beschäftigungsart
+    story.append(Paragraph("Beschäftigungsart", section_title))
     story.append(Paragraph(
-        "Hinweis: Kurzfristige Beschäftigung gemäß § 40a EStG.",
-        styles['Normal']
+        "Kurzfristige Beschäftigung nach § 40a EStG (Brutto = Netto). "
+        "Der Arbeitgeber trägt alle pauschalen Abgaben.",
+        normal
     ))
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 16))
     
-    # 4. Beschäftigungsart
-    story.append(Paragraph("<b>4. Beschäftigungsart</b>", styles["Heading2"]))
-    registration_type_de = "Kurzfristige Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
-    story.append(Paragraph(registration_type_de, styles["Normal"]))
-    story.append(Spacer(1, 12))
+    # Rechtliche Hinweise
+    story.append(Paragraph("Rechtliche Hinweise", section_title))
+    hinweise = [
+        "• Diese Meldung ist gemäß § 28a SGB IV erforderlich.",
+        "• Die kurzfristige Beschäftigung ist sozialversicherungsfrei für Arbeitnehmer.",
+        "• Alle Abgaben trägt der Arbeitgeber pauschal."
+    ]
+    for h in hinweise:
+        story.append(Paragraph(h, normal))
+    story.append(Spacer(1, 16))
     
-    # 5. Hinweis
-    story.append(Paragraph("<b>5. Hinweis</b>", styles["Heading2"]))
-    notice_text = "Dieses Dokument dient der Weitergabe an Steuerberatung, Lohnbüro oder Minijob-Zentrale zur Vorbereitung der erforderlichen Meldungen."
-    story.append(Paragraph(notice_text, styles["Normal"]))
-    story.append(Spacer(1, 12))
-    
-    # Datum
     created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
-    story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", styles["Normal"]))
+    story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", normal))
     
-    # PDF erstellen
+    # Build
     doc.build(story)
-    
-    logger.info(f"Generated Sofortmeldung PDF: {filename}")
+    logger.info(f"Generated modern Sofortmeldung PDF: {filename}")
     
     return f"/api/generated_contracts/{filename}"
 
