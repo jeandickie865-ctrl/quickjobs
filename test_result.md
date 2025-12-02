@@ -454,11 +454,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Backend-Endpoint GET /api/chat/unread-count/{application_id} wurde erstellt. Endpoint zählt ungelesene Nachrichten (read=false) für den anderen Teilnehmer des Chats und gibt {unreadCount: number} zurück."
+      - working: true
+        agent: "testing"
+        comment: "🎉 UNREAD CHAT MESSAGE COUNT ENDPOINT VOLLSTÄNDIG GETESTET UND FUNKTIONAL: Alle 6/6 Tests bestanden (100% Success Rate). ✅ Grundfunktionalität: Chat-Nachrichten werden korrekt erstellt und gezählt. ✅ Worker-Perspektive: Sieht 4 ungelesene Nachrichten vom Employer (korrekt). ✅ Employer-Perspektive: Sieht 2 ungelesene Nachrichten vom Worker (korrekt). ✅ Keine ungelesenen Nachrichten: Neue Applications zeigen 0 ungelesene Nachrichten. ✅ Fehlerbehandlung: Nicht-existierende application_id gibt 0 zurück, fehlende Authentifizierung gibt 401. ✅ MongoDB Persistenz: Nachrichten werden korrekt gespeichert, unread count steigt von 4 auf 5 nach neuer Nachricht. KRITISCHER BUG BEHOBEN: senderRole Feld wurde in Chat-Message-Erstellung hinzugefügt. Endpoint funktioniert einwandfrei mit korrektem Workflow: Accept Application → Pay for Application → Chat Unlock → Message Creation → Unread Count. Feature ist production-ready."
 
 frontend:
   - task: "Unread Message Badge - Worker Matches"
