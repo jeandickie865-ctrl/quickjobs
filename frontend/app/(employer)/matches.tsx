@@ -489,6 +489,25 @@ export default function MatchesScreen() {
                       }}>
                         {match.application.paymentStatus === "paid" ? "Zum Chat" : "Zahlung abschließen"}
                       </Text>
+                      {match.application.paymentStatus === "paid" && unreadCounts[match.application.id] > 0 && (
+                        <View style={{
+                          backgroundColor: '#FF4444',
+                          borderRadius: 12,
+                          minWidth: 24,
+                          height: 24,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          paddingHorizontal: 6,
+                        }}>
+                          <Text style={{ 
+                            fontSize: 12, 
+                            fontWeight: '700', 
+                            color: COLORS.white 
+                          }}>
+                            {unreadCounts[match.application.id]}
+                          </Text>
+                        </View>
+                      )}
                     </View>
                   </Pressable>
 
