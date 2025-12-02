@@ -3083,8 +3083,13 @@ def generate_employer_costs_pdf(job, worker_profile):
     filepath = f"generated_contracts/{filename}"
 
     brutto = job["workerAmountCents"]  # in Cent
-    pauschal = round(brutto * 0.30)     # 30 % Pauschalabgaben
-    total = brutto + pauschal
+
+    # Gesetzliche Aufteilung nach § 40a EStG
+    renten = round(brutto * 0.15)
+    kranken = round(brutto * 0.13)
+    steuer = round(brutto * 0.02)
+    gesamt_abgaben = renten + kranken + steuer
+    total = brutto + gesamt_abgaben
 
     doc = SimpleDocTemplate(filepath, pagesize=A4)
     story = []
@@ -3093,14 +3098,22 @@ def generate_employer_costs_pdf(job, worker_profile):
     story.append(Spacer(1, 16))
 
     story.append(Paragraph(f"Arbeitnehmerlohn: {brutto / 100:.2f} €", styles["Normal"]))
-    story.append(Paragraph(f"Pauschalabgaben (30 % nach § 40a EStG): {pauschal / 100:.2f} €", styles["Normal"]))
-    story.append(Paragraph(f"Gesamtkosten des Arbeitgebers: {total / 100:.2f} €", styles["Normal"]))
+    story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Pauschalabgaben nach § 40a EStG:", styles["Heading3"]))
+    story.append(Paragraph(f"- Rentenversicherung (15 %): {renten / 100:.2f} €", styles["Normal"]))
+    story.append(Paragraph(f"- Krankenversicherung (13 %): {kranken / 100:.2f} €", styles["Normal"]))
+    story.append(Paragraph(f"- Pauschale Lohnsteuer (2 %): {steuer / 100:.2f} €", styles["Normal"]))
+    story.append(Paragraph(f"= Gesamtabgaben: {gesamt_abgaben / 100:.2f} €", styles["Normal"]))
+    story.append(Spacer(1, 12))
+
+    story.append(Paragraph(f"Gesamtkosten des Arbeitgebers: {total / 100:.2f} €", styles["Heading3"]))
     story.append(Spacer(1, 16))
 
     story.append(Paragraph(
         "Kurzfristige Beschäftigung gemäß § 40a EStG. "
         "Der Arbeitgeber trägt sämtliche pauschalen Abgaben. "
-        "Der Arbeitnehmer erhält den vollständigen Bruttolohn ausgezahlt.",
+        "Der Arbeitnehmer erhält den vollen Bruttolohn ohne Abzüge.",
         styles["Normal"]
     ))
 
