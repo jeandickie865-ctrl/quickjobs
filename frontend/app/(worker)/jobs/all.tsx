@@ -47,9 +47,9 @@ export default function AllJobsScreen() {
     setError(null);
 
     try {
-      console.log("📍 [ALL JOBS] Step 1: Loading worker profile...");
+      console.log("📍 [ALL JOBS] Step 1: Loading worker profile for user:", user.userId);
       // 1. Worker-Profil laden (für Radius und Position)
-      const profile = await getWorkerProfile();
+      const profile = await getWorkerProfile(user.userId);
       
       if (!profile) {
         console.error("❌ [ALL JOBS] Worker profile not found");
