@@ -303,6 +303,77 @@ export default function PaymentScreen() {
           </Text>
         </View>
       </View>
+
+      {/* Registration Modal */}
+      {showRegistrationModal && (
+        <View style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0,0,0,0.8)",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+          <View style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 16,
+            padding: 24,
+            width: "100%",
+            maxWidth: 400,
+          }}>
+            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.black, marginBottom: 16, textAlign: "center" }}>
+              Anmeldung des Workers
+            </Text>
+            
+            <Text style={{ fontSize: 14, color: COLORS.darkGray, marginBottom: 24, textAlign: "center" }}>
+              Der Worker ist nicht selbstständig. Möchten Sie Hilfe bei der offiziellen Anmeldung?
+            </Text>
+
+            <Pressable
+              onPress={() => {
+                setShowRegistrationModal(false);
+                requestOfficialRegistration(applicationId);
+              }}
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.neon,
+                borderRadius: 14,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                alignItems: "center",
+                marginBottom: 12,
+                opacity: pressed ? 0.9 : 1,
+              })}
+            >
+              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.black }}>
+                📋 Ja, Hilfe bei der Anmeldung
+              </Text>
+            </Pressable>
+
+            <Pressable
+              onPress={() => {
+                setShowRegistrationModal(false);
+                setInformalRegistration(applicationId);
+              }}
+              style={({ pressed }) => ({
+                borderWidth: 2,
+                borderColor: COLORS.neon,
+                borderRadius: 14,
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                alignItems: "center",
+                opacity: pressed ? 0.9 : 1,
+              })}
+            >
+              <Text style={{ fontSize: 14, fontWeight: "700", color: COLORS.purple }}>
+                Ich kümmere mich selbst um die Anmeldung
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
