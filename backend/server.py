@@ -3073,6 +3073,40 @@ def generate_payroll_pdf(
     
     return f"/api/generated_contracts/{filename}"
 
+def generate_employer_costs_pdf(job, worker_profile):
+    from reportlab.lib.pagesizes import A4
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+
+    styles = getSampleStyleSheet()
+    filename = f"employer_costs_{job['id']}.pdf"
+    filepath = f"generated_contracts/{filename}"
+
+    brutto = job["workerAmountCents"]  # in Cent
+    pauschal = round(brutto * 0.30)     # 30 % Pauschalabgaben
+    total = brutto + pauschal
+
+    doc = SimpleDocTemplate(filepath, pagesize=A4)
+    story = []
+
+    story.append(Paragraph("Arbeitgeber-Kostenübersicht", styles["Title"]))
+    story.append(Spacer(1, 16))
+
+    story.append(Paragraph(f"Arbeitnehmerlohn: {brutto / 100:.2f} €", styles["Normal"]))
+    story.append(Paragraph(f"Pauschalabgaben (30 % nach § 40a EStG): {pauschal / 100:.2f} €", styles["Normal"]))
+    story.append(Paragraph(f"Gesamtkosten des Arbeitgebers: {total / 100:.2f} €", styles["Normal"]))
+    story.append(Spacer(1, 16))
+
+    story.append(Paragraph(
+        "Kurzfristige Beschäftigung gemäß § 40a EStG. "
+        "Der Arbeitgeber trägt sämtliche pauschalen Abgaben. "
+        "Der Arbeitnehmer erhält den vollständigen Bruttolohn ausgezahlt.",
+        styles["Normal"]
+    ))
+
+    doc.build(story)
+    return filepath
+
 # Official Registration Endpoints
 @api_router.post("/registrations/create", response_model=OfficialRegistration)
 async def create_official_registration(request: CreateRegistrationRequest):
