@@ -389,7 +389,7 @@ class UnreadChatCountTester:
         
         # Accept and pay for second application
         await self.accept_application(employer_token, app2['id'])
-        await self.update_application_payment_status(employer_token, app2['id'])
+        await self.pay_for_application(employer_token, app2['id'])
         
         # Test unread counts (should be 0 for both)
         worker_result = await self.get_unread_count(worker_token, app2['id'])
