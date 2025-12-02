@@ -115,8 +115,10 @@ export default function AllJobsScreen() {
   };
 
   useEffect(() => {
-    loadAllJobsInRadius();
-  }, []);
+    if (!loading && token && user) {
+      loadAllJobsInRadius();
+    }
+  }, [loading, token, user]);
 
   if (isLoading) {
     return (
