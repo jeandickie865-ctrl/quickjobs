@@ -1787,6 +1787,36 @@ async def update_application(
     logger.info(f"Application {application_id} updated")
     return JobApplication(**updated_app)
 
+@api_router.delete("/applications/{application_id}")
+async def delete_application(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Delete an application (for cleaning up old matches)"""
+    logger.info(f"🗑️ Deleting application {application_id}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Find application
+    application = await db.applications.find_one({"id": application_id})
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user is the worker or employer (both can delete)
+    if requesting_user not in [application.get("workerId"), application.get("employerId")]:
+        raise HTTPException(status_code=403, detail="Cannot delete this application")
+    
+    # Delete from MongoDB
+    result = await db.applications.delete_one({"id": application_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    logger.info(f"✅ Application {application_id} deleted")
+    return {"message": "Application deleted successfully"}
+
 @api_router.post("/applications/{application_id}/pay", response_model=JobApplication)
 async def pay_for_application(
     application_id: str,
