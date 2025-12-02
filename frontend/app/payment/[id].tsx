@@ -107,6 +107,39 @@ export default function PaymentScreen() {
     }
   }
 
+  async function handleRegistrationCheck() {
+    try {
+      const workerIdFromApplication = application?.workerId;
+      const worker = await getWorkerProfile(workerIdFromApplication);
+      const isSelf = worker?.isSelfEmployed === true;
+      const isPrivateEmployer = user?.accountType === "private";
+
+      // Case 1 – PRIVATE + WORKER NOT SELF-EMPLOYED → Show private info modal
+      if (isPrivateEmployer && !isSelf) {
+        Alert.alert(
+          "Hinweis für private Auftraggeber",
+          "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
+          "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
+          "Wir haben alle Unterlagen in 'Meine Matches' für dich hinterlegt.",
+          [{ text: "OK", onPress: () => setShowRegistrationModal(true) }]
+        );
+        return;
+      }
+
+      // Case 2 – BUSINESS + WORKER NOT SELF-EMPLOYED → Show employer modal
+      if (!isPrivateEmployer && !isSelf) {
+        setShowRegistrationModal(true);
+        return;
+      }
+
+      // Case 3 – no registration needed
+      router.replace("/(employer)/matches");
+    } catch (e) {
+      console.log("Registration check failed:", e);
+      router.replace("/(employer)/matches");
+    }
+  }
+
   async function handlePayment() {
     alert("🔔 handlePayment aufgerufen!");
     console.log("💳 handlePayment called - paymentMethod:", paymentMethod);
