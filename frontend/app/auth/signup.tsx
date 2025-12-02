@@ -39,6 +39,7 @@ export default function SignupScreen() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'worker' | 'employer' | null>(null);
+  const [selectedAccountType, setSelectedAccountType] = useState<'private' | 'business'>('private');
 
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
