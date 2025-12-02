@@ -3542,18 +3542,22 @@ async def generate_payroll(request: GeneratePayrollRequest):
         additional_data=additional_data
     )
     
+    employer_costs_path = generate_employer_costs_pdf(job, worker)
+    
     # payrollUrl in official_registrations speichern
     await db.official_registrations.update_one(
         {"id": registration_id},
         {"$set": {
             "payrollUrl": payroll_url,
+            "employerCostsUrl": employer_costs_path,
             "updatedAt": datetime.utcnow().isoformat()
         }}
     )
     
     logger.info(f"Payroll generated and saved: {payroll_url}")
+    logger.info(f"Employer costs PDF generated: {employer_costs_path}")
     
-    return {"payrollUrl": payroll_url}
+    return {"payrollUrl": payroll_url, "employerCostsUrl": employer_costs_path}
 
 
 # Include the router in the main app
