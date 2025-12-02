@@ -1,106 +1,78 @@
 <analysis>
-The trajectory documents an extensive, iterative development process for the ShiftMatch application, guided by a German-speaking user. The primary focus was building a complete, multi-step Official Registration feature, transforming the app into a mini-HR system.
+The trajectory documents a highly interactive, German-language development process for the ShiftMatch application. The user provides explicit, often code-level instructions for UI/UX enhancements, major refactoring, and bug fixes. The work spans the full stack: a FastAPI/MongoDB backend and a React Native/Expo frontend.
 
-This involved:
-1.  **Backend Development (FastAPI):** Creating numerous Pydantic models and API endpoints (, , , etc.) to manage the registration process.
-2.  **PDF Generation:** Implementing three separate server-side functions using  to generate employment contracts, Sofortmeldung (immediate registration notice), and payroll documents. This included making the generated PDFs accessible via a static file server.
-3.  **Frontend Development (Expo/React Native):** Building a series of new screens (, , ) to guide the employer through data collection and document generation. A new screen for workers () was also created to allow them to pre-fill their personal information.
-4.  **Intensive Debugging:** A significant portion of the work involved resolving critical bugs. Key issues included:
-    *   **Data Inconsistency:** Handling multiple, conflicting address data structures in the MongoDB database for employers and workers.
-    *   **Routing & Serving:** Correcting Unmatched Route errors by prefixing static file paths with  and ensuring correct mounting order in FastAPI.
-    *   **SSR Errors:** Fixing a recurring static rendering error in a new worker screen by removing direct  calls and implementing a secure, token-based authentication pattern for API requests.
+Key development threads include:
+1.  **UI/UX Overhaul**: Multiple screens were iteratively redesigned based on specific user prompts. This includes  and , where the layout was changed from simple lists to modern, two-column grids or single-column cards to achieve a more luftig (airy) and techy aesthetic.
+2.  **Taxonomy Migration**: A significant, complex migration of the core data model was performed. The taxonomy structure, which defines job categories, subcategories, and qualifications, was completely refactored. This involved changing the data structure in , updating all related frontend components (wizards, profile editor), and modifying backend models, validation logic (), and the core matching algorithm (). This migration involved several debugging cycles to handle mismatches between frontend and backend data formats (e.g.,  vs. ,  vs. ).
+3.  **Live Debugging**: Several critical issues were diagnosed and resolved in real-time. This included a login failure caused by a stopped backend service and an incorrect password, and multiple  errors during profile saves, which were traced back to validation failures from the taxonomy migration.
+4.  **New Feature Implementation**: The most recent work involves adding a new feature: displaying an unread message count on chat buttons within the Matches screen.
 
-The final phase of work began a major UI refactoring to establish a consistent color palette and button style across the application.
-
-**Instruction for next agent: The user's primary language is German. All future responses MUST be in German.**
+The user's primary language is German. All future responses MUST be in German.
 </analysis>
 
 <product_requirements>
-The ShiftMatch application is a German-language, two-sided mobile job marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
+The ShiftMatch application is a German-language, two-sided job marketplace connecting Employers (Auftraggeber) and Workers (Auftragnehmer).
 
-**Core Product Flow:**
-1.  **Job Posting & Application:** Employers post jobs; workers apply.
-2.  **Gated Matching & Payment:** Employers accept an application, triggering a mandatory payment step. Contact details remain hidden until payment is complete.
-3.  **Official Registration (New Feature):** After payment, the employer is now redirected to a multi-step Official Registration flow to handle formal paperwork (e.g., Minijob, Kurzfristige Beschäftigung).
-    *   The employer verifies/enters the worker's personal data (tax ID, social security number, etc.).
-    *   The system allows the employer to generate and download three key PDF documents: the employment contract, a Sofortmeldung (for tax authorities), and a payroll slip.
-4.  **Worker Data Entry:** Workers can proactively enter their registration-relevant data on a dedicated screen to streamline the process for future jobs.
-5.  **Reviews:** Both parties can rate each other post-job.
-
-The implementation of the Official Registration feature, including backend logic, PDF generation, and frontend UI, constitutes the bulk of the work documented.
+**Core Functionality:**
+*   **Worker Profiling**: Workers create a profile by selecting their job categories (e.g., Sicherheit, Gastronomie), specific activities/subcategories (e.g., Doorman, Kellner), and optional qualifications (e.g., Sachkunde 34a). Workers can select multiple categories.
+*   **Job Creation**: Employers post jobs, specifying a single category, a single subcategory, and a list of required qualifications.
+*   **Matching**: The backend matches workers to jobs based on matching category, the worker having the job's required subcategory, the worker possessing all of the job's required qualifications, and being within a specified geographic radius. A fallback allows old jobs without subcategories to still be matched.
+*   **Chat**: Once a match is established, employers and workers can communicate via an in-app chat.
+*   **Unread Message Notifications**: A new feature is being implemented to display a count of unread messages for each specific chat on the user's Matches list, enhancing user engagement by signaling new activity.
 </product_requirements>
 
 <key_technical_concepts>
-- **Backend:** FastAPI (Python) with Pydantic models for data validation.
-- **Database:** MongoDB. Addressed significant data inconsistencies, particularly with different address structures between user types.
-- **Frontend:** React Native with Expo and file-based routing via .
-- **Authentication:** JWT-based system using a React . The token is stored in , and user data is fetched from a protected  endpoint.
-- **PDF Generation:** Server-side PDF creation using the  library.
-- **Static File Serving:** FastAPI's  is used to make generated PDFs publicly accessible via a  route.
+- **Backend**: FastAPI (Python), MongoDB database. Logic is primarily in  with a dedicated .
+- **Frontend**: React Native with Expo, using  for file-based routing.
+- **Data Modeling**: Pydantic models for API validation on the backend. A central  file (with different structures for frontend and backend) defines job roles.
+- **State Management**: React Context () for the multi-step profile creation wizard.
+- **Chat Implementation**: Chat messages are stored in MongoDB with a  flag to track seen status.
 </key_technical_concepts>
 
 <code_architecture>
-The project is a monorepo with a  (Expo) and  (FastAPI). The core logic for the new Official Registration feature is distributed across both.
+The project is a monorepo with a  (Expo/React Native) and  (FastAPI/MongoDB).
 
 
 
-- ****:
-  - **Importance**: The single source of truth for all API logic.
-  - **Summary of Changes**: Heavily modified to support the entire registration flow.
-    - Added new Pydantic models for registration data (,  with fields like , , etc.).
-    - Created several new API endpoints:
-        - : Creates the initial registration record with all worker data.
-        - : Marks the registration as complete.
-        - , , : Trigger PDF generation and save the file path.
-        - : Allows a worker to save their own registration data.
-        - : Checks if a worker has provided all necessary data.
-    - Added three PDF generation utility functions (, etc.) using .
-    - Fixed a critical bug by adapting PDF functions to handle multiple, inconsistent address data structures in the database.
-    - Configured  to serve generated PDFs under .
+-   ****: The main backend file containing most API endpoints, Pydantic models, and database interactions. It was modified to add new models for  and , update validation logic to be less strict to resolve  errors, and add a new endpoint . Alias logic was also added to handle discrepancies between frontend (English) and backend (German) category keys.
 
-- ** (Directory)**:
-  - **Importance**: Contains the entire UI for the new employer-facing registration flow.
-  - **Summary of Changes**:
-    - ****: Updated to fetch and display job/worker details and pre-fill input fields (, etc.) with data if the worker has already provided it. Passes all data to the next step via URL params.
-    - ****: Updated to receive all registration data from  and send it to the  endpoint.
-    - ****: Significantly enhanced with three new buttons that call the respective backend endpoints to generate and open the Contract, Sofortmeldung, and Payroll PDFs using .
+-   ****: Contains the core job-matching algorithm. It was significantly updated to implement the new matching rules: must match , , and all . A fallback was added to ensure backward compatibility with old jobs that lack  or  fields.
 
-- ****:
-  - **Importance**: A new screen for workers to enter and save their personal data for registrations.
-  - **Summary of Changes**: Created from scratch. Debugged a critical server-side rendering (SSR) error by implementing a secure pattern: fetching the auth token from  and passing it in the API header, rather than relying on a  hook that breaks SSR.
+-   ** & **: These files define the app's job categories, subcategories, and qualifications. They were the center of a major refactoring and debugging effort. The final state is that the frontend uses a version with English keys and  arrays (), while the backend uses a version with German keys and  arrays. This discrepancy caused validation errors that were later resolved.
 
-- ****:
-  - **Importance**: The payment confirmation screen.
-  - **Summary of Changes**: The redirect after a successful payment was changed from  to , directly initiating the new registration flow.
+-   ****: A large component for workers to edit their entire profile. It was heavily modified multiple times: first for UI redesigns (implementing a 2-column grid for categories), then for the major taxonomy migration (changing state from single to multiple categories, updating save logic), and finally for debugging save failures.
 
-- ****:
-    - **Importance**: New file to centralize UI colors for a consistent design system.
-    - **Summary of Changes**: Created and populated with a new color palette (, , etc.).
+-   ****: The files in this directory (, , ) were all rewritten to accommodate the new taxonomy logic.  now handles selecting one or more categories and their subcategories.  handles selecting qualifications based on the chosen categories.  sends the new data structure to the backend.
 
-- ****:
-    - **Importance**: Defines the tab layout for the employer section.
-    - **Summary of Changes**: Updated to add  to all screens in the  directory, effectively hiding them from the main tab bar and making them accessible only through navigation logic.
+-   ****: The React context for the profile wizard. It was updated to store the new data structure: , , .
+
+-   ****: The employer's job creation form. It was updated to allow employers to select a  and  after choosing a category, matching the new job model.
+
+-   ****: The screen where workers see their active job matches. It is currently being modified to display a count of unread chat messages. A state  and a function  have been added to fetch data from the new backend endpoint.
+
+-   ****: A component used by employers to view a worker's profile. It was updated to display the worker's selected  (Tätigkeiten) and . An incorrect  import was also fixed.
 </code_architecture>
 
 <pending_tasks>
-- **Complete UI Refactoring**: The user requested a global UI update. The  file has been created, and several  buttons in the registration flow were updated. However, many other files and components (like ) still use old inline styles and hardcoded colors.
-- **Fix Create Job Screen Freeze**: The user reported the create job screen was freezing. The agent reverted a change in  as a potential fix, but the root cause was not fully investigated or confirmed resolved.
-- **Address Geocoding Issue**: An early, unaddressed bug regarding incorrect geocoding of Poststr. 7 remains outstanding.
+- Complete the UI implementation for the unread chat message count on .
+- Replicate the unread chat message count feature on the employer side ().
+- Address an old, unresolved bug regarding incorrect geocoding of Poststr. 7.
 </pending_tasks>
 
 <current_work>
-The most recent work was a major UI refactoring initiative to create a consistent design system across the app. This was prompted by the user's request for a unified color palette and modern button styling.
+The immediate task is the implementation of a feature to show the number of unread messages for each chat on the Matches screen.
 
-The process involved:
-1.  **Creating a Central Color Palette**: A new file, , was created to define the application's official colors (e.g., , ).
+**Work Completed So Far:**
+1.  **Backend**: A new endpoint, , was created in . It queries the  collection in MongoDB and returns the count of messages where  is  and the sender is the other party in the chat.
+2.  **Frontend (Worker Side)**: In , the following logic was added:
+    *   A new state variable was created to hold the unread counts for each application ID:
+        
+    *   A function, , was implemented to iterate through the loaded matches, call the new backend endpoint for each application ID, and populate the  state.
+    *   The  function is now called immediately after the  function successfully fetches the match data.
 
-    
-
-2.  **Updating Component Styles**: The developer began systematically replacing hardcoded colors and inline styles in various files with the new  constants and a standardized style object for buttons. This work was being done iteratively using the  and  tools.
-
-3.  **Immediate Last Action**: The developer was in the middle of updating . After successfully updating the main  button's style, the immediate next thought was to also update the  styles within the same file to use the new  for their borders. The last file edit was on .
+The backend work is complete, and the frontend logic for fetching the data is in place. The next step is to use this data in the UI.
 </current_work>
 
 <optional_next_step>
-Continue the UI refactoring on  by updating the  styles to use the new  for the border, then proceed to update the remaining files identified for the style overhaul.
+Modify the JSX in  to display the unread message count from the  state on the Zum Chat button for each match.
 </optional_next_step>

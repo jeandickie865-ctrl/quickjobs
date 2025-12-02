@@ -12,7 +12,7 @@ import uuid
 import sys
 
 # Backend URL from frontend .env
-BACKEND_URL = "https://shiftmatch-app.preview.emergentagent.com/api"
+BACKEND_URL = "https://matchshift-1.preview.emergentagent.com/api"
 
 class B1BackendTester:
     def __init__(self):

@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://shiftmatch-app.preview.emergentagent.com`
-- Backend: `https://shiftmatch-app.preview.emergentagent.com/api`
+- Frontend: `https://matchshift-1.preview.emergentagent.com`
+- Backend: `https://matchshift-1.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)
