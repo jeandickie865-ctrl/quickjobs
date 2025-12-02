@@ -330,6 +330,24 @@ export default function EmployerProfileViewScreen() {
               )}
             </View>
 
+            {/* Info-Block für private Auftraggeber */}
+            {user?.accountType === "private" && user?.isSelfEmployed === false && (
+              <View style={{
+                backgroundColor: '#ECECEC',
+                padding: 14,
+                borderRadius: 12,
+                marginTop: 20
+              }}>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: '#333', marginBottom: 6 }}>
+                  Rechtlicher Hinweis
+                </Text>
+                <Text style={{ fontSize: 13, color: '#333', lineHeight: 18 }}>
+                  Wenn du jemanden kurzfristig beschäftigst, erstellt die App automatisch Vertrags- 
+                  und Abrechnungsunterlagen. Die Meldung an die Minijob-Zentrale nimmst du selbst vor.
+                </Text>
+              </View>
+            )}
+
             {/* Edit Button */}
             <Pressable
               onPress={() => router.push('/(employer)/edit-profile')}
