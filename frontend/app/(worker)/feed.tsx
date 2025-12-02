@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { getMatchedJobs } from "../../utils/jobStore";
 import { useAuth } from "../../contexts/AuthContext";
 import { getTagLabel } from "../../utils/taxonomy";
+import { getWorkerProfile } from "../../utils/profileStore";
 
 const COLORS = {
   purple: "#4A35D9",
@@ -18,6 +19,7 @@ export default function WorkerFeedScreen() {
   const { user, token, loading, signOut } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
+  const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
