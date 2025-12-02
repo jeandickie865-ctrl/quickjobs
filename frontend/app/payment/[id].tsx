@@ -142,9 +142,20 @@ export default function PaymentScreen() {
         router.replace(`/(employer)/matches`);
       } else {
         // Nicht selbstständig
-        // Prüfe ob Arbeitgeber private Person ist
-        if (user?.accountType === "private" && !workerProfile?.isSelfEmployed) {
-          // Popup für private Arbeitgeber anzeigen
+        // Popup soll nur angezeigt werden, wenn:
+        // 1. Arbeitgeber = private
+        // 2. Worker NICHT selbstständig
+        // 3. Theoretisch eine kurzfristige Beschäftigung möglich ist
+        //    (keine unter-300-Euro-Einmalhilfe)
+        
+        const requiresRegistration = job?.workerAmountCents >= 30000; // nur wenn Job >= 300 € brutto
+        
+        const shouldShowPopup =
+          user?.accountType === "private" &&
+          workerProfile?.isSelfEmployed === false &&
+          requiresRegistration;
+        
+        if (shouldShowPopup) {
           const alertMessage = 
             "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
             "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
@@ -163,8 +174,14 @@ export default function PaymentScreen() {
             ]
           );
         } else {
-          // Nicht-private Arbeitgeber - Modal direkt zeigen
-          setShowRegistrationModal(true);
+          // Kein Popup nötig (entweder Business-Arbeitgeber oder Job < 300€)
+          // Modal direkt zeigen oder direkt zu Matches
+          if (user?.accountType === "business") {
+            setShowRegistrationModal(true);
+          } else {
+            // Private Arbeitgeber mit Job < 300€ - direkt zu Matches
+            router.replace(`/(employer)/matches`);
+          }
         }
       }
       
