@@ -69,9 +69,9 @@ export default function Step5Summary() {
         radiusKm: wizardData.radiusKm || 25,
         homeAddress: {
           street: wizardData.street || '',
-          house_number: wizardData.houseNumber || '',
+          houseNumber: wizardData.houseNumber || '',
           city: wizardData.city || '',
-          postal_code: wizardData.postalCode || '',
+          postalCode: wizardData.postalCode || '',
           country: 'Deutschland'
         },
         homeLat: wizardData.lat,
