@@ -136,11 +136,10 @@ export default function PaymentScreen() {
 
       console.log("✅ Payment successful!");
       
-      // Prüfe ob Worker selbstständig ist
-      if (workerProfile?.isSelfEmployed) {
-        // Selbstständig - direkt weiter
+      // Wenn Worker selbstständig ist → direkt weiter ohne Popup
+      if (workerProfile?.isSelfEmployed === true) {
         setProcessing(false);
-        router.replace(`/(employer)/matches`);
+        router.replace("/(employer)/matches");
         return;
       }
 
