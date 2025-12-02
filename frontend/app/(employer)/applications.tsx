@@ -255,21 +255,35 @@ export default function EmployerApplicationsScreen() {
                     borderColor: isAccepted ? COLORS.neon : 'transparent',
                   })}
                 >
-                  {/* Worker Info */}
+                  {/* Worker Info mit Foto */}
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                    <View style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 24,
-                      backgroundColor: COLORS.purple,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginRight: 12,
-                    }}>
-                      <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
-                        {initials}
-                      </Text>
-                    </View>
+                    {worker?.photoUrl || worker?.profilePhotoUri ? (
+                      <Image
+                        source={{ uri: worker.photoUrl || worker.profilePhotoUri }}
+                        style={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 28,
+                          marginRight: 12,
+                          borderWidth: 2,
+                          borderColor: COLORS.neon,
+                        }}
+                      />
+                    ) : (
+                      <View style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 28,
+                        backgroundColor: COLORS.purple,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 12,
+                      }}>
+                        <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
+                          {initials}
+                        </Text>
+                      </View>
+                    )}
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                         {maskedName}
@@ -293,6 +307,25 @@ export default function EmployerApplicationsScreen() {
                       </Text>
                     </View>
                   </View>
+
+                  {/* Über mich - Worker Beschreibung */}
+                  {worker?.shortBio && (
+                    <View style={{
+                      backgroundColor: 'rgba(89, 65, 255, 0.05)',
+                      padding: 12,
+                      borderRadius: 12,
+                      borderLeftWidth: 3,
+                      borderLeftColor: COLORS.purple,
+                      marginBottom: 12,
+                    }}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.purple, marginBottom: 4 }}>
+                        💬 Über mich
+                      </Text>
+                      <Text style={{ fontSize: 13, color: COLORS.black, lineHeight: 18 }}>
+                        {worker.shortBio}
+                      </Text>
+                    </View>
+                  )}
 
                   {/* Worker Qualifikationen - WICHTIG FÜR ENTSCHEIDUNG */}
                   {worker && (worker.subcategories?.length > 0 || worker.qualifications?.length > 0) && (
