@@ -131,7 +131,7 @@ export default function WorkerFeedScreen() {
   if (error) {
     return (
       <View style={{ padding: 20 }}>
-        <Text>{error}</Text>
+        <Text style={{ color: COLORS.textPrimary }}>{error}</Text>
       </View>
     );
   }
@@ -139,7 +139,7 @@ export default function WorkerFeedScreen() {
   if (jobs.length === 0) {
     return (
       <View style={{ padding: 20 }}>
-        <Text>Keine passenden Jobs gefunden</Text>
+        <Text style={{ color: COLORS.textPrimary }}>Keine passenden Jobs gefunden</Text>
       </View>
     );
   }
@@ -166,7 +166,7 @@ export default function WorkerFeedScreen() {
       {/* Titel */}
       <Text
         style={{
-          color: COLORS.textPrimary,
+          color: COLORS.white,
           fontSize: 18,
           fontWeight: "800",
           marginBottom: 6,
@@ -215,12 +215,12 @@ export default function WorkerFeedScreen() {
       {/* Vergütung */}
       {item.workerAmountCents && (
         <View style={{ marginTop: 4 }}>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: '#fff' }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
             {(item.workerAmountCents / 100).toFixed(2)} € (Brutto = Netto)
           </Text>
 
           {!profile?.isSelfEmployed && (
-            <Text style={{ fontSize: 11, color: '#666' }}>
+            <Text style={{ fontSize: 11, color: COLORS.textSecondary }}>
               § 40a EStG – keine Abzüge
             </Text>
           )}
@@ -233,7 +233,7 @@ export default function WorkerFeedScreen() {
           {/* Pflicht-Tags */}
           {item.required_all_tags?.length > 0 && (
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: COLORS.neon, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
+              <Text style={{ color: COLORS.accentNeon, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
                 PFLICHT
               </Text>
               <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
@@ -261,7 +261,7 @@ export default function WorkerFeedScreen() {
           {/* Optional-Tags (mindestens eine) */}
           {item.required_any_tags?.length > 0 && (
             <View>
-              <Text style={{ color: COLORS.gray, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
+              <Text style={{ color: COLORS.textSecondary, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
                 MINDESTENS EINE
               </Text>
               <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
