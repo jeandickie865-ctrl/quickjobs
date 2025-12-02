@@ -14,7 +14,7 @@ export const colors = {
   error: '#FF4D4D',
 
   // Modern additions
-  primaryDark: '#3C2BC8',     // Für dunkle Buttons / Headers
+  primaryDark: '#3E2DD9',     // Für dunkle Buttons / Headers
   primarySoft: '#ECE9FF',     // Für ruhige Purple-Karten
   neonDark: '#A7D012',        // Für dezentere Neon-Effekte
 };
