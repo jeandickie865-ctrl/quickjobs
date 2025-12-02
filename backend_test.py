@@ -267,8 +267,8 @@ class UnreadChatCountTester:
         if not accepted_app:
             return False
         
-        # 6. Update payment status to unlock chat
-        await self.update_application_payment_status(employer_auth['token'], application['id'])
+        # 6. Pay for application to unlock chat
+        await self.pay_for_application(employer_auth['token'], application['id'])
         
         print(f"\n✅ TEST SCENARIO SETUP COMPLETE")
         print(f"Worker: {worker_auth['userId']} ({worker_email})")
