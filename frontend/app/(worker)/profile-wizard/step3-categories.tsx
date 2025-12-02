@@ -95,7 +95,7 @@ export default function Step3Categories() {
       categories: selectedCategories,
       subcategories: selectedSubcategories,
     });
-    router.push('/(worker)/profile-wizard/step2-location');
+    router.push('/(worker)/profile-wizard/step2-address');
   };
 
   const isFormValid = selectedCategories.length > 0 && selectedSubcategories.length > 0;
