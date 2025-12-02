@@ -3042,6 +3042,14 @@ def generate_payroll_pdf(
     story.append(Paragraph("<br/>".join(payment_parts), styles["Normal"]))
     story.append(Spacer(1, 12))
     
+    story.append(Paragraph(
+        "Kurzfristige Beschäftigung nach § 40a EStG: "
+        "Für den Arbeitnehmer fallen keine Abzüge an. "
+        "Der Arbeitgeber trägt die pauschalen Abgaben separat.",
+        styles['Normal']
+    ))
+    story.append(Spacer(1, 12))
+    
     # 5. Hinweis
     story.append(Paragraph("<b>5. Hinweis</b>", styles["Heading2"]))
     notice_text = "Diese Abrechnung bezieht sich ausschließlich auf den oben genannten Einsatz. Sie dient der Übergabe an Arbeitnehmer, Steuerberatung oder Lohnbüro."
