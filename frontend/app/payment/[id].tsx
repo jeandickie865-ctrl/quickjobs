@@ -156,6 +156,7 @@ export default function PaymentScreen() {
       console.log("🔍 DEBUG - workerNotSelfEmployed:", workerNotSelfEmployed);
       console.log("🔍 DEBUG - isSmallJob:", isSmallJob);
 
+      // Stelle sicher, dass vorher keine Navigation stattfindet
       // 🔹 MODAL A: Privatperson + Worker nicht selbstständig + Job < 300€
       if (isPrivateEmployer && workerNotSelfEmployed && isSmallJob) {
         console.log("✅ MODAL A: Showing private employer modal!");
