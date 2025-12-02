@@ -388,7 +388,7 @@ export default function WorkerProfileScreen() {
             }}>
               {profile.selfEmployed 
                 ? 'Kann sofort loslegen nach Zahlung'
-                : 'Auftraggeber kann bei der offiziellen Anmeldung helfen'}
+                : 'Backup kann bei der Anmeldung helfen'}
             </Text>
           </View>
 
