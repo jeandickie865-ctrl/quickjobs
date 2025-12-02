@@ -156,9 +156,17 @@ export default function WorkerJobDetailScreen() {
               <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 8 }}>
                 VERGÜTUNG
               </Text>
-              <Text style={{ fontSize: 24, fontWeight: '800', color: COLORS.black }}>
-                {euro(job.workerAmountCents)}
-              </Text>
+              <View style={{ marginTop: 8 }}>
+                <Text style={{ fontSize: 22, fontWeight: '800', color: '#000' }}>
+                  {euro(job.workerAmountCents)} (Brutto = Netto)
+                </Text>
+
+                {!worker?.isSelfEmployed && (
+                  <Text style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+                    Kurzfristige Beschäftigung nach § 40a EStG – keine Abzüge für dich.
+                  </Text>
+                )}
+              </View>
               <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 4 }}>
                 {job.timeMode === 'hours' ? 'pro Stunde' : 'Gesamt'}
               </Text>
