@@ -3075,16 +3075,35 @@ def generate_payroll_pdf(
 
 def generate_employer_costs_pdf(job, worker_profile):
     from reportlab.lib.pagesizes import A4
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
 
     styles = getSampleStyleSheet()
+
+    # Custom Styles
+    title_style = ParagraphStyle(
+        "TitleCustom",
+        parent=styles["Title"],
+        textColor="#5941FF",
+        fontSize=22,
+        spaceAfter=20
+    )
+
+    section_title = ParagraphStyle(
+        "SectionTitle",
+        parent=styles["Heading2"],
+        textColor="#000000",
+        fontSize=14,
+        spaceAfter=10
+    )
+
+    normal = styles["Normal"]
+
     filename = f"employer_costs_{job['id']}.pdf"
     filepath = f"generated_contracts/{filename}"
 
-    brutto = job["workerAmountCents"]  # in Cent
-
-    # Gesetzliche Aufteilung nach § 40a EStG
+    brutto = job["workerAmountCents"]
     renten = round(brutto * 0.15)
     kranken = round(brutto * 0.13)
     steuer = round(brutto * 0.02)
@@ -3094,27 +3113,51 @@ def generate_employer_costs_pdf(job, worker_profile):
     doc = SimpleDocTemplate(filepath, pagesize=A4)
     story = []
 
-    story.append(Paragraph("Arbeitgeber-Kostenübersicht", styles["Title"]))
-    story.append(Spacer(1, 16))
-
-    story.append(Paragraph(f"Arbeitnehmerlohn: {brutto / 100:.2f} €", styles["Normal"]))
+    # Header
+    story.append(Paragraph("Arbeitgeberkosten – Kurzfristige Beschäftigung § 40a EStG", title_style))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph("Pauschalabgaben nach § 40a EStG:", styles["Heading3"]))
-    story.append(Paragraph(f"- Rentenversicherung (15 %): {renten / 100:.2f} €", styles["Normal"]))
-    story.append(Paragraph(f"- Krankenversicherung (13 %): {kranken / 100:.2f} €", styles["Normal"]))
-    story.append(Paragraph(f"- Pauschale Lohnsteuer (2 %): {steuer / 100:.2f} €", styles["Normal"]))
-    story.append(Paragraph(f"= Gesamtabgaben: {gesamt_abgaben / 100:.2f} €", styles["Normal"]))
-    story.append(Spacer(1, 12))
+    # Section: Grundlagen
+    story.append(Paragraph("Lohn & Pauschalabgaben", section_title))
 
-    story.append(Paragraph(f"Gesamtkosten des Arbeitgebers: {total / 100:.2f} €", styles["Heading3"]))
-    story.append(Spacer(1, 16))
+    data = [
+        ["Beschreibung", "Betrag"],
+        ["Arbeitnehmerlohn (Brutto)", f"{brutto / 100:.2f} €"],
+        ["Rentenversicherung (15 %)", f"{renten / 100:.2f} €"],
+        ["Krankenversicherung (13 %)", f"{kranken / 100:.2f} €"],
+        ["Pauschale Lohnsteuer (2 %)", f"{steuer / 100:.2f} €"],
+        ["Gesamtabgaben", f"{gesamt_abgaben / 100:.2f} €"],
+        ["Gesamtkosten Arbeitgeber", f"{total / 100:.2f} €"],
+    ]
 
+    table = Table(data, colWidths=[280, 130])
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#5941FF")),
+        ("TEXTCOLOR", (0,0), (-1,0), colors.white),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,0), 12),
+
+        ("BACKGROUND", (0,1), (-1,-2), colors.whitesmoke),
+        ("TEXTCOLOR", (0,1), (-1,-2), colors.black),
+
+        ("BACKGROUND", (0,-1), (-1,-1), colors.HexColor("#C8FF16")),
+        ("TEXTCOLOR", (0,-1), (-1,-1), colors.black),
+        ("FONTNAME", (0,-1), (-1,-1), "Helvetica-Bold"),
+
+        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
+        ("LINEBEFORE", (0,0), (-1,-1), 0.2, colors.grey),
+        ("LINEAFTER", (0,0), (-1,-1), 0.2, colors.grey),
+        ("GRID", (0,0), (-1,-1), 0.2, colors.grey),
+    ]))
+
+    story.append(table)
+    story.append(Spacer(1, 20))
+
+    # Hinweisblock
     story.append(Paragraph(
-        "Kurzfristige Beschäftigung gemäß § 40a EStG. "
-        "Der Arbeitgeber trägt sämtliche pauschalen Abgaben. "
-        "Der Arbeitnehmer erhält den vollen Bruttolohn ohne Abzüge.",
-        styles["Normal"]
+        "Hinweis: Bei kurzfristiger Beschäftigung gemäß § 40a EStG trägt der Arbeitgeber sämtliche Pauschalabgaben. "
+        "Der Arbeitnehmer erhält den vollständigen Bruttolohn ohne Abzüge.",
+        normal
     ))
 
     doc.build(story)
