@@ -431,13 +431,34 @@ export default function WorkerMatchesScreen() {
                           opacity: pressed ? 0.9 : 1,
                         })}
                       >
-                        <Text style={{ 
-                          fontSize: 16, 
-                          fontWeight: '700', 
-                          color: application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
-                        }}>
-                          {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
-                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={{ 
+                            fontSize: 16, 
+                            fontWeight: '700', 
+                            color: application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
+                          }}>
+                            {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
+                          </Text>
+                          {application.paymentStatus === "paid" && unreadCounts[application.id] > 0 && (
+                            <View style={{
+                              backgroundColor: '#FF4444',
+                              borderRadius: 12,
+                              minWidth: 24,
+                              height: 24,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              paddingHorizontal: 6,
+                            }}>
+                              <Text style={{ 
+                                fontSize: 12, 
+                                fontWeight: '700', 
+                                color: COLORS.white 
+                              }}>
+                                {unreadCounts[application.id]}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
                       </Pressable>
 
                       {/* Official Registration Section - nur nach Zahlung */}
