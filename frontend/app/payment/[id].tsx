@@ -140,57 +140,10 @@ export default function PaymentScreen() {
       }
 
       console.log("✅ Payment successful!");
-      alert("DEBUG 1: Payment successful!");
-      
-      console.log("🔍 RAW DATA - user:", JSON.stringify(user));
-      console.log("🔍 RAW DATA - workerProfile:", JSON.stringify(workerProfile));
-      console.log("🔍 RAW DATA - job:", JSON.stringify(job));
-      
-      // WICHTIG: Prüfen ob Daten vorhanden sind
-      if (!user || !workerProfile) {
-        console.error("❌ FEHLER: User oder WorkerProfile nicht geladen!");
-        console.error("user exists?", !!user);
-        console.error("workerProfile exists?", !!workerProfile);
-        alert("FEHLER: User=" + !!user + ", WorkerProfile=" + !!workerProfile);
-        setProcessing(false);
-        return;
-      }
-
-      console.log("🔍 DEBUG - user.accountType:", user.accountType);
-      console.log("🔍 DEBUG - workerProfile.isSelfEmployed:", workerProfile.isSelfEmployed);
-      alert("DEBUG 2: accountType=" + user.accountType + ", isSelfEmployed=" + workerProfile.isSelfEmployed);
-      
-      // Wenn Worker selbstständig ist → direkt weiter ohne Popup
-      if (workerProfile.isSelfEmployed === true) {
-        console.log("➡️ Worker ist selbstständig, keine Modals");
-        setProcessing(false);
-        router.replace("/(employer)/matches");
-        return;
-      }
-
-      // Worker ist NICHT selbstständig - jetzt Modal anzeigen
-      console.log("⚠️ Worker ist NICHT selbstständig!");
-      
-      // 🔹 MODAL 1: Firma (business) + Worker nicht selbstständig
-      if (user.accountType === "business") {
-        console.log("✅ MODAL 1 WIRD ANGEZEIGT: Business Registration Modal!");
-        setProcessing(false);
-        setShowRegistrationModal(true);
-        return;
-      }
-
-      // 🔹 MODAL 2: Privatperson (private) + Worker nicht selbstständig
-      if (user.accountType === "private") {
-        console.log("✅ MODAL 2 WIRD ANGEZEIGT: Private Employer Modal!");
-        setProcessing(false);
-        setShowPrivateEmployerModal(true);
-        return;
-      }
-
-      // Sollte nie hier ankommen
-      console.error("⚠️ WARNUNG: Keine Modal-Bedingung erfüllt, gehe zu Matches");
       setProcessing(false);
-      router.replace("/(employer)/matches");
+      
+      // Registration check and modal logic
+      await handleRegistrationCheck();
       
     } catch (err) {
       console.error("❌ Payment error:", err);
