@@ -136,6 +136,21 @@ export default function SignupScreen() {
                 </View>
               </View>
 
+              {/* Account Type Selection (nur für Employer) */}
+              {selectedRole === 'employer' && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Wie trittst du auf?</Text>
+                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                    <Pressable onPress={() => setSelectedAccountType('private')} style={{ flex: 1, backgroundColor: selectedAccountType === 'private' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedAccountType === 'private' ? COLORS.neon : 'transparent' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Privatperson</Text>
+                    </Pressable>
+                    <Pressable onPress={() => setSelectedAccountType('business')} style={{ flex: 1, backgroundColor: selectedAccountType === 'business' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedAccountType === 'business' ? COLORS.neon : 'transparent' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Unternehmen</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              )}
+
               {/* Email */}
               <View style={{ marginBottom: 20 }}>
                 <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>E-Mail</Text>
