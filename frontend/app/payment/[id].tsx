@@ -107,49 +107,59 @@ export default function PaymentScreen() {
     }
   }
 
-  async function handleRegistrationCheck() {
+  const handleRegistrationCheck = async () => {
     try {
-      alert("🔍 handleRegistrationCheck START");
       const workerIdFromApplication = application?.workerId;
-      alert("Worker ID: " + workerIdFromApplication);
-      
       const worker = await getWorkerProfile(workerIdFromApplication);
-      alert("Worker loaded: " + JSON.stringify(worker));
       
-      const isSelf = worker?.isSelfEmployed === true;
-      const isPrivateEmployer = user?.accountType === "private";
-      
-      alert("isSelf=" + isSelf + ", isPrivate=" + isPrivateEmployer);
-
-      // Case 1 – PRIVATE + WORKER NOT SELF-EMPLOYED → Show private info modal
-      if (isPrivateEmployer && !isSelf) {
-        alert("✅ Case 1: Private + nicht selbstständig - zeige Alert");
-        Alert.alert(
-          "Hinweis für private Auftraggeber",
-          "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
-          "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
-          "Wir haben alle Unterlagen in 'Meine Matches' für dich hinterlegt.",
-          [{ text: "OK", onPress: () => setShowRegistrationModal(true) }]
-        );
-        return;
-      }
-
-      // Case 2 – BUSINESS + WORKER NOT SELF-EMPLOYED → Show employer modal
-      if (!isPrivateEmployer && !isSelf) {
-        alert("✅ Case 2: Business + nicht selbstständig - zeige Modal");
-        setShowRegistrationModal(true);
-        return;
-      }
-
-      // Case 3 – no registration needed
-      alert("➡️ Case 3: Keine Anmeldung nötig");
-      router.replace("/(employer)/matches");
+      return new Promise((resolve) => {
+        if (user?.accountType === "private" && !worker?.isSelfEmployed) {
+          Alert.alert(
+            "Hinweis für private Auftraggeber",
+            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
+            "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
+            "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  setShowRegistrationModal(true);
+                  resolve();
+                }
+              }
+            ]
+          );
+        } else if (!worker?.isSelfEmployed) {
+          Alert.alert(
+            "Anmeldung des Workers",
+            "Der Worker ist nicht selbstständig. Möchtest du Hilfe bei der offiziellen Anmeldung?",
+            [
+              {
+                text: "Ja, Hilfe bei der Anmeldung",
+                onPress: () => {
+                  setShowRegistrationModal(true);
+                  resolve();
+                }
+              },
+              {
+                text: "Ich kümmere mich selbst um die Anmeldung",
+                onPress: () => {
+                  router.replace("/(employer)/matches");
+                  resolve();
+                }
+              }
+            ]
+          );
+        } else {
+          router.replace("/(employer)/matches");
+          resolve();
+        }
+      });
     } catch (e) {
-      alert("❌ Registration check failed: " + e.message);
       console.log("Registration check failed:", e);
       router.replace("/(employer)/matches");
     }
-  }
+  };
 
   async function handlePayment() {
     alert("🔔 handlePayment aufgerufen!");
