@@ -42,34 +42,43 @@ export default function AllJobsScreen() {
     setError(null);
 
     try {
+      console.log("📍 [ALL JOBS] Step 1: Getting user ID...");
       // 1. User ID holen
       const userId = await getUserId();
       
       if (!userId) {
+        console.error("❌ [ALL JOBS] No user ID found");
         setError("Nicht angemeldet");
         setIsLoading(false);
         return;
       }
+      console.log("✅ [ALL JOBS] User ID:", userId);
 
+      console.log("📍 [ALL JOBS] Step 2: Loading worker profile...");
       // 2. Worker-Profil laden (für Radius und Position)
       const profile = await getWorkerProfile(userId);
       
       if (!profile) {
+        console.error("❌ [ALL JOBS] Worker profile not found");
         setError("Kein Worker-Profil gefunden");
         setIsLoading(false);
         return;
       }
+      console.log("✅ [ALL JOBS] Profile loaded:", { homeLat: profile.homeLat, homeLon: profile.homeLon, radiusKm: profile.radiusKm });
 
       const { homeLat, homeLon, radiusKm } = profile;
 
       if (!homeLat || !homeLon) {
+        console.error("❌ [ALL JOBS] No coordinates in profile");
         setError("Position im Profil nicht gesetzt");
         setIsLoading(false);
         return;
       }
 
+      console.log("📍 [ALL JOBS] Step 3: Loading all jobs...");
       // 2. Alle Jobs laden
       const allJobs = await getJobs();
+      console.log("✅ [ALL JOBS] Loaded", allJobs.length, "jobs from backend");
 
       // 3. Nur Jobs im Radius filtern (KEINE Kategorie oder Tags)
       const jobsInRadius = allJobs.filter((job) => {
@@ -90,6 +99,8 @@ export default function AllJobsScreen() {
         return distanceKm <= radiusKm;
       });
 
+      console.log("✅ [ALL JOBS] Filtered", jobsInRadius.length, "jobs within", radiusKm, "km radius");
+
       // Nach Distanz sortieren (nächste zuerst)
       jobsInRadius.sort((a, b) => {
         const distA = haversine(homeLat, homeLon, a.lat, a.lon);
@@ -99,11 +110,12 @@ export default function AllJobsScreen() {
 
       setJobs(jobsInRadius);
     } catch (err: any) {
+      console.error("❌ [ALL JOBS] Error:", err);
       if (err.message === "UNAUTHORIZED") {
         signOut();
         return;
       }
-      setError("Fehler beim Laden der Jobs");
+      setError(`Fehler beim Laden der Jobs: ${err.message || 'Unbekannt'}`);
     }
 
     setIsLoading(false);
