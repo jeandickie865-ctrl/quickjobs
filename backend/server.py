@@ -521,6 +521,7 @@ class SignUpRequest(BaseModel):
     email: str
     password: str
     role: str  # 'worker' or 'employer'
+    accountType: Optional[str] = "private"  # 'private' or 'business'
 
 class LoginRequest(BaseModel):
     email: str
