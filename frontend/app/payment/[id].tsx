@@ -125,10 +125,17 @@ export default function PaymentScreen() {
         throw new Error("Zahlung fehlgeschlagen");
       }
 
-      console.log("✅ Payment successful! Redirecting to registration...");
+      console.log("✅ Payment successful!");
+      setProcessing(false);
       
-      // Skip prepare.tsx and go directly to confirm
-      router.replace(`/(employer)/registration/confirm?applicationId=${applicationId}&type=kurzfristig`);
+      // Prüfe ob Worker selbstständig ist
+      if (workerProfile?.isSelfEmployed) {
+        // Selbstständig - direkt weiter
+        router.replace(`/(employer)/matches`);
+      } else {
+        // Nicht selbstständig - Modal zeigen
+        setShowRegistrationModal(true);
+      }
       
     } catch (err) {
       console.error("❌ Payment error:", err);
