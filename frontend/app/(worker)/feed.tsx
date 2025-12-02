@@ -120,6 +120,16 @@ export default function WorkerFeedScreen() {
     }
   }, [loading, token, user]);
 
+  // Reload jobs when screen is focused (z.B. nach einer Bewerbung)
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!loading && token && user) {
+        console.log("🔄 Feed screen focused - reloading jobs");
+        loadJobs();
+      }
+    }, [loading, token, user])
+  );
+
   if (isLoading) {
     return (
       <View style={{ padding: 20 }}>
