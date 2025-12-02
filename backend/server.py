@@ -2855,37 +2855,14 @@ def generate_payroll_pdf(
     additional_data: dict
 ) -> str:
     """
-    Generiert ein PDF für die Lohnabrechnung (MODERNISIERT).
-    
-    Verwendet aktuelle MongoDB-Felder ohne "None"-Ausgaben.
+    Modern payroll PDF with Deep-In design (Purple + Neon)
     """
-    # Helper-Funktionen
-    def format_address(addr_dict):
-        if not addr_dict:
-            return ""
-        parts = []
-        street = addr_dict.get('street', '').strip()
-        house_num = addr_dict.get('house_number', '') or addr_dict.get('houseNumber', '')
-        if isinstance(house_num, (int, float)):
-            house_num = str(house_num)
-        house_num = house_num.strip() if house_num else ''
-        
-        if street:
-            if house_num:
-                parts.append(f"{street} {house_num}")
-            else:
-                parts.append(street)
-        
-        postal = addr_dict.get('postal_code', '') or addr_dict.get('postalCode', '')
-        city = addr_dict.get('city', '').strip()
-        
-        if postal and city:
-            parts.append(f"{postal} {city}")
-        elif city:
-            parts.append(city)
-        
-        return ", ".join(parts) if parts else ""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors as rl_colors
     
+    # Helper functions
     def format_date(date_str):
         if not date_str or date_str == 'None':
             return ""
@@ -2903,173 +2880,118 @@ def generate_payroll_pdf(
     filename = f"payroll_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # PDF erstellen
-    doc = SimpleDocTemplate(str(filepath), pagesize=A4,
-                           leftMargin=2*cm, rightMargin=2*cm,
-                           topMargin=2*cm, bottomMargin=2*cm)
+    # Styles
     styles = getSampleStyleSheet()
-    styles['Heading1'].fontSize = 16
-    styles['Heading2'].fontSize = 12
-    styles['Normal'].fontSize = 10
     
+    title_style = ParagraphStyle(
+        "TitleCustom",
+        parent=styles["Title"],
+        textColor="#5941FF",
+        fontSize=20,
+        spaceAfter=20
+    )
+    
+    section_title = ParagraphStyle(
+        "SectionTitle",
+        parent=styles["Heading2"],
+        textColor="#5941FF",
+        fontSize=14,
+        fontName="Helvetica-Bold",
+        spaceAfter=10
+    )
+    
+    normal = styles["Normal"]
+    
+    # Calculate amounts
+    brutto_cents = job_data.get('workerAmountCents', 0)
+    brutto = brutto_cents / 100
+    netto = brutto  # Brutto = Netto for § 40a
+    
+    # Arbeitgeber costs
+    lohnsteuer = brutto * 0.25
+    kirchensteuer = brutto * 0.05
+    soli = lohnsteuer * 0.055
+    unfallvers = brutto * 0.013
+    gesamt_abgaben = lohnsteuer + kirchensteuer + soli + unfallvers
+    total_employer_costs = brutto + gesamt_abgaben
+    
+    # PDF Doc
+    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
     story = []
     
-    # Titel
-    story.append(Paragraph("<b>Lohnabrechnung – Einmaliger Einsatz</b>", styles["Heading1"]))
+    # Header
+    story.append(Paragraph("Gehaltsabrechnung – Kurzfristige Beschäftigung (§ 40a EStG)", title_style))
     story.append(Spacer(1, 12))
     
-    # 1. Arbeitgeber
-    story.append(Paragraph("<b>1. Arbeitgeber</b>", styles["Heading2"]))
-    
-    emp_first = employer_data.get('firstName', '').strip()
-    emp_last = employer_data.get('lastName', '').strip()
-    emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Nicht angegeben"
-    
-    employer_lines = [emp_name]
-    emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
-    if emp_company and emp_company.strip():
-        employer_lines.append(emp_company.strip())
-    
-    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
-    emp_addr = employer_data.get('homeAddress', {})
-    if not emp_addr:
-        # Fallback auf Root-Level Felder
-        emp_addr = {
-            'street': employer_data.get('street'),
-            'house_number': employer_data.get('houseNumber') or employer_data.get('house_number'),
-            'postal_code': employer_data.get('postalCode') or employer_data.get('postal_code'),
-            'city': employer_data.get('city')
-        }
-    emp_address = format_address(emp_addr)
-    if emp_address:
-        employer_lines.append(emp_address)
-    
-    story.append(Paragraph("<br/>".join(employer_lines), styles["Normal"]))
-    story.append(Spacer(1, 12))
-    
-    # 2. Arbeitnehmer
-    story.append(Paragraph("<b>2. Arbeitnehmer</b>", styles["Heading2"]))
-    
+    # Worker info
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
-    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Nicht angegeben"
+    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Arbeitnehmer"
+    story.append(Paragraph(f"<b>Arbeitnehmer:</b> {work_name}", normal))
+    story.append(Spacer(1, 16))
     
-    worker_lines = [work_name]
+    # Section 1: Verdienstübersicht
+    story.append(Paragraph("Verdienstübersicht", section_title))
     
-    # Adresse: Versuche homeAddress, falls nicht vorhanden, nutze Root-Level Felder
-    work_addr = worker_data.get('homeAddress', {})
-    if not work_addr:
-        # Fallback auf Root-Level Felder
-        work_addr = {
-            'street': worker_data.get('street'),
-            'house_number': worker_data.get('houseNumber') or worker_data.get('house_number'),
-            'postal_code': worker_data.get('postalCode') or worker_data.get('postal_code'),
-            'city': worker_data.get('city')
-        }
-    work_address = format_address(work_addr)
-    if work_address:
-        worker_lines.append(work_address)
-    
-    # Zusätzliche Worker-Daten
-    geburtsdatum = worker_data.get('birthDate') or worker_data.get('geburtsdatum') or additional_data.get('geburtsdatum', '')
-    if geburtsdatum:
-        geburtsdatum_formatted = format_date(geburtsdatum)
-        if geburtsdatum_formatted:
-            worker_lines.append(f"<b>Geburtsdatum:</b> {geburtsdatum_formatted}")
-    
-    steuer_id = worker_data.get('steuerId') or additional_data.get('steuerId', '')
-    if steuer_id and steuer_id.strip():
-        worker_lines.append(f"<b>Steuer-ID:</b> {steuer_id.strip()}")
-    
-    sv_nummer = worker_data.get('sozialversicherungsnummer') or additional_data.get('sozialversicherungsnummer', '')
-    if sv_nummer and sv_nummer.strip():
-        worker_lines.append(f"<b>Sozialversicherungsnummer:</b> {sv_nummer.strip()}")
-    
-    krankenkasse = worker_data.get('krankenkasse') or additional_data.get('krankenkasse', '')
-    if krankenkasse and krankenkasse.strip():
-        worker_lines.append(f"<b>Krankenkasse:</b> {krankenkasse.strip()}")
-    
-    story.append(Paragraph("<br/>".join(worker_lines), styles["Normal"]))
-    story.append(Spacer(1, 12))
-    
-    # 3. Einsatzdetails
-    story.append(Paragraph("<b>3. Einsatzdetails</b>", styles["Heading2"]))
-    
-    job_title = job_data.get('title', '').strip() or "Nicht angegeben"
-    job_desc = job_data.get('description', '').strip() or "Nicht angegeben"
-    
-    job_addr = job_data.get('address', {})
-    job_address = format_address(job_addr) or "Nicht angegeben"
-    
-    # Zeitangaben
-    job_date = format_date(job_data.get('date', ''))
-    start_time = job_data.get('start_at', '') or job_data.get('startAt', '')
-    end_time = job_data.get('end_at', '') or job_data.get('endAt', '')
-    
-    details_parts = [
-        f"<b>Tätigkeit:</b> {job_title}",
-        f"<b>Beschreibung:</b> {job_desc}",
-        f"<b>Ort:</b> {job_address}"
+    verdienst_data = [
+        ["", "Betrag in EUR"],
+        ["Bruttolohn", f"{brutto:.2f}"],
+        ["Nettoverdienst", f"{netto:.2f}"],
     ]
     
-    if job_date:
-        if start_time and end_time:
-            details_parts.append(f"<b>Datum und Zeit:</b> {job_date}, {start_time} – {end_time} Uhr")
-        else:
-            details_parts.append(f"<b>Datum:</b> {job_date}")
+    verdienst_table = Table(verdienst_data, colWidths=[280, 130])
+    verdienst_table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), rl_colors.HexColor("#5941FF")),
+        ("TEXTCOLOR", (0,0), (-1,0), rl_colors.white),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
+        ("GRID", (0,0), (-1,-1), 0.2, rl_colors.grey),
+    ]))
     
-    story.append(Paragraph("<br/>".join(details_parts), styles["Normal"]))
-    story.append(Spacer(1, 12))
+    story.append(verdienst_table)
+    story.append(Spacer(1, 20))
     
-    # 4. Vergütung
-    story.append(Paragraph("<b>4. Vergütung</b>", styles["Heading2"]))
+    # Section 2: Arbeitgeberabgaben
+    story.append(Paragraph("Pauschale Arbeitgeberabgaben", section_title))
     
-    worker_amount = job_data.get('workerAmountCents', 0) / 100
-    
-    # Stunden berechnen (falls vorhanden, sonst Standard)
-    hours = 8.0  # Standard
-    if start_time and end_time:
-        try:
-            from datetime import datetime
-            start = datetime.strptime(start_time, "%H:%M")
-            end = datetime.strptime(end_time, "%H:%M")
-            hours = (end - start).total_seconds() / 3600
-        except:
-            pass
-    
-    hourly_rate = worker_amount / hours if hours > 0 else worker_amount
-    
-    payment_parts = [
-        f"<b>Stundenlohn:</b> {hourly_rate:.2f} EUR",
-        f"<b>Gearbeitete Stunden:</b> {hours:.1f}",
-        f"<b>Gesamtlohn:</b> {worker_amount:.2f} EUR"
+    abgaben_data = [
+        ["Art der Abgabe", "Betrag in EUR"],
+        ["Pauschale Lohnsteuer (25 %)", f"{lohnsteuer:.2f}"],
+        ["Kirchensteuer pauschal (5 %)", f"{kirchensteuer:.2f}"],
+        ["Solidaritätszuschlag (5,5 % auf LSt)", f"{soli:.2f}"],
+        ["Pauschale Unfallversicherung (1,3 %)", f"{unfallvers:.2f}"],
+        ["Gesamt-Arbeitgeberkosten", f"{total_employer_costs:.2f}"],
     ]
     
-    story.append(Paragraph("<br/>".join(payment_parts), styles["Normal"]))
-    story.append(Spacer(1, 12))
+    abgaben_table = Table(abgaben_data, colWidths=[280, 130])
+    abgaben_table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), rl_colors.HexColor("#5941FF")),
+        ("TEXTCOLOR", (0,0), (-1,0), rl_colors.white),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+        
+        ("BACKGROUND", (0,1), (-1,-2), rl_colors.whitesmoke),
+        
+        ("BACKGROUND", (0,-1), (-1,-1), rl_colors.HexColor("#C8FF16")),
+        ("TEXTCOLOR", (0,-1), (-1,-1), rl_colors.black),
+        ("FONTNAME", (0,-1), (-1,-1), "Helvetica-Bold"),
+        
+        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
+        ("GRID", (0,0), (-1,-1), 0.2, rl_colors.grey),
+    ]))
     
+    story.append(abgaben_table)
+    story.append(Spacer(1, 20))
+    
+    # Final note
     story.append(Paragraph(
-        "Kurzfristige Beschäftigung nach § 40a EStG: "
-        "Für den Arbeitnehmer fallen keine Abzüge an. "
-        "Der Arbeitgeber trägt die pauschalen Abgaben separat.",
-        styles['Normal']
+        "Hinweis: Bei kurzfristiger Beschäftigung nach § 40a EStG trägt der Arbeitgeber sämtliche Abgaben. "
+        "Für den Arbeitnehmer entstehen keine steuerlichen Abzüge (Brutto = Netto).",
+        normal
     ))
-    story.append(Spacer(1, 12))
     
-    # 5. Hinweis
-    story.append(Paragraph("<b>5. Hinweis</b>", styles["Heading2"]))
-    notice_text = "Diese Abrechnung bezieht sich ausschließlich auf den oben genannten Einsatz. Sie dient der Übergabe an Arbeitnehmer, Steuerberatung oder Lohnbüro."
-    story.append(Paragraph(notice_text, styles["Normal"]))
-    story.append(Spacer(1, 12))
-    
-    # Datum
-    created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
-    story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", styles["Normal"]))
-    
-    # PDF erstellen
+    # Build PDF
     doc.build(story)
-    
-    logger.info(f"Generated payroll PDF: {filename}")
+    logger.info(f"Generated modern payroll PDF: {filename}")
     
     return f"/api/generated_contracts/{filename}"
 
