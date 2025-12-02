@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-Backend Testing Suite for Unread Chat Message Count Feature
-Tests the GET /api/chat/unread-count/{application_id} endpoint
+Backend API Testing für ShiftMatch App
+Testet den /api/jobs Endpoint wie in der Review-Anfrage spezifiziert
 """
 
-import asyncio
-import httpx
+import requests
 import json
-import uuid
+import time
 from datetime import datetime
-import os
 
-# Backend URL from frontend .env
+# Backend URL aus frontend/.env
 BACKEND_URL = "https://shiftmatch-1.preview.emergentagent.com/api"
 
 class UnreadChatCountTester:
