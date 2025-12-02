@@ -540,6 +540,29 @@ export default function CreateJob() {
           />
         </View>
 
+        {/* Info-Block für private Auftraggeber */}
+        {user?.accountType === "private" && user?.isSelfEmployed === false && (
+          <View style={{
+            backgroundColor: '#F5F5F5',
+            padding: 12,
+            borderRadius: 12,
+            marginTop: 12,
+          }}>
+            <Text style={{
+              color: '#333',
+              fontSize: 13,
+              fontWeight: '600',
+              marginBottom: 4
+            }}>
+              Hinweis für private Auftraggeber
+            </Text>
+            <Text style={{ color: '#333', fontSize: 13, lineHeight: 18 }}>
+              Für kurzfristige Beschäftigungen erstellt die App automatisch alle Unterlagen nach § 40a EStG. 
+              Du reichst sie bei Bedarf selbst bei der Minijob-Zentrale ein.
+            </Text>
+          </View>
+        )}
+
         {/* Cost Breakdown */}
         {workerAmountCents > 0 && (
           <View style={{
