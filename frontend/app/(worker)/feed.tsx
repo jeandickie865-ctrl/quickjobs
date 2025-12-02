@@ -13,6 +13,9 @@ const COLORS = {
   white: "#FFFFFF",
   black: "#000000",
   gray: "#8A8A8A",
+  textPrimary: "#000000",
+  textSecondary: "#333333",
+  accentNeon: "#C8FF16",
 };
 
 export default function WorkerFeedScreen() {
