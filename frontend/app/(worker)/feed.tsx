@@ -101,9 +101,19 @@ export default function WorkerFeedScreen() {
     }
   };
 
+  const loadProfile = async () => {
+    try {
+      const data = await getWorkerProfile();
+      setProfile(data);
+    } catch (err) {
+      console.log('Profile load error:', err);
+    }
+  };
+
   useEffect(() => {
     if (!loading && token && user) {
       loadJobs();
+      loadProfile();
     }
   }, [loading, token, user]);
 
