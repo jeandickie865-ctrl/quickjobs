@@ -150,30 +150,13 @@ export default function PaymentScreen() {
       const workerNotSelfEmployed = workerProfile?.isSelfEmployed === false;
       const requiresRegistration = job?.workerAmountCents >= 30000;
 
-      // 🔹 POPUP A: Privatperson + Worker nicht selbstständig + Job >= 300€
+      // 🔹 MODAL A: Privatperson + Worker nicht selbstständig + Job >= 300€
       if (isPrivateEmployer && workerNotSelfEmployed && requiresRegistration) {
-        const alertMessage =
-          "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
-          "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
-          "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.";
-
-        Alert.alert(
-          "Hinweis für private Auftraggeber",
-          alertMessage,
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                setShowRegistrationModal(true);
-              }
-            }
-          ]
-        );
-
-        return; // ❗ Alles stoppen, Popup B NICHT zeigen
+        setShowPrivateEmployerModal(true);
+        return; // ❗ Alles stoppen, Modal B NICHT zeigen
       }
 
-      // 🔹 POPUP B: Firma + Worker nicht selbstständig
+      // 🔹 MODAL B: Firma + Worker nicht selbstständig
       if (isBusinessEmployer && workerNotSelfEmployed) {
         setShowRegistrationModal(true);
         return;
