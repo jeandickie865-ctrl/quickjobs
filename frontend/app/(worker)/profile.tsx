@@ -350,6 +350,48 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
+          {/* 2.5) Selbstständig Status - WICHTIG FÜR AUFTRAGGEBER */}
+          <View style={{
+            backgroundColor: profile.selfEmployed ? 'rgba(200, 255, 22, 0.1)' : 'rgba(89, 65, 255, 0.1)',
+            borderRadius: 16,
+            padding: 20,
+            marginBottom: 16,
+            borderWidth: 2,
+            borderColor: profile.selfEmployed ? COLORS.neon : COLORS.purple,
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+              <Ionicons 
+                name={profile.selfEmployed ? "briefcase" : "people"} 
+                size={22} 
+                color={profile.selfEmployed ? COLORS.black : COLORS.purple} 
+              />
+              <Text style={{ 
+                fontSize: 18, 
+                fontWeight: '700', 
+                color: COLORS.black, 
+                marginLeft: 8 
+              }}>
+                Beschäftigungsstatus
+              </Text>
+            </View>
+            <Text style={{ 
+              fontSize: 16, 
+              fontWeight: '700',
+              color: COLORS.black,
+            }}>
+              {profile.selfEmployed ? '✅ Selbstständig' : '📋 Nicht selbstständig (Anmeldung erforderlich)'}
+            </Text>
+            <Text style={{ 
+              fontSize: 13, 
+              color: COLORS.darkGray,
+              marginTop: 6,
+            }}>
+              {profile.selfEmployed 
+                ? 'Kann sofort loslegen nach Zahlung'
+                : 'Auftraggeber kann bei der offiziellen Anmeldung helfen'}
+            </Text>
+          </View>
+
           {/* 3) Wohnadresse - VOLLSTÄNDIG */}
           {profile.homeAddress && (
             <View style={{
