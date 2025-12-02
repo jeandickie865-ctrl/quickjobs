@@ -178,16 +178,20 @@ export default function PaymentScreen() {
       console.log("📡 Payment response status:", res.status);
       alert("📡 Response status: " + res.status);
 
+      alert("CHECK 1: Prüfe ob res.ok");
       if (!res.ok) {
         alert("❌ Payment failed - status: " + res.status);
         throw new Error("Zahlung fehlgeschlagen");
       }
 
+      alert("CHECK 2: Payment war OK!");
       console.log("✅ Payment successful!");
       setProcessing(false);
       
+      alert("CHECK 3: Rufe handleRegistrationCheck auf");
       // Registration check and modal logic
       await handleRegistrationCheck();
+      alert("CHECK 4: handleRegistrationCheck fertig");
       
     } catch (err) {
       console.error("❌ Payment error:", err);
