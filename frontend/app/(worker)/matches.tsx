@@ -130,6 +130,12 @@ export default function WorkerMatchesScreen() {
       });
 
       setMatches(combined);
+      
+      // Load unread counts for all matches
+      const applicationIds = combined.map(m => m.application.id);
+      if (applicationIds.length > 0) {
+        loadUnreadCounts(applicationIds);
+      }
     } catch (e) {
       console.error('Error loading matches:', e);
       if (!silent) {
