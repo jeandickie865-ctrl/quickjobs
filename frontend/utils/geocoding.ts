@@ -83,10 +83,10 @@ export async function searchAddressSuggestions(
   }
   
   try {
-    // Über Backend-Endpoint suchen
+    // Über Backend-Endpoint suchen (existierender /api/geocode Endpoint)
     const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
     const encodedQuery = encodeURIComponent(query);
-    const url = `${API_URL}/api/geocoding/search?query=${encodedQuery}`;
+    const url = `${API_URL}/api/geocode?query=${encodedQuery}`;
     
     console.log('🔍 Searching addresses via backend:', query);
     
@@ -100,7 +100,16 @@ export async function searchAddressSuggestions(
     const data = await response.json();
     console.log('✅ Found', data.length, 'address suggestions');
     
-    return data;
+    // Formatiere die Antwort von Nominatim zu unserem Format
+    return data.map((item: any) => ({
+      displayName: item.display_name,
+      street: item.address?.road,
+      houseNumber: item.address?.house_number,
+      postalCode: item.address?.postcode,
+      city: item.address?.city || item.address?.town || item.address?.village,
+      lat: parseFloat(item.lat),
+      lon: parseFloat(item.lon)
+    }));
   } catch (error) {
     console.error('❌ Address search error:', error);
     return [];
