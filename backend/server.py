@@ -1214,9 +1214,18 @@ async def get_matched_jobs_for_me(
     }).to_list(9999)
     logger.info(f"📊 Found {len(all_jobs)} open, future/today, unmatched jobs to match against (date >= {today})")
     
+    # KRITISCH: Jobs ausschließen, für die der Worker bereits eine Bewerbung hat
+    existing_applications = await db.applications.find({"workerId": worker_id}).to_list(9999)
+    applied_job_ids = {app["jobId"] for app in existing_applications}
+    logger.info(f"🚫 Worker has already applied to {len(applied_job_ids)} jobs - excluding them")
+    
     # Apply matching logic
     matched_jobs = []
     for job in all_jobs:
+        # Skip jobs the worker has already applied to
+        if job.get("id") in applied_job_ids:
+            continue
+        
         if match_worker_with_job(worker_profile, job):
             job.pop("_id", None)
             matched_jobs.append(Job(**job))
