@@ -92,11 +92,11 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signUp(email: string, password: string, role: string) {
+  async function signUp(email: string, password: string, role: string, accountType: string = "private") {
     const res = await fetch(`${API_URL}/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, role }),
+      body: JSON.stringify({ email, password, role, accountType }),
     });
 
     if (!res.ok) {
