@@ -2344,7 +2344,10 @@ async def get_unread_count(
     if not application.get("chatUnlocked", False) or application.get("paymentStatus") != "paid":
         return {"unreadCount": 0}
     
-    # Determine who the requesting user is and who the other person is
+    # Determine who the requesting user is and who sent the messages
+    sender_role = "worker" if requesting_user == application.get("workerId") else "employer"
+    other_role = "employer" if sender_role == "worker" else "worker"
+    
     if requesting_user == application.get("workerId"):
         other_user_id = application.get("employerId")
     else:
@@ -2354,8 +2357,10 @@ async def get_unread_count(
     # Support both old messages (using senderId) and new messages (using senderRole)
     unread_count = await db.chat_messages.count_documents({
         "applicationId": application_id,
+        "read": False,
         "$or": [
-            {"senderId": other_user_id, "read": False},  # Old messages without senderRole
+            {"senderId": other_user_id},  # Old messages without senderRole
+            {"senderRole": other_role},   # New messages with senderRole
         ],
     })
     
