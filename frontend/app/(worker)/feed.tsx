@@ -211,11 +211,21 @@ export default function WorkerFeedScreen() {
 
       {/* Vergütung */}
       {item.workerAmountCents && (
-        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
-          <Ionicons name="cash-outline" size={18} color={COLORS.neon} />
-          <Text style={{ color: COLORS.white, marginLeft: 8, fontWeight: "700" }}>
-            {(item.workerAmountCents / 100).toFixed(2)} €
-          </Text>
+        <View style={{ marginBottom: 10 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons name="cash-outline" size={18} color={COLORS.neon} />
+            <View style={{ marginLeft: 8, marginTop: 4 }}>
+              <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700' }}>
+                {(item.workerAmountCents / 100).toFixed(2)} € (Brutto = Netto)
+              </Text>
+
+              {!profile?.isSelfEmployed && (
+                <Text style={{ fontSize: 11, color: '#AAA' }}>
+                  § 40a EStG – keine Abzüge
+                </Text>
+              )}
+            </View>
+          </View>
         </View>
       )}
 
