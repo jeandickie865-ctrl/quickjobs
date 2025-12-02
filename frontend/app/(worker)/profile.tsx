@@ -387,7 +387,7 @@ export default function WorkerProfileScreen() {
               marginTop: 6,
             }}>
               {profile.isSelfEmployed 
-                ? 'Kann sofort loslegen nach Zahlung'
+                ? 'Kann sofort loslegen nach der Zahlung der Provision an Backup'
                 : 'Backup kann bei der Anmeldung helfen'}
             </Text>
           </View>
