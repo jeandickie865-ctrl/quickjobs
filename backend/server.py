@@ -2815,6 +2815,12 @@ def generate_sofortmeldung_pdf(
     story.append(Paragraph("<br/>".join(details_parts), styles["Normal"]))
     story.append(Spacer(1, 12))
     
+    story.append(Paragraph(
+        "Hinweis: Kurzfristige Beschäftigung gemäß § 40a EStG.",
+        styles['Normal']
+    ))
+    story.append(Spacer(1, 12))
+    
     # 4. Beschäftigungsart
     story.append(Paragraph("<b>4. Beschäftigungsart</b>", styles["Heading2"]))
     registration_type_de = "Kurzfristige Beschäftigung" if registration_type == "kurzfristig" else "Minijob"
