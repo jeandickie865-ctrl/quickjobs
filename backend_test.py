@@ -12,7 +12,7 @@ from datetime import datetime
 import os
 
 # Backend URL from frontend .env
-BACKEND_URL = "https://matchshift-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://shiftmatch-1.preview.emergentagent.com/api"
 
 class UnreadChatCountTester:
     def __init__(self):
