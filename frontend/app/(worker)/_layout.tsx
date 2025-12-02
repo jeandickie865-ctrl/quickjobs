@@ -273,6 +273,13 @@ export default function WorkerLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="registration-data"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
