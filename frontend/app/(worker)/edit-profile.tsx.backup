@@ -31,9 +31,6 @@ const COLORS = {
   lightGray: '#F5F5F5',
   borderGray: '#E0E0E0',
   error: '#FF4D4D',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function EditWorkerProfileScreen() {
@@ -1063,7 +1060,7 @@ export default function EditWorkerProfileScreen() {
                 {user?.email || email || 'Keine E-Mail'}
               </Text>
             </View>
-            <Text style={{ fontSize: 12, color: COLORS.textSecondary, marginTop: 4, fontStyle: 'italic' }}>
+            <Text style={{ fontSize: 12, color: '#888', marginTop: 4, fontStyle: 'italic' }}>
               E-Mail kann nicht geändert werden
             </Text>
           </View>

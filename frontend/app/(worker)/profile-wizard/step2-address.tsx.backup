@@ -18,9 +18,6 @@ const COLORS = {
   gray: '#999',
   lightGray: '#F5F5F5',
   error: '#FF4D4D',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function Step2Address() {

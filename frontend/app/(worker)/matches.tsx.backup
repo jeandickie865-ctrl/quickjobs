@@ -26,6 +26,9 @@ const COLORS = {
   darkGray: '#333333',
   neonShadow: 'rgba(200,255,22,0.15)',
   dimmed: 'rgba(0,0,0,0.7)',
+  textPrimary: "#000000",
+  textSecondary: "#333333",
+  accentNeon: "#C8FF16",
 };
 
 type Match = {
@@ -591,7 +594,7 @@ export default function WorkerMatchesScreen() {
                       borderRadius: 16,
                       alignItems: 'center',
                     }}>
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: '#666' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textSecondary }}>
                         Warte auf Antwort...
                       </Text>
                     </View>

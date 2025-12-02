@@ -21,9 +21,6 @@ const COLORS = {
   darkGray: '#333333',
   lightGray: '#F5F5F5',
   borderGray: '#E0E0E0',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function WorkerProfileScreen() {
@@ -456,7 +453,7 @@ export default function WorkerProfileScreen() {
               {/* Kategorien als Purple Chips */}
               {categoryLabels.length > 0 && (
                 <View style={{ marginBottom: tagLabels.length > 0 ? 16 : 0 }}>
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textSecondary, marginBottom: 8 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
                     KATEGORIEN
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -479,7 +476,7 @@ export default function WorkerProfileScreen() {
               {/* Tags/Qualifikationen als Gray Chips */}
               {tagLabels.length > 0 && (
                 <View>
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textSecondary, marginBottom: 8 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginBottom: 8 }}>
                     QUALIFIKATIONEN & TÄTIGKEITEN
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -528,7 +525,7 @@ export default function WorkerProfileScreen() {
                 <View style={{ marginBottom: profile.phone ? 12 : 0 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
                     <Ionicons name="mail-outline" size={16} color={COLORS.darkGray} />
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textSecondary, marginLeft: 6 }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
                       E-MAIL
                     </Text>
                   </View>
@@ -543,7 +540,7 @@ export default function WorkerProfileScreen() {
                 <View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
                     <Ionicons name="call-outline" size={16} color={COLORS.darkGray} />
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textSecondary, marginLeft: 6 }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#888', marginLeft: 6 }}>
                       TELEFON
                     </Text>
                   </View>
@@ -578,7 +575,7 @@ export default function WorkerProfileScreen() {
               <Text style={{ fontSize: 48, fontWeight: '900', color: COLORS.purple }}>
                 {profile.radiusKm}
               </Text>
-              <Text style={{ fontSize: 14, color: COLORS.textSecondary, marginTop: 4 }}>
+              <Text style={{ fontSize: 14, color: '#888', marginTop: 4 }}>
                 Kilometer Umkreis
               </Text>
             </View>
