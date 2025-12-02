@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-B1 Backend Testing Suite - Job Cleanup & Konsistenz
-Tests all B1 implementation features as requested in German review.
+Backend Testing Suite for Unread Chat Message Count Feature
+Tests the GET /api/chat/unread-count/{application_id} endpoint
 """
 
 import asyncio
-import aiohttp
+import httpx
 import json
-from datetime import datetime, timedelta
 import uuid
-import sys
+from datetime import datetime
+import os
 
 # Backend URL from frontend .env
 BACKEND_URL = "https://matchshift-1.preview.emergentagent.com/api"
 
-class B1BackendTester:
+class UnreadChatCountTester:
     def __init__(self):
         self.session = None
         self.test_users = {}
