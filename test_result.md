@@ -442,7 +442,7 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "B1 - Job Cleanup & Konsistenz"
+    - "Unread Chat Message Count Feature"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
