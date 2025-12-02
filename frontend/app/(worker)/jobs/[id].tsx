@@ -11,6 +11,7 @@ import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/re
 import { RatingDisplay } from '../../../components/RatingDisplay';
 import { getTagLabel } from '../../../utils/taxonomy';
 import { addApplication } from '../../../utils/applicationStore';
+import { getWorkerProfile } from '../../../utils/profileStore';
 
 // NEON COLORS
 const COLORS = {
@@ -27,6 +28,7 @@ export default function WorkerJobDetailScreen() {
   const router = useRouter();
 
   const [job, setJob] = useState<Job | null>(null);
+  const [worker, setWorker] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [employerRating, setEmployerRating] = useState(0);
   const [employerReviewCount, setEmployerReviewCount] = useState(0);
