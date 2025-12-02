@@ -16,9 +16,6 @@ const COLORS = {
   placeholder: '#8A8A8A',
   success: '#00D26A',
   successBg: 'rgba(0,210,106,0.12)',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 export default function ForgotPasswordScreen() {
