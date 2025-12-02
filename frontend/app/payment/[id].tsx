@@ -332,7 +332,7 @@ export default function PaymentScreen() {
         </View>
       </View>
 
-      {/* Registration Modal */}
+      {/* Registration Modal (Business Arbeitgeber) */}
       {showRegistrationModal && (
         <View style={{
           position: "absolute",
@@ -397,6 +397,58 @@ export default function PaymentScreen() {
             >
               <Text style={{ fontSize: 14, fontWeight: "700", color: COLORS.purple }}>
                 Ich kümmere mich selbst um die Anmeldung
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
+
+      {/* Modal für private Arbeitgeber (Jobs >= 300€) */}
+      {showPrivateEmployerModal && (
+        <View style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0,0,0,0.8)",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+          <View style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 16,
+            padding: 24,
+            width: "100%",
+            maxWidth: 400,
+          }}>
+            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.black, marginBottom: 16, textAlign: "center" }}>
+              Hinweis für private Auftraggeber
+            </Text>
+            
+            <Text style={{ fontSize: 14, color: COLORS.darkGray, marginBottom: 24, textAlign: "center", lineHeight: 20 }}>
+              Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.{'\n\n'}
+              Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.{'\n\n'}
+              Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.
+            </Text>
+
+            <Pressable
+              onPress={() => {
+                setShowPrivateEmployerModal(false);
+                router.replace(`/(employer)/matches`);
+              }}
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.neon,
+                borderRadius: 14,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                alignItems: "center",
+                opacity: pressed ? 0.9 : 1,
+              })}
+            >
+              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.black }}>
+                ✓ Verstanden
               </Text>
             </Pressable>
           </View>
