@@ -545,8 +545,8 @@ export default function MatchesScreen() {
                     </Pressable>
                   )}
 
-                  {/* Anmeldedokumente Button - nur nach Zahlung */}
-                  {match.application.paymentStatus === "paid" && (() => {
+                  {/* Anmeldedokumente Button - nur für NICHT-selbstständige nach Zahlung */}
+                  {match.application.paymentStatus === "paid" && !match.workerProfile?.isSelfEmployed && (() => {
                     const hasWorkerData = workerDataStatus[match.application.workerId];
                     const buttonText = hasWorkerData 
                       ? "Anmeldedokumente erstellen" 
