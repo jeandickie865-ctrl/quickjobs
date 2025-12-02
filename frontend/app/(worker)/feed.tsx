@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, FlatList, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { getMatchedJobs } from "../../utils/jobStore";
 import { useAuth } from "../../contexts/AuthContext";
 import { getTagLabel } from "../../utils/taxonomy";
