@@ -37,25 +37,19 @@ export default function AllJobsScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const loadAllJobsInRadius = async () => {
+    // Warten bis Auth geladen ist
+    if (!token || !user) {
+      console.log("⏳ [ALL JOBS] Waiting for auth to load...");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
-      console.log("📍 [ALL JOBS] Step 1: Getting user ID...");
-      // 1. User ID holen
-      const userId = await getUserId();
-      
-      if (!userId) {
-        console.error("❌ [ALL JOBS] No user ID found");
-        setError("Nicht angemeldet");
-        setIsLoading(false);
-        return;
-      }
-      console.log("✅ [ALL JOBS] User ID:", userId);
-
-      console.log("📍 [ALL JOBS] Step 2: Loading worker profile...");
-      // 2. Worker-Profil laden (für Radius und Position)
-      const profile = await getWorkerProfile(userId);
+      console.log("📍 [ALL JOBS] Step 1: Loading worker profile...");
+      // 1. Worker-Profil laden (für Radius und Position)
+      const profile = await getWorkerProfile();
       
       if (!profile) {
         console.error("❌ [ALL JOBS] Worker profile not found");
@@ -74,7 +68,7 @@ export default function AllJobsScreen() {
         return;
       }
 
-      console.log("📍 [ALL JOBS] Step 3: Loading all jobs...");
+      console.log("📍 [ALL JOBS] Step 2: Loading all jobs...");
       // 2. Alle Jobs laden
       const allJobs = await getJobs();
       console.log("✅ [ALL JOBS] Loaded", allJobs.length, "jobs from backend");
@@ -115,9 +109,9 @@ export default function AllJobsScreen() {
         return;
       }
       setError(`Fehler beim Laden der Jobs: ${err.message || 'Unbekannt'}`);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {
