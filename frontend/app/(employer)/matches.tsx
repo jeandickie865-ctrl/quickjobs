@@ -600,26 +600,25 @@ export default function MatchesScreen() {
                       ) : (
                         // Worker ist NICHT selbstständig
                         <>
-                          {/* 
-                          ========================================
-                          FEATURE DEAKTIVIERT: Offizielle Anmeldung
-                          ========================================
-                          Später wieder aktivieren!
-                          
                           {match.application.officialRegistrationStatus === "none" && (
                             <>
                               <Pressable
                                 onPress={() => requestOfficialRegistration(match.application.id)}
                                 style={({ pressed }) => ({
-                                  backgroundColor: COLORS.white,
-                                  borderRadius: 12,
-                                  paddingVertical: 12,
+                                  backgroundColor: COLORS.neon,
+                                  borderRadius: 14,
+                                  paddingVertical: 14,
+                                  paddingHorizontal: 16,
                                   alignItems: 'center',
-                                  opacity: pressed ? 0.8 : 1,
+                                  shadowColor: COLORS.neonShadow,
+                                  shadowOffset: { width: 0, height: 2 },
+                                  shadowOpacity: 0.8,
+                                  shadowRadius: 6,
+                                  opacity: pressed ? 0.9 : 1,
                                 })}
                               >
-                                <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.purple }}>
-                                  📋 Offiziell anmelden
+                                <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                                  📋 Brauchen Sie Hilfe bei der Anmeldung?
                                 </Text>
                               </Pressable>
                               
@@ -627,15 +626,16 @@ export default function MatchesScreen() {
                                 onPress={() => setInformalRegistration(match.application.id)}
                                 style={({ pressed }) => ({
                                   borderWidth: 2,
-                                  borderColor: COLORS.white,
-                                  borderRadius: 12,
-                                  paddingVertical: 10,
+                                  borderColor: COLORS.neon,
+                                  borderRadius: 14,
+                                  paddingVertical: 12,
+                                  paddingHorizontal: 16,
                                   alignItems: 'center',
-                                  opacity: pressed ? 0.8 : 1,
+                                  opacity: pressed ? 0.9 : 1,
                                 })}
                               >
-                                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.white }}>
-                                  Ohne Anmeldung fortfahren
+                                <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
+                                  Ich kümmere mich selbst um die Anmeldung
                                 </Text>
                               </Pressable>
                             </>
@@ -643,11 +643,13 @@ export default function MatchesScreen() {
                           
                           {match.application.officialRegistrationStatus === "requested" && (
                             <View style={{ 
-                              backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                              padding: 12, 
-                              borderRadius: 12 
+                              backgroundColor: 'rgba(200, 255, 22, 0.1)', 
+                              padding: 16, 
+                              borderRadius: 12,
+                              borderWidth: 2,
+                              borderColor: COLORS.neon,
                             }}>
-                              <Text style={{ color: COLORS.white, fontSize: 13, textAlign: 'center' }}>
+                              <Text style={{ color: COLORS.neon, fontSize: 14, fontWeight: '700', textAlign: 'center' }}>
                                 ⏳ Wartet auf Daten vom Worker
                               </Text>
                             </View>
@@ -657,19 +659,23 @@ export default function MatchesScreen() {
                             <Pressable
                               onPress={() => downloadContract(match.application.id)}
                               style={({ pressed }) => ({
-                                backgroundColor: COLORS.white,
-                                borderRadius: 12,
-                                paddingVertical: 12,
+                                backgroundColor: COLORS.neon,
+                                borderRadius: 14,
+                                paddingVertical: 14,
+                                paddingHorizontal: 16,
                                 alignItems: 'center',
-                                opacity: pressed ? 0.8 : 1,
+                                shadowColor: COLORS.neonShadow,
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.8,
+                                shadowRadius: 6,
+                                opacity: pressed ? 0.9 : 1,
                               })}
                             >
-                              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.purple }}>
+                              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
                                 📄 Arbeitsvertrag herunterladen
                               </Text>
                             </Pressable>
                           )}
-                          */}
 
                           {match.application.officialRegistrationStatus === "denied" && (
                             // Worker hat abgelehnt
