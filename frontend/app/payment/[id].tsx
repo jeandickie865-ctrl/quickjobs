@@ -140,7 +140,7 @@ export default function PaymentScreen() {
           const alertMessage = 
             "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
             "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
-            "Wir haben alle Unterlagen unter „Meine Matches" für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.";
+            "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.";
           
           Alert.alert(
             "Hinweis für private Auftraggeber",
