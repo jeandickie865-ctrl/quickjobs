@@ -2315,6 +2315,41 @@ async def send_message(
     await db.chat_messages.insert_one(doc)
     return {"success": True}
 
+@api_router.get("/chat/unread-count/{application_id}")
+async def get_unread_count(
+    application_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Get count of unread messages for an application"""
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    
+    # Get application to verify user is part of it
+    application = await db.applications.find_one({"id": application_id})
+    if not application:
+        return {"unreadCount": 0}
+    
+    # User must be either the worker or employer
+    if requesting_user not in [application.get("workerId"), application.get("employerId")]:
+        return {"unreadCount": 0}
+    
+    # Check if chat is unlocked
+    if not application.get("chatUnlocked", False) or application.get("paymentStatus") != "paid":
+        return {"unreadCount": 0}
+    
+    # Determine sender role
+    sender_role = "worker" if requesting_user == application.get("workerId") else "employer"
+    other_role = "employer" if sender_role == "worker" else "worker"
+    
+    # Count unread messages from the other person
+    unread_count = await db.chat_messages.count_documents({
+        "applicationId": application_id,
+        "senderRole": other_role,
+        "read": False
+    })
+    
+    return {"unreadCount": unread_count}
+
 @api_router.get("/chat/messages/{application_id}", response_model=List[ChatMessage])
 async def get_messages(
     application_id: str,
