@@ -447,7 +447,74 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+backend:
+  - task: "Unread Chat Message Count Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Backend-Endpoint GET /api/chat/unread-count/{application_id} wurde erstellt. Endpoint zählt ungelesene Nachrichten (read=false) für den anderen Teilnehmer des Chats und gibt {unreadCount: number} zurück."
+
+frontend:
+  - task: "Unread Message Badge - Worker Matches"
+    implemented: true
+    working: true
+    file: "app/(worker)/matches.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "UI wurde angepasst: Roter Badge mit Anzahl ungelesener Nachrichten wird neben 'Zum Chat'-Button angezeigt, wenn unreadCounts[application.id] > 0. Badge ist ein rotes Kreiselement mit weißer Schrift."
+
+  - task: "Unread Message Badge - Employer Matches"
+    implemented: true
+    working: true
+    file: "app/(employer)/matches.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Gleiche Implementierung wie Worker-Seite: State, loadUnreadCounts Funktion und UI-Badge wurden hinzugefügt. Badge zeigt Anzahl ungelesener Nachrichten neben dem Chat-Button an."
+
 agent_communication:
+  - agent: "main"
+    message: |
+      **Feature: Ungelesene Nachrichten-Anzahl auf Matches-Screens**
+      
+      **Implementierte Änderungen:**
+      
+      **1. Worker Matches Screen (`app/(worker)/matches.tsx`):**
+      - ✅ UI angepasst: Roter Badge mit Anzahl wird angezeigt
+      - ✅ Badge erscheint nur wenn paymentStatus="paid" und unreadCount > 0
+      - ✅ Badge-Design: Rotes Kreiselement (#FF4444) mit weißer Schrift, 24px Höhe
+      - ✅ loadUnreadCounts wird nach loadMatches aufgerufen
+      
+      **2. Employer Matches Screen (`app/(employer)/matches.tsx`):**
+      - ✅ State hinzugefügt: unreadCounts
+      - ✅ loadUnreadCounts Funktion implementiert (identisch zur Worker-Version)
+      - ✅ Funktion wird am Ende von loadMatches aufgerufen
+      - ✅ UI-Badge hinzugefügt (gleiche Implementierung wie Worker)
+      
+      **Erwartetes Verhalten:**
+      - Backend-Endpoint GET /api/chat/unread-count/{application_id} wird aufgerufen
+      - Für jedes Match wird die Anzahl ungelesener Nachrichten abgerufen
+      - Roter Badge erscheint neben "Zum Chat"-Button mit der Anzahl
+      - Badge wird nur bei bezahlten Matches angezeigt (paymentStatus="paid")
+      - Auto-Refresh aktualisiert die Anzahl alle 5 Sekunden
+      
+      **Nächste Schritte:**
+      - Backend-Testing: Verifizierung des /api/chat/unread-count Endpoints
+      - Dann User fragen ob Frontend-Testing gewünscht ist
+  
   - agent: "main"
     message: |
       **Bug Fix: Signup-Screen Crash behoben**
