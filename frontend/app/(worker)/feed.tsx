@@ -287,7 +287,7 @@ export default function WorkerFeedScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-      {/* Header mit "Alle Jobs" Button */}
+      {/* Header */}
       <View
         style={{
           flexDirection: "row",
@@ -300,11 +300,6 @@ export default function WorkerFeedScreen() {
         <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold" }}>
           Passende Jobs
         </Text>
-        <Pressable onPress={() => router.push("/(worker)/jobs/all")}>
-          <Text style={{ color: COLORS.neon, fontSize: 16, fontWeight: "600" }}>
-            Alle Jobs
-          </Text>
-        </Pressable>
       </View>
 
       <FlatList
