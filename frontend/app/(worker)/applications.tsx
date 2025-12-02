@@ -316,6 +316,41 @@ export default function WorkerApplicationsScreen() {
                 </Text>
               </View>
 
+              {/* Löschen-Button für abgelehnte Bewerbungen */}
+              {app.status === 'rejected' && (
+                <Pressable
+                  onPress={async (e) => {
+                    e.stopPropagation();
+                    try {
+                      const headers = { 'Content-Type': 'application/json' };
+                      const token = await AsyncStorage.getItem('token');
+                      if (token) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                      }
+                      await fetch(`/api/applications/${app.id}`, {
+                        method: 'DELETE',
+                        headers,
+                      });
+                      // Aus Liste entfernen
+                      setItems(items.filter(item => item.app.id !== app.id));
+                    } catch (err) {
+                      console.error('Delete error:', err);
+                    }
+                  }}
+                  style={({ pressed }) => ({
+                    marginTop: spacing.sm,
+                    backgroundColor: pressed ? '#e00' : '#c00',
+                    padding: spacing.sm,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                  })}
+                >
+                  <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>
+                    🗑️ Bewerbung löschen
+                  </Text>
+                </Pressable>
+              )}
+
               {/* Matched Info */}
               {isMatched && (
                 <View style={{ marginTop: spacing.sm, gap: spacing.sm }}>
