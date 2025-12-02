@@ -488,7 +488,46 @@ frontend:
         agent: "main"
         comment: "Gleiche Implementierung wie Worker-Seite: State, loadUnreadCounts Funktion und UI-Badge wurden hinzugefügt. Badge zeigt Anzahl ungelesener Nachrichten neben dem Chat-Button an."
 
+backend:
+  - task: "GET /api/jobs Endpoint Verification"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "🎯 GET /api/jobs ENDPOINT VERIFICATION ERFOLGREICH: Spezifischer Test nach deutscher Review-Anfrage durchgeführt. ✅ Worker-Token erstellt (testworker_1764674150@test.de), ✅ GET /api/jobs mit Bearer Token aufgerufen, ✅ Status 200 OK erhalten, ✅ JSON-Array mit 5 Job-Objekten zurückgegeben, ✅ Beispiel-Job validiert (ID: job_b246233f-977e-49fe-8b4f-e959236749c1, Title: Sicherheit, Status: open, Date: 2025-12-03, Category: sicherheit). Backend Logs bestätigen: 'Found 5 open future/today jobs (date >= 2025-12-02)' und automatische B1-Cleanup-Ausführung. Endpoint funktioniert einwandfrei und gibt alle offenen Jobs korrekt zurück."
+
 agent_communication:
+  - agent: "testing"
+    message: |
+      **🎯 GET /api/jobs ENDPOINT VERIFICATION ABGESCHLOSSEN**
+      
+      **Review-Anfrage erfüllt:** Backend-Endpoint `/api/jobs` wurde erfolgreich getestet
+      
+      **Test-Szenario durchgeführt:**
+      1. ✅ Worker-Token erstellt (testworker_1764674150@test.de)
+      2. ✅ GET /api/jobs mit Bearer Token aufgerufen
+      3. ✅ Status 200 OK erhalten
+      4. ✅ JSON-Array mit 5 Job-Objekten zurückgegeben
+      
+      **Erwartetes Ergebnis bestätigt:**
+      - ✅ Status: 200 OK
+      - ✅ Body: JSON-Array mit Job-Objekten
+      - ✅ Keine Fehler
+      
+      **Backend Logs Verification:**
+      - "Found 5 open future/today jobs (date >= 2025-12-02)"
+      - Automatische B1-Cleanup-Ausführung funktioniert
+      - Keine Fehler in Backend Logs
+      
+      **Curl-Test bestätigt:** Endpoint gibt korrekte Anzahl Jobs zurück
+      
+      **Status:** /api/jobs Endpoint vollständig funktional und production-ready
+
   - agent: "main"
     message: |
       **Feature: Ungelesene Nachrichten-Anzahl auf Matches-Screens**
