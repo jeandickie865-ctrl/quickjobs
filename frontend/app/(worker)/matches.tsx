@@ -453,116 +453,37 @@ export default function WorkerMatchesScreen() {
                     {euro(job.workerAmountCents)} / {job.timeMode === "hours" ? "Stunde" : "Gesamt"}
                   </Text>
 
-                  {/* Button-Gruppe */}
-                  <View style={{ gap: 14, marginTop: 22, alignItems: "center" }}>
-
-                    {/* CHAT */}
-                    <Pressable
-                      onPress={() => {
-                        if (application.paymentStatus === "paid") {
-                          router.push(`/chat/${application.id}`);
-                        }
-                      }}
-                      disabled={application.paymentStatus !== "paid"}
-                      style={{
-                        width: "72%",
-                        backgroundColor: COLORS.purple,
-                        paddingVertical: 14,
-                        borderRadius: 14,
-                        alignItems: "center",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        opacity: application.paymentStatus === "paid" ? 1 : 0.5,
-                        shadowColor: "#000",
-                        shadowOpacity: 0.25,
-                        shadowRadius: 8,
-                        shadowOffset: { width: 0, height: 3 },
-                      }}
-                    >
-                      <Ionicons 
-                        name="chatbubble-ellipses-outline" 
-                        size={18} 
-                        color={COLORS.accent}
-                        style={{ marginRight: 8 }}
-                      />
-                      <Text style={{ 
-                        fontSize: 16, 
-                        fontWeight: "700", 
-                        color: COLORS.white 
-                      }}>
-                        {application.paymentStatus === "paid" ? "Zum Chat" : "Warte auf Zahlung"}
-                      </Text>
-                    </Pressable>
-
-
-                    {/* BEWERTEN */}
-                    <Pressable
-                      onPress={() =>
-                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`)
+                  <Pressable
+                    onPress={() => {
+                      if (application.paymentStatus === "paid") {
+                        router.push(`/chat/${application.id}`);
                       }
+                    }}
+                    disabled={application.paymentStatus !== "paid"}
+                    style={{
+                      alignSelf: "center",
+                      width: "70%",
+                      backgroundColor: application.paymentStatus === "paid" ? "#C8FF16" : "#444",
+                      paddingVertical: 12,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      marginTop: 18,
+                      shadowColor: "#000",
+                      shadowOpacity: 0.2,
+                      shadowRadius: 8,
+                      shadowOffset: { width: 0, height: 3 },
+                    }}
+                  >
+                    <Text
                       style={{
-                        width: "72%",
-                        backgroundColor: COLORS.purple,
-                        paddingVertical: 12,
-                        borderRadius: 14,
-                        alignItems: "center",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        shadowColor: "#000",
-                        shadowOpacity: 0.25,
-                        shadowRadius: 8,
-                        shadowOffset: { width: 0, height: 3 },
+                        fontSize: 15,
+                        fontWeight: "700",
+                        color: application.paymentStatus === "paid" ? "#000" : "#AAA",
                       }}
                     >
-                      <Ionicons 
-                        name="star-outline" 
-                        size={18} 
-                        color={COLORS.accent}
-                        style={{ marginRight: 8 }}
-                      />
-                      <Text style={{ 
-                        fontSize: 15, 
-                        fontWeight: "700", 
-                        color: COLORS.white 
-                      }}>
-                        Arbeitgeber bewerten
-                      </Text>
-                    </Pressable>
-
-
-                    {/* DETAILS */}
-                    <Pressable
-                      onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
-                      style={{
-                        width: "72%",
-                        backgroundColor: COLORS.purple,
-                        paddingVertical: 12,
-                        borderRadius: 14,
-                        alignItems: "center",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        shadowColor: "#000",
-                        shadowOpacity: 0.25,
-                        shadowRadius: 8,
-                        shadowOffset: { width: 0, height: 3 },
-                      }}
-                    >
-                      <Ionicons 
-                        name="document-text-outline" 
-                        size={18} 
-                        color={COLORS.accent}
-                        style={{ marginRight: 8 }}
-                      />
-                      <Text style={{ 
-                        fontSize: 15, 
-                        fontWeight: "700", 
-                        color: COLORS.white 
-                      }}>
-                        Jobdetails ansehen
-                      </Text>
-                    </Pressable>
-
-                  </View>
+                      {application.paymentStatus === "paid" ? "Zum Chat" : "Warte auf Zahlung"}
+                    </Text>
+                  </Pressable>
                 </View>
               );
             })}
