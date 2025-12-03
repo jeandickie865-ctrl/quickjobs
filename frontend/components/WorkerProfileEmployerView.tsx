@@ -763,7 +763,7 @@ export function WorkerProfileEmployerView({
                       style={{
                         fontSize: 48,
                         fontWeight: '900',
-                        color: COLORS.purple,
+                        color: COLORS.neon,
                       }}
                     >
                       {profile.radiusKm}
