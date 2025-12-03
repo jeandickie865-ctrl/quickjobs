@@ -424,12 +424,16 @@ export default function WorkerMatchesScreen() {
                   <View style={{
                     marginTop: 14,
                     alignSelf: "flex-start",
-                    backgroundColor: "rgba(200,255,22,0.12)",
+                    backgroundColor: 'rgba(200,255,22,0.10)',
                     paddingHorizontal: 10,
                     paddingVertical: 4,
-                    borderRadius: 8
+                    borderRadius: 8,
                   }}>
-                    <Text style={{ color: COLORS.accent, fontWeight: "600", fontSize: 13 }}>
+                    <Text style={{ 
+                      color: COLORS.accent, 
+                      fontWeight: "600", 
+                      fontSize: 13 
+                    }}>
                       akzeptiert
                     </Text>
                   </View>
