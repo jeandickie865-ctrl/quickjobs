@@ -370,26 +370,26 @@ export default function WorkerMatchesScreen() {
                 <View
                   key={application.id}
                   style={{
-                    backgroundColor: "rgba(255,255,255,0.04)",
+                    backgroundColor: COLORS.cardBg,
                     borderRadius: 20,
-                    padding: 18,
-                    marginBottom: 22,
+                    padding: 20,
                     borderWidth: 1,
-                    borderColor: "rgba(255,255,255,0.06)",
-                    shadowColor: "#000",
+                    borderColor: COLORS.cardBorder,
+                    shadowColor: '#000',
                     shadowOpacity: 0.15,
-                    shadowRadius: 20,
-                    shadowOffset: { width: 0, height: 8 }
+                    shadowRadius: 14,
+                    shadowOffset: { width: 0, height: 6 },
                   }}
                 >
+
                   {/* Header */}
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                       <View style={{
-                        width: 42,
-                        height: 42,
-                        borderRadius: 21,
-                        backgroundColor: "#5941FF",
+                        width: 44,
+                        height: 44,
+                        borderRadius: 22,
+                        backgroundColor: COLORS.purple,
                         justifyContent: "center",
                         alignItems: "center"
                       }}>
@@ -399,21 +399,20 @@ export default function WorkerMatchesScreen() {
                       </View>
 
                       <View style={{ marginLeft: 12 }}>
-                        <Text style={{ fontSize: 17, fontWeight: "700", color: "#FFF" }}>
+                        <Text style={{ fontSize: 17, fontWeight: "700", color: COLORS.textPrimary }}>
                           {job.title}
                         </Text>
-                        <Text style={{ fontSize: 14, color: "#AAA" }}>
+                        <Text style={{ fontSize: 14, color: COLORS.textSecondary }}>
                           von {employerName}
                         </Text>
                       </View>
                     </View>
 
-                    {/* Delete */}
-                    <Pressable 
+                    <Pressable
                       onPress={() => {
                         setApplicationToDelete(application.id);
                         setDeleteModalVisible(true);
-                      }} 
+                      }}
                       style={{ padding: 6 }}
                     >
                       <Ionicons name="trash-outline" size={22} color="#777" />
@@ -422,33 +421,34 @@ export default function WorkerMatchesScreen() {
 
                   {/* Status */}
                   <View style={{
-                    marginTop: 12,
+                    marginTop: 14,
                     alignSelf: "flex-start",
                     backgroundColor: "rgba(200,255,22,0.12)",
                     paddingHorizontal: 10,
                     paddingVertical: 4,
                     borderRadius: 8
                   }}>
-                    <Text style={{ color: "#C8FF16", fontWeight: "600", fontSize: 13 }}>
-                      {application.status === 'accepted' ? 'akzeptiert' : application.status}
+                    <Text style={{ color: COLORS.accent, fontWeight: "600", fontSize: 13 }}>
+                      akzeptiert
                     </Text>
                   </View>
 
                   {/* Infos */}
-                  <Text style={{ color: "#DDD", marginTop: 12 }}>
+                  <Text style={{ color: COLORS.textPrimary, marginTop: 12 }}>
                     {timeDisplay}
                   </Text>
 
-                  <Text style={{ color: "#BBB", marginTop: 4 }}>
+                  <Text style={{ color: COLORS.textSecondary, marginTop: 4 }}>
                     {job.address?.street} {job.address?.house_number}, {job.address?.postal_code} {job.address?.city}
                   </Text>
 
-                  <Text style={{ fontSize: 18, fontWeight: "700", color: "#FFF", marginTop: 14 }}>
-                    {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
+                  <Text style={{ fontSize: 18, fontWeight: "700", color: COLORS.white, marginTop: 14 }}>
+                    {euro(job.workerAmountCents)} / Gesamt
                   </Text>
 
                   {/* Buttons */}
-                  <View style={{ gap: 12, marginTop: 18 }}>
+                  <View style={{ gap: 12, marginTop: 20 }}>
+
                     {/* Chat */}
                     <Pressable
                       onPress={() => {
@@ -458,33 +458,36 @@ export default function WorkerMatchesScreen() {
                       }}
                       disabled={application.paymentStatus !== "paid"}
                       style={{
-                        backgroundColor: application.paymentStatus === "paid" ? "#C8FF16" : "#555",
+                        backgroundColor: application.paymentStatus === "paid" ? COLORS.accent : "#666",
                         paddingVertical: 14,
                         borderRadius: 14,
-                        alignItems: "center"
+                        alignItems: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 16, fontWeight: "700", color: application.paymentStatus === "paid" ? "#000" : "#AAA" }}>
-                        {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
+                      <Text style={{
+                        fontSize: 16,
+                        fontWeight: "700",
+                        color: application.paymentStatus === "paid" ? COLORS.black : "#BBB"
+                      }}>
+                        {application.paymentStatus === "paid" ? "Zum Chat" : "Warte auf Zahlung"}
                       </Text>
                     </Pressable>
 
-                    {/* Arbeitgeber bewerten */}
+                    {/* Bewertung */}
                     <Pressable
-                      onPress={() => {
-                        console.log('🎯 Worker: Navigate to rate - jobId:', job.id, 'employerId:', job.employerId);
-                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
-                      }}
+                      onPress={() =>
+                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`)
+                      }
                       style={{
                         borderWidth: 1,
-                        borderColor: "#5941FF",
+                        borderColor: COLORS.purple,
                         paddingVertical: 12,
                         borderRadius: 14,
                         alignItems: "center"
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: "600", color: "#5941FF" }}>
-                        ⭐ Arbeitgeber bewerten
+                      <Text style={{ fontSize: 15, fontWeight: "600", color: COLORS.purple }}>
+                        Arbeitgeber bewerten
                       </Text>
                     </Pressable>
 
@@ -493,14 +496,14 @@ export default function WorkerMatchesScreen() {
                       onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                       style={{
                         borderWidth: 1,
-                        borderColor: "#5941FF",
+                        borderColor: COLORS.purple,
                         paddingVertical: 12,
                         borderRadius: 14,
                         alignItems: "center"
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: "600", color: "#5941FF" }}>
-                        📄 Jobdetails ansehen
+                      <Text style={{ fontSize: 15, fontWeight: "600", color: COLORS.purple }}>
+                        Jobdetails ansehen
                       </Text>
                     </Pressable>
                   </View>
