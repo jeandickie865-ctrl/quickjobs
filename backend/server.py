@@ -721,7 +721,8 @@ async def auth_me(user_id: str = Depends(get_user_id_from_token)):
     return {
         "userId": user_id,
         "email": user["email"],
-        "role": user["role"]
+        "role": user["role"],
+        "accountType": user.get("accountType", "private")
     }
 
 # Worker Profile Endpoints
