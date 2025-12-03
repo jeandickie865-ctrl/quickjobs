@@ -257,8 +257,8 @@ export function WorkerProfileEmployerView({
             </View>
           ) : error ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-              <Ionicons name="alert-circle" size={48} color={COLORS.muted} />
-              <Text style={{ color: COLORS.muted, marginTop: 16, textAlign: 'center' }}>
+              <Ionicons name="alert-circle" size={48} color={COLORS.dimText} />
+              <Text style={{ color: COLORS.lightText, marginTop: 16, textAlign: 'center' }}>
                 {error}
               </Text>
             </View>
