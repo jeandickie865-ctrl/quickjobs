@@ -1,14 +1,29 @@
-// app/(worker)/profile-wizard/step1-basic.tsx - BASISDATEN + FOTO
+// app/(worker)/profile-wizard/step1-basic.tsx
+// BASISDATEN + FOTO - BACKUP DESIGN
+
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, Pressable, Image, Platform, Alert, StyleSheet } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  Image,
+  Platform,
+  Alert,
+  StyleSheet
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
+
 import { useAuth } from '../../../contexts/AuthContext';
 import { useWizard } from '../../../contexts/WizardContext';
+
 import { getWorkerProfile } from '../../../utils/profileStore';
 
 const COLORS = {
@@ -18,9 +33,9 @@ const COLORS = {
   text: '#FFFFFF',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.7)',
-  purple: '#6B4BFF',
   neon: '#C8FF16',
-  error: '#FF4D4D',
+  purple: '#6B4BFF',
+  placeholder: 'rgba(255,255,255,0.4)',
   gray: 'rgba(255,255,255,0.5)',
   lightGray: 'rgba(255,255,255,0.1)',
 };
@@ -29,7 +44,7 @@ export default function Step1Basic() {
   const router = useRouter();
   const { user } = useAuth();
   const { wizardData, updateWizardData } = useWizard();
-  
+
   const [photoUrl, setPhotoUrl] = useState(wizardData.photoUrl || '');
   const [firstName, setFirstName] = useState(wizardData.firstName || '');
   const [lastName, setLastName] = useState(wizardData.lastName || '');
@@ -39,7 +54,7 @@ export default function Step1Basic() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load existing profile when component mounts
+  // Profil laden
   useEffect(() => {
     const loadExistingProfile = async () => {
       if (!user?.id) {
@@ -48,13 +63,9 @@ export default function Step1Basic() {
       }
 
       try {
-        console.log('📥 Lade existierendes Profil für Bearbeitung...');
         const profile = await getWorkerProfile(user.id);
-        
+
         if (profile) {
-          console.log('✅ Profil gefunden, fülle Wizard-Daten:', profile);
-          
-          // Update wizard context with existing profile data
           updateWizardData({
             photoUrl: profile.photoUrl || profile.profilePhotoUri || '',
             firstName: profile.firstName || '',
@@ -69,21 +80,18 @@ export default function Step1Basic() {
             lon: profile.homeLon,
             radiusKm: profile.radiusKm || 25,
             selectedCategories: profile.categories || [],
-            selectedSkills: profile.selectedTags || [],
+            selectedSkills: profile.selectedTags || []
           });
-          
-          // Update local state
+
           setPhotoUrl(profile.photoUrl || profile.profilePhotoUri || '');
           setFirstName(profile.firstName || '');
           setLastName(profile.lastName || '');
           setShortBio(profile.shortBio || '');
           setPhone(profile.phone || '');
           setIsSelfEmployed(profile.isSelfEmployed || false);
-        } else {
-          console.log('ℹ️ Kein Profil gefunden - neues Profil wird erstellt');
         }
-      } catch (error) {
-        console.error('❌ Fehler beim Laden des Profils:', error);
+      } catch (err) {
+        console.error('Fehler beim Laden des Profils:', err);
       } finally {
         setIsLoading(false);
       }
@@ -98,6 +106,7 @@ export default function Step1Basic() {
     return (first + last).toUpperCase() || '?';
   };
 
+  // Bild wählen
   const pickImage = async () => {
     try {
       if (Platform.OS === 'web') {
@@ -108,9 +117,7 @@ export default function Step1Basic() {
           const file = e.target.files[0];
           if (file) {
             const reader = new FileReader();
-            reader.onload = (event: any) => {
-              setPhotoUrl(event.target.result);
-            };
+            reader.onload = (event: any) => setPhotoUrl(event.target.result);
             reader.readAsDataURL(file);
           }
         };
@@ -122,45 +129,40 @@ export default function Step1Basic() {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
+        quality: 0.8
       });
 
       if (!result.canceled && result.assets && result.assets[0]) {
         setPhotoUrl(result.assets[0].uri);
       }
-    } catch (error) {
-      console.error('Error picking image:', error);
+    } catch (err) {
+      console.error('Error picking image:', err);
     }
   };
 
-  const validate = (): boolean => {
+  const validate = () => {
     const newErrors: Record<string, string> = {};
-
-    if (!photoUrl) newErrors.photoUrl = 'Profilfoto ist erforderlich';
     if (!firstName.trim()) newErrors.firstName = 'Vorname ist erforderlich';
     if (!lastName.trim()) newErrors.lastName = 'Nachname ist erforderlich';
     if (!phone.trim()) newErrors.phone = 'Telefonnummer ist erforderlich';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleNext = () => {
     if (validate()) {
-      // Save to context
       updateWizardData({ photoUrl, firstName, lastName, shortBio, phone, isSelfEmployed });
       router.push('/(worker)/profile-wizard/step2-address');
     }
   };
 
-  // Foto ist optional - nur Name und Telefon sind Pflicht
   const isFormValid = firstName.trim() && lastName.trim() && phone.trim();
 
   if (isLoading) {
     return (
       <View style={styles.container}>
         <SafeAreaView edges={['top']} style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
-          <Text style={{ color: COLORS.white, fontSize: 16 }}>Lade Profil...</Text>
+          <Text style={{ color: COLORS.white }}>Lade Profil...</Text>
         </SafeAreaView>
       </View>
     );
@@ -169,13 +171,11 @@ export default function Step1Basic() {
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.safeArea}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Pressable onPress={() => router.back()}>
-            <Ionicons name="close" size={28} color={COLORS.white} />
-          </Pressable>
-          <Text style={styles.headerTitle}>Profil bearbeiten</Text>
-          <View style={{ width: 28 }} />
+
+        {/* BACKUP HEADER */}
+        <View style={styles.backupHeader}>
+          <Text style={styles.headerBackupTitle}>BACKUP</Text>
+          <View style={styles.headerNeonLine} />
         </View>
 
         {/* Progress */}
@@ -184,13 +184,12 @@ export default function Step1Basic() {
         {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Basisdaten</Text>
-          <Text style={styles.subtitle}>
-            Erzähle uns ein bisschen über dich
-          </Text>
+          <Text style={styles.subtitle}>Erzähle kurz etwas über dich</Text>
 
-          {/* Photo Upload */}
+          {/* PHOTO */}
           <View style={styles.photoSection}>
-            <Text style={styles.label}>Profilfoto *</Text>
+            <Text style={styles.label}>Profilfoto</Text>
+
             <View style={styles.photoContainer}>
               {photoUrl ? (
                 <Image source={{ uri: photoUrl }} style={styles.photoImage} />
@@ -199,120 +198,92 @@ export default function Step1Basic() {
                   <Text style={styles.photoInitials}>{getInitials()}</Text>
                 </View>
               )}
+
               <Pressable onPress={pickImage} style={styles.photoButton}>
-                <Ionicons name="camera" size={20} color={COLORS.purple} />
+                <Ionicons name="camera" size={20} color={COLORS.bg} />
               </Pressable>
             </View>
+
             <Pressable onPress={pickImage} style={styles.changePhotoButton}>
               <Text style={styles.changePhotoText}>Foto ändern</Text>
             </Pressable>
-            {!photoUrl && (
-              <Text style={styles.hintText}>
-                💡 Ein Foto hilft Arbeitgebern, dich besser kennenzulernen (optional)
-              </Text>
-            )}
+
             {errors.photoUrl && <Text style={styles.errorText}>{errors.photoUrl}</Text>}
           </View>
 
-          {/* First Name */}
+          {/* FIRST NAME */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Vorname *</Text>
             <TextInput
-              value={firstName ?? ""}
+              value={firstName}
               onChangeText={setFirstName}
               placeholder="Max"
+              placeholderTextColor={COLORS.placeholder}
               style={styles.input}
-              placeholderTextColor={COLORS.gray}
             />
             {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
           </View>
 
-          {/* Last Name */}
+          {/* LAST NAME */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Nachname *</Text>
             <TextInput
-              value={lastName ?? ""}
+              value={lastName}
               onChangeText={setLastName}
               placeholder="Mustermann"
+              placeholderTextColor={COLORS.placeholder}
               style={styles.input}
-              placeholderTextColor={COLORS.gray}
             />
             {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
           </View>
 
-          {/* Short Bio */}
+          {/* SHORT BIO */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Über mich (optional)</Text>
+            <Text style={styles.label}>Über mich</Text>
             <TextInput
-              value={shortBio ?? ""}
+              value={shortBio}
               onChangeText={setShortBio}
-              placeholder="Erzähl ein bisschen über dich..."
-              style={[styles.input, styles.textArea]}
-              placeholderTextColor={COLORS.gray}
+              placeholder="Erzähl kurz etwas über dich…"
+              placeholderTextColor={COLORS.placeholder}
               multiline
               numberOfLines={4}
-              maxLength={300}
+              style={[styles.input, styles.textArea]}
             />
-            <Text style={styles.characterCount}>{(shortBio ?? "").length}/300</Text>
           </View>
 
-          {/* Phone */}
+          {/* PHONE */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Telefonnummer *</Text>
             <TextInput
-              value={phone ?? ""}
+              value={phone}
               onChangeText={setPhone}
               placeholder="+49 123 456789"
-              style={styles.input}
-              placeholderTextColor={COLORS.gray}
+              placeholderTextColor={COLORS.placeholder}
               keyboardType="phone-pad"
+              style={styles.input}
             />
             {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
           </View>
 
-          {/* Self-Employed Checkbox */}
-          <View style={styles.inputGroup}>
-            <Pressable 
-              onPress={() => setIsSelfEmployed(!isSelfEmployed)}
-              style={styles.checkboxContainer}
-            >
-              <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
-                {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.purple} />}
-              </View>
-              <Text style={styles.checkboxLabel}>
-                Ich bin selbstständig / habe ein Gewerbe
-              </Text>
-            </Pressable>
-            <Text style={styles.helperText}>
-              💡 Als Selbstständiger benötigst du keine offizielle Anmeldung durch den Arbeitgeber
-            </Text>
-          </View>
-
-          {/* Email (Read-only) */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>E-Mail</Text>
-            <View style={styles.emailContainer}>
-              <Text style={styles.emailText}>{user?.email || 'Keine E-Mail'}</Text>
+          {/* SELF EMPLOYED */}
+          <Pressable onPress={() => setIsSelfEmployed(!isSelfEmployed)} style={styles.checkboxContainer}>
+            <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
+              {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
             </View>
-            <Text style={styles.helperText}>E-Mail kann nicht geändert werden</Text>
-          </View>
+            <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
+          </Pressable>
         </ScrollView>
 
-        {/* Validation Hints */}
+        {/* HINT */}
         {!isFormValid && (
-          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
-            <Text style={styles.validationHint}>
-              ℹ️ Bitte fülle alle Pflichtfelder (*) aus, um fortzufahren
-            </Text>
+          <View style={{ paddingHorizontal: 24, paddingBottom: 12 }}>
+            <Text style={styles.validationHint}>Bitte fülle alle Pflichtfelder aus</Text>
           </View>
         )}
 
-        {/* Navigation */}
-        <NavigationButtons
-          onNext={handleNext}
-          nextDisabled={!isFormValid}
-          showBack={false}
-        />
+        {/* NAVIGATION */}
+        <NavigationButtons onNext={handleNext} nextDisabled={!isFormValid} showBack={false} />
+
       </SafeAreaView>
     </View>
   );
@@ -321,70 +292,76 @@ export default function Step1Basic() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.bg
   },
   safeArea: {
-    flex: 1,
+    flex: 1
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+
+  /* BACKUP HEADER */
+  backupHeader: {
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingTop: 16,
+    paddingBottom: 10
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: COLORS.text,
+  headerBackupTitle: {
+    color: COLORS.white,
+    fontSize: 26,
+    fontWeight: '900'
   },
-  scrollView: {
-    flex: 1,
+  headerNeonLine: {
+    height: 4,
+    backgroundColor: COLORS.neon,
+    marginTop: 12,
+    marginBottom: 20,
+    width: '100%'
   },
-  scrollContent: {
-    padding: 24,
-    paddingBottom: 40,
-  },
+
+  scrollView: { flex: 1 },
+  scrollContent: { paddingHorizontal: 24, paddingBottom: 40 },
+
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '900',
-    color: COLORS.text,
-    marginBottom: 8,
+    color: COLORS.white,
+    marginBottom: 6
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.muted,
-    marginBottom: 32,
+    marginBottom: 28
   },
+
+  /* PHOTO */
   photoSection: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 32
   },
   photoContainer: {
     position: 'relative',
-    marginBottom: 12,
+    marginBottom: 12
   },
   photoImage: {
     width: 120,
     height: 120,
     borderRadius: 60,
     borderWidth: 4,
-    borderColor: COLORS.neon,
+    borderColor: COLORS.neon
   },
   photoPlaceholder: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: COLORS.card,
     borderWidth: 4,
     borderColor: COLORS.neon,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   photoInitials: {
     fontSize: 40,
-    fontWeight: '700',
-    color: COLORS.purple,
+    fontWeight: '800',
+    color: COLORS.white
   },
   photoButton: {
     position: 'absolute',
@@ -395,29 +372,31 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: COLORS.neon,
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: COLORS.purple,
+    justifyContent: 'center'
   },
   changePhotoButton: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.white,
-    borderRadius: 20,
+    paddingHorizontal: 14,
+    backgroundColor: COLORS.card,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border
   },
   changePhotoText: {
-    fontSize: 14,
+    color: COLORS.white,
     fontWeight: '600',
-    color: COLORS.purple,
+    fontSize: 14
   },
+
+  /* INPUTS */
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 22
   },
   label: {
     fontSize: 14,
     fontWeight: '700',
     color: COLORS.white,
-    marginBottom: 8,
+    marginBottom: 8
   },
   input: {
     backgroundColor: COLORS.card,
@@ -427,59 +406,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     fontSize: 16,
-    color: COLORS.text,
+    color: COLORS.white
   },
   textArea: {
-    minHeight: 100,
-    textAlignVertical: 'top',
+    minHeight: 110,
+    textAlignVertical: 'top'
   },
-  characterCount: {
-    fontSize: 12,
-    color: COLORS.white,
-    opacity: 0.7,
-    marginTop: 4,
-    textAlign: 'right',
-  },
-  emailContainer: {
-    backgroundColor: COLORS.lightGray,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  emailText: {
-    fontSize: 16,
-    color: COLORS.gray,
-  },
-  helperText: {
-    fontSize: 12,
-    color: COLORS.white,
-    opacity: 0.7,
-    marginTop: 4,
-    fontStyle: 'italic',
-  },
+
   errorText: {
+    color: '#FF4D4D',
     fontSize: 12,
-    color: COLORS.error,
-    marginTop: 4,
+    marginTop: 6
   },
-  hintText: {
-    fontSize: 12,
-    color: COLORS.neon,
-    marginTop: 8,
-    fontStyle: 'italic',
-  },
-  validationHint: {
-    fontSize: 13,
-    color: COLORS.neon,
-    backgroundColor: 'rgba(200, 255, 22, 0.1)',
-    padding: 12,
-    borderRadius: 8,
-    textAlign: 'center',
-  },
+
+  /* CHECKBOX */
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10
   },
   checkbox: {
     width: 24,
@@ -487,19 +431,26 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 2,
     borderColor: COLORS.white,
-    backgroundColor: 'transparent',
     marginRight: 12,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   checkboxChecked: {
     backgroundColor: COLORS.neon,
-    borderColor: COLORS.neon,
+    borderColor: COLORS.neon
   },
   checkboxLabel: {
-    flex: 1,
-    fontSize: 15,
     color: COLORS.white,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '500'
   },
+
+  validationHint: {
+    color: COLORS.neon,
+    backgroundColor: 'rgba(200,255,22,0.1)',
+    padding: 12,
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 14
+  }
 });
