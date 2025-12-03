@@ -588,24 +588,38 @@ export default function WorkerMatchesScreen() {
                       </Pressable>
 
                       <Pressable
-                        onPress={async () => {
-                          if (confirm('Möchtest du diesen Match wirklich löschen?')) {
-                            try {
-                              const headers = await getAuthHeaders();
-                              const res = await fetch(`${API_URL}/applications/${application.id}`, {
-                                method: 'DELETE',
-                                headers,
-                              });
-                              if (res.ok) {
-                                loadMatches();
-                              } else {
-                                alert('Fehler beim Löschen');
+                        onPress={() => {
+                          Alert.alert(
+                            'Match löschen',
+                            'Möchtest du diesen Match wirklich löschen?',
+                            [
+                              {
+                                text: 'Abbrechen',
+                                style: 'cancel'
+                              },
+                              {
+                                text: 'Löschen',
+                                style: 'destructive',
+                                onPress: async () => {
+                                  try {
+                                    const headers = await getAuthHeaders();
+                                    const res = await fetch(`${API_URL}/applications/${application.id}`, {
+                                      method: 'DELETE',
+                                      headers,
+                                    });
+                                    if (res.ok) {
+                                      loadMatches();
+                                    } else {
+                                      Alert.alert('Fehler', 'Match konnte nicht gelöscht werden.');
+                                    }
+                                  } catch (err) {
+                                    console.error(err);
+                                    Alert.alert('Fehler', 'Match konnte nicht gelöscht werden.');
+                                  }
+                                }
                               }
-                            } catch (err) {
-                              console.error(err);
-                              alert('Fehler beim Löschen');
-                            }
-                          }
+                            ]
+                          );
                         }}
                         style={({ pressed }) => ({
                           backgroundColor: '#FF4D4D',
