@@ -520,14 +520,25 @@ export default function WorkerMatchesScreen() {
                     <Pressable
                       onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                       style={{
-                        borderWidth: 1,
-                        borderColor: COLORS.purple,
+                        backgroundColor: COLORS.purple,
                         paddingVertical: 12,
                         borderRadius: 14,
-                        alignItems: "center"
+                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: "600", color: COLORS.purple }}>
+                      <Ionicons 
+                        name="document-text-outline" 
+                        size={18} 
+                        color={COLORS.accent} 
+                        style={{ marginRight: 8 }} 
+                      />
+                      <Text style={{ 
+                        fontSize: 15, 
+                        fontWeight: "700", 
+                        color: COLORS.white 
+                      }}>
                         Jobdetails ansehen
                       </Text>
                     </Pressable>
