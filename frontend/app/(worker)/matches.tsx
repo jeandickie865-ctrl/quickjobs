@@ -356,296 +356,140 @@ export default function WorkerMatchesScreen() {
                 <View
                   key={application.id}
                   style={{
-                    backgroundColor: COLORS.white,
-                    borderRadius: 18,
-                    padding: 20,
-                    shadowColor: COLORS.neon,
-                    shadowOffset: { width: 0, height: 4 },
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    borderRadius: 20,
+                    padding: 18,
+                    marginBottom: 22,
+                    borderWidth: 1,
+                    borderColor: "rgba(255,255,255,0.06)",
+                    shadowColor: "#000",
                     shadowOpacity: 0.15,
-                    shadowRadius: 12,
-                    elevation: 4,
+                    shadowRadius: 20,
+                    shadowOffset: { width: 0, height: 8 }
                   }}
                 >
-                  {/* Header mit Initialen + Badge */}
-                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
-                    {/* Initialen-Kreis */}
-                    <View style={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 28,
-                      backgroundColor: COLORS.purple,
-                      borderWidth: 3,
-                      borderColor: COLORS.neon,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginRight: 12,
-                    }}>
-                      <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
-                        {employerInitials}
-                      </Text>
-                    </View>
-
-                    {/* Job Info */}
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ 
-                        fontSize: 18, 
-                        fontWeight: '700', 
-                        color: COLORS.purple,
-                        marginBottom: 4,
-                      }}>
-                        {job.title}
-                      </Text>
-                      <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                        von {employerName}
-                      </Text>
-                    </View>
-
-                    {/* Badge */}
-                    {isNew && (
+                  {/* Header */}
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
                       <View style={{
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        borderRadius: 8,
-                        backgroundColor: COLORS.neon,
+                        width: 42,
+                        height: 42,
+                        borderRadius: 21,
+                        backgroundColor: "#5941FF",
+                        justifyContent: "center",
+                        alignItems: "center"
                       }}>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
-                          NEU
+                        <Text style={{ color: "#FFF", fontWeight: "700", fontSize: 18 }}>
+                          {employerInitials}
                         </Text>
                       </View>
-                    )}
+
+                      <View style={{ marginLeft: 12 }}>
+                        <Text style={{ fontSize: 17, fontWeight: "700", color: "#FFF" }}>
+                          {job.title}
+                        </Text>
+                        <Text style={{ fontSize: 14, color: "#AAA" }}>
+                          von {employerName}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Delete */}
+                    <Pressable 
+                      onPress={() => {
+                        setApplicationToDelete(application.id);
+                        setDeleteModalVisible(true);
+                      }} 
+                      style={{ padding: 6 }}
+                    >
+                      <Ionicons name="trash-outline" size={22} color="#777" />
+                    </Pressable>
                   </View>
 
-                  {/* Status Badge */}
+                  {/* Status */}
                   <View style={{
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                    backgroundColor: application.status === 'accepted' ? COLORS.neon : '#FFF3CD',
-                    borderRadius: 10,
-                    alignSelf: 'flex-start',
-                    marginBottom: 12,
+                    marginTop: 12,
+                    alignSelf: "flex-start",
+                    backgroundColor: "rgba(200,255,22,0.12)",
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    borderRadius: 8
                   }}>
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black }}>
-                      {application.status === 'accepted' ? '✓ Akzeptiert' : '⏳ Warte auf Antwort'}
+                    <Text style={{ color: "#C8FF16", fontWeight: "600", fontSize: 13 }}>
+                      {application.status === 'accepted' ? 'akzeptiert' : application.status}
                     </Text>
                   </View>
 
-                  {/* Job Details */}
-                  <View style={{ gap: 8, marginBottom: 12 }}>
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                      📦 {job.category}
-                    </Text>
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                      🕐 {timeDisplay}
-                    </Text>
-                    <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
-                      📍 {job.address?.street} {job.address?.house_number}, {job.address?.postal_code} {job.address?.city}
-                    </Text>
-                  </View>
+                  {/* Infos */}
+                  <Text style={{ color: "#DDD", marginTop: 12 }}>
+                    {timeDisplay}
+                  </Text>
 
-                  {/* Preis */}
-                  <Text style={{ fontSize: 20, fontWeight: '800', color: COLORS.black, marginBottom: 16 }}>
+                  <Text style={{ color: "#BBB", marginTop: 4 }}>
+                    {job.address?.street} {job.address?.house_number}, {job.address?.postal_code} {job.address?.city}
+                  </Text>
+
+                  <Text style={{ fontSize: 18, fontWeight: "700", color: "#FFF", marginTop: 14 }}>
                     {euro(job.workerAmountCents)} / {job.timeMode === 'hours' ? 'Stunde' : 'Gesamt'}
                   </Text>
 
-                  {/* Action Buttons */}
-                  {application.status === 'accepted' ? (
-                    <View style={{ gap: 12 }}>
-                      <Pressable
-                        onPress={() => {
-                          if (application.paymentStatus === "paid") {
-                            router.push(`/chat/${application.id}`);
-                          }
-                        }}
-                        disabled={application.paymentStatus !== "paid"}
-                        style={({ pressed }) => ({
-                          backgroundColor: application.paymentStatus === "paid" ? COLORS.neon : COLORS.lightGray,
-                          borderRadius: 14,
-                          paddingVertical: 14,
-                          paddingHorizontal: 16,
-                          alignItems: 'center',
-                          shadowColor: application.paymentStatus === "paid" ? COLORS.neonShadow : 'transparent',
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.8,
-                          shadowRadius: 6,
-                          opacity: pressed ? 0.9 : 1,
-                        })}
-                      >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                          <Text style={{ 
-                            fontSize: 16, 
-                            fontWeight: '700', 
-                            color: application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
-                          }}>
-                            {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
-                          </Text>
-                          {application.paymentStatus === "paid" && unreadCounts[application.id] > 0 && (
-                            <View style={{
-                              backgroundColor: '#FF4444',
-                              borderRadius: 12,
-                              minWidth: 24,
-                              height: 24,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              paddingHorizontal: 6,
-                            }}>
-                              <Text style={{ 
-                                fontSize: 12, 
-                                fontWeight: '700', 
-                                color: COLORS.white 
-                              }}>
-                                {unreadCounts[application.id]}
-                              </Text>
-                            </View>
-                          )}
-                        </View>
-                      </Pressable>
-
-                      {/* Official Registration Section - nur nach Zahlung */}
-                      {application.paymentStatus === "paid" && application.officialRegistrationStatus === "requested" && (
-                        <View style={{ 
-                          backgroundColor: 'rgba(200, 255, 22, 0.1)', 
-                          padding: 16, 
-                          borderRadius: 12,
-                          borderWidth: 2,
-                          borderColor: COLORS.neon,
-                          gap: 12,
-                        }}>
-                          <Text style={{ color: COLORS.neon, fontSize: 15, fontWeight: '700', textAlign: 'center' }}>
-                            📋 Offizielle Anmeldung angefragt
-                          </Text>
-                          <Text style={{ color: COLORS.white, fontSize: 13, textAlign: 'center' }}>
-                            Der Arbeitgeber möchte dich offiziell anmelden. Bitte übermittle deine Daten oder lehne ab.
-                          </Text>
-                          
-                          <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
-                            <Pressable
-                              onPress={() => router.push(`/official-data-form/${application.id}`)}
-                              style={({ pressed }) => ({
-                                flex: 1,
-                                backgroundColor: COLORS.neon,
-                                borderRadius: 14,
-                                paddingVertical: 14,
-                                paddingHorizontal: 16,
-                                alignItems: 'center',
-                                shadowColor: COLORS.neonShadow,
-                                shadowOffset: { width: 0, height: 2 },
-                                shadowOpacity: 0.8,
-                                shadowRadius: 6,
-                                opacity: pressed ? 0.9 : 1,
-                              })}
-                            >
-                              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                                📝 Daten senden
-                              </Text>
-                            </Pressable>
-
-                            <Pressable
-                              onPress={async () => {
-                                try {
-                                  const headers = await getAuthHeaders();
-                                  await fetch(`${API_URL}/applications/${application.id}/respond-official-registration`, {
-                                    method: 'POST',
-                                    headers,
-                                    body: JSON.stringify({ decision: 'deny' }),
-                                  });
-                                  loadMatches();
-                                } catch (err) {
-                                  console.error('Deny registration failed:', err);
-                                }
-                              }}
-                              style={({ pressed }) => ({
-                                flex: 1,
-                                borderWidth: 2,
-                                borderColor: COLORS.neon,
-                                paddingVertical: 10,
-                                borderRadius: 12,
-                                alignItems: 'center',
-                                opacity: pressed ? 0.9 : 1,
-                              })}
-                            >
-                              <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
-                                ❌ Ablehnen
-                              </Text>
-                            </Pressable>
-                          </View>
-                        </View>
-                      )}
-                      
-                      <Pressable
-                        onPress={() => {
-                          console.log('🎯 Worker: Navigate to rate - jobId:', job.id, 'employerId:', job.employerId);
-                          router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
-                        }}
-                        style={({ pressed }) => ({
-                          backgroundColor: '#FFD700',
-                          borderRadius: 14,
-                          paddingVertical: 14,
-                          paddingHorizontal: 16,
-                          alignItems: 'center',
-                          shadowColor: 'rgba(255,215,0,0.2)',
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.8,
-                          shadowRadius: 6,
-                          opacity: pressed ? 0.9 : 1,
-                        })}
-                      >
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                          ⭐ Auftraggeber bewerten
-                        </Text>
-                      </Pressable>
-                      
-                      <Pressable
-                        onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
-                        style={({ pressed }) => ({
-                          backgroundColor: COLORS.purple,
-                          borderRadius: 14,
-                          paddingVertical: 14,
-                          paddingHorizontal: 16,
-                          alignItems: 'center',
-                          shadowColor: 'rgba(89,65,255,0.2)',
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.8,
-                          shadowRadius: 6,
-                          opacity: pressed ? 0.9 : 1,
-                        })}
-                      >
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
-                          📄 Jobdetails ansehen
-                        </Text>
-                      </Pressable>
-
-                      <Pressable
-                        onPress={() => {
-                          setApplicationToDelete(application.id);
-                          setDeleteModalVisible(true);
-                        }}
-                        style={({ pressed }) => ({
-                          backgroundColor: '#FF4D4D',
-                          borderRadius: 14,
-                          paddingVertical: 12,
-                          paddingHorizontal: 16,
-                          alignItems: 'center',
-                          marginTop: 8,
-                          opacity: pressed ? 0.7 : 1,
-                        })}
-                      >
-                        <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.white }}>
-                          🗑️ Löschen
-                        </Text>
-                      </Pressable>
-                    </View>
-                  ) : (
-                    <View style={{
-                      backgroundColor: '#E8E8E8',
-                      paddingVertical: 14,
-                      borderRadius: 16,
-                      alignItems: 'center',
-                    }}>
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textSecondary }}>
-                        Warte auf Antwort...
+                  {/* Buttons */}
+                  <View style={{ gap: 12, marginTop: 18 }}>
+                    {/* Chat */}
+                    <Pressable
+                      onPress={() => {
+                        if (application.paymentStatus === "paid") {
+                          router.push(`/chat/${application.id}`);
+                        }
+                      }}
+                      disabled={application.paymentStatus !== "paid"}
+                      style={{
+                        backgroundColor: application.paymentStatus === "paid" ? "#C8FF16" : "#555",
+                        paddingVertical: 14,
+                        borderRadius: 14,
+                        alignItems: "center"
+                      }}
+                    >
+                      <Text style={{ fontSize: 16, fontWeight: "700", color: application.paymentStatus === "paid" ? "#000" : "#AAA" }}>
+                        {application.paymentStatus === "paid" ? "💬 Zum Chat" : "🔒 Warte auf Zahlung"}
                       </Text>
-                    </View>
-                  )}
+                    </Pressable>
+
+                    {/* Arbeitgeber bewerten */}
+                    <Pressable
+                      onPress={() => {
+                        console.log('🎯 Worker: Navigate to rate - jobId:', job.id, 'employerId:', job.employerId);
+                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
+                      }}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#5941FF",
+                        paddingVertical: 12,
+                        borderRadius: 14,
+                        alignItems: "center"
+                      }}
+                    >
+                      <Text style={{ fontSize: 15, fontWeight: "600", color: "#5941FF" }}>
+                        ⭐ Arbeitgeber bewerten
+                      </Text>
+                    </Pressable>
+
+                    {/* Details */}
+                    <Pressable
+                      onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#5941FF",
+                        paddingVertical: 12,
+                        borderRadius: 14,
+                        alignItems: "center"
+                      }}
+                    >
+                      <Text style={{ fontSize: 15, fontWeight: "600", color: "#5941FF" }}>
+                        📄 Jobdetails ansehen
+                      </Text>
+                    </Pressable>
+                  </View>
                 </View>
               );
             })}
