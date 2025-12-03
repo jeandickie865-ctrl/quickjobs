@@ -10,14 +10,14 @@ const BACKEND_URL = Constants.expoConfig?.extra?.backendUrl || process.env.EXPO_
 const TAXONOMY_DATA = require('../shared/taxonomy.json');
 
 const COLORS = {
-  bg: '#0E0B1F',
+  background: '#0E0B1F',
   card: '#141126',
-  border: 'rgba(255,255,255,0.06)',
-  white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  purple: '#6B4BFF',
   neon: '#C8FF16',
-  dimmed: 'rgba(0,0,0,0.8)',
+  white: '#FFFFFF',
+  lightText: '#E8E8E8',
+  dimText: '#A0A0A0',
+  border: '#2A2738',
+  dimmed: 'rgba(14, 11, 31, 0.95)',
 };
 
 interface WorkerProfileEmployerViewProps {
