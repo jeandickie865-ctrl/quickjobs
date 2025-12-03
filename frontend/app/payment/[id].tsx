@@ -109,52 +109,35 @@ export default function PaymentScreen() {
 
   const handleRegistrationCheck = async () => {
     try {
-      const workerIdFromApplication = application?.workerId;
-      const worker = await getWorkerProfile(workerIdFromApplication);
-      
-      return new Promise((resolve) => {
-        if (user?.accountType === "private" && !worker?.isSelfEmployed) {
-          Alert.alert(
-            "Hinweis für private Auftraggeber",
-            "Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.\n\n" +
-            "Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.\n\n" +
-            "Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt.",
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  setShowRegistrationModal(true);
-                  resolve();
-                }
-              }
-            ]
-          );
-        } else if (!worker?.isSelfEmployed) {
-          Alert.alert(
-            "Anmeldung des Workers",
-            "Der Worker ist nicht selbstständig. Möchtest du Hilfe bei der offiziellen Anmeldung?",
-            [
-              {
-                text: "Ja, Hilfe bei der Anmeldung",
-                onPress: () => {
-                  setShowRegistrationModal(true);
-                  resolve();
-                }
-              },
-              {
-                text: "Ich kümmere mich selbst um die Anmeldung",
-                onPress: () => {
-                  router.replace("/(employer)/matches");
-                  resolve();
-                }
-              }
-            ]
-          );
-        } else {
-          router.replace("/(employer)/matches");
-          resolve();
-        }
-      });
+      console.log("Registration check start");
+      console.log("accountType:", user?.accountType);
+      console.log("workerProfile:", workerProfile);
+      console.log("worker isSelfEmployed:", workerProfile?.isSelfEmployed);
+
+      // Kein Worker-Profil geladen → Fallback
+      if (!workerProfile) {
+        console.log("No workerProfile available. Redirect to matches.");
+        router.replace("/(employer)/matches");
+        return;
+      }
+
+      // Selbstständiger Worker → keine Anmeldung, nur Rechnung
+      if (workerProfile.isSelfEmployed === true) {
+        console.log("Worker is self-employed. No registration required. Redirect to matches.");
+        router.replace("/(employer)/matches");
+        return;
+      }
+
+      // Fall 1: Privat + Worker nicht selbstständig → Hinweis-Popup
+      if (user?.accountType === "private") {
+        console.log("Private employer with non self-employed worker. Show private employer modal.");
+        setShowPrivateEmployerModal(true);
+        return;
+      }
+
+      // Fall 2: Business + Worker nicht selbstständig → Anmeldemodal
+      console.log("Business employer with non self-employed worker. Show registration modal.");
+      setShowRegistrationModal(true);
     } catch (e) {
       console.log("Registration check failed:", e);
       router.replace("/(employer)/matches");
@@ -165,7 +148,7 @@ export default function PaymentScreen() {
     console.log("💳 handlePayment called - paymentMethod:", paymentMethod);
     console.log("💳 processing:", processing);
     
-    // Prevent double-clicks
+    // Double-Clicks verhindern
     if (processing) {
       console.log("⚠️ Already processing payment, ignoring click");
       return;
@@ -190,8 +173,8 @@ export default function PaymentScreen() {
 
       console.log("✅ Payment successful!");
       setProcessing(false);
-      
-      // Registration check and modal logic
+
+      console.log("Payment OK. Checking registration / modal logic now...");
       await handleRegistrationCheck();
       
     } catch (err) {
