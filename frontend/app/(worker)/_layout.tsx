@@ -1,41 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tabs, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { getWorkerApplications } from '../../utils/applicationStore';
 
-// BACKUP NEON-TECH COLORS
 const COLORS = {
   purple: '#5941FF',
   neon: '#C8FF16',
   white: '#FFFFFF',
-  black: '#000000',
-  darkGray: '#8A8A8A',
+  inactive: 'rgba(255,255,255,0.55)',
+  bg: '#1A143A',
 };
 
 export default function WorkerLayout() {
   const { user, loading } = useAuth();
   const [matchesCount, setMatchesCount] = useState(0);
 
-  // Load matches count on mount and on focus
   useFocusEffect(
     React.useCallback(() => {
       if (!user) return;
-      
       async function loadMatchesCount() {
         try {
-          console.log('🔄 Loading matches count for:', user.id);
           const apps = await getWorkerApplications();
-          console.log('📋 Total applications:', apps.length);
-          const acceptedApps = apps.filter(app => app.status === 'accepted');
-          console.log('✅ Accepted applications:', acceptedApps.length);
-          setMatchesCount(acceptedApps.length);
-        } catch (error) {
-          console.error('❌ Error loading matches count:', error);
-        }
+          const accepted = apps.filter(a => a.status === 'accepted');
+          setMatchesCount(accepted.length);
+        } catch (err) {}
       }
-      
       loadMatchesCount();
     }, [user])
   );
@@ -48,238 +38,99 @@ export default function WorkerLayout() {
     );
   }
 
-  if (!user) {
-    return <Redirect href="/start" />;
-  }
-
-  if (user.role !== 'worker') {
-    return <Redirect href="/start" />;
-  }
+  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.white,
-        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
         tabBarStyle: {
-          backgroundColor: '#4A35D9',
-          borderTopWidth: 3,
-          borderTopColor: COLORS.neon,
-          height: Platform.OS === 'ios' ? 95 : 80,
-          paddingBottom: Platform.OS === 'ios' ? 30 : 15,
-          paddingTop: 15,
-          elevation: 25,
-          shadowColor: COLORS.neon,
-          shadowOffset: { width: 0, height: -5 },
-          shadowOpacity: 0.3,
-          shadowRadius: 12,
+          backgroundColor: COLORS.bg,
+          height: Platform.OS === 'ios' ? 90 : 75,
+          paddingBottom: Platform.OS === 'ios' ? 22 : 12,
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarLabelStyle: {
           fontSize: 13,
-          fontWeight: '800',
-          letterSpacing: 0.8,
-          textTransform: 'uppercase',
-          marginTop: 4,
-        },
-        tabBarIconStyle: {
-          marginTop: 0,
+          fontWeight: '700',
         },
       }}
     >
-      {/* Tab 1: Aktuelle Jobs */}
-      <Tabs.Screen
-        name="feed"
-        options={{
-          tabBarIcon: () => null,
-          tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 100,
-              alignItems: 'center',
-            }}>
-              <Text style={{
-                fontSize: 14,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
-              }}>
-                Aktuelle Jobs
-              </Text>
-            </View>
-          ),
-        }}
-      />
+      {/* Helper: clean label + dot */}
+      {TAB('feed', 'Aktuelle Jobs')}
+      {TAB('applications', 'Bewerbungen')}
+      {TAB('matches', 'Matches', matchesCount)}
+      {TAB('profile', 'Profil')}
+      {TAB('jobs/all', 'Jobs/All')}
 
-      {/* Tab 2: Bewerbungen */}
-      <Tabs.Screen
-        name="applications"
-        options={{
-          tabBarIcon: () => null,
-          tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 100,
-              alignItems: 'center',
-            }}>
-              <Text style={{
-                fontSize: 14,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
-              }}>
-                Bewerbungen
-              </Text>
-            </View>
-          ),
-        }}
-      />
+      {/* Hidden routes */}
+      <Tabs.Screen name="index" options={{ href: null }} />
+      <Tabs.Screen name="edit-profile" options={{ href: null }} />
+      <Tabs.Screen name="jobs/[id]" options={{ href: null }} />
+      <Tabs.Screen name="rate" options={{ href: null }} />
+      <Tabs.Screen name="profile-wizard" options={{ href: null }} />
+      <Tabs.Screen name="registration-data" options={{ href: null }} />
+    </Tabs>
+  );
+}
 
-      {/* Tab 3: Matches */}
-      <Tabs.Screen
-        name="matches"
-        options={{
-          tabBarIcon: () => null,
-          tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 100,
-              alignItems: 'center',
-              flexDirection: 'row',
-              gap: 6,
-            }}>
-              <Text style={{
-                fontSize: 14,
+function TAB(name, label, badge) {
+  return (
+    <Tabs.Screen
+      key={name}
+      name={name}
+      options={{
+        tabBarIcon: () => null,
+        tabBarLabel: ({ focused }) => (
+          <View style={{ alignItems: 'center', gap: 4 }}>
+            <Text
+              style={{
+                color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
                 fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
-              }}>
-                Matches
-              </Text>
-              {matchesCount > 0 && (
-                <View style={{
-                  backgroundColor: focused ? COLORS.purple : COLORS.neon,
-                  paddingHorizontal: 8,
+              }}
+            >
+              {label}
+            </Text>
+
+            {focused ? (
+              <View
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#C8FF16',
+                }}
+              />
+            ) : null}
+
+            {badge ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -6,
+                  right: -22,
+                  backgroundColor: '#C8FF16',
+                  paddingHorizontal: 6,
                   paddingVertical: 2,
                   borderRadius: 10,
-                  minWidth: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Text style={{
-                    fontSize: 12,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 11,
                     fontWeight: '900',
-                    color: focused ? COLORS.neon : COLORS.black,
-                  }}>
-                    {matchesCount}
-                  </Text>
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 4: Profil */}
-      <Tabs.Screen
-        name="profile"
-        options={{
-          tabBarIcon: () => null,
-          tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 100,
-              alignItems: 'center',
-            }}>
-              <Text style={{
-                fontSize: 14,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
-              }}>
-                Profil
-              </Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 5: Alle Jobs */}
-      <Tabs.Screen
-        name="jobs/all"
-        options={{
-          tabBarIcon: () => null,
-          tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 100,
-              alignItems: 'center',
-            }}>
-              <Text style={{
-                fontSize: 14,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
-              }}>
-                Jobs/All
-              </Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Hidden Routes */}
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
-        }}
-      />
-      
-      <Tabs.Screen
-        name="edit-profile"
-        options={{
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="jobs/[id]"
-        options={{
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="rate"
-        options={{
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="profile-wizard"
-        options={{
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="registration-data"
-        options={{
-          href: null,
-        }}
-      />
-    </Tabs>
+                    color: '#000',
+                  }}
+                >
+                  {badge}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+        ),
+      }}
+    />
   );
 }
