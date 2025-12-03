@@ -505,14 +505,14 @@ export function WorkerProfileEmployerView({
                             <View
                               key={idx}
                               style={{
-                                backgroundColor: COLORS.purple,
+                                backgroundColor: COLORS.neon,
                                 paddingHorizontal: 14,
                                 paddingVertical: 8,
                                 borderRadius: 20,
                               }}
                             >
                               <Text
-                                style={{ fontSize: 13, fontWeight: '600', color: COLORS.white }}
+                                style={{ fontSize: 13, fontWeight: '700', color: COLORS.background }}
                               >
                                 {label}
                               </Text>
