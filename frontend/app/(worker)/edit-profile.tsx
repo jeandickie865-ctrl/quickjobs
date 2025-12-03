@@ -1105,6 +1105,33 @@ export default function EditWorkerProfileScreen() {
             )}
           </View>
         </View>
+
+        {/* NEUER SPEICHERN BUTTON HIER IM SCROLLVIEW */}
+        <View style={{ marginTop: 40, marginBottom: 30 }}>
+          <Pressable
+            onPress={() => {
+              console.log('🔘 NEUER SAVE BUTTON PRESSED!');
+              handleSave();
+            }}
+            disabled={!isFormValid() || saving}
+            style={({ pressed }) => ({
+              backgroundColor: isFormValid() && !saving ? '#C8FF16' : '#CCCCCC',
+              paddingVertical: 18,
+              borderRadius: 16,
+              alignItems: 'center',
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            {saving ? (
+              <ActivityIndicator color="#000000" size="large" />
+            ) : (
+              <Text style={{ fontSize: 20, fontWeight: '900', color: '#000000' }}>
+                PROFIL SPEICHERN
+              </Text>
+            )}
+          </Pressable>
+        </View>
+
       </ScrollView>
 
       {/* Fixed Save Button */}
