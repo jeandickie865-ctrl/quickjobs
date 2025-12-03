@@ -47,6 +47,8 @@ export default function WorkerMatchesScreen() {
   const [error, setError] = useState<string | null>(null);
   const [showTaxModal, setShowTaxModal] = useState(false);
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [applicationToDelete, setApplicationToDelete] = useState<string | null>(null);
 
   // Auto-refresh interval ref
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
