@@ -29,43 +29,41 @@ export default function WelcomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* Header Container */}
-      <View
-        style={{
-          width: '100%',
-          paddingTop: 80,
-          paddingBottom: 40,
-          backgroundColor: '#141126', // Card Dark
-          alignItems: 'center'
-        }}
-      >
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
-        {/* Logo */}
-        <Image
-          source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
-          style={{
-            width: 160,
-            height: 160,
-            tintColor: '#6B4BFF'
-          }}
-          resizeMode="contain"
-        />
-
-        {/* Neon Accent */}
         <View
           style={{
-            width: 50,
-            height: 4,
-            backgroundColor: '#C8FF16',
-            borderRadius: 2,
-            marginTop: 12,
-            opacity: 0.9
+            width: '100%',
+            alignItems: 'center',
+            marginTop: 90,
+            marginBottom: 32
           }}
-        />
+        >
 
-      </View>
+          {/* Logo */}
+          <Image
+            source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
+            style={{
+              width: 160,
+              height: 160,
+              tintColor: '#6B4BFF'
+            }}
+            resizeMode="contain"
+          />
 
-      <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
+          {/* Neon-Linie */}
+          <View
+            style={{
+              width: 60,
+              height: 4,
+              backgroundColor: '#C8FF16',
+              borderRadius: 2,
+              marginTop: 14,
+              opacity: 0.9
+            }}
+          />
+
+        </View>
 
         {/* Glass Panel */}
         <Animated.View style={{ width: '100%', opacity: fade }}>
