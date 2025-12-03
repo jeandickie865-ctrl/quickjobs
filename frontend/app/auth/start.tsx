@@ -3,82 +3,125 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, Pressable, Image, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  purple: '#6B4BFF',
+  purpleLight: '#7C5CFF',
   white: '#FFFFFF',
-  black: '#000000',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
+  muted: 'rgba(255,255,255,0.7)'
 };
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  const contentOpacity = useRef(new Animated.Value(0)).current;
-  const logoScale = useRef(new Animated.Value(0.9)).current;
+  const fade = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.92)).current;
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(logoOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
-        Animated.spring(logoScale, { toValue: 1, tension: 40, friction: 7, useNativeDriver: true }),
-      ]),
-      Animated.timing(contentOpacity, { toValue: 1, duration: 400, delay: 100, useNativeDriver: true }),
+    Animated.parallel([
+      Animated.timing(fade, { toValue: 1, duration: 600, useNativeDriver: true }),
+      Animated.spring(scale, { toValue: 1, tension: 40, friction: 8, useNativeDriver: true })
     ]).start();
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      <LinearGradient colors={['#5941FF', '#4935CC']} style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
-          <View style={{ height: 60 }} />
-          
-          <Animated.View style={{ transform: [{ scale: logoScale }], opacity: logoOpacity, alignItems: 'center' }}>
-            <View style={{ backgroundColor: COLORS.neon, borderRadius: 22, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12 }}>
-              <Image source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} style={{ width: 180, height: 180 }} resizeMode="contain" />
-            </View>
-          </Animated.View>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
-          <View style={{ height: 32 }} />
+        {/* Logo */}
+        <Animated.View
+          style={{
+            opacity: fade,
+            transform: [{ scale }],
+            marginTop: 100,
+            marginBottom: 40
+          }}
+        >
+          <Image
+            source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
+            style={{ width: 150, height: 150 }}
+            resizeMode="contain"
+          />
+        </Animated.View>
 
-          <Animated.View style={{ opacity: contentOpacity }}>
-            <Text style={{ fontSize: 36, fontWeight: '900', color: COLORS.white, textAlign: 'center', marginBottom: 12 }}>Willkommen bei BACKUP</Text>
-            <Text style={{ fontSize: 16, color: COLORS.whiteTransparent, textAlign: 'center', fontWeight: '500', marginBottom: 60 }}>wenn's jetzt passieren muss.</Text>
+        {/* Glass Panel */}
+        <Animated.View style={{ width: '100%', opacity: fade }}>
+          <BlurView
+            intensity={28}
+            tint="dark"
+            style={{
+              padding: 24,
+              borderRadius: 18,
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.06)',
+              backgroundColor: 'rgba(255,255,255,0.03)',
+              marginBottom: 40
+            }}
+          >
+            <Text style={{ fontSize: 32, fontWeight: '800', color: COLORS.white, textAlign: 'center' }}>
+              BACKUP. Für Jobs, die jetzt zählen.
+            </Text>
 
-            <Pressable onPress={() => router.push('/auth/signup')} style={({ pressed }) => ({ backgroundColor: COLORS.neon, paddingVertical: 18, borderRadius: 16, alignItems: 'center', marginBottom: 16, opacity: pressed ? 0.9 : 1, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 })}>
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>Registrieren</Text>
-            </Pressable>
+            <Text style={{ fontSize: 16, color: COLORS.muted, textAlign: 'center', marginTop: 10 }}>
+              Starte ohne Umwege in deine nächste Schicht.
+            </Text>
+          </BlurView>
+        </Animated.View>
 
-            <Pressable onPress={() => router.push('/auth/login')} style={({ pressed }) => ({ backgroundColor: COLORS.white, paddingVertical: 18, borderRadius: 16, borderWidth: 2, borderColor: COLORS.neon, alignItems: 'center', opacity: pressed ? 0.9 : 1 })}>
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.neon }}>Anmelden</Text>
-            </Pressable>
+        {/* Buttons */}
+        <Animated.View style={{ width: '100%', alignItems: 'center', opacity: fade }}>
 
-            {/* Legal Links */}
-            <View style={{ marginTop: 40, flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: 12 }}>
-              <Pressable onPress={() => router.push('/legal/agb')}>
-                <Text style={{ fontSize: 13, color: COLORS.whiteTransparent, textDecorationLine: 'underline' }}>
-                  AGB
-                </Text>
-              </Pressable>
-              <Text style={{ fontSize: 13, color: COLORS.whiteTransparent }}>•</Text>
-              <Pressable onPress={() => router.push('/legal/privacy')}>
-                <Text style={{ fontSize: 13, color: COLORS.whiteTransparent, textDecorationLine: 'underline' }}>
-                  Datenschutz
-                </Text>
-              </Pressable>
-              <Text style={{ fontSize: 13, color: COLORS.whiteTransparent }}>•</Text>
-              <Pressable onPress={() => router.push('/legal/impressum')}>
-                <Text style={{ fontSize: 13, color: COLORS.whiteTransparent, textDecorationLine: 'underline' }}>
-                  Impressum
-                </Text>
-              </Pressable>
-            </View>
-          </Animated.View>
-        </SafeAreaView>
-      </LinearGradient>
+          <Pressable
+            onPress={() => router.push('/auth/signup')}
+            style={{
+              backgroundColor: COLORS.purple,
+              paddingVertical: 18,
+              borderRadius: 16,
+              alignItems: 'center',
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
+              marginBottom: 16
+            }}
+          >
+            <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>Registrieren</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push('/auth/login')}
+            style={{
+              backgroundColor: COLORS.purpleLight,
+              paddingVertical: 18,
+              borderRadius: 16,
+              alignItems: 'center',
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220
+            }}
+          >
+            <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>Anmelden</Text>
+          </Pressable>
+
+        </Animated.View>
+
+        {/* Legal */}
+        <View style={{ marginTop: 40, flexDirection: 'row', gap: 12 }}>
+          <Pressable onPress={() => router.push('/legal/agb')}>
+            <Text style={{ fontSize: 13, color: COLORS.muted, textDecorationLine: 'underline' }}>AGB</Text>
+          </Pressable>
+          <Text style={{ fontSize: 13, color: COLORS.muted }}>•</Text>
+          <Pressable onPress={() => router.push('/legal/privacy')}>
+            <Text style={{ fontSize: 13, color: COLORS.muted, textDecorationLine: 'underline' }}>Datenschutz</Text>
+          </Pressable>
+          <Text style={{ fontSize: 13, color: COLORS.muted }}>•</Text>
+          <Pressable onPress={() => router.push('/legal/impressum')}>
+            <Text style={{ fontSize: 13, color: COLORS.muted, textDecorationLine: 'underline' }}>Impressum</Text>
+          </Pressable>
+        </View>
+
+      </SafeAreaView>
     </View>
   );
 }
