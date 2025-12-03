@@ -1,5 +1,5 @@
-// app/(worker)/profile-wizard/step4-skills.tsx - SUBCATEGORIES & QUALIFICATIONS
-import React, { useState, useEffect } from 'react';
+// app/(worker)/profile-wizard/step4-skills.tsx - BACKUP D+ DESIGN
+import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -11,29 +11,26 @@ import { useWizard } from '../../../contexts/WizardContext';
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 const COLORS = {
-  purple: '#5941FF',
-  purpleDark: '#3E2DD9',
+  bg: '#0A0816',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
   neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
-  gray: '#999',
-  lightGray: '#F5F5F5',
+  purple: '#6B4BFF',
   error: '#FF4D4D',
 };
 
 export default function Step4Skills() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
-  
+
   const selectedCategories = wizardData.categories || [];
-  const selectedSubcategories = wizardData.subcategories || [];
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>(
     wizardData.qualifications || []
   );
-  
-  // Get qualifications for ALL selected categories
-  const availableQualifications: {key: string, label: string}[] = [];
-  
+
+  const availableQualifications: { key: string; label: string }[] = [];
   selectedCategories.forEach(catKey => {
     const category = TAXONOMY_DATA[catKey];
     if (category) {
@@ -46,24 +43,21 @@ export default function Step4Skills() {
   });
 
   const toggleQualification = (key: string) => {
-    setSelectedQualifications(prev => 
-      prev.includes(key)
-        ? prev.filter(q => q !== key)
-        : [...prev, key]
+    setSelectedQualifications(prev =>
+      prev.includes(key) ? prev.filter(q => q !== key) : [...prev, key]
     );
   };
 
   const handleNext = () => {
-    // No validation - qualifications are optional
-    updateWizardData({ 
-      qualifications: selectedQualifications
+    updateWizardData({
+      qualifications: selectedQualifications,
     });
     router.push('/(worker)/profile-wizard/step5-summary');
   };
 
   const handleBack = () => {
-    updateWizardData({ 
-      qualifications: selectedQualifications
+    updateWizardData({
+      qualifications: selectedQualifications,
     });
     router.push('/(worker)/profile-wizard/step3-categories');
   };
@@ -71,61 +65,48 @@ export default function Step4Skills() {
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.safeArea}>
-        {/* Progress */}
         <ProgressBar currentStep={4} totalSteps={5} />
 
-        {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Qualifikationen</Text>
-          <Text style={styles.subtitle}>
-            Wähle deine Qualifikationen (optional)
-          </Text>
+          <Text style={styles.subtitle}>Welche Qualifikationen hast du?</Text>
 
           {selectedCategories.length === 0 && (
             <View style={styles.emptyState}>
-              <Ionicons name="information-circle" size={48} color={COLORS.black} />
-              <Text style={styles.emptyText}>
-                Bitte wähle zuerst Kategorien in Schritt 3 aus.
-              </Text>
+              <Ionicons name="information-circle" size={48} color={COLORS.neon} />
+              <Text style={styles.emptyText}>Wähle zuerst Kategorien in Schritt 3</Text>
             </View>
           )}
 
           {availableQualifications.length === 0 && selectedCategories.length > 0 && (
             <View style={styles.emptyState}>
               <Ionicons name="checkmark-circle" size={48} color={COLORS.neon} />
-              <Text style={styles.emptyText}>
-                Für diese Kategorie gibt es keine Qualifikationen. Du kannst fortfahren.
-              </Text>
+              <Text style={styles.emptyText}>Keine Qualifikationen verfügbar</Text>
             </View>
           )}
 
-          {/* Qualifications (OPTIONAL) */}
           {availableQualifications.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                Verfügbare Qualifikationen
-              </Text>
-              <Text style={styles.helperText}>
-                Wähle alle Qualifikationen, die auf dich zutreffen
-              </Text>
+              <Text style={styles.sectionTitle}>Wähle alle passenden Qualifikationen</Text>
+
               <View style={styles.itemsList}>
-                {availableQualifications.map((qual) => {
+                {availableQualifications.map(qual => {
                   const isSelected = selectedQualifications.includes(qual.key);
-                  
                   return (
                     <Pressable
                       key={qual.key}
                       onPress={() => toggleQualification(qual.key)}
-                      style={({ pressed }) => [
+                      style={[
                         styles.itemCard,
-                        isSelected && styles.itemCardSelected,
-                        pressed && styles.itemCardPressed,
+                        isSelected && styles.itemCardSelected
                       ]}
                     >
-                      <Text style={[
-                        styles.itemText,
-                        isSelected && styles.itemTextSelected,
-                      ]}>
+                      <Text
+                        style={[
+                          styles.itemText,
+                          isSelected && styles.itemTextSelected
+                        ]}
+                      >
                         {qual.label}
                       </Text>
                       {isSelected && (
@@ -139,7 +120,6 @@ export default function Step4Skills() {
           )}
         </ScrollView>
 
-        {/* Navigation */}
         <NavigationButtons
           onNext={handleNext}
           onBack={handleBack}
@@ -154,96 +134,68 @@ export default function Step4Skills() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.bg,
   },
-  safeArea: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
-  },
+  safeArea: { flex: 1 },
+  scrollView: { flex: 1 },
+  scrollContent: { padding: 24 },
+
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: COLORS.black,
-    marginBottom: 8,
+    color: COLORS.text,
+    marginBottom: 6,
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.black,
-    opacity: 0.8,
-    marginBottom: 24,
+    color: COLORS.muted,
+    marginBottom: 28,
   },
-  section: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: COLORS.purple,
-    marginBottom: 8,
-  },
-  helperText: {
-    fontSize: 12,
-    color: COLORS.gray,
-    opacity: 1,
-    marginBottom: 16,
-    fontStyle: 'italic',
-  },
+
   emptyState: {
     alignItems: 'center',
-    justifyContent: 'center',
     paddingVertical: 48,
   },
   emptyText: {
-    fontSize: 16,
-    color: COLORS.black,
+    color: COLORS.muted,
+    marginTop: 14,
+    fontSize: 15,
     textAlign: 'center',
-    marginTop: 16,
-    opacity: 0.8,
   },
-  itemsList: {
-    flexDirection: 'column',
-    gap: 12,
+
+  section: {
+    marginBottom: 36,
   },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.neon,
+    marginBottom: 16,
+  },
+
+  itemsList: { flexDirection: 'column', gap: 12 },
+
   itemCard: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    borderRadius: 16,
-    backgroundColor: '#ECE9FF',
+    borderRadius: 14,
+    backgroundColor: COLORS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 0,
   },
   itemCardSelected: {
-    backgroundColor: COLORS.white,
-    borderWidth: 2,
     borderColor: COLORS.neon,
-    shadowColor: 'rgba(200,255,22,0.2)',
-    shadowOpacity: 1,
-    shadowRadius: 8,
-  },
-  itemCardPressed: {
-    opacity: 0.7,
+    backgroundColor: '#1A172A',
   },
   itemText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
-    color: COLORS.black,
+    color: COLORS.text,
   },
   itemTextSelected: {
-    color: COLORS.black,
-  },
-  validationHint: {
-    fontSize: 13,
     color: COLORS.neon,
-    backgroundColor: 'rgba(200, 255, 22, 0.1)',
-    padding: 12,
-    borderRadius: 8,
-    textAlign: 'center',
   },
 });
