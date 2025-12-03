@@ -9,7 +9,7 @@ import json
 async def debug_matching():
     # Connect to MongoDB
     client = AsyncIOMotorClient("mongodb://localhost:27017")
-    db = client.backup
+    db = client.shiftmatch
     
     # Get Elisa's latest job
     elisa_jobs = await db.jobs.find({"employerId": "user_elisa_web_de"}).sort("createdAt", -1).limit(10).to_list(10)
