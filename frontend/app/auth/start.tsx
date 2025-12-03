@@ -64,7 +64,24 @@ export default function WelcomeScreen() {
           }}
         />
 
-        {/* Logo */}
+        {/* Neon Halo unter dem Logo */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: 210, // leicht unterhalb des Logos
+            width: 140,
+            height: 28,
+            backgroundColor: 'rgba(200,255,22,0.22)', // weich und nicht grell
+            borderRadius: 50,
+            opacity: fade,
+            shadowColor: '#C8FF16',
+            shadowOpacity: 0.4,
+            shadowRadius: 20,
+            transform: [{ scale }]
+          }}
+        />
+
+        {/* Logo mit Purple Tint + sehr leichter Neon-Kante */}
         <Animated.View
           style={{
             opacity: fade,
@@ -78,7 +95,10 @@ export default function WelcomeScreen() {
             style={{
               width: 150,
               height: 150,
-              tintColor: '#6B4BFF'
+              tintColor: '#6B4BFF',
+              shadowColor: '#C8FF16',   // Neon-Kante
+              shadowOpacity: 0.20,      // sehr leicht
+              shadowRadius: 14           // weich und modern
             }}
             resizeMode="contain"
           />
