@@ -13,12 +13,19 @@ import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../../config';
 import { getAuthHeaders } from '../../utils/api';
+import { 
+  BACKUP_COLORS, 
+  BACKUP_CARD, 
+  BACKUP_BUTTON_PRIMARY, 
+  BACKUP_BUTTON_SECONDARY,
+  BACKUP_BUTTON_TERTIARY 
+} from '../../theme/ThemeProvider';
 
-// BACKUP NEON-TECH COLORS
+// BACKUP NEON-TECH COLORS (Compatibility)
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
-  white: '#FFFFFF',
+  purple: BACKUP_COLORS.purple,
+  neon: BACKUP_COLORS.neon,
+  white: BACKUP_COLORS.white,
   black: '#000000',
   darkGray: '#333333',
   lightGray: '#F5F5F5',
