@@ -384,7 +384,7 @@ export function WorkerProfileEmployerView({
                         Über mich
                       </Text>
                     </View>
-                    <Text style={{ fontSize: 15, color: COLORS.muted, lineHeight: 22 }}>
+                    <Text style={{ fontSize: 15, color: COLORS.lightText, lineHeight: 22 }}>
                       {profile.shortBio}
                     </Text>
                   </View>
