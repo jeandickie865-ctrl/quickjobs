@@ -533,16 +533,60 @@ export default function EditWorkerProfileScreen() {
             Wohnadresse
           </Text>
 
-          {/* Straße */}
-          <View style={{ marginBottom: 16 }}>
+          {/* Straße mit Autocomplete */}
+          <View style={{ marginBottom: 16, position: 'relative', zIndex: 1000 }}>
             <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Straße *</Text>
             <TextInput
               value={street}
-              onChangeText={setStreet}
-              placeholder="Hauptstraße"
+              onChangeText={(text) => {
+                setStreet(text);
+                searchAddress(text);
+              }}
+              placeholder="Hauptstraße 123"
               placeholderTextColor={COLORS.muted}
               style={[inputStyle, errors.street && { borderColor: COLORS.error }]}
             />
+            
+            {/* Autocomplete Dropdown */}
+            {showSuggestions && addressSuggestions.length > 0 && (
+              <View style={{
+                position: 'absolute',
+                top: 70,
+                left: 0,
+                right: 0,
+                backgroundColor: COLORS.card,
+                borderRadius: 12,
+                maxHeight: 200,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.4,
+                shadowRadius: 8,
+                elevation: 10,
+                zIndex: 1001,
+                borderWidth: 1,
+                borderColor: COLORS.border
+              }}>
+                <ScrollView style={{ maxHeight: 200 }}>
+                  {addressSuggestions.map((suggestion, index) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => selectAddress(suggestion)}
+                      style={({ pressed }) => ({
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                        backgroundColor: pressed ? '#1C182B' : COLORS.card,
+                        borderBottomWidth: index < addressSuggestions.length - 1 ? 1 : 0,
+                        borderBottomColor: COLORS.border,
+                      })}
+                    >
+                      <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.white }}>
+                        {suggestion.display_name}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
           </View>
 
           {/* PLZ + Stadt */}
