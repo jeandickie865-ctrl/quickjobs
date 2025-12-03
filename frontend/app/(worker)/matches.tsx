@@ -221,6 +221,30 @@ export default function WorkerMatchesScreen() {
     loadMatches();
   };
 
+  const handleDeleteMatch = async () => {
+    if (!applicationToDelete) return;
+    
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch(`${API_URL}/applications/${applicationToDelete}`, {
+        method: 'DELETE',
+        headers,
+      });
+      
+      if (res.ok) {
+        setDeleteModalVisible(false);
+        setApplicationToDelete(null);
+        loadMatches();
+      } else {
+        console.error('Delete failed:', res.status);
+        alert('Fehler beim Löschen des Matches');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Fehler beim Löschen des Matches');
+    }
+  };
+
   if (authLoading) return null;
   if (!user || user.role !== 'worker') return <Redirect href="/start" />;
 
