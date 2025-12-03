@@ -7,7 +7,7 @@ import asyncio
 import httpx
 from datetime import datetime
 
-BACKEND_URL = "https://shiftmatch-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://employer-worker.preview.emergentagent.com/api"
 
 async def debug_payment_status():
     client = httpx.AsyncClient(timeout=30.0)

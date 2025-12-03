@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Backend URL aus frontend/.env
-BACKEND_URL = "https://shiftmatch-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://employer-worker.preview.emergentagent.com/api"
 
 def test_jobs_endpoint():
     """

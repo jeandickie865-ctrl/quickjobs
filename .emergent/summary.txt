@@ -1,78 +1,96 @@
 <analysis>
-The trajectory documents a highly interactive, German-language development process for the ShiftMatch application. The user provides explicit, often code-level instructions for UI/UX enhancements, major refactoring, and bug fixes. The work spans the full stack: a FastAPI/MongoDB backend and a React Native/Expo frontend.
+The trajectory details an intensive development and debugging process for the ShiftMatch application. The work, conducted entirely in German, began with implementing a new Alle Jobs (All Jobs) feature. This involved extensive debugging of authentication (), data fetching (), and state management, culminating in using the  hook and filtering jobs correctly on the frontend.
 
-Key development threads include:
-1.  **UI/UX Overhaul**: Multiple screens were iteratively redesigned based on specific user prompts. This includes  and , where the layout was changed from simple lists to modern, two-column grids or single-column cards to achieve a more luftig (airy) and techy aesthetic.
-2.  **Taxonomy Migration**: A significant, complex migration of the core data model was performed. The taxonomy structure, which defines job categories, subcategories, and qualifications, was completely refactored. This involved changing the data structure in , updating all related frontend components (wizards, profile editor), and modifying backend models, validation logic (), and the core matching algorithm (). This migration involved several debugging cycles to handle mismatches between frontend and backend data formats (e.g.,  vs. ,  vs. ).
-3.  **Live Debugging**: Several critical issues were diagnosed and resolved in real-time. This included a login failure caused by a stopped backend service and an incorrect password, and multiple  errors during profile saves, which were traced back to validation failures from the taxonomy migration.
-4.  **New Feature Implementation**: The most recent work involves adding a new feature: displaying an unread message count on chat buttons within the Matches screen.
+A significant portion of the effort was dedicated to fixing critical bugs. An unread message badge issue was traced to inconsistent backend logic ( vs. ) and was resolved in . A major, user-frustrating bug where jobs reappeared after a worker applied was identified as a frontend race condition in . The  was re-fetching data too quickly; this was fixed by adding a  delay to allow the backend to process the application.
 
-The user's primary language is German. All future responses MUST be in German.
+Another major task was implementing complex, conditional post-payment modals in . The logic depended on the employer's account type (/) and the worker's employment status. This feature went through many iterations, from  to proper  components, and involved fixing a critical asynchronous issue by wrapping the  calls in a .
+
+The most recent task was adding a Delete button for past matches. A backend  endpoint was created, but adding the button to  caused a crash due to a duplicate import, which is the immediate issue to be resolved. The user's primary language is German; all future interactions must be in German.
 </analysis>
 
 <product_requirements>
-The ShiftMatch application is a German-language, two-sided job marketplace connecting Employers (Auftraggeber) and Workers (Auftragnehmer).
+The ShiftMatch application is a two-sided marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers) in Germany.
 
 **Core Functionality:**
-*   **Worker Profiling**: Workers create a profile by selecting their job categories (e.g., Sicherheit, Gastronomie), specific activities/subcategories (e.g., Doorman, Kellner), and optional qualifications (e.g., Sachkunde 34a). Workers can select multiple categories.
-*   **Job Creation**: Employers post jobs, specifying a single category, a single subcategory, and a list of required qualifications.
-*   **Matching**: The backend matches workers to jobs based on matching category, the worker having the job's required subcategory, the worker possessing all of the job's required qualifications, and being within a specified geographic radius. A fallback allows old jobs without subcategories to still be matched.
-*   **Chat**: Once a match is established, employers and workers can communicate via an in-app chat.
-*   **Unread Message Notifications**: A new feature is being implemented to display a count of unread messages for each specific chat on the user's Matches list, enhancing user engagement by signaling new activity.
+*   **Workers:** Create profiles, specify skills and employment status (self-employed or not), and apply for jobs.
+*   **Employers:** Post jobs (as private individuals or businesses), review applications, and manage accepted workers (Matches).
+
+**Key Implemented Features & Fixes:**
+*   **Alle Jobs Tab:** A dedicated tab for workers to view all nearby jobs, irrespective of their qualifications, filtering out only closed or expired listings.
+*   **Conditional Post-Payment Modals:** After an employer pays for a match, a specific modal appears based on the context:
+    *   **Private Employer + Non-Self-Employed Worker (Job &lt; 300€):** A custom modal provides legal information regarding the Minijob-Zentrale.
+    *   **Business Employer + Non-Self-Employed Worker:** A modal offers assistance with the official registration process.
+    *   All other cases (e.g., self-employed worker) skip the modal and navigate directly to the matches screen.
+*   **Critical Bug Fixes:**
+    *   Resolved a race condition where applied-for jobs would reappear in the worker's feed.
+    *   Fixed the unread message badge to update correctly after a chat is read.
+*   **Address Autocomplete:** Implemented a backend proxy to fix CORS issues with the address search functionality.
 </product_requirements>
 
 <key_technical_concepts>
-- **Backend**: FastAPI (Python), MongoDB database. Logic is primarily in  with a dedicated .
-- **Frontend**: React Native with Expo, using  for file-based routing.
-- **Data Modeling**: Pydantic models for API validation on the backend. A central  file (with different structures for frontend and backend) defines job roles.
-- **State Management**: React Context () for the multi-step profile creation wizard.
-- **Chat Implementation**: Chat messages are stored in MongoDB with a  flag to track seen status.
+- **Backend:** FastAPI (Python), MongoDB (via ), Pydantic.
+- **Frontend:** React Native, Expo, Expo Router for file-based routing.
+- **State Management:** React Context (), .
+- **Async Handling:**  with  for debouncing, -wrapped  calls to manage asynchronous UI updates correctly.
+- **API Architecture:** RESTful endpoints, including a backend proxy () to circumvent browser CORS restrictions for third-party APIs (Nominatim).
+- **Authentication:** Token-based authentication using  and  context.
 </key_technical_concepts>
 
 <code_architecture>
-The project is a monorepo with a  (Expo/React Native) and  (FastAPI/MongoDB).
+The project is a monorepo with  and  directories.
 
 
 
--   ****: The main backend file containing most API endpoints, Pydantic models, and database interactions. It was modified to add new models for  and , update validation logic to be less strict to resolve  errors, and add a new endpoint . Alias logic was also added to handle discrepancies between frontend (English) and backend (German) category keys.
+- ****: The core API.
+  - **Importance**: Contains all business logic, database interactions, and endpoints.
+  - **Changes**:
+    - ****: A crucial filter was added to exclude jobs for which the worker has already submitted an application, fixing a major bug.
+    - ****: Logic was enhanced to correctly mark both old (with ) and new (with ) messages as read.
+    - ****: Verified to correctly set new application status to .
+    - ****: A new endpoint was added to allow users to delete applications/matches.
 
--   ****: Contains the core job-matching algorithm. It was significantly updated to implement the new matching rules: must match , , and all . A fallback was added to ensure backward compatibility with old jobs that lack  or  fields.
+- ****: Handles the post-payment flow and logic for showing modals.
+  - **Importance**: This file contains the most complex conditional UI logic, which was the source of significant user frustration.
+  - **Changes**:
+    - The logic for displaying modals after payment was completely refactored. It now uses a  function that returns a , correctly handling the asynchronous nature of .
+    - The conditions were clarified to show one modal for private employers and another for business employers when the worker is not self-employed.
+    - All previous logic using job value () was removed in favor of the simpler, corrected logic.
 
--   ** & **: These files define the app's job categories, subcategories, and qualifications. They were the center of a major refactoring and debugging effort. The final state is that the frontend uses a version with English keys and  arrays (), while the backend uses a version with German keys and  arrays. This discrepancy caused validation errors that were later resolved.
+- ****: The worker's main job feed.
+  - **Importance**: This is a primary screen for workers. It was the source of a critical race condition bug.
+  - **Changes**:
+    -  was added to refetch jobs when the user navigates back to the screen.
+    - A  with a 1-second delay was added within  to prevent a race condition, ensuring the backend has time to save a new application before the job list is refreshed.
 
--   ****: A large component for workers to edit their entire profile. It was heavily modified multiple times: first for UI redesigns (implementing a 2-column grid for categories), then for the major taxonomy migration (changing state from single to multiple categories, updating save logic), and finally for debugging save failures.
+- ****: Defines the tab navigation for the worker.
+  - **Importance**: Controls the main navigation structure.
+  - **Changes**: A new tab for Jobs/All () was added, and the unused registration-data tab was hidden by setting .
 
--   ****: The files in this directory (, , ) were all rewritten to accommodate the new taxonomy logic.  now handles selecting one or more categories and their subcategories.  handles selecting qualifications based on the chosen categories.  sends the new data structure to the backend.
+- ****: Screen to show a worker's accepted jobs (matches).
+    - **Importance**: Key screen for managing ongoing and past jobs.
+    - **Changes**: A Löschen (Delete) button and  function were being added to allow users to remove old matches. This change introduced a duplicate import error that crashed the app and needs to be fixed.
 
--   ****: The React context for the profile wizard. It was updated to store the new data structure: , , .
-
--   ****: The employer's job creation form. It was updated to allow employers to select a  and  after choosing a category, matching the new job model.
-
--   ****: The screen where workers see their active job matches. It is currently being modified to display a count of unread chat messages. A state  and a function  have been added to fetch data from the new backend endpoint.
-
--   ****: A component used by employers to view a worker's profile. It was updated to display the worker's selected  (Tätigkeiten) and . An incorrect  import was also fixed.
+- ****: Handles address search.
+  - **Importance**: Provides address autocomplete functionality across the app.
+  - **Changes**: The implementation was changed from calling the external Nominatim API directly to calling an internal backend proxy endpoint () to resolve browser CORS issues.
 </code_architecture>
 
 <pending_tasks>
-- Complete the UI implementation for the unread chat message count on .
-- Replicate the unread chat message count feature on the employer side ().
-- Address an old, unresolved bug regarding incorrect geocoding of Poststr. 7.
+- **Complete the Delete Match feature:** A backend  endpoint was created. The frontend implementation in  must be fixed (remove duplicate import) and verified.
+- **Implement Delete Match for Employers:** Consider adding a similar delete functionality to the employer's match list ().
 </pending_tasks>
 
 <current_work>
-The immediate task is the implementation of a feature to show the number of unread messages for each chat on the Matches screen.
+The immediate last task was implementing a feature to allow users to delete old matches from their list. This was based on the user's request after noticing very old, completed jobs were still visible in their Matches list.
 
-**Work Completed So Far:**
-1.  **Backend**: A new endpoint, , was created in . It queries the  collection in MongoDB and returns the count of messages where  is  and the sender is the other party in the chat.
-2.  **Frontend (Worker Side)**: In , the following logic was added:
-    *   A new state variable was created to hold the unread counts for each application ID:
-        
-    *   A function, , was implemented to iterate through the loaded matches, call the new backend endpoint for each application ID, and populate the  state.
-    *   The  function is now called immediately after the  function successfully fetches the match data.
+The work involved two parts:
+1.  **Backend:** A new  endpoint was successfully added to  at the path . This endpoint is responsible for deleting the specified application/match from the database.
 
-The backend work is complete, and the frontend logic for fetching the data is in place. The next step is to use this data in the UI.
+2.  **Frontend:** The focus was on the worker's match list in . A Löschen (Delete) button was being added to each match item. A  function was written to call the new backend endpoint using .
+
+However, this frontend modification introduced a critical error. The AI engineer accidentally added a duplicate import statement for , which caused the application to crash with a syntax error. The user reported this crash with a screenshot, and the last action of the previous engineer was to acknowledge this mistake () and prepare to fix it. The work stopped precisely at the point of needing to remove this duplicate import from .
 </current_work>
 
 <optional_next_step>
-Modify the JSX in  to display the unread message count from the  state on the Zum Chat button for each match.
+Fix the duplicate import error in  to resolve the crash and complete the Delete Match functionality for workers.
 </optional_next_step>

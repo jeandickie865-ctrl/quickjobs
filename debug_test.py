@@ -7,7 +7,7 @@ import asyncio
 import httpx
 import json
 
-BACKEND_URL = "https://shiftmatch-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://employer-worker.preview.emergentagent.com/api"
 
 async def debug_test():
     async with httpx.AsyncClient(timeout=30.0) as client:
