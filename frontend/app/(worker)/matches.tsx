@@ -23,13 +23,14 @@ const COLORS = {
   neon: '#C8FF16',
   white: '#FFFFFF',
   black: '#000000',
-  darkGray: '#333333',
-  lightGray: '#CCCCCC',
-  neonShadow: 'rgba(200,255,22,0.15)',
+  darkBg: '#0E0C1F',               // Neuer Dark Background
+  cardBg: 'rgba(255,255,255,0.04)', // Soft Glass Card
+  cardBorder: 'rgba(255,255,255,0.06)',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#BBBBBB',
+  accent: '#C8FF16',
+  softDot: 'rgba(255,255,255,0.03)',
   dimmed: 'rgba(0,0,0,0.7)',
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
 };
 
 type Match = {
