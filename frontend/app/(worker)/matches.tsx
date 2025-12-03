@@ -1,6 +1,6 @@
 // app/(worker)/matches.tsx - FINAL NEON-TECH DESIGN WITH AUTO-REFRESH
 import React, { useEffect, useState, useRef } from 'react';
-import { ScrollView, View, Text, ActivityIndicator, RefreshControl, Pressable, Animated, Modal, Alert } from 'react-native';
+import { ScrollView, View, Text, ActivityIndicator, RefreshControl, Pressable, Animated, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
