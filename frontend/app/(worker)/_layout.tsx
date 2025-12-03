@@ -115,8 +115,8 @@ function TAB(name, label, badge) {
               <View
                 style={{
                   position: 'absolute',
-                  top: -6,
-                  right: -22,
+                  top: -4,
+                  right: -10,
                   backgroundColor: '#C8FF16',
                   paddingHorizontal: 6,
                   paddingVertical: 2,
