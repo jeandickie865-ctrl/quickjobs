@@ -336,7 +336,7 @@ export function WorkerProfileEmployerView({
                       marginBottom: 8,
                     }}
                   >
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#000' }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.background }}>
                       Match bestätigt
                     </Text>
                   </View>
