@@ -1,6 +1,6 @@
-// app/(worker)/profile.tsx - VOLLSTÄNDIGES WORKER PROFILE
+// app/(worker)/profile.tsx – DARK BACKUP DESIGN
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, Pressable, ActivityIndicator, Image, Alert } from 'react-native';
+import { ScrollView, View, Text, Pressable, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,19 +8,19 @@ import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
 import { getWorkerApplications } from '../../utils/applicationStore';
 import { Ionicons } from '@expo/vector-icons';
-
-// Import taxonomy data
 import taxonomy from '../../shared/taxonomy.json';
 import { getTagLabel } from '../../utils/taxonomy';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
-  black: '#000000',
-  darkGray: '#333333',
-  lightGray: '#F5F5F5',
-  borderGray: '#E0E0E0',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
+  purpleLight: '#7C5CFF',
+  neon: '#C8FF16',
+  red: '#FF4D4D',
 };
 
 export default function WorkerProfileScreen() {
