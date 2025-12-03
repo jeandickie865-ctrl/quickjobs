@@ -65,65 +65,81 @@ export default function WelcomeScreen() {
 
         </View>
 
-        {/* Glass Panel */}
-        <Animated.View style={{ width: '100%', opacity: fade }}>
-          <BlurView
-            intensity={28}
-            tint="dark"
+        {/* Textpanel */}
+        <View
+          style={{
+            width: '100%',
+            padding: 24,
+            borderRadius: 20,
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.06)',
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            marginTop: 24,
+            marginBottom: 28
+          }}
+        >
+          <Text
             style={{
-              padding: 24,
-              borderRadius: 18,
-              borderWidth: 1,
-              borderColor: 'rgba(255,255,255,0.06)',
-              backgroundColor: 'rgba(255,255,255,0.03)',
-              marginBottom: 40
+              fontSize: 26,
+              fontWeight: '800',
+              color: '#FFFFFF',
+              textAlign: 'center',
+              marginBottom: 6
             }}
           >
-            <Text style={{ fontSize: 32, fontWeight: '800', color: COLORS.white, textAlign: 'center' }}>
-              BACKUP. Für Jobs, die jetzt zählen.
-            </Text>
+            BACKUP. Für Jobs, die jetzt zählen.
+          </Text>
 
-            <Text style={{ fontSize: 16, color: COLORS.muted, textAlign: 'center', marginTop: 10 }}>
-              Starte ohne Umwege in deine nächste Schicht.
-            </Text>
-          </BlurView>
-        </Animated.View>
+          <Text
+            style={{
+              fontSize: 15,
+              color: 'rgba(255,255,255,0.7)',
+              textAlign: 'center'
+            }}
+          >
+            Starte ohne Umwege in deine nächste Schicht.
+          </Text>
+        </View>
 
         {/* Buttons */}
-        <Animated.View style={{ width: '100%', alignItems: 'center', opacity: fade }}>
-
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          
           <Pressable
             onPress={() => router.push('/auth/signup')}
             style={{
-              backgroundColor: COLORS.purple,
-              paddingVertical: 18,
-              borderRadius: 16,
+              backgroundColor: '#6B4BFF',
+              paddingVertical: 16,
+              borderRadius: 20,
               alignItems: 'center',
               width: '60%',
               maxWidth: 300,
               minWidth: 220,
-              marginBottom: 16
+              marginBottom: 12
             }}
           >
-            <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>Registrieren</Text>
+            <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
+              Registrieren
+            </Text>
           </Pressable>
 
           <Pressable
             onPress={() => router.push('/auth/login')}
             style={{
-              backgroundColor: COLORS.purpleLight,
-              paddingVertical: 18,
-              borderRadius: 16,
+              backgroundColor: '#7C5CFF',
+              paddingVertical: 16,
+              borderRadius: 20,
               alignItems: 'center',
               width: '60%',
               maxWidth: 300,
               minWidth: 220
             }}
           >
-            <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>Anmelden</Text>
+            <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
+              Anmelden
+            </Text>
           </Pressable>
 
-        </Animated.View>
+        </View>
 
         {/* Legal */}
         <View style={{ marginTop: 40, flexDirection: 'row', gap: 12 }}>
