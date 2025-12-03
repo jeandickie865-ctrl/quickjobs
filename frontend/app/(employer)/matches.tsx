@@ -353,9 +353,9 @@ export default function EmployerMatchesScreen() {
                     </View>
                   )}
 
-                  {/* BUTTONS (60% BREITE) */}
-                  <View style={{ marginTop: 22, gap: 14 }}>
-                    {/* CHAT */}
+                  {/* BUTTONS SECTION – iPhone-Optimiert */}
+                  <View style={{ gap: 14, marginTop: 22, alignItems: "center" }}>
+                    {/* CHAT BUTTON */}
                     <Pressable
                       onPress={() => {
                         if (match.application.paymentStatus === "paid") {
@@ -364,11 +364,14 @@ export default function EmployerMatchesScreen() {
                           router.push(`/payment/${match.application.id}`);
                         }
                       }}
+                      disabled={match.application.paymentStatus !== "paid"}
                       style={{
                         width: "60%",
+                        maxWidth: 300,
+                        minWidth: 220,
                         alignSelf: "center",
                         backgroundColor:
-                          match.application.paymentStatus === "paid" ? COLORS.accent : "#555",
+                          match.application.paymentStatus === "paid" ? COLORS.purple : "#555",
                         paddingVertical: 14,
                         borderRadius: 14,
                         alignItems: "center",
@@ -376,16 +379,19 @@ export default function EmployerMatchesScreen() {
                     >
                       <Text
                         style={{
+                          color:
+                            match.application.paymentStatus === "paid" ? COLORS.textWhite : "#AAA",
                           fontSize: 16,
                           fontWeight: "700",
-                          color: match.application.paymentStatus === "paid" ? "#000" : "#AAA",
                         }}
                       >
-                        {match.application.paymentStatus === "paid" ? "💬 Zum Chat" : "Zahlung abschließen"}
+                        {match.application.paymentStatus === "paid"
+                          ? "Zum Chat"
+                          : "Warte auf Zahlung"}
                       </Text>
                     </Pressable>
 
-                    {/* RATE WORKER */}
+                    {/* RATE BUTTON */}
                     <Pressable
                       onPress={() =>
                         router.push(
@@ -394,20 +400,21 @@ export default function EmployerMatchesScreen() {
                       }
                       style={{
                         width: "60%",
+                        maxWidth: 300,
+                        minWidth: 220,
                         alignSelf: "center",
-                        borderWidth: 2,
-                        borderColor: COLORS.purple,
+                        backgroundColor: COLORS.purpleLight,
                         paddingVertical: 14,
                         borderRadius: 14,
                         alignItems: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: "700", color: COLORS.purple }}>
-                        ⭐ Worker bewerten
+                      <Text style={{ color: COLORS.textWhite, fontSize: 15, fontWeight: "700" }}>
+                        Worker bewerten
                       </Text>
                     </Pressable>
 
-                    {/* DOCUMENTS */}
+                    {/* DOCUMENTS BUTTON */}
                     {match.application.paymentStatus === "paid" && !match.workerProfile?.isSelfEmployed && (
                       <Pressable
                         onPress={() =>
@@ -417,35 +424,37 @@ export default function EmployerMatchesScreen() {
                         }
                         style={{
                           width: "60%",
+                          maxWidth: 300,
+                          minWidth: 220,
                           alignSelf: "center",
-                          borderWidth: 2,
-                          borderColor: COLORS.accent,
+                          backgroundColor: COLORS.purpleLight,
                           paddingVertical: 14,
                           borderRadius: 14,
                           alignItems: "center",
                         }}
                       >
-                        <Text style={{ fontSize: 15, color: COLORS.accent, fontWeight: "700" }}>
-                          📄 Dokumente erstellen
+                        <Text style={{ color: COLORS.textWhite, fontSize: 15, fontWeight: "700" }}>
+                          Dokumente erstellen
                         </Text>
                       </Pressable>
                     )}
 
-                    {/* DETAILS */}
+                    {/* DETAILS BUTTON */}
                     <Pressable
                       onPress={() => router.push(`/(employer)/jobs/${match.job.id}`)}
                       style={{
                         width: "60%",
+                        maxWidth: 300,
+                        minWidth: 220,
                         alignSelf: "center",
-                        borderWidth: 2,
-                        borderColor: COLORS.accent,
+                        backgroundColor: COLORS.purpleLight,
                         paddingVertical: 14,
                         borderRadius: 14,
                         alignItems: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: "700", color: COLORS.accent }}>
-                        📋 Jobdetails ansehen
+                      <Text style={{ color: COLORS.textWhite, fontSize: 15, fontWeight: "700" }}>
+                        Jobdetails ansehen
                       </Text>
                     </Pressable>
                   </View>
