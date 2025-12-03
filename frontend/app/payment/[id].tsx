@@ -329,7 +329,7 @@ export default function PaymentScreen() {
           }}
           disabled={processing}
           style={{
-            backgroundColor: processing ? COLORS.gray : COLORS.neon,
+            backgroundColor: processing ? COLORS.dimText : COLORS.neon,
             paddingVertical: 18,
             borderRadius: 16,
             alignItems: "center",
@@ -341,17 +341,17 @@ export default function PaymentScreen() {
           }}
         >
           {processing ? (
-            <ActivityIndicator color={COLORS.black} />
+            <ActivityIndicator color={COLORS.background} />
           ) : (
-            <Text style={{ fontSize: 17, fontWeight: "700", color: COLORS.black }}>
+            <Text style={{ fontSize: 17, fontWeight: "700", color: COLORS.background }}>
               Jetzt bezahlen
             </Text>
           )}
         </Pressable>
 
         {/* Info */}
-        <View style={{ marginTop: 32, padding: 16, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 12 }}>
-          <Text style={{ color: COLORS.white, fontSize: 14, lineHeight: 20 }}>
+        <View style={{ marginTop: 32, padding: 16, backgroundColor: COLORS.card, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border }}>
+          <Text style={{ color: COLORS.lightText, fontSize: 14, lineHeight: 20 }}>
             ℹ️ Nach der Zahlung wird der Chat automatisch freigeschaltet und du kannst mit dem Worker kommunizieren.
           </Text>
         </View>
