@@ -1,4 +1,5 @@
-// app/(worker)/profile-wizard/step3-categories.tsx - SELECT ONE CATEGORY + SUBCATEGORIES
+// app/(worker)/profile-wizard/step3-categories.tsx – BACKUP STYLE D+ (dark premium)
+
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,33 +11,35 @@ import { useWizard } from '../../../contexts/WizardContext';
 
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
+// D+ PREMIUM COLORS
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0A0816',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.05)',
   white: '#FFFFFF',
-  black: '#000000',
-  gray: '#999',
-  lightGray: '#F5F5F5',
-  error: '#FF4D4D',
+  whiteMuted: 'rgba(255,255,255,0.7)',
+  gray: 'rgba(255,255,255,0.55)',
+  neon: '#C8FF16',
+  purple: '#6B4BFF',
+  purpleLight: '#7C5CFF',
+  error: '#FF4D4D'
 };
 
 export default function Step3Categories() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
-  
+
   const [selectedCategories, setSelectedCategories] = useState<string[]>(wizardData.categories || []);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(
-    wizardData.subcategories || []
-  );
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(wizardData.subcategories || []);
   const [errors, setErrors] = useState<{ category?: string; subcategories?: string }>({});
 
-  // Get subcategories for ALL selected categories
-  const availableSubcategories: {key: string, label: string}[] = [];
-  selectedCategories.forEach(catKey => {
+  // Build available subcategories
+  const availableSubcategories: { key: string; label: string }[] = [];
+  selectedCategories.forEach((catKey) => {
     const category = TAXONOMY_DATA[catKey];
     if (category) {
       category.subcategories?.forEach((sub: any) => {
-        if (!availableSubcategories.find(s => s.key === sub.key)) {
+        if (!availableSubcategories.find((s) => s.key === sub.key)) {
           availableSubcategories.push({ key: sub.key, label: sub.label });
         }
       });
@@ -46,54 +49,47 @@ export default function Step3Categories() {
   const handleCategoryToggle = (catKey: string) => {
     const isSelected = selectedCategories.includes(catKey);
     if (isSelected) {
-      setSelectedCategories(prev => prev.filter(k => k !== catKey));
-      // Remove subcategories from unselected category
+      setSelectedCategories((prev) => prev.filter((k) => k !== catKey));
+
       const cat = TAXONOMY_DATA[catKey];
-      const categorySubcats = cat.subcategories?.map((s: any) => s.key) || [];
-      setSelectedSubcategories(prev => prev.filter(sub => !categorySubcats.includes(sub)));
+      const catSubs = cat.subcategories?.map((s: any) => s.key) || [];
+      setSelectedSubcategories((prev) => prev.filter((s) => !catSubs.includes(s)));
     } else {
-      setSelectedCategories(prev => [...prev, catKey]);
+      setSelectedCategories((prev) => [...prev, catKey]);
     }
     setErrors({});
   };
 
   const toggleSubcategory = (subKey: string) => {
-    setSelectedSubcategories(prev =>
-      prev.includes(subKey)
-        ? prev.filter(s => s !== subKey)
-        : [...prev, subKey]
+    setSelectedSubcategories((prev) =>
+      prev.includes(subKey) ? prev.filter((s) => s !== subKey) : [...prev, subKey]
     );
-    setErrors({ ...errors, subcategories: undefined });
+    setErrors((prev) => ({ ...prev, subcategories: undefined }));
   };
 
   const handleNext = () => {
     const newErrors: { category?: string; subcategories?: string } = {};
-    
-    if (selectedCategories.length === 0) {
-      newErrors.category = 'Bitte wähle mindestens eine Kategorie';
-    }
-    if (selectedSubcategories.length === 0) {
-      newErrors.subcategories = 'Bitte wähle mindestens eine Tätigkeit';
-    }
+
+    if (selectedCategories.length === 0) newErrors.category = 'Bitte wähle mindestens eine Kategorie';
+    if (selectedSubcategories.length === 0) newErrors.subcategories = 'Bitte wähle mindestens eine Tätigkeit';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // Save to context
     updateWizardData({
       categories: selectedCategories,
-      subcategories: selectedSubcategories,
+      subcategories: selectedSubcategories
     });
-    
+
     router.push('/(worker)/profile-wizard/step4-skills');
   };
 
   const handleBack = () => {
     updateWizardData({
       categories: selectedCategories,
-      subcategories: selectedSubcategories,
+      subcategories: selectedSubcategories
     });
     router.push('/(worker)/profile-wizard/step2-address');
   };
@@ -103,21 +99,17 @@ export default function Step3Categories() {
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.safeArea}>
-        {/* Progress */}
         <ProgressBar currentStep={3} totalSteps={5} />
 
-        {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
-          <Text style={styles.subtitle}>
-            Wähle deine Kategorien und Tätigkeiten
-          </Text>
+          <Text style={styles.subtitle}>Wähle deine Kategorien und Tätigkeiten</Text>
 
-          {/* SECTION 1: Select Multiple Categories */}
+          {/* CATEGORY SECTION */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>1. Kategorien auswählen *</Text>
             <Text style={styles.helperText}>Wähle eine oder mehrere Kategorien</Text>
-            
+
             <View style={styles.categoriesGrid}>
               {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
                 const isSelected = selectedCategories.includes(key);
@@ -125,66 +117,59 @@ export default function Step3Categories() {
                   <Pressable
                     key={key}
                     onPress={() => handleCategoryToggle(key)}
-                    style={({ pressed }) => [
+                    style={[
                       styles.categoryCard,
-                      isSelected && styles.categoryCardSelected,
-                      pressed && { opacity: 0.7 },
+                      isSelected && styles.categoryCardSelected
                     ]}
                   >
-                    <Text style={[
-                      styles.categoryText,
-                      isSelected && styles.categoryTextSelected,
-                    ]}>
+                    <Text
+                      style={[
+                        styles.categoryText,
+                        isSelected && styles.categoryTextSelected
+                      ]}
+                    >
                       {cat.label}
                     </Text>
                   </Pressable>
                 );
               })}
             </View>
-            
-            {errors.category && (
-              <Text style={styles.errorText}>{errors.category}</Text>
-            )}
+
+            {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
           </View>
 
-          {/* SECTION 2: Select Subcategories (only if categories selected) */}
+          {/* SUBCATEGORY SECTION */}
           {selectedCategories.length > 0 && availableSubcategories.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>2. Tätigkeiten auswählen *</Text>
-              <Text style={styles.helperText}>
-                Wähle mindestens eine Tätigkeit aus
-              </Text>
-              
+              <Text style={styles.helperText}>Wähle mindestens eine Tätigkeit aus</Text>
+
               <View style={styles.subcategoriesList}>
                 {availableSubcategories.map((sub: any) => {
-                  const subKey = sub.key;
-                  const subLabel = sub.label;
-                  const isSelected = selectedSubcategories.includes(subKey);
-                  
+                  const isSelected = selectedSubcategories.includes(sub.key);
                   return (
                     <Pressable
-                      key={subKey}
-                      onPress={() => toggleSubcategory(subKey)}
-                      style={({ pressed }) => [
+                      key={sub.key}
+                      onPress={() => toggleSubcategory(sub.key)}
+                      style={[
                         styles.subcategoryCard,
-                        isSelected && styles.subcategoryCardSelected,
-                        pressed && { opacity: 0.7 },
+                        isSelected && styles.subcategoryCardSelected
                       ]}
                     >
-                      <Text style={[
-                        styles.subcategoryText,
-                        isSelected && styles.subcategoryTextSelected,
-                      ]}>
-                        {subLabel}
+                      <Text
+                        style={[
+                          styles.subcategoryText,
+                          isSelected && styles.subcategoryTextSelected
+                        ]}
+                      >
+                        {sub.label}
                       </Text>
-                      {isSelected && (
-                        <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
-                      )}
+                      {isSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
                     </Pressable>
                   );
                 })}
               </View>
-              
+
               {errors.subcategories && (
                 <Text style={styles.errorText}>{errors.subcategories}</Text>
               )}
@@ -192,16 +177,12 @@ export default function Step3Categories() {
           )}
         </ScrollView>
 
-        {/* Validation Hint */}
         {!isFormValid && (
           <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
-            <Text style={styles.validationHint}>
-              ℹ️ Bitte wähle mindestens eine Kategorie und eine Tätigkeit
-            </Text>
+            <Text style={styles.validationHint}>Bitte wähle mindestens eine Kategorie und eine Tätigkeit</Text>
           </View>
         )}
 
-        {/* Navigation */}
         <NavigationButtons
           onNext={handleNext}
           onBack={handleBack}
@@ -214,120 +195,119 @@ export default function Step3Categories() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
-  },
+  container: { flex: 1, backgroundColor: COLORS.bg },
+  safeArea: { flex: 1 },
+  scrollView: { flex: 1 },
+  scrollContent: { padding: 20 },
+
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: COLORS.black,
-    marginBottom: 8,
+    color: COLORS.white,
+    marginBottom: 8
   },
+
   subtitle: {
     fontSize: 16,
-    color: COLORS.black,
-    opacity: 0.8,
-    marginBottom: 24,
+    color: COLORS.whiteMuted,
+    marginBottom: 28
   },
+
   section: {
-    marginBottom: 32,
+    marginBottom: 32
   },
+
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: COLORS.purple,
-    marginBottom: 8,
+    color: COLORS.neon,
+    marginBottom: 8
   },
+
   helperText: {
     fontSize: 12,
     color: COLORS.gray,
-    marginBottom: 16,
-    fontStyle: 'italic',
+    marginBottom: 16
   },
+
   categoriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
     gap: 12,
+    justifyContent: 'space-between'
   },
+
   categoryCard: {
     width: '48%',
-    backgroundColor: '#ECE9FF',
+    backgroundColor: COLORS.card,
     borderRadius: 14,
     paddingVertical: 16,
     paddingHorizontal: 12,
-    borderWidth: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    alignItems: 'center'
   },
+
   categoryCardSelected: {
-    backgroundColor: COLORS.white,
-    borderWidth: 2,
     borderColor: COLORS.neon,
-    shadowColor: 'rgba(200,255,22,0.2)',
-    shadowOpacity: 1,
-    shadowRadius: 8,
+    backgroundColor: '#1A172B',
+    shadowColor: COLORS.neon,
+    shadowOpacity: 0.25,
+    shadowRadius: 6
   },
+
   categoryText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.black,
-    textAlign: 'center',
+    color: COLORS.white
   },
-  categoryTextSelected: {
-    color: COLORS.black,
-  },
-  subcategoriesList: {
-    flexDirection: 'column',
-    gap: 12,
-  },
+
+  categoryTextSelected: { color: COLORS.neon },
+
+  subcategoriesList: { flexDirection: 'column', gap: 12 },
+
   subcategoryCard: {
+    backgroundColor: COLORS.card,
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 16,
-    backgroundColor: '#ECE9FF',
+    borderWidth: 1,
+    borderColor: COLORS.border,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 0,
+    alignItems: 'center'
   },
+
   subcategoryCardSelected: {
-    backgroundColor: COLORS.white,
-    borderWidth: 2,
     borderColor: COLORS.neon,
-    shadowColor: 'rgba(200,255,22,0.2)',
-    shadowOpacity: 1,
-    shadowRadius: 8,
+    backgroundColor: '#1A172B',
+    shadowColor: COLORS.neon,
+    shadowOpacity: 0.25,
+    shadowRadius: 6
   },
+
   subcategoryText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.black,
+    color: COLORS.white
   },
+
   subcategoryTextSelected: {
-    color: COLORS.black,
+    color: COLORS.neon
   },
+
   errorText: {
     fontSize: 12,
     color: COLORS.error,
-    marginTop: 8,
+    marginTop: 8
   },
+
   validationHint: {
     fontSize: 13,
     color: COLORS.neon,
-    backgroundColor: 'rgba(200, 255, 22, 0.1)',
+    backgroundColor: 'rgba(200,255,22,0.1)',
     padding: 12,
     borderRadius: 8,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
