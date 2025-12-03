@@ -1,4 +1,4 @@
-// app/(worker)/edit-profile.tsx - COMPLETE WORKER PROFILE EDITOR
+// app/(worker)/edit-profile.tsx – BACKUP DARK MODE REDESIGN (nur Styling)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ScrollView,
@@ -10,7 +10,7 @@ import {
   Alert,
   Image,
   ActionSheetIOS,
-  Platform,
+  Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect } from 'expo-router';
@@ -19,31 +19,39 @@ import { getWorkerProfile, saveWorkerProfile, WorkerProfile } from '../../utils/
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-// Import taxonomy
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
-  black: '#000000',
-  darkGray: '#333333',
-  lightGray: '#F5F5F5',
-  borderGray: '#E0E0E0',
-  error: '#FF4D4D',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
+  neon: '#C8FF16',
+  error: '#FF4D4D'
+};
+
+const inputStyle = {
+  backgroundColor: '#1C182B',
+  borderRadius: 12,
+  paddingHorizontal: 16,
+  paddingVertical: 12,
+  fontSize: 15,
+  color: COLORS.white,
+  borderWidth: 1,
+  borderColor: COLORS.border
 };
 
 export default function EditWorkerProfileScreen() {
   const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
-  // Personal Data
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [profileText, setProfileText] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
 
-  // Address
   const [street, setStreet] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
   const [postalCode, setPostalCode] = useState('');
@@ -52,33 +60,27 @@ export default function EditWorkerProfileScreen() {
   const [lat, setLat] = useState<number | undefined>();
   const [lon, setLon] = useState<number | undefined>();
 
-  // Categories (multiple), Subcategories & Qualifications
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>([]);
 
-  // Contact
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
 
-  // Radius
   const [radiusKm, setRadiusKm] = useState('20');
 
-  // UI State
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Available subcategories and qualifications for selected categories
-  const [availableSubcategories, setAvailableSubcategories] = useState<{key: string, label: string}[]>([]);
-  const [availableQualifications, setAvailableQualifications] = useState<{key: string, label: string}[]>([]);
+  const [availableSubcategories, setAvailableSubcategories] = useState<{ key: string; label: string }[]>([]);
+  const [availableQualifications, setAvailableQualifications] = useState<{ key: string; label: string }[]>([]);
 
   useEffect(() => {
     if (authLoading || !user) return;
     loadProfile();
   }, [user, authLoading]);
 
-  // Update available subcategories and qualifications when categories change
   useEffect(() => {
     if (selectedCategories.length === 0) {
       setAvailableSubcategories([]);
@@ -86,19 +88,17 @@ export default function EditWorkerProfileScreen() {
       return;
     }
 
-    const subcats: {key: string, label: string}[] = [];
-    const quals: {key: string, label: string}[] = [];
-    
+    const subcats: { key: string; label: string }[] = [];
+    const quals: { key: string; label: string }[] = [];
+
     selectedCategories.forEach(catKey => {
       const category = TAXONOMY_DATA[catKey];
       if (category) {
-        // Add subcategories
         category.subcategories?.forEach((sub: any) => {
           if (!subcats.find(s => s.key === sub.key)) {
             subcats.push({ key: sub.key, label: sub.label });
           }
         });
-        // Add qualifications
         category.qualifications?.forEach((qual: any) => {
           if (!quals.find(q => q.key === qual.key)) {
             quals.push({ key: qual.key, label: qual.label });
@@ -137,8 +137,7 @@ export default function EditWorkerProfileScreen() {
         setEmail(profile.email || user.email || '');
         setRadiusKm(String(profile.radiusKm || 20));
       }
-    } catch (err) {
-      console.error('Error loading profile:', err);
+    } catch {
       Alert.alert('Fehler', 'Profil konnte nicht geladen werden');
     } finally {
       setLoading(false);
@@ -147,7 +146,6 @@ export default function EditWorkerProfileScreen() {
 
   async function pickImage() {
     try {
-      // WEB: Use HTML file input
       if (Platform.OS === 'web') {
         const input = document.createElement('input');
         input.type = 'file';
@@ -156,10 +154,7 @@ export default function EditWorkerProfileScreen() {
           const file = e.target.files[0];
           if (file) {
             const reader = new FileReader();
-            reader.onload = (event: any) => {
-              setPhotoUrl(event.target.result);
-              Alert.alert('Erfolg', 'Foto wurde ausgewählt');
-            };
+            reader.onload = (event: any) => setPhotoUrl(event.target.result);
             reader.readAsDataURL(file);
           }
         };
@@ -167,113 +162,64 @@ export default function EditWorkerProfileScreen() {
         return;
       }
 
-      // MOBILE: Use expo-image-picker
-      console.log('📷 pickImage: Requesting media library permissions...');
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      console.log('📷 pickImage: Permission result:', permissionResult.granted);
-      
-      if (!permissionResult.granted) {
-        Alert.alert('Berechtigung erforderlich', 'Bitte erlaube den Zugriff auf die Fotogalerie in den Einstellungen.');
-        return;
-      }
+      if (!permissionResult.granted) return;
 
-      console.log('📷 pickImage: Launching image library...');
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
+        quality: 0.8
       });
 
-      console.log('📷 pickImage: Result:', { canceled: result.canceled, assetsLength: result.assets?.length });
-
       if (!result.canceled && result.assets && result.assets[0]) {
-        const uri = result.assets[0].uri;
-        console.log('📷 pickImage: Setting photo URL:', uri);
-        setPhotoUrl(uri);
-        Alert.alert('Erfolg', 'Foto wurde ausgewählt');
+        setPhotoUrl(result.assets[0].uri);
       }
-    } catch (error) {
-      console.error('❌ Error picking image:', error);
+    } catch {
       Alert.alert('Fehler', 'Bild konnte nicht ausgewählt werden');
     }
   }
 
   async function takePhoto() {
     try {
-      console.log('📸 takePhoto: Requesting camera permissions...');
-      
       const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-      console.log('📸 takePhoto: Permission result:', permissionResult.granted);
-      
-      if (!permissionResult.granted) {
-        Alert.alert('Berechtigung erforderlich', 'Bitte erlaube den Zugriff auf die Kamera in den Einstellungen.');
-        return;
-      }
+      if (!permissionResult.granted) return;
 
-      console.log('📸 takePhoto: Launching camera...');
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
+        quality: 0.8
       });
 
-      console.log('📸 takePhoto: Result:', { canceled: result.canceled, assetsLength: result.assets?.length });
-
       if (!result.canceled && result.assets && result.assets[0]) {
-        const uri = result.assets[0].uri;
-        console.log('📸 takePhoto: Setting photo URL:', uri);
-        setPhotoUrl(uri);
-        Alert.alert('Erfolg', 'Foto wurde aufgenommen');
+        setPhotoUrl(result.assets[0].uri);
       }
-    } catch (error) {
-      console.error('❌ Error taking photo:', error);
+    } catch {
       Alert.alert('Fehler', 'Foto konnte nicht aufgenommen werden');
     }
   }
 
   function showPhotoOptions() {
-    console.log('🎬 showPhotoOptions: Opening photo selection menu...');
-    console.log('🎬 showPhotoOptions: Platform:', Platform.OS);
-    
-    // WEB: Direkt File-Dialog öffnen
-    if (Platform.OS === 'web') {
-      console.log('🎬 -> Web: Opening file picker...');
-      pickImage();
-      return;
-    }
-    
-    // iOS: ActionSheet
+    if (Platform.OS === 'web') return pickImage();
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
         {
           options: ['Abbrechen', 'Foto aufnehmen', 'Aus Galerie wählen'],
-          cancelButtonIndex: 0,
+          cancelButtonIndex: 0
         },
-        (buttonIndex) => {
-          console.log('🎬 ActionSheet button clicked:', buttonIndex);
-          if (buttonIndex === 1) {
-            console.log('🎬 -> Taking photo...');
-            takePhoto();
-          } else if (buttonIndex === 2) {
-            console.log('🎬 -> Picking image from gallery...');
-            pickImage();
-          }
+        (i) => {
+          if (i === 1) takePhoto();
+          if (i === 2) pickImage();
         }
       );
       return;
     }
-    
-    // Android: Alert
-    Alert.alert(
-      'Profilbild ändern',
-      'Wähle eine Option',
-      [
-        { text: 'Abbrechen', style: 'cancel', onPress: () => console.log('🎬 Cancelled') },
-        { text: 'Foto aufnehmen', onPress: () => { console.log('🎬 -> Taking photo...'); takePhoto(); } },
-        { text: 'Aus Galerie wählen', onPress: () => { console.log('🎬 -> Picking image from gallery...'); pickImage(); } },
-      ]
-    );
+
+    Alert.alert('Profilbild ändern', 'Wähle eine Option', [
+      { text: 'Abbrechen', style: 'cancel' },
+      { text: 'Foto aufnehmen', onPress: () => takePhoto() },
+      { text: 'Aus Galerie wählen', onPress: () => pickImage() }
+    ]);
   }
 
   const getInitials = () => {
@@ -282,131 +228,31 @@ export default function EditWorkerProfileScreen() {
     return (first + last).toUpperCase() || '?';
   };
 
-  // OSM Autocomplete for address
-  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  async function searchAddress(query: string) {
-    // Clear previous timeout
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
-    if (!query || query.length < 5) {
-      setAddressSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    // Debounce: Wait 500ms before searching
-    searchTimeoutRef.current = setTimeout(async () => {
-      try {
-        console.log('🔍 Searching address via backend proxy:', query);
-        
-        // Use backend proxy to avoid CORS issues
-        const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
-        const url = `${API_BASE}/api/geocode?query=${encodeURIComponent(query)}`;
-        
-        const response = await fetch(url);
-
-        if (response.status === 429) {
-          console.warn('⚠️ Rate limit reached, please wait');
-          Alert.alert('Rate Limit', 'Bitte warte einen Moment und versuche es erneut.');
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('✅ Found addresses:', data.length);
-        setAddressSuggestions(data);
-        setShowSuggestions(data.length > 0);
-      } catch (error) {
-        console.error('Address search error:', error);
-        setAddressSuggestions([]);
-        setShowSuggestions(false);
-      }
-    }, 500);
-  }
-
-  function selectAddress(suggestion: any) {
-    console.log('Selected address:', suggestion);
-    
-    // Extract address components
-    const addr = suggestion.address || {};
-    
-    // Street
-    const streetName = addr.road || addr.street || '';
-    setStreet(streetName);
-    
-    // House number
-    const houseNum = addr.house_number || '';
-    setHouseNumber(houseNum);
-    
-    // Postal code
-    const postal = addr.postcode || '';
-    setPostalCode(postal);
-    
-    // City
-    const cityName = addr.city || addr.town || addr.village || '';
-    setCity(cityName);
-    
-    // Country
-    const countryName = addr.country || 'Deutschland';
-    setCountry(countryName);
-    
-    // Coordinates
-    const latitude = parseFloat(suggestion.lat);
-    const longitude = parseFloat(suggestion.lon);
-    setLat(latitude);
-    setLon(longitude);
-    
-    console.log('Address filled:', { streetName, houseNum, postal, cityName, countryName, latitude, longitude });
-    
-    setShowSuggestions(false);
-    setAddressSuggestions([]);
-  }
-
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
 
-    // Required fields
-    if (!firstName.trim()) newErrors.firstName = 'Vorname ist erforderlich';
-    if (!lastName.trim()) newErrors.lastName = 'Nachname ist erforderlich';
-    if (!street.trim()) newErrors.street = 'Straße ist erforderlich';
-    if (!postalCode.trim()) newErrors.postalCode = 'PLZ ist erforderlich';
-    if (!city.trim()) newErrors.city = 'Stadt ist erforderlich';
-    if (!country.trim()) newErrors.country = 'Land ist erforderlich';
-    if (!phone.trim()) newErrors.phone = 'Telefonnummer ist erforderlich';
-    if (selectedCategories.length === 0) newErrors.categories = 'Bitte wähle mindestens eine Kategorie';
-
+    if (!firstName.trim()) newErrors.firstName = 'Vorname erforderlich';
+    if (!lastName.trim()) newErrors.lastName = 'Nachname erforderlich';
+    if (!street.trim()) newErrors.street = 'Straße erforderlich';
+    if (!postalCode.trim()) newErrors.postalCode = 'PLZ erforderlich';
+    if (!city.trim()) newErrors.city = 'Stadt erforderlich';
+    if (!country.trim()) newErrors.country = 'Land erforderlich';
+    if (!phone.trim()) newErrors.phone = 'Telefonnummer erforderlich';
+    if (selectedCategories.length === 0) newErrors.categories = 'Mind. eine Kategorie';
     const radius = parseInt(radiusKm);
-    if (isNaN(radius) || radius < 1 || radius > 200) {
-      newErrors.radiusKm = 'Radius muss zwischen 1 und 200 km liegen';
-    }
+    if (isNaN(radius) || radius < 1 || radius > 200) newErrors.radiusKm = '1-200 km';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
 
   async function handleSave() {
-    console.log('💾 SAVE: start');
-    
-    if (!user) {
-      console.error('❌ SAVE: No user found');
-      return;
-    }
+    if (!user) return;
 
-    console.log('🔍 SAVE: validating data');
     if (!validate()) {
-      console.log('❌ SAVE: validation failed');
       Alert.alert('Fehler', 'Bitte alle Pflichtfelder ausfüllen');
       return;
     }
-    console.log('✅ SAVE: validation passed');
 
     try {
       setSaving(true);
@@ -416,7 +262,7 @@ export default function EditWorkerProfileScreen() {
         lastName: lastName.trim(),
         shortBio: profileText.trim() || undefined,
         photoUrl: photoUrl.trim() || undefined,
-        categories: selectedCategories, // Send as array with multiple categories
+        categories: selectedCategories,
         subcategories: selectedSubcategories,
         qualifications: selectedQualifications,
         homeAddress: {
@@ -424,46 +270,22 @@ export default function EditWorkerProfileScreen() {
           houseNumber: houseNumber.trim() || undefined,
           postalCode: postalCode.trim(),
           city: city.trim(),
-          country: country.trim(),
+          country: country.trim()
         },
         homeLat: lat,
         homeLon: lon,
         phone: phone.trim(),
         email: email.trim(),
-        radiusKm: parseInt(radiusKm),
+        radiusKm: parseInt(radiusKm)
       };
-
-      console.log('📤 SAVE: calling saveWorkerProfile', {
-        userId: user.id,
-        data: updatedProfile
-      });
 
       await saveWorkerProfile(user.id, updatedProfile);
 
-      console.log('✅ SAVE: profile saved successfully');
-      console.log('🔄 SAVE: navigating to profile screen');
-
-      // Role-based navigation
-      if (user.role === 'worker') {
-        router.replace('/(worker)/profile');
-      } else if (user.role === 'employer') {
-        router.replace('/(employer)/profile');
-      }
-      
-      // Success - no alert needed, user sees updated profile
-
-    } catch (err: any) {
-      console.error('❌ SAVE: Error saving profile:', err);
-      console.error('❌ SAVE: Error message:', err.message);
-      console.error('❌ SAVE: Error stack:', err.stack);
-      
-      Alert.alert(
-        'Fehler beim Speichern',
-        err.message || 'Profil konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.'
-      );
+      router.replace('/(worker)/profile');
+    } catch {
+      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden');
     } finally {
       setSaving(false);
-      console.log('🏁 SAVE: finished');
     }
   }
 
@@ -477,9 +299,7 @@ export default function EditWorkerProfileScreen() {
       country.trim() &&
       phone.trim() &&
       selectedCategories.length > 0 &&
-      !isNaN(parseInt(radiusKm)) &&
-      parseInt(radiusKm) >= 1 &&
-      parseInt(radiusKm) <= 200
+      !isNaN(parseInt(radiusKm))
     );
   };
 
@@ -488,7 +308,7 @@ export default function EditWorkerProfileScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={COLORS.neon} size="large" />
           <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Profil...</Text>
@@ -498,23 +318,12 @@ export default function EditWorkerProfileScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.lightGray }}>
-      {/* Header */}
-      <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.purple }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 20,
-            paddingVertical: 16,
-          }}
-        >
-          <Pressable onPress={() => router.back()} style={{ marginRight: 16 }}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.white} />
-          </Pressable>
-          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
-            Profil bearbeiten
-          </Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      {/* BACKUP HEADER */}
+      <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.bg }}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 16 }}>
+          <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900' }}>BACKUP</Text>
+          <View style={{ height: 4, backgroundColor: COLORS.neon, width: '100%', marginTop: 8 }} />
         </View>
       </SafeAreaView>
 
@@ -523,25 +332,25 @@ export default function EditWorkerProfileScreen() {
         contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* SECTION 1: Persönliche Daten */}
+
+        {/* SECTION: Persönliche Daten */}
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            marginBottom: 16,
+            marginBottom: 20,
+            borderWidth: 1,
+            borderColor: COLORS.border
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
             Persönliche Daten
           </Text>
 
-          {/* Profile Photo Upload */}
+          {/* Photo */}
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
-            <View style={{
-              position: 'relative',
-              marginBottom: 12,
-            }}>
+            <View style={{ position: 'relative', marginBottom: 12 }}>
               {photoUrl ? (
                 <Image
                   source={{ uri: photoUrl }}
@@ -549,26 +358,29 @@ export default function EditWorkerProfileScreen() {
                     width: 100,
                     height: 100,
                     borderRadius: 50,
-                    borderWidth: 4,
-                    borderColor: COLORS.neon,
+                    borderWidth: 3,
+                    borderColor: COLORS.neon
                   }}
                 />
               ) : (
-                <View style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
-                  backgroundColor: COLORS.purple,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderWidth: 4,
-                  borderColor: COLORS.neon,
-                }}>
-                  <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.white }}>
+                <View
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                    backgroundColor: COLORS.purple,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 3,
+                    borderColor: COLORS.neon
+                  }}
+                >
+                  <Text style={{ fontSize: 32, fontWeight: '700', color: COLORS.white }}>
                     {getInitials()}
                   </Text>
                 </View>
               )}
+
               <Pressable
                 onPress={showPhotoOptions}
                 style={{
@@ -581,376 +393,228 @@ export default function EditWorkerProfileScreen() {
                   borderRadius: 18,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderWidth: 3,
-                  borderColor: COLORS.white,
+                  borderWidth: 2,
+                  borderColor: COLORS.white
                 }}
               >
-                <Ionicons name="camera" size={18} color={COLORS.black} />
+                <Ionicons name="camera" size={18} color="#000" />
               </Pressable>
             </View>
+
             <Pressable
               onPress={showPhotoOptions}
               style={{
-                paddingHorizontal: 16,
                 paddingVertical: 8,
-                backgroundColor: COLORS.lightGray,
+                paddingHorizontal: 16,
+                backgroundColor: '#1C182B',
                 borderRadius: 12,
+                borderWidth: 1,
+                borderColor: COLORS.border
               }}
             >
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.purple }}>
-                Foto ändern
-              </Text>
+              <Text style={{ color: COLORS.white, fontWeight: '600' }}>Foto ändern</Text>
             </Pressable>
           </View>
 
           {/* First Name */}
           <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Vorname *
-            </Text>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Vorname *</Text>
             <TextInput
               value={firstName}
               onChangeText={setFirstName}
               placeholder="Max"
-              style={{
-                backgroundColor: COLORS.lightGray,
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-                borderWidth: errors.firstName ? 2 : 0,
-                borderColor: COLORS.error,
-              }}
+              placeholderTextColor={COLORS.muted}
+              style={[inputStyle, errors.firstName && { borderColor: COLORS.error }]}
             />
-            {errors.firstName && (
-              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                {errors.firstName}
-              </Text>
-            )}
           </View>
 
           {/* Last Name */}
           <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Nachname *
-            </Text>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Nachname *</Text>
             <TextInput
               value={lastName}
               onChangeText={setLastName}
               placeholder="Mustermann"
-              style={{
-                backgroundColor: COLORS.lightGray,
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-                borderWidth: errors.lastName ? 2 : 0,
-                borderColor: COLORS.error,
-              }}
+              placeholderTextColor={COLORS.muted}
+              style={[inputStyle, errors.lastName && { borderColor: COLORS.error }]}
             />
-            {errors.lastName && (
-              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                {errors.lastName}
-              </Text>
-            )}
           </View>
 
           {/* Profile Text */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Über mich (optional)
-            </Text>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Über mich (optional)</Text>
             <TextInput
               value={profileText}
               onChangeText={setProfileText}
-              placeholder="Erzähle etwas über dich..."
+              placeholder="Erzähl etwas über dich..."
+              placeholderTextColor={COLORS.muted}
               multiline
               numberOfLines={4}
-              style={{
-                backgroundColor: COLORS.lightGray,
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-                minHeight: 100,
-                textAlignVertical: 'top',
-              }}
+              style={[
+                inputStyle,
+                { minHeight: 100, textAlignVertical: 'top' }
+              ]}
             />
           </View>
         </View>
 
-        {/* SECTION 2: Wohnadresse */}
+        {/* SECTION: Adresse */}
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            marginBottom: 16,
+            marginBottom: 20,
+            borderWidth: 1,
+            borderColor: COLORS.border
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
             Wohnadresse
           </Text>
 
-          {/* Address Search with Autocomplete */}
-          <View style={{ marginBottom: 16, position: 'relative', zIndex: 1000 }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Straße + Nr. *
-            </Text>
+          {/* Straße */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Straße *</Text>
             <TextInput
-              value={street && houseNumber ? `${street} ${houseNumber}` : street}
-              onChangeText={(text) => {
-                setStreet(text);
-                searchAddress(text);
-              }}
-              placeholder="Hauptstraße 123"
-              style={{
-                backgroundColor: COLORS.lightGray,
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-                borderWidth: errors.street ? 2 : 0,
-                borderColor: COLORS.error,
-              }}
+              value={street}
+              onChangeText={setStreet}
+              placeholder="Hauptstraße"
+              placeholderTextColor={COLORS.muted}
+              style={[inputStyle, errors.street && { borderColor: COLORS.error }]}
             />
-            {errors.street && (
-              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                {errors.street}
-              </Text>
-            )}
-            
-            {/* Autocomplete Suggestions */}
-            {showSuggestions && addressSuggestions.length > 0 && (
-              <View style={{
-                position: 'absolute',
-                top: 70,
-                left: 0,
-                right: 0,
-                backgroundColor: COLORS.white,
-                borderRadius: 12,
-                maxHeight: 200,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 8,
-                elevation: 10,
-                zIndex: 1001,
-              }}>
-                <ScrollView style={{ maxHeight: 200 }}>
-                  {addressSuggestions.map((suggestion, index) => (
-                    <Pressable
-                      key={index}
-                      onPress={() => selectAddress(suggestion)}
-                      style={({ pressed }) => ({
-                        paddingVertical: 12,
-                        paddingHorizontal: 16,
-                        backgroundColor: pressed ? COLORS.lightGray : COLORS.white,
-                        borderBottomWidth: index < addressSuggestions.length - 1 ? 1 : 0,
-                        borderBottomColor: COLORS.borderGray,
-                      })}
-                    >
-                      <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.black }}>
-                        {suggestion.display_name}
-                      </Text>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-              </View>
-            )}
           </View>
 
-          {/* Postal Code & City */}
+          {/* PLZ + Stadt */}
           <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-                PLZ *
-              </Text>
+              <Text style={{ color: COLORS.muted, marginBottom: 6 }}>PLZ *</Text>
               <TextInput
                 value={postalCode}
                 onChangeText={setPostalCode}
                 placeholder="10115"
+                placeholderTextColor={COLORS.muted}
                 keyboardType="numeric"
-                style={{
-                  backgroundColor: COLORS.lightGray,
-                  borderRadius: 12,
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  fontSize: 15,
-                  borderWidth: errors.postalCode ? 2 : 0,
-                  borderColor: COLORS.error,
-                }}
+                style={[inputStyle, errors.postalCode && { borderColor: COLORS.error }]}
               />
-              {errors.postalCode && (
-                <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                  {errors.postalCode}
-                </Text>
-              )}
             </View>
+
             <View style={{ flex: 2 }}>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-                Stadt *
-              </Text>
+              <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Stadt *</Text>
               <TextInput
                 value={city}
                 onChangeText={setCity}
                 placeholder="Berlin"
-                style={{
-                  backgroundColor: COLORS.lightGray,
-                  borderRadius: 12,
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  fontSize: 15,
-                  borderWidth: errors.city ? 2 : 0,
-                  borderColor: COLORS.error,
-                }}
+                placeholderTextColor={COLORS.muted}
+                style={[inputStyle, errors.city && { borderColor: COLORS.error }]}
               />
-              {errors.city && (
-                <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                  {errors.city}
-                </Text>
-              )}
             </View>
           </View>
 
           {/* Country */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Land *
-            </Text>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Land *</Text>
             <TextInput
               value={country}
               onChangeText={setCountry}
               placeholder="Deutschland"
-              style={{
-                backgroundColor: COLORS.lightGray,
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-              }}
+              placeholderTextColor={COLORS.muted}
+              style={[inputStyle, errors.country && { borderColor: COLORS.error }]}
             />
           </View>
         </View>
 
-        {/* SECTION 3: Tätigkeiten & Qualifikationen */}
+        {/* SECTION: Kategorien */}
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            marginBottom: 16,
+            marginBottom: 20,
+            borderWidth: 1,
+            borderColor: COLORS.border
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 16 }}>
             Tätigkeiten & Qualifikationen
           </Text>
 
-          {/* Categories - Select multiple */}
-          <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
-              Kategorien * (mind. 1)
-            </Text>
+          {/* Kategorien */}
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Kategorien *</Text>
+
             <View
               style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                gap: 12,
+                gap: 12
               }}
             >
               {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
                 const isSelected = selectedCategories.includes(key);
+
                 return (
                   <Pressable
                     key={key}
                     onPress={() => {
                       if (isSelected) {
-                        setSelectedCategories(prev => prev.filter(k => k !== key));
-                        // Remove subcategories and qualifications from unselected category
-                        const categorySubcats = cat.subcategories?.map((s: any) => s.key) || [];
-                        const categoryQuals = cat.qualifications?.map((q: any) => q.key) || [];
-                        
-                        setSelectedSubcategories(prev => 
-                          prev.filter(sub => !categorySubcats.includes(sub))
-                        );
-                        setSelectedQualifications(prev => 
-                          prev.filter(qual => !categoryQuals.includes(qual))
-                        );
+                        const subs = cat.subcategories?.map((s: any) => s.key) || [];
+                        const quals = cat.qualifications?.map((q: any) => q.key) || [];
+                        setSelectedCategories(prev => prev.filter(v => v !== key));
+                        setSelectedSubcategories(prev => prev.filter(s => !subs.includes(s)));
+                        setSelectedQualifications(prev => prev.filter(q => !quals.includes(q)));
                       } else {
                         setSelectedCategories(prev => [...prev, key]);
                       }
                     }}
                     style={{
-                      width: '48%',
-                      backgroundColor: isSelected ? COLORS.white : '#ECE9FF',
+                      width: '47%',
+                      backgroundColor: isSelected ? COLORS.purple : '#1C182B',
+                      borderWidth: 1,
+                      borderColor: isSelected ? COLORS.neon : COLORS.border,
                       borderRadius: 14,
-                      paddingVertical: 16,
-                      paddingHorizontal: 12,
-                      borderWidth: isSelected ? 2 : 0,
-                      borderColor: isSelected ? COLORS.neon : 'transparent',
-                      shadowColor: isSelected ? 'rgba(200,255,22,0.2)' : 'transparent',
-                      shadowOpacity: isSelected ? 1 : 0,
-                      shadowRadius: isSelected ? 8 : 0,
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      paddingVertical: 14,
+                      alignItems: 'center'
                     }}
                   >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: '600',
-                        color: COLORS.black,
-                      }}
-                    >
-                      {cat.label}
-                    </Text>
+                    <Text style={{ color: COLORS.white, fontWeight: '600' }}>{cat.label}</Text>
                   </Pressable>
                 );
               })}
             </View>
-            {errors.categories && (
-              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 8 }}>
-                {errors.categories}
-              </Text>
-            )}
           </View>
 
           {/* Subcategories */}
           {availableSubcategories.length > 0 && (
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
+            <View style={{ marginBottom: 20 }}>
+              <Text style={{ color: COLORS.muted, marginBottom: 6 }}>
                 Tätigkeiten *
               </Text>
+
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {availableSubcategories.map((sub) => {
+                {availableSubcategories.map(sub => {
                   const isSelected = selectedSubcategories.includes(sub.key);
+
                   return (
                     <Pressable
                       key={sub.key}
                       onPress={() => {
                         if (isSelected) {
-                          setSelectedSubcategories(prev => prev.filter(k => k !== sub.key));
+                          setSelectedSubcategories(prev => prev.filter(v => v !== sub.key));
                         } else {
                           setSelectedSubcategories(prev => [...prev, sub.key]);
                         }
                       }}
                       style={{
-                        backgroundColor: isSelected ? COLORS.neon : COLORS.lightGray,
-                        borderWidth: 1,
-                        borderColor: isSelected ? COLORS.neon : COLORS.borderGray,
-                        paddingHorizontal: 14,
+                        backgroundColor: isSelected ? COLORS.neon : '#1C182B',
+                        borderRadius: 14,
                         paddingVertical: 8,
-                        borderRadius: 16,
+                        paddingHorizontal: 14,
+                        borderWidth: 1,
+                        borderColor: isSelected ? COLORS.neon : COLORS.border
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: 13,
-                          fontWeight: '600',
-                          color: isSelected ? COLORS.black : COLORS.darkGray,
-                        }}
-                      >
+                      <Text style={{ color: isSelected ? '#000' : COLORS.white, fontWeight: '600' }}>
                         {sub.label}
                       </Text>
                     </Pressable>
@@ -963,38 +627,33 @@ export default function EditWorkerProfileScreen() {
           {/* Qualifications */}
           {availableQualifications.length > 0 && (
             <View>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 8 }}>
+              <Text style={{ color: COLORS.muted, marginBottom: 6 }}>
                 Qualifikationen (optional)
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {availableQualifications.map((qual) => {
+                {availableQualifications.map(qual => {
                   const isSelected = selectedQualifications.includes(qual.key);
+
                   return (
                     <Pressable
                       key={qual.key}
                       onPress={() => {
                         if (isSelected) {
-                          setSelectedQualifications(prev => prev.filter(k => k !== qual.key));
+                          setSelectedQualifications(prev => prev.filter(v => v !== qual.key));
                         } else {
                           setSelectedQualifications(prev => [...prev, qual.key]);
                         }
                       }}
                       style={{
-                        backgroundColor: isSelected ? COLORS.purple : COLORS.lightGray,
-                        borderWidth: 1,
-                        borderColor: isSelected ? COLORS.purple : COLORS.borderGray,
-                        paddingHorizontal: 14,
+                        backgroundColor: isSelected ? COLORS.purple : '#1C182B',
+                        borderRadius: 14,
                         paddingVertical: 8,
-                        borderRadius: 16,
+                        paddingHorizontal: 14,
+                        borderWidth: 1,
+                        borderColor: isSelected ? COLORS.purple : COLORS.border
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: 13,
-                          fontWeight: '600',
-                          color: isSelected ? COLORS.white : COLORS.darkGray,
-                        }}
-                      >
+                      <Text style={{ color: COLORS.white, fontWeight: '600' }}>
                         {qual.label}
                       </Text>
                     </Pressable>
@@ -1005,181 +664,104 @@ export default function EditWorkerProfileScreen() {
           )}
         </View>
 
-        {/* SECTION 4: Kontaktinformationen */}
+        {/* SECTION: Kontakt */}
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            marginBottom: 16,
+            marginBottom: 20,
+            borderWidth: 1,
+            borderColor: COLORS.border
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
             Kontaktinformationen
           </Text>
 
           {/* Phone */}
           <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Telefonnummer *
-            </Text>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Telefonnummer *</Text>
             <TextInput
               value={phone}
               onChangeText={setPhone}
-              placeholder="0162 123 4567"
+              placeholder="0176..."
+              placeholderTextColor={COLORS.muted}
               keyboardType="phone-pad"
+              style={[inputStyle, errors.phone && { borderColor: COLORS.error }]}
+            />
+          </View>
+
+          {/* Email */}
+          <View>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>E-Mail</Text>
+            <View
               style={{
-                backgroundColor: COLORS.lightGray,
+                backgroundColor: '#1C182B',
                 borderRadius: 12,
                 paddingHorizontal: 16,
                 paddingVertical: 12,
-                fontSize: 15,
-                borderWidth: errors.phone ? 2 : 0,
-                borderColor: COLORS.error,
+                borderWidth: 1,
+                borderColor: COLORS.border
               }}
-            />
-            {errors.phone && (
-              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                {errors.phone}
-              </Text>
-            )}
-          </View>
-
-          {/* Email - Read-only, from AuthContext */}
-          <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              E-Mail
-            </Text>
-            <View style={{
-              backgroundColor: '#E8E8E8',
-              borderRadius: 12,
-              paddingHorizontal: 16,
-              paddingVertical: 12,
-            }}>
-              <Text style={{ fontSize: 15, color: COLORS.darkGray }}>
-                {user?.email || email || 'Keine E-Mail'}
-              </Text>
+            >
+              <Text style={{ color: COLORS.muted }}>{user?.email || email}</Text>
             </View>
-            <Text style={{ fontSize: 12, color: '#888', marginTop: 4, fontStyle: 'italic' }}>
-              E-Mail kann nicht geändert werden
-            </Text>
           </View>
         </View>
 
-        {/* SECTION 5: Arbeitsradius */}
+        {/* Radius */}
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            marginBottom: 16,
+            marginBottom: 40,
+            borderWidth: 1,
+            borderColor: COLORS.border
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black, marginBottom: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
             Arbeitsradius
           </Text>
 
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.darkGray, marginBottom: 6 }}>
-              Radius in km * (1-200)
-            </Text>
+            <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Radius in km *</Text>
             <TextInput
               value={radiusKm}
               onChangeText={setRadiusKm}
               placeholder="20"
+              placeholderTextColor={COLORS.muted}
               keyboardType="numeric"
-              style={{
-                backgroundColor: COLORS.lightGray,
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                fontSize: 15,
-                borderWidth: errors.radiusKm ? 2 : 0,
-                borderColor: COLORS.error,
-              }}
+              style={[inputStyle, errors.radiusKm && { borderColor: COLORS.error }]}
             />
-            {errors.radiusKm && (
-              <Text style={{ fontSize: 12, color: COLORS.error, marginTop: 4 }}>
-                {errors.radiusKm}
-              </Text>
-            )}
           </View>
         </View>
 
-        {/* NEUER SPEICHERN BUTTON HIER IM SCROLLVIEW */}
-        <View style={{ marginTop: 40, marginBottom: 30 }}>
-          <Pressable
-            onPress={() => {
-              console.log('🔘 NEUER SAVE BUTTON PRESSED!');
-              handleSave();
-            }}
-            disabled={!isFormValid() || saving}
-            style={({ pressed }) => ({
-              backgroundColor: isFormValid() && !saving ? '#C8FF16' : '#CCCCCC',
-              paddingVertical: 18,
-              borderRadius: 16,
-              alignItems: 'center',
-              opacity: pressed ? 0.85 : 1,
-            })}
-          >
-            {saving ? (
-              <ActivityIndicator color="#000000" size="large" />
-            ) : (
-              <Text style={{ fontSize: 20, fontWeight: '900', color: '#000000' }}>
-                PROFIL SPEICHERN
-              </Text>
-            )}
-          </Pressable>
-        </View>
-
-      </ScrollView>
-
-      {/* Fixed Save Button */}
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#FFFFFF',
-          paddingHorizontal: 20,
-          paddingVertical: 20,
-          borderTopWidth: 3,
-          borderTopColor: '#C8FF16',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-          elevation: 20,
-          zIndex: 9999,
-        }}
-      >
+        {/* Bottom Save Button */}
         <Pressable
-          onPress={() => {
-            console.log('🔘 SAVE BUTTON PRESSED!');
-            console.log('🔘 isFormValid:', isFormValid());
-            console.log('🔘 saving:', saving);
-            handleSave();
-          }}
+          onPress={handleSave}
           disabled={!isFormValid() || saving}
-          style={({ pressed }) => ({
-            backgroundColor: isFormValid() && !saving ? '#C8FF16' : '#CCCCCC',
-            paddingVertical: 18,
-            borderRadius: 16,
-            alignItems: 'center',
-            opacity: pressed ? 0.85 : 1,
-            marginBottom: 10,
-          })}
+          style={{
+            width: '60%',
+            maxWidth: 300,
+            minWidth: 220,
+            alignSelf: 'center',
+            backgroundColor: isFormValid() && !saving ? COLORS.neon : '#333',
+            paddingVertical: 16,
+            borderRadius: 14,
+            alignItems: 'center'
+          }}
         >
           {saving ? (
-            <ActivityIndicator color="#000000" />
+            <ActivityIndicator color="#000" />
           ) : (
-            <Text style={{ fontSize: 18, fontWeight: '800', color: '#000000' }}>
-              PROFIL SPEICHERN
+            <Text style={{ color: '#000', fontSize: 16, fontWeight: '700' }}>
+              Profil speichern
             </Text>
           )}
         </Pressable>
-      </View>
+      </ScrollView>
     </View>
   );
 }
