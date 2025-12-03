@@ -61,7 +61,6 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await login(email.trim().toLowerCase(), password);
-      // Login successful - navigate to start which will handle routing
       router.replace('/start');
     } catch (err: any) {
       console.error('Login error in handleLogin:', err);
@@ -78,7 +77,6 @@ export default function LoginScreen() {
         style={StyleSheet.absoluteFillObject}
       />
 
-      {/* Animated Glow Effects */}
       <Animated.View style={[styles.glowCircle, { opacity: logoOpacity }]}>
         <LinearGradient
           colors={['rgba(107,75,255,0.3)', 'rgba(107,75,255,0)']}
@@ -90,7 +88,6 @@ export default function LoginScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
             
-            {/* Logo Section */}
             <Animated.View style={[styles.logoSection, { opacity: logoOpacity }]}>
               <View style={styles.logoContainer}>
                 <Image 
@@ -101,13 +98,11 @@ export default function LoginScreen() {
               </View>
             </Animated.View>
 
-            {/* Title Section */}
             <Animated.View style={[styles.titleSection, { opacity: logoOpacity }]}>
               <Text style={styles.title}>Willkommen zurück!</Text>
               <Text style={styles.subtitle}>Melde dich an und leg direkt los.</Text>
             </Animated.View>
 
-            {/* Error Message */}
             {errorMsg ? (
               <Animated.View style={[styles.errorContainer, { opacity: inputOpacity }]}>
                 <BlurView intensity={20} tint="dark" style={styles.errorBlur}>
@@ -116,9 +111,7 @@ export default function LoginScreen() {
               </Animated.View>
             ) : null}
 
-            {/* Input Section */}
             <Animated.View style={{ opacity: inputOpacity, transform: [{ translateY: inputTranslateY }] }}>
-              {/* Email */}
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>E-Mail</Text>
                 <View style={[styles.inputContainer, emailFocused && styles.inputFocused]}>
@@ -136,7 +129,6 @@ export default function LoginScreen() {
                 </View>
               </View>
 
-              {/* Password */}
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Passwort</Text>
                 <View style={[styles.inputContainer, passwordFocused && styles.inputFocused]}>
@@ -159,7 +151,6 @@ export default function LoginScreen() {
 
             <View style={{ flex: 1, minHeight: 20 }} />
 
-            {/* Button Section */}
             <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
               <Pressable 
                 onPress={handleLogin} 
@@ -182,7 +173,6 @@ export default function LoginScreen() {
                 </LinearGradient>
               </Pressable>
 
-              {/* Sign Up Link */}
               <View style={styles.signupSection}>
                 <Text style={styles.signupText}>Noch kein Account?</Text>
                 <Pressable onPress={() => router.push('/auth/signup')}>
@@ -341,69 +331,3 @@ const styles = StyleSheet.create({
     color: COLORS.purple,
   },
 });
-
-
-              {/* Password */}
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Passwort</Text>
-                <View style={[styles.inputContainer, passwordFocused && styles.inputFocused]}>
-                  <TextInput
-                    placeholder="••••••••"
-                    placeholderTextColor={COLORS.placeholder}
-                    secureTextEntry={!showPassword}
-                    value={password}
-                    onChangeText={setPassword}
-                    onFocus={() => setPasswordFocused(true)}
-                    onBlur={() => setPasswordFocused(false)}
-                    style={[styles.input, { flex: 1 }]}
-                  />
-                  <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
-                    {showPassword ? <EyeOff size={20} color={COLORS.muted} /> : <Eye size={20} color={COLORS.muted} />}
-                  </Pressable>
-                </View>
-              </View>
-            </Animated.View>
-
-            <View style={{ flex: 1, minHeight: 20 }} />
-
-            {/* Button Section */}
-            <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
-              <Pressable 
-                onPress={handleLogin} 
-                disabled={loading}
-                style={({ pressed }) => [
-                  styles.loginButton,
-                  loading && styles.loginButtonDisabled,
-                  pressed && styles.loginButtonPressed
-                ]}
-              >
-                <LinearGradient
-                  colors={loading ? ['#4A4A4A', '#3A3A3A'] : [COLORS.purple, COLORS.purpleDark]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.buttonGradient}
-                >
-                  <Text style={styles.loginButtonText}>
-                    {loading ? 'Lädt...' : 'Einloggen'}
-                  </Text>
-                </LinearGradient>
-              </Pressable>
-
-              {/* Sign Up Link */}
-              <View style={styles.signupSection}>
-                <Text style={styles.signupText}>Noch kein Account?</Text>
-                <Pressable onPress={() => router.push('/auth/signup')}>
-                  <Text style={styles.signupLink}>Registrieren</Text>
-                </Pressable>
-              </View>
-            </Animated.View>
-
-            <View style={{ height: 40 }} />
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </View>
-  );
-}
-
-
