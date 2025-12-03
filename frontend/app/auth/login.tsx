@@ -136,6 +136,69 @@ export default function LoginScreen() {
                 </View>
               </View>
 
+              {/* Password */}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Passwort</Text>
+                <View style={[styles.inputContainer, passwordFocused && styles.inputFocused]}>
+                  <TextInput
+                    placeholder="••••••••"
+                    placeholderTextColor={COLORS.placeholder}
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
+                    style={[styles.input, { flex: 1 }]}
+                  />
+                  <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+                    {showPassword ? <EyeOff size={20} color={COLORS.muted} /> : <Eye size={20} color={COLORS.muted} />}
+                  </Pressable>
+                </View>
+              </View>
+            </Animated.View>
+
+            <View style={{ flex: 1, minHeight: 20 }} />
+
+            {/* Button Section */}
+            <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
+              <Pressable 
+                onPress={handleLogin} 
+                disabled={loading}
+                style={({ pressed }) => [
+                  styles.loginButton,
+                  loading && styles.loginButtonDisabled,
+                  pressed && styles.loginButtonPressed
+                ]}
+              >
+                <LinearGradient
+                  colors={loading ? ['#4A4A4A', '#3A3A3A'] : [COLORS.purple, COLORS.purpleDark]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.buttonGradient}
+                >
+                  <Text style={styles.loginButtonText}>
+                    {loading ? 'Lädt...' : 'Einloggen'}
+                  </Text>
+                </LinearGradient>
+              </Pressable>
+
+              {/* Sign Up Link */}
+              <View style={styles.signupSection}>
+                <Text style={styles.signupText}>Noch kein Account?</Text>
+                <Pressable onPress={() => router.push('/auth/signup')}>
+                  <Text style={styles.signupLink}>Registrieren</Text>
+                </Pressable>
+              </View>
+            </Animated.View>
+
+            <View style={{ height: 40 }} />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
