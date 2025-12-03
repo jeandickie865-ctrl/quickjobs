@@ -195,16 +195,16 @@ export default function PaymentScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator color={COLORS.neon} size="large" />
-        <Text style={{ color: COLORS.white, marginTop: 10 }}>Lädt...</Text>
+        <Text style={{ color: COLORS.lightText, marginTop: 10 }}>Lädt...</Text>
       </View>
     );
   }
 
   if (!application) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: "center", alignItems: "center", padding: 20 }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: "center", alignItems: "center", padding: 20 }}>
         <Ionicons name="alert-circle" size={48} color={COLORS.neon} />
         <Text style={{ color: COLORS.white, fontSize: 18, marginTop: 12, textAlign: "center" }}>
           Application nicht gefunden
@@ -213,7 +213,7 @@ export default function PaymentScreen() {
           onPress={() => router.back()}
           style={{ backgroundColor: COLORS.neon, paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12, marginTop: 24 }}
         >
-          <Text style={{ fontWeight: "700", color: COLORS.black }}>Zurück</Text>
+          <Text style={{ fontWeight: "700", color: COLORS.background }}>Zurück</Text>
         </Pressable>
       </View>
     );
