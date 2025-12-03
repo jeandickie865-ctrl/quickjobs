@@ -616,7 +616,7 @@ export function WorkerProfileEmployerView({
                               }}
                             >
                               <Text
-                                style={{ fontSize: 13, fontWeight: '600', color: COLORS.muted }}
+                                style={{ fontSize: 13, fontWeight: '600', color: COLORS.lightText }}
                               >
                                 {label}
                               </Text>
