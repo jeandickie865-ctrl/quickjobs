@@ -463,12 +463,14 @@ export default function WorkerMatchesScreen() {
                     }}
                     disabled={application.paymentStatus !== "paid"}
                     style={{
-                      backgroundColor: application.paymentStatus === "paid" ? "#5941FF" : "#3A2F7A",
-                      paddingVertical: 16,
+                      backgroundColor: COLORS.purple,
+                      paddingVertical: 14,
                       borderRadius: 14,
+                      width: "60%",
+                      alignSelf: "center",
                       alignItems: "center",
-                      width: "100%",
                       marginTop: 18,
+                      opacity: application.paymentStatus === "paid" ? 1 : 0.5,
                     }}
                   >
                     <Text
@@ -489,11 +491,12 @@ export default function WorkerMatchesScreen() {
                       router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
                     }}
                     style={{
-                      backgroundColor: "#7A63FF",
+                      backgroundColor: COLORS.secondaryPurple,
                       paddingVertical: 14,
                       borderRadius: 14,
+                      width: "60%",
+                      alignSelf: "center",
                       alignItems: "center",
-                      width: "100%",
                       marginTop: 12,
                     }}
                   >
@@ -512,11 +515,12 @@ export default function WorkerMatchesScreen() {
                   <Pressable
                     onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                     style={{
-                      backgroundColor: "#7A63FF",
+                      backgroundColor: COLORS.secondaryPurple,
                       paddingVertical: 14,
                       borderRadius: 14,
+                      width: "60%",
+                      alignSelf: "center",
                       alignItems: "center",
-                      width: "100%",
                       marginTop: 12,
                     }}
                   >
