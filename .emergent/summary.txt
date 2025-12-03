@@ -1,96 +1,67 @@
 <analysis>
-The trajectory details an intensive development and debugging process for the ShiftMatch application. The work, conducted entirely in German, began with implementing a new Alle Jobs (All Jobs) feature. This involved extensive debugging of authentication (), data fetching (), and state management, culminating in using the  hook and filtering jobs correctly on the frontend.
+The trajectory details an intensive, iterative UI/UX overhaul of the ShiftMatch application, driven by a user providing specific code patches in German. The work began by establishing a global (but manually applied) design system. A major focus was the redesign of the employer's matches screen () and its corresponding tab navigator () to align with a pre-existing modern, dark iPhone-style aesthetic from the worker side of the app.
 
-A significant portion of the effort was dedicated to fixing critical bugs. An unread message badge issue was traced to inconsistent backend logic ( vs. ) and was resolved in . A major, user-frustrating bug where jobs reappeared after a worker applied was identified as a frontend race condition in . The  was re-fetching data too quickly; this was fixed by adding a  delay to allow the backend to process the application.
+A significant portion of the effort then shifted to redesigning the authentication and onboarding flow. The welcome screen () was rebuilt from scratch through numerous user-provided patches, resulting in a polished, animated, dark-themed page. Following this, the AI, at the user's direction, created a new multi-step onboarding flow (, , etc.) and a redesigned . This new flow, however, was purely a UI shell and broke the core registration logic by failing to call . This led to significant user frustration. The issue was resolved by reverting  to a previous, functional version that contained all the necessary logic (role selection, validation, backend call) and then applying the new dark design to it.
 
-Another major task was implementing complex, conditional post-payment modals in . The logic depended on the employer's account type (/) and the worker's employment status. This feature went through many iterations, from  to proper  components, and involved fixing a critical asynchronous issue by wrapping the  calls in a .
+The final and current task involves fixing a bug on the worker's profile creation wizard (), where a Save button was not visible. After a great deal of confusion and debugging (including looking at the wrong file), the user provided a complete file replacement for  with the new dark theme, which the AI was in the process of implementing. A persistent environmental issue throughout the trajectory was Metro bundler's CI mode, which required frequent manual restarts and cache clearing to make changes visible, causing significant delays and confusion.
 
-The most recent task was adding a Delete button for past matches. A backend  endpoint was created, but adding the button to  caused a crash due to a duplicate import, which is the immediate issue to be resolved. The user's primary language is German; all future interactions must be in German.
+The user's primary language is German. The next agent must respond in German only.
 </analysis>
-
 <product_requirements>
-The ShiftMatch application is a two-sided marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers) in Germany.
+The ShiftMatch application is a German-language, two-sided marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
-**Core Functionality:**
-*   **Workers:** Create profiles, specify skills and employment status (self-employed or not), and apply for jobs.
-*   **Employers:** Post jobs (as private individuals or businesses), review applications, and manage accepted workers (Matches).
+The primary goal of the recent work was to unify the application's design under a consistent, modern, dark iPhone-style theme. This involved a complete UI/UX overhaul of several key areas.
 
-**Key Implemented Features & Fixes:**
-*   **Alle Jobs Tab:** A dedicated tab for workers to view all nearby jobs, irrespective of their qualifications, filtering out only closed or expired listings.
-*   **Conditional Post-Payment Modals:** After an employer pays for a match, a specific modal appears based on the context:
-    *   **Private Employer + Non-Self-Employed Worker (Job &lt; 300€):** A custom modal provides legal information regarding the Minijob-Zentrale.
-    *   **Business Employer + Non-Self-Employed Worker:** A modal offers assistance with the official registration process.
-    *   All other cases (e.g., self-employed worker) skip the modal and navigate directly to the matches screen.
-*   **Critical Bug Fixes:**
-    *   Resolved a race condition where applied-for jobs would reappear in the worker's feed.
-    *   Fixed the unread message badge to update correctly after a chat is read.
-*   **Address Autocomplete:** Implemented a backend proxy to fix CORS issues with the address search functionality.
+**Implemented Features & Redesigns:**
+*   **Employer Matches Screen:** The  screen and its tab-bar layout () were completely redesigned to match the modern aesthetic of the worker's side, moving from a purple/neon theme to a dark, glassmorphism-based design.
+*   **Authentication Flow Overhaul:** The  (Welcome),  (Registration), and a new  screen were created or redesigned with a consistent dark theme,  backgrounds, and sequential animations.
+*   **Onboarding Flow Creation (and Reversal):** A multi-step onboarding flow was created but later abandoned. The core  was reverted to its original, all-in-one functional state (with role selection, validation, and backend integration) and then styled to match the new dark theme, fixing a critical bug where users could not actually register.
+*   **Profile Wizard Fix:** A bug where the Save button was not visible on the worker profile creation screen was addressed by replacing the entire file with a user-provided, dark-themed version.
 </product_requirements>
-
 <key_technical_concepts>
-- **Backend:** FastAPI (Python), MongoDB (via ), Pydantic.
-- **Frontend:** React Native, Expo, Expo Router for file-based routing.
-- **State Management:** React Context (), .
-- **Async Handling:**  with  for debouncing, -wrapped  calls to manage asynchronous UI updates correctly.
-- **API Architecture:** RESTful endpoints, including a backend proxy () to circumvent browser CORS restrictions for third-party APIs (Nominatim).
-- **Authentication:** Token-based authentication using  and  context.
+- **Frontend:** React Native, Expo, Expo Router (file-based routing).
+- **Styling:** StyleSheet, , , and a manually applied design system defined in .
+- **Animation:** React Native  API for sequential and parallel animations (fade, slide).
+- **Backend:** FastAPI (Python), with user authentication handled via a React Context ().
+- **State Management:**  for component state,  for auth and a .
+- **Environment Issue:** Metro bundler runs in CI mode (), disabling hot-reloading and requiring frequent manual cache clearing and server restarts to see changes.
 </key_technical_concepts>
-
 <code_architecture>
-The project is a monorepo with  and  directories.
+The project is a monorepo with a  (Expo) and  (FastAPI) structure.
 
 
 
-- ****: The core API.
-  - **Importance**: Contains all business logic, database interactions, and endpoints.
-  - **Changes**:
-    - ****: A crucial filter was added to exclude jobs for which the worker has already submitted an application, fixing a major bug.
-    - ****: Logic was enhanced to correctly mark both old (with ) and new (with ) messages as read.
-    - ****: Verified to correctly set new application status to .
-    - ****: A new endpoint was added to allow users to delete applications/matches.
+- ****
+    - **Importance:** The main welcome/landing screen of the app.
+    - **Changes:** Underwent a massive, iterative redesign. The user provided multiple patches to transform it from a simple purple screen to a polished, dark-themed page with , multi-layered animated glow effects, glassmorphism panels, and sequential animations. The final version is a complete file replacement.
 
-- ****: Handles the post-payment flow and logic for showing modals.
-  - **Importance**: This file contains the most complex conditional UI logic, which was the source of significant user frustration.
-  - **Changes**:
-    - The logic for displaying modals after payment was completely refactored. It now uses a  function that returns a , correctly handling the asynchronous nature of .
-    - The conditions were clarified to show one modal for private employers and another for business employers when the worker is not self-employed.
-    - All previous logic using job value () was removed in favor of the simpler, corrected logic.
+- ****
+    - **Importance:** The core user registration screen. This file was the source of a critical bug.
+    - **Changes:** Initially, it was a functional, all-in-one form. It was then replaced with a new, stylish but non-functional UI as part of a multi-step onboarding flow. This broke user registration. After significant user frustration, the file was reverted to a previous, fully functional version (including Zod validation and  call) and then restyled to match the new dark theme.
 
-- ****: The worker's main job feed.
-  - **Importance**: This is a primary screen for workers. It was the source of a critical race condition bug.
-  - **Changes**:
-    -  was added to refetch jobs when the user navigates back to the screen.
-    - A  with a 1-second delay was added within  to prevent a race condition, ensuring the backend has time to save a new application before the job list is refreshed.
+- ****
+    - **Importance:** The main screen for employers to view their hired workers.
+    - **Changes:** This screen was completely redesigned to match the worker's dark-themed . The user provided patches to change the header, and then a full patch to replace the card-based list with a new layout featuring glassmorphism, a new color scheme (moving away from neon green), and a consistent button hierarchy.
 
-- ****: Defines the tab navigation for the worker.
-  - **Importance**: Controls the main navigation structure.
-  - **Changes**: A new tab for Jobs/All () was added, and the unused registration-data tab was hidden by setting .
+- ****
+    - **Importance:** The tab navigator for the employer section.
+    - **Changes:** The styling was completely overhauled via user patches to match the worker's tab bar. The background color was changed, the border was restyled (from neon green to a subtle dark border), and the active tab indicator was changed to a purple dot.
 
-- ****: Screen to show a worker's accepted jobs (matches).
-    - **Importance**: Key screen for managing ongoing and past jobs.
-    - **Changes**: A Löschen (Delete) button and  function were being added to allow users to remove old matches. This change introduced a duplicate import error that crashed the app and needs to be fixed.
-
-- ****: Handles address search.
-  - **Importance**: Provides address autocomplete functionality across the app.
-  - **Changes**: The implementation was changed from calling the external Nominatim API directly to calling an internal backend proxy endpoint () to resolve browser CORS issues.
+- ****
+    - **Importance:** The first step in the worker's profile creation flow. It was the subject of the final bug fix.
+    - **Changes:** The user reported a Save button was not visible. After much confusion, the user provided a complete file replacement with a new, consistent dark theme design, including a redesigned photo uploader, input fields, and layout. The AI was in the process of applying this change.
 </code_architecture>
-
 <pending_tasks>
-- **Complete the Delete Match feature:** A backend  endpoint was created. The frontend implementation in  must be fixed (remove duplicate import) and verified.
-- **Implement Delete Match for Employers:** Consider adding a similar delete functionality to the employer's match list ().
+- **Apply the new dark theme to **: The login screen still uses the old purple/neon design and needs to be updated for consistency with the redesigned  and  screens.
+- **Validate and complete the Onboarding Flow**: The new multi-step onboarding screens (, , , ) are just UI shells. They need to be integrated with the  and backend to actually save user data.
 </pending_tasks>
-
 <current_work>
-The immediate last task was implementing a feature to allow users to delete old matches from their list. This was based on the user's request after noticing very old, completed jobs were still visible in their Matches list.
+The AI engineer was in the final stages of fixing a critical UI bug on the worker profile creation screen, . The user reported that the Save or Next button was not visible, causing a complete blocker in the user flow.
 
-The work involved two parts:
-1.  **Backend:** A new  endpoint was successfully added to  at the path . This endpoint is responsible for deleting the specified application/match from the database.
+After a long and difficult debugging session where the AI first looked at the wrong file (), the user provided a complete, full-file replacement for . This new code not only fixes the button visibility issue but also completely overhauls the screen's UI to match the new dark, iPhone-style design system being implemented across the app.
 
-2.  **Frontend:** The focus was on the worker's match list in . A Löschen (Delete) button was being added to each match item. A  function was written to call the new backend endpoint using .
-
-However, this frontend modification introduced a critical error. The AI engineer accidentally added a duplicate import statement for , which caused the application to crash with a syntax error. The user reported this crash with a screenshot, and the last action of the previous engineer was to acknowledge this mistake () and prepare to fix it. The work stopped precisely at the point of needing to remove this duplicate import from .
+The last actions taken by the AI were to apply this large patch. It had successfully edited the file with the new JSX structure, was confirming the  function was present, and was about to replace the old  with the new styles provided by the user. The work was interrupted mid-process while applying the new styles. The goal is to make the profile wizard functional and visually consistent with the rest of the application.
 </current_work>
-
 <optional_next_step>
-Fix the duplicate import error in  to resolve the crash and complete the Delete Match functionality for workers.
+I will complete the application of the user-provided patch for  by replacing the remaining input styles and ensuring the entire file matches the new design, then restart Expo to address the caching issue.
 </optional_next_step>

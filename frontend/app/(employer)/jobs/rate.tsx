@@ -12,7 +12,7 @@ import { Job } from '../../../types/job';
 import { WorkerProfile } from '../../../types/profile';
 import { Ionicons } from '@expo/vector-icons';
 
-const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://matchpro-9.preview.emergentagent.com/api';
+const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://uxmatch-redesign.preview.emergentagent.com/api';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
