@@ -1,26 +1,33 @@
 // app/auth/login.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Animated, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Animated,
+  Image
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
   bg: '#0E0B1F',
   card: '#141126',
-  border: 'rgba(255,255,255,0.06)',
-  text: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.6)',
-  purple: '#6B4BFF',
-  purpleDark: '#5941FF',
-  neon: '#C8FF16',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.1)',
-  inputBg: 'rgba(255,255,255,0.05)',
+  white: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
   placeholder: 'rgba(255,255,255,0.4)',
+  purple: '#6B4BFF',
+  purple2: '#7C5CFF',
+  neon: '#C8FF16',
+  border: 'rgba(255,255,255,0.06)',
+  error: '#FF4D4D',
+  errorBg: 'rgba(255,77,77,0.12)'
 };
 
 export default function LoginScreen() {
@@ -47,12 +54,12 @@ export default function LoginScreen() {
       Animated.timing(logoOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.parallel([
         Animated.timing(inputTranslateY, { toValue: 0, duration: 400, useNativeDriver: true }),
-        Animated.timing(inputOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.timing(inputOpacity, { toValue: 1, duration: 400, useNativeDriver: true })
       ]),
       Animated.parallel([
         Animated.timing(buttonTranslateY, { toValue: 0, duration: 300, useNativeDriver: true }),
-        Animated.timing(buttonOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]),
+        Animated.timing(buttonOpacity, { toValue: 1, duration: 300, useNativeDriver: true })
+      ])
     ]).start();
   }, []);
 
@@ -63,7 +70,6 @@ export default function LoginScreen() {
       await login(email.trim().toLowerCase(), password);
       router.replace('/start');
     } catch (err: any) {
-      console.error('Login error in handleLogin:', err);
       setErrorMsg(err.message || 'Login fehlgeschlagen. Bitte überprüfe deine E-Mail und Passwort.');
     } finally {
       setLoading(false);
@@ -71,50 +77,144 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#0E0B1F', '#1A1535', '#0E0B1F']}
-        style={StyleSheet.absoluteFillObject}
-      />
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingHorizontal: 24,
+              paddingVertical: 40
+            }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
 
-      <Animated.View style={[styles.glowCircle, { opacity: logoOpacity }]}>
-        <LinearGradient
-          colors={['rgba(107,75,255,0.3)', 'rgba(107,75,255,0)']}
-          style={StyleSheet.absoluteFillObject}
-        />
-      </Animated.View>
+            {/* HEADER */}
+            <View style={{ marginBottom: 50 }}>
+              <Text
+                style={{
+                  color: COLORS.white,
+                  fontWeight: '900',
+                  fontSize: 28,
+                  letterSpacing: 1
+                }}
+              >
+                BACKUP
+              </Text>
+              <View
+                style={{
+                  marginTop: 8,
+                  height: 4,
+                  width: '100%',
+                  backgroundColor: COLORS.neon
+                }}
+              />
+            </View>
 
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-            
-            <Animated.View style={[styles.logoSection, { opacity: logoOpacity }]}>
-              <View style={styles.logoContainer}>
-                <Image 
-                  source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} 
-                  style={styles.logoImage} 
-                  resizeMode="contain" 
+            {/* LOGO */}
+            <Animated.View style={{ alignItems: 'center', marginBottom: 32, opacity: logoOpacity }}>
+              <View
+                style={{
+                  width: 90,
+                  height: 90,
+                  backgroundColor: COLORS.card,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 1,
+                  borderColor: COLORS.border
+                }}
+              >
+                <Image
+                  source={{
+                    uri:
+                      'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png'
+                  }}
+                  style={{ width: 60, height: 60 }}
+                  resizeMode="contain"
                 />
               </View>
             </Animated.View>
 
-            <Animated.View style={[styles.titleSection, { opacity: logoOpacity }]}>
-              <Text style={styles.title}>Willkommen zurück!</Text>
-              <Text style={styles.subtitle}>Melde dich an und leg direkt los.</Text>
+            {/* HEADLINE */}
+            <Animated.View style={{ marginBottom: 8, opacity: logoOpacity }}>
+              <Text
+                style={{
+                  fontSize: 26,
+                  fontWeight: '800',
+                  color: COLORS.white,
+                  textAlign: 'center'
+                }}
+              >
+                Willkommen zurück
+              </Text>
             </Animated.View>
 
+            <Animated.View style={{ marginBottom: 32, opacity: logoOpacity }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: COLORS.muted,
+                  textAlign: 'center',
+                  fontWeight: '500'
+                }}
+              >
+                Melde dich an und leg los
+              </Text>
+            </Animated.View>
+
+            {/* ERROR */}
             {errorMsg ? (
-              <Animated.View style={[styles.errorContainer, { opacity: inputOpacity }]}>
-                <BlurView intensity={20} tint="dark" style={styles.errorBlur}>
-                  <Text style={styles.errorText}>⚠️ {errorMsg}</Text>
-                </BlurView>
+              <Animated.View
+                style={{
+                  marginBottom: 24,
+                  paddingHorizontal: 16,
+                  paddingVertical: 14,
+                  backgroundColor: COLORS.errorBg,
+                  borderRadius: 12,
+                  borderLeftWidth: 3,
+                  borderLeftColor: COLORS.error,
+                  opacity: inputOpacity
+                }}
+              >
+                <Text style={{ fontSize: 14, color: COLORS.error, fontWeight: '600' }}>
+                  {errorMsg}
+                </Text>
               </Animated.View>
             ) : null}
 
-            <Animated.View style={{ opacity: inputOpacity, transform: [{ translateY: inputTranslateY }] }}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>E-Mail</Text>
-                <View style={[styles.inputContainer, emailFocused && styles.inputFocused]}>
+            {/* INPUTS */}
+            <Animated.View
+              style={{ opacity: inputOpacity, transform: [{ translateY: inputTranslateY }] }}
+            >
+              {/* EMAIL */}
+              <View style={{ marginBottom: 20 }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: COLORS.neon,
+                    marginBottom: 8
+                  }}
+                >
+                  E-Mail
+                </Text>
+
+                <View
+                  style={{
+                    backgroundColor: COLORS.card,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: emailFocused ? COLORS.neon : COLORS.border,
+                    height: 56,
+                    paddingHorizontal: 16,
+                    justifyContent: 'center'
+                  }}
+                >
                   <TextInput
                     autoCapitalize="none"
                     keyboardType="email-address"
@@ -124,14 +224,40 @@ export default function LoginScreen() {
                     onChangeText={setEmail}
                     onFocus={() => setEmailFocused(true)}
                     onBlur={() => setEmailFocused(false)}
-                    style={styles.input}
+                    style={{
+                      fontSize: 16,
+                      color: COLORS.white,
+                      fontWeight: '500'
+                    }}
                   />
                 </View>
               </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Passwort</Text>
-                <View style={[styles.inputContainer, passwordFocused && styles.inputFocused]}>
+              {/* PASSWORD */}
+              <View style={{ marginBottom: 32 }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: COLORS.neon,
+                    marginBottom: 8
+                  }}
+                >
+                  Passwort
+                </Text>
+
+                <View
+                  style={{
+                    backgroundColor: COLORS.card,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: passwordFocused ? COLORS.neon : COLORS.border,
+                    height: 56,
+                    paddingHorizontal: 16,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}
+                >
                   <TextInput
                     placeholder="••••••••"
                     placeholderTextColor={COLORS.placeholder}
@@ -140,10 +266,20 @@ export default function LoginScreen() {
                     onChangeText={setPassword}
                     onFocus={() => setPasswordFocused(true)}
                     onBlur={() => setPasswordFocused(false)}
-                    style={[styles.input, { flex: 1 }]}
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      color: COLORS.white,
+                      fontWeight: '500'
+                    }}
                   />
-                  <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
-                    {showPassword ? <EyeOff size={20} color={COLORS.muted} /> : <Eye size={20} color={COLORS.muted} />}
+
+                  <Pressable onPress={() => setShowPassword(!showPassword)} style={{ paddingLeft: 12 }}>
+                    {showPassword ? (
+                      <EyeOff size={22} color={COLORS.placeholder} />
+                    ) : (
+                      <Eye size={22} color={COLORS.placeholder} />
+                    )}
                   </Pressable>
                 </View>
               </View>
@@ -151,32 +287,47 @@ export default function LoginScreen() {
 
             <View style={{ flex: 1, minHeight: 20 }} />
 
-            <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
-              <Pressable 
-                onPress={handleLogin} 
+            {/* BUTTON + SIGNUP */}
+            <Animated.View
+              style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}
+            >
+              <Pressable
+                onPress={handleLogin}
                 disabled={loading}
-                style={({ pressed }) => [
-                  styles.loginButton,
-                  loading && styles.loginButtonDisabled,
-                  pressed && styles.loginButtonPressed
-                ]}
+                style={({ pressed }) => ({
+                  backgroundColor: loading ? '#999' : COLORS.neon,
+                  height: 56,
+                  borderRadius: 12,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 16,
+                  width: '60%',
+                  maxWidth: 300,
+                  minWidth: 220,
+                  alignSelf: 'center',
+                  opacity: pressed ? 0.9 : 1
+                })}
               >
-                <LinearGradient
-                  colors={loading ? ['#4A4A4A', '#3A3A3A'] : [COLORS.purple, COLORS.purpleDark]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.buttonGradient}
+                <Text
+                  style={{
+                    fontSize: 17,
+                    fontWeight: '700',
+                    color: COLORS.bg
+                  }}
                 >
-                  <Text style={styles.loginButtonText}>
-                    {loading ? 'Lädt...' : 'Einloggen'}
-                  </Text>
-                </LinearGradient>
+                  {loading ? 'Lädt...' : 'Einloggen'}
+                </Text>
               </Pressable>
 
-              <View style={styles.signupSection}>
-                <Text style={styles.signupText}>Noch kein Account?</Text>
+              <View style={{ alignItems: 'center', marginTop: 16 }}>
+                <Text style={{ fontSize: 15, color: COLORS.muted, marginBottom: 8 }}>
+                  Noch kein Account?
+                </Text>
+
                 <Pressable onPress={() => router.push('/auth/signup')}>
-                  <Text style={styles.signupLink}>Registrieren</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>
+                    Registrieren
+                  </Text>
                 </Pressable>
               </View>
             </Animated.View>
@@ -188,146 +339,3 @@ export default function LoginScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.bg,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  glowCircle: {
-    position: 'absolute',
-    top: -100,
-    left: -50,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 40,
-  },
-  logoSection: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  logoContainer: {
-    width: 100,
-    height: 100,
-    backgroundColor: COLORS.purple,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: COLORS.purple,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  logoImage: {
-    width: 70,
-    height: 70,
-  },
-  titleSection: {
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: COLORS.muted,
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  errorContainer: {
-    marginBottom: 24,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  errorBlur: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: COLORS.errorBg,
-    borderLeftWidth: 3,
-    borderLeftColor: COLORS.error,
-  },
-  errorText: {
-    fontSize: 14,
-    color: COLORS.error,
-    fontWeight: '600',
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: COLORS.text,
-    marginBottom: 8,
-  },
-  inputContainer: {
-    backgroundColor: COLORS.inputBg,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: COLORS.border,
-    minHeight: 56,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputFocused: {
-    borderColor: COLORS.purple,
-    backgroundColor: 'rgba(107,75,255,0.05)',
-  },
-  input: {
-    fontSize: 16,
-    color: COLORS.text,
-    fontWeight: '500',
-  },
-  eyeButton: {
-    paddingLeft: 12,
-  },
-  loginButton: {
-    height: 56,
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 24,
-  },
-  loginButtonDisabled: {
-    opacity: 0.6,
-  },
-  loginButtonPressed: {
-    opacity: 0.8,
-  },
-  buttonGradient: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loginButtonText: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: COLORS.text,
-  },
-  signupSection: {
-    alignItems: 'center',
-  },
-  signupText: {
-    fontSize: 15,
-    color: COLORS.muted,
-    marginBottom: 8,
-  },
-  signupLink: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: COLORS.purple,
-  },
-});
