@@ -46,13 +46,13 @@ export default function WelcomeScreen() {
     >
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
 
-        {/* LOGO-BLOCK */}
-        <View
+        {/* LOGO */}
+        <Animated.View
           style={{
-            width: '100%',
+            opacity: fadeLogo,
             alignItems: 'center',
-            marginTop: 100,  // iPhone Notch Abstand
-            marginBottom: 26
+            marginTop: 100,
+            marginBottom: 20
           }}
         >
           <Image
@@ -64,30 +64,36 @@ export default function WelcomeScreen() {
             }}
             resizeMode="contain"
           />
+        </Animated.View>
 
-          {/* Neon-Linie */}
+        {/* NEON LINE */}
+        <Animated.View
+          style={{
+            opacity: fadeLine,
+            alignItems: 'center',
+            marginBottom: 26
+          }}
+        >
           <View
             style={{
               width: 55,
               height: 3,
               backgroundColor: '#C8FF16',
-              borderRadius: 2,
-              marginTop: 14,
-              opacity: 0.9
+              borderRadius: 2
             }}
           />
-        </View>
+        </Animated.View>
 
-        {/* GLAS-PANEL (SLOGAN) */}
-        <View
+        {/* GLASS PANEL */}
+        <Animated.View
           style={{
-            width: '100%',
+            opacity: fadePanel,
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            borderColor: 'rgba(255,255,255,0.07)',
+            borderWidth: 1,
             padding: 24,
             borderRadius: 22,
-            backgroundColor: 'rgba(255,255,255,0.04)',
-            borderWidth: 1,
-            borderColor: 'rgba(255,255,255,0.07)',
-            marginBottom: 32,
+            marginBottom: 32
           }}
         >
           <Text
@@ -96,8 +102,7 @@ export default function WelcomeScreen() {
               fontWeight: '800',
               color: '#FFFFFF',
               textAlign: 'center',
-              marginBottom: 6,
-              lineHeight: 32
+              marginBottom: 6
             }}
           >
             BACKUP. Für Jobs, die jetzt zählen.
@@ -107,17 +112,21 @@ export default function WelcomeScreen() {
             style={{
               fontSize: 15,
               color: 'rgba(255,255,255,0.7)',
-              textAlign: 'center',
-              lineHeight: 20
+              textAlign: 'center'
             }}
           >
             Starte ohne Umwege in deine nächste Schicht.
           </Text>
-        </View>
+        </Animated.View>
 
         {/* BUTTONS */}
-        <View style={{ width: '100%', alignItems: 'center' }}>
-
+        <Animated.View
+          style={{
+            transform: [{ translateY: slideButtons }],
+            alignItems: 'center',
+            width: '100%'
+          }}
+        >
           <Pressable
             onPress={() => router.push('/auth/signup')}
             style={{
@@ -145,8 +154,7 @@ export default function WelcomeScreen() {
               alignItems: 'center',
               width: '60%',
               maxWidth: 300,
-              minWidth: 220,
-              marginBottom: 24
+              minWidth: 220
             }}
           >
             <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
@@ -154,25 +162,26 @@ export default function WelcomeScreen() {
             </Text>
           </Pressable>
 
-          {/* Micro-Hint unter den Buttons – iPhone UX Standard */}
+          {/* Micro-Hint */}
           <Text
             style={{
               fontSize: 13,
-              color: 'rgba(255,255,255,0.55)',
-              marginBottom: 30
+              color: 'rgba(255,255,255,0.5)',
+              marginTop: 22
             }}
           >
-            Deine Anmeldung dauert unter 30 Sekunden.
+            Deine Anmeldung dauert 30 Sekunden.
           </Text>
-        </View>
+        </Animated.View>
 
         {/* FOOTER */}
         <View
           style={{
-            marginBottom: 30,
+            marginTop: 'auto',
             flexDirection: 'row',
             justifyContent: 'center',
-            gap: 12
+            gap: 12,
+            marginBottom: 26
           }}
         >
           <Pressable onPress={() => router.push('/legal/agb')}>
@@ -197,8 +206,7 @@ export default function WelcomeScreen() {
             </Text>
           </Pressable>
         </View>
-
       </SafeAreaView>
-    </View>
+    </LinearGradient>
   );
 }
