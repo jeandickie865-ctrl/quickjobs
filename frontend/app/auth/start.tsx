@@ -3,33 +3,48 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, Pressable, Image, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { BlurView } from 'expo-blur';
-
-const COLORS = {
-  bg: '#0E0B1F',
-  card: '#141126',
-  purple: '#6B4BFF',
-  purpleLight: '#7C5CFF',
-  white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)'
-};
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const fade = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.92)).current;
-  const glowSize = 200;
+
+  // Animations
+  const fadeLogo = useRef(new Animated.Value(0)).current;
+  const fadeLine = useRef(new Animated.Value(0)).current;
+  const fadePanel = useRef(new Animated.Value(0)).current;
+  const slideButtons = useRef(new Animated.Value(30)).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fade, { toValue: 1, duration: 600, useNativeDriver: true }),
-      Animated.spring(scale, { toValue: 1, tension: 40, friction: 8, useNativeDriver: true })
+    Animated.sequence([
+      Animated.timing(fadeLogo, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true
+      }),
+      Animated.timing(fadeLine, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true
+      }),
+      Animated.timing(fadePanel, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true
+      }),
+      Animated.timing(slideButtons, {
+        toValue: 0,
+        duration: 450,
+        useNativeDriver: true
+      })
     ]).start();
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
+    <LinearGradient
+      colors={['#0E0B1F', '#141126']}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
 
         {/* LOGO-BLOCK */}
         <View
