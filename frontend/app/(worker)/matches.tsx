@@ -20,6 +20,7 @@ import { getAuthHeaders } from '../../utils/api';
 // BACKUP NEON-TECH COLORS
 const COLORS = {
   purple: '#5941FF',
+  secondaryPurple: '#7A63FF',
   neon: '#C8FF16',
   white: '#FFFFFF',
   black: '#000000',
