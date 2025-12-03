@@ -9,12 +9,15 @@ import { API_URL } from "../../config";
 import { getAuthHeaders } from "../../utils/api";
 
 const COLORS = {
-  purple: "#5941FF",
+  background: "#0E0B1F",
+  card: "#141126",
   neon: "#C8FF16",
   white: "#FFFFFF",
-  black: "#000000",
+  lightText: "#E8E8E8",
+  dimText: "#A0A0A0",
+  border: "#2A2738",
   gray: "#DDDDDD",
-  darkGray: "#333333",
+  black: "#000000",
 };
 
 export default function PaymentScreen() {
