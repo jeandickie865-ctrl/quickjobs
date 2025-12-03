@@ -370,14 +370,15 @@ export default function WorkerMatchesScreen() {
                 <View
                   key={application.id}
                   style={{
-                    backgroundColor: COLORS.cardBg,
-                    borderRadius: 20,
+                    backgroundColor: 'rgba(255,255,255,0.06)',
+                    borderRadius: 18,
                     padding: 20,
+                    marginBottom: 22,
                     borderWidth: 1,
-                    borderColor: COLORS.cardBorder,
+                    borderColor: 'rgba(255,255,255,0.12)',
                     shadowColor: '#000',
                     shadowOpacity: 0.15,
-                    shadowRadius: 14,
+                    shadowRadius: 12,
                     shadowOffset: { width: 0, height: 6 },
                   }}
                 >
