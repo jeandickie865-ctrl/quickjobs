@@ -420,19 +420,19 @@ export function WorkerProfileEmployerView({
                       {isAccepted ? (
                         <>
                           {profile.homeAddress.street && (
-                            <Text style={{ fontSize: 15, color: COLORS.muted }}>
+                            <Text style={{ fontSize: 15, color: COLORS.lightText }}>
                               {profile.homeAddress.street}{' '}
                               {profile.homeAddress.houseNumber || ''}
                             </Text>
                           )}
                           {(profile.homeAddress.postalCode || profile.homeAddress.city) && (
-                            <Text style={{ fontSize: 15, color: COLORS.muted }}>
+                            <Text style={{ fontSize: 15, color: COLORS.lightText }}>
                               {profile.homeAddress.postalCode || ''}{' '}
                               {profile.homeAddress.city || ''}
                             </Text>
                           )}
                           {profile.homeAddress.country && (
-                            <Text style={{ fontSize: 15, color: COLORS.muted }}>
+                            <Text style={{ fontSize: 15, color: COLORS.lightText }}>
                               {profile.homeAddress.country}
                             </Text>
                           )}
