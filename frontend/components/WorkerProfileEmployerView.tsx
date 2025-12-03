@@ -665,7 +665,7 @@ export function WorkerProfileEmployerView({
                             marginBottom: 4,
                           }}
                         >
-                          <Ionicons name="mail-outline" size={16} color={COLORS.muted} />
+                          <Ionicons name="mail-outline" size={16} color={COLORS.dimText} />
                           <Text
                             style={{
                               fontSize: 12,
