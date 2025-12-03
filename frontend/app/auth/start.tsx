@@ -31,16 +31,15 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
+        {/* LOGO-BLOCK */}
         <View
           style={{
             width: '100%',
             alignItems: 'center',
-            marginTop: 90,
-            marginBottom: 32
+            marginTop: 100,  // iPhone Notch Abstand
+            marginBottom: 26
           }}
         >
-
-          {/* Logo */}
           <Image
             source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
             style={{
@@ -54,28 +53,26 @@ export default function WelcomeScreen() {
           {/* Neon-Linie */}
           <View
             style={{
-              width: 60,
-              height: 4,
+              width: 55,
+              height: 3,
               backgroundColor: '#C8FF16',
               borderRadius: 2,
               marginTop: 14,
               opacity: 0.9
             }}
           />
-
         </View>
 
-        {/* Textpanel */}
+        {/* GLAS-PANEL (SLOGAN) */}
         <View
           style={{
             width: '100%',
             padding: 24,
-            borderRadius: 20,
-            borderWidth: 1,
-            borderColor: 'rgba(255,255,255,0.06)',
+            borderRadius: 22,
             backgroundColor: 'rgba(255,255,255,0.04)',
-            marginTop: 24,
-            marginBottom: 28
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.07)',
+            marginBottom: 32,
           }}
         >
           <Text
@@ -84,7 +81,8 @@ export default function WelcomeScreen() {
               fontWeight: '800',
               color: '#FFFFFF',
               textAlign: 'center',
-              marginBottom: 6
+              marginBottom: 6,
+              lineHeight: 32
             }}
           >
             BACKUP. Für Jobs, die jetzt zählen.
@@ -94,16 +92,17 @@ export default function WelcomeScreen() {
             style={{
               fontSize: 15,
               color: 'rgba(255,255,255,0.7)',
-              textAlign: 'center'
+              textAlign: 'center',
+              lineHeight: 20
             }}
           >
             Starte ohne Umwege in deine nächste Schicht.
           </Text>
         </View>
 
-        {/* Buttons */}
+        {/* BUTTONS */}
         <View style={{ width: '100%', alignItems: 'center' }}>
-          
+
           <Pressable
             onPress={() => router.push('/auth/signup')}
             style={{
@@ -114,7 +113,7 @@ export default function WelcomeScreen() {
               width: '60%',
               maxWidth: 300,
               minWidth: 220,
-              marginBottom: 12
+              marginBottom: 14
             }}
           >
             <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
@@ -131,7 +130,8 @@ export default function WelcomeScreen() {
               alignItems: 'center',
               width: '60%',
               maxWidth: 300,
-              minWidth: 220
+              minWidth: 220,
+              marginBottom: 24
             }}
           >
             <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
@@ -139,20 +139,47 @@ export default function WelcomeScreen() {
             </Text>
           </Pressable>
 
+          {/* Micro-Hint unter den Buttons – iPhone UX Standard */}
+          <Text
+            style={{
+              fontSize: 13,
+              color: 'rgba(255,255,255,0.55)',
+              marginBottom: 30
+            }}
+          >
+            Deine Anmeldung dauert unter 30 Sekunden.
+          </Text>
         </View>
 
-        {/* Legal */}
-        <View style={{ marginTop: 40, flexDirection: 'row', gap: 12 }}>
+        {/* FOOTER */}
+        <View
+          style={{
+            marginBottom: 30,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            gap: 12
+          }}
+        >
           <Pressable onPress={() => router.push('/legal/agb')}>
-            <Text style={{ fontSize: 13, color: COLORS.muted, textDecorationLine: 'underline' }}>AGB</Text>
+            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecorationLine: 'underline' }}>
+              AGB
+            </Text>
           </Pressable>
-          <Text style={{ fontSize: 13, color: COLORS.muted }}>•</Text>
+
+          <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>•</Text>
+
           <Pressable onPress={() => router.push('/legal/privacy')}>
-            <Text style={{ fontSize: 13, color: COLORS.muted, textDecorationLine: 'underline' }}>Datenschutz</Text>
+            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecorationLine: 'underline' }}>
+              Datenschutz
+            </Text>
           </Pressable>
-          <Text style={{ fontSize: 13, color: COLORS.muted }}>•</Text>
+
+          <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>•</Text>
+
           <Pressable onPress={() => router.push('/legal/impressum')}>
-            <Text style={{ fontSize: 13, color: COLORS.muted, textDecorationLine: 'underline' }}>Impressum</Text>
+            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecorationLine: 'underline' }}>
+              Impressum
+            </Text>
           </Pressable>
         </View>
 
