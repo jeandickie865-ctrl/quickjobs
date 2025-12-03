@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://uxmatch-redesign.preview.emergentagent.com`
-- Backend: `https://uxmatch-redesign.preview.emergentagent.com/api`
+- Frontend: `https://iphone-profile-tabs.preview.emergentagent.com`
+- Backend: `https://iphone-profile-tabs.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)

@@ -1,6 +1,6 @@
 export const API_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  "https://uxmatch-redesign.preview.emergentagent.com/api";
+  "https://iphone-profile-tabs.preview.emergentagent.com/api";
 
 export const APP_VERSION = "1.0.0";
 
