@@ -274,9 +274,14 @@ export function WorkerProfileEmployerView({
                 style={{
                   backgroundColor: COLORS.card,
                   paddingHorizontal: 20,
+                  paddingTop: 24,
                   paddingBottom: 30,
-                  paddingTop: 20,
                   alignItems: 'center',
+                  marginHorizontal: 16,
+                  marginTop: 16,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  borderColor: COLORS.border,
                 }}
               >
                 {/* Profile Image */}
