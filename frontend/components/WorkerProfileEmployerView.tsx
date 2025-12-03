@@ -311,7 +311,7 @@ export function WorkerProfileEmployerView({
                       marginBottom: 16,
                     }}
                   >
-                    <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.white }}>
+                    <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.neon }}>
                       {getInitials()}
                     </Text>
                   </View>
