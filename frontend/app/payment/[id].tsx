@@ -67,10 +67,8 @@ export default function PaymentScreen() {
         setWorkerProfile(workerData);
       }
 
-      // Wenn bereits bezahlt, direkt zu Registration
-      if (data.paymentStatus === "paid") {
-        router.replace(`/(employer)/registration/${applicationId}`);
-      }
+      // Auto-Redirect deaktiviert, Modal-Logik übernimmt nach Zahlung
+      console.log("paymentStatus:", data.paymentStatus);
     } catch (err) {
       console.error("Load application error:", err);
       Alert.alert("Fehler", "Application konnte nicht geladen werden");
