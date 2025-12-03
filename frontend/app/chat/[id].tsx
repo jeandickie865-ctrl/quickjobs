@@ -1,4 +1,4 @@
-// app/chat/[id].tsx — FINAL WHATSAPP-STYLE CHAT
+// app/chat/[id].tsx – BACKUP DARK DESIGN
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, FlatList, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,12 +11,14 @@ import { loadMessages, sendMessage, checkChatUnlocked } from "../../utils/chatSt
 import { getApplicationById } from "../../utils/applicationStore";
 
 const COLORS = {
-  purple: "#5941FF",
-  neon: "#C8FF16",
-  white: "#FFFFFF",
-  black: "#000000",
-  gray: "#DDDDDD",
-  darkGray: "#333333",
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  white: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
+  neon: '#C8FF16',
+  inputBg: '#1C182B',
 };
 
 export default function ChatScreen() {
@@ -38,55 +40,36 @@ export default function ChatScreen() {
   const flatListRef = useRef<FlatList>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // --------------------------------------------
-  // LOAD CHAT INITIAL + AUTO-REFRESH
-  // --------------------------------------------
   useEffect(() => {
     let mounted = true;
     let isFirstLoad = true;
 
     async function loadChat() {
       try {
-        console.log("CHAT → loadChat() gestartet", applicationId);
-        
-        // Nur beim ersten Laden Loading anzeigen
         if (isFirstLoad) {
           setLoading(true);
           isFirstLoad = false;
         }
 
-        // 1. Unlock-Check
         const isUnlocked = await checkChatUnlocked(applicationId);
-        console.log("CHAT → isUnlocked:", isUnlocked);
-
         if (!isUnlocked) {
           setLocked(true);
           setLoading(false);
           return;
         }
 
-        // 2. Messages laden
         const msgs = await loadMessages(applicationId);
-        console.log("CHAT → messages loaded:", msgs);
-
-        if (mounted) {
-          setMessages(msgs || []);
-        }
-
+        if (mounted) setMessages(msgs || []);
       } catch (err) {
         console.log("CHAT ERROR:", err);
-        console.log("CHAT ERROR RESPONSE:", err?.response?.data);
       } finally {
         if (mounted) setLoading(false);
       }
     }
 
     loadChat();
-
     intervalRef.current = setInterval(() => {
-      if (mounted && isFocused && !locked) {
-        loadChat();
-      }
+      if (mounted && isFocused && !locked) loadChat();
     }, 4000);
 
     return () => {
@@ -95,57 +78,38 @@ export default function ChatScreen() {
     };
   }, [applicationId]);
 
-  // --------------------------------------------
-  // AUTO SCROLL TO BOTTOM
-  // --------------------------------------------
   useEffect(() => {
     if (flatListRef.current) {
-      setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 50);
+      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 50);
     }
   }, [messages]);
 
-  // --------------------------------------------
-  // TYPING TIMEOUT - Reset nach 800ms Pause
-  // --------------------------------------------
   useEffect(() => {
     if (!isTyping) return;
     const timeout = setTimeout(() => setIsTyping(false), 800);
     return () => clearTimeout(timeout);
   }, [isTyping]);
 
-  // --------------------------------------------
-  // SEND MESSAGE
-  // --------------------------------------------
   async function handleSend() {
-    if (sending) return;
-    if (!text.trim()) return;
-    if (locked) return;
+    if (sending || !text.trim() || locked) return;
 
     try {
       setSending(true);
-
       const msg = await sendMessage(applicationId, text.trim());
       setMessages((prev) => [...prev, msg]);
       setText("");
-
     } catch (err) {
       console.log("Send error:", err);
-      if (String(err).includes("CHAT_LOCKED")) {
-        setLocked(true);
-      }
+      if (String(err).includes("CHAT_LOCKED")) setLocked(true);
     } finally {
       setSending(false);
     }
   }
 
-  // --------------------------------------------
-  // UI: Locked state
-  // --------------------------------------------
+  // LOCKED STATE
   if (locked) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ padding: 20 }}>
           <Pressable onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
@@ -157,21 +121,25 @@ export default function ChatScreen() {
           <Text style={{ color: COLORS.white, fontSize: 22, fontWeight: "700", marginTop: 12 }}>
             Chat gesperrt
           </Text>
-          <Text style={{ color: COLORS.white, marginTop: 6, textAlign: "center" }}>
+          <Text style={{ color: COLORS.muted, marginTop: 6, textAlign: "center" }}>
             Du kannst erst schreiben, nachdem die 20% Provision bezahlt wurde.
           </Text>
 
           <Pressable
             onPress={() => router.push(`/payment/${applicationId}`)}
             style={{
-              backgroundColor: COLORS.neon,
+              backgroundColor: COLORS.purple,
               paddingHorizontal: 24,
               paddingVertical: 14,
               borderRadius: 12,
               marginTop: 24,
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
+              alignItems: 'center',
             }}
           >
-            <Text style={{ fontWeight: "700", color: COLORS.black }}>
+            <Text style={{ fontWeight: "700", color: COLORS.white }}>
               Jetzt freischalten
             </Text>
           </Pressable>
@@ -180,34 +148,26 @@ export default function ChatScreen() {
     );
   }
 
-  // --------------------------------------------
-  // UI: Loading
-  // --------------------------------------------
+  // LOADING
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator color={COLORS.neon} size="large" />
         <Text style={{ color: COLORS.white, marginTop: 10 }}>Lade Chat...</Text>
       </View>
     );
   }
 
-  // --------------------------------------------
-  // UI: Chat
-  // --------------------------------------------
+  // CHAT
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: COLORS.purple }}
+      style={{ flex: 1, backgroundColor: COLORS.bg }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={90}
     >
       {/* HEADER */}
       <SafeAreaView edges={["top"]}>
-        <View style={{
-          flexDirection: "row",
-          alignItems: "center",
-          padding: 16
-        }}>
+        <View style={{ flexDirection: "row", alignItems: "center", padding: 16 }}>
           <Pressable onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
           </Pressable>
@@ -228,29 +188,34 @@ export default function ChatScreen() {
           return (
             <View
               style={{
-                padding: 10,
+                padding: 12,
                 marginVertical: 4,
-                maxWidth: "80%",
+                marginHorizontal: 16,
+                maxWidth: "75%",
                 alignSelf: isOwn ? "flex-end" : "flex-start",
-                backgroundColor: isOwn ? COLORS.neon : COLORS.white,
-                borderRadius: 14,
+                backgroundColor: isOwn ? COLORS.neon : COLORS.card,
+                borderRadius: 16,
+                borderWidth: isOwn ? 0 : 1,
+                borderColor: COLORS.border,
               }}
             >
-              <Text style={{ color: isOwn ? COLORS.black : COLORS.darkGray }}>
+              <Text style={{ color: isOwn ? '#000' : COLORS.white, fontSize: 15 }}>
                 {item.text}
               </Text>
             </View>
           );
         }}
-        contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingVertical: 16, paddingBottom: 40 }}
       />
 
-      {/* INPUT */}
+      {/* INPUT BAR */}
       <View style={{
         flexDirection: "row",
         alignItems: "center",
         padding: 14,
-        backgroundColor: COLORS.white,
+        backgroundColor: COLORS.card,
+        borderTopWidth: 1,
+        borderTopColor: COLORS.border,
       }}>
         <TextInput
           value={text}
@@ -261,11 +226,15 @@ export default function ChatScreen() {
           onFocus={() => setInputFocused(true)}
           onBlur={() => setInputFocused(false)}
           placeholder="Nachricht..."
+          placeholderTextColor={COLORS.muted}
           style={{
             flex: 1,
             padding: 14,
-            backgroundColor: COLORS.gray,
+            backgroundColor: COLORS.inputBg,
             borderRadius: 12,
+            color: COLORS.white,
+            borderWidth: 1,
+            borderColor: COLORS.border,
           }}
         />
 
@@ -275,11 +244,11 @@ export default function ChatScreen() {
           style={{
             marginLeft: 12,
             padding: 12,
-            backgroundColor: sending ? COLORS.gray : COLORS.neon,
+            backgroundColor: sending || !text.trim() ? 'rgba(255,255,255,0.15)' : COLORS.neon,
             borderRadius: 12,
           }}
         >
-          <Ionicons name="send" size={22} color={COLORS.black} />
+          <Ionicons name="send" size={22} color={sending || !text.trim() ? COLORS.muted : '#000'} />
         </Pressable>
       </View>
     </KeyboardAvoidingView>
