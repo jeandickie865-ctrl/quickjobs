@@ -489,18 +489,29 @@ export default function WorkerMatchesScreen() {
 
                     {/* Bewertung */}
                     <Pressable
-                      onPress={() =>
-                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`)
-                      }
+                      onPress={() => {
+                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
+                      }}
                       style={{
-                        borderWidth: 1,
-                        borderColor: COLORS.purple,
+                        backgroundColor: COLORS.purple,
                         paddingVertical: 12,
                         borderRadius: 14,
-                        alignItems: "center"
+                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 15, fontWeight: "600", color: COLORS.purple }}>
+                      <Ionicons 
+                        name="star-outline" 
+                        size={18} 
+                        color={COLORS.accent} 
+                        style={{ marginRight: 8 }} 
+                      />
+                      <Text style={{ 
+                        fontSize: 15, 
+                        fontWeight: "700", 
+                        color: COLORS.white 
+                      }}>
                         Arbeitgeber bewerten
                       </Text>
                     </Pressable>
