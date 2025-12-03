@@ -221,7 +221,7 @@ export function WorkerProfileEmployerView({
         <View
           style={{
             flex: 1,
-            backgroundColor: COLORS.bg,
+            backgroundColor: COLORS.background,
             marginTop: 60,
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
