@@ -110,23 +110,20 @@ export default function PaymentScreen() {
     console.log("CHECK workerProfile:", workerProfile);
 
     if (!workerProfile) {
-      console.log("NO workerProfile. Stay on payment screen.");
-      Alert.alert("Fehler", "Worker-Profil konnte nicht geladen werden.");
+      console.log("NO workerProfile");
+      Alert.alert("Fehler", "Worker-Daten fehlen.");
       return;
     }
 
-    const isSelfEmployed = workerProfile.isSelfEmployed === true;
-    console.log("RESOLVED isSelfEmployed:", isSelfEmployed);
+    const isSelf = workerProfile.isSelfEmployed === true;
 
-    // Fall A: Employer = private UND Worker nicht selbstständig → Private-Hinweis-Popup
-    if (user?.accountType === "private" && !isSelfEmployed) {
-      console.log("SHOW PRIVATE EMPLOYER MODAL");
+    // PRIVATE + NICHT selbstständig → Private Modal
+    if (user?.accountType === "private" && !isSelf) {
       setShowPrivateEmployerModal(true);
       return;
     }
 
-    // Fall B: Employer ≠ private ODER Worker selbstständig → Standard-Anmeldemodal
-    console.log("SHOW STANDARD REGISTRATION MODAL");
+    // BUSINESS oder selbstständig → Business Modal
     setShowRegistrationModal(true);
   };
 
