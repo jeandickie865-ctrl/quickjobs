@@ -417,12 +417,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.card,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     fontSize: 16,
-    color: COLORS.black,
+    color: COLORS.text,
   },
   textArea: {
     minHeight: 100,
