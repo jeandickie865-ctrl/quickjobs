@@ -280,15 +280,15 @@ export default function MatchesScreen() {
 
       {/* Header */}
       <SafeAreaView edges={['top']}>
-        <View style={{
-          paddingHorizontal: 20,
-          paddingVertical: 16,
-        }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>
+        <View style={{ paddingHorizontal: 20, paddingVertical: 16 }}>
+          <Text style={{ 
+            fontSize: 26, 
+            fontWeight: '900', 
+            color: COLORS.white,
+            letterSpacing: 0.3,
+            textAlign: 'center' 
+          }}>
             Meine Matches
-          </Text>
-          <Text style={{ fontSize: 14, color: COLORS.white, opacity: 0.7, textAlign: 'center', marginTop: 4 }}>
-            Alle bestätigten Arbeitsverhältnisse
           </Text>
         </View>
       </SafeAreaView>
