@@ -489,7 +489,7 @@ export function WorkerProfileEmployerView({
                           style={{
                             fontSize: 12,
                             fontWeight: '700',
-                            color: COLORS.muted,
+                            color: COLORS.dimText,
                             marginBottom: 8,
                           }}
                         >
@@ -524,7 +524,7 @@ export function WorkerProfileEmployerView({
                           style={{
                             fontSize: 12,
                             fontWeight: '700',
-                            color: COLORS.muted,
+                            color: COLORS.dimText,
                             marginBottom: 8,
                           }}
                         >
@@ -559,7 +559,7 @@ export function WorkerProfileEmployerView({
                           style={{
                             fontSize: 12,
                             fontWeight: '700',
-                            color: COLORS.muted,
+                            color: COLORS.dimText,
                             marginBottom: 8,
                           }}
                         >
@@ -596,7 +596,7 @@ export function WorkerProfileEmployerView({
                           style={{
                             fontSize: 12,
                             fontWeight: '700',
-                            color: COLORS.muted,
+                            color: COLORS.dimText,
                             marginBottom: 8,
                           }}
                         >
@@ -670,7 +670,7 @@ export function WorkerProfileEmployerView({
                             style={{
                               fontSize: 12,
                               fontWeight: '700',
-                              color: COLORS.muted,
+                              color: COLORS.dimText,
                               marginLeft: 6,
                             }}
                           >
@@ -703,7 +703,7 @@ export function WorkerProfileEmployerView({
                             style={{
                               fontSize: 12,
                               fontWeight: '700',
-                              color: COLORS.muted,
+                              color: COLORS.dimText,
                               marginLeft: 6,
                             }}
                           >
