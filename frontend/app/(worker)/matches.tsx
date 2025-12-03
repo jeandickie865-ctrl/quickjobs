@@ -463,16 +463,25 @@ export default function WorkerMatchesScreen() {
                       }}
                       disabled={application.paymentStatus !== "paid"}
                       style={{
-                        backgroundColor: application.paymentStatus === "paid" ? COLORS.accent : "#666",
+                        backgroundColor: COLORS.purple,
                         paddingVertical: 14,
                         borderRadius: 14,
                         alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        opacity: application.paymentStatus === "paid" ? 1 : 0.5,
                       }}
                     >
-                      <Text style={{
-                        fontSize: 16,
-                        fontWeight: "700",
-                        color: application.paymentStatus === "paid" ? COLORS.black : "#BBB"
+                      <Ionicons 
+                        name="chatbubble-ellipses-outline" 
+                        size={18} 
+                        color={COLORS.accent} 
+                        style={{ marginRight: 8 }} 
+                      />
+                      <Text style={{ 
+                        fontSize: 16, 
+                        fontWeight: "700", 
+                        color: COLORS.white 
                       }}>
                         {application.paymentStatus === "paid" ? "Zum Chat" : "Warte auf Zahlung"}
                       </Text>
