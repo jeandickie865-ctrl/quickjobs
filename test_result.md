@@ -2496,3 +2496,60 @@ agent_communication:
       - ✅ Vollständige Integration mit Payment-System (Chat Unlock)
       
       **Status:** Feature erfolgreich getestet und einsatzbereit
+
+  - agent: "main"
+    message: |
+      **Feature: Worker Edit-Profile Screen - Tab-basiertes Layout**
+      
+      **Problem:**
+      Benutzer meldete: "wieder so voll für iPhone" - Die edit-profile.tsx Seite war eine einzige lange Scroll-Seite mit 5 Sections, zu überladen für ein iPhone-Display.
+      
+      **Implementierte Lösung:**
+      Komplette Refaktorierung der Datei zu einem Tab-basierten Layout:
+      
+      1. **Tab-Navigation hinzugefügt:**
+         - 5 Tabs: "Basis", "Adresse", "Kategorien", "Kontakt", "Radius"
+         - Horizontales Scroll-Menü mit Ionicons
+         - Aktiver Tab wird mit Neon-Grün (#C8FF16) hervorgehoben
+         - Inaktive Tabs: Dunkelgrauer Hintergrund (#1C182B)
+      
+      2. **Content-Organisation:**
+         - Jeder Tab zeigt nur seine eigene Section
+         - Conditional Rendering: {activeTab === 'basis' && ...}
+         - Alle 5 Sections bleiben auf einer Seite (kein Multi-Step)
+         - State Management bleibt unverändert
+      
+      3. **Layout-Verbesserungen:**
+         - Tab-Bar unter dem BACKUP Header
+         - Fixer "Profil speichern" Button unten mit SafeAreaView
+         - Mehr Platz für Content, weniger Scrollen nötig
+         - Bessere Übersichtlichkeit auf kleinen Screens
+      
+      4. **Beibehaltene Funktionalität:**
+         - ✅ Alle State-Variablen unverändert
+         - ✅ Address Autocomplete funktioniert weiterhin
+         - ✅ Kategorien/Unterkategorien-Logik bleibt gleich
+         - ✅ Validation und API-Calls identisch
+         - ✅ Photo Upload unverändert
+      
+      **BACKUP Dark Theme beibehalten:**
+      - Hintergrund: #0E0B1F
+      - Cards: #141126
+      - Neon-Akzent: #C8FF16
+      - Tab-Navigation passt zum Theme
+      
+      **Technische Details:**
+      - File: app/(worker)/edit-profile.tsx (komplett neu geschrieben)
+      - Alte Version gesichert als: edit-profile-old-backup.tsx
+      - Keine API-Änderungen erforderlich
+      - Reine Frontend UI-Reorganisation
+      
+      **Erwartetes Verhalten:**
+      - Benutzer sieht 5 Tabs statt einer langen Seite
+      - Klick auf Tab zeigt nur relevante Section
+      - Bessere mobile UX, weniger überladen
+      - "Profil speichern" Button bleibt immer sichtbar unten
+      
+      **Nächste Schritte:**
+      - Backend Testing (sollte keine Änderungen zeigen)
+      - Dann User fragen ob Frontend-Testing gewünscht ist
