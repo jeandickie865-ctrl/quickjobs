@@ -163,15 +163,18 @@ export default function PaymentScreen() {
       console.log("✅ Payment successful!");
       setProcessing(false);
 
-      console.log("Payment OK. Checking registration / modal logic now...");
-      console.log("PAYMENT OK → CHECKING MODAL CONDITIONS");
-      console.log("USER accountType:", user?.accountType);
-      console.log("WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
-      console.log("JOB:", job);
+      console.log("🔍 [PAYMENT] BEFORE RELOAD:");
+      console.log("🔍 [PAYMENT] USER accountType:", user?.accountType);
+      console.log("🔍 [PAYMENT] WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
+      console.log("🔍 [PAYMENT] JOB:", job);
 
-      console.log("Re-loading application after payment…");
+      console.log("🔍 [PAYMENT] Re-loading application after payment…");
       await loadApplication(); // Daten refreshen
-      console.log("Reload complete. Checking modal conditions again…");
+      
+      console.log("🔍 [PAYMENT] AFTER RELOAD:");
+      console.log("🔍 [PAYMENT] WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
+      console.log("🔍 [PAYMENT] Calling handleRegistrationCheck now...");
+      
       await handleRegistrationCheck();
       
     } catch (err) {
