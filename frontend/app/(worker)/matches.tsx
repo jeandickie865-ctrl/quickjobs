@@ -521,7 +521,7 @@ export default function WorkerMatchesScreen() {
                                     headers,
                                     body: JSON.stringify({ decision: 'deny' }),
                                   });
-                                  loadApplications();
+                                  loadMatches();
                                 } catch (err) {
                                   console.error('Deny registration failed:', err);
                                 }
