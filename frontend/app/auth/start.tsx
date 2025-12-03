@@ -36,9 +36,20 @@ export default function WelcomeScreen() {
             opacity: fade,
             transform: [{ scale }],
             marginTop: 100,
-            marginBottom: 40
+            marginBottom: 40,
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
+          <View
+            style={{
+              position: 'absolute',
+              width: 180,
+              height: 180,
+              backgroundColor: 'rgba(107,75,255,0.18)',
+              borderRadius: 999,
+            }}
+          />
           <Image
             source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
             style={{ width: 150, height: 150 }}
