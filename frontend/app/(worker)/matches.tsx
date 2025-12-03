@@ -24,6 +24,7 @@ const COLORS = {
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
+  lightGray: '#CCCCCC',
   neonShadow: 'rgba(200,255,22,0.15)',
   dimmed: 'rgba(0,0,0,0.7)',
   textPrimary: "#000000",
