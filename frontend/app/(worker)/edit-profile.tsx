@@ -76,6 +76,11 @@ export default function EditWorkerProfileScreen() {
   const [availableSubcategories, setAvailableSubcategories] = useState<{ key: string; label: string }[]>([]);
   const [availableQualifications, setAvailableQualifications] = useState<{ key: string; label: string }[]>([]);
 
+  // OSM Autocomplete
+  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (authLoading || !user) return;
     loadProfile();
