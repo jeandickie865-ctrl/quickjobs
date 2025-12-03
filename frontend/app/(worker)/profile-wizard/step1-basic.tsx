@@ -12,13 +12,13 @@ import { useWizard } from '../../../contexts/WizardContext';
 import { getWorkerProfile } from '../../../utils/profileStore';
 
 const COLORS = {
-  purple: '#5941FF',
-  purpleDark: '#3E2DD9',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
   neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
-  gray: '#999',
-  lightGray: '#F5F5F5',
   error: '#FF4D4D',
 };
 
