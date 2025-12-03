@@ -18,6 +18,7 @@ export default function WelcomeScreen() {
   const router = useRouter();
   const fade = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.92)).current;
+  const glowSize = 200;
 
   useEffect(() => {
     Animated.parallel([
@@ -30,29 +31,55 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
-        {/* Logo */}
+        {/* Soft Ambient Light */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: -120,
+            width: 600,
+            height: 600,
+            backgroundColor: 'rgba(123,92,255,0.20)',
+            borderRadius: 300,
+            opacity: fade,
+          }}
+        />
+
+        {/* Purple Halo */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: 40,
+            width: glowSize,
+            height: glowSize,
+            backgroundColor: 'rgba(123,92,255,0.45)',
+            borderRadius: 999,
+            opacity: fade,
+            transform: [{ scale }],
+            shadowColor: '#6B4BFF',
+            shadowOpacity: 0.6,
+            shadowRadius: 60,
+          }}
+        />
+
+        {/* Logo mit Purple Tint + Outline */}
         <Animated.View
           style={{
             opacity: fade,
             transform: [{ scale }],
-            marginTop: 100,
+            marginTop: 120,
             marginBottom: 40,
-            alignItems: 'center',
-            justifyContent: 'center'
           }}
         >
-          <View
-            style={{
-              position: 'absolute',
-              width: 180,
-              height: 180,
-              backgroundColor: 'rgba(107,75,255,0.18)',
-              borderRadius: 999,
-            }}
-          />
           <Image
             source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
-            style={{ width: 150, height: 150 }}
+            style={{
+              width: 150,
+              height: 150,
+              tintColor: '#6B4BFF',
+              shadowColor: '#FFFFFF',
+              shadowOpacity: 0.15,
+              shadowRadius: 8
+            }}
             resizeMode="contain"
           />
         </Animated.View>
