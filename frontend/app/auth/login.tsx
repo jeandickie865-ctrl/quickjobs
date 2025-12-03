@@ -1,20 +1,26 @@
 // app/auth/login.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Animated, Image } from 'react-native';
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Animated, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
-  purple: '#5941FF',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.6)',
+  purple: '#6B4BFF',
+  purpleDark: '#5941FF',
   neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
   error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.12)',
-  placeholder: '#8A8A8A',
+  errorBg: 'rgba(255,77,77,0.1)',
+  inputBg: 'rgba(255,255,255,0.05)',
+  placeholder: 'rgba(255,255,255,0.4)',
 };
 
 export default function LoginScreen() {
