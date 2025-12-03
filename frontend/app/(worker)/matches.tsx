@@ -616,37 +616,8 @@ export default function WorkerMatchesScreen() {
 
                       <Pressable
                         onPress={() => {
-                          Alert.alert(
-                            'Match löschen',
-                            'Möchtest du diesen Match wirklich löschen?',
-                            [
-                              {
-                                text: 'Abbrechen',
-                                style: 'cancel'
-                              },
-                              {
-                                text: 'Löschen',
-                                style: 'destructive',
-                                onPress: async () => {
-                                  try {
-                                    const headers = await getAuthHeaders();
-                                    const res = await fetch(`${API_URL}/applications/${application.id}`, {
-                                      method: 'DELETE',
-                                      headers,
-                                    });
-                                    if (res.ok) {
-                                      loadMatches();
-                                    } else {
-                                      Alert.alert('Fehler', 'Match konnte nicht gelöscht werden.');
-                                    }
-                                  } catch (err) {
-                                    console.error(err);
-                                    Alert.alert('Fehler', 'Match konnte nicht gelöscht werden.');
-                                  }
-                                }
-                              }
-                            ]
-                          );
+                          setApplicationToDelete(application.id);
+                          setDeleteModalVisible(true);
                         }}
                         style={({ pressed }) => ({
                           backgroundColor: '#FF4D4D',
