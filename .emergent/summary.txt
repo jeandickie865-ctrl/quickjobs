@@ -1,91 +1,88 @@
 <analysis>
-The trajectory details an extensive, iterative UI/UX overhaul of the ShiftMatch application, driven by a German-speaking user providing specific code patches and design directives. The core goal was to unify the app's aesthetic under a consistent, modern, dark iPhone-style theme, referred to as the BACKUP design.
+The trajectory documents a comprehensive, user-driven UI/UX overhaul of the ShiftMatch application. The user, who is German-speaking, has been systematically providing complete code replacements for each screen to migrate the app from an old purple theme to a new, consistent dark BACKUP theme.
 
-The work involved redesigning key authentication screens (, ), the main worker job feed (), and the entire five-step worker profile creation wizard ( through ). Each redesign was implemented via user-provided code, often requiring multiple attempts and debugging due to syntax errors or Metro bundler caching issues. The user emphasized specific UI constraints, such as buttons having a maximum width of 60% and ensuring an iPhone-friendly layout.
+The process is highly iterative:
+1.  The AI engineer suggests the next logical screen to redesign (e.g., payment, chat, job details).
+2.  The user agrees and asks to see the current file.
+3.  The AI reads and displays the file.
+4.  The user provides a complete, new code snippet for that file with the BACKUP design.
+5.  The AI overwrites the old file with the new code, restarts the Expo server, and confirms completion.
 
-The most recent and current task focuses on refactoring the main worker profile editing screen, . After initially applying the new dark theme, the user found the long, single-page layout too cluttered for a mobile device. After a detailed discussion analyzing the risks of a multi-step approach versus a tabbed interface, the user and AI agreed that a Tab-based layout was the safer and preferred solution. The previous engineer was just about to begin this refactoring work.
+This pattern has been successfully applied to numerous screens, including the worker profile wizard, authentication, feed, employer dashboard, job creation, job details, applications list, payment flow, and chat.
+
+The most recent task was to redesign the  modal. The user provided an improved code snippet that not only applied the dark theme but also enhanced the logic for displaying data. The AI has just finished implementing this change and restarting the frontend. The next tasks, as identified, are the remaining employer profile screens.
 
 The user's primary language is German. The next agent must respond in German only.
 </analysis>
-
 <product_requirements>
 The ShiftMatch application is a German-language, two-sided marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
-The primary product requirement has been to perform a complete visual and user experience overhaul of the application, migrating from an inconsistent purple/neon-green theme to a unified, modern, dark iPhone-style aesthetic, consistently referred to by the user as the BACKUP design.
+The primary product goal is a complete visual and user experience overhaul. The objective is to migrate every screen from an inconsistent purple/lila theme to a unified, modern, dark iPhone-style aesthetic, consistently referred to as the BACKUP design.
 
-**Key Implementation Requirements & Constraints:**
-- **Consistent Dark Theme:** Apply a dark background (), dark cards (), and neon green accents () across all screens.
-- **iPhone-Optimized Layout:** Ensure all layouts are clean and usable on an iPhone screen. This includes a user-specified constraint that primary action buttons should not exceed 60% of the screen width.
-- **BACKUP Header:** A standardized header component with the text BACKUP and a neon underline should be used on key pages.
+**Core Design Specifications:**
+*   **Theme:** Dark background (), dark cards (), and neon green accents ().
+*   **Layout:** Clean, mobile-first layouts optimized for iPhone, with specific constraints like buttons having a maximum width of 60%.
 
-**Implemented Redesigns:**
-- **Authentication:**  and  have been fully redesigned.
-- **Worker Flow:**
-    -  (Job Feed) has been redesigned.
-    - The entire 5-step  has been redesigned with the BACKUP and BACKUP D+ (premium dark) themes.
-    -  was redesigned, but the result was unsatisfactory, leading to the current refactoring task.
-    - The worker tab navigator  was updated.
+**Implementation Status:**
+The redesign is nearly complete. The AI engineer, guided by user-provided code, has successfully updated the following key areas to the BACKUP theme:
+*   Authentication (, )
+*   Worker Section (, , , tab layout)
+*   Employer Section (, , , , , tab layout)
+*   Core Functionality (, , various modals)
+
+The project is in its final stages of this redesign phase, with only a few secondary employer-side screens remaining.
 </product_requirements>
-
 <key_technical_concepts>
-- **Frontend:** React Native with Expo.
-- **Routing:** Expo Router (file-based).
-- **Styling:**  for all styles. The BACKUP theme uses specific hex codes for dark backgrounds, cards, and neon accents.
-- **State Management:** React , , and  for  and .
-- **API Interaction:**  calls to a FastAPI backend for profile creation/updates, using a Bearer token from .
-- **External Services:** OpenStreetMap (Nominatim) for address autocomplete.
-- **Known Issue:** Frequent Metro bundler caching problems requiring manual cache clearing ([17:54:14] Starting project at /app/frontend) and server restarts to reflect changes.
+- **Frontend Framework:** React Native with Expo.
+- **Routing:** Expo Router (file-based routing within the  directory).
+- **Styling:**  with a hardcoded BACKUP color palette. No CSS-in-JS or utility-class libraries are used.
+- **State Management:** Primarily React Hooks (, , ) and  for .
+- **Data:** A central  file is used for categories, skills, and qualifications across the app.
+- **API:**  calls to a FastAPI backend, with authentication via a Bearer token.
 </key_technical_concepts>
-
 <code_architecture>
-The project is a standard Expo application with file-based routing in the  directory.
+The project follows a standard Expo Router structure, where files in the  directory define the application's routes.
 
 
 
 - ****
-  - **Importance:** This is the main screen for a worker to edit their full profile after initial onboarding. It's a very large and complex file.
-  - **Changes:** The file was completely replaced with a new BACKUP dark theme version. However, the user found the resulting single-scroll page too cluttered for an iPhone. The current task is to refactor this file to use a Tab-based interface to improve usability.
+  - **Importance:** This is a crucial modal for employers to view a worker's detailed profile before or after a match.
+  - **Summary of changes:** This file was the subject of the most recent work. It was completely replaced with user-provided code that not only applied the BACKUP dark theme but also included significant logic improvements for displaying masked names and resolving taxonomy labels.
 
-- ** (all files)**
-  - **Importance:** This directory contains the 5-step onboarding flow for new workers.
-  - **Changes:** Every file in this flow ( to ) was iteratively replaced with user-provided code to implement the new BACKUP and BACKUP D+ (dark premium) design, unifying the entire onboarding experience.
+- ****
+  - **Importance:** A modal used in the job creation flow to ensure employers agree to legal terms.
+  - **Summary of changes:** The file was rewritten to match the BACKUP theme. The AI also identified and fixed a potential infinite loop risk in the  logic by adding a  for a safer state update.
 
 - ** & **
-  - **Importance:** Core authentication screens for user entry and registration.
-  - **Changes:** Both files were completely rewritten from an old purple theme to the new BACKUP dark theme, including animated elements and consistent input styling. This involved multiple debugging cycles to fix syntax and rendering errors.
+  - **Importance:** These are the core screens for an employer to create a new job and view the details of an existing one, including the list of applicants.
+  - **Summary of changes:** Both were very large, complex files that were completely rewritten with user-provided code to implement the BACKUP dark theme, replacing all old UI components and styles.
 
 - ****
-  - **Importance:** The main job feed screen for workers.
-  - **Changes:** Redesigned from an old purple/neon theme to the new BACKUP dark theme, including new card designs and layout.
+  - **Importance:** The central communication screen for matched workers and employers.
+  - **Summary of changes:** Rewritten from a purple theme to a BACKUP dark theme with a WhatsApp-style bubble layout, including dark-mode-friendly input fields and message bubbles.
 
 - ****
-  - **Importance:** The tab navigator for the entire worker section of the app.
-  - **Changes:** The styling was updated with user-provided code to match the new BACKUP theme, ensuring consistent navigation aesthetics.
+  - **Importance:** The critical screen where an employer pays the platform's commission to unlock a match.
+  - **Summary of changes:** Completely redesigned with the BACKUP dark theme, including payment method selection and an animated success screen.
 </code_architecture>
-
 <pending_tasks>
-- **Redesign Worker Screens:** The  (view-only profile) and  pages still need to be updated to the BACKUP dark theme.
-- **Redesign Employer Section:** The entire employer section, including , , and its , needs to be redesigned to match the new BACKUP theme.
-- **Redesign Miscellaneous Screens:** Other screens, such as job detail pages, will likely need a design update for consistency.
+- **Redesign Employer Profile Screens:**
+  -  (View-only profile)
+  -  (Profile editing form)
+- **Redesign Registration/PDF Flow:** The four screens under .
+- **Redesign Job Rating Screen:** .
+
+The user has explicitly asked to work on the employer profile screens next.
 </pending_tasks>
-
 <current_work>
-The work is focused on refactoring the worker's main profile editing screen: .
+The most recent task was a complete redesign of the **** component. This is a modal that allows employers to view a worker's full profile.
 
-Previously, the AI engineer had successfully replaced the entire file with a new version that applied the BACKUP dark theme. However, the user immediately pointed out that the resulting layout—a single, very long scrolling page with 5 distinct sections—was overwhelming and poorly suited for an iPhone (wieder so voll für iPhone).
+The user provided a complete code snippet for this component. This snippet went beyond a simple theme change; it included:
+1.  **BACKUP Dark Theme:** All colors and styles were updated to match the application's new dark design ( background,  cards, etc.).
+2.  **Improved Logic:** The user's code introduced helper functions to better handle data display, such as  to show a masked name () before a match is confirmed and the full name after. It also improved how taxonomy labels for skills and categories were resolved.
 
-A detailed discussion followed, where the AI engineer analyzed two potential solutions to improve the user experience:
-1.  **Multi-Step Wizard:** Splitting the form into multiple pages, similar to the . This was deemed high-risk due to the complex state management required, especially for the interdependent category/subcategory logic.
-2.  **Tabbed Interface:** Keeping all logic on one page but organizing the 5 sections into selectable tabs at the top. This was identified as a much safer, lower-risk approach that still achieved the goal of a cleaner UI.
-
-The user explicitly agreed to the Tab-based approach. The last action by the previous engineer was to confirm this plan and prepare to start rewriting  to implement this new Tab-based structure.
+The previous AI engineer recognized these improvements, validated the code, and successfully overwrote the old component file with the new, enhanced version. The final action taken was restarting the Expo frontend service to apply the changes. The work on this specific file is concluded.
 </current_work>
-
 <optional_next_step>
-Begin refactoring  to implement the agreed-upon Tab-based layout to improve its UI/UX on mobile devices.
+Ask the user for the design code for the two remaining employer profile screens:  and , as this was their last explicit request before the modal redesign.
 </optional_next_step>
-
-User: Tabs funktionieren auch aber überleg erstmal ob das einfacher ist
-AI: [Analysis of Tabs vs Multi-Step]... Ich habe die Optionen geprüft und kann mit Tabs beginnen.
-User: ja dann mach die tabs
-AI: Perfekt! Ich werde jetzt die mit Tabs umbauen. Das wird deutlich einfacher und sicherer! 🚀

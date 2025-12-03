@@ -7,7 +7,7 @@ import asyncio
 import httpx
 import json
 
-BACKEND_URL = "https://iphone-profile-tabs.preview.emergentagent.com/api"
+BACKEND_URL = "https://backup-design.preview.emergentagent.com/api"
 
 async def debug_test():
     async with httpx.AsyncClient(timeout=30.0) as client:

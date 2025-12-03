@@ -10,7 +10,7 @@ import json
 import time
 from typing import Dict, List
 
-BASE_URL = "https://iphone-profile-tabs.preview.emergentagent.com/api"
+BASE_URL = "https://backup-design.preview.emergentagent.com/api"
 TIMESTAMP = int(time.time())
 
 # Expected Results Matrix
