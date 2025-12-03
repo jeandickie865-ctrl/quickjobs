@@ -812,7 +812,7 @@ agent_communication:
       4. ✅ **Signup-Screen geladen** - Formular wird angezeigt
       
       **Verifizierung:**
-      - Frontend URL: https://employer-worker.preview.emergentagent.com/
+      - Frontend URL: https://matchpro-9.preview.emergentagent.com/
       - Screenshot bestätigt: "Willkommen bei BCKP" Screen mit Registrieren/Login Buttons
       - Keine Module-Resolution-Errors mehr in den Logs
       
@@ -1872,7 +1872,7 @@ agent_communication:
       
       **SCHRITT 1 – API BASISDATEI:**
       ✅ `/app/frontend/utils/api.ts` bereits vorhanden
-      ✅ `API_BASE = 'https://employer-worker.preview.emergentagent.com/api'`
+      ✅ `API_BASE = 'https://matchpro-9.preview.emergentagent.com/api'`
       ✅ Helper-Funktionen `getAuthToken()`, `getUserId()`, `getAuthHeaders()` implementiert
       
       **SCHRITT 2 – ALLE STORES UMGESTELLT:**

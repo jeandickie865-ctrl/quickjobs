@@ -10,7 +10,7 @@ import time
 from datetime import datetime, timedelta
 
 # Backend URL from environment
-BACKEND_URL = "https://employer-worker.preview.emergentagent.com/api"
+BACKEND_URL = "https://matchpro-9.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):

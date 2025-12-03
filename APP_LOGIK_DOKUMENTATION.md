@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://employer-worker.preview.emergentagent.com`
-- Backend: `https://employer-worker.preview.emergentagent.com/api`
+- Frontend: `https://matchpro-9.preview.emergentagent.com`
+- Backend: `https://matchpro-9.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)
