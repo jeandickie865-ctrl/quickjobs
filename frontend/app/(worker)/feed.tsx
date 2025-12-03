@@ -8,14 +8,16 @@ import { getTagLabel } from "../../utils/taxonomy";
 import { getWorkerProfile } from "../../utils/profileStore";
 
 const COLORS = {
-  purple: "#4A35D9",
-  neon: "#C8FF16",
-  white: "#FFFFFF",
-  black: "#000000",
-  gray: "#8A8A8A",
-  textPrimary: "#000000",
-  textSecondary: "#333333",
-  accentNeon: "#C8FF16",
+  bg: '#0E0B1F',
+  card: '#141126',
+  white: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
+  neon: '#C8FF16',
+  border: 'rgba(255,255,255,0.06)',
+  error: '#FF4D4D',
+  tagRequired: '#5941FF',
+  tagOptional: '#3A3A3A'
 };
 
 export default function WorkerFeedScreen() {
@@ -35,10 +37,8 @@ export default function WorkerFeedScreen() {
     const jobDate = new Date(job.date);
     if (isNaN(jobDate)) return false;
 
-    // In der Vergangenheit? → raus
     if (jobDate < today) return false;
 
-    // Heute → Endzeit prüfen
     if (jobDate.getTime() === today.getTime()) {
       const now = new Date();
       const [endH, endM] = job.endAt.split(':').map(Number);
@@ -47,19 +47,16 @@ export default function WorkerFeedScreen() {
       if (endTime < now) return false;
     }
 
-    // Status muss 'open' sein
     if (job.status !== 'open') return false;
 
     return true;
   };
 
   const hideMatchedJobs = (job) => {
-    // Wenn Job ein Match hat, nicht anzeigen
     if (job.status === "matched" || job.status === "done" || job.status === "cancelled") {
       return false;
     }
 
-    // Falls backend ein Feld matchedApplication oder similar zurückgibt:
     if (job.matchedApplication || job.matchedWorkerId || job.chosenApplicationId) {
       return false;
     }
@@ -68,7 +65,6 @@ export default function WorkerFeedScreen() {
   };
 
   const loadJobs = async () => {
-    // Sicherstellen, dass user und token geladen sind
     if (!token || !user) {
       console.log("⏳ Waiting for auth to load...");
       return;
@@ -92,7 +88,6 @@ export default function WorkerFeedScreen() {
         signOut();
         return;
       }
-      // Check if it's a "profile not found" error
       if (err.message?.includes("FAILED_TO_FETCH_MATCHED_JOBS")) {
         setError("Du musst zuerst dein Profil vervollständigen, um passende Jobs zu sehen. Bitte gehe zum Profil-Tab.");
         setIsLoading(false);
@@ -120,15 +115,13 @@ export default function WorkerFeedScreen() {
     }
   }, [loading, token, user]);
 
-  // Reload jobs when screen is focused (z.B. nach einer Bewerbung)
-  // Mit 1 Sekunde Delay um Race Condition zu vermeiden
   useFocusEffect(
     React.useCallback(() => {
       if (!loading && token && user) {
         const timer = setTimeout(() => {
           console.log("🔄 Feed screen focused - reloading jobs after delay");
           loadJobs();
-        }, 1000); // 1 Sekunde warten
+        }, 1000);
         
         return () => clearTimeout(timer);
       }
@@ -137,186 +130,244 @@ export default function WorkerFeedScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ padding: 20 }}>
-        <ActivityIndicator color={COLORS.neon} />
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={COLORS.neon} />
+        <Text style={{ color: COLORS.muted, marginTop: 16, fontSize: 14 }}>Jobs werden geladen...</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={{ padding: 20 }}>
-        <Text style={{ color: COLORS.textPrimary }}>{error}</Text>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+        {/* HEADER */}
+        <View style={{ paddingTop: 60, paddingHorizontal: 24, marginBottom: 40 }}>
+          <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
+            BACKUP
+          </Text>
+          <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
+        </View>
+
+        <View style={{ paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          <View style={{
+            backgroundColor: COLORS.card,
+            borderRadius: 16,
+            padding: 24,
+            borderWidth: 1,
+            borderColor: COLORS.border,
+            alignItems: 'center'
+          }}>
+            <Ionicons name="alert-circle-outline" size={48} color={COLORS.error} style={{ marginBottom: 16 }} />
+            <Text style={{ color: COLORS.white, fontSize: 16, textAlign: 'center', lineHeight: 24 }}>
+              {error}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
 
   if (jobs.length === 0) {
     return (
-      <View style={{ padding: 20 }}>
-        <Text style={{ color: COLORS.textPrimary }}>Keine passenden Jobs gefunden</Text>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+        {/* HEADER */}
+        <View style={{ paddingTop: 60, paddingHorizontal: 24, marginBottom: 40 }}>
+          <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
+            BACKUP
+          </Text>
+          <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
+        </View>
+
+        <View style={{ paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          <View style={{
+            backgroundColor: COLORS.card,
+            borderRadius: 16,
+            padding: 24,
+            borderWidth: 1,
+            borderColor: COLORS.border,
+            alignItems: 'center'
+          }}>
+            <Ionicons name="briefcase-outline" size={48} color={COLORS.muted} style={{ marginBottom: 16 }} />
+            <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
+              Keine passenden Jobs
+            </Text>
+            <Text style={{ color: COLORS.muted, fontSize: 14, textAlign: 'center' }}>
+              Aktuell gibt es keine Jobs, die zu deinem Profil passen.{'\n'}Schau später nochmal vorbei!
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
 
   const renderJobCard = ({ item }) => (
-    <Pressable
-      onPress={() => router.push(`/jobs/${item.id}`)}
-      style={({ pressed }) => ({
-        backgroundColor: COLORS.purple,
-        borderRadius: 14,
-        padding: 18,
-        marginHorizontal: 16,
-        marginVertical: 10,
-        borderWidth: 2,
-        borderColor: COLORS.neon,
-        shadowColor: COLORS.neon,
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 3 },
-        shadowRadius: 8,
-        opacity: pressed ? 0.7 : 1,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
-    >
-      {/* Titel */}
-      <Text
-        style={{
-          color: COLORS.white,
-          fontSize: 18,
-          fontWeight: "800",
-          marginBottom: 6,
-        }}
-      >
-        {item.title}
-      </Text>
+    <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
+      <View style={{
+        backgroundColor: COLORS.card,
+        borderRadius: 16,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: COLORS.border
+      }}>
+        {/* TITEL */}
+        <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '800', marginBottom: 8 }}>
+          {item.title}
+        </Text>
 
-      {/* Kategorie Badge */}
-      <View
-        style={{
+        {/* KATEGORIE BADGE */}
+        <View style={{
           backgroundColor: COLORS.neon,
-          alignSelf: "flex-start",
-          paddingVertical: 4,
-          paddingHorizontal: 10,
-          borderRadius: 6,
-          marginBottom: 10,
-        }}
-      >
-        <Text
-          style={{
-            color: COLORS.black,
-            fontWeight: "700",
-            fontSize: 12,
-          }}
-        >
-          {item.category}
-        </Text>
-      </View>
-
-      {/* Beschreibung */}
-      <View style={{ flexDirection: "row", marginBottom: 10 }}>
-        <Ionicons name="information-circle-outline" size={18} color={COLORS.neon} />
-        <Text style={{ color: COLORS.white, marginLeft: 8, flex: 1 }}>{item.description}</Text>
-      </View>
-
-      {/* Adresse */}
-      <View style={{ flexDirection: "row", marginBottom: 10 }}>
-        <Ionicons name="location-outline" size={18} color={COLORS.neon} />
-        <Text style={{ color: COLORS.white, marginLeft: 8 }}>
-          {item.address?.street} {item.address?.houseNumber},{" "}
-          {item.address?.postalCode} {item.address?.city}
-        </Text>
-      </View>
-
-      {/* Vergütung */}
-      {item.workerAmountCents && (
-        <View style={{ marginTop: 4 }}>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
-            {(item.workerAmountCents / 100).toFixed(2)} € (Brutto = Netto)
+          alignSelf: 'flex-start',
+          paddingVertical: 6,
+          paddingHorizontal: 12,
+          borderRadius: 8,
+          marginBottom: 16
+        }}>
+          <Text style={{ color: COLORS.bg, fontWeight: '700', fontSize: 12, textTransform: 'uppercase' }}>
+            {item.category}
           </Text>
+        </View>
 
-          {!profile?.isSelfEmployed && (
-            <Text style={{ fontSize: 11, color: COLORS.textSecondary }}>
-              § 40a EStG – keine Abzüge
+        {/* BESCHREIBUNG */}
+        {item.description && (
+          <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'flex-start' }}>
+            <Ionicons name="information-circle-outline" size={20} color={COLORS.neon} style={{ marginRight: 8, marginTop: 2 }} />
+            <Text style={{ color: COLORS.muted, flex: 1, fontSize: 14, lineHeight: 20 }}>
+              {item.description}
             </Text>
-          )}
-        </View>
-      )}
+          </View>
+        )}
 
-      {/* Tags anzeigen */}
-      {(item.required_all_tags?.length > 0 || item.required_any_tags?.length > 0) && (
-        <View style={{ marginTop: 8, borderTopWidth: 1, borderTopColor: COLORS.neon, paddingTop: 10 }}>
-          {/* Pflicht-Tags */}
-          {item.required_all_tags?.length > 0 && (
-            <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: COLORS.accentNeon, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
-                PFLICHT
-              </Text>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-                {item.required_all_tags.map((tag) => (
-                  <View
-                    key={tag}
-                    style={{
-                      paddingHorizontal: 10,
-                      paddingVertical: 6,
-                      backgroundColor: "#5941FF",
-                      borderRadius: 6,
-                      borderWidth: 1,
-                      borderColor: COLORS.neon,
-                    }}
-                  >
-                    <Text style={{ color: COLORS.white, fontSize: 11, fontWeight: "600" }}>
-                      {getTagLabel(item.category, tag)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Optional-Tags (mindestens eine) */}
-          {item.required_any_tags?.length > 0 && (
-            <View>
-              <Text style={{ color: COLORS.textSecondary, fontSize: 11, fontWeight: "700", marginBottom: 4 }}>
-                MINDESTENS EINE
-              </Text>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-                {item.required_any_tags.map((tag) => (
-                  <View
-                    key={tag}
-                    style={{
-                      paddingHorizontal: 10,
-                      paddingVertical: 6,
-                      backgroundColor: "#8A8A8A",
-                      borderRadius: 6,
-                    }}
-                  >
-                    <Text style={{ color: COLORS.white, fontSize: 11, fontWeight: "600" }}>
-                      {getTagLabel(item.category, tag)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
+        {/* ADRESSE */}
+        <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'flex-start' }}>
+          <Ionicons name="location-outline" size={20} color={COLORS.neon} style={{ marginRight: 8, marginTop: 2 }} />
+          <Text style={{ color: COLORS.muted, flex: 1, fontSize: 14 }}>
+            {item.address?.street} {item.address?.houseNumber}, {item.address?.postalCode} {item.address?.city}
+          </Text>
         </View>
-      )}
-    </Pressable>
+
+        {/* VERGÜTUNG */}
+        {item.workerAmountCents && (
+          <View style={{
+            marginTop: 8,
+            paddingTop: 16,
+            borderTopWidth: 1,
+            borderTopColor: COLORS.border
+          }}>
+            <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.neon, marginBottom: 4 }}>
+              {(item.workerAmountCents / 100).toFixed(2)} €
+            </Text>
+            <Text style={{ fontSize: 13, color: COLORS.muted }}>
+              Brutto = Netto
+            </Text>
+            {!profile?.isSelfEmployed && (
+              <Text style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>
+                § 40a EStG – keine Abzüge
+              </Text>
+            )}
+          </View>
+        )}
+
+        {/* TAGS */}
+        {(item.required_all_tags?.length > 0 || item.required_any_tags?.length > 0) && (
+          <View style={{ marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: COLORS.border }}>
+            {/* Pflicht-Tags */}
+            {item.required_all_tags?.length > 0 && (
+              <View style={{ marginBottom: item.required_any_tags?.length > 0 ? 12 : 0 }}>
+                <Text style={{ color: COLORS.neon, fontSize: 11, fontWeight: '700', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Erforderlich
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                  {item.required_all_tags.map((tag) => (
+                    <View
+                      key={tag}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        backgroundColor: COLORS.tagRequired,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: COLORS.neon
+                      }}
+                    >
+                      <Text style={{ color: COLORS.white, fontSize: 12, fontWeight: '600' }}>
+                        {getTagLabel(item.category, tag)}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Optional-Tags */}
+            {item.required_any_tags?.length > 0 && (
+              <View>
+                <Text style={{ color: COLORS.muted, fontSize: 11, fontWeight: '700', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Mindestens eine
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                  {item.required_any_tags.map((tag) => (
+                    <View
+                      key={tag}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        backgroundColor: COLORS.tagOptional,
+                        borderRadius: 8
+                      }}
+                    >
+                      <Text style={{ color: COLORS.muted, fontSize: 12, fontWeight: '600' }}>
+                        {getTagLabel(item.category, tag)}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* BUTTON */}
+        <Pressable
+          onPress={() => router.push(`/jobs/${item.id}`)}
+          style={({ pressed }) => ({
+            backgroundColor: COLORS.neon,
+            height: 48,
+            borderRadius: 12,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 20,
+            width: '60%',
+            maxWidth: 250,
+            alignSelf: 'center',
+            opacity: pressed ? 0.9 : 1
+          })}
+        >
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.bg }}>
+            Job ansehen
+          </Text>
+        </Pressable>
+      </View>
+    </View>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-      {/* Header */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: 16,
-          backgroundColor: COLORS.purple,
-        }}
-      >
-        <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold" }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      {/* HEADER */}
+      <View style={{ paddingTop: 60, paddingHorizontal: 24, marginBottom: 24 }}>
+        <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
+          BACKUP
+        </Text>
+        <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
+      </View>
+
+      {/* SUBTITLE */}
+      <View style={{ paddingHorizontal: 24, marginBottom: 16 }}>
+        <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '700' }}>
           Passende Jobs
+        </Text>
+        <Text style={{ color: COLORS.muted, fontSize: 14, marginTop: 4 }}>
+          {jobs.length} {jobs.length === 1 ? 'Job gefunden' : 'Jobs gefunden'}
         </Text>
       </View>
 
@@ -324,7 +375,8 @@ export default function WorkerFeedScreen() {
         data={jobs}
         keyExtractor={(item) => item.id}
         renderItem={renderJobCard}
-        contentContainerStyle={{ paddingVertical: 10 }}
+        contentContainerStyle={{ paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
