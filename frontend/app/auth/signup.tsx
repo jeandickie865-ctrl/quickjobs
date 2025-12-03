@@ -1,6 +1,17 @@
 // app/auth/signup.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Animated, Image, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Animated,
+  Image,
+  Alert
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,24 +19,27 @@ import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
-  black: '#000000',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
+  muted: 'rgba(255,255,255,0.7)',
+  neon: '#C8FF16',
+  placeholder: 'rgba(255,255,255,0.4)',
   error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.12)',
-  placeholder: '#8A8A8A',
+  errorBg: 'rgba(255,77,77,0.12)'
 };
 
-const signupSchema = z.object({
-  email: z.string().min(1, 'E-Mail erforderlich').email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
-  confirm: z.string().min(1, 'Passwort-Bestätigung erforderlich'),
-}).refine((data) => data.password === data.confirm, {
-  message: 'Die Passwörter stimmen nicht überein',
-  path: ['confirm'],
-});
+const signupSchema = z
+  .object({
+    email: z.string().min(1, 'E-Mail erforderlich').email('Ungültige E-Mail-Adresse'),
+    password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
+    confirm: z.string().min(1, 'Passwort-Bestätigung erforderlich')
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: 'Die Passwörter stimmen nicht überein',
+    path: ['confirm']
+  });
 
 export default function SignupScreen() {
   const { signUp } = useAuth();
@@ -39,7 +53,8 @@ export default function SignupScreen() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'worker' | 'employer' | null>(null);
-  const [selectedAccountType, setSelectedAccountType] = useState<'private' | 'business'>('private');
+  const [selectedAccountType, setSelectedAccountType] =
+    useState<'private' | 'business'>('private');
 
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -56,12 +71,12 @@ export default function SignupScreen() {
       Animated.timing(logoOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.parallel([
         Animated.timing(inputTranslateY, { toValue: 0, duration: 400, useNativeDriver: true }),
-        Animated.timing(inputOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.timing(inputOpacity, { toValue: 1, duration: 400, useNativeDriver: true })
       ]),
       Animated.parallel([
         Animated.timing(buttonTranslateY, { toValue: 0, duration: 300, useNativeDriver: true }),
-        Animated.timing(buttonOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]),
+        Animated.timing(buttonOpacity, { toValue: 1, duration: 300, useNativeDriver: true })
+      ])
     ]).start();
   }, []);
 
@@ -73,8 +88,12 @@ export default function SignupScreen() {
       return;
     }
 
-    const result = signupSchema.safeParse({ email: email.trim(), password, confirm });
-    
+    const result = signupSchema.safeParse({
+      email: email.trim(),
+      password,
+      confirm
+    });
+
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
@@ -87,8 +106,7 @@ export default function SignupScreen() {
     setLoading(true);
     try {
       await signUp(result.data.email, result.data.password, selectedRole, selectedAccountType);
-      
-      // Nach Registrierung: Worker direkt zur Profil-Erstellung, Employer zum Dashboard
+
       if (selectedRole === 'worker') {
         router.replace('/(worker)/profile-wizard/step1-basic');
       } else {
@@ -102,100 +120,524 @@ export default function SignupScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 40 }} keyboardShouldPersistTaps="handled">
-            
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingHorizontal: 24,
+              paddingVertical: 40
+            }}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* HEADER */}
+            <View style={{ marginBottom: 50 }}>
+              <Text
+                style={{
+                  color: COLORS.white,
+                  fontWeight: '900',
+                  fontSize: 28,
+                  letterSpacing: 1
+                }}
+              >
+                BACKUP
+              </Text>
+              <View
+                style={{
+                  marginTop: 8,
+                  height: 4,
+                  width: '100%',
+                  backgroundColor: COLORS.neon
+                }}
+              />
+            </View>
+
+            {/* LOGO */}
             <Animated.View style={{ alignItems: 'center', marginBottom: 32, opacity: logoOpacity }}>
-              <View style={{ width: 100, height: 100, backgroundColor: COLORS.neon, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <Image source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} style={{ width: 70, height: 70 }} resizeMode="contain" />
+              <View
+                style={{
+                  width: 90,
+                  height: 90,
+                  backgroundColor: COLORS.card,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 1,
+                  borderColor: COLORS.border
+                }}
+              >
+                <Image
+                  source={{
+                    uri:
+                      'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png'
+                  }}
+                  style={{ width: 60, height: 60 }}
+                  resizeMode="contain"
+                />
               </View>
             </Animated.View>
 
+            {/* TITLE */}
             <Animated.View style={{ marginBottom: 8, opacity: logoOpacity }}>
-              <Text style={{ fontSize: 30, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>Erstelle deinen{"\n"}BACKUP-Account</Text>
+              <Text
+                style={{
+                  fontSize: 26,
+                  fontWeight: '800',
+                  color: COLORS.white,
+                  textAlign: 'center'
+                }}
+              >
+                Erstelle deinen{"\n"}BACKUP-Account
+              </Text>
             </Animated.View>
 
-            <Animated.View style={{ marginBottom: 40, opacity: logoOpacity }}>
-              <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, textAlign: 'center', fontWeight: '500' }}>Schnell. Sicher. Sofort einsatzbereit.</Text>
+            <Animated.View style={{ marginBottom: 32, opacity: logoOpacity }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: COLORS.muted,
+                  textAlign: 'center',
+                  fontWeight: '500'
+                }}
+              >
+                Schnell. Sicher. Bereit.
+              </Text>
             </Animated.View>
 
-            <Animated.View style={{ opacity: inputOpacity, transform: [{ translateY: inputTranslateY }] }}>
-              
-              {/* Role Selection */}
+            {/* INPUT WRAPPER */}
+            <Animated.View
+              style={{
+                opacity: inputOpacity,
+                transform: [{ translateY: inputTranslateY }]
+              }}
+            >
+              {/* ROLE */}
               <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Rolle wählen</Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: COLORS.neon,
+                    marginBottom: 8
+                  }}
+                >
+                  Rolle wählen
+                </Text>
+
                 <View style={{ flexDirection: 'row', gap: 12 }}>
-                  <Pressable onPress={() => setSelectedRole('worker')} style={{ flex: 1, backgroundColor: selectedRole === 'worker' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'worker' ? COLORS.neon : 'transparent' }}>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Auftragnehmer</Text>
+                  <Pressable
+                    onPress={() => setSelectedRole('worker')}
+                    style={{
+                      flex: 1,
+                      backgroundColor:
+                        selectedRole === 'worker' ? COLORS.neon : COLORS.card,
+                      borderRadius: 12,
+                      paddingVertical: 14,
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor:
+                        selectedRole === 'worker' ? COLORS.neon : COLORS.border
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '700',
+                        color: selectedRole === 'worker' ? COLORS.bg : COLORS.white
+                      }}
+                    >
+                      Auftragnehmer
+                    </Text>
                   </Pressable>
-                  <Pressable onPress={() => setSelectedRole('employer')} style={{ flex: 1, backgroundColor: selectedRole === 'employer' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'employer' ? COLORS.neon : 'transparent' }}>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Auftraggeber</Text>
+
+                  <Pressable
+                    onPress={() => setSelectedRole('employer')}
+                    style={{
+                      flex: 1,
+                      backgroundColor:
+                        selectedRole === 'employer' ? COLORS.neon : COLORS.card,
+                      borderRadius: 12,
+                      paddingVertical: 14,
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor:
+                        selectedRole === 'employer' ? COLORS.neon : COLORS.border
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '700',
+                        color: selectedRole === 'employer' ? COLORS.bg : COLORS.white
+                      }}
+                    >
+                      Auftraggeber
+                    </Text>
                   </Pressable>
                 </View>
               </View>
 
-              {/* Account Type Selection (nur für Employer) */}
+              {/* ACCOUNT TYPE */}
               {selectedRole === 'employer' && (
                 <View style={{ marginBottom: 20 }}>
-                  <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Wie trittst du auf?</Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      color: COLORS.neon,
+                      marginBottom: 8
+                    }}
+                  >
+                    Wie trittst du auf?
+                  </Text>
+
                   <View style={{ flexDirection: 'row', gap: 12 }}>
-                    <Pressable onPress={() => setSelectedAccountType('private')} style={{ flex: 1, backgroundColor: selectedAccountType === 'private' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedAccountType === 'private' ? COLORS.neon : 'transparent' }}>
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Privatperson</Text>
+                    <Pressable
+                      onPress={() => setSelectedAccountType('private')}
+                      style={{
+                        flex: 1,
+                        backgroundColor:
+                          selectedAccountType === 'private'
+                            ? COLORS.neon
+                            : COLORS.card,
+                        borderRadius: 12,
+                        paddingVertical: 14,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor:
+                          selectedAccountType === 'private'
+                            ? COLORS.neon
+                            : COLORS.border
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '700',
+                          color:
+                            selectedAccountType === 'private'
+                              ? COLORS.bg
+                              : COLORS.white
+                        }}
+                      >
+                        Privatperson
+                      </Text>
                     </Pressable>
-                    <Pressable onPress={() => setSelectedAccountType('business')} style={{ flex: 1, backgroundColor: selectedAccountType === 'business' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedAccountType === 'business' ? COLORS.neon : 'transparent' }}>
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Unternehmen</Text>
+
+                    <Pressable
+                      onPress={() => setSelectedAccountType('business')}
+                      style={{
+                        flex: 1,
+                        backgroundColor:
+                          selectedAccountType === 'business'
+                            ? COLORS.neon
+                            : COLORS.card,
+                        borderRadius: 12,
+                        paddingVertical: 14,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor:
+                          selectedAccountType === 'business'
+                            ? COLORS.neon
+                            : COLORS.border
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '700',
+                          color:
+                            selectedAccountType === 'business'
+                              ? COLORS.bg
+                              : COLORS.white
+                        }}
+                      >
+                        Unternehmen
+                      </Text>
                     </Pressable>
                   </View>
                 </View>
               )}
 
-              {/* Email */}
+              {/* EMAIL */}
               <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>E-Mail</Text>
-                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: emailFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, justifyContent: 'center' }}>
-                  <TextInput autoCapitalize="none" keyboardType="email-address" placeholder="name@email.de" placeholderTextColor={COLORS.placeholder} value={email} onChangeText={(text) => setEmail(text.trim())} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} style={{ fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: COLORS.neon,
+                    marginBottom: 8
+                  }}
+                >
+                  E-Mail
+                </Text>
+
+                <View
+                  style={{
+                    backgroundColor: COLORS.card,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: emailFocused ? COLORS.neon : COLORS.border,
+                    height: 56,
+                    paddingHorizontal: 16,
+                    justifyContent: 'center'
+                  }}
+                >
+                  <TextInput
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    placeholder="name@email.de"
+                    placeholderTextColor={COLORS.placeholder}
+                    value={email}
+                    onChangeText={(v) => setEmail(v.trim())}
+                    onFocus={() => setEmailFocused(true)}
+                    onBlur={() => setEmailFocused(false)}
+                    style={{
+                      fontSize: 16,
+                      color: COLORS.white,
+                      fontWeight: '500'
+                    }}
+                  />
                 </View>
-                {errors.email && <View style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: COLORS.errorBg, borderRadius: 8 }}><Text style={{ fontSize: 13, color: COLORS.error, fontWeight: '600' }}>{errors.email}</Text></View>}
+
+                {errors.email && (
+                  <View
+                    style={{
+                      marginTop: 8,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      backgroundColor: COLORS.errorBg,
+                      borderRadius: 8
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: COLORS.error,
+                        fontWeight: '600'
+                      }}
+                    >
+                      {errors.email}
+                    </Text>
+                  </View>
+                )}
               </View>
 
-              {/* Password */}
+              {/* PASSWORD */}
               <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Passwort</Text>
-                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: passwordFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
-                  <TextInput placeholder="Mindestens 6 Zeichen" placeholderTextColor={COLORS.placeholder} secureTextEntry={!showPassword} value={password} onChangeText={setPassword} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} style={{ flex: 1, fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
-                  <Pressable onPress={() => setShowPassword(!showPassword)} style={{ paddingLeft: 12 }}>
-                    {showPassword ? <EyeOff size={22} color={COLORS.placeholder} /> : <Eye size={22} color={COLORS.placeholder} />}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: COLORS.neon,
+                    marginBottom: 8
+                  }}
+                >
+                  Passwort
+                </Text>
+
+                <View
+                  style={{
+                    backgroundColor: COLORS.card,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: passwordFocused ? COLORS.neon : COLORS.border,
+                    height: 56,
+                    paddingHorizontal: 16,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}
+                >
+                  <TextInput
+                    placeholder="Mindestens 6 Zeichen"
+                    placeholderTextColor={COLORS.placeholder}
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      color: COLORS.white,
+                      fontWeight: '500'
+                    }}
+                  />
+
+                  <Pressable
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={{ paddingLeft: 12 }}
+                  >
+                    {showPassword ? (
+                      <EyeOff size={22} color={COLORS.placeholder} />
+                    ) : (
+                      <Eye size={22} color={COLORS.placeholder} />
+                    )}
                   </Pressable>
                 </View>
-                {errors.password && <View style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: COLORS.errorBg, borderRadius: 8 }}><Text style={{ fontSize: 13, color: COLORS.error, fontWeight: '600' }}>{errors.password}</Text></View>}
+
+                {errors.password && (
+                  <View
+                    style={{
+                      marginTop: 8,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      backgroundColor: COLORS.errorBg,
+                      borderRadius: 8
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: COLORS.error,
+                        fontWeight: '600'
+                      }}
+                    >
+                      {errors.password}
+                    </Text>
+                  </View>
+                )}
               </View>
 
-              {/* Confirm Password */}
+              {/* CONFIRM PASSWORD */}
               <View style={{ marginBottom: 32 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Passwort bestätigen</Text>
-                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: confirmFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
-                  <TextInput placeholder="Passwort wiederholen" placeholderTextColor={COLORS.placeholder} secureTextEntry={!showConfirm} value={confirm} onChangeText={setConfirm} onFocus={() => setConfirmFocused(true)} onBlur={() => setConfirmFocused(false)} style={{ flex: 1, fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
-                  <Pressable onPress={() => setShowConfirm(!showConfirm)} style={{ paddingLeft: 12 }}>
-                    {showConfirm ? <EyeOff size={22} color={COLORS.placeholder} /> : <Eye size={22} color={COLORS.placeholder} />}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: COLORS.neon,
+                    marginBottom: 8
+                  }}
+                >
+                  Passwort bestätigen
+                </Text>
+
+                <View
+                  style={{
+                    backgroundColor: COLORS.card,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: confirmFocused ? COLORS.neon : COLORS.border,
+                    height: 56,
+                    paddingHorizontal: 16,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}
+                >
+                  <TextInput
+                    placeholder="Passwort wiederholen"
+                    placeholderTextColor={COLORS.placeholder}
+                    secureTextEntry={!showConfirm}
+                    value={confirm}
+                    onChangeText={setConfirm}
+                    onFocus={() => setConfirmFocused(true)}
+                    onBlur={() => setConfirmFocused(false)}
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      color: COLORS.white,
+                      fontWeight: '500'
+                    }}
+                  />
+
+                  <Pressable
+                    onPress={() => setShowConfirm(!showConfirm)}
+                    style={{ paddingLeft: 12 }}
+                  >
+                    {showConfirm ? (
+                      <EyeOff size={22} color={COLORS.placeholder} />
+                    ) : (
+                      <Eye size={22} color={COLORS.placeholder} />
+                    )}
                   </Pressable>
                 </View>
-                {errors.confirm && <View style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: COLORS.errorBg, borderRadius: 8 }}><Text style={{ fontSize: 13, color: COLORS.error, fontWeight: '600' }}>{errors.confirm}</Text></View>}
+
+                {errors.confirm && (
+                  <View
+                    style={{
+                      marginTop: 8,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      backgroundColor: COLORS.errorBg,
+                      borderRadius: 8
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: COLORS.error,
+                        fontWeight: '600'
+                      }}
+                    >
+                      {errors.confirm}
+                    </Text>
+                  </View>
+                )}
               </View>
             </Animated.View>
 
             <View style={{ flex: 1, minHeight: 20 }} />
 
-            <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
-              <Pressable onPress={handleSignup} disabled={loading} style={({ pressed }) => ({ backgroundColor: loading ? '#B3B3B3' : COLORS.neon, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 16, opacity: pressed ? 0.9 : 1 })}>
-                <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>{loading ? 'Wird erstellt...' : 'Account erstellen'}</Text>
+            {/* BUTTON */}
+            <Animated.View
+              style={{
+                opacity: buttonOpacity,
+                transform: [{ translateY: buttonTranslateY }]
+              }}
+            >
+              <Pressable
+                onPress={handleSignup}
+                disabled={loading}
+                style={({ pressed }) => ({
+                  backgroundColor: loading ? '#999' : COLORS.neon,
+                  height: 56,
+                  borderRadius: 12,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 16,
+                  width: '60%',
+                  maxWidth: 300,
+                  minWidth: 220,
+                  alignSelf: 'center',
+                  opacity: pressed ? 0.9 : 1
+                })}
+              >
+                <Text
+                  style={{
+                    fontSize: 17,
+                    fontWeight: '700',
+                    color: COLORS.bg
+                  }}
+                >
+                  {loading ? 'Wird erstellt...' : 'Account erstellen'}
+                </Text>
               </Pressable>
 
               <View style={{ alignItems: 'center', marginTop: 16 }}>
-                <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, marginBottom: 8 }}>Schon einen Account?</Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: COLORS.muted,
+                    marginBottom: 8
+                  }}
+                >
+                  Schon einen Account?
+                </Text>
+
                 <Pressable onPress={() => router.push('/auth/login')}>
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>Login</Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '700',
+                      color: COLORS.neon
+                    }}
+                  >
+                    Login
+                  </Text>
                 </Pressable>
               </View>
             </Animated.View>
