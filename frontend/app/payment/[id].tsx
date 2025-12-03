@@ -176,6 +176,9 @@ export default function PaymentScreen() {
       console.log("WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
       console.log("JOB:", job);
 
+      console.log("Re-loading application after payment…");
+      await loadApplication(); // Daten refreshen
+      console.log("Reload complete. Checking modal conditions again…");
       await handleRegistrationCheck();
       
     } catch (err) {
