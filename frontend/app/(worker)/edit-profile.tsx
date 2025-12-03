@@ -1114,39 +1114,44 @@ export default function EditWorkerProfileScreen() {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: COLORS.white,
+          backgroundColor: '#FFFFFF',
           paddingHorizontal: 20,
-          paddingVertical: 16,
-          borderTopWidth: 1,
-          borderTopColor: COLORS.borderGray,
+          paddingVertical: 20,
+          borderTopWidth: 3,
+          borderTopColor: '#C8FF16',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 20,
+          zIndex: 9999,
         }}
       >
-        <SafeAreaView edges={['bottom']}>
-          <Pressable
-            onPress={() => {
-              console.log('🔘 SAVE BUTTON PRESSED!');
-              console.log('🔘 isFormValid:', isFormValid());
-              console.log('🔘 saving:', saving);
-              handleSave();
-            }}
-            disabled={!isFormValid() || saving}
-            style={({ pressed }) => ({
-              backgroundColor: isFormValid() && !saving ? COLORS.neon : '#CCCCCC',
-              paddingVertical: 16,
-              borderRadius: 16,
-              alignItems: 'center',
-              opacity: pressed ? 0.9 : 1,
-            })}
-          >
-            {saving ? (
-              <ActivityIndicator color={COLORS.black} />
-            ) : (
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
-                Profil speichern
-              </Text>
-            )}
-          </Pressable>
-        </SafeAreaView>
+        <Pressable
+          onPress={() => {
+            console.log('🔘 SAVE BUTTON PRESSED!');
+            console.log('🔘 isFormValid:', isFormValid());
+            console.log('🔘 saving:', saving);
+            handleSave();
+          }}
+          disabled={!isFormValid() || saving}
+          style={({ pressed }) => ({
+            backgroundColor: isFormValid() && !saving ? '#C8FF16' : '#CCCCCC',
+            paddingVertical: 18,
+            borderRadius: 16,
+            alignItems: 'center',
+            opacity: pressed ? 0.85 : 1,
+            marginBottom: 10,
+          })}
+        >
+          {saving ? (
+            <ActivityIndicator color="#000000" />
+          ) : (
+            <Text style={{ fontSize: 18, fontWeight: '800', color: '#000000' }}>
+              PROFIL SPEICHERN
+            </Text>
+          )}
+        </Pressable>
       </View>
     </View>
   );
