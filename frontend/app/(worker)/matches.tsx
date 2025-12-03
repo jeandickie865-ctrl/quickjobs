@@ -451,10 +451,10 @@ export default function WorkerMatchesScreen() {
                     {euro(job.workerAmountCents)} / Gesamt
                   </Text>
 
-                  {/* Buttons */}
-                  <View style={{ gap: 12, marginTop: 20 }}>
+                  {/* Button-Gruppe */}
+                  <View style={{ gap: 14, marginTop: 22, alignItems: "center" }}>
 
-                    {/* Chat */}
+                    {/* CHAT */}
                     <Pressable
                       onPress={() => {
                         if (application.paymentStatus === "paid") {
@@ -463,6 +463,7 @@ export default function WorkerMatchesScreen() {
                       }}
                       disabled={application.paymentStatus !== "paid"}
                       style={{
+                        width: "72%",
                         backgroundColor: COLORS.purple,
                         paddingVertical: 14,
                         borderRadius: 14,
@@ -470,13 +471,17 @@ export default function WorkerMatchesScreen() {
                         flexDirection: "row",
                         justifyContent: "center",
                         opacity: application.paymentStatus === "paid" ? 1 : 0.5,
+                        shadowColor: "#000",
+                        shadowOpacity: 0.25,
+                        shadowRadius: 8,
+                        shadowOffset: { width: 0, height: 3 },
                       }}
                     >
                       <Ionicons 
                         name="chatbubble-ellipses-outline" 
                         size={18} 
-                        color={COLORS.accent} 
-                        style={{ marginRight: 8 }} 
+                        color={COLORS.accent}
+                        style={{ marginRight: 8 }}
                       />
                       <Text style={{ 
                         fontSize: 16, 
@@ -487,25 +492,31 @@ export default function WorkerMatchesScreen() {
                       </Text>
                     </Pressable>
 
-                    {/* Bewertung */}
+
+                    {/* BEWERTEN */}
                     <Pressable
-                      onPress={() => {
-                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
-                      }}
+                      onPress={() =>
+                        router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`)
+                      }
                       style={{
+                        width: "72%",
                         backgroundColor: COLORS.purple,
                         paddingVertical: 12,
                         borderRadius: 14,
                         alignItems: "center",
                         flexDirection: "row",
                         justifyContent: "center",
+                        shadowColor: "#000",
+                        shadowOpacity: 0.25,
+                        shadowRadius: 8,
+                        shadowOffset: { width: 0, height: 3 },
                       }}
                     >
                       <Ionicons 
                         name="star-outline" 
                         size={18} 
-                        color={COLORS.accent} 
-                        style={{ marginRight: 8 }} 
+                        color={COLORS.accent}
+                        style={{ marginRight: 8 }}
                       />
                       <Text style={{ 
                         fontSize: 15, 
@@ -516,23 +527,29 @@ export default function WorkerMatchesScreen() {
                       </Text>
                     </Pressable>
 
-                    {/* Details */}
+
+                    {/* DETAILS */}
                     <Pressable
                       onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                       style={{
+                        width: "72%",
                         backgroundColor: COLORS.purple,
                         paddingVertical: 12,
                         borderRadius: 14,
                         alignItems: "center",
                         flexDirection: "row",
                         justifyContent: "center",
+                        shadowColor: "#000",
+                        shadowOpacity: 0.25,
+                        shadowRadius: 8,
+                        shadowOffset: { width: 0, height: 3 },
                       }}
                     >
                       <Ionicons 
                         name="document-text-outline" 
                         size={18} 
-                        color={COLORS.accent} 
-                        style={{ marginRight: 8 }} 
+                        color={COLORS.accent}
+                        style={{ marginRight: 8 }}
                       />
                       <Text style={{ 
                         fontSize: 15, 
@@ -542,6 +559,7 @@ export default function WorkerMatchesScreen() {
                         Jobdetails ansehen
                       </Text>
                     </Pressable>
+
                   </View>
                 </View>
               );
