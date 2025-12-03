@@ -29,19 +29,34 @@ export default function WelcomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* Ambient Neon Light oben */}
+      {/* Premium Header Hintergrund */}
       <View
         style={{
           position: 'absolute',
           top: 0,
           width: '100%',
-          height: 6,
-          backgroundColor: 'rgba(200,255,22,0.25)',
-          shadowColor: '#C8FF16',
-          shadowOpacity: 0.35,
-          shadowRadius: 20
+          height: 280,
+          backgroundColor: 'transparent'
         }}
-      />
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#0E0B1F'
+          }}
+        />
+
+        {/* weicher Purple Gradient oben */}
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            width: '100%',
+            height: 260,
+            backgroundColor: 'rgba(107,75,255,0.12)',
+          }}
+        />
+      </View>
 
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
@@ -50,32 +65,35 @@ export default function WelcomeScreen() {
           style={{
             opacity: fade,
             transform: [{ scale }],
-            marginTop: 120,
-            marginBottom: 20,
+            marginTop: 130,
+            marginBottom: 18,
             alignItems: 'center'
           }}
         >
           <Image
             source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
             style={{
-              width: 150,
-              height: 150,
-              tintColor: '#6B4BFF'
+              width: 180,
+              height: 180,
+              tintColor: '#6B4BFF',
             }}
             resizeMode="contain"
           />
         </Animated.View>
 
-        {/* Kleine Neon-Line unter dem Logo */}
+        {/* feine Neon-Line */}
         <View
           style={{
-            width: 60,
-            height: 4,
+            width: 50,
+            height: 3,
             backgroundColor: '#C8FF16',
-            borderRadius: 2,
+            borderRadius: 50,
+            marginBottom: 25,
             alignSelf: 'center',
-            marginBottom: 30,
-            opacity: 0.8
+            opacity: 0.85,
+            shadowColor: '#C8FF16',
+            shadowOpacity: 0.25,
+            shadowRadius: 8,
           }}
         />
 
