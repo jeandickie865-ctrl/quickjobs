@@ -12,10 +12,15 @@ async def debug_matching():
     db = client.backup
     
     # Get Elisa's latest job
-    elisa_jobs = await db.jobs.find({"employerId": "user_elisa_web_de"}).sort("createdAt", -1).limit(1).to_list(1)
+    elisa_jobs = await db.jobs.find({"employerId": "user_elisa_web_de"}).sort("createdAt", -1).limit(10).to_list(10)
+    
+    print(f"Found {len(elisa_jobs)} jobs for elisa@web.de")
     
     if not elisa_jobs:
         print("❌ No jobs found for elisa@web.de")
+        print("Checking all jobs in DB...")
+        all_jobs_count = await db.jobs.count_documents({})
+        print(f"Total jobs in DB: {all_jobs_count}")
         return
     
     elisa_job = elisa_jobs[0]
