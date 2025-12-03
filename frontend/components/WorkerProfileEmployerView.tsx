@@ -18,6 +18,7 @@ const COLORS = {
   dimText: '#A0A0A0',
   border: '#2A2738',
   dimmed: 'rgba(14, 11, 31, 0.95)',
+  purple: '#6B4BFF',
 };
 
 interface WorkerProfileEmployerViewProps {
