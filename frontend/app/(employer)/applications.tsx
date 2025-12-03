@@ -1,4 +1,4 @@
-// app/(employer)/applications.tsx - ALLE BEWERBUNGEN FÜR ARBEITGEBER
+// app/(employer)/applications.tsx - ALLE BEWERBUNGEN FÜR ARBEITGEBER (BACKUP DESIGN)
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, ActivityIndicator, Pressable, RefreshControl, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,13 +13,14 @@ import { WorkerProfile } from '../../types/profile';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
-  black: '#000000',
-  darkGray: '#333333',
-  lightGray: '#F5F5F5',
-  errorBg: 'rgba(255,77,77,0.12)',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
+  purpleLight: '#7C5CFF',
+  neon: '#C8FF16',
   error: '#FF4D4D',
 };
 
@@ -38,7 +39,6 @@ export default function EmployerApplicationsScreen() {
   const [items, setItems] = useState<ApplicationWithDetails[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Auto-refresh interval ref
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const loadApplications = async (silent = false) => {
@@ -51,11 +51,9 @@ export default function EmployerApplicationsScreen() {
     try {
       setError(null);
 
-      // Alle Bewerbungen für diesen Arbeitgeber laden
       const apps = await getApplicationsForEmployer();
       console.log(`📋 Gefunden: ${apps.length} Bewerbungen für Employer ${user.id}`);
 
-      // Job- und Worker-Details für jede Bewerbung laden
       const withDetails: ApplicationWithDetails[] = [];
       for (const app of apps) {
         const job = await getJobById(app.jobId);
@@ -63,11 +61,9 @@ export default function EmployerApplicationsScreen() {
         withDetails.push({ application: app, job, worker });
       }
 
-      // Nur PENDING Bewerbungen anzeigen (accepted sind in Matches, rejected werden versteckt)
       const pendingOnly = withDetails.filter(item => item.application.status === 'pending');
 
-      // Sortieren: Neueste zuerst
-      pendingOnly.sort((a, b) => 
+      pendingOnly.sort((a, b) =>
         b.application.createdAt.localeCompare(a.application.createdAt)
       );
 
@@ -85,21 +81,18 @@ export default function EmployerApplicationsScreen() {
     }
   };
 
-  // Setup auto-refresh when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       if (!authLoading && user) {
         loadApplications();
       }
 
-      // Start auto-refresh interval (5 seconds)
       intervalRef.current = setInterval(() => {
         if (!authLoading && user) {
-          loadApplications(true); // Silent refresh
+          loadApplications(true);
         }
       }, 5000);
 
-      // Cleanup on unfocus
       return () => {
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
@@ -130,13 +123,13 @@ export default function EmployerApplicationsScreen() {
   const getStatusColor = (status: JobApplication['status']) => {
     switch (status) {
       case 'pending':
-        return '#FFA500';
+        return COLORS.purple;
       case 'accepted':
         return COLORS.neon;
       case 'rejected':
         return COLORS.error;
       default:
-        return COLORS.darkGray;
+        return COLORS.muted;
     }
   };
 
@@ -162,32 +155,34 @@ export default function EmployerApplicationsScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={COLORS.neon} size="large" />
-          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Bewerbungen...</Text>
+          <Text style={{ color: COLORS.muted, marginTop: 16 }}>Lädt Bewerbungen</Text>
         </SafeAreaView>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      {/* Top Bar */}
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={['top']}>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingHorizontal: 20,
-          paddingVertical: 16,
-        }}>
-          <Text style={{ 
-            fontSize: 24, 
-            fontWeight: '900', 
-            color: COLORS.white,
-            letterSpacing: 0.2,
-          }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '900',
+              color: COLORS.white,
+            }}
+          >
             Bewerbungen
           </Text>
           <Pressable onPress={() => router.push('/(employer)/profile')}>
@@ -200,36 +195,59 @@ export default function EmployerApplicationsScreen() {
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 20, gap: 16 }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={COLORS.neon} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={COLORS.neon}
+          />
         }
       >
         {error && (
-          <View style={{
-            padding: 16,
-            backgroundColor: COLORS.errorBg,
-            borderRadius: 12,
-            borderLeftWidth: 4,
-            borderLeftColor: COLORS.error,
-          }}>
+          <View
+            style={{
+              padding: 16,
+              backgroundColor: 'rgba(255,77,77,0.12)',
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: COLORS.error,
+            }}
+          >
             <Text style={{ color: COLORS.error, fontSize: 14, fontWeight: '600' }}>
-              ⚠️ {error}
+              {error}
             </Text>
           </View>
         )}
 
         {items.length === 0 ? (
-          <View style={{
-            padding: 32,
-            backgroundColor: COLORS.white,
-            borderRadius: 18,
-            alignItems: 'center',
-            gap: 12,
-          }}>
-            <Text style={{ color: COLORS.black, fontSize: 18, textAlign: 'center', fontWeight: '700' }}>
+          <View
+            style={{
+              padding: 32,
+              backgroundColor: COLORS.card,
+              borderRadius: 18,
+              alignItems: 'center',
+              gap: 12,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+            }}
+          >
+            <Text
+              style={{
+                color: COLORS.white,
+                fontSize: 18,
+                textAlign: 'center',
+                fontWeight: '700',
+              }}
+            >
               Noch keine Bewerbungen
             </Text>
-            <Text style={{ color: COLORS.darkGray, fontSize: 14, textAlign: 'center' }}>
-              Sobald sich jemand auf deine Aufträge bewirbt, erscheinen die Bewerbungen hier.
+            <Text
+              style={{
+                color: COLORS.muted,
+                fontSize: 14,
+                textAlign: 'center',
+              }}
+            >
+              Neue Bewerbungen zu deinen Aufträgen erscheinen hier.
             </Text>
           </View>
         ) : (
@@ -250,16 +268,22 @@ export default function EmployerApplicationsScreen() {
                     }
                   }}
                   style={({ pressed }) => ({
-                    backgroundColor: COLORS.white,
+                    backgroundColor: COLORS.card,
                     borderRadius: 18,
                     padding: 20,
                     opacity: pressed ? 0.9 : 1,
-                    borderWidth: isAccepted ? 2 : 0,
-                    borderColor: isAccepted ? COLORS.neon : 'transparent',
+                    borderWidth: 1,
+                    borderColor: isAccepted ? COLORS.neon : COLORS.border,
                   })}
                 >
-                  {/* Worker Info mit Foto */}
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  {/* Worker Kopfbereich */}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 12,
+                    }}
+                  >
                     {worker?.photoUrl || worker?.profilePhotoUri ? (
                       <Image
                         source={{ uri: worker.photoUrl || worker.profilePhotoUri }}
@@ -273,199 +297,351 @@ export default function EmployerApplicationsScreen() {
                         }}
                       />
                     ) : (
-                      <View style={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: 28,
-                        backgroundColor: COLORS.purple,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginRight: 12,
-                      }}>
-                        <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white }}>
+                      <View
+                        style={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 28,
+                          backgroundColor: COLORS.purple,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight: 12,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            fontWeight: '700',
+                            color: COLORS.white,
+                          }}
+                        >
                           {initials}
                         </Text>
                       </View>
                     )}
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '700',
+                          color: COLORS.white,
+                        }}
+                      >
                         {maskedName}
                       </Text>
-                      <Text style={{ fontSize: 12, color: COLORS.darkGray, marginTop: 2 }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: COLORS.muted,
+                          marginTop: 2,
+                        }}
+                      >
                         {new Date(application.createdAt).toLocaleDateString('de-DE')}
                       </Text>
                     </View>
-                    <View style={{
-                      paddingHorizontal: 12,
-                      paddingVertical: 6,
-                      borderRadius: 10,
-                      backgroundColor: statusColor === COLORS.neon ? statusColor : `${statusColor}20`,
-                    }}>
-                      <Text style={{ 
-                        fontSize: 12, 
-                        fontWeight: '700', 
-                        color: statusColor === COLORS.neon ? COLORS.black : statusColor,
-                      }}>
+                    <View
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        borderRadius: 10,
+                        backgroundColor:
+                          statusColor === COLORS.neon
+                            ? 'rgba(200,255,22,0.2)'
+                            : statusColor === COLORS.error
+                            ? 'rgba(255,77,77,0.16)'
+                            : 'rgba(107,75,255,0.16)',
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: '700',
+                          color:
+                            statusColor === COLORS.neon
+                              ? COLORS.neon
+                              : statusColor === COLORS.error
+                              ? COLORS.error
+                              : COLORS.purple,
+                        }}
+                      >
                         {statusLabel}
                       </Text>
                     </View>
                   </View>
 
-                  {/* Über mich - Worker Beschreibung */}
+                  {/* Über mich */}
                   {worker?.shortBio && (
-                    <View style={{
-                      backgroundColor: 'rgba(89, 65, 255, 0.05)',
-                      padding: 12,
-                      borderRadius: 12,
-                      borderLeftWidth: 3,
-                      borderLeftColor: COLORS.purple,
-                      marginBottom: 12,
-                    }}>
-                      <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.purple, marginBottom: 4 }}>
-                        💬 Über mich
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(107,75,255,0.12)',
+                        padding: 12,
+                        borderRadius: 12,
+                        borderLeftWidth: 3,
+                        borderLeftColor: COLORS.purple,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: '700',
+                          color: COLORS.white,
+                          marginBottom: 4,
+                        }}
+                      >
+                        Über mich
                       </Text>
-                      <Text style={{ fontSize: 13, color: COLORS.black, lineHeight: 18 }}>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          color: COLORS.muted,
+                          lineHeight: 18,
+                        }}
+                      >
                         {worker.shortBio}
                       </Text>
                     </View>
                   )}
 
-                  {/* Beschäftigungsstatus - WICHTIG! */}
+                  {/* Beschäftigungsstatus */}
                   {worker && (
-                    <View style={{
-                      backgroundColor: worker.isSelfEmployed ? 'rgba(200, 255, 22, 0.1)' : 'rgba(89, 65, 255, 0.1)',
-                      padding: 12,
-                      borderRadius: 12,
-                      borderWidth: 2,
-                      borderColor: worker.isSelfEmployed ? COLORS.neon : COLORS.purple,
-                      marginBottom: 12,
-                    }}>
-                      <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black, marginBottom: 4 }}>
-                        {worker.isSelfEmployed ? '💼 Selbstständig' : '📋 Nicht selbstständig'}
+                    <View
+                      style={{
+                        backgroundColor: worker.isSelfEmployed
+                          ? 'rgba(200,255,22,0.1)'
+                          : 'rgba(107,75,255,0.12)',
+                        padding: 12,
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: worker.isSelfEmployed ? COLORS.neon : COLORS.purple,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: '700',
+                          color: COLORS.white,
+                          marginBottom: 4,
+                        }}
+                      >
+                        {worker.isSelfEmployed ? 'Selbstständig' : 'Nicht selbstständig'}
                       </Text>
-                      <Text style={{ fontSize: 11, color: COLORS.darkGray }}>
-                        {worker.isSelfEmployed 
-                          ? 'Kann sofort loslegen nach der Zahlung der Provision an Backup'
-                          : 'Backup kann bei der Anmeldung helfen'}
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          color: COLORS.muted,
+                        }}
+                      >
+                        {worker.isSelfEmployed
+                          ? 'Kann nach der Provision an BACKUP direkt starten.'
+                          : 'BACKUP unterstützt bei der Anmeldung.'}
                       </Text>
                     </View>
                   )}
 
-                  {/* Worker Qualifikationen - WICHTIG FÜR ENTSCHEIDUNG */}
-                  {worker && (worker.subcategories?.length > 0 || worker.qualifications?.length > 0) && (
-                    <View style={{
-                      backgroundColor: 'rgba(200, 255, 22, 0.1)',
-                      padding: 12,
-                      borderRadius: 12,
-                      borderWidth: 2,
-                      borderColor: COLORS.neon,
-                      marginBottom: 12,
-                    }}>
-                      <Text style={{ fontSize: 13, fontWeight: '700', color: COLORS.black, marginBottom: 8 }}>
-                        🎯 Qualifikationen & Tätigkeiten
-                      </Text>
-                      
-                      {worker.subcategories && worker.subcategories.length > 0 && (
-                        <View style={{ marginBottom: 8 }}>
-                          <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.darkGray, marginBottom: 4 }}>
-                            Tätigkeiten:
-                          </Text>
-                          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                            {worker.subcategories.map((sub, idx) => (
-                              <View 
-                                key={idx}
-                                style={{
-                                  backgroundColor: COLORS.white,
-                                  paddingHorizontal: 8,
-                                  paddingVertical: 4,
-                                  borderRadius: 8,
-                                  borderWidth: 1,
-                                  borderColor: COLORS.neon,
-                                }}
-                              >
-                                <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.black }}>
-                                  {sub}
-                                </Text>
-                              </View>
-                            ))}
-                          </View>
-                        </View>
-                      )}
+                  {/* Qualifikationen / Tätigkeiten */}
+                  {worker &&
+                    (worker.subcategories?.length > 0 ||
+                      worker.qualifications?.length > 0) && (
+                      <View
+                        style={{
+                          backgroundColor: 'rgba(200,255,22,0.08)',
+                          padding: 12,
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          borderColor: COLORS.neon,
+                          marginBottom: 12,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            fontWeight: '700',
+                            color: COLORS.white,
+                            marginBottom: 8,
+                          }}
+                        >
+                          Qualifikationen und Tätigkeiten
+                        </Text>
 
-                      {worker.qualifications && worker.qualifications.length > 0 && (
-                        <View>
-                          <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.darkGray, marginBottom: 4 }}>
-                            Qualifikationen:
-                          </Text>
-                          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                            {worker.qualifications.map((qual, idx) => (
-                              <View 
-                                key={idx}
-                                style={{
-                                  backgroundColor: COLORS.neon,
-                                  paddingHorizontal: 8,
-                                  paddingVertical: 4,
-                                  borderRadius: 8,
-                                }}
-                              >
-                                <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
-                                  ✓ {qual}
-                                </Text>
-                              </View>
-                            ))}
+                        {worker.subcategories && worker.subcategories.length > 0 && (
+                          <View style={{ marginBottom: 8 }}>
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                fontWeight: '600',
+                                color: COLORS.muted,
+                                marginBottom: 4,
+                              }}
+                            >
+                              Tätigkeiten
+                            </Text>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                gap: 6,
+                              }}
+                            >
+                              {worker.subcategories.map((sub, idx) => (
+                                <View
+                                  key={idx}
+                                  style={{
+                                    backgroundColor: COLORS.card,
+                                    paddingHorizontal: 8,
+                                    paddingVertical: 4,
+                                    borderRadius: 8,
+                                    borderWidth: 1,
+                                    borderColor: COLORS.neon,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontSize: 11,
+                                      fontWeight: '600',
+                                      color: COLORS.white,
+                                    }}
+                                  >
+                                    {sub}
+                                  </Text>
+                                </View>
+                              ))}
+                            </View>
                           </View>
-                        </View>
-                      )}
-                    </View>
-                  )}
+                        )}
+
+                        {worker.qualifications && worker.qualifications.length > 0 && (
+                          <View>
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                fontWeight: '600',
+                                color: COLORS.muted,
+                                marginBottom: 4,
+                              }}
+                            >
+                              Qualifikationen
+                            </Text>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                gap: 6,
+                              }}
+                            >
+                              {worker.qualifications.map((qual, idx) => (
+                                <View
+                                  key={idx}
+                                  style={{
+                                    backgroundColor: COLORS.neon,
+                                    paddingHorizontal: 8,
+                                    paddingVertical: 4,
+                                    borderRadius: 8,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontSize: 11,
+                                      fontWeight: '700',
+                                      color: '#000000',
+                                    }}
+                                  >
+                                    {qual}
+                                  </Text>
+                                </View>
+                              ))}
+                            </View>
+                          </View>
+                        )}
+                      </View>
+                    )}
 
                   {/* Job Info */}
                   {job && (
-                    <View style={{
-                      backgroundColor: COLORS.lightGray,
-                      padding: 12,
-                      borderRadius: 12,
-                    }}>
-                      <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.black, marginBottom: 4 }}>
+                    <View
+                      style={{
+                        backgroundColor: COLORS.card,
+                        padding: 12,
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: COLORS.border,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: '600',
+                          color: COLORS.white,
+                          marginBottom: 4,
+                        }}
+                      >
                         {job.title}
                       </Text>
-                      <Text style={{ fontSize: 12, color: COLORS.darkGray }}>
-                        📦 {job.category}
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: COLORS.muted,
+                        }}
+                      >
+                        Kategorie: {job.category}
                       </Text>
                     </View>
                   )}
 
-                  {/* Accept Button - nur bei pending */}
+                  {/* Button nur bei pending */}
                   {application.status === 'pending' && (
-                    <Pressable
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        router.push(`/payment/${application.id}`);
-                      }}
+                    <View
                       style={{
-                        backgroundColor: COLORS.neon,
-                        borderRadius: 14,
-                        paddingVertical: 14,
-                        paddingHorizontal: 16,
-                        alignItems: 'center',
-                        shadowColor: 'rgba(200,255,22,0.2)',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.8,
-                        shadowRadius: 6,
                         marginTop: 12,
+                        alignItems: 'center',
                       }}
                     >
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                        ✓ Annehmen & zur Zahlung
-                      </Text>
-                    </Pressable>
+                      <Pressable
+                        onPress={e => {
+                          e.stopPropagation();
+                          router.push(`/payment/${application.id}`);
+                        }}
+                        style={{
+                          backgroundColor: COLORS.purple,
+                          borderRadius: 14,
+                          paddingVertical: 14,
+                          paddingHorizontal: 16,
+                          alignItems: 'center',
+                          width: '60%',
+                          maxWidth: 300,
+                          minWidth: 220,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            fontWeight: '700',
+                            color: COLORS.white,
+                          }}
+                        >
+                          Annehmen und zur Zahlung
+                        </Text>
+                      </Pressable>
+                    </View>
                   )}
 
-                  {/* Action Hint */}
-                  <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Ionicons name="open-outline" size={14} color={COLORS.purple} />
-                    <Text style={{ fontSize: 12, color: COLORS.purple, fontWeight: '600' }}>
-                      Tippen für Details
+                  <View
+                    style={{
+                      marginTop: 12,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 6,
+                    }}
+                  >
+                    <Ionicons name="open-outline" size={14} color={COLORS.muted} />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: COLORS.muted,
+                      }}
+                    >
+                      Tippe auf die Karte für weitere Details.
                     </Text>
                   </View>
                 </Pressable>
