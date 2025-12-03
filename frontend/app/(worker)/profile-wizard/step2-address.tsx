@@ -1,4 +1,5 @@
-// app/(worker)/profile-wizard/step2-address.tsx - ADRESSE & ARBEITSRADIUS
+// app/(worker)/profile-wizard/step2-address.tsx – BACKUP DESIGN
+
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,20 +11,19 @@ import Slider from '@react-native-community/slider';
 import { useWizard } from '../../../contexts/WizardContext';
 
 const COLORS = {
-  purple: '#5941FF',
-  purpleDark: '#3E2DD9',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
   neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
-  gray: '#999',
-  lightGray: '#F5F5F5',
   error: '#FF4D4D',
 };
 
 export default function Step2Address() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
-  
+
   const [street, setStreet] = useState(wizardData.street || '');
   const [houseNumber, setHouseNumber] = useState(wizardData.houseNumber || '');
   const [postalCode, setPostalCode] = useState(wizardData.postalCode || '');
@@ -34,14 +34,12 @@ export default function Step2Address() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!street.trim()) newErrors.street = 'Straße ist erforderlich';
-    if (!postalCode.trim()) newErrors.postalCode = 'PLZ ist erforderlich';
-    if (!city.trim()) newErrors.city = 'Stadt ist erforderlich';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const err: Record<string, string> = {};
+    if (!street.trim()) err.street = 'Straße ist erforderlich';
+    if (!postalCode.trim()) err.postalCode = 'PLZ ist erforderlich';
+    if (!city.trim()) err.city = 'Stadt ist erforderlich';
+    setErrors(err);
+    return Object.keys(err).length === 0;
   };
 
   const handleNext = () => {
@@ -65,25 +63,33 @@ export default function Step2Address() {
 
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Adresse & Arbeitsbereich</Text>
-          <Text style={styles.subtitle}>
-            Wo wohnst du und wie weit möchtest du fahren?
-          </Text>
+          <Text style={styles.subtitle}>Wo wohnst du und wie weit möchtest du fahren?</Text>
 
-          <AddressAutocompleteInput
-            street={street}
-            postalCode={postalCode}
-            city={city}
-            houseNumber={houseNumber}
-            onStreetChange={setStreet}
-            onPostalCodeChange={setPostalCode}
-            onCityChange={setCity}
-            onHouseNumberChange={setHouseNumber}
-            onLatChange={setLat}
-            onLonChange={setLon}
-          />
+          {/* Address Autocomplete Input */}
+          <View style={styles.card}>
+            <AddressAutocompleteInput
+              street={street}
+              postalCode={postalCode}
+              city={city}
+              houseNumber={houseNumber}
+              onStreetChange={setStreet}
+              onPostalCodeChange={setPostalCode}
+              onCityChange={setCity}
+              onHouseNumberChange={setHouseNumber}
+              onLatChange={setLat}
+              onLonChange={setLon}
+            />
 
-          <View style={styles.radiusSection}>
+            {/* Errors */}
+            {errors.street && <Text style={styles.errorText}>{errors.street}</Text>}
+            {errors.postalCode && <Text style={styles.errorText}>{errors.postalCode}</Text>}
+            {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
+          </View>
+
+          {/* RADIUS */}
+          <View style={styles.card}>
             <Text style={styles.label}>Arbeitsradius: {radius} km</Text>
+
             <Slider
               style={styles.slider}
               minimumValue={5}
@@ -92,24 +98,25 @@ export default function Step2Address() {
               value={radius}
               onValueChange={setRadius}
               minimumTrackTintColor={COLORS.neon}
-              maximumTrackTintColor={COLORS.white}
+              maximumTrackTintColor={COLORS.border}
               thumbTintColor={COLORS.neon}
             />
+
             <View style={styles.radiusLabels}>
               <Text style={styles.radiusLabel}>5 km</Text>
               <Text style={styles.radiusLabel}>100 km</Text>
             </View>
-            <Text style={styles.helperText}>
+
+            <Text style={styles.helper}>
               Jobs werden dir innerhalb dieses Radius angezeigt
             </Text>
           </View>
         </ScrollView>
 
-        {/* Validation Hint */}
         {!isFormValid && (
           <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
             <Text style={styles.validationHint}>
-              ℹ️ Bitte gib deine vollständige Adresse ein, um fortzufahren
+              Bitte gib deine vollständige Adresse ein, um fortzufahren
             </Text>
           </View>
         )}
@@ -125,10 +132,11 @@ export default function Step2Address() {
   );
 }
 
+// STYLES — BACKUP DESIGN
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.purple,
+    backgroundColor: COLORS.bg,
   },
   safeArea: {
     flex: 1,
@@ -137,56 +145,71 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
+    padding: 24,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: COLORS.white,
-    marginBottom: 8,
+    color: COLORS.text,
+    marginBottom: 6,
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.white,
-    opacity: 0.9,
+    color: COLORS.muted,
     marginBottom: 32,
   },
-  radiusSection: {
-    marginTop: 32,
+
+  card: {
+    backgroundColor: COLORS.card,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
+
   label: {
     fontSize: 14,
     fontWeight: '700',
-    color: COLORS.white,
-    marginBottom: 16,
+    color: COLORS.text,
+    marginBottom: 10,
   },
+
   slider: {
     width: '100%',
     height: 40,
   },
+
   radiusLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 8,
   },
+
   radiusLabel: {
     fontSize: 12,
-    color: COLORS.white,
-    opacity: 0.7,
+    color: COLORS.muted,
   },
-  helperText: {
+
+  helper: {
+    marginTop: 12,
     fontSize: 12,
-    color: COLORS.white,
-    opacity: 0.7,
-    marginTop: 16,
-    fontStyle: 'italic',
+    color: COLORS.muted,
   },
+
   validationHint: {
     fontSize: 13,
     color: COLORS.neon,
-    backgroundColor: 'rgba(200, 255, 22, 0.1)',
+    backgroundColor: 'rgba(200,255,22,0.1)',
     padding: 12,
     borderRadius: 8,
     textAlign: 'center',
+  },
+
+  errorText: {
+    color: COLORS.error,
+    fontSize: 12,
+    marginTop: 6,
   },
 });
