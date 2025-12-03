@@ -292,23 +292,25 @@ export default function WorkerMatchesScreen() {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingHorizontal: 20,
-          paddingVertical: 16,
+          paddingHorizontal: 22,
+          paddingVertical: 18,
         }}>
-          <Text style={{ 
-            fontSize: 24, 
-            fontWeight: '900', 
+          <Text style={{
+            fontSize: 24,
+            fontWeight: '800',
             color: COLORS.white,
-            letterSpacing: 0.2,
+            letterSpacing: 0.5,
           }}>
             Meine Matches
           </Text>
-          <View style={{ flexDirection: 'row', gap: 12 }}>
+
+          <View style={{ flexDirection: 'row', gap: 18 }}>
             <Pressable onPress={() => setShowTaxModal(true)}>
-              <Ionicons name="information-circle-outline" size={26} color={COLORS.neon} />
+              <Ionicons name="information-circle-outline" size={26} color={COLORS.accent} />
             </Pressable>
+
             <Pressable onPress={() => router.push('/(worker)/profile')}>
-              <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
+              <Ionicons name="person-circle-outline" size={28} color={COLORS.white} />
             </Pressable>
           </View>
         </View>
