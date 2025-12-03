@@ -167,6 +167,11 @@ export default function PaymentScreen() {
       setProcessing(false);
 
       console.log("Payment OK. Checking registration / modal logic now...");
+      console.log("PAYMENT OK → CHECKING MODAL CONDITIONS");
+      console.log("USER accountType:", user?.accountType);
+      console.log("WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
+      console.log("JOB:", job);
+
       await handleRegistrationCheck();
       
     } catch (err) {
