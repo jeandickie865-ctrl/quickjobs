@@ -698,7 +698,7 @@ export function WorkerProfileEmployerView({
                             marginBottom: 4,
                           }}
                         >
-                          <Ionicons name="call-outline" size={16} color={COLORS.muted} />
+                          <Ionicons name="call-outline" size={16} color={COLORS.dimText} />
                           <Text
                             style={{
                               fontSize: 12,
