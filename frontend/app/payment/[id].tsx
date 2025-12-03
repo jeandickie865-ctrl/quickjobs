@@ -112,24 +112,30 @@ export default function PaymentScreen() {
   }
 
   const handleRegistrationCheck = async () => {
-    console.log("CHECK accountType:", user?.accountType);
-    console.log("CHECK workerProfile:", workerProfile);
+    console.log("🔍 [MODAL CHECK] START");
+    console.log("🔍 [MODAL CHECK] user.accountType:", user?.accountType);
+    console.log("🔍 [MODAL CHECK] workerProfile:", workerProfile);
+    console.log("🔍 [MODAL CHECK] workerProfile.isSelfEmployed:", workerProfile?.isSelfEmployed);
+    console.log("🔍 [MODAL CHECK] workerProfile.isSelfEmployed TYPE:", typeof workerProfile?.isSelfEmployed);
 
     if (!workerProfile) {
-      console.log("NO workerProfile");
+      console.log("❌ [MODAL CHECK] NO workerProfile - showing error");
       Alert.alert("Fehler", "Worker-Daten fehlen.");
       return;
     }
 
     const isSelf = workerProfile.isSelfEmployed === true;
+    console.log("🔍 [MODAL CHECK] isSelf (=== true):", isSelf);
 
     // PRIVATE + NICHT selbstständig → Private Modal
     if (user?.accountType === "private" && !isSelf) {
+      console.log("✅ [MODAL CHECK] Showing PRIVATE EMPLOYER MODAL");
       setShowPrivateEmployerModal(true);
       return;
     }
 
     // BUSINESS oder selbstständig → Business Modal
+    console.log("✅ [MODAL CHECK] Showing BUSINESS REGISTRATION MODAL");
     setShowRegistrationModal(true);
   };
 
