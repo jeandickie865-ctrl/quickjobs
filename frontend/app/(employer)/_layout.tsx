@@ -96,21 +96,21 @@ export default function EmployerLayout() {
         options={{
           tabBarIcon: () => null,
           tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 85,
-              alignItems: 'center',
-            }}>
+            <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{
-                fontSize: 13,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+                color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
+                fontWeight: focused ? '800' : '600',
               }}>
                 Aufträge
               </Text>
+              {focused && (
+                <View style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#5941FF',
+                }} />
+              )}
             </View>
           ),
         }}
@@ -122,21 +122,21 @@ export default function EmployerLayout() {
         options={{
           tabBarIcon: () => null,
           tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 16,
-              borderRadius: 12,
-              minWidth: 85,
-              alignItems: 'center',
-            }}>
+            <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{
-                fontSize: 13,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+                color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
+                fontWeight: focused ? '800' : '600',
               }}>
                 Bewerb.
               </Text>
+              {focused && (
+                <View style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#5941FF',
+                }} />
+              )}
             </View>
           ),
         }}
@@ -146,35 +146,42 @@ export default function EmployerLayout() {
       <Tabs.Screen
         name="matches"
         options={{
-          tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
-          tabBarBadgeStyle: {
-            backgroundColor: '#007AFF',
-            color: '#FFFFFF',
-            fontSize: 11,
-            fontWeight: '700',
-            minWidth: 20,
-            height: 20,
-            borderRadius: 10,
-            marginLeft: -8,
-            marginTop: -4,
-          },
           tabBarIcon: () => null,
           tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 85,
-              alignItems: 'center',
-            }}>
+            <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{
-                fontSize: 13,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+                color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
+                fontWeight: focused ? '800' : '600',
               }}>
                 Matches
               </Text>
+              {focused && (
+                <View style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#5941FF',
+                }} />
+              )}
+              {matchesCount > 0 && (
+                <View style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -10,
+                  backgroundColor: '#C8FF16',
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                  borderRadius: 10,
+                }}>
+                  <Text style={{
+                    fontSize: 11,
+                    fontWeight: '900',
+                    color: '#000',
+                  }}>
+                    {matchesCount}
+                  </Text>
+                </View>
+              )}
             </View>
           ),
         }}
@@ -186,21 +193,21 @@ export default function EmployerLayout() {
         options={{
           tabBarIcon: () => null,
           tabBarLabel: ({ focused }) => (
-            <View style={{
-              backgroundColor: focused ? COLORS.neon : 'rgba(255, 255, 255, 0.15)',
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              minWidth: 85,
-              alignItems: 'center',
-            }}>
+            <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{
-                fontSize: 13,
-                fontWeight: '700',
-                color: focused ? '#000000' : 'rgba(255, 255, 255, 0.8)',
+                color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
+                fontWeight: focused ? '800' : '600',
               }}>
                 Profil
               </Text>
+              {focused && (
+                <View style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#5941FF',
+                }} />
+              )}
             </View>
           ),
         }}
