@@ -233,6 +233,61 @@ export default function EditWorkerProfileScreen() {
     return (first + last).toUpperCase() || '?';
   };
 
+  // OSM Address Search
+  async function searchAddress(query: string) {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (!query || query.length < 5) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+        const url = `${API_BASE}/api/geocode?query=${encodeURIComponent(query)}`;
+        
+        const response = await fetch(url);
+
+        if (response.status === 429) {
+          Alert.alert('Rate Limit', 'Bitte warte einen Moment und versuche es erneut.');
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setAddressSuggestions(data);
+        setShowSuggestions(data.length > 0);
+      } catch (error) {
+        console.error('Address search error:', error);
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
+      }
+    }, 500);
+  }
+
+  function selectAddress(suggestion: any) {
+    const addr = suggestion.address || {};
+    
+    setStreet(addr.road || addr.street || '');
+    setHouseNumber(addr.house_number || '');
+    setPostalCode(addr.postcode || '');
+    setCity(addr.city || addr.town || addr.village || '');
+    setCountry(addr.country || 'Deutschland');
+    
+    setLat(parseFloat(suggestion.lat));
+    setLon(parseFloat(suggestion.lon));
+    
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+  }
+
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
 
