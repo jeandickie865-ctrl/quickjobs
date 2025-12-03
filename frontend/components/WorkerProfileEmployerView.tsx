@@ -440,7 +440,7 @@ export function WorkerProfileEmployerView({
                       ) : (
                         <>
                           {(profile.homeAddress.postalCode || profile.homeAddress.city) && (
-                            <Text style={{ fontSize: 15, color: COLORS.muted }}>
+                            <Text style={{ fontSize: 15, color: COLORS.lightText }}>
                               {profile.homeAddress.postalCode || ''}{' '}
                               {profile.homeAddress.city || ''}
                             </Text>
