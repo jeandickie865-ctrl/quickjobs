@@ -292,7 +292,7 @@ export function WorkerProfileEmployerView({
                       width: 100,
                       height: 100,
                       borderRadius: 50,
-                      borderWidth: 4,
+                      borderWidth: 3,
                       borderColor: COLORS.neon,
                       marginBottom: 16,
                     }}
