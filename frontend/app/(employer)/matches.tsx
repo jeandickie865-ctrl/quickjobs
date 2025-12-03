@@ -338,129 +338,93 @@ export default function MatchesScreen() {
               <View
                 key={`${match.job.id}-${match.application.id}`}
                 style={{
-                  backgroundColor: COLORS.white,
-                  borderRadius: 18,
-                  padding: 20,
-                  shadowColor: COLORS.neon,
-                  shadowOffset: { width: 0, height: 6 },
-                  shadowOpacity: 0.2,
-                  shadowRadius: 12,
+                  backgroundColor: "rgba(255,255,255,0.04)",
+                  borderRadius: 20,
+                  padding: 18,
+                  marginBottom: 22,
+                  borderWidth: 1,
+                  borderColor: "rgba(255,255,255,0.06)",
                 }}
               >
-                {/* Worker Info */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+
+                {/* TOP: Worker Avatar + Name */}
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <View style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 28,
-                    backgroundColor: COLORS.neon,
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    backgroundColor: "#C8FF16",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}>
-                    <Text style={{ fontSize: 24, fontWeight: '700', color: COLORS.black }}>
-                      {match.application.workerName?.charAt(0) || 'W'}
+                    <Text style={{ fontSize: 20, fontWeight: "800", color: "#000" }}>
+                      {match.application.workerName?.charAt(0) || "W"}
                     </Text>
                   </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
-                      {match.application.workerName || 'Worker'}
+
+                  <View style={{ marginLeft: 12 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "700", color: "#FFF" }}>
+                      {match.application.workerName}
                     </Text>
-                    <Text style={{ fontSize: 13, color: COLORS.darkGray, marginTop: 2 }}>
-                      {match.application.status === 'pending' ? 'Neue Bewerbung' : 'Match seit'} {formatDate(match.application.createdAt)}
+                    <Text style={{ fontSize: 13, color: "#AAA", marginTop: 2 }}>
+                      Match seit {formatDate(match.application.createdAt)}
                     </Text>
-                    {match.application.status === 'pending' && (
-                      <View style={{ 
-                        backgroundColor: COLORS.neon, 
-                        paddingHorizontal: 8, 
-                        paddingVertical: 4, 
-                        borderRadius: 6, 
-                        alignSelf: 'flex-start',
-                        marginTop: 4
-                      }}>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: COLORS.black }}>
-                          NEU
-                        </Text>
-                      </View>
-                    )}
-                    <View style={{ marginTop: 6 }}>
-                      <RatingDisplay
-                        averageRating={match.avgRating}
-                        reviewCount={match.reviewCount}
-                        size="small"
-                        color={COLORS.neon}
-                      />
-                    </View>
                   </View>
                 </View>
 
-                {/* Contact Details - ONLY VISIBLE AFTER PAYMENT */}
-                {match.workerProfile && match.application.paymentStatus === 'paid' && (
+                {/* STATUS BADGE */}
+                <View style={{
+                  marginTop: 14,
+                  alignSelf: "flex-start",
+                  backgroundColor: "rgba(200,255,22,0.12)",
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                  borderRadius: 8
+                }}>
+                  <Text style={{ color: "#C8FF16", fontWeight: "700", fontSize: 12 }}>
+                    BESTÄTIGT
+                  </Text>
+                </View>
+
+                {/* JOB TITLE */}
+                <Text style={{ color: "#FFF", fontSize: 17, marginTop: 14, fontWeight: "700" }}>
+                  {match.job.title}
+                </Text>
+                <Text style={{ color: "#AAA", marginTop: 4 }}>
+                  {match.job.category}
+                </Text>
+
+                {/* CONTACT BOX (nur bei paid) */}
+                {match.workerProfile && match.application.paymentStatus === "paid" && (
                   <View style={{
-                    backgroundColor: COLORS.neon,
-                    borderRadius: 12,
-                    padding: 16,
-                    marginBottom: 16,
+                    marginTop: 18,
+                    backgroundColor: "rgba(200,255,22,0.12)",
+                    padding: 14,
+                    borderRadius: 14,
+                    borderWidth: 1,
+                    borderColor: "#C8FF16",
                   }}>
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.black, marginBottom: 12, opacity: 0.7 }}>
-                      🔓 KONTAKTDATEN FREIGESCHALTET
+                    <Text style={{ color: "#C8FF16", fontWeight: "700", marginBottom: 10 }}>
+                      KONTAKTDATEN FREIGESCHALTET
                     </Text>
-                    
-                    {(match.workerProfile.firstName || match.workerProfile.lastName) && (
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                        <Ionicons name="person" size={18} color={COLORS.black} />
-                        <Text style={{ fontSize: 15, color: COLORS.black, fontWeight: '700' }}>
-                          {match.workerProfile.firstName} {match.workerProfile.lastName}
-                        </Text>
-                      </View>
-                    )}
-                    
+
                     {match.workerProfile.email && (
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                        <Ionicons name="mail" size={18} color={COLORS.black} />
-                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
-                          {match.workerProfile.email}
-                        </Text>
-                      </View>
+                      <Text style={{ color: "#FFF", marginBottom: 6 }}>
+                        📩 {match.workerProfile.email}
+                      </Text>
                     )}
-                    
                     {match.workerProfile.phone && (
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                        <Ionicons name="call" size={18} color={COLORS.black} />
-                        <Text style={{ fontSize: 14, color: COLORS.black, fontWeight: '600' }}>
-                          {match.workerProfile.phone}
-                        </Text>
-                      </View>
-                    )}
-                    
-                    {!match.workerProfile.email && !match.workerProfile.phone && (
-                      <Text style={{ fontSize: 13, color: COLORS.black, opacity: 0.6, fontStyle: 'italic' }}>
-                        Worker hat noch keine Kontaktdaten hinterlegt
+                      <Text style={{ color: "#FFF" }}>
+                        📞 {match.workerProfile.phone}
                       </Text>
                     )}
                   </View>
                 )}
 
-                {/* Job Info */}
-                <View style={{ 
-                  backgroundColor: COLORS.lightGray, 
-                  borderRadius: 12, 
-                  padding: 12,
-                  marginBottom: 16
-                }}>
-                  <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.black, marginBottom: 6 }}>
-                    {match.job.title}
-                  </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Ionicons name="briefcase-outline" size={14} color={COLORS.darkGray} />
-                    <Text style={{ fontSize: 12, color: COLORS.darkGray }}>
-                      {match.job.category}
-                    </Text>
-                  </View>
-                </View>
+                {/* BUTTONS (60% BREITE) */}
+                <View style={{ marginTop: 22, gap: 14 }}>
 
-                {/* Actions */}
-                <View style={{ gap: 10 }}>
-                  {/* Chat Button */}
+                  {/* CHAT */}
                   <Pressable
                     onPress={() => {
                       if (match.application.paymentStatus === "paid") {
@@ -469,216 +433,88 @@ export default function MatchesScreen() {
                         router.push(`/payment/${match.application.id}`);
                       }
                     }}
-                    disabled={match.application.paymentStatus === "pending"}
-                    style={({ pressed }) => ({
-                      backgroundColor: match.application.paymentStatus === "paid" ? COLORS.neon : COLORS.lightGray,
-                      borderRadius: 14,
+                    style={{
+                      width: "60%",
+                      alignSelf: "center",
+                      backgroundColor:
+                        match.application.paymentStatus === "paid" ? COLORS.neon : "#555",
                       paddingVertical: 14,
-                      paddingHorizontal: 16,
-                      alignItems: 'center',
-                      shadowColor: match.application.paymentStatus === "paid" ? COLORS.neonShadow : "transparent",
-                      shadowOffset: { width: 0, height: 2 },
-                      shadowOpacity: 0.8,
-                      shadowRadius: 6,
-                      opacity: pressed ? 0.9 : 1,
-                    })}
+                      borderRadius: 14,
+                      alignItems: "center",
+                    }}
                   >
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <Ionicons 
-                        name={match.application.paymentStatus === "paid" ? "chatbubble-outline" : "lock-closed"} 
-                        size={18} 
-                        color={match.application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray} 
-                      />
-                      <Text style={{ 
-                        fontSize: 16, 
-                        fontWeight: '700', 
-                        color: match.application.paymentStatus === "paid" ? COLORS.black : COLORS.darkGray 
-                      }}>
-                        {match.application.paymentStatus === "paid" ? "Zum Chat" : "Zahlung abschließen"}
-                      </Text>
-                      {match.application.paymentStatus === "paid" && unreadCounts[match.application.id] > 0 && (
-                        <View style={{
-                          backgroundColor: '#FF4444',
-                          borderRadius: 12,
-                          minWidth: 24,
-                          height: 24,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          paddingHorizontal: 6,
-                        }}>
-                          <Text style={{ 
-                            fontSize: 12, 
-                            fontWeight: '700', 
-                            color: COLORS.white 
-                          }}>
-                            {unreadCounts[match.application.id]}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
+                    <Text style={{
+                      fontSize: 16,
+                      fontWeight: "700",
+                      color: match.application.paymentStatus === "paid" ? "#000" : "#AAA"
+                    }}>
+                      {match.application.paymentStatus === "paid"
+                        ? "Zum Chat"
+                        : "Zahlung abschließen"}
+                    </Text>
                   </Pressable>
 
-                  {/* Rate Worker Button - nur nach Zahlung */}
+                  {/* RATE WORKER */}
+                  <Pressable
+                    onPress={() =>
+                      router.push(`/(employer)/jobs/rate?jobId=${match.job.id}&workerId=${match.application.workerId}`)
+                    }
+                    style={{
+                      width: "60%",
+                      alignSelf: "center",
+                      borderWidth: 2,
+                      borderColor: COLORS.purple,
+                      paddingVertical: 14,
+                      borderRadius: 14,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 15, fontWeight: "700", color: COLORS.purple }}>
+                      ⭐ Worker bewerten
+                    </Text>
+                  </Pressable>
+
+                  {/* DOCUMENTS */}
                   {match.application.paymentStatus === "paid" && (
                     <Pressable
-                      onPress={() => {
-                        // Use application.workerId directly
-                        const workerId = match.application?.workerId;
-                        console.log('🎯 Employer Button: application.workerId:', match.application?.workerId);
-                        console.log('🎯 Employer Button: worker?.userId:', match.worker?.userId);
-                        console.log('🎯 Employer Button: Final workerId:', workerId);
-                        console.log('🎯 Employer Button: Navigate to rate - jobId:', match.job.id, 'workerId:', workerId);
-                        router.push(`/(employer)/jobs/rate?jobId=${match.job.id}&workerId=${workerId}`);
-                      }}
-                      style={({ pressed }) => ({
-                        backgroundColor: '#FFD700',
-                        borderRadius: 14,
+                      onPress={() =>
+                        router.push(`/(employer)/registration/confirm?applicationId=${match.application.id}&type=kurzfristig`)
+                      }
+                      style={{
+                        width: "60%",
+                        alignSelf: "center",
+                        borderWidth: 2,
+                        borderColor: COLORS.neon,
                         paddingVertical: 14,
-                        paddingHorizontal: 16,
-                        alignItems: 'center',
-                        shadowColor: 'rgba(255,215,0,0.2)',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.8,
-                        shadowRadius: 6,
-                        opacity: pressed ? 0.9 : 1,
-                      })}
+                        borderRadius: 14,
+                        alignItems: "center",
+                      }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <Ionicons name="star" size={18} color={COLORS.black} />
-                        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                          Auftragnehmer bewerten
-                        </Text>
-                      </View>
+                      <Text style={{ fontSize: 15, color: COLORS.neon, fontWeight: "700" }}>
+                        📄 Dokumente erstellen
+                      </Text>
                     </Pressable>
                   )}
 
-                  {/* Anmeldedokumente Button - nur für NICHT-selbstständige nach Zahlung */}
-                  {match.application.paymentStatus === "paid" && !match.workerProfile?.isSelfEmployed && (() => {
-                    const hasWorkerData = workerDataStatus[match.application.workerId];
-                    const buttonText = hasWorkerData 
-                      ? "Anmeldedokumente erstellen" 
-                      : "Worker-Daten fehlen noch";
-                    const iconName = hasWorkerData ? "document-text" : "alert-circle";
-                    
-                    return (
-                      <Pressable
-                        onPress={() => {
-                          router.push(`/(employer)/registration/confirm?applicationId=${match.application.id}&type=kurzfristig`);
-                        }}
-                        style={({ pressed }) => ({
-                          backgroundColor: COLORS.purple,
-                          borderRadius: 14,
-                          paddingVertical: 14,
-                          paddingHorizontal: 16,
-                          alignItems: 'center',
-                          shadowColor: 'rgba(89,65,255,0.2)',
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.8,
-                          shadowRadius: 6,
-                          opacity: pressed ? 0.9 : 1,
-                        })}
-                      >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                          <Ionicons name={iconName} size={18} color={COLORS.white} />
-                          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
-                            {buttonText}
-                          </Text>
-                        </View>
-                      </Pressable>
-                    );
-                  })()}
-
-                  {/* Official Registration Section - nur nach Zahlung */}
-                  {match.application.paymentStatus === "paid" && (
-                    <>
-                      {match.workerProfile?.isSelfEmployed ? (
-                        // Worker ist selbstständig - keine Anmeldung nötig
-                        <View style={{ 
-                          backgroundColor: 'rgba(200, 255, 22, 0.1)', 
-                          padding: 12, 
-                          borderRadius: 12,
-                          borderWidth: 1,
-                          borderColor: COLORS.neon,
-                        }}>
-                          <Text style={{ color: COLORS.neon, fontSize: 13, textAlign: 'center' }}>
-                            ℹ️ Diese Person ist selbstständig. Anmeldung nicht erforderlich.
-                          </Text>
-                        </View>
-                      ) : (
-                        // Worker ist NICHT selbstständig
-                        <>
-                          {match.application.officialRegistrationStatus === "requested" && (
-                            <View style={{ 
-                              backgroundColor: 'rgba(200, 255, 22, 0.1)', 
-                              padding: 16, 
-                              borderRadius: 12,
-                              borderWidth: 2,
-                              borderColor: COLORS.neon,
-                            }}>
-                              <Text style={{ color: COLORS.neon, fontSize: 14, fontWeight: '700', textAlign: 'center' }}>
-                                ⏳ Wartet auf Daten vom Worker
-                              </Text>
-                            </View>
-                          )}
-
-                          {match.application.officialRegistrationStatus === "completed" && (
-                            <Pressable
-                              onPress={() => downloadContract(match.application.id)}
-                              style={({ pressed }) => ({
-                                backgroundColor: COLORS.neon,
-                                borderRadius: 14,
-                                paddingVertical: 14,
-                                paddingHorizontal: 16,
-                                alignItems: 'center',
-                                shadowColor: COLORS.neonShadow,
-                                shadowOffset: { width: 0, height: 2 },
-                                shadowOpacity: 0.8,
-                                shadowRadius: 6,
-                                opacity: pressed ? 0.9 : 1,
-                              })}
-                            >
-                              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-                                📄 Arbeitsvertrag herunterladen
-                              </Text>
-                            </Pressable>
-                          )}
-
-                          {match.application.officialRegistrationStatus === "denied" && (
-                            // Worker hat abgelehnt
-                            <View style={{ 
-                              backgroundColor: 'rgba(255, 77, 77, 0.1)', 
-                              padding: 12, 
-                              borderRadius: 12,
-                              borderWidth: 1,
-                              borderColor: '#FF4D4D',
-                            }}>
-                              <Text style={{ color: '#FF4D4D', fontSize: 13, textAlign: 'center' }}>
-                                ❌ Worker hat offizielle Anmeldung abgelehnt
-                              </Text>
-                            </View>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-
-                  {/* Job Details Button */}
+                  {/* DETAILS */}
                   <Pressable
                     onPress={() => router.push(`/(employer)/jobs/${match.job.id}`)}
-                    style={({ pressed }) => ({
+                    style={{
+                      width: "60%",
+                      alignSelf: "center",
                       borderWidth: 2,
                       borderColor: COLORS.neon,
-                      borderRadius: 12,
-                      paddingVertical: 12,
-                      alignItems: 'center',
-                      opacity: pressed ? 0.8 : 1,
-                    })}
+                      paddingVertical: 14,
+                      borderRadius: 14,
+                      alignItems: "center",
+                    }}
                   >
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
-                      Auftragsdetails
+                    <Text style={{ fontSize: 15, fontWeight: "700", color: COLORS.neon }}>
+                      📄 Jobdetails ansehen
                     </Text>
                   </Pressable>
                 </View>
+
               </View>
             ))}
           </>
