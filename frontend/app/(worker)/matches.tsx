@@ -484,6 +484,26 @@ export default function WorkerMatchesScreen() {
                       {application.paymentStatus === "paid" ? "Zum Chat" : "Warte auf Zahlung"}
                     </Text>
                   </Pressable>
+
+                  <Pressable
+                    onPress={() => {
+                      router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
+                    }}
+                    style={{
+                      alignSelf: "center",
+                      width: "70%",
+                      borderWidth: 1,
+                      borderColor: "#6B57FF",
+                      paddingVertical: 12,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      marginTop: 12,
+                    }}
+                  >
+                    <Text style={{ fontSize: 15, fontWeight: "600", color: "#6B57FF" }}>
+                      Arbeitgeber bewerten
+                    </Text>
+                  </Pressable>
                 </View>
               );
             })}
