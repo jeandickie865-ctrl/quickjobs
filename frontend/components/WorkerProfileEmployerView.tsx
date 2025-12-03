@@ -253,7 +253,7 @@ export function WorkerProfileEmployerView({
           {loading ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <ActivityIndicator color={COLORS.neon} size="large" />
-              <Text style={{ color: COLORS.muted, marginTop: 16 }}>Lädt Profil...</Text>
+              <Text style={{ color: COLORS.dimText, marginTop: 16 }}>Lädt Profil...</Text>
             </View>
           ) : error ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
