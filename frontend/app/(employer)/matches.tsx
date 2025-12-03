@@ -1,6 +1,16 @@
-// app/(employer)/matches.tsx - NEON-TECH MATCHES SCREEN WITH AUTO-REFRESH
+// app/(employer)/matches.tsx – FINAL iPhone-Version (wie Worker)
+
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator, Animated } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  ActivityIndicator,
+  RefreshControl,
+  Pressable,
+  Animated,
+  Dimensions
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,28 +18,25 @@ import { Job } from '../../types/job';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob, JobApplication } from '../../utils/applicationStore';
 import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
-import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
-import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../../config';
 import { getAuthHeaders } from '../../utils/api';
-import { 
-  BACKUP_COLORS, 
-  BACKUP_CARD, 
-  BACKUP_BUTTON_PRIMARY, 
-  BACKUP_BUTTON_SECONDARY,
-  BACKUP_BUTTON_TERTIARY 
-} from '../../theme/ThemeProvider';
 
-// BACKUP NEON-TECH COLORS (Compatibility)
+const { width } = Dimensions.get('window');
+const BUTTON_WIDTH = width * 0.6; // 60% Breite
+const INNER_CARD_PADDING = 18;
+
+// Colors (EXAKT wie Worker)
 const COLORS = {
-  purple: BACKUP_COLORS.purple,
-  neon: BACKUP_COLORS.neon,
-  white: BACKUP_COLORS.white,
-  black: '#000000',
-  darkGray: '#333333',
-  lightGray: '#F5F5F5',
-  neonShadow: 'rgba(200,255,22,0.2)',
+  bgDark: "#0E0B1F",
+  cardDark: "#141126",
+  purple: "#6B4BFF",
+  purpleLight: "#7C5CFF",
+  textWhite: "#FFFFFF",
+  textMuted: "rgba(255,255,255,0.7)",
+  accent: "#C8FF16",
+  red: "#FF4D4D",
+  dim: "rgba(0,0,0,0.6)"
 };
 
 type Match = {
