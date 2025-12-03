@@ -220,7 +220,7 @@ export default function PaymentScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <SafeAreaView edges={["top"]}>
         <View style={{ padding: 16, flexDirection: "row", alignItems: "center" }}>
           <Pressable onPress={() => router.back()}>
