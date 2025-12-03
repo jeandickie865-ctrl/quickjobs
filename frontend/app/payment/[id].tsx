@@ -342,13 +342,14 @@ export default function PaymentScreen() {
       </View>
 
       {/* Registration Modal (Business Arbeitgeber) */}
-      {showRegistrationModal && (
+      <Modal
+        visible={showRegistrationModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowRegistrationModal(false)}
+      >
         <View style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          flex: 1,
           backgroundColor: "rgba(0,0,0,0.8)",
           justifyContent: "center",
           alignItems: "center",
@@ -410,7 +411,7 @@ export default function PaymentScreen() {
             </Pressable>
           </View>
         </View>
-      )}
+      </Modal>
 
       {/* Modal für private Arbeitgeber (Jobs >= 300€) */}
       {showPrivateEmployerModal && (
