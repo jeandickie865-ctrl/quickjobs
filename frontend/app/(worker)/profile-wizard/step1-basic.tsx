@@ -16,10 +16,13 @@ const COLORS = {
   card: '#141126',
   border: 'rgba(255,255,255,0.06)',
   text: '#FFFFFF',
+  white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.7)',
   purple: '#6B4BFF',
   neon: '#C8FF16',
   error: '#FF4D4D',
+  gray: 'rgba(255,255,255,0.5)',
+  lightGray: 'rgba(255,255,255,0.1)',
 };
 
 export default function Step1Basic() {
