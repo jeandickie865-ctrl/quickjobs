@@ -504,6 +504,24 @@ export default function WorkerMatchesScreen() {
                       Arbeitgeber bewerten
                     </Text>
                   </Pressable>
+
+                  <Pressable
+                    onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
+                    style={{
+                      alignSelf: "center",
+                      width: "70%",
+                      borderWidth: 1,
+                      borderColor: "#6B57FF",
+                      paddingVertical: 12,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      marginTop: 12,
+                    }}
+                  >
+                    <Text style={{ fontSize: 15, fontWeight: "600", color: "#6B57FF" }}>
+                      Jobdetails ansehen
+                    </Text>
+                  </Pressable>
                 </View>
               );
             })}
