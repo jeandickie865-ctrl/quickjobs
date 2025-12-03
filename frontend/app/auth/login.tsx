@@ -136,6 +136,150 @@ export default function LoginScreen() {
                 </View>
               </View>
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.bg,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  glowCircle: {
+    position: 'absolute',
+    top: -100,
+    left: -50,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 40,
+  },
+  logoSection: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  logoContainer: {
+    width: 100,
+    height: 100,
+    backgroundColor: COLORS.purple,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: COLORS.purple,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  logoImage: {
+    width: 70,
+    height: 70,
+  },
+  titleSection: {
+    marginBottom: 40,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: COLORS.text,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.muted,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  errorContainer: {
+    marginBottom: 24,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  errorBlur: {
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: COLORS.errorBg,
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.error,
+  },
+  errorText: {
+    fontSize: 14,
+    color: COLORS.error,
+    fontWeight: '600',
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: COLORS.text,
+    marginBottom: 8,
+  },
+  inputContainer: {
+    backgroundColor: COLORS.inputBg,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    minHeight: 56,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputFocused: {
+    borderColor: COLORS.purple,
+    backgroundColor: 'rgba(107,75,255,0.05)',
+  },
+  input: {
+    fontSize: 16,
+    color: COLORS.text,
+    fontWeight: '500',
+  },
+  eyeButton: {
+    paddingLeft: 12,
+  },
+  loginButton: {
+    height: 56,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 24,
+  },
+  loginButtonDisabled: {
+    opacity: 0.6,
+  },
+  loginButtonPressed: {
+    opacity: 0.8,
+  },
+  buttonGradient: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loginButtonText: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: COLORS.text,
+  },
+  signupSection: {
+    alignItems: 'center',
+  },
+  signupText: {
+    fontSize: 15,
+    color: COLORS.muted,
+    marginBottom: 8,
+  },
+  signupLink: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.purple,
+  },
+});
+
+
               {/* Password */}
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Passwort</Text>
