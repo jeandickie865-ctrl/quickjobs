@@ -258,7 +258,9 @@ export default function PaymentScreen() {
               alignItems: "center",
               padding: 16,
               borderRadius: 12,
-              backgroundColor: paymentMethod === "card" ? COLORS.neon : COLORS.white,
+              backgroundColor: paymentMethod === "card" ? COLORS.neon : COLORS.card,
+              borderWidth: 1,
+              borderColor: paymentMethod === "card" ? COLORS.neon : COLORS.border,
               marginBottom: 12,
             }}
           >
@@ -267,8 +269,8 @@ export default function PaymentScreen() {
               height: 24,
               borderRadius: 12,
               borderWidth: 2,
-              borderColor: paymentMethod === "card" ? COLORS.black : COLORS.darkGray,
-              backgroundColor: paymentMethod === "card" ? COLORS.black : "transparent",
+              borderColor: paymentMethod === "card" ? COLORS.background : COLORS.neon,
+              backgroundColor: paymentMethod === "card" ? COLORS.background : "transparent",
               marginRight: 12,
               alignItems: "center",
               justifyContent: "center",
@@ -277,8 +279,8 @@ export default function PaymentScreen() {
                 <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.neon }} />
               )}
             </View>
-            <Ionicons name="card-outline" size={24} color={paymentMethod === "card" ? COLORS.black : COLORS.darkGray} style={{ marginRight: 12 }} />
-            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "card" ? "700" : "600", color: paymentMethod === "card" ? COLORS.black : COLORS.darkGray }}>
+            <Ionicons name="card-outline" size={24} color={paymentMethod === "card" ? COLORS.background : COLORS.lightText} style={{ marginRight: 12 }} />
+            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "card" ? "700" : "600", color: paymentMethod === "card" ? COLORS.background : COLORS.lightText }}>
               Kreditkarte
             </Text>
           </Pressable>
@@ -291,7 +293,9 @@ export default function PaymentScreen() {
               alignItems: "center",
               padding: 16,
               borderRadius: 12,
-              backgroundColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.white,
+              backgroundColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.card,
+              borderWidth: 1,
+              borderColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.border,
             }}
           >
             <View style={{
@@ -299,8 +303,8 @@ export default function PaymentScreen() {
               height: 24,
               borderRadius: 12,
               borderWidth: 2,
-              borderColor: paymentMethod === "paypal" ? COLORS.black : COLORS.darkGray,
-              backgroundColor: paymentMethod === "paypal" ? COLORS.black : "transparent",
+              borderColor: paymentMethod === "paypal" ? COLORS.background : COLORS.neon,
+              backgroundColor: paymentMethod === "paypal" ? COLORS.background : "transparent",
               marginRight: 12,
               alignItems: "center",
               justifyContent: "center",
@@ -309,8 +313,8 @@ export default function PaymentScreen() {
                 <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.neon }} />
               )}
             </View>
-            <Ionicons name="logo-paypal" size={24} color={paymentMethod === "paypal" ? COLORS.black : COLORS.darkGray} style={{ marginRight: 12 }} />
-            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "paypal" ? "700" : "600", color: paymentMethod === "paypal" ? COLORS.black : COLORS.darkGray }}>
+            <Ionicons name="logo-paypal" size={24} color={paymentMethod === "paypal" ? COLORS.background : COLORS.lightText} style={{ marginRight: 12 }} />
+            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "paypal" ? "700" : "600", color: paymentMethod === "paypal" ? COLORS.background : COLORS.lightText }}>
               PayPal
             </Text>
           </Pressable>
