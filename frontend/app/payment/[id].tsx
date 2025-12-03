@@ -109,35 +109,25 @@ export default function PaymentScreen() {
     console.log("CHECK accountType:", user?.accountType);
     console.log("CHECK workerProfile:", workerProfile);
 
-    // DEBUG: Zeige die Werte als Alert
-    Alert.alert(
-      "DEBUG", 
-      `accountType: ${user?.accountType}\nisSelfEmployed: ${workerProfile?.isSelfEmployed}\nworkerProfile exists: ${!!workerProfile}`
-    );
-
     if (!workerProfile) {
-      console.log("NO workerProfile. Redirect.");
-      router.replace("/(employer)/matches");
+      console.log("NO workerProfile. Stay on payment screen.");
+      Alert.alert("Fehler", "Worker-Profil konnte nicht geladen werden.");
       return;
     }
 
-    // Fall 1: Privat + Worker nicht selbstständig
-    if (user?.accountType === "private" && workerProfile.isSelfEmployed === false) {
+    const isSelfEmployed = workerProfile.isSelfEmployed === true;
+    console.log("RESOLVED isSelfEmployed:", isSelfEmployed);
+
+    // Fall A: Employer = private UND Worker nicht selbstständig → Private-Hinweis-Popup
+    if (user?.accountType === "private" && !isSelfEmployed) {
       console.log("SHOW PRIVATE EMPLOYER MODAL");
       setShowPrivateEmployerModal(true);
       return;
     }
 
-    // Fall 2: Business + Worker nicht selbstständig
-    if (user?.accountType !== "private" && workerProfile.isSelfEmployed === false) {
-      console.log("SHOW BUSINESS REGISTRATION MODAL");
-      setShowRegistrationModal(true);
-      return;
-    }
-
-    // Fall 3: Worker selbstständig → keine Anmeldung nötig
-    console.log("WORKER SELF-EMPLOYED → DIRECT ROUTE");
-    router.replace("/(employer)/matches");
+    // Fall B: Employer ≠ private ODER Worker selbstständig → Standard-Anmeldemodal
+    console.log("SHOW STANDARD REGISTRATION MODAL");
+    setShowRegistrationModal(true);
   };
 
   async function handlePayment() {
