@@ -303,10 +303,10 @@ export function WorkerProfileEmployerView({
                       width: 100,
                       height: 100,
                       borderRadius: 50,
-                      backgroundColor: COLORS.purple,
+                      backgroundColor: COLORS.background,
                       alignItems: 'center',
                       justifyContent: 'center',
-                      borderWidth: 4,
+                      borderWidth: 3,
                       borderColor: COLORS.neon,
                       marginBottom: 16,
                     }}
