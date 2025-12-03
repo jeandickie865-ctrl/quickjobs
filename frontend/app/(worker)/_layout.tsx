@@ -45,12 +45,18 @@ export default function WorkerLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: COLORS.bg,
-          height: Platform.OS === 'ios' ? 90 : 75,
-          paddingBottom: Platform.OS === 'ios' ? 22 : 12,
-          borderTopWidth: 0,
-          elevation: 0,
+          backgroundColor: '#1A1A2E',
+          height: Platform.OS === 'ios' ? 78 : 70,
+          paddingBottom: Platform.OS === 'ios' ? 18 : 12,
+          paddingTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(255,255,255,0.06)',
           shadowOpacity: 0,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
         },
         tabBarLabelStyle: {
           fontSize: 13,
