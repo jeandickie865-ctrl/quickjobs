@@ -442,7 +442,7 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "Unread Chat Message Count Feature"
+    - "Worker Edit Profile - Tab-based Layout Refactoring"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
