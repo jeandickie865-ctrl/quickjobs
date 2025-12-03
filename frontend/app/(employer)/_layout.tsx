@@ -1,19 +1,19 @@
-// app/(employer)/_layout.tsx - FINAL NEON-TECH DESIGN WITH TABS
+// app/(employer)/_layout.tsx – BACKUP DARK DESIGN
 import React, { useState, useEffect } from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob } from '../../utils/applicationStore';
 
-// BACKUP NEON-TECH COLORS
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
-  whiteTransparent45: 'rgba(255,255,255,0.45)',
-  whiteTransparent55: 'rgba(255,255,255,0.55)',
+  muted: 'rgba(255,255,255,0.55)',
+  purple: '#6B4BFF',
+  neon: '#C8FF16',
 };
 
 export default function EmployerLayout() {
