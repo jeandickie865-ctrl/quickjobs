@@ -370,45 +370,49 @@ export default function WorkerMatchesScreen() {
                 <View
                   key={application.id}
                   style={{
-                    backgroundColor: 'rgba(255,255,255,0.06)',
+                    backgroundColor: "rgba(255,255,255,0.03)",
                     borderRadius: 18,
                     padding: 20,
                     marginBottom: 22,
                     borderWidth: 1,
-                    borderColor: 'rgba(255,255,255,0.12)',
-                    shadowColor: '#000',
-                    shadowOpacity: 0.15,
-                    shadowRadius: 12,
-                    shadowOffset: { width: 0, height: 6 },
+                    borderColor: "rgba(255,255,255,0.06)",
+                    shadowColor: "#000",
+                    shadowOpacity: 0.22,
+                    shadowRadius: 26,
+                    shadowOffset: { width: 0, height: 12 }
                   }}
                 >
-
                   {/* Header */}
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
-                      <View style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 22,
-                        backgroundColor: COLORS.purple,
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}>
-                        <Text style={{ color: "#FFF", fontWeight: "700", fontSize: 18 }}>
+
+                      {/* Avatar */}
+                      <View
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: "#5941FF",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text style={{ color: "#FFF", fontWeight: "700", fontSize: 17 }}>
                           {employerInitials}
                         </Text>
                       </View>
 
                       <View style={{ marginLeft: 12 }}>
-                        <Text style={{ fontSize: 17, fontWeight: "700", color: COLORS.textPrimary }}>
+                        <Text style={{ fontSize: 17, fontWeight: "700", color: "#FFF" }}>
                           {job.title}
                         </Text>
-                        <Text style={{ fontSize: 14, color: COLORS.textSecondary }}>
+                        <Text style={{ fontSize: 13, color: "#999" }}>
                           von {employerName}
                         </Text>
                       </View>
                     </View>
 
+                    {/* Delete */}
                     <Pressable
                       onPress={() => {
                         setApplicationToDelete(application.id);
@@ -416,39 +420,37 @@ export default function WorkerMatchesScreen() {
                       }}
                       style={{ padding: 6 }}
                     >
-                      <Ionicons name="trash-outline" size={22} color="#777" />
+                      <Ionicons name="trash-outline" size={20} color="#666" />
                     </Pressable>
                   </View>
 
                   {/* Status */}
-                  <View style={{
-                    marginTop: 14,
-                    alignSelf: "flex-start",
-                    backgroundColor: 'rgba(200,255,22,0.10)',
-                    paddingHorizontal: 10,
-                    paddingVertical: 4,
-                    borderRadius: 8,
-                  }}>
-                    <Text style={{ 
-                      color: COLORS.accent, 
-                      fontWeight: "600", 
-                      fontSize: 13 
-                    }}>
+                  <View
+                    style={{
+                      marginTop: 14,
+                      alignSelf: "flex-start",
+                      backgroundColor: "rgba(200,255,22,0.12)",
+                      paddingHorizontal: 12,
+                      paddingVertical: 4,
+                      borderRadius: 8
+                    }}
+                  >
+                    <Text style={{ color: "#C8FF16", fontWeight: "600", fontSize: 13 }}>
                       akzeptiert
                     </Text>
                   </View>
 
                   {/* Infos */}
-                  <Text style={{ color: COLORS.textPrimary, marginTop: 12 }}>
+                  <Text style={{ color: "#DDD", marginTop: 14, fontSize: 15 }}>
                     {timeDisplay}
                   </Text>
 
-                  <Text style={{ color: COLORS.textSecondary, marginTop: 4 }}>
+                  <Text style={{ color: "#AAA", marginTop: 3, fontSize: 14 }}>
                     {job.address?.street} {job.address?.house_number}, {job.address?.postal_code} {job.address?.city}
                   </Text>
 
-                  <Text style={{ fontSize: 18, fontWeight: "700", color: COLORS.white, marginTop: 14 }}>
-                    {euro(job.workerAmountCents)} / Gesamt
+                  <Text style={{ fontSize: 18, fontWeight: "700", color: "#FFF", marginTop: 14 }}>
+                    {euro(job.workerAmountCents)} / {job.timeMode === "hours" ? "Stunde" : "Gesamt"}
                   </Text>
 
                   {/* Button-Gruppe */}
