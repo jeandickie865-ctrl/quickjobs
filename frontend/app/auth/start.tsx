@@ -29,63 +29,43 @@ export default function WelcomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* Premium Header Hintergrund */}
+      {/* Header Container */}
       <View
         style={{
-          position: 'absolute',
-          top: 0,
           width: '100%',
-          height: 280,
-          backgroundColor: 'transparent'
+          paddingTop: 80,
+          paddingBottom: 40,
+          backgroundColor: '#141126', // Card Dark
+          alignItems: 'center'
         }}
       >
+
+        {/* Logo */}
+        <Image
+          source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
+          style={{
+            width: 160,
+            height: 160,
+            tintColor: '#6B4BFF'
+          }}
+          resizeMode="contain"
+        />
+
+        {/* Neon Accent */}
         <View
           style={{
-            flex: 1,
-            backgroundColor: '#0E0B1F'
+            width: 50,
+            height: 4,
+            backgroundColor: '#C8FF16',
+            borderRadius: 2,
+            marginTop: 12,
+            opacity: 0.9
           }}
         />
 
-        {/* weicher Purple Gradient oben */}
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            width: '100%',
-            height: 260,
-            backgroundColor: 'rgba(107,75,255,0.12)',
-          }}
-        />
       </View>
 
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
-
-        {/* Header */}
-        <View style={{ marginTop: 120, alignItems: 'center' }}>
-          <Image
-            source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
-            style={{
-              width: 170,
-              height: 170,
-              tintColor: '#6B4BFF'
-            }}
-            resizeMode="contain"
-          />
-
-          {/* klare, minimalistische Neon-Line */}
-          <View
-            style={{
-              width: 50,
-              height: 4,
-              backgroundColor: '#C8FF16',
-              borderRadius: 2,
-              marginTop: 14,
-              opacity: 0.9
-            }}
-          />
-        </View>
-
-        <View style={{ marginBottom: 25 }} />
 
         {/* Glass Panel */}
         <Animated.View style={{ width: '100%', opacity: fade }}>
