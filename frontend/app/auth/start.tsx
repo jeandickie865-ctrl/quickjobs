@@ -29,65 +29,30 @@ export default function WelcomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      {/* Ambient Neon Light oben */}
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          width: '100%',
+          height: 6,
+          backgroundColor: 'rgba(200,255,22,0.25)',
+          shadowColor: '#C8FF16',
+          shadowOpacity: 0.35,
+          shadowRadius: 20
+        }}
+      />
+
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
-        {/* Extra Ambient Light */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            top: -150,
-            width: 850,
-            height: 850,
-            borderRadius: 425,
-            backgroundColor: 'rgba(107,75,255,0.10)',
-            opacity: fade,
-            shadowColor: '#6B4BFF',
-            shadowOpacity: 0.15,
-            shadowRadius: 120
-          }}
-        />
-
-        {/* Soft Halo Glow */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            top: 0,
-            width: 700,
-            height: 700,
-            borderRadius: 350,
-            backgroundColor: 'rgba(107,75,255,0.18)',
-            opacity: fade,
-            shadowColor: '#6B4BFF',
-            shadowOpacity: 0.25,
-            shadowRadius: 80,
-            transform: [{ scale }]
-          }}
-        />
-
-        {/* Neon Halo unter dem Logo */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            top: 210, // leicht unterhalb des Logos
-            width: 140,
-            height: 28,
-            backgroundColor: 'rgba(200,255,22,0.22)', // weich und nicht grell
-            borderRadius: 50,
-            opacity: fade,
-            shadowColor: '#C8FF16',
-            shadowOpacity: 0.4,
-            shadowRadius: 20,
-            transform: [{ scale }]
-          }}
-        />
-
-        {/* Logo mit Purple Tint + sehr leichter Neon-Kante */}
+        {/* Logo */}
         <Animated.View
           style={{
             opacity: fade,
             transform: [{ scale }],
             marginTop: 120,
-            marginBottom: 40,
+            marginBottom: 20,
+            alignItems: 'center'
           }}
         >
           <Image
@@ -95,14 +60,24 @@ export default function WelcomeScreen() {
             style={{
               width: 150,
               height: 150,
-              tintColor: '#6B4BFF',
-              shadowColor: '#C8FF16',   // Neon-Kante
-              shadowOpacity: 0.20,      // sehr leicht
-              shadowRadius: 14           // weich und modern
+              tintColor: '#6B4BFF'
             }}
             resizeMode="contain"
           />
         </Animated.View>
+
+        {/* Kleine Neon-Line unter dem Logo */}
+        <View
+          style={{
+            width: 60,
+            height: 4,
+            backgroundColor: '#C8FF16',
+            borderRadius: 2,
+            alignSelf: 'center',
+            marginBottom: 30,
+            opacity: 0.8
+          }}
+        />
 
         {/* Glass Panel */}
         <Animated.View style={{ width: '100%', opacity: fade }}>
