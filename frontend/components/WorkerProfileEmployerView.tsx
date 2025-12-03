@@ -764,7 +764,7 @@ export function WorkerProfileEmployerView({
                     <Text
                       style={{
                         fontSize: 14,
-                        color: COLORS.muted,
+                        color: COLORS.dimText,
                         marginTop: 4,
                       }}
                     >
