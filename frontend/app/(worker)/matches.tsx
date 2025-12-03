@@ -638,10 +638,10 @@ export default function WorkerMatchesScreen() {
             padding: 24,
             width: '100%',
             maxWidth: 400,
-            shadowColor: '#FF4D4D',
+            shadowColor: COLORS.accent,
             shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.3,
-            shadowRadius: 20,
+            shadowOpacity: 0.25,
+            shadowRadius: 16,
             elevation: 10,
           }}>
             {/* Header */}
@@ -651,9 +651,9 @@ export default function WorkerMatchesScreen() {
               marginBottom: 20,
               paddingBottom: 16,
               borderBottomWidth: 2,
-              borderBottomColor: '#FF4D4D',
+              borderBottomColor: COLORS.accent,
             }}>
-              <Ionicons name="trash" size={32} color="#FF4D4D" />
+              <Ionicons name="trash-outline" size={32} color={COLORS.accent} />
               <Text style={{ 
                 fontSize: 20, 
                 fontWeight: '800', 
