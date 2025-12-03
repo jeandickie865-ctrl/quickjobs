@@ -72,47 +72,86 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      <SafeAreaView style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={['#0E0B1F', '#1A1535', '#0E0B1F']}
+        style={StyleSheet.absoluteFillObject}
+      />
+
+      {/* Animated Glow Effects */}
+      <Animated.View style={[styles.glowCircle, { opacity: logoOpacity }]}>
+        <LinearGradient
+          colors={['rgba(107,75,255,0.3)', 'rgba(107,75,255,0)']}
+          style={StyleSheet.absoluteFillObject}
+        />
+      </Animated.View>
+
+      <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 40 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
             
-            <Animated.View style={{ alignItems: 'center', marginBottom: 32, opacity: logoOpacity }}>
-              <View style={{ width: 100, height: 100, backgroundColor: COLORS.neon, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <Image source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} style={{ width: 70, height: 70 }} resizeMode="contain" />
+            {/* Logo Section */}
+            <Animated.View style={[styles.logoSection, { opacity: logoOpacity }]}>
+              <View style={styles.logoContainer}>
+                <Image 
+                  source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} 
+                  style={styles.logoImage} 
+                  resizeMode="contain" 
+                />
               </View>
             </Animated.View>
 
-            <Animated.View style={{ marginBottom: 8, opacity: logoOpacity }}>
-              <Text style={{ fontSize: 30, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>Willkommen zurück!</Text>
+            {/* Title Section */}
+            <Animated.View style={[styles.titleSection, { opacity: logoOpacity }]}>
+              <Text style={styles.title}>Willkommen zurück!</Text>
+              <Text style={styles.subtitle}>Melde dich an und leg direkt los.</Text>
             </Animated.View>
 
-            <Animated.View style={{ marginBottom: 40, opacity: logoOpacity }}>
-              <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, textAlign: 'center', fontWeight: '500' }}>Melde dich an und leg direkt los.</Text>
-            </Animated.View>
-
+            {/* Error Message */}
             {errorMsg ? (
-              <Animated.View style={{ marginBottom: 24, paddingHorizontal: 16, paddingVertical: 14, backgroundColor: COLORS.errorBg, borderRadius: 12, borderLeftWidth: 4, borderLeftColor: COLORS.error, opacity: inputOpacity }}>
-                <Text style={{ fontSize: 14, color: COLORS.error, fontWeight: '600' }}>{errorMsg}</Text>
+              <Animated.View style={[styles.errorContainer, { opacity: inputOpacity }]}>
+                <BlurView intensity={20} tint="dark" style={styles.errorBlur}>
+                  <Text style={styles.errorText}>⚠️ {errorMsg}</Text>
+                </BlurView>
               </Animated.View>
             ) : null}
 
+            {/* Input Section */}
             <Animated.View style={{ opacity: inputOpacity, transform: [{ translateY: inputTranslateY }] }}>
               {/* Email */}
-              <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>E-Mail</Text>
-                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: emailFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, justifyContent: 'center' }}>
-                  <TextInput autoCapitalize="none" keyboardType="email-address" placeholder="name@email.de" placeholderTextColor={COLORS.placeholder} value={email} onChangeText={setEmail} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} style={{ fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>E-Mail</Text>
+                <View style={[styles.inputContainer, emailFocused && styles.inputFocused]}>
+                  <TextInput
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    placeholder="name@email.de"
+                    placeholderTextColor={COLORS.placeholder}
+                    value={email}
+                    onChangeText={setEmail}
+                    onFocus={() => setEmailFocused(true)}
+                    onBlur={() => setEmailFocused(false)}
+                    style={styles.input}
+                  />
                 </View>
               </View>
 
               {/* Password */}
-              <View style={{ marginBottom: 32 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Passwort</Text>
-                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: passwordFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
-                  <TextInput placeholder="••••••••" placeholderTextColor={COLORS.placeholder} secureTextEntry={!showPassword} value={password} onChangeText={setPassword} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} style={{ flex: 1, fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
-                  <Pressable onPress={() => setShowPassword(!showPassword)} style={{ paddingLeft: 12 }}>
-                    {showPassword ? <EyeOff size={22} color={COLORS.placeholder} /> : <Eye size={22} color={COLORS.placeholder} />}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Passwort</Text>
+                <View style={[styles.inputContainer, passwordFocused && styles.inputFocused]}>
+                  <TextInput
+                    placeholder="••••••••"
+                    placeholderTextColor={COLORS.placeholder}
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
+                    style={[styles.input, { flex: 1 }]}
+                  />
+                  <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+                    {showPassword ? <EyeOff size={20} color={COLORS.muted} /> : <Eye size={20} color={COLORS.muted} />}
                   </Pressable>
                 </View>
               </View>
@@ -120,15 +159,34 @@ export default function LoginScreen() {
 
             <View style={{ flex: 1, minHeight: 20 }} />
 
+            {/* Button Section */}
             <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
-              <Pressable onPress={handleLogin} disabled={loading} style={({ pressed }) => ({ backgroundColor: loading ? '#B3B3B3' : COLORS.neon, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 20, opacity: pressed ? 0.9 : 1 })}>
-                <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>{loading ? 'Lädt...' : 'Einloggen'}</Text>
+              <Pressable 
+                onPress={handleLogin} 
+                disabled={loading}
+                style={({ pressed }) => [
+                  styles.loginButton,
+                  loading && styles.loginButtonDisabled,
+                  pressed && styles.loginButtonPressed
+                ]}
+              >
+                <LinearGradient
+                  colors={loading ? ['#4A4A4A', '#3A3A3A'] : [COLORS.purple, COLORS.purpleDark]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.buttonGradient}
+                >
+                  <Text style={styles.loginButtonText}>
+                    {loading ? 'Lädt...' : 'Einloggen'}
+                  </Text>
+                </LinearGradient>
               </Pressable>
 
-              <View style={{ alignItems: 'center', marginTop: 16 }}>
-                <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, marginBottom: 8 }}>Noch kein Account?</Text>
+              {/* Sign Up Link */}
+              <View style={styles.signupSection}>
+                <Text style={styles.signupText}>Noch kein Account?</Text>
                 <Pressable onPress={() => router.push('/auth/signup')}>
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>Registrieren</Text>
+                  <Text style={styles.signupLink}>Registrieren</Text>
                 </Pressable>
               </View>
             </Animated.View>
