@@ -31,37 +31,40 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
-        {/* Soft Ambient Light */}
+        {/* Extra Ambient Light */}
         <Animated.View
           style={{
             position: 'absolute',
-            top: -120,
-            width: 600,
-            height: 600,
-            backgroundColor: 'rgba(123,92,255,0.20)',
-            borderRadius: 300,
+            top: -150,
+            width: 850,
+            height: 850,
+            borderRadius: 425,
+            backgroundColor: 'rgba(107,75,255,0.10)',
             opacity: fade,
-          }}
-        />
-
-        {/* Purple Halo */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            top: 40,
-            width: glowSize,
-            height: glowSize,
-            backgroundColor: 'rgba(123,92,255,0.45)',
-            borderRadius: 999,
-            opacity: fade,
-            transform: [{ scale }],
             shadowColor: '#6B4BFF',
-            shadowOpacity: 0.6,
-            shadowRadius: 60,
+            shadowOpacity: 0.15,
+            shadowRadius: 120
           }}
         />
 
-        {/* Logo mit Purple Tint + Outline */}
+        {/* Soft Halo Glow */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: 0,
+            width: 700,
+            height: 700,
+            borderRadius: 350,
+            backgroundColor: 'rgba(107,75,255,0.18)',
+            opacity: fade,
+            shadowColor: '#6B4BFF',
+            shadowOpacity: 0.25,
+            shadowRadius: 80,
+            transform: [{ scale }]
+          }}
+        />
+
+        {/* Logo */}
         <Animated.View
           style={{
             opacity: fade,
@@ -75,10 +78,7 @@ export default function WelcomeScreen() {
             style={{
               width: 150,
               height: 150,
-              tintColor: '#6B4BFF',
-              shadowColor: '#FFFFFF',
-              shadowOpacity: 0.15,
-              shadowRadius: 8
+              tintColor: '#6B4BFF'
             }}
             resizeMode="contain"
           />
