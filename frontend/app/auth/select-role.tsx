@@ -86,10 +86,10 @@ export default function SelectRoleScreen() {
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 6 }}>
-              Auftragnehmer
+              Ich suche Arbeit
             </Text>
             <Text style={{ fontSize: 14, color: COLORS.muted }}>
-              Security, Bewachung, Events, Einsatzkräfte.
+              Finde passende Einsätze.
             </Text>
           </Pressable>
 
@@ -105,10 +105,10 @@ export default function SelectRoleScreen() {
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 6 }}>
-              Auftraggeber
+              Ich suche kurzfristig Hilfe
             </Text>
             <Text style={{ fontSize: 14, color: COLORS.muted }}>
-              Firmen, Objekte, Events, Einsatzorte.
+              Finde schnelle Unterstützung.
             </Text>
           </Pressable>
         </Animated.View>
