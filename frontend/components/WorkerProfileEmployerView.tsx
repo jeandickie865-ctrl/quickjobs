@@ -577,16 +577,16 @@ export function WorkerProfileEmployerView({
                             <View
                               key={idx}
                               style={{
-                                backgroundColor: 'rgba(107,75,255,0.2)',
+                                backgroundColor: 'rgba(200,255,22,0.15)',
                                 borderWidth: 1,
-                                borderColor: COLORS.purple,
+                                borderColor: COLORS.neon,
                                 paddingHorizontal: 12,
                                 paddingVertical: 6,
                                 borderRadius: 16,
                               }}
                             >
                               <Text
-                                style={{ fontSize: 13, fontWeight: '600', color: COLORS.white }}
+                                style={{ fontSize: 13, fontWeight: '600', color: COLORS.lightText }}
                               >
                                 {label}
                               </Text>
