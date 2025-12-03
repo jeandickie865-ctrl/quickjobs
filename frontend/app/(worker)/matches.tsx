@@ -753,6 +753,108 @@ export default function WorkerMatchesScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        visible={deleteModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setDeleteModalVisible(false);
+          setApplicationToDelete(null);
+        }}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: COLORS.dimmed,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 24,
+        }}>
+          <View style={{
+            backgroundColor: COLORS.white,
+            borderRadius: 20,
+            padding: 24,
+            width: '100%',
+            maxWidth: 400,
+            shadowColor: '#FF4D4D',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+          }}>
+            {/* Header */}
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 20,
+              paddingBottom: 16,
+              borderBottomWidth: 2,
+              borderBottomColor: '#FF4D4D',
+            }}>
+              <Ionicons name="trash" size={32} color="#FF4D4D" />
+              <Text style={{ 
+                fontSize: 20, 
+                fontWeight: '800', 
+                color: COLORS.black,
+                marginLeft: 12,
+              }}>
+                Match löschen?
+              </Text>
+            </View>
+
+            {/* Content */}
+            <Text style={{ 
+              fontSize: 15, 
+              color: COLORS.darkGray, 
+              lineHeight: 22,
+              marginBottom: 24,
+            }}>
+              Möchtest du diesen Match wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+            </Text>
+
+            {/* Buttons */}
+            <View style={{ flexDirection: 'row', gap: 12 }}>
+              <Pressable
+                onPress={() => {
+                  setDeleteModalVisible(false);
+                  setApplicationToDelete(null);
+                }}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  backgroundColor: COLORS.lightGray,
+                  borderRadius: 14,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  alignItems: 'center',
+                  opacity: pressed ? 0.7 : 1,
+                })}
+              >
+                <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                  Abbrechen
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleDeleteMatch}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  backgroundColor: '#FF4D4D',
+                  borderRadius: 14,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  alignItems: 'center',
+                  opacity: pressed ? 0.7 : 1,
+                })}
+              >
+                <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
+                  Löschen
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
