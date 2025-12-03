@@ -270,53 +270,56 @@ export default function EmployerMatchesScreen() {
                     borderColor: "rgba(255,255,255,0.06)",
                   }}
                 >
-                  {/* TOP: Worker Avatar + Name */}
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <View
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 24,
-                        backgroundColor: COLORS.accent,
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text style={{ fontSize: 20, fontWeight: "800", color: "#000" }}>
-                        {match.application.workerName?.charAt(0) || "W"}
-                      </Text>
-                    </View>
+                  {/* Card Header */}
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <View
+                        style={{
+                          width: 46,
+                          height: 46,
+                          borderRadius: 23,
+                          backgroundColor: COLORS.purple,
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text style={{ color: COLORS.textWhite, fontSize: 18, fontWeight: "700" }}>
+                          {match.application.workerName?.charAt(0) || "W"}
+                        </Text>
+                      </View>
 
-                    <View style={{ marginLeft: 12, flex: 1 }}>
-                      <Text style={{ fontSize: 18, fontWeight: "700", color: COLORS.textWhite }}>
-                        {match.application.workerName}
-                      </Text>
-                      <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 2 }}>
-                        Match seit {formatDate(match.application.createdAt)}
-                      </Text>
+                      <View style={{ marginLeft: 12 }}>
+                        <Text style={{ color: COLORS.textWhite, fontSize: 17, fontWeight: "700" }}>
+                          {match.job.title}
+                        </Text>
+                        <Text style={{ color: COLORS.textMuted, fontSize: 13, marginTop: 2 }}>
+                          von {match.application.workerName}
+                        </Text>
+                      </View>
                     </View>
                   </View>
 
-                  {/* STATUS BADGE */}
+                  {/* Status */}
                   <View
                     style={{
-                      marginTop: 14,
+                      marginTop: 12,
                       alignSelf: "flex-start",
-                      backgroundColor: "rgba(200,255,22,0.12)",
+                      backgroundColor: "rgba(123,92,255,0.18)",
                       paddingHorizontal: 10,
                       paddingVertical: 4,
-                      borderRadius: 8,
+                      borderRadius: 6,
                     }}
                   >
-                    <Text style={{ color: COLORS.accent, fontWeight: "700", fontSize: 12 }}>
-                      BESTÄTIGT
+                    <Text style={{ color: COLORS.purpleLight, fontSize: 13, fontWeight: "700" }}>
+                      akzeptiert
                     </Text>
                   </View>
 
-                  {/* JOB TITLE */}
-                  <Text style={{ color: COLORS.textWhite, fontSize: 17, marginTop: 14, fontWeight: "700" }}>
-                    {match.job.title}
+                  {/* Info */}
+                  <Text style={{ color: COLORS.textWhite, marginTop: 12, fontSize: 14 }}>
+                    Match seit {formatDate(match.application.createdAt)}
                   </Text>
+
                   <Text style={{ color: COLORS.textMuted, marginTop: 4, fontSize: 14 }}>
                     {match.job.category}
                   </Text>
@@ -325,26 +328,26 @@ export default function EmployerMatchesScreen() {
                   {match.workerProfile && match.application.paymentStatus === "paid" && (
                     <View
                       style={{
-                        marginTop: 18,
-                        backgroundColor: "rgba(200,255,22,0.12)",
-                        padding: 14,
-                        borderRadius: 14,
+                        marginTop: 14,
+                        backgroundColor: "rgba(123,92,255,0.1)",
+                        padding: 12,
+                        borderRadius: 12,
                         borderWidth: 1,
-                        borderColor: COLORS.accent,
+                        borderColor: "rgba(123,92,255,0.3)",
                       }}
                     >
-                      <Text style={{ color: COLORS.accent, fontWeight: "700", marginBottom: 10, fontSize: 13 }}>
-                        🔓 KONTAKTDATEN FREIGESCHALTET
+                      <Text style={{ color: COLORS.purpleLight, fontWeight: "700", marginBottom: 8, fontSize: 13 }}>
+                        🔓 KONTAKTDATEN
                       </Text>
 
                       {match.workerProfile.email && (
-                        <Text style={{ color: COLORS.textWhite, marginBottom: 6, fontSize: 14 }}>
-                          📩 {match.workerProfile.email}
+                        <Text style={{ color: COLORS.textWhite, marginBottom: 4, fontSize: 13 }}>
+                          {match.workerProfile.email}
                         </Text>
                       )}
                       {match.workerProfile.phone && (
-                        <Text style={{ color: COLORS.textWhite, fontSize: 14 }}>
-                          📞 {match.workerProfile.phone}
+                        <Text style={{ color: COLORS.textWhite, fontSize: 13 }}>
+                          {match.workerProfile.phone}
                         </Text>
                       )}
                     </View>
