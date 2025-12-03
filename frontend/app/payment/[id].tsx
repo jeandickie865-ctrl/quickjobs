@@ -440,23 +440,25 @@ export default function PaymentScreen() {
       >
         <View style={{
           flex: 1,
-          backgroundColor: "rgba(0,0,0,0.8)",
+          backgroundColor: "rgba(14, 11, 31, 0.95)",
           justifyContent: "center",
           alignItems: "center",
           padding: 20,
         }}>
           <View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 16,
+            borderWidth: 1,
+            borderColor: COLORS.border,
             padding: 24,
             width: "100%",
             maxWidth: 400,
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.black, marginBottom: 16, textAlign: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.white, marginBottom: 16, textAlign: "center" }}>
               Hinweis für private Auftraggeber
             </Text>
             
-            <Text style={{ fontSize: 14, color: COLORS.darkGray, marginBottom: 24, textAlign: "center", lineHeight: 20 }}>
+            <Text style={{ fontSize: 14, color: COLORS.lightText, marginBottom: 24, textAlign: "center", lineHeight: 20 }}>
               Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.{'\n\n'}
               Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.{'\n\n'}
               Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.
@@ -476,7 +478,7 @@ export default function PaymentScreen() {
                 opacity: pressed ? 0.9 : 1,
               })}
             >
-              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.black }}>
+              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.background }}>
                 ✓ Verstanden
               </Text>
             </Pressable>
