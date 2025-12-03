@@ -453,6 +453,7 @@ export default function WorkerMatchesScreen() {
                     {euro(job.workerAmountCents)} / {job.timeMode === "hours" ? "Stunde" : "Gesamt"}
                   </Text>
 
+                  {/* Chat Button */}
                   <Pressable
                     onPress={() => {
                       if (application.paymentStatus === "paid") {
@@ -461,64 +462,70 @@ export default function WorkerMatchesScreen() {
                     }}
                     disabled={application.paymentStatus !== "paid"}
                     style={{
-                      alignSelf: "center",
-                      width: "70%",
-                      backgroundColor: application.paymentStatus === "paid" ? "#C8FF16" : "#444",
-                      paddingVertical: 12,
-                      borderRadius: 12,
+                      backgroundColor: application.paymentStatus === "paid" ? "#5941FF" : "#3A2F7A",
+                      paddingVertical: 16,
+                      borderRadius: 14,
                       alignItems: "center",
+                      width: "100%",
                       marginTop: 18,
-                      shadowColor: "#000",
-                      shadowOpacity: 0.2,
-                      shadowRadius: 8,
-                      shadowOffset: { width: 0, height: 3 },
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 16,
                         fontWeight: "700",
-                        color: application.paymentStatus === "paid" ? "#000" : "#AAA",
+                        color: "#FFFFFF",
                       }}
                     >
                       {application.paymentStatus === "paid" ? "Zum Chat" : "Warte auf Zahlung"}
                     </Text>
                   </Pressable>
 
+                  {/* Arbeitgeber bewerten */}
                   <Pressable
                     onPress={() => {
+                      console.log('🎯 Worker: Navigate to rate - jobId:', job.id, 'employerId:', job.employerId);
                       router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`);
                     }}
                     style={{
-                      alignSelf: "center",
-                      width: "70%",
-                      borderWidth: 1,
-                      borderColor: "#6B57FF",
-                      paddingVertical: 12,
-                      borderRadius: 12,
+                      backgroundColor: "#7A63FF",
+                      paddingVertical: 14,
+                      borderRadius: 14,
                       alignItems: "center",
+                      width: "100%",
                       marginTop: 12,
                     }}
                   >
-                    <Text style={{ fontSize: 15, fontWeight: "600", color: "#6B57FF" }}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: "700",
+                        color: "#FFFFFF",
+                      }}
+                    >
                       Arbeitgeber bewerten
                     </Text>
                   </Pressable>
 
+                  {/* Jobdetails ansehen */}
                   <Pressable
                     onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                     style={{
-                      alignSelf: "center",
-                      width: "70%",
-                      borderWidth: 1,
-                      borderColor: "#6B57FF",
-                      paddingVertical: 12,
-                      borderRadius: 12,
+                      backgroundColor: "#7A63FF",
+                      paddingVertical: 14,
+                      borderRadius: 14,
                       alignItems: "center",
+                      width: "100%",
                       marginTop: 12,
                     }}
                   >
-                    <Text style={{ fontSize: 15, fontWeight: "600", color: "#6B57FF" }}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: "700",
+                        color: "#FFFFFF",
+                      }}
+                    >
                       Jobdetails ansehen
                     </Text>
                   </Pressable>
