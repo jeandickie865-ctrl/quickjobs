@@ -5,11 +5,13 @@ import { View, ActivityIndicator, Platform, Text } from 'react-native';
 import { getWorkerApplications } from '../../utils/applicationStore';
 
 const COLORS = {
-  purple: '#5941FF',
+  purple: '#6B4BFF',
   neon: '#C8FF16',
   white: '#FFFFFF',
   inactive: 'rgba(255,255,255,0.55)',
-  bg: '#1A143A',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
 };
 
 export default function WorkerLayout() {
@@ -32,7 +34,14 @@ export default function WorkerLayout() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.purple }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: COLORS.bg,
+        }}
+      >
         <ActivityIndicator size="large" color={COLORS.neon} />
       </View>
     );
@@ -45,12 +54,12 @@ export default function WorkerLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#1A1A2E',
+          backgroundColor: COLORS.card,
           height: Platform.OS === 'ios' ? 78 : 70,
           paddingBottom: Platform.OS === 'ios' ? 18 : 12,
           paddingTop: 10,
           borderTopWidth: 1,
-          borderTopColor: 'rgba(255,255,255,0.06)',
+          borderTopColor: COLORS.border,
           shadowOpacity: 0,
           position: 'absolute',
           bottom: 0,
@@ -61,17 +70,16 @@ export default function WorkerLayout() {
         tabBarLabelStyle: {
           fontSize: 13,
           fontWeight: '700',
+          color: COLORS.white,
         },
       }}
     >
-      {/* Helper: clean label + dot */}
       {TAB('feed', 'Aktuelle Jobs')}
       {TAB('applications', 'Bewerbungen')}
       {TAB('matches', 'Matches', matchesCount)}
       {TAB('profile', 'Profil')}
       {TAB('jobs/all', 'Jobs/All')}
 
-      {/* Hidden routes */}
       <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
       <Tabs.Screen name="jobs/[id]" options={{ href: null }} />
@@ -93,7 +101,7 @@ function TAB(name, label, badge) {
           <View style={{ alignItems: 'center', gap: 4 }}>
             <Text
               style={{
-                color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
+                color: focused ? COLORS.white : COLORS.inactive,
                 fontWeight: focused ? '800' : '600',
               }}
             >
@@ -106,7 +114,7 @@ function TAB(name, label, badge) {
                   width: 6,
                   height: 6,
                   borderRadius: 3,
-                  backgroundColor: '#5941FF',
+                  backgroundColor: COLORS.purple,
                 }}
               />
             ) : null}
@@ -117,7 +125,7 @@ function TAB(name, label, badge) {
                   position: 'absolute',
                   top: -4,
                   right: -10,
-                  backgroundColor: '#C8FF16',
+                  backgroundColor: COLORS.neon,
                   paddingHorizontal: 6,
                   paddingVertical: 2,
                   borderRadius: 10,
@@ -127,7 +135,7 @@ function TAB(name, label, badge) {
                   style={{
                     fontSize: 11,
                     fontWeight: '900',
-                    color: '#000',
+                    color: '#000000',
                   }}
                 >
                   {badge}
