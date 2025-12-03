@@ -1114,11 +1114,16 @@ export default function EditWorkerProfileScreen() {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: COLORS.white,
+          backgroundColor: '#0E0B1F',
           paddingHorizontal: 20,
           paddingVertical: 16,
           borderTopWidth: 1,
-          borderTopColor: COLORS.borderGray,
+          borderTopColor: 'rgba(255,255,255,0.1)',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 10,
         }}
       >
         <SafeAreaView edges={['bottom']}>
@@ -1131,17 +1136,17 @@ export default function EditWorkerProfileScreen() {
             }}
             disabled={!isFormValid() || saving}
             style={({ pressed }) => ({
-              backgroundColor: isFormValid() && !saving ? COLORS.neon : '#CCCCCC',
+              backgroundColor: isFormValid() && !saving ? '#6B4BFF' : 'rgba(255,255,255,0.1)',
               paddingVertical: 16,
-              borderRadius: 16,
+              borderRadius: 20,
               alignItems: 'center',
               opacity: pressed ? 0.9 : 1,
             })}
           >
             {saving ? (
-              <ActivityIndicator color={COLORS.black} />
+              <ActivityIndicator color="#FFFFFF" />
             ) : (
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
+              <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
                 Profil speichern
               </Text>
             )}
