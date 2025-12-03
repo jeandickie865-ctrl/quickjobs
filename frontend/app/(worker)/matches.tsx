@@ -592,7 +592,7 @@ export default function WorkerMatchesScreen() {
                           if (confirm('Möchtest du diesen Match wirklich löschen?')) {
                             try {
                               const headers = await getAuthHeaders();
-                              const res = await fetch(`${API_URL}/applications/${match.application.id}`, {
+                              const res = await fetch(`${API_URL}/applications/${application.id}`, {
                                 method: 'DELETE',
                                 headers,
                               });
