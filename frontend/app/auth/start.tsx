@@ -60,42 +60,32 @@ export default function WelcomeScreen() {
 
       <SafeAreaView style={{ flex: 1, alignItems: 'center', paddingHorizontal: 24 }}>
 
-        {/* Logo */}
-        <Animated.View
-          style={{
-            opacity: fade,
-            transform: [{ scale }],
-            marginTop: 130,
-            marginBottom: 18,
-            alignItems: 'center'
-          }}
-        >
+        {/* Header */}
+        <View style={{ marginTop: 120, alignItems: 'center' }}>
           <Image
             source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
             style={{
-              width: 180,
-              height: 180,
-              tintColor: '#6B4BFF',
+              width: 170,
+              height: 170,
+              tintColor: '#6B4BFF'
             }}
             resizeMode="contain"
           />
-        </Animated.View>
 
-        {/* feine Neon-Line */}
-        <View
-          style={{
-            width: 50,
-            height: 3,
-            backgroundColor: '#C8FF16',
-            borderRadius: 50,
-            marginBottom: 25,
-            alignSelf: 'center',
-            opacity: 0.85,
-            shadowColor: '#C8FF16',
-            shadowOpacity: 0.25,
-            shadowRadius: 8,
-          }}
-        />
+          {/* klare, minimalistische Neon-Line */}
+          <View
+            style={{
+              width: 50,
+              height: 4,
+              backgroundColor: '#C8FF16',
+              borderRadius: 2,
+              marginTop: 14,
+              opacity: 0.9
+            }}
+          />
+        </View>
+
+        <View style={{ marginBottom: 25 }} />
 
         {/* Glass Panel */}
         <Animated.View style={{ width: '100%', opacity: fade }}>
