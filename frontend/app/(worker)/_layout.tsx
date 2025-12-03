@@ -106,7 +106,7 @@ function TAB(name, label, badge) {
                   width: 6,
                   height: 6,
                   borderRadius: 3,
-                  backgroundColor: '#C8FF16',
+                  backgroundColor: '#5941FF',
                 }}
               />
             ) : null}
