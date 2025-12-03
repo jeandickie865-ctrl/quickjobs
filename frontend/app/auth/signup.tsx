@@ -18,75 +18,16 @@ const COLORS = {
 export default function SignupScreen() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<'worker' | 'employer' | null>(null);
-  const [selectedAccountType, setSelectedAccountType] = useState<'private' | 'business'>('private');
-
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
-  const [confirmFocused, setConfirmFocused] = useState(false);
-
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  const inputTranslateY = useRef(new Animated.Value(30)).current;
-  const inputOpacity = useRef(new Animated.Value(0)).current;
-  const buttonTranslateY = useRef(new Animated.Value(20)).current;
-  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  // Animations
+  const fade = useRef(new Animated.Value(0)).current;
+  const slide = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.timing(logoOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-      Animated.parallel([
-        Animated.timing(inputTranslateY, { toValue: 0, duration: 400, useNativeDriver: true }),
-        Animated.timing(inputOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.timing(buttonTranslateY, { toValue: 0, duration: 300, useNativeDriver: true }),
-        Animated.timing(buttonOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]),
+    Animated.parallel([
+      Animated.timing(fade, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.timing(slide, { toValue: 0, duration: 500, useNativeDriver: true })
     ]).start();
   }, []);
-
-  const handleSignup = async () => {
-    setErrors({});
-
-    if (!selectedRole) {
-      Alert.alert('Fehler', 'Bitte wähle eine Rolle (Worker oder Employer)');
-      return;
-    }
-
-    const result = signupSchema.safeParse({ email: email.trim(), password, confirm });
-    
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.issues.forEach((issue) => {
-        if (issue.path[0]) fieldErrors[issue.path[0] as string] = issue.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await signUp(result.data.email, result.data.password, selectedRole, selectedAccountType);
-      
-      // Nach Registrierung: Worker direkt zur Profil-Erstellung, Employer zum Dashboard
-      if (selectedRole === 'worker') {
-        router.replace('/(worker)/profile-wizard/step1-basic');
-      } else {
-        router.replace('/(employer)');
-      }
-    } catch (error: any) {
-      setErrors({ email: error.message || 'Registrierung fehlgeschlagen' });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
