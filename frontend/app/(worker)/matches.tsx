@@ -261,19 +261,30 @@ export default function WorkerMatchesScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      {/* Glow Effect */}
+    <View style={{ flex: 1, backgroundColor: COLORS.darkBg }}>
+      {/* Soft Dot Wave Background */}
       <View style={{
         position: 'absolute',
-        top: -80,
-        left: -40,
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        backgroundColor: COLORS.neon,
-        opacity: 0.12,
-        blur: 60,
-      }} />
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 350,
+        opacity: 0.22,
+      }}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <View key={i} style={{
+            position: 'absolute',
+            top: i * 40,
+            left: -100 + i * 20,
+            width: 600,
+            height: 40,
+            backgroundColor: 'transparent',
+            borderBottomWidth: 1,
+            borderBottomColor: COLORS.softDot,
+            opacity: 0.4,
+          }} />
+        ))}
+      </View>
 
       {/* Top Bar */}
       <SafeAreaView edges={['top']}>
