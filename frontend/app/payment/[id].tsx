@@ -108,40 +108,32 @@ export default function PaymentScreen() {
   }
 
   const handleRegistrationCheck = async () => {
-    try {
-      console.log("Registration check start");
-      console.log("accountType:", user?.accountType);
-      console.log("workerProfile:", workerProfile);
-      console.log("worker isSelfEmployed:", workerProfile?.isSelfEmployed);
+    console.log("CHECK accountType:", user?.accountType);
+    console.log("CHECK workerProfile:", workerProfile);
 
-      // Kein Worker-Profil geladen → Fallback
-      if (!workerProfile) {
-        console.log("No workerProfile available. Redirect to matches.");
-        router.replace("/(employer)/matches");
-        return;
-      }
-
-      // Selbstständiger Worker → keine Anmeldung, nur Rechnung
-      if (workerProfile.isSelfEmployed === true) {
-        console.log("Worker is self-employed. No registration required. Redirect to matches.");
-        router.replace("/(employer)/matches");
-        return;
-      }
-
-      // Fall 1: Privat + Worker nicht selbstständig → Hinweis-Popup
-      if (user?.accountType === "private") {
-        console.log("Private employer with non self-employed worker. Show private employer modal.");
-        setShowPrivateEmployerModal(true);
-        return;
-      }
-
-      // Fall 2: Business + Worker nicht selbstständig → Anmeldemodal
-      console.log("Business employer with non self-employed worker. Show registration modal.");
-      setShowRegistrationModal(true);
-    } catch (e) {
-      console.log("Registration check failed:", e);
+    if (!workerProfile) {
+      console.log("NO workerProfile. Redirect.");
       router.replace("/(employer)/matches");
+      return;
     }
+
+    // Fall 1: Privat + Worker nicht selbstständig
+    if (user?.accountType === "private" && workerProfile.isSelfEmployed === false) {
+      console.log("SHOW PRIVATE EMPLOYER MODAL");
+      setShowPrivateEmployerModal(true);
+      return;
+    }
+
+    // Fall 2: Business + Worker nicht selbstständig
+    if (user?.accountType !== "private" && workerProfile.isSelfEmployed === false) {
+      console.log("SHOW BUSINESS REGISTRATION MODAL");
+      setShowRegistrationModal(true);
+      return;
+    }
+
+    // Fall 3: Worker selbstständig → keine Anmeldung nötig
+    console.log("WORKER SELF-EMPLOYED → DIRECT ROUTE");
+    router.replace("/(employer)/matches");
   };
 
   async function handlePayment() {
