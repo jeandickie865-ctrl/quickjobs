@@ -1,34 +1,21 @@
 // app/auth/signup.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Animated, Image, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, Pressable, TextInput, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '../../contexts/AuthContext';
-import { Eye, EyeOff } from '../../components/Icons';
-import { z } from 'zod';
+import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bgDark: '#0E0B1F',
+  bgCard: '#141126',
+  purple: '#6B4BFF',
+  purpleLight: '#7C5CFF',
   white: '#FFFFFF',
-  black: '#000000',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.12)',
-  placeholder: '#8A8A8A',
+  muted: 'rgba(255,255,255,0.6)',
+  neon: '#C8FF16'
 };
 
-const signupSchema = z.object({
-  email: z.string().min(1, 'E-Mail erforderlich').email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
-  confirm: z.string().min(1, 'Passwort-Bestätigung erforderlich'),
-}).refine((data) => data.password === data.confirm, {
-  message: 'Die Passwörter stimmen nicht überein',
-  path: ['confirm'],
-});
-
 export default function SignupScreen() {
-  const { signUp } = useAuth();
   const router = useRouter();
 
   const [email, setEmail] = useState('');
