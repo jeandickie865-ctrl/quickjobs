@@ -111,6 +111,12 @@ export default function PaymentScreen() {
     console.log("CHECK accountType:", user?.accountType);
     console.log("CHECK workerProfile:", workerProfile);
 
+    // DEBUG: Zeige die Werte als Alert
+    Alert.alert(
+      "DEBUG", 
+      `accountType: ${user?.accountType}\nisSelfEmployed: ${workerProfile?.isSelfEmployed}\nworkerProfile exists: ${!!workerProfile}`
+    );
+
     if (!workerProfile) {
       console.log("NO workerProfile. Redirect.");
       router.replace("/(employer)/matches");
