@@ -94,7 +94,7 @@ function TAB(name, label, badge) {
             <Text
               style={{
                 color: focused ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
-                fontWeight: '700',
+                fontWeight: focused ? '800' : '600',
               }}
             >
               {label}
