@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step5-summary.tsx - ZUSAMMENFASSUNG
+// app/(worker)/profile-wizard/step5-summary.tsx - BACKUP D+ DESIGN
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, Image, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,13 +10,13 @@ import { useWizard } from '../../../contexts/WizardContext';
 import { useAuth } from '../../../contexts/AuthContext';
 
 const COLORS = {
-  purple: '#5941FF',
-  purpleDark: '#3E2DD9',
+  bg: '#0A0816',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
   neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
-  gray: '#999',
-  lightGray: '#F5F5F5',
+  purple: '#6B4BFF',
   error: '#FF4D4D',
 };
 
@@ -25,17 +25,14 @@ export default function Step5Summary() {
   const { wizardData, resetWizard } = useWizard();
   const { user, token } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
-  
-  // Track if component is still mounted to prevent Alert on unmounted component
+
   const isMounted = useRef(true);
-  
   useEffect(() => {
     return () => {
       isMounted.current = false;
     };
   }, []);
 
-  // Get all data from context
   const profileData = {
     photoUrl: wizardData.photoUrl,
     firstName: wizardData.firstName,
@@ -54,7 +51,6 @@ export default function Step5Summary() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // Prepare profile data for backend - NEW STRUCTURE
       const profilePayload = {
         firstName: wizardData.firstName || '',
         lastName: wizardData.lastName || '',
@@ -63,7 +59,7 @@ export default function Step5Summary() {
         shortBio: wizardData.shortBio || '',
         photoUrl: wizardData.photoUrl || '',
         isSelfEmployed: wizardData.isSelfEmployed || false,
-        categories: wizardData.categories || [], // Array with multiple categories
+        categories: wizardData.categories || [],
         subcategories: wizardData.subcategories || [],
         qualifications: wizardData.qualifications || [],
         radiusKm: wizardData.radiusKm || 25,
@@ -78,25 +74,9 @@ export default function Step5Summary() {
         homeLon: wizardData.lon,
       };
 
-      console.log('💾 Saving profile with NEW structure:', profilePayload);
-      console.log('📊 Wizard Data Check:', {
-        category: wizardData.category,
-        subcategories: wizardData.subcategories,
-        qualifications: wizardData.qualifications,
-        lat: wizardData.lat,
-        lon: wizardData.lon
-      });
-
       const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
       const userId = user?.id || '';
-      
-      console.log('🔑 Authorization info:', {
-        userId,
-        token,
-        authHeader: `Bearer ${token}`
-      });
-      
-      // Try POST first (create new profile)
+
       let response = await fetch(`${backendUrl}/api/profiles/worker`, {
         method: 'POST',
         headers: {
@@ -106,9 +86,7 @@ export default function Step5Summary() {
         body: JSON.stringify(profilePayload),
       });
 
-      // If profile already exists (400), use PUT to update
       if (response.status === 400) {
-        console.log('Profile exists, updating instead...');
         response = await fetch(`${backendUrl}/api/profiles/worker/${userId}`, {
           method: 'PUT',
           headers: {
@@ -119,36 +97,19 @@ export default function Step5Summary() {
         });
       }
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Backend error:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-      const savedProfile = await response.json();
-      console.log('Profile saved successfully:', savedProfile);
-      
-      // Reset wizard data after successful save
       resetWizard();
-      
-      // Navigate to profile page
       router.replace('/(worker)/profile');
-      
-      // Show success message after navigation (only if component is still mounted)
+
       setTimeout(() => {
         if (isMounted.current) {
-          Alert.alert(
-            'Profil gespeichert! 🎉',
-            'Dein Profil wurde erfolgreich gespeichert.'
-          );
+          Alert.alert('Profil gespeichert', 'Dein Profil wurde erfolgreich gespeichert.');
         }
       }, 500);
+
     } catch (error) {
-      console.error('Error saving profile:', error);
-      Alert.alert(
-        'Fehler',
-        'Profil konnte nicht gespeichert werden. Bitte versuche es erneut.'
-      );
+      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden.');
     } finally {
       setIsSaving(false);
     }
@@ -161,17 +122,13 @@ export default function Step5Summary() {
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.safeArea}>
-        {/* Progress */}
         <ProgressBar currentStep={5} totalSteps={5} />
 
-        {/* Content */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <Text style={styles.title}>Zusammenfassung</Text>
-          <Text style={styles.subtitle}>
-            Überprüfe deine Angaben
-          </Text>
+          <Text style={styles.subtitle}>Überprüfe deine Angaben</Text>
 
-          {/* Profile Photo */}
+          {/* PHOTO */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Profilbild</Text>
             <View style={styles.photoContainer}>
@@ -180,54 +137,60 @@ export default function Step5Summary() {
               ) : (
                 <View style={styles.photoPlaceholder}>
                   <Text style={styles.photoInitials}>
-                    {profileData.firstName.charAt(0)}{profileData.lastName.charAt(0)}
+                    {profileData.firstName?.charAt(0)}
+                    {profileData.lastName?.charAt(0)}
                   </Text>
                 </View>
               )}
             </View>
           </View>
 
-          {/* Basic Info */}
+          {/* BASIC INFO */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Basisdaten</Text>
+
             <View style={styles.infoRow}>
-              <Ionicons name="person" size={20} color={COLORS.white} />
+              <Ionicons name="person" size={20} color={COLORS.neon} />
               <Text style={styles.infoText}>
                 {profileData.firstName} {profileData.lastName}
               </Text>
             </View>
+
             <View style={styles.infoRow}>
-              <Ionicons name="call" size={20} color={COLORS.white} />
+              <Ionicons name="call" size={20} color={COLORS.neon} />
               <Text style={styles.infoText}>{profileData.phone}</Text>
             </View>
+
             <View style={styles.infoRow}>
-              <Ionicons name="mail" size={20} color={COLORS.white} />
+              <Ionicons name="mail" size={20} color={COLORS.neon} />
               <Text style={styles.infoText}>{profileData.email}</Text>
             </View>
           </View>
 
-          {/* Address */}
+          {/* ADDRESS */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Adresse & Arbeitsbereich</Text>
+
             <View style={styles.infoRow}>
-              <Ionicons name="location" size={20} color={COLORS.white} />
+              <Ionicons name="location" size={20} color={COLORS.neon} />
               <Text style={styles.infoText}>
                 {profileData.street}, {profileData.postalCode} {profileData.city}
               </Text>
             </View>
+
             <View style={styles.infoRow}>
-              <Ionicons name="navigate" size={20} color={COLORS.white} />
-              <Text style={styles.infoText}>Arbeitsradius: {profileData.radius} km</Text>
+              <Ionicons name="navigate" size={20} color={COLORS.neon} />
+              <Text style={styles.infoText}>Radius: {profileData.radius} km</Text>
             </View>
           </View>
 
-          {/* Categories */}
+          {/* CATEGORIES */}
           {profileData.categories.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Kategorien</Text>
               <View style={styles.tagContainer}>
-                {profileData.categories.map((cat, index) => (
-                  <View key={index} style={styles.tag}>
+                {profileData.categories.map((cat, i) => (
+                  <View key={i} style={styles.tag}>
                     <Text style={styles.tagText}>{cat}</Text>
                   </View>
                 ))}
@@ -235,13 +198,13 @@ export default function Step5Summary() {
             </View>
           )}
 
-          {/* Subcategories */}
+          {/* SUBCATEGORIES */}
           {profileData.subcategories.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Tätigkeiten</Text>
               <View style={styles.tagContainer}>
-                {profileData.subcategories.map((sub, index) => (
-                  <View key={index} style={styles.tag}>
+                {profileData.subcategories.map((sub, i) => (
+                  <View key={i} style={styles.tag}>
                     <Text style={styles.tagText}>{sub}</Text>
                   </View>
                 ))}
@@ -249,35 +212,21 @@ export default function Step5Summary() {
             </View>
           )}
 
-          {/* Qualifications */}
+          {/* QUALIFICATIONS */}
           {profileData.qualifications.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Qualifikationen</Text>
               <View style={styles.tagContainer}>
-                {profileData.qualifications.map((qual, index) => (
-                  <View key={index} style={styles.tag}>
+                {profileData.qualifications.map((qual, i) => (
+                  <View key={i} style={styles.tag}>
                     <Text style={styles.tagText}>{qual}</Text>
                   </View>
                 ))}
               </View>
             </View>
           )}
-
-          {/* Verdienst - nur für nicht-Selbstständige */}
-          {!wizardData.isSelfEmployed && (
-            <View style={{ marginTop: 12 }}>
-              <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>
-                Verdienst
-              </Text>
-              <Text style={{ fontSize: 14, color: '#333', marginTop: 4 }}>
-                Brutto = Netto – kurzfristige Beschäftigung nach § 40a EStG  
-                Der Arbeitgeber trägt alle Pauschalabgaben.
-              </Text>
-            </View>
-          )}
         </ScrollView>
 
-        {/* Navigation */}
         <NavigationButtons
           onNext={handleSave}
           onBack={handleBack}
@@ -300,63 +249,58 @@ export default function Step5Summary() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.purple,
+    backgroundColor: COLORS.bg,
   },
-  safeArea: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
-  },
+  safeArea: { flex: 1 },
+  scrollView: { flex: 1 },
+  scrollContent: { padding: 24 },
+
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: COLORS.white,
-    marginBottom: 8,
+    color: COLORS.text,
+    marginBottom: 6,
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.white,
-    opacity: 0.9,
-    marginBottom: 32,
+    color: COLORS.muted,
+    marginBottom: 28,
   },
+
   section: {
-    marginBottom: 32,
+    marginBottom: 36,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: COLORS.neon,
     marginBottom: 16,
   },
-  photoContainer: {
-    alignItems: 'center',
-  },
+
+  photoContainer: { alignItems: 'center' },
   photo: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     borderWidth: 3,
     borderColor: COLORS.neon,
   },
   photoPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: COLORS.card,
     borderWidth: 3,
     borderColor: COLORS.neon,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   photoInitials: {
     fontSize: 32,
     fontWeight: '700',
     color: COLORS.purple,
   },
+
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -365,39 +309,43 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 16,
-    color: COLORS.white,
+    color: COLORS.text,
     flex: 1,
   },
+
   tagContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 10,
   },
   tag: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: COLORS.neon,
-    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    backgroundColor: COLORS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   tagText: {
+    color: COLORS.muted,
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.purple,
   },
+
   loadingOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
-    gap: 16,
+    alignItems: 'center',
+    gap: 18,
   },
   loadingText: {
+    color: COLORS.text,
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.white,
   },
 });
