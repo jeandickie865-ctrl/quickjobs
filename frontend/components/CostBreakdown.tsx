@@ -11,16 +11,16 @@ export function CostBreakdown({ workerAmountCents }: { workerAmountCents: number
   return (
     <View style={{ gap: 4 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.black }}>An Arbeitnehmer</Text>
-        <Text style={{ color: colors.black }}>{euro(workerAmountCents)}</Text>
+        <Text style={{ color: colors.text }}>An Arbeitnehmer</Text>
+        <Text style={{ color: colors.text }}>{euro(workerAmountCents)}</Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.black }}>Plattform 20 %</Text>
-        <Text style={{ color: colors.black }}>{euro(fee)}</Text>
+        <Text style={{ color: colors.text }}>Plattform 20 %</Text>
+        <Text style={{ color: colors.text }}>{euro(fee)}</Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.black, fontWeight: '600' }}>Gesamt für dich</Text>
-        <Text style={{ color: colors.black, fontWeight: '600' }}>{euro(total)}</Text>
+        <Text style={{ color: colors.text, fontWeight: '600' }}>Gesamt für dich</Text>
+        <Text style={{ color: colors.text, fontWeight: '600' }}>{euro(total)}</Text>
       </View>
     </View>
   );
