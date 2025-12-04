@@ -228,13 +228,11 @@ export default function EmployerProfileViewScreen() {
 
           {/* Profile Card */}
           <View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 24,
-            shadowColor: COLORS.neon,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.2,
-            shadowRadius: 12,
+            borderWidth: 1,
+            borderColor: COLORS.border,
           }}>
             {/* Profile Header with Photo */}
             <View style={{ alignItems: 'center', marginBottom: 24 }}>
@@ -242,7 +240,7 @@ export default function EmployerProfileViewScreen() {
                 width: 100,
                 height: 100,
                 borderRadius: 50,
-                backgroundColor: COLORS.purple,
+                backgroundColor: COLORS.bg,
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderWidth: 4,
@@ -253,13 +251,13 @@ export default function EmployerProfileViewScreen() {
                   {profile?.firstName?.charAt(0) || profile?.company?.charAt(0) || 'E'}
                 </Text>
               </View>
-              <Text style={{ fontSize: 24, fontWeight: '800', color: COLORS.black, textAlign: 'center' }}>
+              <Text style={{ fontSize: 24, fontWeight: '800', color: COLORS.white, textAlign: 'center' }}>
                 {profile?.firstName && profile?.lastName 
                   ? `${profile.firstName} ${profile.lastName}`
                   : profile?.company || 'Kein Name'}
               </Text>
               {profile?.company && (
-                <Text style={{ fontSize: 16, color: COLORS.darkGray, marginTop: 4 }}>
+                <Text style={{ fontSize: 16, color: COLORS.muted, marginTop: 4 }}>
                   {profile.company}
                 </Text>
               )}
