@@ -246,7 +246,7 @@ export default function WorkerJobDetailScreen() {
               <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 8 }}>
                 STANDORT
               </Text>
-              <Text style={{ fontSize: 16, color: COLORS.black }}>
+              <Text style={{ fontSize: 16, color: COLORS.white }}>
                 📍 {job.address?.street || 'Keine Straße'} {job.address?.houseNumber || job.address?.house_number || ''}, {job.address?.postalCode || job.address?.postal_code || ''} {job.address?.city || 'Keine Stadt'}
               </Text>
             </View>
