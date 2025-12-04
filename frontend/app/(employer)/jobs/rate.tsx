@@ -100,8 +100,21 @@ export default function RateWorkerScreen() {
       return;
     }
 
+    if (job.status !== "matched" && job.status !== "done") {
+      Alert.alert("Nicht möglich", "Du kannst den Worker erst nach dem Job bewerten.");
+      return;
+    }
+
     setSaving(true);
     try {
+      const reviews = await getReviewsForWorker(worker.userId);
+      const alreadyRated = reviews.some(r => r.jobId === jobId && r.employerId === user.id);
+
+      if (alreadyRated) {
+        Alert.alert("Hinweis", "Du hast diesen Worker für diesen Job bereits bewertet.");
+        setSaving(false);
+        return;
+      }
       const review = {
         jobId: String(jobId),
         workerId: worker.userId,
