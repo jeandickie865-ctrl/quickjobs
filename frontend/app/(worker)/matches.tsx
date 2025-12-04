@@ -476,7 +476,7 @@ export default function WorkerMatchesScreen() {
                           backgroundColor:
                             application.paymentStatus === "paid"
                               ? COLORS.purple
-                              : "#555",
+                              : "rgba(255,255,255,0.15)",
                           paddingVertical: 14,
                           borderRadius: 14,
                           alignItems: "center",
@@ -487,7 +487,7 @@ export default function WorkerMatchesScreen() {
                             color:
                               application.paymentStatus === "paid"
                                 ? COLORS.textWhite
-                                : "#AAA",
+                                : "rgba(255,255,255,0.4)",
                             fontSize: 16,
                             fontWeight: "700",
                           }}
