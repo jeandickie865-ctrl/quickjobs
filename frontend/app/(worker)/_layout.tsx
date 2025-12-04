@@ -16,21 +16,6 @@ const COLORS = {
 
 export default function WorkerLayout() {
   const { user, loading } = useAuth();
-  const [matchesCount, setMatchesCount] = useState(0);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (!user) return;
-      async function loadMatchesCount() {
-        try {
-          const apps = await getWorkerApplications();
-          const accepted = apps.filter(a => a.status === 'accepted');
-          setMatchesCount(accepted.length);
-        } catch (err) {}
-      }
-      loadMatchesCount();
-    }, [user])
-  );
 
   if (loading) {
     return (
