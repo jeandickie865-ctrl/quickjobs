@@ -674,6 +674,7 @@ export default function CreateJob() {
           </View>
         </View>
       </ScrollView>
+      </SafeAreaView>
 
       {/* FIXED BOTTOM BUTTON */}
       <View
@@ -713,6 +714,6 @@ export default function CreateJob() {
           </Text>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
