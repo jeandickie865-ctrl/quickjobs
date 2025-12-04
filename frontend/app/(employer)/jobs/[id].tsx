@@ -121,6 +121,8 @@ export default function JobDetailScreen() {
 
     loadApplications();
 
+    if (intervalRef.current) return;
+    
     intervalRef.current = setInterval(() => {
       loadApplications(true);
     }, 5000);
