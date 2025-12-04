@@ -1,3 +1,5 @@
+// LEGACY BACKUP – DO NOT USE IN PRODUCTION
+
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, Pressable, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
