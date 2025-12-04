@@ -178,7 +178,7 @@ export default function EmployerProfileScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator size="large" color={COLORS.neon} />
           <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Profil...</Text>
@@ -188,25 +188,11 @@ export default function EmployerProfileScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      
-      {/* Neon Glow */}
-      <Animated.View
-        style={{
-          position: 'absolute',
-          top: -80,
-          right: -60,
-          width: 200,
-          height: 200,
-          borderRadius: 200,
-          backgroundColor: COLORS.neon,
-          opacity: glowAnim.interpolate({ inputRange: [0, 1], outputRange: [0.07, 0.15] })
-        }}
-      />
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
 
       {/* Header */}
       <SafeAreaView edges={['top']}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: COLORS.border }}>
           <Pressable onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
           </Pressable>
@@ -214,7 +200,7 @@ export default function EmployerProfileScreen() {
           <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>Mein Profil</Text>
 
           <Pressable onPress={handleLogout}>
-            <Text style={{ color: COLORS.neon, fontWeight: '700' }}>Logout</Text>
+            <Ionicons name="log-out-outline" size={24} color={COLORS.neon} />
           </Pressable>
         </View>
       </SafeAreaView>
