@@ -245,24 +245,26 @@ export default function Step5Summary() {
               </View>
             </View>
           )}
-        </ScrollView>
+          </ScrollView>
 
-        <NavigationButtons
-          onNext={handleSave}
-          onBack={handleBack}
-          nextDisabled={isSaving}
-          showBack={true}
-          nextLabel={isSaving ? 'Speichern...' : 'Profil erstellen'}
-        />
+          <NavigationButtons
+            onNext={handleSave}
+            onBack={handleBack}
+            nextDisabled={isSaving}
+            showBack={true}
+            nextLabel={isSaving ? 'Speichern...' : 'Profil erstellen'}
+          />
 
-        {isSaving && (
-          <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color={COLORS.neon} />
-            <Text style={styles.loadingText}>Profil wird erstellt...</Text>
-          </View>
-        )}
-      </SafeAreaView>
-    </View>
+          {isSaving && (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator size="large" color={COLORS.neon} />
+              <Text style={styles.loadingText}>Profil wird erstellt...</Text>
+            </View>
+          )}
+
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
