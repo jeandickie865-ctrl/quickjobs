@@ -157,7 +157,7 @@ export default function RateWorkerScreen() {
   }
   
   if (!worker) {
-    console.log('❌ Employer Rate: Worker fehlt!', params.workerId);
+    console.error('❌ Worker not found:', workerId);
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Worker-Profil nicht gefunden</Text>
