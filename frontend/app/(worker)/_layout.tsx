@@ -62,11 +62,6 @@ export default function WorkerLayout() {
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
           elevation: 0,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 50,
         },
         tabBarLabelStyle: {
           fontSize: 11,
