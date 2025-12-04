@@ -696,9 +696,9 @@ export default function EditWorkerProfileScreen() {
                   maxHeight: 200,
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.4,
-                  shadowRadius: 8,
-                  elevation: 10,
+                  shadowOpacity: 0.2,
+                  shadowRadius: 4,
+                  elevation: 4,
                   zIndex: 1001,
                   borderWidth: 1,
                   borderColor: COLORS.border
