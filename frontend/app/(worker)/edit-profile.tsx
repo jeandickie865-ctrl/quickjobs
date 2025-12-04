@@ -332,7 +332,7 @@ export default function EditWorkerProfileScreen() {
       // Show which tabs have missing fields
       const missingTabs = [];
       if (newErrors.firstName || newErrors.lastName) missingTabs.push('Basis');
-      if (newErrors.street || newErrors.postalCode || newErrors.city || newErrors.country) missingTabs.push('Adresse');
+      if (newErrors.street || newErrors.houseNumber || newErrors.postalCode || newErrors.city || newErrors.country) missingTabs.push('Adresse');
       if (newErrors.categories) missingTabs.push('Kategorien');
       if (newErrors.phone) missingTabs.push('Kontakt');
       if (newErrors.radiusKm) missingTabs.push('Radius');
