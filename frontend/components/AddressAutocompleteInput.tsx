@@ -132,6 +132,51 @@ export default function AddressAutocompleteInput({
         />
       </View>
 
+      {/* KOORDINATEN-BUTTON */}
+      <Pressable
+        onPress={async () => {
+          // Standort-Zugriff (optional)
+          try {
+            const { status } = await import('expo-location').then(m => m.requestForegroundPermissionsAsync());
+            if (status === 'granted') {
+              const location = await import('expo-location').then(m => m.getCurrentPositionAsync({}));
+              onLatChange(location.coords.latitude);
+              onLonChange(location.coords.longitude);
+              
+              // Reverse Geocoding
+              const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.coords.latitude}&lon=${location.coords.longitude}`;
+              const res = await fetch(url);
+              const data = await res.json();
+              
+              if (data && data.address) {
+                onStreetChange(data.address.road || '');
+                onHouseNumberChange(data.address.house_number || '');
+                onPostalCodeChange(data.address.postcode || '');
+                onCityChange(data.address.city || data.address.town || data.address.village || '');
+              }
+            }
+          } catch (err) {
+            console.log('Standort-Fehler:', err);
+          }
+        }}
+        style={({ pressed }) => ({
+          backgroundColor: pressed ? COLORS.border : COLORS.card,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: COLORS.neon,
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginTop: 8,
+        })}
+      >
+        <Text style={{ color: COLORS.neon, fontSize: 14, fontWeight: '700' }}>
+          📍 Aktuellen Standort verwenden
+        </Text>
+      </Pressable>
+
       {/* AUTOCOMPLETE DROPDOWN */}
       {show && suggestions.length > 0 && (
         <View style={styles.dropdown}>
