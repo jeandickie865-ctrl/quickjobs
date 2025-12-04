@@ -145,7 +145,7 @@ export default function RateWorkerScreen() {
   }
 
   if (!job) {
-    console.log('❌ Employer Rate: Job fehlt!', jobId);
+    console.error('❌ Job not found:', jobId);
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Job nicht gefunden</Text>
