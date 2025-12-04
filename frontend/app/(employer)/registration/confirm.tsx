@@ -1,7 +1,19 @@
-import { View, Text, Pressable, Modal } from 'react-native';
+import { View, Text, Pressable, Modal, ActivityIndicator, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
-import COLORS from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
+
+const COLORS = {
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  white: '#FFFFFF',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
+  neon: '#C8FF16',
+  black: '#000000',
+};
 
 function ConfirmContent() {
   const router = useRouter();
@@ -18,6 +30,7 @@ function ConfirmContent() {
   const [application, setApplication] = useState(null);
   const [workerDataComplete, setWorkerDataComplete] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Ein einziger useEffect der auf application reagiert
   useEffect(() => {
@@ -59,95 +72,234 @@ function ConfirmContent() {
       .catch(err => console.error('Error loading application:', err));
   }, [applicationId]);
 
+  const handleCreateRegistration = async () => {
+    // Prüfe zuerst ob Worker-Daten vollständig sind
+    if (!workerDataComplete) {
+      setShowModal(true);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/registrations/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          applicationId,
+          registrationType,
+          steuerId,
+          krankenkasse,
+          geburtsdatum,
+          sozialversicherungsnummer
+        })
+      });
+
+      const data = await response.json();
+      console.log('Registration created:', data);
+
+      router.push(
+        `/(employer)/registration/done?applicationId=${applicationId}`
+      );
+    } catch (err) {
+      console.error('Error creating registration:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
-      <Text style={{ fontSize: 20, fontWeight: '600' }}>
-        Anmeldung vorbereiten
-      </Text>
-
-      <Text style={{ fontSize: 16 }}>
-        Du erstellst jetzt die Anmeldung für {worker ? `${worker.firstName} ${worker.lastName}` : 'den Mitarbeiter'}.
-      </Text>
-
-      <Text style={{ fontSize: 16 }}>
-        Art der Anmeldung: {registrationType}
-      </Text>
-
-      <Pressable
-        onPress={async () => {
-          // Prüfe zuerst ob Worker-Daten vollständig sind
-          if (!workerDataComplete) {
-            setShowModal(true);
-            return;
-          }
-
-          try {
-            const response = await fetch('/api/registrations/create', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                applicationId,
-                registrationType,
-                steuerId,
-                krankenkasse,
-                geburtsdatum,
-                sozialversicherungsnummer
-              })
-            });
-
-            const data = await response.json();
-            console.log('Registration created:', data);
-
-            router.push(
-              `/(employer)/registration/done?applicationId=${applicationId}`
-            );
-          } catch (err) {
-            console.error('Error creating registration:', err);
-          }
-        }}
-        style={{
-          backgroundColor: COLORS.neon,
-          borderRadius: 14,
-          paddingVertical: 14,
-          paddingHorizontal: 16,
-          alignItems: 'center',
-          shadowColor: COLORS.neonShadow,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.8,
-          shadowRadius: 6,
-          marginTop: 20
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-          Anmeldung jetzt erstellen
-        </Text>
-      </Pressable>
-
-      {/* Modal für fehlende Worker-Daten */}
-      <Modal
-        visible={showModal}
-        transparent={true}
-        animationType="fade"
-      >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-          <View style={{ backgroundColor: COLORS.white, padding: 20, borderRadius: 12 }}>
-            <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 10 }}>
-              Angaben fehlen
-            </Text>
-
-            <Text style={{ fontSize: 15, marginBottom: 20 }}>
-              Die Angaben des Arbeitnehmers fehlen noch. Der Arbeitnehmer wird beim nächsten Öffnen der App automatisch aufgefordert, seine Daten einzugeben. Sobald die Angaben vollständig sind, können Sie die Anmeldung erneut durchführen.
-            </Text>
-
-            <Pressable
-              onPress={() => { setShowModal(false); router.push('/(employer)/matches'); }}
-              style={{ backgroundColor: COLORS.neon, padding: 12, borderRadius: 10, alignItems: 'center' }}
-            >
-              <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '600' }}>Verstanden</Text>
-            </Pressable>
-          </View>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+        {/* Header */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: COLORS.border,
+          }}
+        >
+          <Pressable onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+          </Pressable>
+          <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginLeft: 12 }}>
+            Anmeldung vorbereiten
+          </Text>
         </View>
-      </Modal>
+
+        <ScrollView contentContainerStyle={{ padding: 20, gap: 24 }}>
+          {/* Info Icon */}
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <View
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                backgroundColor: COLORS.card,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderWidth: 2,
+                borderColor: COLORS.neon,
+              }}
+            >
+              <Ionicons name="document-text" size={40} color={COLORS.neon} />
+            </View>
+          </View>
+
+          {/* Worker Info Card */}
+          <View
+            style={{
+              backgroundColor: COLORS.card,
+              borderRadius: 16,
+              padding: 20,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+            }}
+          >
+            <Text style={{ color: COLORS.neon, fontSize: 12, fontWeight: '700', marginBottom: 12 }}>
+              MITARBEITER
+            </Text>
+            <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700' }}>
+              {worker ? `${worker.firstName} ${worker.lastName}` : 'Wird geladen...'}
+            </Text>
+          </View>
+
+          {/* Registration Type Card */}
+          <View
+            style={{
+              backgroundColor: COLORS.card,
+              borderRadius: 16,
+              padding: 20,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+            }}
+          >
+            <Text style={{ color: COLORS.neon, fontSize: 12, fontWeight: '700', marginBottom: 12 }}>
+              ART DER ANMELDUNG
+            </Text>
+            <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', textTransform: 'capitalize' }}>
+              {registrationType || 'Nicht angegeben'}
+            </Text>
+          </View>
+
+          {/* Info Box */}
+          <View
+            style={{
+              backgroundColor: COLORS.card,
+              borderRadius: 16,
+              padding: 18,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+              flexDirection: 'row',
+              gap: 12,
+            }}
+          >
+            <Ionicons name="information-circle" size={24} color={COLORS.neon} style={{ marginTop: 2 }} />
+            <Text style={{ color: COLORS.muted, fontSize: 14, flex: 1, lineHeight: 20 }}>
+              Du erstellst jetzt die Anmeldung für diesen Mitarbeiter. Alle notwendigen Dokumente werden automatisch generiert.
+            </Text>
+          </View>
+
+          {/* Action Button */}
+          <Pressable
+            onPress={handleCreateRegistration}
+            disabled={loading}
+            style={{
+              backgroundColor: loading ? COLORS.muted : COLORS.neon,
+              borderRadius: 16,
+              paddingVertical: 18,
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              marginTop: 20,
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
+              alignSelf: 'center',
+            }}
+          >
+            {loading ? (
+              <ActivityIndicator color={COLORS.bg} />
+            ) : (
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                Anmeldung jetzt erstellen
+              </Text>
+            )}
+          </Pressable>
+
+          <View style={{ height: 40 }} />
+        </ScrollView>
+
+        {/* Modal für fehlende Worker-Daten */}
+        <Modal
+          visible={showModal}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowModal(false)}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(14, 11, 31, 0.95)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 20,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: COLORS.card,
+                padding: 24,
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: COLORS.border,
+                width: '100%',
+                maxWidth: 400,
+              }}
+            >
+              <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                <View
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: 30,
+                    backgroundColor: COLORS.bg,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 16,
+                  }}
+                >
+                  <Ionicons name="alert-circle" size={32} color={COLORS.neon} />
+                </View>
+                <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, textAlign: 'center' }}>
+                  Angaben fehlen
+                </Text>
+              </View>
+
+              <Text style={{ fontSize: 15, color: COLORS.muted, marginBottom: 24, textAlign: 'center', lineHeight: 22 }}>
+                Die Angaben des Arbeitnehmers fehlen noch. Der Arbeitnehmer wird beim nächsten Öffnen der App automatisch aufgefordert, seine Daten einzugeben. Sobald die Angaben vollständig sind, können Sie die Anmeldung erneut durchführen.
+              </Text>
+
+              <Pressable
+                onPress={() => {
+                  setShowModal(false);
+                  router.push('/(employer)/matches');
+                }}
+                style={{
+                  backgroundColor: COLORS.neon,
+                  padding: 16,
+                  borderRadius: 14,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '700' }}>Verstanden</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </SafeAreaView>
     </View>
   );
 }
