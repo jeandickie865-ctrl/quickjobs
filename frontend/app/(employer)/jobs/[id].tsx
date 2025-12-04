@@ -269,7 +269,12 @@ export default function JobDetailScreen() {
         </View>
       </SafeAreaView>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 16 }}>
+      <ScrollView 
+        style={{ flex: 1 }} 
+        contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: 200 }}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Job Header Card */}
         <View
           style={{
