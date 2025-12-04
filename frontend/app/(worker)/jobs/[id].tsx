@@ -13,14 +13,17 @@ import { getTagLabel } from '../../../utils/taxonomy';
 import { addApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 
-// NEON COLORS
+// BACKUP DARK COLORS
 const COLORS = {
-  purple: '#5941FF',
+  bg: '#0E0B1F',
+  card: '#141126',
+  cardSoft: '#181433',
+  border: 'rgba(255,255,255,0.08)',
   neon: '#C8FF16',
   white: '#FFFFFF',
-  black: '#000000',
+  lightText: '#E8E8E8',
+  dimText: '#A0A0A0',
   darkGray: '#666666',
-  lightGray: '#F5F5F5',
 };
 
 export default function WorkerJobDetailScreen() {
