@@ -257,7 +257,7 @@ export default function WorkerJobDetailScreen() {
                 KATEGORIE
               </Text>
               <View style={{
-                backgroundColor: COLORS.purple,
+                backgroundColor: COLORS.neon,
                 alignSelf: 'flex-start',
                 paddingHorizontal: 16,
                 paddingVertical: 8,
