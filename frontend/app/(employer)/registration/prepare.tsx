@@ -280,6 +280,8 @@ export default function RegistrationPrepareScreen() {
           Weiter zur Anmeldung
         </Text>
       </Pressable>
-    </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
