@@ -11,8 +11,7 @@ import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
 import { formatAddress } from '../../types/address';
 import { euro } from '../../utils/pricing';
-
-const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL + '/api';
+import { API_URL } from '../../config';
 import { getAuthHeaders } from '../../utils/api';
 
 type ApplicationWithJob = {
