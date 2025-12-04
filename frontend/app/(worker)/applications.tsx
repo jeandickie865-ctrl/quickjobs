@@ -49,18 +49,25 @@ export default function WorkerApplicationsScreen() {
         app.status === 'pending' || app.status === 'rejected'
       );
       
-      const result: ApplicationWithJob[] = [];
-      for (const app of pendingAndRejectedApps) {
-        const job = await getJobById(app.jobId);
-        result.push({ app, job });
-      }
+      // Performance: Alle Jobs parallel laden
+      const jobs = await Promise.all(
+        pendingAndRejectedApps.map(app => 
+          getJobById(app.jobId).catch(() => null)
+        )
+      );
+      
+      const result: ApplicationWithJob[] = pendingAndRejectedApps.map((app, index) => ({
+        app,
+        job: jobs[index]
+      }));
+      
       // Neuste Bewerbungen oben
       result.sort((a, b) => b.app.createdAt.localeCompare(a.app.createdAt));
       setItems(result);
     } catch (e) {
-      console.log('Worker applications load error', e);
+      console.error('Worker applications load error:', e);
       if (!silent) {
-        setError('Bewerbungen konnten nicht geladen werden.');
+        setError('Bewerbungen konnten nicht geladen werden. Bitte versuche es erneut.');
       }
     } finally {
       if (!silent) {
