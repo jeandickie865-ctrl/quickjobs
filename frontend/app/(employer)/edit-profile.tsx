@@ -57,7 +57,7 @@ export default function EmployerProfileScreen() {
   const [city, setCity] = useState('');
   const [lat, setLat] = useState<number | undefined>();
   const [lon, setLon] = useState<number | undefined>();
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [shortBio, setShortBio] = useState('');
 
   // Focus for neon border
