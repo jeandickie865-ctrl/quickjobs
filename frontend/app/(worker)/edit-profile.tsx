@@ -396,7 +396,10 @@ export default function EditWorkerProfileScreen() {
       country.trim() &&
       phone.trim() &&
       selectedCategories.length > 0 &&
-      !isNaN(parseInt(radiusKm))
+      (() => {
+        const n = parseInt(radiusKm);
+        return !isNaN(n) && n >= 1 && n <= 200;
+      })()
     );
   };
 
