@@ -264,17 +264,27 @@ export default function Step1Basic() {
             {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
           </View>
 
-          {/* SELF EMPLOYED */}
+          {/* Spacer where checkbox will be */}
+          <View style={{ height: 60 }} />
+        </ScrollView>
+
+        {/* SELF EMPLOYED - Fixed above button so it's always clickable */}
+        <View style={{
+          position: 'absolute',
+          bottom: 140,
+          left: 0,
+          right: 0,
+          alignItems: 'center',
+          zIndex: 1000,
+          paddingHorizontal: 20,
+        }}>
           <Pressable onPress={() => setIsSelfEmployed(!isSelfEmployed)} style={styles.checkboxContainer}>
             <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
               {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
             </View>
             <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
           </Pressable>
-
-          {/* MASSIVE spacer - checkbox must be fully visible above fixed button */}
-          <View style={{ height: 350 }} />
-        </ScrollView>
+        </View>
 
         {/* HINT */}
         {!isFormValid && (
