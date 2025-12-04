@@ -243,9 +243,8 @@ export default function WorkerMatchesScreen() {
           <Text
             style={{
               fontSize: 26,
-              fontWeight: "900",
+              fontWeight: "800",
               color: COLORS.textWhite,
-              letterSpacing: 0.3,
             }}
           >
             Meine Matches
