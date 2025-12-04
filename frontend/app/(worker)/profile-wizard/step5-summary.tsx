@@ -34,6 +34,7 @@ export default function Step5Summary() {
   const { wizardData, resetWizard } = useWizard();
   const { user, token } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const isMounted = useRef(true);
   useEffect(() => {
