@@ -135,7 +135,7 @@ export default function WorkerJobDetailScreen() {
 
         <ScrollView
           style={{ flex: 1 }}
-          contentContainerStyle={{ padding: 20, paddingBottom: 160, flexGrow: 1 }}
+          contentContainerStyle={{ padding: 20, paddingBottom: 200 }}
         >
           {/* Job Title */}
           <Text style={{
