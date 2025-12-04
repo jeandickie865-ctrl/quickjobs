@@ -168,7 +168,7 @@ export default function WorkerJobDetailScreen() {
                 </Text>
 
                 {!worker?.isSelfEmployed && (
-                  <Text style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+                  <Text style={{ fontSize: 12, color: COLORS.dimText, marginTop: 4 }}>
                     § 40a EStG – keine Abzüge
                   </Text>
                 )}
