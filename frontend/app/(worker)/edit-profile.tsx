@@ -374,6 +374,7 @@ export default function EditWorkerProfileScreen() {
 
       console.log('💾 Saving profile:', updatedProfile);
       await saveWorkerProfile(user.id, updatedProfile);
+      setSaveSuccess(true);
       console.log('✅ Profile saved successfully!');
       
       Alert.alert('Erfolg', 'Profil wurde gespeichert!', [
