@@ -138,7 +138,7 @@ export default function Step4Skills() {
           <NavigationButtons
             onNext={handleNext}
             onBack={handleBack}
-            nextDisabled={selectedQualifications.length === 0}
+            nextDisabled={false}
             showBack={true}
           />
 
