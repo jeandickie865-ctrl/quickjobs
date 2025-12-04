@@ -416,7 +416,7 @@ function Field({
 }
 
 // PAYMENT OPTION CHIP
-function PaymentOption({ label, value, selected, setSelected }) {
+function PaymentOption({ label, value, selected, setSelected }: any) {
   const isSelected = selected === value;
   return (
     <Pressable
