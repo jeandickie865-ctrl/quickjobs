@@ -173,10 +173,18 @@ export default function Step2Address() {
               </Text>
             </View>
 
-            {!isFormValid && (
+            {(lat == null || lon == null) && (
               <View style={{ marginTop: 16 }}>
                 <Text style={styles.validationHint}>
-                  Bitte gib eine vollständige Adresse ein und berechne Koordinaten.
+                  Bitte Adresse auswählen oder GPS nutzen.
+                </Text>
+              </View>
+            )}
+
+            {!isFormValid && lat != null && lon != null && (
+              <View style={{ marginTop: 16 }}>
+                <Text style={styles.validationHint}>
+                  Bitte gib eine vollständige Adresse ein.
                 </Text>
               </View>
             )}
