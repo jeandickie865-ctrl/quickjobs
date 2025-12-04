@@ -175,7 +175,6 @@ export default function Step1Basic() {
         {/* BACKUP HEADER */}
         <View style={styles.backupHeader}>
           <Text style={styles.headerBackupTitle}>BACKUP</Text>
-          <View style={styles.headerNeonLine} />
         </View>
 
         {/* Progress */}
