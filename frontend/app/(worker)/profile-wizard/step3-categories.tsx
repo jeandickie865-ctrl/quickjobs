@@ -281,15 +281,16 @@ const styles = StyleSheet.create({
   subcategoriesList: { flexDirection: 'column', gap: 12 },
 
   subcategoryCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: COLORS.card,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 16,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    minHeight: 52,
     borderWidth: 1,
     borderColor: COLORS.border,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
   },
 
   subcategoryCardSelected: {
