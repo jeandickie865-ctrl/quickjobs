@@ -94,9 +94,13 @@ function ConfirmContent() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/registrations/create', {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`${API_URL}/registrations/create`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           applicationId,
           registrationType,
