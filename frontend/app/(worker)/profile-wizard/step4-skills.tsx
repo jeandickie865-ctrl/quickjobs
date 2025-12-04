@@ -84,14 +84,14 @@ export default function Step4Skills() {
             {selectedCategories.length === 0 && (
               <View style={styles.emptyState}>
                 <Ionicons name="information-circle" size={48} color={COLORS.neon} />
-                <Text style={styles.emptyText}>Wähle zuerst Kategorien in Schritt 3</Text>
+                <Text style={styles.emptyText}>Bitte wähle zuerst mindestens eine Kategorie in Schritt 3 aus.</Text>
               </View>
             )}
 
             {availableQualifications.length === 0 && selectedCategories.length > 0 && (
               <View style={styles.emptyState}>
                 <Ionicons name="checkmark-circle" size={48} color={COLORS.neon} />
-                <Text style={styles.emptyText}>Keine Qualifikationen verfügbar</Text>
+                <Text style={styles.emptyText}>Für diese Kategorie gibt es keine Qualifikationen.</Text>
               </View>
             )}
 
