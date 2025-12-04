@@ -158,7 +158,7 @@ export default function WorkerApplicationsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: '#0E0B1F' }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: '#0E0B1F' }]} edges={['top','bottom']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
