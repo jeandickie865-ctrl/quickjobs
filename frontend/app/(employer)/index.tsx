@@ -100,8 +100,13 @@ export default function EmployerDashboard() {
   if (!hasProfile) return <Redirect href="/(employer)/edit-profile" />;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }} edges={['top']}>
+      <ScrollView 
+        contentContainerStyle={{ padding: 20, gap: 20, paddingBottom: 200 }} 
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
         <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900' }}>Meine Aufträge</Text>
 
         <Pressable
