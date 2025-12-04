@@ -1,3 +1,5 @@
+// LEGACY BACKUP – DO NOT USE IN PRODUCTION
+
 // app/(employer)/matches.tsx – FINAL iPhone-Version (wie Worker)
 
 import React, { useEffect, useState, useRef } from 'react';
