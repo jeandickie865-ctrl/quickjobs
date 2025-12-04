@@ -479,7 +479,7 @@ export default function WorkerMatchesScreen() {
                           backgroundColor:
                             application.paymentStatus === "paid"
                               ? COLORS.purple
-                              : "rgba(255,255,255,0.15)",
+                              : "#3A3A3A",
                           paddingVertical: 14,
                           borderRadius: 14,
                           alignItems: "center",
