@@ -169,131 +169,138 @@ export default function Step1Basic() {
   }
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.container}>
+          
+          {/* BACKUP HEADER */}
+          <View style={styles.backupHeader}>
+            <Text style={styles.headerBackupTitle}>BACKUP</Text>
+          </View>
 
-        {/* BACKUP HEADER */}
-        <View style={styles.backupHeader}>
-          <Text style={styles.headerBackupTitle}>BACKUP</Text>
-        </View>
+          <ProgressBar currentStep={1} totalSteps={5} />
 
-        {/* Progress */}
-        <ProgressBar currentStep={1} totalSteps={5} />
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.title}>Basisdaten</Text>
+            <Text style={styles.subtitle}>Erzähle kurz etwas über dich</Text>
 
-        {/* Content */}
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Basisdaten</Text>
-          <Text style={styles.subtitle}>Erzähle kurz etwas über dich</Text>
+            {/* PHOTO */}
+            <View style={styles.photoSection}>
+              <Text style={styles.label}>Profilfoto</Text>
 
-          {/* PHOTO */}
-          <View style={styles.photoSection}>
-            <Text style={styles.label}>Profilfoto</Text>
+              <View style={styles.photoContainer}>
+                {photoUrl ? (
+                  <Image source={{ uri: photoUrl }} style={styles.photoImage} />
+                ) : (
+                  <View style={styles.photoPlaceholder}>
+                    <Text style={styles.photoInitials}>{getInitials()}</Text>
+                  </View>
+                )}
 
-            <View style={styles.photoContainer}>
-              {photoUrl ? (
-                <Image source={{ uri: photoUrl }} style={styles.photoImage} />
-              ) : (
-                <View style={styles.photoPlaceholder}>
-                  <Text style={styles.photoInitials}>{getInitials()}</Text>
-                </View>
-              )}
+                <Pressable onPress={pickImage} style={styles.photoButton}>
+                  <Ionicons name="camera" size={20} color={COLORS.bg} />
+                </Pressable>
+              </View>
 
-              <Pressable onPress={pickImage} style={styles.photoButton}>
-                <Ionicons name="camera" size={20} color={COLORS.bg} />
+              <Pressable onPress={pickImage} style={styles.changePhotoButton}>
+                <Text style={styles.changePhotoText}>Foto ändern</Text>
               </Pressable>
+
+              {errors.photoUrl && <Text style={styles.errorText}>{errors.photoUrl}</Text>}
             </View>
 
-            <Pressable onPress={pickImage} style={styles.changePhotoButton}>
-              <Text style={styles.changePhotoText}>Foto ändern</Text>
+            {/* FIRST NAME */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Vorname *</Text>
+              <TextInput
+                value={firstName}
+                onChangeText={setFirstName}
+                placeholder="Max"
+                placeholderTextColor={COLORS.placeholder}
+                style={styles.input}
+              />
+              {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
+            </View>
+
+            {/* LAST NAME */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nachname *</Text>
+              <TextInput
+                value={lastName}
+                onChangeText={setLastName}
+                placeholder="Mustermann"
+                placeholderTextColor={COLORS.placeholder}
+                style={styles.input}
+              />
+              {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
+            </View>
+
+            {/* SELF EMPLOYED - Moved here for easy access */}
+            <Pressable 
+              onPress={() => {
+                console.log('Checkbox clicked!');
+                setIsSelfEmployed(!isSelfEmployed);
+              }} 
+              style={styles.checkboxContainer}
+            >
+              <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
+                {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
+              </View>
+              <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
             </Pressable>
 
-            {errors.photoUrl && <Text style={styles.errorText}>{errors.photoUrl}</Text>}
-          </View>
-
-          {/* FIRST NAME */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Vorname *</Text>
-            <TextInput
-              value={firstName}
-              onChangeText={setFirstName}
-              placeholder="Max"
-              placeholderTextColor={COLORS.placeholder}
-              style={styles.input}
-            />
-            {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
-          </View>
-
-          {/* LAST NAME */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nachname *</Text>
-            <TextInput
-              value={lastName}
-              onChangeText={setLastName}
-              placeholder="Mustermann"
-              placeholderTextColor={COLORS.placeholder}
-              style={styles.input}
-            />
-            {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
-          </View>
-
-          {/* SELF EMPLOYED - Moved here for easy access */}
-          <Pressable 
-            onPress={() => {
-              console.log('Checkbox clicked!');
-              setIsSelfEmployed(!isSelfEmployed);
-            }} 
-            style={styles.checkboxContainer}
-          >
-            <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
-              {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
+            {/* SHORT BIO */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Über mich</Text>
+              <TextInput
+                value={shortBio}
+                onChangeText={setShortBio}
+                placeholder="Erzähl kurz etwas über dich…"
+                placeholderTextColor={COLORS.placeholder}
+                multiline
+                numberOfLines={4}
+                style={[styles.input, styles.textArea]}
+              />
             </View>
-            <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
-          </Pressable>
 
-          {/* SHORT BIO */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Über mich</Text>
-            <TextInput
-              value={shortBio}
-              onChangeText={setShortBio}
-              placeholder="Erzähl kurz etwas über dich…"
-              placeholderTextColor={COLORS.placeholder}
-              multiline
-              numberOfLines={4}
-              style={[styles.input, styles.textArea]}
-            />
-          </View>
+            {/* PHONE */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Telefonnummer *</Text>
+              <TextInput
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="+49 123 456789"
+                placeholderTextColor={COLORS.placeholder}
+                keyboardType="phone-pad"
+                style={styles.input}
+              />
+              {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
+            </View>
 
-          {/* PHONE */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Telefonnummer *</Text>
-            <TextInput
-              value={phone}
-              onChangeText={setPhone}
-              placeholder="+49 123 456789"
-              placeholderTextColor={COLORS.placeholder}
-              keyboardType="phone-pad"
-              style={styles.input}
-            />
-            {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
-          </View>
+            {/* HINT */}
+            {!isFormValid && (
+              <View style={{ marginTop: 16 }}>
+                <Text style={styles.validationHint}>Bitte fülle alle Pflichtfelder aus</Text>
+              </View>
+            )}
+          </ScrollView>
 
-          {/* Large spacer so all fields are above fixed button */}
-          <View style={{ height: 240 }} />
-        </ScrollView>
+          <NavigationButtons
+            onNext={handleNext}
+            nextDisabled={!isFormValid}
+            showBack={false}
+          />
 
-        {/* HINT */}
-        {!isFormValid && (
-          <View style={{ paddingHorizontal: 24, paddingBottom: 12 }}>
-            <Text style={styles.validationHint}>Bitte fülle alle Pflichtfelder aus</Text>
-          </View>
-        )}
-
-        {/* NAVIGATION */}
-        <NavigationButtons onNext={handleNext} nextDisabled={!isFormValid} showBack={false} />
-
-      </SafeAreaView>
-    </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
