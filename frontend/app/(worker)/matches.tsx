@@ -145,9 +145,11 @@ export default function WorkerMatchesScreen() {
     React.useCallback(() => {
       if (!authLoading && user) loadMatches();
 
-      intervalRef.current = setInterval(() => {
-        if (!authLoading && user) loadMatches(true);
-      }, 15000);
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(() => {
+          if (!authLoading && user) loadMatches(true);
+        }, 15000);
+      }
 
       return () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
