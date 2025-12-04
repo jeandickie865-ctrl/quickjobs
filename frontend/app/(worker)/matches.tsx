@@ -217,7 +217,7 @@ export default function WorkerMatchesScreen() {
   if (loading) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bgDark }}>
-        <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <SafeAreaView edges={['top','bottom']} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator color={COLORS.accent} size="large" />
           <Text style={{ color: COLORS.textWhite, marginTop: 16, fontSize: 16 }}>
             Lädt Matches...
