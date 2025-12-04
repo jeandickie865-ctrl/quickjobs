@@ -377,8 +377,7 @@ export default function WorkerJobDetailScreen() {
 
                   const newCount = buttonClickCount + 1;
                   setButtonClickCount(newCount);
-                  setDebugLogs(prev => [...prev, `Click #${newCount}`]);
-                  setDebugLogs(prev => [...prev, `Job ID: ${job.id}`]);
+                  setDebugLogs(prev => [...prev, `Click #${newCount}`, `Job ID: ${job?.id}`]);
 
                   try {
                     const result = await addApplication(job.id);
