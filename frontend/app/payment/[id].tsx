@@ -114,26 +114,30 @@ export default function PaymentScreen() {
     }
   }
 
-  const handleRegistrationCheck = async () => {
+  const handleRegistrationCheck = async (profileData?: any) => {
     console.log("🔍 [MODAL CHECK] START");
     console.log("🔍 [MODAL CHECK] user.accountType:", user?.accountType);
-    console.log("🔍 [MODAL CHECK] workerProfile:", workerProfile);
-    console.log("🔍 [MODAL CHECK] workerProfile.isSelfEmployed:", workerProfile?.isSelfEmployed);
-    console.log("🔍 [MODAL CHECK] workerProfile.isSelfEmployed TYPE:", typeof workerProfile?.isSelfEmployed);
+    
+    // Verwende entweder das übergebene Profil oder das State-Profil
+    const currentProfile = profileData || workerProfile;
+    console.log("🔍 [MODAL CHECK] currentProfile:", currentProfile);
+    console.log("🔍 [MODAL CHECK] currentProfile.isSelfEmployed:", currentProfile?.isSelfEmployed);
+    console.log("🔍 [MODAL CHECK] currentProfile.isSelfEmployed TYPE:", typeof currentProfile?.isSelfEmployed);
 
-    if (!workerProfile) {
-      console.log("❌ [MODAL CHECK] NO workerProfile - showing error");
+    if (!currentProfile) {
+      console.log("❌ [MODAL CHECK] NO currentProfile - showing error");
       Alert.alert("Fehler", "Worker-Daten fehlen.");
       return;
     }
 
-    const isSelf = workerProfile.isSelfEmployed === true;
+    const isSelf = currentProfile.isSelfEmployed === true;
     console.log("🔍 [MODAL CHECK] isSelf (=== true):", isSelf);
 
     // Wenn selbstständig → KEIN Modal
     if (isSelf) {
       console.log("✅ [MODAL CHECK] Worker is self-employed, no registration modal needed");
       // Payment ist bereits abgeschlossen, keine weitere Aktion nötig
+      router.replace("/(employer)/matches");
       return;
     }
 
