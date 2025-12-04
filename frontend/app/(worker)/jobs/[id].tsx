@@ -220,7 +220,7 @@ export default function WorkerJobDetailScreen() {
                 if (job.timeMode === 'hour_package' && job.hours) {
                   return (
                     <>
-                      <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: '600' }}>
+                      <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '600' }}>
                         ⏱️ {job.hours} Stunden
                       </Text>
                       {jobDate && (
