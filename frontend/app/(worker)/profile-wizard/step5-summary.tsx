@@ -68,9 +68,9 @@ export default function Step5Summary() {
         shortBio: wizardData.shortBio || '',
         photoUrl: wizardData.photoUrl || '',
         isSelfEmployed: wizardData.isSelfEmployed || false,
-        categories: wizardData.categories || [],
-        subcategories: wizardData.subcategories || [],
-        qualifications: wizardData.qualifications || [],
+        categories: wizardData.selectedCategories || wizardData.categories || [],
+        subcategories: wizardData.selectedSubcategories || wizardData.subcategories || [],
+        qualifications: wizardData.selectedQualifications || wizardData.qualifications || [],
         radiusKm: wizardData.radiusKm || 25,
         homeAddress: {
           street: wizardData.street || '',
