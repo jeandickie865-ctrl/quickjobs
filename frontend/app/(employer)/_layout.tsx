@@ -133,7 +133,7 @@ function TAB(name, label, badge = 0) {
                   width: 6,
                   height: 6,
                   borderRadius: 3,
-                  backgroundColor: COLORS.purple,
+                  backgroundColor: COLORS.neon,
                 }}
               />
             )}
