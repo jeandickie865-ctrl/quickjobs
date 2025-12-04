@@ -708,7 +708,7 @@ export default function CreateJob() {
           zIndex: 999,
         }}
       >
-        <View style={{ width: '60%', maxWidth: 380 }}>
+        <View style={{ width: '100%', maxWidth: 360 }}>
           <Button
             title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
             onPress={handlePublish}
