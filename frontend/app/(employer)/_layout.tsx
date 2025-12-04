@@ -68,10 +68,6 @@ export default function EmployerLayout() {
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
         },
         tabBarLabelStyle: {
           fontSize: 13,
