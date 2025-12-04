@@ -122,39 +122,48 @@ export default function CreateJob() {
       setError('Du musst als Auftraggeber angemeldet sein.');
       return;
     }
+    // Pflichtfelder prüfen
     if (!title.trim()) {
-      setError('Gib einen Jobtitel ein.');
-      return;
-    }
-    if (!category) {
-      setError('Wähle eine Kategorie.');
-      return;
-    }
-    if (!address.street && !address.postalCode && !address.city) {
-      setError('Gib eine Adresse an.');
-      return;
-    }
-    if (workerAmountCents <= 0) {
-      setError('Gib einen gültigen Lohn ein.');
-      return;
-    }
-    if (!lat || !lon) {
-      setError('Keine Koordinaten gefunden. Nutze die Adresssuche.');
-      return;
-    }
-    if (!date) {
-      setError('Gib ein Datum ein.');
-      return;
-    }
-    if (!startAt) {
-      setError('Gib eine Startzeit ein.');
-      return;
-    }
-    if (!endAt) {
-      setError('Gib eine Endzeit ein.');
+      setError('Bitte gib einen Jobtitel ein.');
       return;
     }
 
+    if (!category) {
+      setError('Bitte wähle eine Kategorie.');
+      return;
+    }
+
+    if (!subcategory) {
+      setError('Bitte wähle eine Tätigkeit (Subkategorie).');
+      return;
+    }
+
+    if (!workerAmountInput.trim() || workerAmountCents <= 0) {
+      setError('Bitte gib einen gültigen Lohn ein.');
+      return;
+    }
+
+    if (!lat || !lon) {
+      setError('Bitte wähle eine Adresse und berechne Koordinaten.');
+      return;
+    }
+
+    if (!date) {
+      setError('Bitte gib ein Datum ein.');
+      return;
+    }
+
+    if (!startAt) {
+      setError('Bitte gib eine Startzeit ein.');
+      return;
+    }
+
+    if (!endAt) {
+      setError('Bitte gib eine Endzeit ein.');
+      return;
+    }
+
+    // Datum darf nicht in der Vergangenheit liegen
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const jobDate = new Date(date);
