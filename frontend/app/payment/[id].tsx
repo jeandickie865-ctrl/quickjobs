@@ -344,6 +344,10 @@ export default function PaymentScreen() {
             shadowOpacity: 0.3,
             shadowRadius: 8,
             elevation: 4,
+            width: "60%",
+            maxWidth: 300,
+            minWidth: 220,
+            alignSelf: "center",
           }}
         >
           {processing ? (
