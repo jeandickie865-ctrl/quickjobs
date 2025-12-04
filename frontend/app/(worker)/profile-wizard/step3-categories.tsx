@@ -246,8 +246,9 @@ const styles = StyleSheet.create({
   categoriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    justifyContent: 'space-between'
+    justifyContent: 'flex-start',
+    columnGap: 12,
+    rowGap: 12,
   },
 
   categoryCard: {
