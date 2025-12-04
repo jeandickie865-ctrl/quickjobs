@@ -296,7 +296,7 @@ export default function CreateJob() {
           <TextInput
             value={title}
             onChangeText={setTitle}
-            placeholder="z. B. Fahrer für Event in Köln"
+            placeholder="z. B. Fahrer für Event"
             placeholderTextColor={COLORS.muted}
             style={{
               borderWidth: 1,
@@ -305,7 +305,7 @@ export default function CreateJob() {
               paddingHorizontal: 14,
               paddingVertical: 10,
               backgroundColor: COLORS.inputBg,
-              color: COLORS.white,
+              color: '#000000',
               fontSize: 15,
             }}
           />
