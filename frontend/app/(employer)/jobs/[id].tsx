@@ -363,12 +363,11 @@ export default function JobDetailScreen() {
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.white, lineHeight: 22 }}>
             {(() => {
-              if (job.date && job.start_at && job.end_at) {
-                return `${job.date} von ${job.start_at} bis ${job.end_at}`;
-              }
+              const start = job.start_at || job.startAt || null;
+              const end = job.end_at || job.endAt || null;
 
-              if (job.date && job.startAt && job.endAt) {
-                return `${job.date} von ${job.startAt} bis ${job.endAt}`;
+              if (job.date && start && end) {
+                return `${job.date} von ${start} bis ${end}`;
               }
 
               if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
