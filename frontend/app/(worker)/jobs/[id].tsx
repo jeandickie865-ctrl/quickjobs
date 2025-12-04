@@ -351,35 +351,49 @@ export default function WorkerJobDetailScreen() {
             </Text>
           </View>
 
-          {/* "Ich habe Zeit" Button - nur wenn Job nicht matched ist */}
+          {/* Status Badge */}
+          <View style={{
+            backgroundColor: job.status === 'matched' ? COLORS.neon : COLORS.lightGray,
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            borderRadius: 12,
+            alignItems: 'center',
+            marginBottom: 40,
+          }}>
+            <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.black }}>
+              {job.status === 'matched'
+                ? '✓ Du bist für diesen Job ausgewählt!'
+                : job.status === 'open'
+                ? '🔓 Job ist offen'
+                : job.status === 'pending'
+                ? '⏳ In Bearbeitung'
+                : 'Status unbekannt'
+              }
+            </Text>
+          </View>
+
+          {/* Button "Ich habe Zeit" */}
           {job.status !== 'matched' && (
-            <View style={{ 
-              paddingHorizontal: 20,
-              paddingBottom: 40,
-            }}>
+            <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
               <Pressable
                 onPress={async () => {
                   const newCount = buttonClickCount + 1;
                   setButtonClickCount(newCount);
-                  setDebugLogs(prev => [...prev, `🚀 Click #${newCount}`]);
+                  setDebugLogs(prev => [...prev, `Click #${newCount}`]);
                   setDebugLogs(prev => [...prev, `Job ID: ${job.id}`]);
-                  setDebugLogs(prev => [...prev, `Job ID Type: ${typeof job.id}`]);
-                  
+
                   try {
-                    setDebugLogs(prev => [...prev, '📝 Rufe addApplication...' ]);
                     const result = await addApplication(job.id);
-                    setDebugLogs(prev => [...prev, '✅ Erfolg!']);
-                    alert('✅ Erfolg! Bewerbung wurde erstellt.');
+                    alert('Erfolg! Bewerbung wurde erstellt.');
                     setTimeout(() => router.push('/(worker)/applications'), 500);
                   } catch (err: any) {
-                    setDebugLogs(prev => [...prev, `❌ FEHLER: ${err.message}`]);
-                    alert('❌ FEHLER: ' + (err.message || 'Unbekannter Fehler'));
+                    alert('Fehler: ' + (err.message || 'Unbekannter Fehler'));
                   }
                 }}
                 style={{
+                  width: '60%', 
                   backgroundColor: COLORS.neon,
                   paddingVertical: 20,
-                  paddingHorizontal: 24,
                   borderRadius: 16,
                   alignItems: 'center',
                   shadowColor: COLORS.black,
