@@ -171,55 +171,69 @@ export default function WorkerRegistrationDataScreen() {
           </View>
         </ScrollView>
 
-        <Pressable
-          onPress={async () => {
-            try {
-              const token = await AsyncStorage.getItem("token");
-              if (!token) return;
+        {/* Save Button */}
+        <View style={{ padding: 20, paddingBottom: 40 }}>
+          <Pressable
+            onPress={async () => {
+              try {
+                setSaving(true);
+                const token = await AsyncStorage.getItem("token");
+                if (!token) return;
 
-              // Original-API-Call unverändert lassen
-              const response = await fetch("/api/profiles/worker/me/registration-data", {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                  steuerId,
-                  geburtsdatum,
-                  sozialversicherungsnummer,
-                  krankenkasse
-                })
-              });
+                // Original-API-Call unverändert lassen
+                const response = await fetch("/api/profiles/worker/me/registration-data", {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                  },
+                  body: JSON.stringify({
+                    steuerId,
+                    geburtsdatum,
+                    sozialversicherungsnummer,
+                    krankenkasse
+                  })
+                });
 
-              // Nur UI: Toast
-              setShowSaved(true);
+                // Nur UI: Toast
+                setShowSaved(true);
 
-              // Nach kurzer Zeit zurück auf /worker/profile
-              setTimeout(() => {
-                setShowSaved(false);
-                router.replace("/(worker)/profile");
-              }, 1200);
+                // Nach kurzer Zeit zurück auf /worker/profile
+                setTimeout(() => {
+                  setShowSaved(false);
+                  router.replace("/(worker)/profile");
+                }, 1200);
 
-            } catch (error) {
-              console.error("Error saving registration data:", error);
-            }
-          }}
-          style={{
-            backgroundColor: COLORS.neon,
-            paddingVertical: 16,
-            borderRadius: 14,
-            alignItems: "center",
-            width: "100%",
-            maxWidth: 360,
-            alignSelf: "center",
-            marginBottom: 40
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
-            Daten speichern und weiter
-          </Text>
-        </Pressable>
+              } catch (error) {
+                console.error("Error saving registration data:", error);
+              } finally {
+                setSaving(false);
+              }
+            }}
+            disabled={saving}
+            style={{
+              backgroundColor: saving ? COLORS.card : COLORS.neon,
+              paddingVertical: 18,
+              borderRadius: 16,
+              alignItems: "center",
+              width: "100%",
+              maxWidth: 360,
+              alignSelf: "center",
+              shadowColor: COLORS.neon,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: saving ? 0 : 0.3,
+              shadowRadius: 8,
+            }}
+          >
+            {saving ? (
+              <ActivityIndicator color={COLORS.white} />
+            ) : (
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
+                Daten speichern und weiter
+              </Text>
+            )}
+          </Pressable>
+        </View>
 
         {showSaved && (
           <View
