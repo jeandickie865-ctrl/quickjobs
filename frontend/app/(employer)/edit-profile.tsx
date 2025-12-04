@@ -388,32 +388,29 @@ function Field({
   fieldKey,
   keyboardType
 }: any) {
+  const focused = focusedField === fieldKey;
   return (
     <View style={{ marginBottom: 16 }}>
-      <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.neon, marginBottom: 6 }}>
+      <Text style={{ color: focused ? COLORS.neon : COLORS.muted, fontSize: 13, fontWeight: '600', marginBottom: 8 }}>
         {label}
       </Text>
-
-      <View
+      <TextInput
+        value={value}
+        onChangeText={setValue}
+        keyboardType={keyboardType}
+        onFocus={() => setFocusedField(fieldKey)}
+        onBlur={() => setFocusedField(null)}
         style={{
-          backgroundColor: COLORS.white,
-          borderRadius: 16,
-          borderWidth: 2,
-          borderColor: focusedField === fieldKey ? COLORS.neon : 'transparent',
-          paddingHorizontal: 16,
-          paddingVertical: 12
+          backgroundColor: COLORS.bg,
+          borderRadius: 12,
+          padding: 14,
+          fontSize: 15,
+          color: COLORS.white,
+          borderWidth: focused ? 2 : 1,
+          borderColor: focused ? COLORS.neon : COLORS.border,
         }}
-      >
-        <TextInput
-          value={value}
-          onChangeText={setValue}
-          onFocus={() => setFocusedField(fieldKey)}
-          onBlur={() => setFocusedField(null)}
-          placeholderTextColor="#999"
-          keyboardType={keyboardType}
-          style={{ fontSize: 16, color: COLORS.black }}
-        />
-      </View>
+        placeholderTextColor={COLORS.muted}
+      />
     </View>
   );
 }
