@@ -152,11 +152,12 @@ export default function WorkerMatchesScreen() {
     React.useCallback(() => {
       if (!authLoading && user) loadMatches();
 
-      if (!intervalRef.current) {
-        intervalRef.current = setInterval(() => {
-          if (!authLoading && user) loadMatches(true);
-        }, 15000);
-      }
+      // RACE-CONDITION GUARD: Prüfen ob bereits Interval läuft
+      if (intervalRef.current) return;
+
+      intervalRef.current = setInterval(() => {
+        if (!authLoading && user) loadMatches(true);
+      }, 15000);
 
       return () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
