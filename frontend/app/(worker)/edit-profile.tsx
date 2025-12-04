@@ -488,8 +488,10 @@ export default function EditWorkerProfileScreen() {
       {/* TAB CONTENT */}
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 20, paddingBottom: 180 }}
+        contentContainerStyle={{ padding: 20, paddingBottom: 260 }}
         showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
       >
         {/* BASIS TAB */}
         {activeTab === 'basis' && (
