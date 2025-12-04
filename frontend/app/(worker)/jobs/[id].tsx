@@ -389,15 +389,16 @@ export default function WorkerJobDetailScreen() {
                   }
                 }}
                 style={{
-                  width: '60%', 
+                  width: '100%',
+                  maxWidth: 360,
                   backgroundColor: COLORS.neon,
                   paddingVertical: 20,
                   borderRadius: 16,
                   alignItems: 'center',
                   shadowColor: '#000000',
                   shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
+                  shadowOpacity: 0.15,
+                  shadowRadius: 4,
                   elevation: 8,
                 }}
               >
