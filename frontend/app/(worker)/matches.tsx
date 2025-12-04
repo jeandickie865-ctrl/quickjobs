@@ -129,8 +129,9 @@ export default function WorkerMatchesScreen() {
       const ids = combined.map(m => m.application.id);
       if (ids.length) loadUnreadCounts(ids);
 
-    } catch {
-      if (!silent) setError("Matches konnten nicht geladen werden.");
+    } catch (error) {
+      console.error('Error loading matches:', error);
+      if (!silent) setError("Matches konnten nicht geladen werden. Bitte versuche es erneut.");
     } finally {
       if (!silent) setLoading(false);
       setRefreshing(false);
