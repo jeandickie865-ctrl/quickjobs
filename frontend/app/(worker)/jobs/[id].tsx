@@ -354,11 +354,11 @@ export default function WorkerJobDetailScreen() {
           }}>
             <Text style={{ fontSize: 14, fontWeight: '700', color: job.status === 'matched' ? COLORS.bg : COLORS.white }}>
               {job.status === 'matched'
-                ? '✓ Du bist für diesen Job ausgewählt!'
+                ? 'Du bist für diesen Job ausgewählt'
                 : job.status === 'open'
-                ? '🔓 Job ist offen'
+                ? 'Job ist offen'
                 : job.status === 'pending'
-                ? '⏳ In Bearbeitung'
+                ? 'In Bearbeitung'
                 : 'Status unbekannt'
               }
             </Text>
