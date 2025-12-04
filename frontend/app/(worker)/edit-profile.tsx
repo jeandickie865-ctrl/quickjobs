@@ -364,8 +364,9 @@ export default function EditWorkerProfileScreen() {
       Alert.alert('Erfolg', 'Profil wurde gespeichert!', [
         { text: 'OK', onPress: () => router.back() }
       ]);
-    } catch {
-      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden');
+    } catch (error: any) {
+      console.error('❌ Save failed:', error);
+      Alert.alert('Fehler', `Profil konnte nicht gespeichert werden:\n${error.message || 'Unbekannter Fehler'}`);
     } finally {
       setSaving(false);
     }
