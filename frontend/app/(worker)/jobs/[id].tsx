@@ -45,7 +45,11 @@ export default function WorkerJobDetailScreen() {
 
   const loadWorkerProfile = async () => {
     try {
-      const profile = await getWorkerProfile();
+      if (!user?.id) {
+        console.error('❌ Cannot load worker profile: user.id missing');
+        return;
+      }
+      const profile = await getWorkerProfile(user.id);
       console.log('========== WORKER PROFILE LOADED ==========');
       console.log('profile:', profile);
       console.log('profile.categories:', profile?.categories);
