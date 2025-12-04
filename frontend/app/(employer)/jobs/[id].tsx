@@ -89,23 +89,19 @@ export default function JobDetailScreen() {
     try {
       const apps = await getApplicationsForJob(job.id);
       setApplications(apps);
-      const withProfiles: {
-        app: JobApplication;
-        profile: WorkerProfile | null;
-        avgRating: number;
-        reviewCount: number;
-      }[] = [];
-      for (const app of apps) {
-        const p = await getWorkerProfile(app.workerId);
-        const reviews = await getReviewsForWorker(app.workerId);
-        const avgRating = calculateAverageRating(reviews);
-        withProfiles.push({
-          app,
-          profile: p,
-          avgRating,
-          reviewCount: reviews.length,
-        });
-      }
+      const withProfiles = await Promise.all(
+        apps.map(async app => {
+          const p = await getWorkerProfile(app.workerId);
+          const reviews = await getReviewsForWorker(app.workerId);
+          const avgRating = calculateAverageRating(reviews);
+          return {
+            app,
+            profile: p,
+            avgRating,
+            reviewCount: reviews.length
+          };
+        })
+      );
       setApplicants(withProfiles);
     } catch (e) {
       console.error('Error loading applicants:', e);
