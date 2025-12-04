@@ -472,9 +472,9 @@ export default function WorkerMatchesScreen() {
                         }}
                         disabled={application.paymentStatus !== "paid"}
                         style={{
-                          width: "60%",
-                          maxWidth: 300,
-                          minWidth: 220,
+                          width: "70%",
+                          maxWidth: 340,
+                          minWidth: 240,
                           alignSelf: "center",
                           backgroundColor:
                             application.paymentStatus === "paid"
