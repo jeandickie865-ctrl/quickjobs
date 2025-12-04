@@ -78,22 +78,29 @@ export default function WorkerMatchesScreen() {
   const loadUnreadCounts = async (applicationIds: string[]) => {
     const counts: Record<string, number> = {};
 
-    for (const appId of applicationIds) {
-      try {
-        const res = await fetch(`${API_URL}/chat/unread-count/${appId}`, {
-          headers: await getAuthHeaders()
-        });
+    // OPTIMIZED: Parallel statt sequenziell
+    const results = await Promise.all(
+      applicationIds.map(async (appId) => {
+        try {
+          const res = await fetch(`${API_URL}/chat/unread-count/${appId}`, {
+            headers: await getAuthHeaders()
+          });
 
-        if (res.ok) {
-          const json = await res.json();
-          counts[appId] = json.unreadCount || 0;
-        } else {
-          counts[appId] = 0;
+          if (res.ok) {
+            const json = await res.json();
+            return { appId, count: json.unreadCount || 0 };
+          } else {
+            return { appId, count: 0 };
+          }
+        } catch {
+          return { appId, count: 0 };
         }
-      } catch {
-        counts[appId] = 0;
-      }
-    }
+      })
+    );
+
+    results.forEach(({ appId, count }) => {
+      counts[appId] = count;
+    });
 
     setUnreadCounts(counts);
   };
