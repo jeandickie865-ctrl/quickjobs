@@ -280,7 +280,7 @@ export default function EmployerProfileScreen() {
           </View>
 
           {/* CONTACT */}
-          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, padding: 20 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 20, borderWidth: 1, borderColor: COLORS.border }}>
             <Text style={{ color: COLORS.neon, fontWeight: '700', marginBottom: 14 }}>KONTAKT</Text>
 
             <Field
@@ -305,7 +305,7 @@ export default function EmployerProfileScreen() {
           </View>
 
           {/* ADDRESS */}
-          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, padding: 20 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 20, borderWidth: 1, borderColor: COLORS.border }}>
             <Text style={{ color: COLORS.neon, fontWeight: '700', marginBottom: 14 }}>RECHNUNGSADRESSE</Text>
 
             <AddressAutocompleteInput
@@ -323,7 +323,7 @@ export default function EmployerProfileScreen() {
           </View>
 
           {/* PAYMENT */}
-          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, padding: 20 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 20, borderWidth: 1, borderColor: COLORS.border }}>
             <Text style={{ color: COLORS.neon, fontWeight: '700', marginBottom: 14 }}>ZAHLUNGSDATEN</Text>
 
             <PaymentOption label="Kreditkarte" value="card" selected={paymentMethod} setSelected={setPaymentMethod} />
@@ -331,19 +331,19 @@ export default function EmployerProfileScreen() {
           </View>
 
           {/* ABOUT YOU */}
-          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, padding: 20 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 20, borderWidth: 1, borderColor: COLORS.border }}>
             <Text style={{ color: COLORS.neon, fontWeight: '700', marginBottom: 14 }}>ÜBER DICH</Text>
             <TextInput
               value={shortBio}
               onChangeText={setShortBio}
               placeholder="Kurze Beschreibung..."
-              placeholderTextColor="#999"
+              placeholderTextColor={COLORS.muted}
               multiline
               numberOfLines={4}
               style={{
                 fontSize: 15,
-                color: COLORS.black,
-                backgroundColor: '#F8F8F8',
+                color: COLORS.white,
+                backgroundColor: COLORS.bg,
                 borderRadius: 12,
                 padding: 16,
                 minHeight: 100
