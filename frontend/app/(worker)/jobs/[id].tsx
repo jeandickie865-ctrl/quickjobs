@@ -136,6 +136,7 @@ export default function WorkerJobDetailScreen() {
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: 20, paddingBottom: 200 }}
+          keyboardShouldPersistTaps="handled"
         >
           {/* Job Title */}
           <Text style={{
