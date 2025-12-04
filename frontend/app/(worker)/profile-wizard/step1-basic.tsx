@@ -310,10 +310,9 @@ const styles = StyleSheet.create({
     fontWeight: '900'
   },
   headerNeonLine: {
-    height: 4,
+    height: 2,
     backgroundColor: COLORS.neon,
-    marginTop: 12,
-    marginBottom: 20,
+    marginTop: 8,
     width: '100%'
   },
 
