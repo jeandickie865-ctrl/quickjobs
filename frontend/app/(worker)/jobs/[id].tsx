@@ -30,6 +30,7 @@ const COLORS = {
 export default function WorkerJobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { user } = useAuth();
 
   const [job, setJob] = useState<Job | null>(null);
   const [worker, setWorker] = useState<any>(null);
