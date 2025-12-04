@@ -1,4 +1,5 @@
-import { View, Text, Pressable, TextInput, Modal, Alert } from 'react-native';
+import { View, Text, Pressable, TextInput, Modal, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import COLORS from '@/constants/colors';
