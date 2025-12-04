@@ -686,13 +686,28 @@ export default function CreateJob() {
           alignItems: 'center',
         }}
       >
-        <View style={{ width: '60%', maxWidth: 400 }}>
-          <Button
-            title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
-            onPress={handlePublish}
-            disabled={isSaving}
-          />
-        </View>
+        <Pressable
+          onPress={handlePublish}
+          disabled={isSaving}
+          style={{
+            width: '60%',
+            maxWidth: 400,
+            backgroundColor: isSaving ? '#555' : COLORS.neon,
+            paddingVertical: 18,
+            borderRadius: 16,
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: 56,
+          }}
+        >
+          {isSaving ? (
+            <ActivityIndicator color="#000" size="small" />
+          ) : (
+            <Text style={{ fontSize: 17, fontWeight: '800', color: '#000', letterSpacing: 0.3 }}>
+              Auftrag veröffentlichen
+            </Text>
+          )}
+        </Pressable>
 
         {error && (
           <Text
