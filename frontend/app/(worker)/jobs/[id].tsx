@@ -206,10 +206,10 @@ export default function WorkerJobDetailScreen() {
                 if (job.timeMode === 'fixed_time' && jobDate && startTime && endTime) {
                   return (
                     <>
-                      <Text style={{ fontSize: 16, color: COLORS.black }}>
+                      <Text style={{ fontSize: 16, color: COLORS.white }}>
                         📅 {jobDate}
                       </Text>
-                      <Text style={{ fontSize: 16, color: COLORS.black, marginTop: 4 }}>
+                      <Text style={{ fontSize: 16, color: COLORS.white, marginTop: 4 }}>
                         🕐 {startTime} – {endTime} Uhr
                       </Text>
                     </>
