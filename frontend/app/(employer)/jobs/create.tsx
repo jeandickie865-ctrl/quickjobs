@@ -881,28 +881,38 @@ export default function CreateJob() {
           </View>
         </View>
 
-        {/* Fehler */}
+      </ScrollView>
+
+      {/* FIXED ACTION BUTTON AREA */}
+      <View
+        style={{
+          paddingHorizontal: SPACING.md,
+          paddingBottom: Platform.OS === 'ios' ? 32 : 20,
+          paddingTop: 12,
+          backgroundColor: COLORS.bg,
+          borderTopWidth: 1,
+          borderTopColor: COLORS.border,
+        }}
+      >
+        <Button
+          title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
+          onPress={handlePublish}
+          disabled={isSaving}
+        />
+
         {error && (
           <Text
             style={{
               color: COLORS.error,
               fontSize: 13,
+              marginTop: 8,
               textAlign: 'center',
             }}
           >
             {error}
           </Text>
         )}
-
-        {/* Submit */}
-        <View style={{ marginTop: SPACING.sm }}>
-          <Button
-            title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
-            onPress={handlePublish}
-            disabled={isSaving}
-          />
-        </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
