@@ -292,9 +292,11 @@ export default function EmployerMatchesScreen() {
                         <Text style={{ color: COLORS.textWhite, fontSize: 17, fontWeight: "700" }}>
                           {match.job.title}
                         </Text>
-                        <Text style={{ color: COLORS.textMuted, fontSize: 13, marginTop: 2 }}>
-                          von {match.application.workerName}
-                        </Text>
+                        {match.application.workerName && (
+                          <Text style={{ color: COLORS.textMuted, fontSize: 13, marginTop: 2 }}>
+                            von {match.application.workerName}
+                          </Text>
+                        )}
                       </View>
                     </View>
                   </View>
