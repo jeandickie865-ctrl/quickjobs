@@ -730,7 +730,7 @@ export default function JobDetailScreen() {
                           minWidth: 220,
                           alignSelf: 'center',
                           marginTop: 16,
-                          marginBottom: 100,
+                          marginBottom: 16,
                         })}
                       >
                         <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.white }}>
