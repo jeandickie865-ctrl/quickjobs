@@ -159,7 +159,7 @@ export default function RateEmployerScreen() {
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 8 }}>
             Job konnte nicht geladen werden
           </Text>
-          <Text style={{ color: COLORS.whiteTransparent30, fontSize: 14, textAlign: 'center', marginBottom: 16 }}>
+          <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14, textAlign: 'center', marginBottom: 16 }}>
             JobId: {jobId || 'nicht vorhanden'}
           </Text>
           <Pressable
