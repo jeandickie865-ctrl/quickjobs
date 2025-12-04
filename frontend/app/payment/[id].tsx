@@ -245,8 +245,8 @@ export default function PaymentScreen() {
         </View>
 
         {/* Payment Methods */}
-        <View style={{ marginBottom: 32 }}>
-          <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: "700", marginBottom: 16 }}>
+        <View style={{ marginBottom: 32, alignItems: "center" }}>
+          <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: "700", marginBottom: 16, alignSelf: "flex-start" }}>
             Zahlungsart wählen
           </Text>
 
@@ -262,6 +262,9 @@ export default function PaymentScreen() {
               borderWidth: 1,
               borderColor: paymentMethod === "card" ? COLORS.neon : COLORS.border,
               marginBottom: 12,
+              width: "60%",
+              maxWidth: 300,
+              minWidth: 220,
             }}
           >
             <View style={{
