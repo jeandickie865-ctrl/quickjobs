@@ -140,9 +140,9 @@ export default function WorkerFeedScreen() {
 
   if (error) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
         {/* HEADER */}
-        <View style={{ paddingTop: 60, paddingHorizontal: 24, marginBottom: 40 }}>
+        <View style={{ paddingHorizontal: 24, marginBottom: 40 }}>
           <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
             BACKUP
           </Text>
@@ -164,7 +164,7 @@ export default function WorkerFeedScreen() {
             </Text>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
