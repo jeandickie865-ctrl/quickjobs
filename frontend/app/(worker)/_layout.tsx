@@ -26,7 +26,9 @@ export default function WorkerLayout() {
           const apps = await getWorkerApplications();
           const accepted = apps.filter(a => a.status === 'accepted');
           setMatchesCount(accepted.length);
-        } catch (err) {}
+        } catch (err) {
+          console.error('Matches count error:', err);
+        }
       }
       loadMatchesCount();
     }, [user])
