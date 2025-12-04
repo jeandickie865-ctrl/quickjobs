@@ -338,9 +338,13 @@ export default function WorkerMatchesScreen() {
                     style={{
                       backgroundColor: COLORS.cardDark,
                       borderRadius: 18,
-                      padding: INNER_CARD_PADDING,
+                      padding: 20,
                       borderWidth: 1,
-                      borderColor: "rgba(255,255,255,0.06)",
+                      borderColor: "rgba(255,255,255,0.1)",
+                      shadowColor: COLORS.purple,
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 12,
                     }}
                   >
                     {/* Card Header */}
