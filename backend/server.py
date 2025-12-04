@@ -183,6 +183,7 @@ class WorkerProfileUpdate(BaseModel):
     photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
     shortBio: Optional[str] = None
+    isSelfEmployed: Optional[bool] = None  # NEW: Selbstständig Status
     # Deprecated fields for backward compatibility
     selectedTags: Optional[List[str]] = None  # DEPRECATED
     activities: Optional[List[str]] = None  # DEPRECATED
