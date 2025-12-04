@@ -87,8 +87,13 @@ export default function RegistrationPrepareScreen() {
   }, [worker, steuerId, krankenkasse, geburtsdatum, sozialversicherungsnummer, dataChecked]);
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: 'center', gap: 24 }}>
-      {/* Modal für fehlende Daten */}
+    <SafeAreaView edges={['top','bottom']} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 24 }}>
+          {/* Modal für fehlende Daten */}
       <Modal
         visible={showMissingDataModal}
         transparent={true}
