@@ -46,6 +46,12 @@ export default function WorkerJobDetailScreen() {
   const loadWorkerProfile = async () => {
     try {
       const profile = await getWorkerProfile();
+      console.log('========== WORKER PROFILE LOADED ==========');
+      console.log('profile:', profile);
+      console.log('profile.categories:', profile?.categories);
+      console.log('profile.radiusKm:', profile?.radiusKm);
+      console.log('profile.isSelfEmployed:', profile?.isSelfEmployed);
+      console.log('==========================================');
       setWorker(profile);
     } catch (err) {
       console.log('Worker profile load error:', err);
