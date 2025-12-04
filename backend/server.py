@@ -1214,7 +1214,7 @@ async def get_matched_jobs_for_me(
         logger.error(f"❌ Worker profile not found for user {worker_id}")
         raise HTTPException(status_code=404, detail="Worker profile not found")
     
-    logger.info(f"📋 Worker profile loaded: category={worker_profile.get('category')}, radius={worker_profile.get('radius')}")
+    logger.info(f"📋 Worker profile loaded: categories={worker_profile.get('categories')}, radiusKm={worker_profile.get('radiusKm')}")
     
     # B1: Load only future/today jobs that are open and unmatched
     today = datetime.utcnow().strftime("%Y-%m-%d")
