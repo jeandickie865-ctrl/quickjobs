@@ -373,7 +373,7 @@ export default function WorkerJobDetailScreen() {
             <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
               <Pressable
                 onPress={async () => {
-                  if (!worker?.category || !worker?.radius || worker?.isSelfEmployed === undefined) {
+                  if (!worker?.categories || worker?.categories.length === 0 || !worker?.radiusKm || worker?.isSelfEmployed === undefined) {
                     alert("Bitte vervollständige dein Profil, bevor du dich bewerben kannst.");
                     router.push('/(worker)/edit-profile');
                     return;
