@@ -397,14 +397,16 @@ export default function WorkerApplicationsScreen() {
 
               {/* Action Button */}
               {job && (
-                <View style={{ marginTop: spacing.sm }}>
-                  <Button
-                    title="📄 Jobdetails ansehen"
-                    variant="primary"
-                    onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
-                    style={{ backgroundColor: '#C8FF16' }}
-                    textStyle={{ color: '#000000', fontWeight: '700' }}
-                  />
+                <View style={{ marginTop: spacing.sm, alignItems: 'center' }}>
+                  <View style={{ width: '60%', maxWidth: 300, minWidth: 220 }}>
+                    <Button
+                      title="Jobdetails ansehen"
+                      variant="primary"
+                      onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
+                      style={{ backgroundColor: '#C8FF16' }}
+                      textStyle={{ color: '#000000', fontWeight: '700' }}
+                    />
+                  </View>
                 </View>
               )}
             </Pressable>
