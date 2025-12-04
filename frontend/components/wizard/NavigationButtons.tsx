@@ -75,17 +75,15 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 16,
     gap: 12,
-    zIndex: 999,
+    backgroundColor: '#0A0816',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.05)',
   },
   backButton: {
     flexDirection: 'row',
