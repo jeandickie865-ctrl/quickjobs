@@ -469,7 +469,10 @@ export default function EditWorkerProfileScreen() {
             </Text>
 
             <Pressable
-              onPress={() => setSaveSuccess(false)}
+              onPress={() => {
+                setSaveSuccess(false);
+                router.push('/(worker)/profile');
+              }}
               style={{
                 backgroundColor: '#C8FF16',
                 paddingVertical: 12,
@@ -478,7 +481,7 @@ export default function EditWorkerProfileScreen() {
               }}
             >
               <Text style={{ color: '#000', fontSize: 16, fontWeight: '700' }}>
-                Schließen
+                Zum Profil
               </Text>
             </Pressable>
           </View>
