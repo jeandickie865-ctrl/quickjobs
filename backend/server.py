@@ -2558,7 +2558,15 @@ def generate_contract_pdf(
     emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Arbeitgeber"
     emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
     emp_addr = employer_data.get('businessAddress', {}) or employer_data.get('homeAddress', {})
+    
+    # Debug logging
+    logger.info(f"Contract PDF - Employer data keys: {employer_data.keys()}")
+    logger.info(f"Contract PDF - businessAddress: {employer_data.get('businessAddress')}")
+    logger.info(f"Contract PDF - homeAddress: {employer_data.get('homeAddress')}")
+    logger.info(f"Contract PDF - emp_addr selected: {emp_addr}")
+    
     emp_address = format_address(emp_addr)
+    logger.info(f"Contract PDF - Formatted address: {emp_address}")
     
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
