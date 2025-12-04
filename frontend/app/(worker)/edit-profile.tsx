@@ -72,6 +72,7 @@ export default function EditWorkerProfileScreen() {
   const [email, setEmail] = useState('');
 
   const [radiusKm, setRadiusKm] = useState('20');
+  const [isSelfEmployed, setIsSelfEmployed] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
