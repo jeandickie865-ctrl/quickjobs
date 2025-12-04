@@ -146,47 +146,52 @@ export default function EmployerDashboard() {
             </Text>
           </View>
         ) : (
-          jobs.map(job => (
-            <Pressable
-              key={job.id}
-              onPress={() => router.push({ pathname: '/(employer)/jobs/[id]', params: { id: job.id } })}
-            >
-              <View
-                style={{
-                  backgroundColor: COLORS.card,
-                  padding: 20,
-                  borderRadius: 18,
-                  borderWidth: 1,
-                  borderColor: COLORS.border,
-                  marginBottom: 6,
-                }}
+          jobs.map(job => {
+            const adr = job?.address ? formatAddress(job.address) : 'Keine Adresse';
+            
+            return (
+              <Pressable
+                key={job.id}
+                onPress={() => router.push({ pathname: '/(employer)/jobs/[id]', params: { id: job.id } })}
+                style={{ paddingVertical: 4 }}
               >
-                <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginBottom: 4 }}>
-                  {job.title}
-                </Text>
-
-                <Text style={{ color: COLORS.muted, fontSize: 14 }}>{job.category}</Text>
-
-                <Text style={{ color: COLORS.muted, fontSize: 13, marginTop: 6 }}>
-                  📍 {formatAddress(job.address) || 'Keine Adresse'}
-                </Text>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
-                  <Text style={{ color: COLORS.muted, fontSize: 13 }}>
-                    {job.timeMode === 'fixed_time'
-                      ? '⏱ Zeitgenau'
-                      : job.timeMode === 'hour_package'
-                      ? `⏱ ${job.hours}h`
-                      : '⏱ Projekt'}
+                <View
+                  style={{
+                    backgroundColor: COLORS.card,
+                    padding: 20,
+                    borderRadius: 18,
+                    borderWidth: 1,
+                    borderColor: COLORS.border,
+                    marginBottom: 16,
+                  }}
+                >
+                  <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginBottom: 4 }}>
+                    {job.title}
                   </Text>
 
-                  <Text style={{ color: COLORS.neon, fontSize: 18, fontWeight: '900' }}>
-                    {euro(job.workerAmountCents)}
+                  <Text style={{ color: COLORS.muted, fontSize: 14 }}>{job.category}</Text>
+
+                  <Text style={{ color: COLORS.muted, fontSize: 13, marginTop: 6 }}>
+                    Adresse: {adr}
                   </Text>
+
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
+                    <Text style={{ color: COLORS.muted, fontSize: 13 }}>
+                      {job.timeMode === 'fixed_time'
+                        ? 'Zeit: Zeitgenau'
+                        : job.timeMode === 'hour_package'
+                        ? `Zeit: ${job.hours}h`
+                        : 'Zeit: Projekt'}
+                    </Text>
+
+                    <Text style={{ color: COLORS.neon, fontSize: 18, fontWeight: '900' }}>
+                      {euro(job.workerAmountCents)}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </Pressable>
-          ))
+              </Pressable>
+            );
+          })
         )}
       </ScrollView>
     </SafeAreaView>
