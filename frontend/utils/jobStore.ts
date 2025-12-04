@@ -33,23 +33,40 @@ export async function getMatchedJobs(): Promise<Job[]> {
    EMPLOYER: GET ALL JOBS FOR THIS EMPLOYER
 --------------------------------------------------- */
 export async function getEmployerJobs(employerId: string): Promise<Job[]> {
-  const headers = await getAuthHeaders();
+  try {
+    const headers = await getAuthHeaders();
 
-  const res = await fetch(`${API_URL}/jobs/employer/${employerId}`, {
-    method: "GET",
-    headers,
-  });
+    const res = await fetch(`${API_URL}/jobs/employer/${employerId}`, {
+      method: "GET",
+      headers,
+    });
 
-  if (res.status === 401) throw new Error("UNAUTHORIZED");
-  if (!res.ok) throw new Error("FAILED_TO_FETCH_EMPLOYER_JOBS");
+    if (res.status === 401) throw new Error("UNAUTHORIZED");
+    
+    // If 404, return empty array (no jobs yet)
+    if (res.status === 404) {
+      console.log(`📋 No jobs found for employer ${employerId}`);
+      return [];
+    }
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`❌ Failed to fetch employer jobs: ${res.status} ${errorText}`);
+      throw new Error("FAILED_TO_FETCH_EMPLOYER_JOBS");
+    }
 
-  const data = await res.json();
+    const data = await res.json();
 
-  return data.map((job: any) => ({
-    ...job,
-    required_all_tags: job.required_all_tags ?? job.tags ?? [],
-    required_any_tags: job.required_any_tags ?? [],
-  }));
+    return data.map((job: any) => ({
+      ...job,
+      required_all_tags: job.required_all_tags ?? job.tags ?? [],
+      required_any_tags: job.required_any_tags ?? [],
+    }));
+  } catch (error) {
+    console.error('❌ getEmployerJobs error:', error);
+    // Return empty array instead of throwing to prevent app crash
+    return [];
+  }
 }
 
 
