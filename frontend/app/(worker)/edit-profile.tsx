@@ -783,6 +783,23 @@ export default function EditWorkerProfileScreen() {
               )}
             </View>
 
+            {/* Hausnummer */}
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Hausnummer *</Text>
+              <TextInput
+                value={houseNumber}
+                onChangeText={setHouseNumber}
+                placeholder="z. B. 12a"
+                placeholderTextColor={COLORS.muted}
+                style={[inputStyle, errors.houseNumber && { borderColor: COLORS.error }]}
+              />
+              {errors.houseNumber && (
+                <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>
+                  {errors.houseNumber}
+                </Text>
+              )}
+            </View>
+
             {/* PLZ + Stadt */}
             <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
               <View style={{ flex: 1 }}>
