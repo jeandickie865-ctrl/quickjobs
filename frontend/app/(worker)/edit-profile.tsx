@@ -10,7 +10,8 @@ import {
   Alert,
   Image,
   ActionSheetIOS,
-  Platform
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Redirect } from 'expo-router';
