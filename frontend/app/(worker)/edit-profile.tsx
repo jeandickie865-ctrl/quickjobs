@@ -380,10 +380,6 @@ export default function EditWorkerProfileScreen() {
       await saveWorkerProfile(user.id, updatedProfile);
       setSaveSuccess(true);
       console.log('✅ Profile saved successfully!');
-      
-      Alert.alert('Erfolg', 'Profil wurde gespeichert!', [
-        { text: 'OK', onPress: () => router.back() }
-      ]);
     } catch (error: any) {
       console.error('❌ Save failed:', error);
       Alert.alert('Fehler', `Profil konnte nicht gespeichert werden:\n${error.message || 'Unbekannter Fehler'}`);
