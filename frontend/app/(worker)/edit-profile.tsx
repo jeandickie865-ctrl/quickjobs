@@ -311,12 +311,23 @@ export default function EditWorkerProfileScreen() {
   }
 
   async function handleSave() {
-    if (!user) return;
-
-    if (!validate()) {
-      Alert.alert('Fehler', 'Bitte alle Pflichtfelder ausfüllen');
+    console.log('🔵 handleSave called!');
+    if (!user) {
+      console.log('❌ No user!');
       return;
     }
+
+    const isValid = validate();
+    console.log('🔵 Validation result:', isValid);
+    console.log('🔵 Errors:', errors);
+    
+    if (!isValid) {
+      console.log('❌ Validation failed!');
+      Alert.alert('Fehler', 'Bitte alle Pflichtfelder ausfüllen. Fehlende Felder sind rot markiert.');
+      return;
+    }
+    
+    console.log('✅ Validation passed, saving...');
 
     try {
       setSaving(true);
