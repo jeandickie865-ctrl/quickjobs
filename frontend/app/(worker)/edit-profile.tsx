@@ -354,8 +354,8 @@ export default function EditWorkerProfileScreen() {
 
       const addressPayload = {
         street: street.trim() || undefined,
-        house_number: houseNumber.trim() || undefined,
-        postal_code: postalCode.trim() || undefined,
+        houseNumber: houseNumber.trim() || undefined,
+        postalCode: postalCode.trim() || undefined,
         city: city.trim() || undefined,
         country: country.trim() || 'Deutschland',
       };
