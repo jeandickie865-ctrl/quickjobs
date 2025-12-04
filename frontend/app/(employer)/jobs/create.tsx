@@ -234,6 +234,7 @@ export default function CreateJob() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      
       {/* HEADER */}
       <View
         style={{
@@ -244,8 +245,8 @@ export default function CreateJob() {
       >
         <Text
           style={{
-            color: COLORS.white,
-            fontSize: 26,
+            color: '#FFFFFF',
+            fontSize: 28,
             fontWeight: '900',
           }}
         >
@@ -253,20 +254,21 @@ export default function CreateJob() {
         </Text>
         <Text
           style={{
-            color: COLORS.muted,
+            color: '#DDDDDD',
             marginTop: 4,
             fontSize: 14,
           }}
         >
-          Erstelle einen Job, damit Worker sich bewerben.
+          Erstelle einen Job für Worker.
         </Text>
       </View>
 
+      {/* SCROLL CONTENT */}
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingHorizontal: SPACING.md,
-          paddingBottom: 120,
+          paddingBottom: 260,
           gap: SPACING.md,
         }}
         keyboardShouldPersistTaps="handled"
