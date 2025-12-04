@@ -353,12 +353,17 @@ export default function EditWorkerProfileScreen() {
         homeLon: lon,
         phone: phone.trim(),
         email: email.trim(),
-        radiusKm: parseInt(radiusKm)
+        radiusKm: parseInt(radiusKm),
+        isSelfEmployed: isSelfEmployed
       };
 
+      console.log('💾 Saving profile:', updatedProfile);
       await saveWorkerProfile(user.id, updatedProfile);
-
-      router.replace('/(worker)/profile');
+      console.log('✅ Profile saved successfully!');
+      
+      Alert.alert('Erfolg', 'Profil wurde gespeichert!', [
+        { text: 'OK', onPress: () => router.back() }
+      ]);
     } catch {
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden');
     } finally {
