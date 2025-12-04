@@ -57,13 +57,20 @@ export async function saveWorkerProfile(
   console.log('💾 saveWorkerProfile: Data:', profileData);
   
   try {
+    // 1. Bestehendes Profil laden
+    const existing = await getWorkerProfile(userId);
+    
+    // 2. Vollständiges Profil-Objekt erstellen
+    const merged = existing ? { ...existing, ...profileData } : profileData;
+    
     const headers = await getAuthHeaders();
     
+    // 3. merged statt profileData senden
     // Try PUT first (update existing)
     let response = await fetch(`${API_BASE}/profiles/worker/${userId}`, {
       method: 'PUT',
       headers,
-      body: JSON.stringify(profileData),
+      body: JSON.stringify(merged),
     });
     
     console.log('📥 saveWorkerProfile: PUT response status:', response.status);
@@ -75,7 +82,7 @@ export async function saveWorkerProfile(
       response = await fetch(`${API_BASE}/profiles/worker`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(profileData),
+        body: JSON.stringify(merged),
       });
       
       console.log('📥 saveWorkerProfile: POST response status:', response.status);
