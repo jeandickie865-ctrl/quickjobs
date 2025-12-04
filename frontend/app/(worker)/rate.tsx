@@ -186,7 +186,7 @@ export default function RateEmployerScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top','bottom']}>
         <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
           {/* Header */}
           <View style={{
