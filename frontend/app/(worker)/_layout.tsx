@@ -76,6 +76,7 @@ export default function WorkerLayout() {
     >
       {TAB('feed', 'Aktuelle Jobs')}
       {TAB('applications', 'Bewerbungen')}
+      {TAB('matches', 'Matches', matchesCount)}
       {TAB('profile', 'Profil')}
       {TAB('jobs/all', 'alle Jobs')}
 
