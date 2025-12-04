@@ -171,8 +171,10 @@ export default function WorkerApplicationsScreen() {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.content,
-          { padding: spacing.md, paddingBottom: 120 }
+          { padding: spacing.md, paddingBottom: 200 }
         ]}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <View style={[styles.header, { marginBottom: spacing.md }]}>
