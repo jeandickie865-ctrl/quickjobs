@@ -272,8 +272,8 @@ export default function Step1Basic() {
             <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
           </Pressable>
 
-          {/* HUGE spacer so checkbox is always fully visible even when button is active */}
-          <View style={{ height: 250 }} />
+          {/* MASSIVE spacer - checkbox must be fully visible above fixed button */}
+          <View style={{ height: 350 }} />
         </ScrollView>
 
         {/* HINT */}
