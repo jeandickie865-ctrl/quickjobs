@@ -268,17 +268,25 @@ export default function Step1Basic() {
           <View style={{ height: 60 }} />
         </ScrollView>
 
-        {/* SELF EMPLOYED - Fixed above button so it's always clickable */}
+        {/* SELF EMPLOYED - Fixed WELL above button so it's always clickable */}
         <View style={{
           position: 'absolute',
-          bottom: 140,
+          bottom: 200,
           left: 0,
           right: 0,
           alignItems: 'center',
           zIndex: 1000,
           paddingHorizontal: 20,
+          backgroundColor: COLORS.bg,
+          paddingVertical: 12,
         }}>
-          <Pressable onPress={() => setIsSelfEmployed(!isSelfEmployed)} style={styles.checkboxContainer}>
+          <Pressable 
+            onPress={() => {
+              console.log('Checkbox clicked!');
+              setIsSelfEmployed(!isSelfEmployed);
+            }} 
+            style={styles.checkboxContainer}
+          >
             <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
               {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
             </View>
