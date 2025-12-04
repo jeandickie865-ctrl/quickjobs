@@ -993,9 +993,8 @@ export default function EditWorkerProfileScreen() {
           onPress={handleSave}
           disabled={!isFormValid() || saving}
           style={{
-            width: '60%',
-            maxWidth: 300,
-            minWidth: 220,
+            width: '100%',
+            maxWidth: 360,
             alignSelf: 'center',
             backgroundColor: isFormValid() && !saving ? COLORS.neon : COLORS.card,
             paddingVertical: 18,
