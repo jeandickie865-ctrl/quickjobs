@@ -199,8 +199,8 @@ export default function WorkerJobDetailScreen() {
 
                 // Neue Felder: date, start_at, end_at
                 const jobDate = formatDate(job.date);
-                const startTime = job.start_at || job.startAt;
-                const endTime = job.end_at || job.endAt;
+                const startTime = job.start_at || job.startAt || null;
+                const endTime = job.end_at || job.endAt || null;
 
                 // 1. FIXED TIME mit neuen Feldern
                 if (job.timeMode === 'fixed_time' && jobDate && startTime && endTime) {
