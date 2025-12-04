@@ -171,7 +171,7 @@ export default function WorkerApplicationsScreen() {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.content,
-          { padding: spacing.md, paddingBottom: spacing.xl }
+          { padding: spacing.md, paddingBottom: 120 }
         ]}
       >
         {/* Header */}
