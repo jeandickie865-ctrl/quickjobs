@@ -191,9 +191,17 @@ export default function WorkerFeedScreen() {
             <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
               Keine passenden Jobs
             </Text>
-            <Text style={{ color: COLORS.muted, fontSize: 14, textAlign: 'center' }}>
-              Aktuell gibt es keine Jobs, die zu deinem Profil passen.{'\n'}Schau später nochmal vorbei!
-            </Text>
+            {profile && (!profile.category || !profile.radius) ? (
+              <Pressable onPress={() => router.push('/(worker)/edit-profile')}>
+                <Text style={{ color: COLORS.neon, fontSize: 14, textAlign: 'center', textDecorationLine: 'underline' }}>
+                  Vervollständige dein Profil (Kategorie & Radius), um Jobs zu sehen!
+                </Text>
+              </Pressable>
+            ) : (
+              <Text style={{ color: COLORS.muted, fontSize: 14, textAlign: 'center' }}>
+                Aktuell gibt es keine Jobs, die zu deinem Profil passen.{'\n'}Schau später nochmal vorbei!
+              </Text>
+            )}
           </View>
         </View>
       </View>
