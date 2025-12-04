@@ -98,6 +98,7 @@ export default function Step2Address() {
               {errors.street && <Text style={styles.errorText}>{errors.street}</Text>}
               {errors.postalCode && <Text style={styles.errorText}>{errors.postalCode}</Text>}
               {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
+              {errors.coords && <Text style={styles.errorText}>{errors.coords}</Text>}
             </View>
 
             <View style={styles.card}>
