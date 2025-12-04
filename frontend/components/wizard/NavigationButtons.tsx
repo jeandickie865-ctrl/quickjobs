@@ -125,10 +125,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#CCCCCC',
   },
   nextText: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 16,
+    fontWeight: '700',
     color: '#000000',
-    textTransform: 'uppercase',
   },
   nextTextDisabled: {
     color: COLORS.gray,
