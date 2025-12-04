@@ -2938,27 +2938,32 @@ def generate_payroll_pdf(
     filename = f"payroll_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # Styles
+    # Styles - Optimized for single page
     styles = getSampleStyleSheet()
     
     title_style = ParagraphStyle(
         "TitleCustom",
         parent=styles["Title"],
         textColor="#5941FF",
-        fontSize=20,
-        spaceAfter=20
+        fontSize=16,
+        spaceAfter=10
     )
     
     section_title = ParagraphStyle(
         "SectionTitle",
         parent=styles["Heading2"],
         textColor="#5941FF",
-        fontSize=14,
+        fontSize=11,
         fontName="Helvetica-Bold",
-        spaceAfter=10
+        spaceAfter=6
     )
     
-    normal = styles["Normal"]
+    normal = ParagraphStyle(
+        "NormalCustom",
+        parent=styles["Normal"],
+        fontSize=9,
+        leading=11
+    )
     
     # Calculate amounts
     brutto_cents = job_data.get('workerAmountCents', 0)
