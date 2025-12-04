@@ -103,7 +103,7 @@ export default function EmployerProfileViewScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+      <SafeAreaView edges={['top','bottom']} style={{ flex: 1 }}>
         {/* Header */}
         <View style={{
           flexDirection: 'row',
