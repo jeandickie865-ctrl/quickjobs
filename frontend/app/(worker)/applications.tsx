@@ -95,9 +95,9 @@ export default function WorkerApplicationsScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.beige50 }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: '#0E0B1F' }]}>
         <View style={styles.centerContent}>
-          <ActivityIndicator size="large" color={colors.black} />
+          <ActivityIndicator size="large" color="#C8FF16" />
         </View>
       </SafeAreaView>
     );
