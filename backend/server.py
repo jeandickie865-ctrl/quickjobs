@@ -2790,16 +2790,20 @@ def generate_sofortmeldung_pdf(
     emp_last = employer_data.get('lastName', '').strip()
     emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Arbeitgeber"
     emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
+    
+    # Try different address formats
     emp_addr = employer_data.get('businessAddress', {}) or employer_data.get('homeAddress', {})
     
-    # Debug logging
-    logger.info(f"Contract PDF - Employer data keys: {employer_data.keys()}")
-    logger.info(f"Contract PDF - businessAddress: {employer_data.get('businessAddress')}")
-    logger.info(f"Contract PDF - homeAddress: {employer_data.get('homeAddress')}")
-    logger.info(f"Contract PDF - emp_addr selected: {emp_addr}")
+    # If no nested address, build from flat fields
+    if not emp_addr or not any(emp_addr.values() if isinstance(emp_addr, dict) else []):
+        emp_addr = {
+            'street': employer_data.get('street', ''),
+            'houseNumber': employer_data.get('houseNumber', ''),
+            'postalCode': employer_data.get('postalCode', ''),
+            'city': employer_data.get('city', '')
+        }
     
     emp_address = format_address(emp_addr) or "Nicht angegeben"
-    logger.info(f"Contract PDF - Formatted address: {emp_address}")
     
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
