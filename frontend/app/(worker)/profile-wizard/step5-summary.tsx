@@ -53,9 +53,9 @@ export default function Step5Summary() {
     postalCode: wizardData.postalCode,
     city: wizardData.city,
     radius: wizardData.radiusKm,
-    categories: wizardData.categories || [],
-    subcategories: wizardData.subcategories || [],
-    qualifications: wizardData.qualifications || [],
+    categories: wizardData.selectedCategories || wizardData.categories || [],
+    subcategories: wizardData.selectedSubcategories || wizardData.subcategories || [],
+    qualifications: wizardData.selectedQualifications || wizardData.qualifications || [],
   };
 
   const handleSave = async () => {
