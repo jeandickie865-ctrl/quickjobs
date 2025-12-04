@@ -68,6 +68,9 @@ export default function ChatScreen() {
     }
 
     loadChat();
+
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    
     intervalRef.current = setInterval(() => {
       if (mounted && isFocused && !locked) loadChat();
     }, 4000);
