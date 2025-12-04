@@ -466,7 +466,7 @@ export default function EditWorkerProfileScreen() {
       {/* TAB CONTENT */}
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
+        contentContainerStyle={{ padding: 20, paddingBottom: 180 }}
         showsVerticalScrollIndicator={false}
       >
         {/* BASIS TAB */}
