@@ -425,8 +425,12 @@ export default function EditWorkerProfileScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* BACKUP HEADER */}
-      <SafeAreaView edges={['top','bottom']} style={{ backgroundColor: COLORS.bg }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        {/* BACKUP HEADER */}
+        <SafeAreaView edges={['top','bottom']} style={{ backgroundColor: COLORS.bg }}>
         <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12 }}>
           <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900' }}>BACKUP</Text>
         </View>
