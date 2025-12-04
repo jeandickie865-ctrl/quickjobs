@@ -416,6 +416,29 @@ export default function EmployerMatchesScreen() {
                       </Text>
                     </Pressable>
 
+                    {/* SELF-EMPLOYED BADGE */}
+                    {match.application.paymentStatus === "paid" && match.workerProfile?.isSelfEmployed && (
+                      <View
+                        style={{
+                          width: "80%",
+                          maxWidth: 350,
+                          alignSelf: "center",
+                          backgroundColor: "rgba(200,255,22,0.1)",
+                          borderWidth: 1,
+                          borderColor: COLORS.accent,
+                          paddingVertical: 12,
+                          paddingHorizontal: 16,
+                          borderRadius: 12,
+                          alignItems: "center",
+                          marginBottom: 12
+                        }}
+                      >
+                        <Text style={{ color: COLORS.accent, fontSize: 14, fontWeight: "600", textAlign: "center" }}>
+                          ✓ Selbstständig - keine Anmeldung erforderlich
+                        </Text>
+                      </View>
+                    )}
+
                     {/* DOCUMENTS BUTTON */}
                     {match.application.paymentStatus === "paid" && !match.workerProfile?.isSelfEmployed && (
                       <Pressable
