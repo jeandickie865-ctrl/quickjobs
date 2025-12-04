@@ -236,6 +236,20 @@ export default function Step1Basic() {
             {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
           </View>
 
+          {/* SELF EMPLOYED - Moved here for easy access */}
+          <Pressable 
+            onPress={() => {
+              console.log('Checkbox clicked!');
+              setIsSelfEmployed(!isSelfEmployed);
+            }} 
+            style={styles.checkboxContainer}
+          >
+            <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
+              {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
+            </View>
+            <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
+          </Pressable>
+
           {/* SHORT BIO */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Über mich</Text>
