@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { Redirect, useRouter, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerApplications } from '../../utils/applicationStore';
@@ -12,6 +11,8 @@ import { JobApplication } from '../../types/application';
 import { Button } from '../../components/ui/Button';
 import { formatAddress } from '../../types/address';
 import { euro } from '../../utils/pricing';
+import { API_URL } from '../../config';
+import { getAuthHeaders } from '../../utils/api';
 
 type ApplicationWithJob = {
   app: JobApplication;
