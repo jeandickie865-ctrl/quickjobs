@@ -54,7 +54,10 @@ function ConfirmContent() {
         const statusRes = await fetch(`${API_URL}/profiles/worker/${workerId}/registration-status`, { headers });
         const status = await statusRes.json();
 
-        if (!status.complete) {
+        // Wenn selbstständig oder vollständig, dann OK
+        if (status.isSelfEmployed || status.complete) {
+          setWorkerDataComplete(true);
+        } else {
           setWorkerDataComplete(false);
           setShowModal(true);
         }
