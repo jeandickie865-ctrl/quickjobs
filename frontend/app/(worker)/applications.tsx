@@ -192,14 +192,14 @@ export default function WorkerApplicationsScreen() {
             style={[
               styles.errorContainer,
               {
-                backgroundColor: '#fee',
-                borderColor: '#fcc',
+                backgroundColor: '#141126',
+                borderColor: '#FF4D4D',
                 padding: spacing.md,
                 marginBottom: spacing.sm,
               },
             ]}
           >
-            <Text style={styles.errorText}>{error}</Text>
+            <Text style={[styles.errorText, { color: '#FF4D4D' }]}>{error}</Text>
           </View>
         )}
 
@@ -209,16 +209,16 @@ export default function WorkerApplicationsScreen() {
             style={[
               styles.emptyContainer,
               {
-                backgroundColor: colors.white,
-                borderColor: colors.gray200,
+                backgroundColor: '#141126',
+                borderColor: 'rgba(255,255,255,0.08)',
                 padding: spacing.xl,
               },
             ]}
           >
-            <Text style={[styles.emptyTitle, { color: colors.black }]}>
+            <Text style={[styles.emptyTitle, { color: '#FFFFFF' }]}>
               Noch keine Bewerbungen
             </Text>
-            <Text style={[styles.emptyText, { color: colors.gray600, marginTop: spacing.xs }]}>
+            <Text style={[styles.emptyText, { color: '#A0A0A0', marginTop: spacing.xs }]}>
               Du hast dich bisher für keine Aufträge gemeldet.{'\n'}
               Schau im Feed nach passenden Aufträge!
             </Text>
