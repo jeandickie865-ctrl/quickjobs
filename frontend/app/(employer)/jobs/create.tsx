@@ -266,7 +266,7 @@ export default function CreateJob() {
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingHorizontal: SPACING.md,
-          paddingBottom: SPACING.xl,
+          paddingBottom: 150,
           gap: SPACING.md,
         }}
         keyboardShouldPersistTaps="handled"
