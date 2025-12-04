@@ -276,14 +276,14 @@ export default function EmployerProfileViewScreen() {
             {/* Bio */}
             {profile?.shortBio && (
               <View style={{
-                backgroundColor: '#F8F8F8',
+                backgroundColor: COLORS.bg,
                 padding: 16,
                 borderRadius: 12,
                 marginBottom: 24,
                 borderLeftWidth: 4,
                 borderLeftColor: COLORS.neon,
               }}>
-                <Text style={{ fontSize: 14, color: COLORS.darkGray, fontStyle: 'italic' }}>
+                <Text style={{ fontSize: 14, color: COLORS.muted, fontStyle: 'italic' }}>
                   "{profile.shortBio}"
                 </Text>
               </View>
@@ -297,27 +297,27 @@ export default function EmployerProfileViewScreen() {
 
               {profile?.email && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <Ionicons name="mail" size={20} color={COLORS.purple} />
-                  <Text style={{ fontSize: 15, color: COLORS.black }}>{profile.email}</Text>
+                  <Ionicons name="mail" size={20} color={COLORS.neon} />
+                  <Text style={{ fontSize: 15, color: COLORS.white }}>{profile.email}</Text>
                 </View>
               )}
 
               {profile?.phone && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <Ionicons name="call" size={20} color={COLORS.purple} />
-                  <Text style={{ fontSize: 15, color: COLORS.black }}>{profile.phone}</Text>
+                  <Ionicons name="call" size={20} color={COLORS.neon} />
+                  <Text style={{ fontSize: 15, color: COLORS.white }}>{profile.phone}</Text>
                 </View>
               )}
 
               {(profile?.street || profile?.postalCode || profile?.city) && (
                 <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-                  <Ionicons name="location" size={20} color={COLORS.purple} />
+                  <Ionicons name="location" size={20} color={COLORS.neon} />
                   <View>
                     {profile?.street && (
-                      <Text style={{ fontSize: 15, color: COLORS.black }}>{profile.street}</Text>
+                      <Text style={{ fontSize: 15, color: COLORS.white }}>{profile.street}</Text>
                     )}
                     {(profile?.postalCode || profile?.city) && (
-                      <Text style={{ fontSize: 15, color: COLORS.black }}>
+                      <Text style={{ fontSize: 15, color: COLORS.white }}>
                         {profile?.postalCode} {profile?.city}
                       </Text>
                     )}
@@ -327,8 +327,8 @@ export default function EmployerProfileViewScreen() {
 
               {profile?.paymentMethod && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <Ionicons name="card" size={20} color={COLORS.purple} />
-                  <Text style={{ fontSize: 15, color: COLORS.black }}>
+                  <Ionicons name="card" size={20} color={COLORS.neon} />
+                  <Text style={{ fontSize: 15, color: COLORS.white }}>
                     {profile.paymentMethod === 'card' ? 'Kreditkarte' : 'PayPal'}
                   </Text>
                 </View>
