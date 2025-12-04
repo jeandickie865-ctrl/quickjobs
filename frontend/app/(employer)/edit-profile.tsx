@@ -358,7 +358,7 @@ export default function EmployerProfileScreen() {
         {/* FIXED SAVE BUTTON */}
         <View style={{
           position: 'absolute',
-          bottom: 70,
+          bottom: 0,
           left: 0,
           right: 0,
           alignItems: 'center',

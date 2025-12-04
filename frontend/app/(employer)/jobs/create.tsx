@@ -680,7 +680,7 @@ export default function CreateJob() {
       <View
         style={{
           position: 'absolute',
-          bottom: 70,
+          bottom: 0,
           left: 0,
           right: 0,
           paddingBottom: Platform.OS === 'ios' ? 34 : 20,
