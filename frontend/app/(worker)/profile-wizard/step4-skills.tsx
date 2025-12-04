@@ -43,9 +43,12 @@ export default function Step4Skills() {
   });
 
   const toggleQualification = (key: string) => {
-    setSelectedQualifications(prev =>
-      prev.includes(key) ? prev.filter(q => q !== key) : [...prev, key]
-    );
+    setSelectedQualifications(prev => {
+      if (prev.includes(key)) {
+        return prev.filter(q => q !== key);
+      }
+      return [...prev, key];
+    });
   };
 
   const handleNext = () => {
