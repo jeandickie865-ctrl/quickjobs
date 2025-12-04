@@ -66,7 +66,11 @@ def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
     # 1. Category check - must match exactly
     worker_categories = worker.get("categories", [])
     job_category = job.get("category")
-    if not worker_categories or job_category not in worker_categories:
+
+    if not worker_categories:
+        return False
+
+    if job_category not in worker_categories:
         return False
     
     # 2. Subcategory check - ONLY if job has subcategory
