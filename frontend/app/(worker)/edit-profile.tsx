@@ -577,7 +577,7 @@ export default function EditWorkerProfileScreen() {
             </View>
 
             {/* Profile Text */}
-            <View>
+            <View style={{ marginBottom: 16 }}>
               <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Über mich (optional)</Text>
               <TextInput
                 value={profileText}
@@ -592,6 +592,42 @@ export default function EditWorkerProfileScreen() {
                 ]}
               />
             </View>
+
+            {/* Self-Employed Checkbox */}
+            <Pressable
+              onPress={() => setIsSelfEmployed(!isSelfEmployed)}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                backgroundColor: '#1C182B',
+                borderRadius: 12,
+                borderWidth: 1,
+                borderColor: COLORS.border
+              }}
+            >
+              <View
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  borderWidth: 2,
+                  borderColor: isSelfEmployed ? COLORS.neon : COLORS.border,
+                  backgroundColor: isSelfEmployed ? COLORS.neon : 'transparent',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 12
+                }}
+              >
+                {isSelfEmployed && (
+                  <Ionicons name="checkmark" size={16} color="#000" />
+                )}
+              </View>
+              <Text style={{ color: COLORS.white, fontSize: 15, flex: 1 }}>
+                Ich bin selbstständig
+              </Text>
+            </Pressable>
           </View>
         )}
 
