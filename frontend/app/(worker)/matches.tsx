@@ -109,13 +109,14 @@ export default function WorkerMatchesScreen() {
 
       const accepted = apps.filter(a => a.status === "accepted");
 
-      const combined: Match[] = [];
-      for (const a of accepted) {
-        try {
-          const job = await getJobById(a.jobId);
-          combined.push({ job, application: a });
-        } catch {}
-      }
+      // Performance: Alle Jobs parallel laden
+      const jobs = await Promise.all(
+        accepted.map(a => getJobById(a.jobId).catch(() => null))
+      );
+
+      const combined: Match[] = accepted
+        .map((a, index) => ({ job: jobs[index], application: a }))
+        .filter(match => match.job !== null) as Match[];
 
       combined.sort((a, b) => {
         const da = a.application.respondedAt || a.application.createdAt;
