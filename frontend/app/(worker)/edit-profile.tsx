@@ -135,9 +135,9 @@ export default function EditWorkerProfileScreen() {
         setLastName(profile.lastName || '');
         setProfileText(profile.shortBio || '');
         setPhotoUrl(profile.photoUrl || profile.profilePhotoUri || '');
-        setStreet(profile.homeAddress?.street || '');
-        setHouseNumber(profile.homeAddress?.houseNumber || '');
-        setPostalCode(profile.homeAddress?.postalCode || '');
+        setStreet(profile.homeAddress?.street || profile.address?.street || '');
+        setHouseNumber(profile.homeAddress?.house_number || profile.homeAddress?.houseNumber || profile.address?.house_number || profile.address?.houseNumber || '');
+        setPostalCode(profile.homeAddress?.postal_code || profile.homeAddress?.postalCode || profile.address?.postal_code || profile.address?.postalCode || '');
         setCity(profile.homeAddress?.city || '');
         setCountry(profile.homeAddress?.country || 'Deutschland');
         setLat(profile.homeLat);
