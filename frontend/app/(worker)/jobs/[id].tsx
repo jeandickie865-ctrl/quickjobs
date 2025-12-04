@@ -369,6 +369,12 @@ export default function WorkerJobDetailScreen() {
             <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
               <Pressable
                 onPress={async () => {
+                  if (!worker?.category || !worker?.radius || worker?.isSelfEmployed === undefined) {
+                    alert("Bitte vervollständige dein Profil, bevor du dich bewerben kannst.");
+                    router.push('/(worker)/edit-profile');
+                    return;
+                  }
+
                   const newCount = buttonClickCount + 1;
                   setButtonClickCount(newCount);
                   setDebugLogs(prev => [...prev, `Click #${newCount}`]);
