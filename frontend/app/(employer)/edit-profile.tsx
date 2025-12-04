@@ -356,10 +356,14 @@ export default function EmployerProfileScreen() {
             onPress={handleSave}
             disabled={saving}
             style={{
-              backgroundColor: saving ? '#DDD' : COLORS.neon,
+              backgroundColor: saving ? COLORS.muted : COLORS.neon,
               paddingVertical: 18,
               borderRadius: 16,
-              alignItems: 'center'
+              alignItems: 'center',
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
+              alignSelf: 'center',
             }}
           >
             <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
