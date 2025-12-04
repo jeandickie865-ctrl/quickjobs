@@ -1,7 +1,7 @@
 // app/(worker)/profile-wizard/step2-address.tsx – BACKUP DESIGN
 
 import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
