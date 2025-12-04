@@ -189,7 +189,7 @@ export default function EmployerMatchesScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bgDark }}>
-      <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+      <SafeAreaView edges={['top','bottom']} style={{ flex: 1 }}>
         {/* HEADER */}
         <View
           style={{
