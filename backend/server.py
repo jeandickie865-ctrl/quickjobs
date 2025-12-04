@@ -2805,7 +2805,7 @@ def generate_sofortmeldung_pdf(
     
     # Header
     story.append(Paragraph("Sofortmeldung zur Sozialversicherung – Kurzfristige Beschäftigung", title_style))
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 6))
     
     # Neon info box
     info_data = [[Paragraph(
@@ -2816,11 +2816,11 @@ def generate_sofortmeldung_pdf(
     info_table.setStyle(TableStyle([
         ("BACKGROUND", (0,0), (-1,-1), rl_colors.HexColor("#C8FF16")),
         ("TEXTCOLOR", (0,0), (-1,-1), rl_colors.black),
-        ("PADDING", (0,0), (-1,-1), 12),
+        ("PADDING", (0,0), (-1,-1), 8),
         ("BOX", (0,0), (-1,-1), 2, rl_colors.HexColor("#C8FF16")),
     ]))
     story.append(info_table)
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Arbeitgeber
     story.append(Paragraph("Arbeitgeber", section_title))
