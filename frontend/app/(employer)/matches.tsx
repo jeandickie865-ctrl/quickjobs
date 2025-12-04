@@ -104,23 +104,33 @@ export default function EmployerMatchesScreen() {
 
     try {
       const employerJobs = await getEmployerJobs(user.id);
-      const allMatches: Match[] = [];
 
-      for (const job of employerJobs) {
-        const jobApps = await getApplicationsForJob(job.id);
-        const acceptedApps = jobApps.filter(app =>
+      // OPTIMIZED: Alle Applications parallel laden
+      const jobApplicationsResults = await Promise.all(
+        employerJobs.map(async (job) => ({
+          job,
+          applications: await getApplicationsForJob(job.id)
+        }))
+      );
+
+      // Filter accepted apps
+      const jobsWithAcceptedApps = jobApplicationsResults.map(({ job, applications }) => ({
+        job,
+        acceptedApps: applications.filter(app =>
           app.status === 'accepted' && app.paymentStatus === 'paid'
-        );
+        )
+      })).filter(item => item.acceptedApps.length > 0);
 
-        for (const app of acceptedApps) {
-          const workerProfile = await getWorkerProfile(app.workerId);
-          allMatches.push({
-            job,
-            application: app,
-            workerProfile
-          });
-        }
-      }
+      // OPTIMIZED: Alle Worker-Profile parallel laden
+      const allProfilePromises = jobsWithAcceptedApps.flatMap(({ job, acceptedApps }) =>
+        acceptedApps.map(async (app) => ({
+          job,
+          application: app,
+          workerProfile: await getWorkerProfile(app.workerId)
+        }))
+      );
+
+      const allMatches: Match[] = await Promise.all(allProfilePromises);
 
       allMatches.sort((a, b) =>
         new Date(b.application.createdAt).getTime() - new Date(a.application.createdAt).getTime()
@@ -128,17 +138,23 @@ export default function EmployerMatchesScreen() {
 
       setMatches(allMatches);
 
-      // Load worker data status
+      // OPTIMIZED: Load worker data status parallel
+      const statusResults = await Promise.all(
+        allMatches.map(async (match) => {
+          try {
+            const res = await fetch(`${API_URL}/profiles/worker/${match.application.workerId}/registration-status`);
+            const status = await res.json();
+            return { workerId: match.application.workerId, complete: status.complete || false };
+          } catch {
+            return { workerId: match.application.workerId, complete: false };
+          }
+        })
+      );
+
       const statusMap: {[workerId: string]: boolean} = {};
-      for (const match of allMatches) {
-        try {
-          const res = await fetch(`${API_URL}/profiles/worker/${match.application.workerId}/registration-status`);
-          const status = await res.json();
-          statusMap[match.application.workerId] = status.complete || false;
-        } catch {
-          statusMap[match.application.workerId] = false;
-        }
-      }
+      statusResults.forEach(({ workerId, complete }) => {
+        statusMap[workerId] = complete;
+      });
       setWorkerDataStatus(statusMap);
 
       // Load unread counts
