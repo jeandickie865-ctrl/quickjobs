@@ -351,7 +351,20 @@ export default function EmployerProfileScreen() {
             />
           </View>
 
-          {/* SAVE BUTTON */}
+          {/* Spacer for fixed button */}
+          <View style={{ height: 100 }} />
+        </Animated.ScrollView>
+
+        {/* FIXED SAVE BUTTON */}
+        <View style={{
+          position: 'absolute',
+          bottom: 70,
+          left: 0,
+          right: 0,
+          alignItems: 'center',
+          zIndex: 999,
+          paddingHorizontal: 20,
+        }}>
           <Pressable
             onPress={handleSave}
             disabled={saving}
@@ -363,16 +376,17 @@ export default function EmployerProfileScreen() {
               width: '60%',
               maxWidth: 300,
               minWidth: 220,
-              alignSelf: 'center',
+              shadowColor: COLORS.neon,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
             }}
           >
             <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
               {saving ? 'Speichert...' : 'Profil speichern'}
             </Text>
           </Pressable>
-
-          <View style={{ height: 60 }} />
-        </Animated.ScrollView>
+        </View>
       </KeyboardAvoidingView>
     </View>
   );
