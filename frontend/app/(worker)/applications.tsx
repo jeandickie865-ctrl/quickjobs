@@ -359,13 +359,13 @@ export default function WorkerApplicationsScreen() {
                     style={[
                       styles.matchedInfo,
                       {
-                        backgroundColor: colors.beige100,
-                        borderLeftColor: colors.black,
+                        backgroundColor: 'rgba(200,255,22,0.1)',
+                        borderLeftColor: '#C8FF16',
                         padding: spacing.sm,
                       },
                     ]}
                   >
-                    <Text style={[styles.matchedText, { color: colors.black }]}>
+                    <Text style={[styles.matchedText, { color: '#C8FF16' }]}>
                       ✓ Du wurdest ausgewählt!{'\n'}
                       Nutze den Chat, um Details zu besprechen.
                     </Text>
@@ -389,7 +389,7 @@ export default function WorkerApplicationsScreen() {
               {/* Pending Info */}
               {isPending && job?.status === 'open' && (
                 <View style={{ marginTop: spacing.xs }}>
-                  <Text style={[styles.pendingText, { color: colors.gray600 }]}>
+                  <Text style={[styles.pendingText, { color: '#A0A0A0' }]}>
                     Deine Bewerbung wird geprüft.
                   </Text>
                 </View>
@@ -402,8 +402,8 @@ export default function WorkerApplicationsScreen() {
                     title="📄 Jobdetails ansehen"
                     variant="primary"
                     onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
-                    style={{ backgroundColor: '#5941FF' }}
-                    textStyle={{ color: '#FFFFFF', fontWeight: '700' }}
+                    style={{ backgroundColor: '#C8FF16' }}
+                    textStyle={{ color: '#000000', fontWeight: '700' }}
                   />
                 </View>
               )}
