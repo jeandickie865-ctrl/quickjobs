@@ -150,8 +150,10 @@ export default function WorkerJobDetailScreen() {
 
           {/* Main Info Card */}
           <View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
+            borderWidth: 1,
+            borderColor: COLORS.border,
             padding: 20,
             marginBottom: 20,
           }}>
