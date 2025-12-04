@@ -275,7 +275,7 @@ export default function WorkerJobDetailScreen() {
                 <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 8 }}>
                   BESCHREIBUNG
                 </Text>
-                <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
+                <Text style={{ fontSize: 15, color: COLORS.white, lineHeight: 22 }}>
                   {job.description}
                 </Text>
               </View>
