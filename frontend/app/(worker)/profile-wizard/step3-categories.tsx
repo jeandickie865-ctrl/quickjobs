@@ -97,100 +97,113 @@ export default function Step3Categories() {
   const isFormValid = selectedCategories.length > 0 && selectedSubcategories.length > 0;
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView edges={['top']} style={styles.safeArea}>
-        <ProgressBar currentStep={3} totalSteps={5} />
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <View style={styles.container}>
+        
+          <ProgressBar currentStep={3} totalSteps={5} />
 
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
-          <Text style={styles.subtitle}>Wähle deine Kategorien und Tätigkeiten</Text>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={{ ...styles.scrollContent, paddingBottom: 160 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
+            <Text style={styles.subtitle}>Wähle deine Kategorien und Tätigkeiten</Text>
 
-          {/* CATEGORY SECTION */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>1. Kategorien auswählen *</Text>
-            <Text style={styles.helperText}>Wähle eine oder mehrere Kategorien</Text>
-
-            <View style={styles.categoriesGrid}>
-              {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
-                const isSelected = selectedCategories.includes(key);
-                return (
-                  <Pressable
-                    key={key}
-                    onPress={() => handleCategoryToggle(key)}
-                    style={[
-                      styles.categoryCard,
-                      isSelected && styles.categoryCardSelected
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.categoryText,
-                        isSelected && styles.categoryTextSelected
-                      ]}
-                    >
-                      {cat.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
-          </View>
-
-          {/* SUBCATEGORY SECTION */}
-          {selectedCategories.length > 0 && availableSubcategories.length > 0 && (
+            {/* CATEGORY SECTION */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>2. Tätigkeiten auswählen *</Text>
-              <Text style={styles.helperText}>Wähle mindestens eine Tätigkeit aus</Text>
+              <Text style={styles.sectionTitle}>1. Kategorien auswählen *</Text>
+              <Text style={styles.helperText}>Wähle eine oder mehrere Kategorien</Text>
 
-              <View style={styles.subcategoriesList}>
-                {availableSubcategories.map((sub: any) => {
-                  const isSelected = selectedSubcategories.includes(sub.key);
+              <View style={styles.categoriesGrid}>
+                {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
+                  const isSelected = selectedCategories.includes(key);
                   return (
                     <Pressable
-                      key={sub.key}
-                      onPress={() => toggleSubcategory(sub.key)}
+                      key={key}
+                      onPress={() => handleCategoryToggle(key)}
                       style={[
-                        styles.subcategoryCard,
-                        isSelected && styles.subcategoryCardSelected
+                        styles.categoryCard,
+                        isSelected && styles.categoryCardSelected
                       ]}
                     >
                       <Text
                         style={[
-                          styles.subcategoryText,
-                          isSelected && styles.subcategoryTextSelected
+                          styles.categoryText,
+                          isSelected && styles.categoryTextSelected
                         ]}
                       >
-                        {sub.label}
+                        {cat.label}
                       </Text>
-                      {isSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
                     </Pressable>
                   );
                 })}
               </View>
 
-              {errors.subcategories && (
-                <Text style={styles.errorText}>{errors.subcategories}</Text>
-              )}
+              {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
+            </View>
+
+            {/* SUBCATEGORY SECTION */}
+            {selectedCategories.length > 0 && availableSubcategories.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>2. Tätigkeiten auswählen *</Text>
+                <Text style={styles.helperText}>Wähle mindestens eine Tätigkeit aus</Text>
+
+                <View style={styles.subcategoriesList}>
+                  {availableSubcategories.map((sub: any) => {
+                    const isSelected = selectedSubcategories.includes(sub.key);
+                    return (
+                      <Pressable
+                        key={sub.key}
+                        onPress={() => toggleSubcategory(sub.key)}
+                        style={[
+                          styles.subcategoryCard,
+                          isSelected && styles.subcategoryCardSelected
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.subcategoryText,
+                            isSelected && styles.subcategoryTextSelected
+                          ]}
+                        >
+                          {sub.label}
+                        </Text>
+                        {isSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+
+                {errors.subcategories && (
+                  <Text style={styles.errorText}>{errors.subcategories}</Text>
+                )}
+              </View>
+            )}
+          </ScrollView>
+
+          {!isFormValid && (
+            <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
+              <Text style={styles.validationHint}>
+                Bitte wähle mindestens eine Kategorie und eine Tätigkeit
+              </Text>
             </View>
           )}
-        </ScrollView>
 
-        {!isFormValid && (
-          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
-            <Text style={styles.validationHint}>Bitte wähle mindestens eine Kategorie und eine Tätigkeit</Text>
-          </View>
-        )}
+          <NavigationButtons
+            onNext={handleNext}
+            onBack={handleBack}
+            nextDisabled={!isFormValid}
+            showBack={true}
+          />
 
-        <NavigationButtons
-          onNext={handleNext}
-          onBack={handleBack}
-          nextDisabled={!isFormValid}
-          showBack={true}
-        />
-      </SafeAreaView>
-    </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
