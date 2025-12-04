@@ -1,3 +1,5 @@
+// LEGACY BACKUP – DO NOT USE IN PRODUCTION
+
 // app/(employer)/jobs/[id].tsx - FINAL NEON-TECH DESIGN
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Alert, ActivityIndicator, Pressable, Image } from 'react-native';
