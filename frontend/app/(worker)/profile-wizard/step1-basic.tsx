@@ -278,8 +278,8 @@ export default function Step1Basic() {
             {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
           </View>
 
-          {/* Small spacer for button */}
-          <View style={{ height: 80 }} />
+          {/* Large spacer so all fields are above fixed button */}
+          <View style={{ height: 180 }} />
         </ScrollView>
 
         {/* HINT */}
