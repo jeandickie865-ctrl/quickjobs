@@ -12,6 +12,7 @@ export default function WorkerRegistrationDataScreen() {
   const [steuerId, setSteuerId] = useState('');
   const [sozialversicherungsnummer, setSozialversicherungsnummer] = useState('');
   const [krankenkasse, setKrankenkasse] = useState('');
+  const [showSaved, setShowSaved] = useState(false);
 
   return (
     <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
