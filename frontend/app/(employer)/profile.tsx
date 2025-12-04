@@ -338,15 +338,17 @@ export default function EmployerProfileViewScreen() {
             {/* Info-Block für private Auftraggeber */}
             {user?.accountType === "private" && user?.isSelfEmployed === false && (
               <View style={{
-                backgroundColor: '#ECECEC',
+                backgroundColor: COLORS.bg,
                 padding: 14,
                 borderRadius: 12,
-                marginTop: 20
+                marginTop: 20,
+                borderWidth: 1,
+                borderColor: COLORS.border,
               }}>
-                <Text style={{ fontSize: 14, fontWeight: '700', color: '#333', marginBottom: 6 }}>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon, marginBottom: 6 }}>
                   Rechtlicher Hinweis
                 </Text>
-                <Text style={{ fontSize: 13, color: '#333', lineHeight: 18 }}>
+                <Text style={{ fontSize: 13, color: COLORS.muted, lineHeight: 18 }}>
                   Wenn du jemanden kurzfristig beschäftigst, erstellt die App automatisch Vertrags- 
                   und Abrechnungsunterlagen. Die Meldung an die Minijob-Zentrale nimmst du selbst vor.
                 </Text>
@@ -358,15 +360,15 @@ export default function EmployerProfileViewScreen() {
               onPress={() => router.push('/(employer)/edit-profile')}
               style={({ pressed }) => ({
                 backgroundColor: COLORS.neon,
-                borderRadius: 14,
-                paddingVertical: 14,
+                borderRadius: 16,
+                paddingVertical: 18,
                 paddingHorizontal: 16,
                 alignItems: 'center',
-                shadowColor: COLORS.neonShadow,
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.8,
-                shadowRadius: 6,
                 marginTop: 32,
+                width: '60%',
+                maxWidth: 300,
+                minWidth: 220,
+                alignSelf: 'center',
                 opacity: pressed ? 0.9 : 1,
               })}
             >
