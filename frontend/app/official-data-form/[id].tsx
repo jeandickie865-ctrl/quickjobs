@@ -108,7 +108,7 @@ export default function OfficialDataFormScreen() {
       style={{ flex: 1, backgroundColor: COLORS.purple }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
+      <SafeAreaView edges={["top", "bottom"]} style={{ flex: 1 }}>
         {/* Header */}
         <View style={{ padding: 16, flexDirection: "row", alignItems: "center" }}>
           <Pressable onPress={() => router.back()}>
