@@ -350,6 +350,14 @@ export default function EditWorkerProfileScreen() {
     try {
       setSaving(true);
 
+      const addressPayload = {
+        street: street.trim() || undefined,
+        house_number: houseNumber.trim() || undefined,
+        postal_code: postalCode.trim() || undefined,
+        city: city.trim() || undefined,
+        country: country.trim() || 'Deutschland',
+      };
+
       const updatedProfile: Partial<WorkerProfile> = {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
@@ -358,13 +366,7 @@ export default function EditWorkerProfileScreen() {
         categories: selectedCategories,
         subcategories: selectedSubcategories,
         qualifications: selectedQualifications,
-        homeAddress: {
-          street: street.trim(),
-          houseNumber: houseNumber.trim() || undefined,
-          postalCode: postalCode.trim(),
-          city: city.trim(),
-          country: country.trim()
-        },
+        homeAddress: addressPayload,
         homeLat: lat,
         homeLon: lon,
         phone: phone.trim(),
