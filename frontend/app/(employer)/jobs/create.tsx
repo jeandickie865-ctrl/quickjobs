@@ -883,39 +883,42 @@ export default function CreateJob() {
 
       </ScrollView>
 
-        {/* FIXED ACTION BUTTON AREA */}
-        <View
-          style={{
-            paddingHorizontal: SPACING.md,
-            paddingBottom: Platform.OS === 'ios' ? 32 : 20,
-            paddingTop: 12,
-            backgroundColor: COLORS.bg,
-            borderTopWidth: 1,
-            borderTopColor: COLORS.border,
-            alignItems: 'center',
-          }}
-        >
-          <View style={{ width: '60%', maxWidth: 400 }}>
-            <Button
-              title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
-              onPress={handlePublish}
-              disabled={isSaving}
-            />
-          </View>
-
-          {error && (
-            <Text
-              style={{
-                color: COLORS.error,
-                fontSize: 13,
-                marginTop: 8,
-                textAlign: 'center',
-              }}
-            >
-              {error}
-            </Text>
-          )}
+      {/* FIXED ACTION BUTTON AREA */}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          paddingHorizontal: SPACING.md,
+          paddingBottom: Platform.OS === 'ios' ? 32 : 20,
+          paddingTop: 12,
+          backgroundColor: COLORS.bg,
+          borderTopWidth: 1,
+          borderTopColor: COLORS.border,
+          alignItems: 'center',
+        }}
+      >
+        <View style={{ width: '60%', maxWidth: 400 }}>
+          <Button
+            title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
+            onPress={handlePublish}
+            disabled={isSaving}
+          />
         </View>
+
+        {error && (
+          <Text
+            style={{
+              color: COLORS.error,
+              fontSize: 13,
+              marginTop: 8,
+              textAlign: 'center',
+            }}
+          >
+            {error}
+          </Text>
+        )}
       </View>
     </SafeAreaView>
   );
