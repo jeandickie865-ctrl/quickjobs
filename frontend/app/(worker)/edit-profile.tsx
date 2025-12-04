@@ -981,16 +981,8 @@ export default function EditWorkerProfileScreen() {
         )}
       </ScrollView>
 
-      {/* FIXED SAVE BUTTON */}
-      <View style={{
-        position: 'absolute',
-        bottom: 100,
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-        zIndex: 999,
-        paddingHorizontal: 20,
-      }}>
+      {/* SAVE BUTTON */}
+      <View style={{ padding: 20, paddingBottom: 40 }}>
         <Pressable
           onPress={handleSave}
           disabled={!isFormValid() || saving}
@@ -998,6 +990,7 @@ export default function EditWorkerProfileScreen() {
             width: '60%',
             maxWidth: 300,
             minWidth: 220,
+            alignSelf: 'center',
             backgroundColor: isFormValid() && !saving ? COLORS.neon : COLORS.card,
             paddingVertical: 18,
             borderRadius: 16,
