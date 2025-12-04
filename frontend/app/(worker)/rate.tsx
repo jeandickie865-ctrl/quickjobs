@@ -185,7 +185,7 @@ export default function RateEmployerScreen() {
   }
 
   if (!employer) {
-    console.log('❌ Worker Rate: Employer nicht gefunden. EmployerId:', employerId || job?.employerId);
+    console.log('❌ Employer not found for rating.');
     
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
