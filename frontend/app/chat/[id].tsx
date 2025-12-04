@@ -205,7 +205,7 @@ export default function ChatScreen() {
             </View>
           );
         }}
-        contentContainerStyle={{ paddingVertical: 16, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingVertical: 16, paddingBottom: 120 }}
       />
 
       {/* INPUT BAR */}
