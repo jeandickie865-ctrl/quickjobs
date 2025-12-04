@@ -2557,7 +2557,7 @@ def generate_contract_pdf(
     emp_last = employer_data.get('lastName', '').strip()
     emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Arbeitgeber"
     emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
-    emp_addr = employer_data.get('homeAddress', {})
+    emp_addr = employer_data.get('businessAddress', {}) or employer_data.get('homeAddress', {})
     emp_address = format_address(emp_addr)
     
     work_first = worker_data.get('firstName', '').strip()
