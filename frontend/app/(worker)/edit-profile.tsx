@@ -444,6 +444,7 @@ export default function EditWorkerProfileScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
           style={{ borderBottomWidth: 2, borderBottomColor: COLORS.neon }}
+          keyboardShouldPersistTaps="handled"
         >
           {tabs.map(tab => {
             const isActive = activeTab === tab.key;
