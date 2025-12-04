@@ -72,14 +72,15 @@ export default function WorkerRegistrationDataScreen() {
         <Pressable
           onPress={async () => {
             try {
-              const token = await AsyncStorage.getItem('token');
+              const token = await AsyncStorage.getItem("token");
               if (!token) return;
 
-              const response = await fetch('/api/profiles/worker/me/registration-data', {
-                method: 'PUT',
+              // Original-API-Call unverändert lassen
+              const response = await fetch("/api/profiles/worker/me/registration-data", {
+                method: "PUT",
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                   steuerId,
@@ -89,22 +90,28 @@ export default function WorkerRegistrationDataScreen() {
                 })
               });
 
-              const data = await response.json();
-              console.log('Registration data saved:', data);
+              // Nur UI: Toast
+              setShowSaved(true);
 
-              router.back();
+              // Nach kurzer Zeit zurück auf /worker/profile
+              setTimeout(() => {
+                setShowSaved(false);
+                router.replace("/(worker)/profile");
+              }, 1200);
+
             } catch (error) {
-              console.error('Error saving registration data:', error);
+              console.error("Error saving registration data:", error);
             }
           }}
           style={{
             backgroundColor: COLORS.neon,
             paddingVertical: 16,
-            paddingHorizontal: 20,
-            alignItems: 'center',
             borderRadius: 14,
-            marginBottom: 20,
-            marginHorizontal: 20
+            alignItems: "center",
+            width: "100%",
+            maxWidth: 360,
+            alignSelf: "center",
+            marginBottom: 40
           }}
         >
           <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
