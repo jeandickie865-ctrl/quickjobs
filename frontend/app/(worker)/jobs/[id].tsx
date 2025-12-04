@@ -40,11 +40,6 @@ export default function WorkerJobDetailScreen() {
   const [buttonClickCount, setButtonClickCount] = useState(0);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
-  useEffect(() => {
-    loadJob();
-    loadWorkerProfile();
-  }, [id]);
-
   const loadWorkerProfile = async () => {
     try {
       if (!user?.id) {
