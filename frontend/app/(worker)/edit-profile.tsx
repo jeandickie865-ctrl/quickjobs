@@ -78,6 +78,7 @@ export default function EditWorkerProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [availableSubcategories, setAvailableSubcategories] = useState<{ key: string; label: string }[]>([]);
   const [availableQualifications, setAvailableQualifications] = useState<{ key: string; label: string }[]>([]);
