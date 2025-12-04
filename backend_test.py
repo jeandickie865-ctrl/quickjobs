@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Get backend URL from frontend .env
-BACKEND_URL = "https://backup-design.preview.emergentagent.com"
+BACKEND_URL = "https://shiftmatch-dark.preview.emergentagent.com"
 
 def log_test(test_name, status, details=""):
     """Log test results with timestamp"""

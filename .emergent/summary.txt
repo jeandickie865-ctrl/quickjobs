@@ -1,88 +1,87 @@
 <analysis>
-The trajectory documents a comprehensive, user-driven UI/UX overhaul of the ShiftMatch application. The user, who is German-speaking, has been systematically providing complete code replacements for each screen to migrate the app from an old purple theme to a new, consistent dark BACKUP theme.
+The trajectory documents the final, complex stages of a complete UI/UX overhaul for the ShiftMatch application, migrating it from a purple theme to a consistent dark BACKUP theme. The user, who is German-speaking, guides the process with specific requests and, at times, full code snippets.
 
-The process is highly iterative:
-1.  The AI engineer suggests the next logical screen to redesign (e.g., payment, chat, job details).
-2.  The user agrees and asks to see the current file.
-3.  The AI reads and displays the file.
-4.  The user provides a complete, new code snippet for that file with the BACKUP design.
-5.  The AI overwrites the old file with the new code, restarts the Expo server, and confirms completion.
+The work cycle involved:
+1.  **Redesigning Components:** The AI successfully converted , , , and  to the dark theme.
+2.  **Bug Fixing & Feature Refinement:** A significant portion of the trajectory focused on the  screen. This involved a protracted and difficult process of implementing a fixed bottom action button that is now visible and correctly positioned above the tab bar. The AI also fixed an unreadable text issue in  and added two crucial coordinate-handling buttons to  after installing .
+3.  **User-AI Interaction:** The interaction is highly iterative. The user provides precise feedback, including screenshots and code, and the AI implements the changes. There were several instances of misunderstanding, such as the AI modifying the wrong file, which were quickly corrected upon user feedback.
 
-This pattern has been successfully applied to numerous screens, including the worker profile wizard, authentication, feed, employer dashboard, job creation, job details, applications list, payment flow, and chat.
+The most recent task, initiated by the user, is to fix the worker-side tab bar, which is currently unreadable and contains incorrect labels. The AI has acknowledged this and is about to locate the relevant layout file.
 
-The most recent task was to redesign the  modal. The user provided an improved code snippet that not only applied the dark theme but also enhanced the logic for displaying data. The AI has just finished implementing this change and restarting the frontend. The next tasks, as identified, are the remaining employer profile screens.
-
-The user's primary language is German. The next agent must respond in German only.
+The user's primary language is German. All future responses must be in German.
 </analysis>
-<product_requirements>
-The ShiftMatch application is a German-language, two-sided marketplace connecting Auftraggeber (Employers) and Auftragnehmer (Workers).
 
-The primary product goal is a complete visual and user experience overhaul. The objective is to migrate every screen from an inconsistent purple/lila theme to a unified, modern, dark iPhone-style aesthetic, consistently referred to as the BACKUP design.
+<product_requirements>
+The ShiftMatch application is a German-language, two-sided marketplace connecting employers and workers. The core product requirement is a complete visual and user experience overhaul of the entire application.
+
+**Objective:** Migrate every screen from an old, inconsistent purple theme to a unified, modern, dark BACKUP theme, optimized for a professional, native iPhone-style aesthetic.
 
 **Core Design Specifications:**
 *   **Theme:** Dark background (), dark cards (), and neon green accents ().
-*   **Layout:** Clean, mobile-first layouts optimized for iPhone, with specific constraints like buttons having a maximum width of 60%.
+*   **Layout:** Clean, mobile-first layouts with specific constraints, such as action buttons having a maximum width of 60% and being correctly anchored for one-handed use.
+*   **Language:** Labels and text must be in German.
 
 **Implementation Status:**
-The redesign is nearly complete. The AI engineer, guided by user-provided code, has successfully updated the following key areas to the BACKUP theme:
-*   Authentication (, )
-*   Worker Section (, , , tab layout)
-*   Employer Section (, , , , , tab layout)
-*   Core Functionality (, , various modals)
-
-The project is in its final stages of this redesign phase, with only a few secondary employer-side screens remaining.
+The redesign is in its final stages. Key sections like authentication, worker/employer dashboards, job creation/details, payment, and chat have been migrated. The most recent work focused on fixing complex layout issues on the job creation screen and redesigning several worker-side pages. The current task is to fix the worker-side tab bar navigation, which has styling and labeling issues.
 </product_requirements>
+
 <key_technical_concepts>
-- **Frontend Framework:** React Native with Expo.
-- **Routing:** Expo Router (file-based routing within the  directory).
-- **Styling:**  with a hardcoded BACKUP color palette. No CSS-in-JS or utility-class libraries are used.
-- **State Management:** Primarily React Hooks (, , ) and  for .
-- **Data:** A central  file is used for categories, skills, and qualifications across the app.
-- **API:**  calls to a FastAPI backend, with authentication via a Bearer token.
+- **Framework:** React Native with Expo
+- **Routing:** Expo Router (file-based)
+- **Styling:**  with a hardcoded BACKUP theme color palette.
+- **State Management:** React Hooks (, ) and  for context.
+- **Layout Pattern:** A recurring and critical challenge was implementing a fixed bottom action button. The final, working solution involves a combination of ,  (to clear the tab bar), and , with careful parent container flex properties.
+- **Device API:**  was installed and used for GPS functionality.
 </key_technical_concepts>
+
 <code_architecture>
-The project follows a standard Expo Router structure, where files in the  directory define the application's routes.
+The project uses a standard Expo Router file-based routing structure.
 
 
 
 - ****
-  - **Importance:** This is a crucial modal for employers to view a worker's detailed profile before or after a match.
-  - **Summary of changes:** This file was the subject of the most recent work. It was completely replaced with user-provided code that not only applied the BACKUP dark theme but also included significant logic improvements for displaying masked names and resolving taxonomy labels.
+    - **Importance:** This is the critical screen for employers to post new jobs. It was the source of significant layout problems.
+    - **Summary of Changes:** The file underwent numerous, iterative changes to fix a non-visible action button. The final solution places a button container with  and  to keep it fixed above the tab bar. The button's width is capped at 60%. The file's theme was also changed from a user-provided Premium Purple back to the standard BACKUP dark theme.
 
 - ****
-  - **Importance:** A modal used in the job creation flow to ensure employers agree to legal terms.
-  - **Summary of changes:** The file was rewritten to match the BACKUP theme. The AI also identified and fixed a potential infinite loop risk in the  logic by adding a  for a safer state update.
-
-- ** & **
-  - **Importance:** These are the core screens for an employer to create a new job and view the details of an existing one, including the list of applicants.
-  - **Summary of changes:** Both were very large, complex files that were completely rewritten with user-provided code to implement the BACKUP dark theme, replacing all old UI components and styles.
+    - **Importance:** This screen shows workers the details of a specific job.
+    - **Summary of Changes:** The entire screen was converted from the old purple theme to the BACKUP dark theme. The main action button (Ich habe Zeit) was styled to have a 60% width to maintain consistency with the rest of the app.
 
 - ****
-  - **Importance:** The central communication screen for matched workers and employers.
-  - **Summary of changes:** Rewritten from a purple theme to a BACKUP dark theme with a WhatsApp-style bubble layout, including dark-mode-friendly input fields and message bubbles.
+    - **Importance:** Shows a worker a list of their job applications and their statuses.
+    - **Summary of Changes:** Following a specific user request, the AI performed an incremental, style-only update to convert the screen to the BACKUP dark theme without rewriting the file's structure.
 
 - ****
-  - **Importance:** The critical screen where an employer pays the platform's commission to unlock a match.
-  - **Summary of changes:** Completely redesigned with the BACKUP dark theme, including payment method selection and an animated success screen.
+    - **Importance:** A reusable component for address input and geocoding.
+    - **Summary of Changes:**  was installed. Two buttons were added: Aktueller GPS-Standort (uses device GPS) and Koordinaten berechnen (performs forward geocoding from the typed address). The buttons were later styled to have 60% width and no emojis for a cleaner look.
+
+- ****
+    - **Importance:** Displays the cost breakdown for a job.
+    - **Summary of Changes:** A simple but important fix was made to change the text color from  to  (white) to make it readable on the dark theme.
 </code_architecture>
+
 <pending_tasks>
-- **Redesign Employer Profile Screens:**
-  -  (View-only profile)
-  -  (Profile editing form)
-- **Redesign Registration/PDF Flow:** The four screens under .
-- **Redesign Job Rating Screen:** .
-
-The user has explicitly asked to work on the employer profile screens next.
+- **Fix Worker Tab Bar:** The immediate task is to redesign the worker tab bar () for readability, remove the Matches old tab, and rename the all/jobs tab to alle Jobs.
+- **Redesign Remaining Employer Screens:** The profile (), edit profile (), registration, and job rating screens are still pending the BACKUP theme redesign.
 </pending_tasks>
+
 <current_work>
-The most recent task was a complete redesign of the **** component. This is a modal that allows employers to view a worker's full profile.
+The immediate focus is on fixing the worker-side tab bar navigation. The user reported that the footer navigation is poorly designed and unreadable on the dark theme.
 
-The user provided a complete code snippet for this component. This snippet went beyond a simple theme change; it included:
-1.  **BACKUP Dark Theme:** All colors and styles were updated to match the application's new dark design ( background,  cards, etc.).
-2.  **Improved Logic:** The user's code introduced helper functions to better handle data display, such as  to show a masked name () before a match is confirmed and the full name after. It also improved how taxonomy labels for skills and categories were resolved.
+**User's Explicit Requests for the Tab Bar:**
+1.  **Fix Design:** The styling needs to be adjusted to be angemessen designed (appropriately designed) so the labels are visible against the dark background.
+2.  **Remove Matches old:** This tab is considered unnecessary and should be removed from the navigation.
+3.  **Rename Tab:** The tab labeled all/jobs must be renamed to its German equivalent, alle Jobs, for consistency with the app's language.
 
-The previous AI engineer recognized these improvements, validated the code, and successfully overwrote the old component file with the new, enhanced version. The final action taken was restarting the Expo frontend service to apply the changes. The work on this specific file is concluded.
+The previous AI engineer acknowledged these issues and was in the process of locating the correct file to modify, which is conventionally  in an Expo Router setup. The work stopped just before reading or editing this file.
 </current_work>
+
 <optional_next_step>
-Ask the user for the design code for the two remaining employer profile screens:  and , as this was their last explicit request before the modal redesign.
+Locate and read the file  to begin implementing the user's requested changes for the worker-side tab bar.
 </optional_next_step>
+
+<direct_quotes>
+**User:** guck dir mal den die fusszeile an, können wir die bitte angemessen designed so sieht man ja nichts auch brauchen wir ja Matches old nicht, und es soll NICHT all/jobs dort stehen sondern alle Jobs nicht englisch
+
+**AI:** Verstanden! Die Tab-Bar unten sieht schrecklich aus. Lassen Sie mich die Worker Tab-Navigation finden und anpassen:
+</direct_quotes>
