@@ -55,12 +55,13 @@ export default function WorkerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: Platform.OS === 'ios' ? 78 : 70,
-          paddingBottom: Platform.OS === 'ios' ? 18 : 12,
-          paddingTop: 10,
+          height: Platform.OS === 'ios' ? 85 : 75,
+          paddingBottom: Platform.OS === 'ios' ? 20 : 14,
+          paddingTop: 12,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
+          elevation: 0,
           position: 'absolute',
           bottom: 0,
           left: 0,
@@ -68,10 +69,11 @@ export default function WorkerLayout() {
           zIndex: 50,
         },
         tabBarLabelStyle: {
-          fontSize: 13,
-          fontWeight: '700',
-          color: COLORS.white,
+          fontSize: 11,
+          fontWeight: '600',
         },
+        tabBarActiveTintColor: COLORS.neon,
+        tabBarInactiveTintColor: COLORS.inactive,
       }}
     >
       {TAB('feed', 'Aktuelle Jobs')}
