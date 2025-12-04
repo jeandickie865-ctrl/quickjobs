@@ -2984,14 +2984,14 @@ def generate_payroll_pdf(
     
     # Header
     story.append(Paragraph("Gehaltsabrechnung – Kurzfristige Beschäftigung (§ 40a EStG)", title_style))
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 6))
     
     # Worker info
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
     work_name = " ".join([p for p in [work_first, work_last] if p]) or "Arbeitnehmer"
     story.append(Paragraph(f"<b>Arbeitnehmer:</b> {work_name}", normal))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Section 1: Verdienstübersicht
     story.append(Paragraph("Verdienstübersicht", section_title))
@@ -3012,7 +3012,7 @@ def generate_payroll_pdf(
     ]))
     
     story.append(verdienst_table)
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 10))
     
     # Section 2: Arbeitgeberabgaben
     story.append(Paragraph("Pauschale Arbeitgeberabgaben", section_title))
@@ -3043,7 +3043,7 @@ def generate_payroll_pdf(
     ]))
     
     story.append(abgaben_table)
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 10))
     
     # Final note
     story.append(Paragraph(
