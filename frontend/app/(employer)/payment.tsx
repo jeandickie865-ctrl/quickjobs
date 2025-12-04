@@ -223,8 +223,8 @@ export default function PaymentScreen() {
         </View>
 
         {/* Payment Methods */}
-        <View style={{ gap: 10 }}>
-          <Text style={{ color: COLORS.neon, fontSize: 12, fontWeight: '700' }}>ZAHLUNGSMETHODE</Text>
+        <View style={{ gap: 10, alignItems: 'center' }}>
+          <Text style={{ color: COLORS.neon, fontSize: 12, fontWeight: '700', alignSelf: 'flex-start' }}>ZAHLUNGSMETHODE</Text>
 
           {/* CARD */}
           <Pressable
@@ -237,6 +237,9 @@ export default function PaymentScreen() {
               alignItems: 'center',
               borderWidth: 2,
               borderColor: selectedMethod === 'card' ? COLORS.neon : COLORS.border,
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
             }}
           >
             <Ionicons
@@ -262,6 +265,9 @@ export default function PaymentScreen() {
               alignItems: 'center',
               borderWidth: 2,
               borderColor: selectedMethod === 'paypal' ? COLORS.neon : COLORS.border,
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
             }}
           >
             <Ionicons
@@ -285,11 +291,14 @@ export default function PaymentScreen() {
               flexDirection: 'row',
               alignItems: 'center',
               opacity: 0.5,
+              width: '60%',
+              maxWidth: 300,
+              minWidth: 220,
             }}
           >
             <Ionicons name="business-outline" size={26} color={COLORS.muted} style={{ marginRight: 14 }} />
             <Text style={{ color: COLORS.muted, fontSize: 16, fontWeight: '700', flex: 1 }}>SEPA</Text>
-            <Text style={{ color: COLORS.muted, fontSize: 13 }}>Bald verfügbar</Text>
+            <Text style={{ color: COLORS.muted, fontSize: 13 }}>Bald</Text>
           </View>
         </View>
 
