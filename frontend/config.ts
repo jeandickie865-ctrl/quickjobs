@@ -1,6 +1,6 @@
 export const API_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  "https://shiftmatch-fix.preview.emergentagent.com/api";
+  "https://worker-connect-10.preview.emergentagent.com/api";
 
 export const APP_VERSION = "1.0.0";
 
