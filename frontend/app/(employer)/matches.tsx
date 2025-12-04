@@ -318,8 +318,8 @@ export default function EmployerMatchesScreen() {
                   </View>
 
                   {/* Info */}
-                  <Text style={{ color: COLORS.textWhite, marginTop: 12, fontSize: 14 }}>
-                    Match seit {formatDate(match.application.createdAt)}
+                  <Text style={{ color: COLORS.textMuted, marginTop: 12, fontSize: 13 }}>
+                    Match vom {formatDate(match.application.createdAt)}
                   </Text>
 
                   <Text style={{ color: COLORS.textMuted, marginTop: 4, fontSize: 14 }}>
