@@ -63,71 +63,85 @@ export default function Step4Skills() {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView edges={['top']} style={styles.safeArea}>
-        <ProgressBar currentStep={4} totalSteps={5} />
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <View style={styles.container}>
 
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Qualifikationen</Text>
-          <Text style={styles.subtitle}>Welche Qualifikationen hast du?</Text>
+          <ProgressBar currentStep={4} totalSteps={5} />
 
-          {selectedCategories.length === 0 && (
-            <View style={styles.emptyState}>
-              <Ionicons name="information-circle" size={48} color={COLORS.neon} />
-              <Text style={styles.emptyText}>Wähle zuerst Kategorien in Schritt 3</Text>
-            </View>
-          )}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={{ ...styles.scrollContent, paddingBottom: 160 }}
+            showsVerticalScrollIndicator={false}
+          >
+            
+            <Text style={styles.title}>Qualifikationen</Text>
+            <Text style={styles.subtitle}>Welche Qualifikationen hast du?</Text>
 
-          {availableQualifications.length === 0 && selectedCategories.length > 0 && (
-            <View style={styles.emptyState}>
-              <Ionicons name="checkmark-circle" size={48} color={COLORS.neon} />
-              <Text style={styles.emptyText}>Keine Qualifikationen verfügbar</Text>
-            </View>
-          )}
+            {selectedCategories.length === 0 && (
+              <View style={styles.emptyState}>
+                <Ionicons name="information-circle" size={48} color={COLORS.neon} />
+                <Text style={styles.emptyText}>Wähle zuerst Kategorien in Schritt 3</Text>
+              </View>
+            )}
 
-          {availableQualifications.length > 0 && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Wähle alle passenden Qualifikationen</Text>
+            {availableQualifications.length === 0 && selectedCategories.length > 0 && (
+              <View style={styles.emptyState}>
+                <Ionicons name="checkmark-circle" size={48} color={COLORS.neon} />
+                <Text style={styles.emptyText}>Keine Qualifikationen verfügbar</Text>
+              </View>
+            )}
 
-              <View style={styles.itemsList}>
-                {availableQualifications.map(qual => {
-                  const isSelected = selectedQualifications.includes(qual.key);
-                  return (
-                    <Pressable
-                      key={qual.key}
-                      onPress={() => toggleQualification(qual.key)}
-                      style={[
-                        styles.itemCard,
-                        isSelected && styles.itemCardSelected
-                      ]}
-                    >
-                      <Text
+            {availableQualifications.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Wähle alle passenden Qualifikationen</Text>
+
+                <View style={styles.itemsList}>
+                  {availableQualifications.map(qual => {
+                    const isSelected = selectedQualifications.includes(qual.key);
+                    return (
+                      <Pressable
+                        key={qual.key}
+                        onPress={() => toggleQualification(qual.key)}
                         style={[
-                          styles.itemText,
-                          isSelected && styles.itemTextSelected
+                          styles.itemCard,
+                          isSelected && styles.itemCardSelected
                         ]}
                       >
-                        {qual.label}
-                      </Text>
-                      {isSelected && (
-                        <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
-                      )}
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
-          )}
-        </ScrollView>
+                        <Text
+                          style={[
+                            styles.itemText,
+                            isSelected && styles.itemTextSelected
+                          ]}
+                        >
+                          {qual.label}
+                        </Text>
 
-        <NavigationButtons
-          onNext={handleNext}
-          onBack={handleBack}
-          nextDisabled={false}
-          showBack={true}
-        />
-      </SafeAreaView>
-    </View>
+                        {isSelected && (
+                          <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />
+                        )}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
+
+          </ScrollView>
+
+          <NavigationButtons
+            onNext={handleNext}
+            onBack={handleBack}
+            nextDisabled={selectedQualifications.length === 0}
+            showBack={true}
+          />
+
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
