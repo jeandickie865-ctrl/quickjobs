@@ -1019,6 +1019,7 @@ export default function EditWorkerProfileScreen() {
           )}
         </Pressable>
       </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
