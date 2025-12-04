@@ -247,7 +247,7 @@ export default function JobDetailScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       {/* Top Bar */}
-      <SafeAreaView edges={['top','bottom']}>
+      <SafeAreaView edges={['top']}>
         <View
           style={{
             flexDirection: 'row',
