@@ -288,8 +288,8 @@ export default function EditWorkerProfileScreen() {
     setCity(addr.city || addr.town || addr.village || '');
     setCountry(addr.country || 'Deutschland');
     
-    setLat(parseFloat(suggestion.lat));
-    setLon(parseFloat(suggestion.lon));
+    setLat(suggestion.lat ? parseFloat(suggestion.lat) : undefined);
+    setLon(suggestion.lon ? parseFloat(suggestion.lon) : undefined);
     
     setShowSuggestions(false);
     setAddressSuggestions([]);
