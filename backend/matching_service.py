@@ -86,20 +86,22 @@ def match_worker_with_job(worker: Dict[str, Any], job: Dict[str, Any]) -> bool:
             if qual not in worker_qualifications:
                 return False
     
-    # 4. Radius check (unchanged)
-    try:
-        worker_lat = float(worker.get("homeLat", 0))
-        worker_lon = float(worker.get("homeLon", 0))
-        job_lat = float(job.get("lat", 0))
-        job_lon = float(job.get("lon", 0))
-        worker_radius = float(worker.get("radiusKm", 0))
-        
-        distance = haversine(worker_lat, worker_lon, job_lat, job_lon)
-        
-        if distance > worker_radius:
-            return False
-    except (ValueError, TypeError):
-        # If coordinates are missing or invalid, no match
+    # 4. Radius check
+    worker_lat = worker.get("homeLat")
+    worker_lon = worker.get("homeLon")
+    job_lat = job.get("lat")
+    job_lon = job.get("lon")
+    worker_radius = worker.get("radiusKm")
+
+    # HARTE VALIDIERUNG
+    if worker_lat is None or worker_lon is None or job_lat is None or job_lon is None:
+        return False
+
+    if worker_radius is None or float(worker_radius) <= 0:
+        return False
+
+    distance = haversine(float(worker_lat), float(worker_lon), float(job_lat), float(job_lon))
+    if distance > float(worker_radius):
         return False
     
     return True
