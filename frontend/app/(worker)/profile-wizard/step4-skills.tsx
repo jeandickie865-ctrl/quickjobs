@@ -190,15 +190,16 @@ const styles = StyleSheet.create({
   itemsList: { flexDirection: 'column', gap: 12 },
 
   itemCard: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: COLORS.card,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    minHeight: 52,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   itemCardSelected: {
     borderColor: COLORS.neon,
