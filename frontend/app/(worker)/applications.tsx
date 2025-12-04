@@ -360,7 +360,7 @@ export default function WorkerApplicationsScreen() {
                   })}
                 >
                   <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>
-                    🗑️ Bewerbung löschen
+                    Bewerbung löschen
                   </Text>
                 </Pressable>
               )}
