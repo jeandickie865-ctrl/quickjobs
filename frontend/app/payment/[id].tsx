@@ -237,7 +237,7 @@ export default function PaymentScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <SafeAreaView edges={["top"]}>
+      <SafeAreaView edges={["top","bottom"]}>
         <View style={{ padding: 16, flexDirection: "row", alignItems: "center" }}>
           <Pressable onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
