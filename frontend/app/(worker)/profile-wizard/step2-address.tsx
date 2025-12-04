@@ -57,78 +57,88 @@ export default function Step2Address() {
   const isFormValid = street.trim() && postalCode.trim() && city.trim();
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView edges={['top']} style={styles.safeArea}>
-        <ProgressBar currentStep={2} totalSteps={5} />
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <View style={styles.container}>
 
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.title}>Adresse & Arbeitsbereich</Text>
-          <Text style={styles.subtitle}>Wo wohnst du und wie weit möchtest du fahren?</Text>
+          <ProgressBar currentStep={2} totalSteps={5} />
 
-          {/* Address Autocomplete Input */}
-          <View style={styles.card}>
-            <AddressAutocompleteInput
-              street={street}
-              postalCode={postalCode}
-              city={city}
-              houseNumber={houseNumber}
-              onStreetChange={setStreet}
-              onPostalCodeChange={setPostalCode}
-              onCityChange={setCity}
-              onHouseNumberChange={setHouseNumber}
-              onLatChange={setLat}
-              onLonChange={setLon}
-            />
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            
+            <Text style={styles.title}>Adresse & Arbeitsbereich</Text>
+            <Text style={styles.subtitle}>Wo wohnst du und wie weit möchtest du fahren?</Text>
 
-            {/* Errors */}
-            {errors.street && <Text style={styles.errorText}>{errors.street}</Text>}
-            {errors.postalCode && <Text style={styles.errorText}>{errors.postalCode}</Text>}
-            {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
-          </View>
+            <View style={styles.card}>
+              <AddressAutocompleteInput
+                street={street}
+                postalCode={postalCode}
+                city={city}
+                houseNumber={houseNumber}
+                onStreetChange={setStreet}
+                onPostalCodeChange={setPostalCode}
+                onCityChange={setCity}
+                onHouseNumberChange={setHouseNumber}
+                onLatChange={setLat}
+                onLonChange={setLon}
+              />
 
-          {/* RADIUS */}
-          <View style={styles.card}>
-            <Text style={styles.label}>Arbeitsradius: {radius} km</Text>
-
-            <Slider
-              style={styles.slider}
-              minimumValue={5}
-              maximumValue={100}
-              step={5}
-              value={radius}
-              onValueChange={setRadius}
-              minimumTrackTintColor={COLORS.neon}
-              maximumTrackTintColor={COLORS.border}
-              thumbTintColor={COLORS.neon}
-            />
-
-            <View style={styles.radiusLabels}>
-              <Text style={styles.radiusLabel}>5 km</Text>
-              <Text style={styles.radiusLabel}>100 km</Text>
+              {errors.street && <Text style={styles.errorText}>{errors.street}</Text>}
+              {errors.postalCode && <Text style={styles.errorText}>{errors.postalCode}</Text>}
+              {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
             </View>
 
-            <Text style={styles.helper}>
-              Jobs werden dir innerhalb dieses Radius angezeigt
-            </Text>
-          </View>
-        </ScrollView>
+            <View style={styles.card}>
+              <Text style={styles.label}>Arbeitsradius: {radius} km</Text>
 
-        {!isFormValid && (
-          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
-            <Text style={styles.validationHint}>
-              Bitte gib deine vollständige Adresse ein, um fortzufahren
-            </Text>
-          </View>
-        )}
+              <Slider
+                style={styles.slider}
+                minimumValue={5}
+                maximumValue={100}
+                step={5}
+                value={radius}
+                onValueChange={setRadius}
+                minimumTrackTintColor={COLORS.neon}
+                maximumTrackTintColor={COLORS.border}
+                thumbTintColor={COLORS.neon}
+              />
 
-        <NavigationButtons
-          onNext={handleNext}
-          onBack={handleBack}
-          nextDisabled={!isFormValid}
-          showBack={true}
-        />
-      </SafeAreaView>
-    </View>
+              <View style={styles.radiusLabels}>
+                <Text style={styles.radiusLabel}>5 km</Text>
+                <Text style={styles.radiusLabel}>100 km</Text>
+              </View>
+
+              <Text style={styles.helper}>
+                Jobs werden dir innerhalb dieses Radius angezeigt
+              </Text>
+            </View>
+
+            {!isFormValid && (
+              <View style={{ marginTop: 16 }}>
+                <Text style={styles.validationHint}>
+                  Bitte gib deine vollständige Adresse ein, um fortzufahren
+                </Text>
+              </View>
+            )}
+
+          </ScrollView>
+
+          <NavigationButtons
+            onNext={handleNext}
+            onBack={handleBack}
+            nextDisabled={!isFormValid}
+            showBack={true}
+          />
+
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
