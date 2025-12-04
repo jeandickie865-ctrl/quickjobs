@@ -979,7 +979,7 @@ export default function EditWorkerProfileScreen() {
       {/* FIXED SAVE BUTTON */}
       <View style={{
         position: 'absolute',
-        bottom: 90,
+        bottom: 100,
         left: 0,
         right: 0,
         alignItems: 'center',
