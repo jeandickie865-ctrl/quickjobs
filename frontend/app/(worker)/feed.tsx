@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, FlatList, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useFocusEffect } from "expo-router";
 import { getMatchedJobs } from "../../utils/jobStore";
