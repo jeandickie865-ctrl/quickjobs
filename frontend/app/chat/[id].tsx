@@ -80,7 +80,7 @@ export default function ChatScreen() {
 
   useEffect(() => {
     if (flatListRef.current) {
-      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 50);
+      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 120);
     }
   }, [messages]);
 
