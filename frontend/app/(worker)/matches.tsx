@@ -203,10 +203,11 @@ export default function WorkerMatchesScreen() {
         setApplicationToDelete(null);
         loadMatches();
       } else {
-        alert("Fehler beim Löschen");
+        alert("Fehler beim Löschen des Matches. Bitte versuche es erneut.");
       }
-    } catch {
-      alert("Fehler beim Löschen");
+    } catch (error) {
+      console.error('Delete match error:', error);
+      alert("Fehler beim Löschen des Matches. Bitte versuche es erneut.");
     }
   };
 
