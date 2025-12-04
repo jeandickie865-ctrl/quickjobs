@@ -234,7 +234,7 @@ export default function WorkerJobDetailScreen() {
 
                 // 3. FALLBACK
                 return (
-                  <Text style={{ fontSize: 16, color: COLORS.black }}>
+                  <Text style={{ fontSize: 16, color: COLORS.white }}>
                     Keine Zeitangabe
                   </Text>
                 );
