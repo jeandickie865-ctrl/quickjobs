@@ -143,8 +143,8 @@ export default function CreateJob() {
       return;
     }
 
-    if (!lat || !lon) {
-      setError('Bitte wähle eine Adresse und berechne Koordinaten.');
+    if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
+      setError('Bitte gib eine gültige Adresse ein oder nutze GPS.');
       return;
     }
 
