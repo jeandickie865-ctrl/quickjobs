@@ -223,27 +223,29 @@ export default function EmployerProfileScreen() {
           <Pressable
             onPress={() => router.push('/(employer)/matches')}
             style={{
-              backgroundColor: COLORS.neon,
+              backgroundColor: COLORS.card,
               borderRadius: 16,
               padding: 16,
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: COLORS.border,
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
               {matchesCount > 0 ? `Neue Matches (${matchesCount})` : 'Meine Matches'}
             </Text>
 
-            <View style={{ backgroundColor: COLORS.black, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12 }}>
-              <Text style={{ color: COLORS.neon, fontWeight: '900' }}>{matchesCount}</Text>
+            <View style={{ backgroundColor: COLORS.neon, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12 }}>
+              <Text style={{ color: COLORS.black, fontWeight: '900' }}>{matchesCount}</Text>
             </View>
           </Pressable>
 
           {/* FORM BLOCKS */}
 
           {/* PERSONAL DATA */}
-          <View style={{ backgroundColor: COLORS.white, borderRadius: 16, padding: 20 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 20, borderWidth: 1, borderColor: COLORS.border }}>
 
             <Text style={{ color: COLORS.neon, fontWeight: '700', marginBottom: 14 }}>PERSÖNLICHE DATEN</Text>
 
