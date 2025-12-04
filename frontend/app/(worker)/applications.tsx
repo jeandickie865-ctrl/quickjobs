@@ -411,7 +411,7 @@ export default function WorkerApplicationsScreen() {
               {/* Action Button */}
               {job && (
                 <View style={{ marginTop: spacing.sm, alignItems: 'center' }}>
-                  <View style={{ width: '60%', maxWidth: 300, minWidth: 220 }}>
+                  <View style={{ width: '100%', maxWidth: 360 }}>
                     <Button
                       title="Jobdetails ansehen"
                       variant="primary"
