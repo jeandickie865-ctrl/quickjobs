@@ -677,44 +677,34 @@ export default function CreateJob() {
       {/* FIXED BOTTOM BUTTON */}
       <View
         style={{
-          paddingHorizontal: SPACING.md,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
           paddingBottom: Platform.OS === 'ios' ? 34 : 20,
           paddingTop: 16,
+          paddingHorizontal: SPACING.md,
           backgroundColor: COLORS.bg,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           alignItems: 'center',
+          zIndex: 999,
         }}
       >
-        <Pressable
-          onPress={handlePublish}
-          disabled={isSaving}
-          style={{
-            width: '60%',
-            maxWidth: 400,
-            backgroundColor: isSaving ? '#555' : COLORS.neon,
-            paddingVertical: 18,
-            borderRadius: 16,
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: 56,
-          }}
-        >
-          {isSaving ? (
-            <ActivityIndicator color="#000" size="small" />
-          ) : (
-            <Text style={{ fontSize: 17, fontWeight: '800', color: '#000', letterSpacing: 0.3 }}>
-              Auftrag veröffentlichen
-            </Text>
-          )}
-        </Pressable>
+        <View style={{ width: '60%', maxWidth: 380 }}>
+          <Button
+            title={isSaving ? 'Veröffentliche…' : 'Auftrag veröffentlichen'}
+            onPress={handlePublish}
+            disabled={isSaving}
+          />
+        </View>
 
         {error && (
           <Text
             style={{
               color: COLORS.error,
               fontSize: 13,
-              marginTop: 8,
+              marginTop: 10,
               textAlign: 'center',
             }}
           >
