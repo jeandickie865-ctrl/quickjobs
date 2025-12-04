@@ -134,7 +134,7 @@ export default function Step2Address() {
             {!isFormValid && (
               <View style={{ marginTop: 16 }}>
                 <Text style={styles.validationHint}>
-                  Bitte gib deine vollständige Adresse ein, um fortzufahren
+                  Bitte gib eine vollständige Adresse ein und berechne Koordinaten.
                 </Text>
               </View>
             )}
