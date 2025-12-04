@@ -30,7 +30,8 @@ const COLORS = {
   muted: 'rgba(255,255,255,0.7)',
   purple: '#6B4BFF',
   neon: '#C8FF16',
-  error: '#FF4D4D'
+  error: '#FF4D4D',
+  black: '#000000'
 };
 
 const inputStyle = {
