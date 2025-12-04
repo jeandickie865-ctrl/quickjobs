@@ -263,7 +263,7 @@ export default function WorkerJobDetailScreen() {
                 paddingVertical: 8,
                 borderRadius: 20,
               }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.white }}>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.bg }}>
                   {job.category || 'Keine Kategorie'}
                 </Text>
               </View>
