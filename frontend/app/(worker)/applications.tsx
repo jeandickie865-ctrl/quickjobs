@@ -273,17 +273,17 @@ export default function WorkerApplicationsScreen() {
               <View style={{ gap: 4, marginTop: spacing.xs }}>
                 {!!category && (
                   <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
-                    🏷️ {category}
+                    {category}
                   </Text>
                 )}
                 {!!address && (
                   <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
-                    📍 {address}
+                    {address}
                   </Text>
                 )}
                 {!!workerAmount && (
                   <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
-                    💰 {workerAmount}
+                    {workerAmount}
                   </Text>
                 )}
               </View>
