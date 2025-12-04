@@ -343,14 +343,16 @@ export default function WorkerJobDetailScreen() {
 
           {/* Status Badge */}
           <View style={{
-            backgroundColor: job.status === 'matched' ? COLORS.neon : COLORS.lightGray,
+            backgroundColor: job.status === 'matched' ? COLORS.neon : COLORS.cardSoft,
+            borderWidth: 1,
+            borderColor: COLORS.border,
             paddingHorizontal: 16,
             paddingVertical: 12,
             borderRadius: 12,
             alignItems: 'center',
             marginBottom: 40,
           }}>
-            <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.black }}>
+            <Text style={{ fontSize: 14, fontWeight: '700', color: job.status === 'matched' ? COLORS.bg : COLORS.white }}>
               {job.status === 'matched'
                 ? '✓ Du bist für diesen Job ausgewählt!'
                 : job.status === 'open'
