@@ -84,12 +84,12 @@ export default function WorkerApplicationsScreen() {
         loadApplications();
       }
 
-      // Start auto-refresh interval (5 seconds)
+      // Start auto-refresh interval (15 seconds - optimiert für Performance)
       intervalRef.current = setInterval(() => {
         if (user) {
           loadApplications(true); // Silent refresh
         }
-      }, 5000);
+      }, 15000);
 
       // Cleanup on unfocus
       return () => {
