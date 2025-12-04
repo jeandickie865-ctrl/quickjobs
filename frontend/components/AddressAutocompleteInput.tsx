@@ -185,6 +185,60 @@ export default function AddressAutocompleteInput({
         </Text>
       </Pressable>
 
+      {/* KOORDINATEN AUS ADRESSE BERECHNEN */}
+      <Pressable
+        onPress={async () => {
+          try {
+            // Adresse zusammenbauen
+            const addressParts = [];
+            if (street) addressParts.push(street);
+            if (houseNumber) addressParts.push(houseNumber);
+            if (postalCode) addressParts.push(postalCode);
+            if (city) addressParts.push(city);
+            
+            if (addressParts.length === 0) {
+              alert('Bitte gib zuerst eine Adresse ein');
+              return;
+            }
+            
+            const addressString = addressParts.join(', ');
+            
+            // Forward Geocoding
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressString)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            if (data && data.length > 0) {
+              const result = data[0];
+              onLatChange(parseFloat(result.lat));
+              onLonChange(parseFloat(result.lon));
+              alert('Koordinaten erfolgreich berechnet!');
+            } else {
+              alert('Keine Koordinaten für diese Adresse gefunden');
+            }
+          } catch (err) {
+            console.error('Geocoding-Fehler:', err);
+            alert('Koordinaten konnten nicht berechnet werden');
+          }
+        }}
+        style={({ pressed }) => ({
+          backgroundColor: pressed ? 'rgba(200,255,22,0.1)' : COLORS.card,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: COLORS.neon,
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginTop: 8,
+        })}
+      >
+        <Text style={{ color: COLORS.neon, fontSize: 14, fontWeight: '700' }}>
+          🗺️ Koordinaten aus Adresse berechnen
+        </Text>
+      </Pressable>
+
       {/* AUTOCOMPLETE DROPDOWN */}
       {show && suggestions.length > 0 && (
         <View style={styles.dropdown}>
