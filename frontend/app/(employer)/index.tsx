@@ -39,8 +39,16 @@ export default function EmployerDashboard() {
           const p = await getEmployerProfile(user.id);
           if (!mounted) return;
 
-          if (!p || !p.firstName) setHasProfile(false);
-          else setHasProfile(true);
+          const isValidProfile =
+            p &&
+            (
+              p.companyName ||
+              p.firstName || 
+              p.lastName ||
+              p.email
+            );
+
+          setHasProfile(!!isValidProfile);
         } catch {
           if (mounted) setHasProfile(false);
         } finally {
