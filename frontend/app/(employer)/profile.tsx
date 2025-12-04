@@ -102,7 +102,7 @@ export default function EmployerProfileViewScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={['top']} style={{ flex: 1 }}>
         {/* Header */}
         <View style={{
@@ -111,6 +111,8 @@ export default function EmployerProfileViewScreen() {
           justifyContent: 'space-between',
           paddingHorizontal: 20,
           paddingVertical: 16,
+          borderBottomWidth: 1,
+          borderBottomColor: COLORS.border,
         }}>
           <View style={{ width: 30 }} />
           <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>Mein Profil</Text>
