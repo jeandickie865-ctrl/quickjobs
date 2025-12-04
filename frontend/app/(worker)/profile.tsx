@@ -132,7 +132,7 @@ export default function WorkerProfileScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.bg }}>
+      <SafeAreaView edges={['top', 'bottom']} style={{ backgroundColor: COLORS.bg }}>
         <View
           style={{
             flexDirection: 'row',
