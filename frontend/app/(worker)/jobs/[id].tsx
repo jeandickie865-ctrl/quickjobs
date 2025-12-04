@@ -163,7 +163,7 @@ export default function WorkerJobDetailScreen() {
                 VERGÜTUNG
               </Text>
               <View style={{ marginTop: 8 }}>
-                <Text style={{ fontSize: 22, fontWeight: '800', color: '#000' }}>
+                <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.white }}>
                   {euro(job.workerAmountCents)} (Brutto = Netto)
                 </Text>
 
