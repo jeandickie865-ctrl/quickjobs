@@ -145,8 +145,8 @@ export default function EditWorkerProfileScreen() {
         setSelectedCategories(profile.categories || []);
         setSelectedSubcategories(profile.subcategories || []);
         setSelectedQualifications(profile.qualifications || []);
-        setPhone(profile.phone || profile.contactPhone || '');
-        setEmail(profile.email || profile.contactEmail || '');
+        setPhone(profile.phone || (profile as any).contactPhone || '');
+        setEmail(profile.email || (profile as any).contactEmail || '');
         setRadiusKm(String(profile.radiusKm || 20));
         setIsSelfEmployed(profile.isSelfEmployed ?? false);
       }
