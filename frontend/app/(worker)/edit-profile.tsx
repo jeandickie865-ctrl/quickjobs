@@ -521,7 +521,7 @@ export default function EditWorkerProfileScreen() {
                   onPress={showPhotoOptions}
                   style={{
                     position: 'absolute',
-                    bottom: 0,
+                    bottom: 90,
                     right: 0,
                     backgroundColor: COLORS.neon,
                     width: 36,
@@ -930,7 +930,7 @@ export default function EditWorkerProfileScreen() {
       {/* FIXED SAVE BUTTON */}
       <View style={{
         position: 'absolute',
-        bottom: 0,
+        bottom: 90,
         left: 0,
         right: 0,
         alignItems: 'center',
