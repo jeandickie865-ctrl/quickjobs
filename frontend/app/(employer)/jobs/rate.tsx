@@ -70,29 +70,23 @@ export default function RateWorkerScreen() {
 
   async function loadData() {
     if (!jobId) {
-      console.log('❌ No jobId provided');
+      console.error('❌ No jobId provided');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('📋 Employer Rate: Loading job:', jobId);
       const jobData = await getJobById(String(jobId));
       setJob(jobData);
-      console.log('✅ Employer Rate: Job loaded:', jobData?.title);
-      
-      console.log('👤 Employer Rate: Loading worker with ID:', workerId);
       
       if (workerId) {
-        // Use getWorkerProfile - it handles auth correctly
         const workerData = await getWorkerProfile(String(workerId));
         setWorker(workerData);
-        console.log('✅ Employer Rate: Worker loaded:', workerData?.firstName, workerData?.lastName);
       } else {
-        console.error('❌ Employer Rate: No workerId available!');
+        console.error('❌ No workerId available');
       }
     } catch (error) {
-      console.error('❌ Employer Rate: Error loading data:', error);
+      console.error('❌ Error loading data:', error);
     } finally {
       setLoading(false);
     }
