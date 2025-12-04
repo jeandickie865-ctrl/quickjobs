@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   },
 
   scrollView: { flex: 1 },
-  scrollContent: { paddingHorizontal: 24, paddingBottom: 40 },
+  scrollContent: { paddingHorizontal: 24, paddingBottom: 160 },
 
   title: {
     fontSize: 26,
