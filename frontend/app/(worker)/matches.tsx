@@ -146,7 +146,7 @@ export default function WorkerMatchesScreen() {
 
       intervalRef.current = setInterval(() => {
         if (!authLoading && user) loadMatches(true);
-      }, 5000);
+      }, 15000);
 
       return () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
