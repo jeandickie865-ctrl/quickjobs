@@ -140,8 +140,8 @@ export default function EditWorkerProfileScreen() {
         setPostalCode(profile.homeAddress?.postal_code || profile.homeAddress?.postalCode || profile.address?.postal_code || profile.address?.postalCode || '');
         setCity(profile.homeAddress?.city || profile.address?.city || '');
         setCountry(profile.homeAddress?.country || profile.address?.country || 'Deutschland');
-        setLat(profile.homeLat);
-        setLon(profile.homeLon);
+        setLat(profile.homeLat || profile.lat);
+        setLon(profile.homeLon || profile.lon);
         setSelectedCategories(profile.categories || []);
         setSelectedSubcategories(profile.subcategories || []);
         setSelectedQualifications(profile.qualifications || []);
