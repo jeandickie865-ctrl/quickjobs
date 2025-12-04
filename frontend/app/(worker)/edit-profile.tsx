@@ -545,8 +545,9 @@ export default function EditWorkerProfileScreen() {
                   onPress={showPhotoOptions}
                   style={{
                     position: 'absolute',
-                    bottom: 90,
+                    bottom: 0,
                     right: 0,
+                    transform: [{ translateY: 12 }],
                     backgroundColor: COLORS.neon,
                     width: 36,
                     height: 36,
