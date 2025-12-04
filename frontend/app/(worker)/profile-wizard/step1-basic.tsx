@@ -271,6 +271,9 @@ export default function Step1Basic() {
             </View>
             <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
           </Pressable>
+
+          {/* Spacer for fixed button */}
+          <View style={{ height: 120 }} />
         </ScrollView>
 
         {/* HINT */}
