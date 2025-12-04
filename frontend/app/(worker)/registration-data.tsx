@@ -1,18 +1,76 @@
-import { View, Text, TextInput, Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import COLORS from '@/constants/colors';
+import { useAuth } from '../../contexts/AuthContext';
+import { getWorkerProfile } from '../../utils/profileStore';
+
+const COLORS = {
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
+  white: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
+  purple: '#6B4BFF',
+  neon: '#C8FF16',
+  error: '#FF4D4D',
+  black: '#000000'
+};
+
+const inputStyle = {
+  backgroundColor: '#1C182B',
+  borderRadius: 12,
+  paddingHorizontal: 16,
+  paddingVertical: 14,
+  fontSize: 15,
+  color: COLORS.white,
+  borderWidth: 1,
+  borderColor: COLORS.border
+};
 
 export default function WorkerRegistrationDataScreen() {
   const router = useRouter();
+  const { user } = useAuth();
 
   const [geburtsdatum, setGeburtsdatum] = useState('');
   const [steuerId, setSteuerId] = useState('');
   const [sozialversicherungsnummer, setSozialversicherungsnummer] = useState('');
   const [krankenkasse, setKrankenkasse] = useState('');
   const [showSaved, setShowSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    async function loadData() {
+      if (!user) return;
+      
+      try {
+        const profile = await getWorkerProfile(user.id);
+        if (profile) {
+          setGeburtsdatum(profile.geburtsdatum || '');
+          setSteuerId(profile.steuerId || '');
+          setSozialversicherungsnummer(profile.sozialversicherungsnummer || '');
+          setKrankenkasse(profile.krankenkasse || '');
+        }
+      } catch (error) {
+        console.error('Error loading registration data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={COLORS.neon} />
+        <Text style={{ color: COLORS.white, marginTop: 12 }}>Lädt Daten...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
@@ -26,47 +84,91 @@ export default function WorkerRegistrationDataScreen() {
             paddingBottom: 200
           }}
           showsVerticalScrollIndicator={false}
+          keyboardDismissMode="on-drag"
         >
-          <Text style={{ fontSize: 20, fontWeight: '600' }}>
-            Deine Daten für offizielle Einsätze
-          </Text>
+          {/* Header */}
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900', marginBottom: 8 }}>
+              BACKUP
+            </Text>
+            <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '700', marginBottom: 8 }}>
+              Deine Daten für offizielle Einsätze
+            </Text>
+            <Text style={{ color: COLORS.muted, fontSize: 14, lineHeight: 20 }}>
+              Für offizielle Einsätze braucht dein Arbeitgeber ein paar Angaben von dir. 
+              Du gibst diese Daten nur ein einziges Mal ein. Danach sind sie gespeichert.
+            </Text>
+          </View>
 
-          <Text style={{ fontSize: 15, marginBottom: 16 }}>
-            Für offizielle Einsätze braucht dein Arbeitgeber ein paar Angaben von dir.
-            Du gibst diese Daten nur ein einziges Mal ein. Danach sind sie gespeichert.
-          </Text>
+          {/* Form Card */}
+          <View
+            style={{
+              backgroundColor: COLORS.card,
+              borderRadius: 18,
+              padding: 20,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+              gap: 16
+            }}
+          >
+            {/* Geburtsdatum */}
+            <View>
+              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+                Geburtsdatum *
+              </Text>
+              <TextInput
+                value={geburtsdatum}
+                onChangeText={setGeburtsdatum}
+                placeholder="TT.MM.JJJJ"
+                placeholderTextColor={COLORS.muted}
+                style={inputStyle}
+              />
+            </View>
 
-          <Text>Geburtsdatum</Text>
-          <TextInput
-            value={geburtsdatum}
-            onChangeText={setGeburtsdatum}
-            placeholder="TT.MM.JJJJ"
-            style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
-          />
+            {/* Steuer-ID */}
+            <View>
+              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+                Steuer-ID *
+              </Text>
+              <TextInput
+                value={steuerId}
+                onChangeText={setSteuerId}
+                placeholder="Steuer-ID"
+                placeholderTextColor={COLORS.muted}
+                keyboardType="numeric"
+                style={inputStyle}
+              />
+            </View>
 
-          <Text style={{ marginTop: 12 }}>Steuer-ID</Text>
-          <TextInput
-            value={steuerId}
-            onChangeText={setSteuerId}
-            placeholder="Steuer-ID"
-            style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
-          />
+            {/* Sozialversicherungsnummer */}
+            <View>
+              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+                Sozialversicherungsnummer *
+              </Text>
+              <TextInput
+                value={sozialversicherungsnummer}
+                onChangeText={setSozialversicherungsnummer}
+                placeholder="SV-Nummer"
+                placeholderTextColor={COLORS.muted}
+                keyboardType="numeric"
+                style={inputStyle}
+              />
+            </View>
 
-          <Text style={{ marginTop: 12 }}>Sozialversicherungsnummer</Text>
-          <TextInput
-            value={sozialversicherungsnummer}
-            onChangeText={setSozialversicherungsnummer}
-            placeholder="SV-Nummer"
-            style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
-          />
-
-          <Text style={{ marginTop: 12 }}>Krankenkasse</Text>
-          <TextInput
-            value={krankenkasse}
-            onChangeText={setKrankenkasse}
-            placeholder="Name der Krankenkasse"
-            style={{ borderWidth: 1, borderColor: COLORS.gray, borderRadius: 8, padding: 10 }}
-          />
+            {/* Krankenkasse */}
+            <View>
+              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+                Krankenkasse *
+              </Text>
+              <TextInput
+                value={krankenkasse}
+                onChangeText={setKrankenkasse}
+                placeholder="Name der Krankenkasse"
+                placeholderTextColor={COLORS.muted}
+                style={inputStyle}
+              />
+            </View>
+          </View>
         </ScrollView>
 
         <Pressable
