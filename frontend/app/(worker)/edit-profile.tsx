@@ -302,6 +302,7 @@ export default function EditWorkerProfileScreen() {
     if (!firstName.trim()) newErrors.firstName = 'Vorname erforderlich';
     if (!lastName.trim()) newErrors.lastName = 'Nachname erforderlich';
     if (!street.trim()) newErrors.street = 'Straße erforderlich';
+    if (!houseNumber.trim()) newErrors.houseNumber = 'Bitte gib eine Hausnummer ein.';
     if (!postalCode.trim()) newErrors.postalCode = 'PLZ erforderlich';
     if (!city.trim()) newErrors.city = 'Stadt erforderlich';
     if (!country.trim()) newErrors.country = 'Land erforderlich';
