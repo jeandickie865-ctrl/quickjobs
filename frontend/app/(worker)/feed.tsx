@@ -131,10 +131,10 @@ export default function WorkerFeedScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={COLORS.neon} />
         <Text style={{ color: COLORS.muted, marginTop: 16, fontSize: 14 }}>Jobs werden geladen...</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
