@@ -194,13 +194,13 @@ export default function PaymentScreen() {
       console.log("🔍 [PAYMENT] JOB:", job);
 
       console.log("🔍 [PAYMENT] Re-loading application after payment…");
-      await loadApplication(); // Daten refreshen
+      const freshWorkerProfile = await loadApplication(); // Daten refreshen
       
       console.log("🔍 [PAYMENT] AFTER RELOAD:");
-      console.log("🔍 [PAYMENT] WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
-      console.log("🔍 [PAYMENT] Calling handleRegistrationCheck now...");
+      console.log("🔍 [PAYMENT] FRESH WORKER isSelfEmployed:", freshWorkerProfile?.isSelfEmployed);
+      console.log("🔍 [PAYMENT] Calling handleRegistrationCheck with fresh data...");
       
-      await handleRegistrationCheck();
+      await handleRegistrationCheck(freshWorkerProfile);
       
     } catch (err) {
       console.error("❌ Payment error:", err);
