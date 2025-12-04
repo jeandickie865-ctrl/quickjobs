@@ -262,6 +262,16 @@ export default function Step5Summary() {
 
         </View>
       </KeyboardAvoidingView>
+
+      {showSuccess && (
+        <View style={styles.successOverlay}>
+          <View style={styles.successBox}>
+            <Ionicons name="checkmark-circle" size={60} color={COLORS.neon} />
+            <Text style={styles.successTitle}>Erfolgreich gespeichert</Text>
+            <Text style={styles.successText}>Dein Profil ist jetzt aktiv</Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
