@@ -332,11 +332,11 @@ export default function EditWorkerProfileScreen() {
       
       // Show which tabs have missing fields
       const missingTabs = [];
-      if (newErrors.firstName || newErrors.lastName) missingTabs.push('Basis');
-      if (newErrors.street || newErrors.houseNumber || newErrors.postalCode || newErrors.city || newErrors.country) missingTabs.push('Adresse');
-      if (newErrors.categories) missingTabs.push('Kategorien');
-      if (newErrors.phone) missingTabs.push('Kontakt');
-      if (newErrors.radiusKm) missingTabs.push('Radius');
+      if (errors.firstName || errors.lastName) missingTabs.push('Basis');
+      if (errors.street || errors.houseNumber || errors.postalCode || errors.city || errors.country) missingTabs.push('Adresse');
+      if (errors.categories) missingTabs.push('Kategorien');
+      if (errors.phone) missingTabs.push('Kontakt');
+      if (errors.radiusKm) missingTabs.push('Radius');
       
       const message = missingTabs.length > 0 
         ? `Bitte fülle alle Pflichtfelder in folgenden Tabs aus: ${missingTabs.join(', ')}`
