@@ -697,7 +697,7 @@ export default function CreateJob() {
           bottom: 0,
           left: 0,
           right: 0,
-          paddingBottom: Platform.OS === 'ios' ? 34 : 20,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 18,
           paddingTop: 16,
           paddingHorizontal: SPACING.md,
           backgroundColor: COLORS.bg,
