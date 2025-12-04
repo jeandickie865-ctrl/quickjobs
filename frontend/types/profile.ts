@@ -20,24 +20,30 @@ export type WorkerDocument = {
 
 export type WorkerProfile = {
   userId: string;
-  categories: string[];      // category keys aus taxonomy.json
-  selectedTags: string[];    // tag keys aus taxonomy.json
+  categories: string[];          // category keys aus taxonomy.json
+  subcategories?: string[];      // NEW: subcategory keys aus taxonomy.json
+  qualifications?: string[];     // NEW: qualification keys aus taxonomy.json
+  selectedTags: string[];        // DEPRECATED: legacy tag keys
   radiusKm: number;
-  homeAddress: Address;      // Strukturierte Adresse (statt string)
-  homeLat: number | null;    // Koordinaten - NIEMALS 0 als Fallback!
-  homeLon: number | null;    // Koordinaten - NIEMALS 0 als Fallback!
-  profilePhotoUri?: string;  // Lokale URI zum Profilfoto
-  documents?: WorkerDocument[]; // Liste der Dokumente
+  homeAddress: Address;          // Strukturierte Adresse (statt string)
+  homeLat?: number | null;       // Koordinaten - NIEMALS 0 als Fallback!
+  homeLon?: number | null;       // Koordinaten - NIEMALS 0 als Fallback!
+  profilePhotoUri?: string;      // Lokale URI zum Profilfoto
+  photoUrl?: string;             // Backend URL zum Profilfoto
+  documents?: WorkerDocument[];  // Liste der Dokumente
   
   // Steckbrief und Kontaktdaten (neu)
-  firstName?: string;        // Vorname für persönliche Ansprache
-  lastName?: string;         // Nachname
-  shortBio?: string;         // Kurzer Steckbrief, vor Match sichtbar
-  contactPhone?: string;     // Telefonnummer, nur nach Match sichtbar
-  contactEmail?: string;     // Kontakt-E-Mail, nur nach Match sichtbar
+  firstName?: string;            // Vorname für persönliche Ansprache
+  lastName?: string;             // Nachname
+  shortBio?: string;             // Kurzer Steckbrief, vor Match sichtbar
+  phone?: string;                // Telefonnummer
+  email?: string;                // E-Mail
+  contactPhone?: string;         // DEPRECATED: use phone
+  contactEmail?: string;         // DEPRECATED: use email
+  isSelfEmployed?: boolean;      // Selbstständig Checkbox
   
   // Push Notifications
-  pushToken?: string;        // Expo Push Token für Benachrichtigungen
+  pushToken?: string;            // Expo Push Token für Benachrichtigungen
 };
 
 export type EmployerProfile = {
