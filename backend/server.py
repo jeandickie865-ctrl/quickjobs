@@ -3651,7 +3651,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://backupmatch.preview.emergentagent.com",
+        "https://shiftmatch-fix.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
