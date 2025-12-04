@@ -3,6 +3,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { API_URL } from '../../../config';
+import { getAuthHeaders } from '../../../utils/api';
 
 const COLORS = {
   bg: '#0E0B1F',
