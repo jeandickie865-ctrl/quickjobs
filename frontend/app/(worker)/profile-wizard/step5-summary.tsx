@@ -110,13 +110,10 @@ export default function Step5Summary() {
       if (!res.ok) throw new Error();
 
       resetWizard();
-      router.replace('/(worker)/profile');
-
+      setShowSuccess(true);
       setTimeout(() => {
-        if (isMounted.current) {
-          Alert.alert('Erfolgreich', 'Profil gespeichert.');
-        }
-      }, 300);
+        router.replace('/(worker)/profile');
+      }, 1500);
 
     } catch {
       Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden.');
