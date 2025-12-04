@@ -532,9 +532,9 @@ export default function WorkerMatchesScreen() {
                       <Pressable
                         onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
                         style={{
-                          width: "60%",
-                          maxWidth: 300,
-                          minWidth: 220,
+                          width: "70%",
+                          maxWidth: 340,
+                          minWidth: 240,
                           alignSelf: "center",
                           backgroundColor: COLORS.purpleLight,
                           paddingVertical: 14,
