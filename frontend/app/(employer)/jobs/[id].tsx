@@ -777,7 +777,7 @@ export default function JobDetailScreen() {
                     })}
                   >
                     <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
-                      💬 Zum Chat
+                      Zum Chat
                     </Text>
                   </Pressable>
                 );
