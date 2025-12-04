@@ -2592,7 +2592,7 @@ def generate_contract_pdf(
     
     # Header
     story.append(Paragraph("Arbeitsvertrag – Kurzfristige Beschäftigung (§ 40a EStG)", title_style))
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 6))
     
     # Vertragsparteien
     story.append(Paragraph("Vertragsparteien", section_title))
@@ -2601,17 +2601,17 @@ def generate_contract_pdf(
         story.append(Paragraph(f"<b>Firma:</b> {emp_company}", normal))
     if emp_address:
         story.append(Paragraph(f"<b>Adresse:</b> {emp_address}", normal))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 4))
     story.append(Paragraph(f"<b>Arbeitnehmer:</b> {work_name}", normal))
     if work_address:
         story.append(Paragraph(f"<b>Adresse:</b> {work_address}", normal))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Tätigkeitsbeschreibung
     story.append(Paragraph("Tätigkeitsbeschreibung", section_title))
     story.append(Paragraph(f"<b>Tätigkeit:</b> {job_title}", normal))
     story.append(Paragraph(f"<b>Beschreibung:</b> {job_desc}", normal))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Einsatzzeitraum und Einsatzort
     story.append(Paragraph("Einsatzzeitraum und Einsatzort", section_title))
@@ -2621,7 +2621,7 @@ def generate_contract_pdf(
             story.append(Paragraph(f"<b>Zeitraum:</b> {job_date}, {start_time} – {end_time} Uhr", normal))
         else:
             story.append(Paragraph(f"<b>Datum:</b> {job_date}", normal))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Vergütung
     story.append(Paragraph("Vergütung", section_title))
@@ -2630,7 +2630,7 @@ def generate_contract_pdf(
         "Bei kurzfristiger Beschäftigung nach § 40a EStG fallen für den Arbeitnehmer keine Abzüge an.",
         normal
     ))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Arbeitgeberabgaben
     story.append(Paragraph("Arbeitgeberabgaben", section_title))
