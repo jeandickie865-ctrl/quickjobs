@@ -14,7 +14,7 @@ export default function WorkerRegistrationDataScreen() {
   const [krankenkasse, setKrankenkasse] = useState('');
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
+    <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
