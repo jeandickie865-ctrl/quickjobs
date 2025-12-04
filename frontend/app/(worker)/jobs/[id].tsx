@@ -123,7 +123,7 @@ export default function WorkerJobDetailScreen() {
           paddingHorizontal: 20,
           paddingVertical: 16,
           borderBottomWidth: 1,
-          borderBottomColor: 'rgba(255,255,255,0.1)',
+          borderBottomColor: COLORS.border,
         }}>
           <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 16 }}>
             <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
