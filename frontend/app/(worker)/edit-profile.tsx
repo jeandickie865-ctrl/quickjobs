@@ -146,6 +146,7 @@ export default function EditWorkerProfileScreen() {
         setPhone(profile.phone || '');
         setEmail(profile.email || user.email || '');
         setRadiusKm(String(profile.radiusKm || 20));
+        setIsSelfEmployed(profile.isSelfEmployed || false);
       }
     } catch {
       Alert.alert('Fehler', 'Profil konnte nicht geladen werden');
