@@ -184,6 +184,41 @@ export default function RateEmployerScreen() {
     );
   }
 
+  if (!employer) {
+    console.log('❌ Worker Rate: Employer nicht gefunden. EmployerId:', employerId || job?.employerId);
+    
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Ionicons name="alert-circle" size={64} color={COLORS.neon} style={{ marginBottom: 16 }} />
+          <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 8 }}>
+            Auftraggeber konnte nicht geladen werden
+          </Text>
+          <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14, textAlign: 'center', marginBottom: 16 }}>
+            EmployerId: {employerId || job?.employerId || 'nicht vorhanden'}
+          </Text>
+          <Pressable
+            onPress={() => router.back()}
+            style={{
+              marginTop: 20,
+              backgroundColor: COLORS.neon,
+              borderRadius: 14,
+              paddingVertical: 14,
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              shadowColor: 'rgba(200,255,22,0.2)',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Zurück</Text>
+          </Pressable>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
       <SafeAreaView style={{ flex: 1 }} edges={['top','bottom']}>
