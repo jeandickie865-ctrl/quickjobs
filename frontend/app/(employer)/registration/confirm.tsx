@@ -43,13 +43,15 @@ function ConfirmContent() {
 
     async function checkWorkerData() {
       try {
+        const headers = await getAuthHeaders();
+        
         // Worker-Profil laden
-        const workerRes = await fetch(`/api/profiles/worker/${workerId}`);
+        const workerRes = await fetch(`${API_URL}/profiles/worker/${workerId}`, { headers });
         const workerData = await workerRes.json();
         setWorker(workerData);
 
         // Worker-Status prüfen
-        const statusRes = await fetch(`/api/profiles/worker/${workerId}/registration-status`);
+        const statusRes = await fetch(`${API_URL}/profiles/worker/${workerId}/registration-status`, { headers });
         const status = await statusRes.json();
 
         if (!status.complete) {
@@ -68,10 +70,18 @@ function ConfirmContent() {
   useEffect(() => {
     if (!applicationId) return;
     
-    fetch(`/api/applications/${applicationId}`)
-      .then(res => res.json())
-      .then(data => setApplication(data))
-      .catch(err => console.error('Error loading application:', err));
+    async function loadApplication() {
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${API_URL}/applications/${applicationId}`, { headers });
+        const data = await res.json();
+        setApplication(data);
+      } catch (err) {
+        console.error('Error loading application:', err);
+      }
+    }
+    
+    loadApplication();
   }, [applicationId]);
 
   const handleCreateRegistration = async () => {
