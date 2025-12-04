@@ -331,19 +331,22 @@ export default function WorkerApplicationsScreen() {
                   onPress={async (e) => {
                     e.stopPropagation();
                     try {
-                      const headers = { 'Content-Type': 'application/json' };
-                      const token = await AsyncStorage.getItem('token');
-                      if (token) {
-                        headers['Authorization'] = `Bearer ${token}`;
-                      }
-                      await fetch(`/api/applications/${app.id}`, {
+                      const headers = await getAuthHeaders();
+                      const response = await fetch(`${API_URL}/applications/${app.id}`, {
                         method: 'DELETE',
                         headers,
                       });
-                      // Aus Liste entfernen
+                      
+                      if (!response.ok) {
+                        throw new Error('Löschen fehlgeschlagen');
+                      }
+                      
+                      // Aus Liste entfernen und neu laden
                       setItems(items.filter(item => item.app.id !== app.id));
+                      loadApplications(true);
                     } catch (err) {
                       console.error('Delete error:', err);
+                      alert('Fehler beim Löschen der Bewerbung. Bitte versuche es erneut.');
                     }
                   }}
                   style={({ pressed }) => ({
