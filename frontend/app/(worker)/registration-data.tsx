@@ -23,7 +23,7 @@ export default function WorkerRegistrationDataScreen() {
         <ScrollView
           contentContainerStyle={{
             padding: 20,
-            paddingBottom: 160
+            paddingBottom: 200
           }}
           showsVerticalScrollIndicator={false}
         >
