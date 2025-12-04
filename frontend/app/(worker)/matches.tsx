@@ -264,7 +264,7 @@ export default function WorkerMatchesScreen() {
 
         <Animated.ScrollView
           style={{ flex: 1, opacity: fadeAnim }}
-          contentContainerStyle={{ padding: 20 }}
+          contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
