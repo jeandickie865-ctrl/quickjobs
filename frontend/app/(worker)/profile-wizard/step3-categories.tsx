@@ -70,8 +70,13 @@ export default function Step3Categories() {
   const handleNext = () => {
     const newErrors: { category?: string; subcategories?: string } = {};
 
-    if (selectedCategories.length === 0) newErrors.category = 'Bitte wähle mindestens eine Kategorie';
-    if (selectedSubcategories.length === 0) newErrors.subcategories = 'Bitte wähle mindestens eine Tätigkeit';
+    if (selectedCategories.length === 0) {
+      newErrors.category = 'Bitte wähle mindestens eine Kategorie aus.';
+    }
+
+    if (selectedSubcategories.length === 0) {
+      newErrors.subcategories = 'Bitte wähle mindestens eine Tätigkeit aus.';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -80,7 +85,7 @@ export default function Step3Categories() {
 
     updateWizardData({
       categories: selectedCategories,
-      subcategories: selectedSubcategories
+      subcategories: selectedSubcategories,
     });
 
     router.push('/(worker)/profile-wizard/step4-skills');
