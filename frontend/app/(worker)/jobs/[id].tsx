@@ -388,14 +388,14 @@ export default function WorkerJobDetailScreen() {
                   paddingVertical: 20,
                   borderRadius: 16,
                   alignItems: 'center',
-                  shadowColor: COLORS.black,
+                  shadowColor: '#000000',
                   shadowOffset: { width: 0, height: 4 },
                   shadowOpacity: 0.3,
                   shadowRadius: 8,
                   elevation: 8,
                 }}
               >
-                <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.black, letterSpacing: 0.5 }}>
+                <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.bg, letterSpacing: 0.5 }}>
                   ✓ Ich habe Zeit
                 </Text>
               </Pressable>
