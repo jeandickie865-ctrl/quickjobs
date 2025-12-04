@@ -379,7 +379,19 @@ export default function WorkerJobDetailScreen() {
             <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
               <Pressable
                 onPress={async () => {
+                  console.log('======== BEWERBUNG VALIDATION ========');
+                  console.log('worker object:', worker);
+                  console.log('worker.categories:', worker?.categories);
+                  console.log('worker.categories.length:', worker?.categories?.length);
+                  console.log('worker.radiusKm:', worker?.radiusKm);
+                  console.log('worker.isSelfEmployed:', worker?.isSelfEmployed);
+                  console.log('======================================');
+                  
                   if (!worker?.categories || worker?.categories.length === 0 || !worker?.radiusKm || worker?.isSelfEmployed === undefined) {
+                    console.error('❌ VALIDATION FAILED!');
+                    console.error('Missing categories:', !worker?.categories || worker?.categories.length === 0);
+                    console.error('Missing radiusKm:', !worker?.radiusKm);
+                    console.error('Missing isSelfEmployed:', worker?.isSelfEmployed === undefined);
                     alert("Bitte vervollständige dein Profil, bevor du dich bewerben kannst.");
                     router.push('/(worker)/edit-profile');
                     return;
