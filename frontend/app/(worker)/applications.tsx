@@ -158,7 +158,7 @@ export default function WorkerApplicationsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.beige50 }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: '#0E0B1F' }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -168,10 +168,10 @@ export default function WorkerApplicationsScreen() {
       >
         {/* Header */}
         <View style={[styles.header, { marginBottom: spacing.md }]}>
-          <Text style={[styles.title, { color: colors.black }]}>
+          <Text style={[styles.title, { color: '#FFFFFF' }]}>
             Meine Bewerbungen
           </Text>
-          <Text style={[styles.subtitle, { color: colors.gray700, marginTop: 4 }]}>
+          <Text style={[styles.subtitle, { color: '#A0A0A0', marginTop: 4 }]}>
             Alle Aufträge, für die du dich gemeldet hast
           </Text>
         </View>
@@ -179,8 +179,8 @@ export default function WorkerApplicationsScreen() {
         {/* Loading State */}
         {loading && (
           <View style={styles.centerContent}>
-            <ActivityIndicator size="large" color={colors.black} />
-            <Text style={[styles.loadingText, { color: colors.gray700, marginTop: spacing.sm }]}>
+            <ActivityIndicator size="large" color="#C8FF16" />
+            <Text style={[styles.loadingText, { color: '#A0A0A0', marginTop: spacing.sm }]}>
               Lade Bewerbungen…
             </Text>
           </View>
