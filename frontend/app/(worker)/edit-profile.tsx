@@ -396,7 +396,6 @@ export default function EditWorkerProfileScreen() {
       <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.bg }}>
         <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12 }}>
           <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900' }}>BACKUP</Text>
-          <View style={{ height: 4, backgroundColor: COLORS.neon, width: '100%', marginTop: 8 }} />
         </View>
 
         {/* TAB BAR */}
@@ -404,7 +403,7 @@ export default function EditWorkerProfileScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
-          style={{ borderBottomWidth: 1, borderBottomColor: COLORS.border }}
+          style={{ borderBottomWidth: 2, borderBottomColor: COLORS.neon }}
         >
           {tabs.map(tab => {
             const isActive = activeTab === tab.key;
