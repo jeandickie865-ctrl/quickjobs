@@ -204,46 +204,47 @@ export default function CreateJob() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }} edges={['top', 'bottom']}>
-      
-      {/* HEADER */}
-      <View
-        style={{
-          paddingHorizontal: SPACING.md,
-          paddingTop: SPACING.md,
-          paddingBottom: SPACING.sm,
-        }}
-      >
-        <Text
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        
+        {/* HEADER */}
+        <View
           style={{
-            color: COLORS.white,
-            fontSize: 28,
-            fontWeight: '900',
+            paddingHorizontal: SPACING.md,
+            paddingTop: SPACING.md,
+            paddingBottom: SPACING.sm,
           }}
         >
-          Neuer Auftrag
-        </Text>
-        <Text
-          style={{
-            color: COLORS.muted,
-            marginTop: 4,
-            fontSize: 14,
-          }}
-        >
-          Erstelle einen Job für Worker.
-        </Text>
-      </View>
+          <Text
+            style={{
+              color: COLORS.white,
+              fontSize: 28,
+              fontWeight: '900',
+            }}
+          >
+            Neuer Auftrag
+          </Text>
+          <Text
+            style={{
+              color: COLORS.muted,
+              marginTop: 4,
+              fontSize: 14,
+            }}
+          >
+            Erstelle einen Job für Worker.
+          </Text>
+        </View>
 
-      {/* SCROLL CONTENT */}
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          paddingHorizontal: SPACING.md,
-          paddingBottom: 300,
-          gap: SPACING.md,
-        }}
-        keyboardShouldPersistTaps="handled"
-      >
+        {/* SCROLL CONTENT */}
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            paddingHorizontal: SPACING.md,
+            paddingBottom: 300,
+            gap: SPACING.md,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
 
         {/* Titel */}
         <View
