@@ -328,4 +328,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: { color: COLORS.text, marginTop: 14, fontSize: 15, fontWeight: '600' },
+
+  successOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  successBox: {
+    backgroundColor: COLORS.card,
+    paddingVertical: 30,
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    alignItems: 'center',
+    width: '75%',
+    borderWidth: 1,
+    borderColor: COLORS.neon,
+  },
+  successTitle: {
+    color: COLORS.neon,
+    fontSize: 18,
+    fontWeight: '700',
+    marginTop: 12,
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  successText: {
+    color: COLORS.text,
+    fontSize: 14,
+    textAlign: 'center',
+  },
 });
