@@ -177,7 +177,9 @@ export default function WorkerMatchesScreen() {
 
           if (!reg.complete) router.replace("/(worker)/registration-data");
         }
-      } catch {}
+      } catch (error) {
+        console.error('Registration check error:', error);
+      }
     };
 
     check();
