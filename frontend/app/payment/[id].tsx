@@ -66,8 +66,9 @@ export default function PaymentScreen() {
       // Worker-Profil laden
       console.log("🔍 [LOAD] Fetching worker profile for:", data.workerId);
       const workerRes = await fetch(`${API_URL}/profiles/worker/${data.workerId}`, { headers });
+      let workerData = null;
       if (workerRes.ok) {
-        const workerData = await workerRes.json();
+        workerData = await workerRes.json();
         console.log("🔍 [LOAD] Worker profile received:", workerData);
         console.log("🔍 [LOAD] isSelfEmployed VALUE:", workerData.isSelfEmployed);
         console.log("🔍 [LOAD] isSelfEmployed TYPE:", typeof workerData.isSelfEmployed);
@@ -78,9 +79,13 @@ export default function PaymentScreen() {
 
       // Auto-Redirect deaktiviert, Modal-Logik übernimmt nach Zahlung
       console.log("🔍 [LOAD] paymentStatus:", data.paymentStatus);
+      
+      // Return the worker profile data for immediate use
+      return workerData;
     } catch (err) {
       console.error("Load application error:", err);
       Alert.alert("Fehler", "Application konnte nicht geladen werden");
+      return null;
     } finally {
       setLoading(false);
     }
