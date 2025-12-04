@@ -12,6 +12,7 @@ import { RatingDisplay } from '../../../components/RatingDisplay';
 import { getTagLabel } from '../../../utils/taxonomy';
 import { addApplication } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
+import { useAuth } from '../../../contexts/AuthContext';
 
 // BACKUP DARK COLORS
 const COLORS = {
