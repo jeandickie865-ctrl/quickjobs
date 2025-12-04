@@ -2661,7 +2661,7 @@ def generate_contract_pdf(
     ]))
     
     story.append(abgaben_table)
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Rechtliche Hinweise
     story.append(Paragraph("Rechtliche Hinweise", section_title))
@@ -2671,7 +2671,7 @@ def generate_contract_pdf(
         "Der Arbeitnehmer erhält die vereinbarte Vergütung ohne steuerliche Abzüge.",
         normal
     ))
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 6))
     
     created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
     story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", normal))
