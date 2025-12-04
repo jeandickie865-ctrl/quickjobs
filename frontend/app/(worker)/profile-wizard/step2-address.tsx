@@ -43,6 +43,12 @@ export default function Step2Address() {
   };
 
   const handleNext = () => {
+    // Koordinaten-Check ZUERST
+    if (!lat || !lon) {
+      setErrors(prev => ({ ...prev, coords: 'Bitte berechne die Koordinaten oder wähle eine Adresse aus der Liste' }));
+      return;
+    }
+    
     if (validate()) {
       updateWizardData({ street, houseNumber, postalCode, city, lat, lon, radiusKm: radius });
       router.push('/(worker)/profile-wizard/step3-categories');
