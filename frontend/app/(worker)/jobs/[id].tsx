@@ -82,7 +82,7 @@ export default function WorkerJobDetailScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={COLORS.neon} />
         <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt...</Text>
       </View>
@@ -91,7 +91,7 @@ export default function WorkerJobDetailScreen() {
 
   if (!job) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 20 }}>
             Job nicht gefunden
@@ -105,7 +105,7 @@ export default function WorkerJobDetailScreen() {
               borderRadius: 12,
             }}
           >
-            <Text style={{ color: COLORS.black, fontWeight: '700' }}>Zurück</Text>
+            <Text style={{ color: COLORS.bg, fontWeight: '700' }}>Zurück</Text>
           </Pressable>
         </SafeAreaView>
       </View>
@@ -113,7 +113,7 @@ export default function WorkerJobDetailScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
 
         {/* Header */}
