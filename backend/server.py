@@ -2839,7 +2839,7 @@ def generate_sofortmeldung_pdf(
         ("VALIGN", (0,0), (-1,-1), "TOP"),
     ]))
     story.append(ag_table)
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Arbeitnehmer
     story.append(Paragraph("Arbeitnehmer", section_title))
@@ -2860,18 +2860,18 @@ def generate_sofortmeldung_pdf(
         ("VALIGN", (0,0), (-1,-1), "TOP"),
     ]))
     story.append(an_table)
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Beschäftigungsbeginn
     story.append(Paragraph("Beschäftigungsbeginn", section_title))
     story.append(Paragraph(f"<b>{job_date}</b>", normal))
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 6))
     
     # Einsatzort
     story.append(Paragraph("Einsatzort", section_title))
     story.append(Paragraph(f"<b>{job_title}</b>", normal))
     story.append(Paragraph(f"{job_address}", normal))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Beschäftigungsart
     story.append(Paragraph("Beschäftigungsart", section_title))
@@ -2880,7 +2880,7 @@ def generate_sofortmeldung_pdf(
         "Der Arbeitgeber trägt alle pauschalen Abgaben.",
         normal
     ))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
     
     # Rechtliche Hinweise
     story.append(Paragraph("Rechtliche Hinweise", section_title))
@@ -2891,7 +2891,7 @@ def generate_sofortmeldung_pdf(
     ]
     for h in hinweise:
         story.append(Paragraph(h, normal))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 6))
     
     created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
     story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", normal))
