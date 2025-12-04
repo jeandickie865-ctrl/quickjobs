@@ -134,13 +134,15 @@ export default function EmployerProfileViewScreen() {
           <Pressable
             onPress={() => router.push('/(employer)/matches')}
             style={({ pressed }) => ({
-              backgroundColor: COLORS.white,
+              backgroundColor: COLORS.card,
               borderRadius: 16,
               padding: 16,
               marginBottom: 24,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
+              borderWidth: 1,
+              borderColor: COLORS.border,
               opacity: pressed ? 0.9 : 1,
             })}
           >
@@ -156,21 +158,21 @@ export default function EmployerProfileViewScreen() {
                 <Ionicons name="people" size={24} color={COLORS.black} />
               </View>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
                   Meine Matches
                 </Text>
-                <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                <Text style={{ fontSize: 14, color: COLORS.muted }}>
                   Angenommene Bewerber
                 </Text>
               </View>
             </View>
             <View style={{
-              backgroundColor: COLORS.purple,
+              backgroundColor: COLORS.neon,
               paddingHorizontal: 12,
               paddingVertical: 6,
               borderRadius: 12,
             }}>
-              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.black }}>
                 {matchesCount}
               </Text>
             </View>
@@ -180,13 +182,15 @@ export default function EmployerProfileViewScreen() {
           <Pressable
             onPress={() => router.push('/(employer)/applications')}
             style={({ pressed }) => ({
-              backgroundColor: COLORS.white,
+              backgroundColor: COLORS.card,
               borderRadius: 16,
               padding: 16,
               marginBottom: 24,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
+              borderWidth: 1,
+              borderColor: COLORS.border,
               opacity: pressed ? 0.9 : 1,
             })}
           >
@@ -202,21 +206,21 @@ export default function EmployerProfileViewScreen() {
                 <Ionicons name="mail-unread" size={24} color={COLORS.black} />
               </View>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.black }}>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
                   Meine Bewerbungen
                 </Text>
-                <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+                <Text style={{ fontSize: 14, color: COLORS.muted }}>
                   Neue Bewerbungen
                 </Text>
               </View>
             </View>
             <View style={{
-              backgroundColor: COLORS.purple,
+              backgroundColor: COLORS.neon,
               paddingHorizontal: 12,
               paddingVertical: 6,
               borderRadius: 12,
             }}>
-              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.neon }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: COLORS.black }}>
                 {applicationsCount}
               </Text>
             </View>
