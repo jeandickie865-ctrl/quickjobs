@@ -94,7 +94,9 @@ export default function Step3Categories() {
     router.push('/(worker)/profile-wizard/step2-address');
   };
 
-  const isFormValid = selectedCategories.length > 0 && selectedSubcategories.length > 0;
+  const isFormValid =
+    selectedCategories.length > 0 &&
+    selectedSubcategories.length > 0;
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
