@@ -365,6 +365,7 @@ export default function EmployerProfileViewScreen() {
                 paddingHorizontal: 16,
                 alignItems: 'center',
                 marginTop: 32,
+                marginBottom: 100,
                 width: '60%',
                 maxWidth: 300,
                 minWidth: 220,
