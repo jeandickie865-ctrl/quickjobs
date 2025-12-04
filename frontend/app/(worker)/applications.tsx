@@ -255,8 +255,8 @@ export default function WorkerApplicationsScreen() {
               style={({ pressed }) => [
                 styles.applicationCard,
                 {
-                  backgroundColor: colors.white,
-                  borderColor: isMatched ? colors.black : colors.gray200,
+                  backgroundColor: '#141126',
+                  borderColor: isMatched ? '#C8FF16' : 'rgba(255,255,255,0.08)',
                   borderWidth: isMatched ? 2 : 1,
                   padding: spacing.md,
                   marginBottom: spacing.sm,
@@ -265,24 +265,24 @@ export default function WorkerApplicationsScreen() {
               ]}
             >
               {/* Auftrag Title */}
-              <Text style={[styles.jobTitle, { color: colors.black }]}>
+              <Text style={[styles.jobTitle, { color: '#FFFFFF' }]}>
                 {title}
               </Text>
 
               {/* Auftrag Details */}
               <View style={{ gap: 4, marginTop: spacing.xs }}>
                 {!!category && (
-                  <Text style={[styles.jobDetail, { color: colors.gray700 }]}>
+                  <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
                     🏷️ {category}
                   </Text>
                 )}
                 {!!address && (
-                  <Text style={[styles.jobDetail, { color: colors.gray700 }]}>
+                  <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
                     📍 {address}
                   </Text>
                 )}
                 {!!workerAmount && (
-                  <Text style={[styles.jobDetail, { color: colors.gray700 }]}>
+                  <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
                     💰 {workerAmount}
                   </Text>
                 )}
@@ -293,26 +293,26 @@ export default function WorkerApplicationsScreen() {
                 style={[
                   styles.statusContainer,
                   {
-                    backgroundColor: colors.beige50,
+                    backgroundColor: '#0E0B1F',
                     padding: spacing.sm,
                     marginTop: spacing.sm,
                   },
                 ]}
               >
                 <View style={styles.statusRow}>
-                  <Text style={[styles.statusLabel, { color: colors.gray600 }]}>
+                  <Text style={[styles.statusLabel, { color: '#A0A0A0' }]}>
                     Status:
                   </Text>
-                  <Text style={[styles.statusValue, { color: statusColor, fontWeight: '700' }]}>
+                  <Text style={[styles.statusValue, { color: statusColor === colors.black ? '#C8FF16' : statusColor, fontWeight: '700' }]}>
                     {statusLabel}
                   </Text>
                 </View>
                 {!!jobStatusLabel && (
-                  <Text style={[styles.jobStatusText, { color: colors.gray500 }]}>
+                  <Text style={[styles.jobStatusText, { color: '#888' }]}>
                     Job: {jobStatusLabel}
                   </Text>
                 )}
-                <Text style={[styles.dateText, { color: colors.gray500 }]}>
+                <Text style={[styles.dateText, { color: '#888' }]}>
                   Beworben am {formatDate(app.createdAt)}
                 </Text>
               </View>
