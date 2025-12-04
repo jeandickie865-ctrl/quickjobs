@@ -76,9 +76,8 @@ export default function WorkerLayout() {
     >
       {TAB('feed', 'Aktuelle Jobs')}
       {TAB('applications', 'Bewerbungen')}
-      {TAB('matches', 'Matches', matchesCount)}
       {TAB('profile', 'Profil')}
-      {TAB('jobs/all', 'Jobs/All')}
+      {TAB('jobs/all', 'alle Jobs')}
 
       <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
