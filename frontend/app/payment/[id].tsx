@@ -130,6 +130,13 @@ export default function PaymentScreen() {
     const isSelf = workerProfile.isSelfEmployed === true;
     console.log("🔍 [MODAL CHECK] isSelf (=== true):", isSelf);
 
+    // Wenn selbstständig → KEIN Modal
+    if (isSelf) {
+      console.log("✅ [MODAL CHECK] Worker is self-employed, no registration modal needed");
+      // Payment ist bereits abgeschlossen, keine weitere Aktion nötig
+      return;
+    }
+
     // PRIVATE + NICHT selbstständig → Private Modal
     if (user?.accountType === "private" && !isSelf) {
       console.log("✅ [MODAL CHECK] Showing PRIVATE EMPLOYER MODAL");
@@ -137,7 +144,7 @@ export default function PaymentScreen() {
       return;
     }
 
-    // BUSINESS oder selbstständig → Business Modal
+    // BUSINESS + NICHT selbstständig → Business Modal
     console.log("✅ [MODAL CHECK] Showing BUSINESS REGISTRATION MODAL");
     setShowRegistrationModal(true);
   };
