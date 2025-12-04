@@ -38,7 +38,7 @@ const COLORS = {
   purple: "#6B4BFF",
   purpleLight: "#7C5CFF",
   textWhite: "#FFFFFF",
-  textMuted: "rgba(255,255,255,0.7)",
+  textMuted: "rgba(255,255,255,0.75)",
   accent: "#C8FF16",
   red: "#FF4D4D",
   dim: "rgba(0,0,0,0.6)"
