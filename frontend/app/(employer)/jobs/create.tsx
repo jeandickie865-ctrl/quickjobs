@@ -575,15 +575,15 @@ export default function CreateJob() {
 
           <AddressAutocompleteInput
             street={address.street || ''}
+            postalCode={address.postalCode || ''}
+            city={address.city || ''}
             houseNumber={address.houseNumber || ''}
-            postalCode={address.postalCode}
-            city={address.city}
-            onStreetChange={value => setAddress(prev => ({ ...prev, street: value }))}
-            onHouseNumberChange={value => setAddress(prev => ({ ...prev, houseNumber: value }))}
-            onPostalCodeChange={value => setAddress(prev => ({ ...prev, postalCode: value }))}
-            onCityChange={value => setAddress(prev => ({ ...prev, city: value }))}
-            onLatChange={value => setLat(value)}
-            onLonChange={value => setLon(value)}
+            onStreetChange={(v) => setAddress(a => ({ ...a, street: v }))}
+            onPostalCodeChange={(v) => setAddress(a => ({ ...a, postalCode: v }))}
+            onCityChange={(v) => setAddress(a => ({ ...a, city: v }))}
+            onHouseNumberChange={(v) => setAddress(a => ({ ...a, houseNumber: v }))}
+            onLatChange={setLat}
+            onLonChange={setLon}
           />
         </View>
 
