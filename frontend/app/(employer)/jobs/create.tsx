@@ -234,44 +234,43 @@ export default function CreateJob() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <View style={{ flex: 1 }}>
-        {/* HEADER */}
-        <View
+      {/* HEADER */}
+      <View
+        style={{
+          paddingHorizontal: SPACING.md,
+          paddingTop: SPACING.md,
+          paddingBottom: SPACING.sm,
+        }}
+      >
+        <Text
           style={{
-            paddingHorizontal: SPACING.md,
-            paddingTop: SPACING.md,
-            paddingBottom: SPACING.sm,
+            color: COLORS.white,
+            fontSize: 26,
+            fontWeight: '900',
           }}
         >
-          <Text
-            style={{
-              color: COLORS.white,
-              fontSize: 26,
-              fontWeight: '900',
-            }}
-          >
-            Neuer Auftrag
-          </Text>
-          <Text
-            style={{
-              color: COLORS.muted,
-              marginTop: 4,
-              fontSize: 14,
-            }}
-          >
-            Erstelle einen Job, damit Worker sich bewerben.
-          </Text>
-        </View>
+          Neuer Auftrag
+        </Text>
+        <Text
+          style={{
+            color: COLORS.muted,
+            marginTop: 4,
+            fontSize: 14,
+          }}
+        >
+          Erstelle einen Job, damit Worker sich bewerben.
+        </Text>
+      </View>
 
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{
-            paddingHorizontal: SPACING.md,
-            paddingBottom: 20,
-            gap: SPACING.md,
-          }}
-          keyboardShouldPersistTaps="handled"
-        >
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingHorizontal: SPACING.md,
+          paddingBottom: 120,
+          gap: SPACING.md,
+        }}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Titel */}
         <View
           style={{
