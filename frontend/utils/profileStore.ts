@@ -35,10 +35,28 @@ export async function getWorkerProfile(userId?: string): Promise<WorkerProfile |
     }
     
     const profile = await response.json();
+    
+    // Map Backend keys (snake_case) → Frontend keys (camelCase)
+    if (profile.home_address) {
+      profile.homeAddress = {
+        street: profile.home_address.street,
+        houseNumber: profile.home_address.house_number || profile.home_address.houseNumber,
+        postalCode: profile.home_address.postal_code || profile.home_address.postalCode,
+        city: profile.home_address.city,
+        country: profile.home_address.country,
+      };
+    }
+    if (profile.home_lat) profile.homeLat = profile.home_lat;
+    if (profile.home_lon) profile.homeLon = profile.home_lon;
+    if (profile.radius_km !== undefined) profile.radiusKm = profile.radius_km;
+    if (profile.is_self_employed !== undefined) profile.isSelfEmployed = profile.is_self_employed;
+    if (profile.short_bio) profile.shortBio = profile.short_bio;
+    
     console.log('✅ getWorkerProfile: Profile loaded', {
       userId: profile.userId,
       categories: profile.categories?.length || 0,
-      tags: profile.selectedTags?.length || 0,
+      radiusKm: profile.radiusKm,
+      isSelfEmployed: profile.isSelfEmployed,
     });
     
     return profile;
