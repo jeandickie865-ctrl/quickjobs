@@ -1,467 +1,271 @@
 {
-  "sicherheit": {
-    "label": "Sicherheit",
-    "subcategories": [
-      "Doorman",
-      "Event Security",
-      "Revierdienst",
-      "Kaufhausdetektiv",
-      "Brandsicherheitswache",
-      "Parkplatzaufsicht",
-      "Einlasskontrolle",
-      "Objektschutz"
-    ],
-    "qualifications": [
-      "Sachkunde 34a",
-      "Unterrichtung 34a",
-      "Bewacher-ID",
-      "Polizeiliches Führungszeugnis",
-      "Brandschutzhelfer"
-    ]
-  },
-  "gastro": {
-    "label": "Gastronomie",
-    "subcategories": [
-      "Kellner / Service",
-      "Runner",
-      "Spüler",
-      "Koch",
-      "Küchenhilfe",
-      "Theke",
-      "Bar",
-      "Buffet",
-      "Kasse"
-    ],
-    "qualifications": [
-      "Hygienebelehrung (HACCP)",
-      "Erfahrung Service > 3 Jahre",
-      "Barkeeper Erfahrung",
-      "Kassensystem Erfahrung"
-    ]
-  },
-  "event": {
-    "label": "Event & Messe",
-    "subcategories": [
-      "Host/Hostess",
-      "Promotion",
-      "Garderobe",
-      "Auf- und Abbau",
-      "Stagehand",
-      "Akkreditierung",
-      "Flyerverteilung"
-    ],
-    "qualifications": [
-      "Kundenkontakt",
-      "Standbetreuung",
-      "Englisch Grundkenntnisse"
-    ]
-  },
-  "reinigung": {
-    "label": "Reinigung",
-    "subcategories": [
-      "Gebäudereinigung",
-      "Büroreinigung",
-      "Eventreinigung",
-      "Hotel Housekeeping",
-      "Küchenreinigung",
-      "Fensterreinigung"
-    ],
-    "qualifications": [
-      "Erfahrung Reinigung",
-      "Schnelles Arbeiten",
-      "Gründlichkeit"
-    ]
-  },
-  "lager": {
-    "label": "Lager & Logistik",
-    "subcategories": [
-      "Kommissionierung",
-      "Sortierung",
-      "Verpackung",
-      "Wareneingang",
-      "Versand",
-      "Staplerfahrer"
-    ],
-    "qualifications": [
-      "Staplerschein",
-      "Erfahrung Lager",
-      "Heavy Lifting bis 30kg"
-    ]
-  },
-  "einzelhandel": {
-    "label": "Einzelhandel",
-    "subcategories": [
-      "Kassierer",
-      "Warenverräumer",
-      "Inventurhelfer",
-      "Beratung",
-      "Backshop"
-    ],
-    "qualifications": [
-      "Kassensystem Erfahrung",
-      "Kundenkontakt",
-      "Inventurerfahrung"
-    ]
-  },
-  "lieferservice": {
-    "label": "Lieferservice",
-    "subcategories": [
-      "Essenslieferung",
-      "Kurierfahrer",
-      "Last Mile Delivery",
-      "Getränke-/Lebensmittel-Lieferung",
-      "Expresslieferung",
-      "Paket-Light"
-    ],
-    "qualifications": [
-      "Führerschein B",
-      "Führerschein AM",
-      "Führerschein BE",
-      "Führerschein C1",
-      "Eigenes Auto",
-      "Eigener Roller",
-      "Eigenes E-Bike",
-      "Eigenes Fahrrad",
-      "Erfahrung Fahrer",
-      "Ortskenntnisse",
-      "Unfallfreie Fahrpraxis"
-    ]
-  },
-  "transport": {
-    "label": "Transport & Umzug",
-    "subcategories": [
-      "Möbelpacker",
-      "Tragehelfer",
-      "Fahrer (B)",
-      "Fahrer (BE)",
-      "Fahrer (C1)",
-      "Kurier",
-      "Lieferhelfer"
-    ],
-    "qualifications": [
-      "Heavy Lifting",
-      "Fahrerfahrung",
-      "Führerschein B",
-      "Führerschein BE",
-      "Führerschein C1"
-    ]
-  },
-  "haushalt": {
-    "label": "Haushalt & Hauswirtschaft",
-    "subcategories": [
-      "Putzhilfe",
-      "Haushaltshilfe",
-      "Bügeln",
-      "Einkaufen",
-      "Fensterputzen",
-      "Gartenarbeit"
-    ],
-    "qualifications": [
-      "Erfahrung Haushalt"
-    ]
-  },
-  "kinder": {
-    "label": "Kinderbetreuung",
-    "subcategories": [
-      "Babysitter",
-      "Betreuung zuhause",
-      "Freizeitbetreuung"
-    ],
-    "qualifications": [
-      "Erste Hilfe am Kind",
-      "Erfahrung Kinderbetreuung"
-    ]
-  },
-  "haustiere": {
-    "label": "Haustiere",
-    "subcategories": [
-      "Dogsitting",
-      "Dogwalking",
-      "Katzensitting",
-      "Kleintiere"
-    ],
-    "qualifications": [
-      "Tiererfahrung"
-    ]
-  },
-  "handwerk": {
-    "label": "Handwerk & Reparaturen",
-    "subcategories": [
-      "Möbelaufbau",
-      "Regale montieren",
-      "Lampen montieren",
-      "Geräte anschließen",
-      "Kleinreparaturen allgemein"
-    ],
-    "qualifications": [
-      "Werkzeugkenntnisse",
-      "Eigenes Werkzeug",
-      "Erfahrung Möbelaufbau",
-      "Handwerkliche Grundkenntnisse"
-    ]
-  },
-  "buero": {
-    "label": "Büro & Service",
-    "subcategories": [
-      "Datenerfassung",
-      "Telefonservice",
-      "Empfang",
-      "Sortieren / Scannen"
-    ],
-    "qualifications": [
-      "PC-Grundkenntnisse",
-      "Kundenkontakt"
-    ]
-  },
-  "foto": {
-    "label": "Foto & Video",
-    "subcategories": [
-      "Eventfotografie",
-      "Produktfotografie",
-      "Videografie",
-      "Videoschnitt"
-    ],
-    "qualifications": [
-      "Erfahrung Bildbearbeitung",
-      "Erfahrung Videoschnitt",
-      "Editing/Grading Basics",
-      "Eigenes Foto/Videoequipment"
-    ]
-  },
-  "nachhilfe": {
-    "label": "Nachhilfe",
-    "subcategories": [
-      "Mathe",
-      "Deutsch",
-      "Englisch",
-      "Grundschule"
-    ],
-    "qualifications": [
-      "Gute Noten",
-      "Erfahrung Nachhilfe"
-    ]
-  },
-  "it": {
-    "label": "IT & Support",
-    "subcategories": [
-      "Hardware-Aufbau",
-      "Software-Installation",
-      "WLAN / Router",
-      "Smartphonehilfe"
-    ],
-    "qualifications": [
-      "IT-Grundkenntnisse"
-    ]
-  },
-  "gastronomie": {
-    "label": "Gastronomie",
-    "subcategories": [
-      "Kellner / Service",
-      "Runner",
-      "Spüler",
-      "Koch",
-      "Küchenhilfe",
-      "Theke",
-      "Bar",
-      "Buffet",
-      "Kasse"
-    ],
-    "qualifications": [
-      "Hygienebelehrung (HACCP)",
-      "Erfahrung Service > 3 Jahre",
-      "Barkeeper Erfahrung",
-      "Kassensystem Erfahrung"
-    ]
-  },
   "security": {
     "label": "Sicherheit",
     "subcategories": [
-      "Doorman",
-      "Event Security",
-      "Revierdienst",
-      "Kaufhausdetektiv",
-      "Brandsicherheitswache",
-      "Parkplatzaufsicht",
-      "Einlasskontrolle",
-      "Objektschutz"
+      { "key": "doorman", "label": "Doorman" },
+      { "key": "event_security", "label": "Event Security" },
+      { "key": "revierdienst", "label": "Revierdienst" },
+      { "key": "kaufhausdetektiv", "label": "Kaufhausdetektiv" },
+      { "key": "brandsicherheitswache", "label": "Brandsicherheitswache" },
+      { "key": "parkplatzaufsicht", "label": "Parkplatzaufsicht" },
+      { "key": "einlasskontrolle", "label": "Einlasskontrolle" },
+      { "key": "objektschutz", "label": "Objektschutz" }
     ],
     "qualifications": [
-      "Sachkunde 34a",
-      "Unterrichtung 34a",
-      "Bewacher-ID",
-      "Polizeiliches Führungszeugnis",
-      "Brandschutzhelfer"
+      { "key": "sachkunde_34a", "label": "Sachkunde 34a" },
+      { "key": "unterrichtung_34a", "label": "Unterrichtung 34a" },
+      { "key": "bewacher_id", "label": "Bewacher-ID" },
+      { "key": "fuehrungszeugnis", "label": "Polizeiliches Führungszeugnis" },
+      { "key": "brandschutzhelfer", "label": "Brandschutzhelfer" }
     ]
   },
+
+  "gastro": {
+    "label": "Gastronomie",
+    "subcategories": [
+      { "key": "kellner_service", "label": "Kellner / Service" },
+      { "key": "runner", "label": "Runner" },
+      { "key": "spueler", "label": "Spüler" },
+      { "key": "koch", "label": "Koch" },
+      { "key": "kuechenhilfe", "label": "Küchenhilfe" },
+      { "key": "theke", "label": "Theke" },
+      { "key": "bar", "label": "Bar" },
+      { "key": "buffet", "label": "Buffet" },
+      { "key": "kasse", "label": "Kasse" }
+    ],
+    "qualifications": [
+      { "key": "haccp", "label": "Hygienebelehrung (HACCP)" },
+      { "key": "service_erfahrung_3j", "label": "Erfahrung Service > 3 Jahre" },
+      { "key": "barkeeper_erfahrung", "label": "Barkeeper Erfahrung" },
+      { "key": "kassensystem_erfahrung", "label": "Kassensystem Erfahrung" }
+    ]
+  },
+
+  "event": {
+    "label": "Event & Messe",
+    "subcategories": [
+      { "key": "host_hostess", "label": "Host/Hostess" },
+      { "key": "promotion", "label": "Promotion" },
+      { "key": "garderobe", "label": "Garderobe" },
+      { "key": "auf_abbau", "label": "Auf- und Abbau" },
+      { "key": "stagehand", "label": "Stagehand" },
+      { "key": "akkreditierung", "label": "Akkreditierung" },
+      { "key": "flyerverteilung", "label": "Flyerverteilung" }
+    ],
+    "qualifications": [
+      { "key": "kundenkontakt", "label": "Kundenkontakt" },
+      { "key": "standbetreuung", "label": "Standbetreuung" },
+      { "key": "englisch_grundkenntnisse", "label": "Englisch Grundkenntnisse" }
+    ]
+  },
+
   "cleaning": {
     "label": "Reinigung",
     "subcategories": [
-      "Gebäudereinigung",
-      "Büroreinigung",
-      "Eventreinigung",
-      "Hotel Housekeeping",
-      "Küchenreinigung",
-      "Fensterreinigung"
+      { "key": "gebaeudereinigung", "label": "Gebäudereinigung" },
+      { "key": "bueroreinigung", "label": "Büroreinigung" },
+      { "key": "eventreinigung", "label": "Eventreinigung" },
+      { "key": "hotel_housekeeping", "label": "Hotel Housekeeping" },
+      { "key": "kuechenreinigung", "label": "Küchenreinigung" },
+      { "key": "fensterreinigung", "label": "Fensterreinigung" }
     ],
     "qualifications": [
-      "Erfahrung Reinigung",
-      "Schnelles Arbeiten",
-      "Gründlichkeit"
+      { "key": "erfahrung_reinigung", "label": "Erfahrung Reinigung" },
+      { "key": "schnelles_arbeiten", "label": "Schnelles Arbeiten" },
+      { "key": "gruendlichkeit", "label": "Gründlichkeit" }
     ]
   },
+
   "logistics": {
     "label": "Lager & Logistik",
     "subcategories": [
-      "Kommissionierung",
-      "Sortierung",
-      "Verpackung",
-      "Wareneingang",
-      "Versand",
-      "Staplerfahrer"
+      { "key": "kommissionierung", "label": "Kommissionierung" },
+      { "key": "sortierung", "label": "Sortierung" },
+      { "key": "verpackung", "label": "Verpackung" },
+      { "key": "wareneingang", "label": "Wareneingang" },
+      { "key": "versand", "label": "Versand" },
+      { "key": "staplerfahrer", "label": "Staplerfahrer" }
     ],
     "qualifications": [
-      "Staplerschein",
-      "Erfahrung Lager",
-      "Heavy Lifting bis 30kg"
+      { "key": "staplerschein", "label": "Staplerschein" },
+      { "key": "erfahrung_lager", "label": "Erfahrung Lager" },
+      { "key": "heavy_lifting_30kg", "label": "Heavy Lifting bis 30kg" }
     ]
   },
+
   "retail": {
     "label": "Einzelhandel",
     "subcategories": [
-      "Kassierer",
-      "Warenverräumer",
-      "Inventurhelfer",
-      "Beratung",
-      "Backshop"
+      { "key": "kassierer", "label": "Kassierer" },
+      { "key": "warenverraeumer", "label": "Warenverräumer" },
+      { "key": "inventurhelfer", "label": "Inventurhelfer" },
+      { "key": "beratung", "label": "Beratung" },
+      { "key": "backshop", "label": "Backshop" }
     ],
     "qualifications": [
-      "Kassensystem Erfahrung",
-      "Kundenkontakt",
-      "Inventurerfahrung"
+      { "key": "kassensystem_erfahrung", "label": "Kassensystem Erfahrung" },
+      { "key": "kundenkontakt", "label": "Kundenkontakt" },
+      { "key": "inventurerfahrung", "label": "Inventurerfahrung" }
     ]
   },
+
   "delivery": {
     "label": "Lieferservice",
     "subcategories": [
-      "Essenslieferung",
-      "Kurierfahrer",
-      "Last Mile Delivery",
-      "Getränke-/Lebensmittel-Lieferung",
-      "Expresslieferung",
-      "Paket-Light"
+      { "key": "essenslieferung", "label": "Essenslieferung" },
+      { "key": "kurierfahrer", "label": "Kurierfahrer" },
+      { "key": "last_mile_delivery", "label": "Last Mile Delivery" },
+      { "key": "getraenke_lebensmittel", "label": "Getränke-/Lebensmittel-Lieferung" },
+      { "key": "expresslieferung", "label": "Expresslieferung" },
+      { "key": "paket_light", "label": "Paket-Light" }
     ],
     "qualifications": [
-      "Führerschein B",
-      "Führerschein AM",
-      "Führerschein BE",
-      "Führerschein C1",
-      "Eigenes Auto",
-      "Eigener Roller",
-      "Eigenes E-Bike",
-      "Eigenes Fahrrad",
-      "Erfahrung Fahrer",
-      "Ortskenntnisse",
-      "Unfallfreie Fahrpraxis"
+      { "key": "fuehrerschein_b", "label": "Führerschein B" },
+      { "key": "fuehrerschein_am", "label": "Führerschein AM" },
+      { "key": "fuehrerschein_be", "label": "Führerschein BE" },
+      { "key": "fuehrerschein_c1", "label": "Führerschein C1" },
+      { "key": "eigenes_auto", "label": "Eigenes Auto" },
+      { "key": "eigener_roller", "label": "Eigener Roller" },
+      { "key": "eigenes_ebike", "label": "Eigenes E-Bike" },
+      { "key": "eigenes_fahrrad", "label": "Eigenes Fahrrad" },
+      { "key": "erfahrung_fahrer", "label": "Erfahrung Fahrer" },
+      { "key": "ortskenntnisse", "label": "Ortskenntnisse" },
+      { "key": "unfallfreie_fahrpraxis", "label": "Unfallfreie Fahrpraxis" }
     ]
   },
+
+  "transport": {
+    "label": "Transport & Umzug",
+    "subcategories": [
+      { "key": "moebelpacker", "label": "Möbelpacker" },
+      { "key": "tragehelfer", "label": "Tragehelfer" },
+      { "key": "fahrer_b", "label": "Fahrer (B)" },
+      { "key": "fahrer_be", "label": "Fahrer (BE)" },
+      { "key": "fahrer_c1", "label": "Fahrer (C1)" },
+      { "key": "kurier", "label": "Kurier" },
+      { "key": "lieferhelfer", "label": "Lieferhelfer" }
+    ],
+    "qualifications": [
+      { "key": "heavy_lifting", "label": "Heavy Lifting" },
+      { "key": "fahrerfahrung", "label": "Fahrerfahrung" },
+      { "key": "fuehrerschein_b", "label": "Führerschein B" },
+      { "key": "fuehrerschein_be", "label": "Führerschein BE" },
+      { "key": "fuehrerschein_c1", "label": "Führerschein C1" }
+    ]
+  },
+
   "household": {
     "label": "Haushalt & Hauswirtschaft",
     "subcategories": [
-      "Putzhilfe",
-      "Haushaltshilfe",
-      "Bügeln",
-      "Einkaufen",
-      "Fensterputzen",
-      "Gartenarbeit"
+      { "key": "putzhilfe", "label": "Putzhilfe" },
+      { "key": "haushaltshilfe", "label": "Haushaltshilfe" },
+      { "key": "buegeln", "label": "Bügeln" },
+      { "key": "einkaufen", "label": "Einkaufen" },
+      { "key": "fensterputzen", "label": "Fensterputzen" },
+      { "key": "gartenarbeit", "label": "Gartenarbeit" }
     ],
     "qualifications": [
-      "Erfahrung Haushalt"
+      { "key": "erfahrung_haushalt", "label": "Erfahrung Haushalt" }
     ]
   },
+
   "childcare": {
     "label": "Kinderbetreuung",
     "subcategories": [
-      "Babysitter",
-      "Betreuung zuhause",
-      "Freizeitbetreuung"
+      { "key": "babysitter", "label": "Babysitter" },
+      { "key": "betreuung_zuhause", "label": "Betreuung zuhause" },
+      { "key": "freizeitbetreuung", "label": "Freizeitbetreuung" }
     ],
     "qualifications": [
-      "Erste Hilfe am Kind",
-      "Erfahrung Kinderbetreuung"
+      { "key": "erste_hilfe_kind", "label": "Erste Hilfe am Kind" },
+      { "key": "erfahrung_kinderbetreuung", "label": "Erfahrung Kinderbetreuung" }
     ]
   },
+
   "petcare": {
     "label": "Haustiere",
     "subcategories": [
-      "Dogsitting",
-      "Dogwalking",
-      "Katzensitting",
-      "Kleintiere"
+      { "key": "dogsitting", "label": "Dogsitting" },
+      { "key": "dogwalking", "label": "Dogwalking" },
+      { "key": "katzensitting", "label": "Katzensitting" },
+      { "key": "kleintiere", "label": "Kleintiere" }
     ],
     "qualifications": [
-      "Tiererfahrung"
+      { "key": "tiererfahrung", "label": "Tiererfahrung" }
     ]
   },
+
   "handcraft": {
     "label": "Handwerk & Reparaturen",
     "subcategories": [
-      "Möbelaufbau",
-      "Regale montieren",
-      "Lampen montieren",
-      "Geräte anschließen",
-      "Kleinreparaturen allgemein"
+      { "key": "moebelaufbau", "label": "Möbelaufbau" },
+      { "key": "regale_montieren", "label": "Regale montieren" },
+      { "key": "lampen_montieren", "label": "Lampen montieren" },
+      { "key": "geraete_anschliessen", "label": "Geräte anschließen" },
+      { "key": "kleinreparaturen", "label": "Kleinreparaturen allgemein" }
     ],
     "qualifications": [
-      "Werkzeugkenntnisse",
-      "Eigenes Werkzeug",
-      "Erfahrung Möbelaufbau",
-      "Handwerkliche Grundkenntnisse"
+      { "key": "werkzeugkenntnisse", "label": "Werkzeugkenntnisse" },
+      { "key": "eigenes_werkzeug", "label": "Eigenes Werkzeug" },
+      { "key": "erfahrung_moebelaufbau", "label": "Erfahrung Möbelaufbau" },
+      { "key": "handwerkliche_grundkenntnisse", "label": "Handwerkliche Grundkenntnisse" }
     ]
   },
+
   "office": {
     "label": "Büro & Service",
     "subcategories": [
-      "Datenerfassung",
-      "Telefonservice",
-      "Empfang",
-      "Sortieren / Scannen"
+      { "key": "datenerfassung", "label": "Datenerfassung" },
+      { "key": "telefonservice", "label": "Telefonservice" },
+      { "key": "empfang", "label": "Empfang" },
+      { "key": "sortieren_scannen", "label": "Sortieren / Scannen" }
     ],
     "qualifications": [
-      "PC-Grundkenntnisse",
-      "Kundenkontakt"
+      { "key": "pc_grundkenntnisse", "label": "PC-Grundkenntnisse" },
+      { "key": "kundenkontakt", "label": "Kundenkontakt" }
     ]
   },
+
   "photo_video": {
     "label": "Foto & Video",
     "subcategories": [
-      "Eventfotografie",
-      "Produktfotografie",
-      "Videografie",
-      "Videoschnitt"
+      { "key": "eventfotografie", "label": "Eventfotografie" },
+      { "key": "produktfotografie", "label": "Produktfotografie" },
+      { "key": "videografie", "label": "Videografie" },
+      { "key": "videoschnitt", "label": "Videoschnitt" }
     ],
     "qualifications": [
-      "Erfahrung Bildbearbeitung",
-      "Erfahrung Videoschnitt",
-      "Editing/Grading Basics",
-      "Eigenes Foto/Videoequipment"
+      { "key": "erfahrung_bildbearbeitung", "label": "Erfahrung Bildbearbeitung" },
+      { "key": "erfahrung_videoschnitt", "label": "Erfahrung Videoschnitt" },
+      { "key": "editing_grading_basics", "label": "Editing/Grading Basics" },
+      { "key": "eigenes_equipment", "label": "Eigenes Foto/Videoequipment" }
     ]
   },
+
   "tutoring": {
     "label": "Nachhilfe",
     "subcategories": [
-      "Mathe",
-      "Deutsch",
-      "Englisch",
-      "Grundschule"
+      { "key": "mathe", "label": "Mathe" },
+      { "key": "deutsch", "label": "Deutsch" },
+      { "key": "englisch", "label": "Englisch" },
+      { "key": "grundschule", "label": "Grundschule" }
     ],
     "qualifications": [
-      "Gute Noten",
-      "Erfahrung Nachhilfe"
+      { "key": "gute_noten", "label": "Gute Noten" },
+      { "key": "erfahrung_nachhilfe", "label": "Erfahrung Nachhilfe" }
     ]
   },
-  "care": {
-    "label": "Pflege & Betreuung",
-    "subcategories": [],
-    "qualifications": []
+
+  "it": {
+    "label": "IT & Support",
+    "subcategories": [
+      { "key": "hardware_aufbau", "label": "Hardware-Aufbau" },
+      { "key": "software_installation", "label": "Software-Installation" },
+      { "key": "wlan_router", "label": "WLAN / Router" },
+      { "key": "smartphonehilfe", "label": "Smartphonehilfe" }
+    ],
+    "qualifications": [
+      { "key": "it_grundkenntnisse", "label": "IT-Grundkenntnisse" }
+    ]
   }
 }
