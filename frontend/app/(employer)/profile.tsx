@@ -75,7 +75,7 @@ export default function EmployerProfileViewScreen() {
 
   if (authLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={COLORS.neon} />
       </View>
     );
@@ -87,7 +87,7 @@ export default function EmployerProfileViewScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={COLORS.neon} size="large" />
           <Text style={{ color: COLORS.white, marginTop: 16, fontSize: 15 }}>Lade Profil…</Text>
