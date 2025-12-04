@@ -299,6 +299,9 @@ export default function PaymentScreen() {
               backgroundColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.card,
               borderWidth: 1,
               borderColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.border,
+              width: "60%",
+              maxWidth: 300,
+              minWidth: 220,
             }}
           >
             <View style={{
