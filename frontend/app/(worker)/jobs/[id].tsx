@@ -45,7 +45,7 @@ export default function WorkerJobDetailScreen() {
 
   const loadWorkerProfile = async () => {
     try {
-      const profile = await getWorkerProfile(worker?.userId);
+      const profile = await getWorkerProfile();
       setWorker(profile);
     } catch (err) {
       console.log('Worker profile load error:', err);
