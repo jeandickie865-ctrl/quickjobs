@@ -270,7 +270,7 @@ export default function WorkerApplicationsScreen() {
                   borderWidth: isMatched ? 2 : 1,
                   padding: spacing.md,
                   marginBottom: spacing.sm,
-                  opacity: pressed ? 0.8 : 1,
+                  opacity: pressed ? 0.9 : 1,
                 },
               ]}
             >
