@@ -197,7 +197,7 @@ export default function RateWorkerScreen() {
       }} />
 
       {/* Top Bar */}
-      <SafeAreaView edges={['top']}>
+      <SafeAreaView edges={['top','bottom']}>
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
