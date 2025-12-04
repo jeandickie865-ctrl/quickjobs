@@ -247,7 +247,10 @@ export default function WorkerJobDetailScreen() {
                 STANDORT
               </Text>
               <Text style={{ fontSize: 16, color: COLORS.white }}>
-                {job.address?.street || 'Keine Straße'} {job.address?.houseNumber || job.address?.house_number || ''}, {job.address?.postalCode || job.address?.postal_code || ''} {job.address?.city || 'Keine Stadt'}
+                {job.address
+                  ? `${job.address.street || ''} ${job.address.houseNumber || job.address.house_number || ''}, ${job.address.postalCode || job.address.postal_code || ''} ${job.address.city || ''}`.trim()
+                  : 'Adresse nicht angegeben'
+                }
               </Text>
             </View>
 
