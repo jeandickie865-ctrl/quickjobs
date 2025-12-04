@@ -54,7 +54,9 @@ export default function EmployerDashboard() {
   );
 
   const isUpcomingJob = job => {
-    if (!job.date || !job.startAt || !job.endAt) return false;
+    if (!job || !job.date) return false;
+    if (!job.startAt || !job.endAt) return false;
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
