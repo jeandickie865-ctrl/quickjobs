@@ -60,7 +60,12 @@ export default function Step2Address() {
     router.push('/(worker)/profile-wizard/step1-basic');
   };
 
-  const isFormValid = street.trim() && postalCode.trim() && city.trim() && lat && lon;
+  const isFormValid =
+    street.trim() &&
+    postalCode.trim() &&
+    city.trim() &&
+    lat != null &&
+    lon != null;
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
