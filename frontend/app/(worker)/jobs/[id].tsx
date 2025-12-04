@@ -286,7 +286,7 @@ export default function WorkerJobDetailScreen() {
               <View style={{ marginTop: 20 }}>
                 {job.required_all_tags?.length > 0 && (
                   <View style={{ marginBottom: 12 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.purple, marginBottom: 6 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon, marginBottom: 6 }}>
                       PFLICHT
                     </Text>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
