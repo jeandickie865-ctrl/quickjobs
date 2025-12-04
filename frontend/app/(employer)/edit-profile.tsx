@@ -417,35 +417,20 @@ function Field({
 
 // PAYMENT OPTION CHIP
 function PaymentOption({ label, value, selected, setSelected }) {
+  const isSelected = selected === value;
   return (
     <Pressable
       onPress={() => setSelected(value)}
       style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 16,
+        backgroundColor: isSelected ? COLORS.neon : COLORS.bg,
         borderRadius: 12,
-        backgroundColor: selected === value ? COLORS.neon : '#F8F8F8',
-        marginBottom: 12
+        padding: 16,
+        marginBottom: 12,
+        borderWidth: isSelected ? 2 : 1,
+        borderColor: isSelected ? COLORS.neon : COLORS.border,
       }}
     >
-      <View
-        style={{
-          width: 24,
-          height: 24,
-          borderRadius: 24,
-          borderWidth: 2,
-          borderColor: selected === value ? COLORS.black : COLORS.darkGray,
-          backgroundColor: selected === value ? COLORS.black : 'transparent',
-          marginRight: 12,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        {selected === value && <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.neon }} />}
-      </View>
-
-      <Text style={{ fontSize: 16, fontWeight: selected === value ? '700' : '600', color: COLORS.black }}>
+      <Text style={{ fontWeight: '700', color: isSelected ? COLORS.black : COLORS.white, fontSize: 15 }}>
         {label}
       </Text>
     </Pressable>
