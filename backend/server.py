@@ -2736,35 +2736,40 @@ def generate_sofortmeldung_pdf(
     filename = f"sofortmeldung_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # Styles
+    # Styles - Optimized for single page
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         "TitleCustom",
         parent=styles["Title"],
         textColor="#5941FF",
-        fontSize=18,
-        spaceAfter=12
+        fontSize=14,
+        spaceAfter=8
     )
     section_title = ParagraphStyle(
         "SectionTitle",
         parent=styles["Heading2"],
         textColor="#5941FF",
-        fontSize=13,
+        fontSize=10,
         fontName="Helvetica-Bold",
-        spaceAfter=8
+        spaceAfter=5
     )
-    normal = styles["Normal"]
+    normal = ParagraphStyle(
+        "NormalCustom",
+        parent=styles["Normal"],
+        fontSize=9,
+        leading=11
+    )
     field_label = ParagraphStyle(
         "FieldLabel",
         parent=styles["Normal"],
         textColor="#333333",
-        fontSize=10
+        fontSize=8
     )
     field_value = ParagraphStyle(
         "FieldValue",
         parent=styles["Normal"],
         textColor="#000000",
-        fontSize=10,
+        fontSize=8,
         fontName="Helvetica-Bold"
     )
     
