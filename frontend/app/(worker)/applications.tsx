@@ -85,11 +85,14 @@ export default function WorkerApplicationsScreen() {
       }
 
       // Start auto-refresh interval (15 seconds - optimiert für Performance)
-      intervalRef.current = setInterval(() => {
-        if (user) {
-          loadApplications(true); // Silent refresh
-        }
-      }, 15000);
+      // Race Condition verhindern: nur starten, wenn noch kein Interval läuft
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(() => {
+          if (user) {
+            loadApplications(true); // Silent refresh
+          }
+        }, 15000);
+      }
 
       // Cleanup on unfocus
       return () => {
