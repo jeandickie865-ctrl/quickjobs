@@ -129,11 +129,20 @@ export default function Step5Summary() {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView edges={['top']} style={styles.safeArea}>
-        <ProgressBar currentStep={5} totalSteps={5} />
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <View style={styles.container}>
 
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+          <ProgressBar currentStep={5} totalSteps={5} />
+
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={{ ...styles.scrollContent, paddingBottom: 160 }}
+            showsVerticalScrollIndicator={false}
+          >
           <Text style={styles.title}>Zusammenfassung</Text>
           <Text style={styles.subtitle}>Überprüfe deine Angaben</Text>
 
