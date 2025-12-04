@@ -207,10 +207,10 @@ export default function WorkerJobDetailScreen() {
                   return (
                     <>
                       <Text style={{ fontSize: 16, color: COLORS.white }}>
-                        📅 {jobDate}
+                        {jobDate}
                       </Text>
                       <Text style={{ fontSize: 16, color: COLORS.white, marginTop: 4 }}>
-                        🕐 {startTime} – {endTime} Uhr
+                        {startTime} – {endTime} Uhr
                       </Text>
                     </>
                   );
@@ -221,11 +221,11 @@ export default function WorkerJobDetailScreen() {
                   return (
                     <>
                       <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '600' }}>
-                        ⏱️ {job.hours} Stunden
+                        {job.hours} Stunden
                       </Text>
                       {jobDate && (
                         <Text style={{ fontSize: 14, color: COLORS.darkGray, marginTop: 8 }}>
-                          📅 Datum: {jobDate}
+                          Datum: {jobDate}
                         </Text>
                       )}
                     </>
