@@ -910,32 +910,43 @@ export default function EditWorkerProfileScreen() {
       </ScrollView>
 
       {/* FIXED SAVE BUTTON */}
-      <SafeAreaView edges={['bottom']} style={{ backgroundColor: COLORS.bg }}>
-        <View style={{ paddingHorizontal: 20, paddingVertical: 16, borderTopWidth: 1, borderTopColor: COLORS.border }}>
-          <Pressable
-            onPress={handleSave}
-            disabled={!isFormValid() || saving}
-            style={{
-              width: '60%',
-              maxWidth: 300,
-              minWidth: 220,
-              alignSelf: 'center',
-              backgroundColor: isFormValid() && !saving ? COLORS.neon : '#333',
-              paddingVertical: 16,
-              borderRadius: 14,
-              alignItems: 'center'
-            }}
-          >
-            {saving ? (
-              <ActivityIndicator color="#000" />
-            ) : (
-              <Text style={{ color: '#000', fontSize: 16, fontWeight: '700' }}>
-                Profil speichern
-              </Text>
-            )}
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <View style={{
+        position: 'absolute',
+        bottom: 70,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        zIndex: 999,
+        paddingHorizontal: 20,
+      }}>
+        <Pressable
+          onPress={handleSave}
+          disabled={!isFormValid() || saving}
+          style={{
+            width: '60%',
+            maxWidth: 300,
+            minWidth: 220,
+            backgroundColor: isFormValid() && !saving ? COLORS.neon : COLORS.card,
+            paddingVertical: 18,
+            borderRadius: 16,
+            alignItems: 'center',
+            borderWidth: isFormValid() ? 0 : 2,
+            borderColor: COLORS.border,
+            shadowColor: COLORS.neon,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: isFormValid() ? 0.3 : 0,
+            shadowRadius: 8,
+          }}
+        >
+          {saving ? (
+            <ActivityIndicator color={COLORS.black} />
+          ) : (
+            <Text style={{ color: isFormValid() ? COLORS.black : COLORS.muted, fontSize: 17, fontWeight: '700' }}>
+              Profil speichern
+            </Text>
+          )}
+        </Pressable>
+      </View>
     </View>
   );
 }
