@@ -104,7 +104,9 @@ const styles = StyleSheet.create({
     color: COLORS.purple,
   },
   nextButton: {
-    flex: 1,
+    width: '60%',
+    maxWidth: 300,
+    minWidth: 220,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
