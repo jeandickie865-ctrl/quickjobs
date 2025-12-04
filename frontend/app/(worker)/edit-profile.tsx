@@ -1102,6 +1102,43 @@ export default function EditWorkerProfileScreen() {
         </Pressable>
       </View>
       </KeyboardAvoidingView>
+      
+      {showSaved && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 100,
+            left: 0,
+            right: 0,
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#141126",
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: "#6B4BFF",
+              shadowColor: "#6B4BFF",
+              shadowOpacity: 0.3,
+              shadowRadius: 6,
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: "700",
+              }}
+            >
+              Änderungen gespeichert
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
