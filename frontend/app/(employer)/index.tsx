@@ -117,9 +117,8 @@ export default function EmployerDashboard() {
             paddingVertical: 14,
             paddingHorizontal: 16,
             alignItems: 'center',
-            width: '60%',
-            maxWidth: 300,
-            minWidth: 220,
+            width: '100%',
+            maxWidth: 360,
           }}
         >
           <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>+ Neuen Auftrag erstellen</Text>
