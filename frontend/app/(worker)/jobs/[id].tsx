@@ -111,7 +111,8 @@ export default function WorkerJobDetailScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
-      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
+
         {/* Header */}
         <View style={{
           flexDirection: 'row',
@@ -131,7 +132,7 @@ export default function WorkerJobDetailScreen() {
 
         <ScrollView
           style={{ flex: 1 }}
-          contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+          contentContainerStyle={{ padding: 20, paddingBottom: 160, flexGrow: 1 }}
         >
           {/* Job Title */}
           <Text style={{
