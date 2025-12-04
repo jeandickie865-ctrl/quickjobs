@@ -279,7 +279,7 @@ export default function Step1Basic() {
           </View>
 
           {/* Large spacer so all fields are above fixed button */}
-          <View style={{ height: 180 }} />
+          <View style={{ height: 240 }} />
         </ScrollView>
 
         {/* HINT */}
