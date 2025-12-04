@@ -86,6 +86,10 @@ export default function WorkerJobDetailScreen() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    loadJob();
+    loadWorkerProfile();
+  }, [id]);
 
   if (loading) {
     return (
