@@ -10,15 +10,16 @@ import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
 
-// BACKUP NEON-TECH COLORS
+// BACKUP DARK THEME
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#0E0B1F',
+  card: '#141126',
+  border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.7)',
+  neon: '#C8FF16',
   black: '#000000',
-  darkGray: '#333333',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
-  neonShadow: 'rgba(200,255,22,0.2)',
 };
 
 export default function EmployerProfileViewScreen() {
