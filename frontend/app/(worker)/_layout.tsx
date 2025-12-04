@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Tabs, Redirect, useFocusEffect } from 'expo-router';
+import React from 'react';
+import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform, Text } from 'react-native';
-import { getWorkerApplications } from '../../utils/applicationStore';
 
 const COLORS = {
   purple: '#6B4BFF',
