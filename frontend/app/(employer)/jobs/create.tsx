@@ -1,4 +1,4 @@
-// app/(employer)/jobs/create.tsx – BACKUP NEON-TECH JOB CREATE
+// app/(employer)/jobs/create.tsx – PREMIUM PURPLE FINAL CLEAN VERSION
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, Pressable, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,16 +14,16 @@ import AddressAutocompleteInput from '../../../components/AddressAutocompleteInp
 import taxonomy from '../../../shared/taxonomy.json';
 
 const COLORS = {
-  bg: '#0E0B1F',
-  card: '#141126',
-  cardSoft: '#181433',
-  border: 'rgba(255,255,255,0.08)',
-  inputBorder: 'rgba(255,255,255,0.25)',
-  inputBg: '#1E1938',
-  white: '#FFFFFF',
+  bg: '#3D2CE6',           // Premium Purple Background
+  card: '#FFFFFF',         // White cards for clarity
+  cardSoft: '#F5F5F5',
+  border: 'rgba(0,0,0,0.06)',
+  inputBorder: 'rgba(0,0,0,0.12)',
+  inputBg: '#FFFFFF',
+  white: '#000000',        // Black text inside white cards
   neon: '#C8FF16',
-  purple: '#6B4BFF',
-  muted: 'rgba(255,255,255,0.7)',
+  purple: '#3D2CE6',
+  muted: '#777777',
   error: '#FF4D4D',
 };
 
