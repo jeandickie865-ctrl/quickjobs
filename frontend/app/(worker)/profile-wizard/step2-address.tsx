@@ -42,17 +42,59 @@ export default function Step2Address() {
     return Object.keys(err).length === 0;
   };
 
-  const handleNext = () => {
-    // Koordinaten-Check ZUERST
-    if (!lat || !lon) {
-      setErrors(prev => ({ ...prev, coords: 'Bitte berechne die Koordinaten oder wähle eine Adresse aus der Liste' }));
+  const handleNext = async () => {
+    // Erste Validierung
+    if (!street.trim() || !postalCode.trim() || !city.trim()) {
+      setErrors({
+        street: !street.trim() ? 'Straße ist erforderlich' : '',
+        postalCode: !postalCode.trim() ? 'PLZ ist erforderlich' : '',
+        city: !city.trim() ? 'Stadt ist erforderlich' : '',
+      });
       return;
     }
-    
-    if (validate()) {
-      updateWizardData({ street, houseNumber, postalCode, city, lat, lon, radiusKm: radius });
-      router.push('/(worker)/profile-wizard/step3-categories');
+
+    // Wenn Koordinaten fehlen → automatisch berechnen
+    if (lat == null || lon == null) {
+      try {
+        const addressParts = [];
+        if (street) addressParts.push(street);
+        if (houseNumber) addressParts.push(houseNumber);
+        if (postalCode) addressParts.push(postalCode);
+        if (city) addressParts.push(city);
+
+        const addressString = addressParts.join(', ');
+
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressString)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data && data.length > 0) {
+          const result = data[0];
+          setLat(parseFloat(result.lat));
+          setLon(parseFloat(result.lon));
+        } else {
+          setErrors({ city: 'Es konnten keine Koordinaten erzeugt werden' });
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+        setErrors({ city: 'Es konnten keine Koordinaten erzeugt werden' });
+        return;
+      }
     }
+
+    // Speichern
+    updateWizardData({
+      street,
+      houseNumber,
+      postalCode,
+      city,
+      lat,
+      lon,
+      radiusKm: radius,
+    });
+
+    router.push('/(worker)/profile-wizard/step3-categories');
   };
 
   const handleBack = () => {
