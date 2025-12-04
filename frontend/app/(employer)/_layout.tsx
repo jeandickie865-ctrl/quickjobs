@@ -80,7 +80,7 @@ export default function EmployerLayout() {
       }}
     >
       {TAB('index', 'Aufträge')}
-      {TAB('applications', 'Bewerb.')}
+      {TAB('applications', 'Bewerbungen')}
       {TAB('matches', 'Matches', matchesCount)}
       {TAB('profile', 'Profil')}
 
@@ -93,6 +93,11 @@ export default function EmployerLayout() {
       <Tabs.Screen name="registration/prepare" options={{ href: null }} />
       <Tabs.Screen name="registration/confirm" options={{ href: null }} />
       <Tabs.Screen name="registration/done" options={{ href: null }} />
+      <Tabs.Screen name="matches_OLD" options={{ href: null }} />
+      <Tabs.Screen name="index-old-backup" options={{ href: null }} />
+      <Tabs.Screen name="_layout-old-backup" options={{ href: null }} />
+      <Tabs.Screen name="payment-old-backup" options={{ href: null }} />
+      <Tabs.Screen name="applications-old-backup" options={{ href: null }} />
     </Tabs>
   );
 }
