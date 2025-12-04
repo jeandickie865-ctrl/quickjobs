@@ -571,7 +571,7 @@ export default function WorkerMatchesScreen() {
           <View
             style={{
               flex: 1,
-              backgroundColor: COLORS.dim,
+              backgroundColor: "rgba(0,0,0,0.7)",
               justifyContent: "center",
               alignItems: "center",
               padding: 24,
@@ -694,7 +694,7 @@ export default function WorkerMatchesScreen() {
           <View
             style={{
               flex: 1,
-              backgroundColor: COLORS.dim,
+              backgroundColor: "rgba(0,0,0,0.7)",
               justifyContent: "center",
               alignItems: "center",
               padding: 24,
