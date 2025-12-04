@@ -1012,7 +1012,7 @@ async def get_worker_registration_status(worker_id: str):
         worker_id: Die userId des Workers
     
     Returns:
-        JSON mit complete Status und ggf. Liste fehlender Felder
+        JSON mit complete Status, isSelfEmployed und ggf. Liste fehlender Felder
     """
     logger.info(f"Checking registration status for worker {worker_id}")
     
@@ -1021,7 +1021,17 @@ async def get_worker_registration_status(worker_id: str):
     if not profile:
         raise HTTPException(status_code=404, detail="Worker profile not found")
     
-    # Erforderliche Felder prüfen
+    # Wenn selbstständig, sind keine Registrierungsdaten erforderlich
+    is_self_employed = profile.get("isSelfEmployed", False)
+    if is_self_employed:
+        logger.info(f"Worker {worker_id} is self-employed, no registration data needed")
+        return {
+            "complete": True,
+            "isSelfEmployed": True,
+            "message": "Selbstständig - keine Anmeldung erforderlich"
+        }
+    
+    # Erforderliche Felder prüfen (nur für nicht-selbstständige)
     required_fields = ["geburtsdatum", "steuerId", "sozialversicherungsnummer", "krankenkasse"]
     missing_fields = []
     
@@ -1036,12 +1046,14 @@ async def get_worker_registration_status(worker_id: str):
         logger.info(f"Worker {worker_id} registration incomplete. Missing: {missing_fields}")
         return {
             "complete": False,
+            "isSelfEmployed": False,
             "missing": missing_fields
         }
     else:
         logger.info(f"Worker {worker_id} registration complete")
         return {
-            "complete": True
+            "complete": True,
+            "isSelfEmployed": False
         }
 
 
