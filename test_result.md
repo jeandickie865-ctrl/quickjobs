@@ -657,6 +657,49 @@ agent_communication:
       
       **Status:** DELETE Match Feature vollständig funktional und production-ready
 
+  - agent: "testing"
+    message: |
+      **❌ CRITICAL FRONTEND TESTING RESULTS - REGISTRATION DATA SCREEN INACCESSIBLE**
+      
+      **Review-Anfrage:** Extended Worker Registration Data Fields Testing auf Mobile (390x844)
+      
+      **KRITISCHES PROBLEM IDENTIFIZIERT:**
+      🚨 **Registration-Data Screen ist vollständig unzugänglich**
+      
+      **Test-Ergebnisse (Mobile: 390x844):**
+      1. ❌ **Direkte Navigation fehlgeschlagen:** /(worker)/registration-data → Redirect zu /auth/start
+      2. ❌ **Authentifizierung blockiert Zugang:** Alle geschützten Worker-Routen nicht erreichbar
+      3. ❌ **Keine Felder testbar:** 0/8 Felder (4 alte + 4 neue) zugänglich
+      4. ❌ **UI-Tests unmöglich:** Geburtsort, Staatsangehörigkeit, Checkboxen nicht sichtbar
+      
+      **Versuchte Lösungsansätze:**
+      - ✅ Account-Erstellung getestet (testworker_1764964696@test.de)
+      - ✅ Rolle-Auswahl getestet (Auftragnehmer)
+      - ❌ Direkte Navigation zu registration-data → Fehlgeschlagen
+      - ❌ Alternative Navigation über matches → Fehlgeschlagen
+      
+      **Screenshots dokumentiert:**
+      📸 01_initial_screen.png - Start screen statt registration form
+      📸 02-06_*.png - Alle zeigen Start screen (Redirect-Problem)
+      
+      **Root Cause Analysis:**
+      Das Problem liegt im Authentication/Authorization System:
+      - Worker-Routen sind geschützt aber Auth-Flow ist unterbrochen
+      - Benutzer können sich registrieren aber nicht zu Worker-Bereichen navigieren
+      - Registration-Data Screen ist hinter Auth-Wall aber Auth funktioniert nicht
+      
+      **Impact auf Review-Anfrage:**
+      ❌ **Alle Test-Szenarien fehlgeschlagen:**
+      - Navigation zum Formular: UNMÖGLICH
+      - UI-Darstellung: NICHT TESTBAR
+      - Eingabe-Funktionalität: NICHT TESTBAR
+      - Speichern-Funktionalität: NICHT TESTBAR
+      - Daten-Persistenz: NICHT TESTBAR
+      - Keyboard-Handling: NICHT TESTBAR
+      
+      **Status:** CRITICAL - Komplette Feature-Blockade durch Auth-Problem
+      **Empfehlung:** Auth-System reparieren BEVOR weitere Frontend-Tests möglich sind
+
   - agent: "main"
     message: |
       **Feature: Ungelesene Nachrichten-Anzahl auf Matches-Screens**
