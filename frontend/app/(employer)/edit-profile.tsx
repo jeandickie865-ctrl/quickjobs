@@ -63,6 +63,10 @@ export default function EmployerProfileScreen() {
   // Focus for neon border
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
+  // Toast state
+  const [showToast, setShowToast] = useState(false);
+  const toastOpacity = useRef(new Animated.Value(0)).current;
+
   // ANIMATION
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const glowAnim = useRef(new Animated.Value(0)).current;
