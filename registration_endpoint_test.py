@@ -12,7 +12,7 @@ from datetime import datetime
 import uuid
 
 # Backend URL from environment
-BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://worklink-30.preview.emergentagent.com')
+BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://quick-shift.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 class RegistrationEndpointTester:

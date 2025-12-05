@@ -1,196 +1,89 @@
 <analysis>
-The trajectory documents an intensive, user-guided development process for the ShiftMatch mobile app. The user, a German-speaking engineer, has directed the AI through a wide range of tasks, from UI/UX enhancements and critical bug fixes to complex performance optimizations and a grueling iOS build-and-deployment cycle.
+The trajectory details an intensive, user-guided development process for the ShiftMatch mobile application. The German-speaking user has directed the AI engineer through a wide array of tasks, beginning with UI/UX fixes on the employer dashboard, such as resolving a tab bar positioning issue on modern iPhones using .
 
-Work began with specific UI fixes, such as implementing a non-blocking toast notification. It then transitioned to debugging critical backend and frontend integration issues, including a stopped backend, a data-mapping error ( vs. ), and a major job-matching failure caused by inconsistent  files between the frontend (English keys) and backend (German keys). The AI successfully synchronized these to resolve the matching problem.
+A significant portion of the work involved debugging critical system-wide issues. This included fixing a user registration failure by correcting an overly strict email validation and restarting a stopped backend service. A major navigation loop after profile saving was resolved by correcting flawed redirection logic in  and . A critical TestFlight build crash (app stuck on splash screen) was traced back to incorrect environment variables; the app was using development URLs in a production build. This was fixed by properly configuring  for production builds.
 
-Performance was significantly improved on the  screens for both workers and employers by parallelizing sequential API calls using . The  component was also heavily optimized with debouncing, caching, and request guards.
-
-The latter half of the trajectory was dominated by a difficult and iterative process to create a successful iOS build for TestFlight. This involved debugging numerous failures related to Expo SDK versions (downgrading from 54 to 53, then upgrading back to 54), Node.js version incompatibilities, CocoaPods errors (, , , ), and incorrect project configurations (hardcoded  in , missing ). After many failed attempts, a successful build was finally produced.
-
-The most recent task, initiated right at the end, is to fix UI issues on the employer dashboard: a non-functional Aufträge button and a tab bar positioned too low on modern iPhones.
+The latter half of the trajectory focused heavily on a complete overhaul of the backend's PDF generation for employment documents (, , ), guided by user feedback and ChatGPT-provided templates. This involved not only redesigning the PDFs for professionalism and legal compliance but also fixing data-related bugs, like a missing date of birth due to an incorrect date format assumption. Most recently, the system was enhanced to differentiate between urgent and standard social security registrations (Sofortmeldung) based on job category. The feature was then refactored and renamed to Meldecheck at the user's request. The last action was updating the backend to support new fields for the worker registration form.
 
 The user's primary language is German. All future responses **must be in German**.
 </analysis>
 
 <product_requirements>
-The ShiftMatch application is a German-language, two-sided mobile marketplace connecting freelance/employed workers (Worker) with employers (Employer). The primary goal is to build a polished, stable, and performant app with a modern dark theme (BACKUP) and a native iOS feel.
+The ShiftMatch application is a German-language, two-sided mobile marketplace connecting freelance/short-term workers (Worker) with employers (Employer).
 
-**Core User Requirements:**
-1.  **Worker & Employer Flows:** Users must be able to register, manage their profiles, and interact with the job lifecycle.
-2.  **Job Matching:** Workers should see a feed of relevant jobs based on their profile (skills, location, radius). This matching must be reliable.
-3.  **UI/UX Excellence:** The application must be visually consistent and handle device-specific UI challenges like the iPhone's safe areas and keyboard. All interactions should be smooth and intuitive.
-4.  **Performance:** List screens, particularly Matches, must load quickly, even with a large number of entries.
-5.  **Deployment:** The application must be buildable for iOS (TestFlight) and Android, requiring correct configuration of , , and all related dependencies.
+**Core Requirements:**
+1.  **Dual User Roles:** Separate, functional flows for Workers and Employers, including registration, profile management, and job interaction.
+2.  **UI/UX Excellence:** A polished, intuitive, and performant dark-themed application that feels native on iOS and Android. It must correctly handle device-specific UI, such as iPhone safe areas.
+3.  **Legally Compliant Documentation:** The app must generate professional and legally compliant German employment documents, including the work contract (), social security registration (/), and payroll statement ().
+4.  **Intelligent Business Logic:** The system must automatically handle nuances of German employment law, such as identifying job categories that require an immediate social security declaration (Sofortmeldung).
 
-**Implementation So Far:**
-- The core application structure is in place using Expo Router.
-- Numerous UI/UX refinements have been made (toasts, button states, layout fixes).
-- Critical bugs related to data mapping (/), authentication, and job matching have been resolved.
-- Performance of key list screens has been drastically improved.
-- A successful iOS build was produced after an extensive debugging cycle.
+**Implementation Status:**
+- Core app structure with role-based layouts is complete.
+- Numerous UI/UX bugs and critical backend/frontend integration issues have been resolved.
+- PDF generation has been significantly refactored for professionalism and legal accuracy, using user-provided templates.
+- A system to dynamically handle Sofortmeldung requirements based on job category is implemented.
+- The next step is to enhance the worker data collection to include fields necessary for full legal compliance of generated documents.
 </product_requirements>
 
 <key_technical_concepts>
-- **Framework:** React Native with Expo (SDK 54).
-- **Routing:** Expo Router (file-based).
-- **Backend:** FastAPI (Python) with MongoDB.
-- **State Management:**  and custom utility stores (, ).
-- **Performance:**  for parallelizing API calls, Debouncing and Caching for input components.
-- **Build/Deployment:** Expo Application Services (EAS) for iOS builds, involving , , and .
-- **Debugging:** Extensive use of backend/frontend logs, database queries (Current Mongosh Log ID:	6932dfca70418cda39b1ddf3
-Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.9
-Using MongoDB:		7.0.26
-Using Mongosh:		2.5.9
-
-For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
-
-
-To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
-You can opt-out by running the disableTelemetry() command.
-
-------
-   The server generated these startup warnings when booting
-   2025-12-05T13:36:08.075+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
-   2025-12-05T13:36:09.292+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
-   2025-12-05T13:36:09.292+00:00: You are running this process as the root user, which is not recommended
-   2025-12-05T13:36:09.292+00:00: Soft rlimits for open file descriptors too low
-------
-
-test> ), and iterative dependency management (yarn install v1.22.22
-[1/4] Resolving packages...
-success Already up-to-date.
-Done in 0.31s., env: load .env
-env: export EXPO_TUNNEL_SUBDOMAIN EXPO_PACKAGER_HOSTNAME EXPO_PACKAGER_PROXY_URL EXPO_PUBLIC_BACKEND_URL EXPO_USE_FAST_RESOLVER METRO_CACHE_ROOT EXPO_TUNNEL_NO_HTTPS_CHECK
-› Installing using yarn
-> yarn install
-yarn install v1.22.22
-[1/4] Resolving packages...
-success Already up-to-date.
-Done in 0.33s.).
+- **Framework:** React Native with Expo (SDK 54)
+- **Routing:** Expo Router (file-based)
+- **Backend:** FastAPI (Python) with MongoDB
+- **Data Modeling:** Pydantic for backend request/response validation
+- **PDF Generation:**  library in Python
+- **UI:**  () for dynamic layouts
+- **Environment Management:** Differentiating development and production API URLs via  and .
 </key_technical_concepts>
 
 <code_architecture>
-The project is an Expo monorepo with a  and . The frontend uses Expo's file-based routing with separate layouts for  and  roles.
+The project is a monorepo with an Expo  and a FastAPI .
 
 
 
 - ****
-  - **Importance:** Defines the tab navigation for the employer section. It's the source of the current UI bug.
-  - **Summary of Changes:** The  height and padding were increased to fix an issue where the tab bar was rendered too low on modern iPhones. This was the last action taken.
-
-- ** & **
-  - **Importance:** Critical configuration for building the app with EAS. They were the focus of a lengthy debugging cycle for the iOS build.
-  - **Summary of Changes:** Iteratively modified to add/fix the iOS , add the  plugin, define a Node.js version ( in ), and disable the New Architecture ( in ) to resolve various build failures. The  for  was also added.
+  - **Importance:** This is the core of the application's business logic, handling all API endpoints, database interactions, and PDF generation. It's the most frequently and heavily modified file.
+  - **Summary of Changes:** Extensively refactored. The  Pydantic model was repeatedly updated to include new fields like , , , and . The PDF generation functions (, , ) were completely rewritten based on user-provided templates for legal compliance and professional design. Logic was added to dynamically adjust the Meldecheck PDF based on whether the job category requires urgent registration (Sofortmeldung).
 
 - ****
-  - **Importance:** Manages all frontend dependencies. Was the subject of intense debugging to resolve version mismatches causing build failures.
-  - **Summary of Changes:** Went through multiple cycles of downgrading and upgrading 
-  Usage: expo [command] [options]
-
-  Options:
-  
-    -V, --version                     output the version number
-    --non-interactive                 Fail, if an interactive prompt would be required to continue.
-    -h, --help                        output usage information
-  
-  Commands:
-
-    init [name]                       Create a new Expo project
-    start [path]                      Start a local dev server for the app
-    start:web [path]                  Start a Webpack dev server for the web app
-    export [path]                     Export the static files of the app for hosting it on a web server
-    install [packages...]             Install a module or other package to a project
-    run:android [path]                Run the Android app binary locally
-    run:ios [path]                    Run the iOS app binary locally
-    send [path]                       Share the project's URL to an email address
-
-    login                             Login to an Expo account
-    logout                            Logout of an Expo account
-    register                          Sign up for a new Expo account
-    whoami                            Return the currently authenticated account
-
-    client:install:ios                Install Expo Go for iOS on the simulator
-    client:install:android            Install Expo Go for Android on a connected device or emulator
-
-    config [path]                     Show the project config
-    doctor [path]                     Diagnose issues with the project
-    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
-
-    customize:web [path]              Eject the default web files for customization
-    prebuild [path]                   Create native iOS and Android project files before building natively.
-                                      Learn more: https://docs.expo.dev/workflow/customizing/
-
-    build:web [path]                  Build the web app for production
-
-    credentials:manager [path]        Superseded by eas credentials in eas-cli
-
-    url [path]                        Log a URL for opening the project in Expo Go
-    url:ipa [path]                    Log the download URL for the standalone iOS binary
-    url:apk [path]                    Log the download URL for the standalone Android binary
-
-    webhooks [path]                   List all webhooks for a project
-    webhooks:add [path]               Add a webhook to a project
-    webhooks:remove [path]            Delete a webhook
-    webhooks:update [path]            Update an existing webhook
-
-    build:ios [path]                  Superseded by eas build in eas-cli
-    build:android [path]              Superseded by eas build in eas-cli
-    build:status [path]               Superseded by eas build:list in eas-cli
-    eject [path]                      Superseded by expo prebuild
-    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
-    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
-    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
-    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
-    publish [path]                    Superseded by eas update in eas-cli
-    publish:set [path]                Superseded by eas update:republish in eas-cli
-    publish:rollback [path]           Superseded by eas update:republish in eas-cli
-    publish:history [path]            Superseded by eas update:list in eas-cli
-    publish:details [path]            Superseded by eas update:view in eas-cli
-    push:android:upload [path]        Superseded by eas credentials in eas-cli
-    push:android:show [path]          Superseded by eas credentials in eas-cli
-    push:android:clear [path]         Superseded by eas credentials in eas-cli
-    upload:android [path]             Superseded by eas submit in eas-cli
-    upload:ios [path]                 Superseded by eas submit in eas-cli
-    client:ios [path]                 Superseded by Expo Dev Clients
-
-[13:36:13]   Run a command with --help for more info 💡
-[13:36:13]     $ expo start --help
-[13:36:13], , , , and adding/removing  to find a stable combination for the iOS build. The final state uses Expo SDK 54.
-
-- ** & **
-  - **Importance:** Key screens for users to view their job matches. Were suffering from severe performance issues.
-  - **Summary of Changes:** Reworked to use  to parallelize multiple API calls (for unread counts, worker profiles, registration status), drastically reducing load times. A conditional button was also added to the employer view to show Warten auf Worker-Daten if a worker's registration data is incomplete.
-
-- ** & **
-  - **Importance:** A critical bug was caused by the backend using a  with German keys () while the frontend used English keys (), breaking the job matching.
-  - **Summary of Changes:** The backend's  was replaced with the frontend's version, and a migration script was run on the database to update all existing job categories to use English keys, unifying the system.
+  - **Importance:** The primary screen for workers to input their official data (tax ID, social security number, etc.) required for employment documents.
+  - **Summary of Changes:** This file is the target of the **current work**. It needs to be updated to include new input fields for Staatsangehörigkeit (nationality), Geburtsort (place of birth), and two legal confirmation checkboxes. The backend changes to support this are already complete.
 
 - ****
-  - **Importance:** A reusable component for address search used in multiple screens.
-  - **Summary of Changes:** Significantly optimized by adding debouncing (300ms delay), response caching (10-minute TTL), and a request ID guard to prevent race conditions, leading to a much faster and more responsive user experience.
+  - **Importance:** The form for employers to create new job listings. It was identified as a major UX pain point due to its length.
+  - **Summary of Changes:** The UI was significantly simplified by removing an overly complex collapsible/accordion layout in favor of clear, static section headers. The excessive bottom padding was reduced. A visual warning banner was added, which appears when the user selects a job category that legally requires an urgent Sofortmeldung.
+
+- ****
+  - **Importance:** Defines the tab bar navigation for the employer section.
+  - **Summary of Changes:** The tab bar's styling was made dynamic using the  hook to correctly position it on modern iPhones with larger bottom safe areas, resolving a key UI complaint.
+
+- ** and **
+  - **Importance:** Critical for managing API endpoints. Misconfiguration caused the TestFlight app to crash on launch.
+  - **Summary of Changes:**  was updated with  to point to the production backend.  was modified to intelligently select the correct URL:  for development (web preview) and  for production builds.
 </code_architecture>
 
 <pending_tasks>
-- **Fix Aufträge Button:** The user reported that the Aufträge (Jobs/Orders) button in the employer's tab navigation is not functional. This has not been investigated yet.
-- **Verify Footer Fix:** The AI has applied a potential fix for the employer tab bar being too low, but the frontend service needs to be restarted and the result confirmed by the user.
+- **Frontend Implementation for Worker Registration:** The UI for the worker registration data form () needs to be updated. This includes adding input fields for Staatsangehörigkeit and Geburtsort, and adding two legal confirmation checkboxes related to short-term employment rules.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI was actively debugging two UI issues reported by the user on the employer side of the application ( layout).
+The current task is to enhance the worker registration process to capture all data required for legally compliant employment documents, based on direct user feedback. The user specified that the worker registration form, where data like social security number is entered, should be expanded.
 
-1.  **Non-functional Aufträge Button:** The user stated they are unable to press the Aufträge (Jobs/Orders) tab in the employer's main navigation. This part of the problem has not yet been addressed.
-2.  **Incorrect Footer/Tab-Bar Position:** The user reported that the tab bar is positioned too low on their iPhone 16 Pro, with elements appearing at the very bottom edge of the screen.
+**The user's explicit request is to add:**
+1.  A field for Staatsangehörigkeit (Nationality).
+2.  A field for Geburtsort (Place of Birth).
+3.  Two checkboxes for the worker to confirm their short-term employment status (Kurzfristigkeits-Nachweis):
+    - Confirmation they do not exceed 70 workdays per year.
+    - Confirmation that this type of work is not their primary profession.
 
-The AI correctly identified this as a -related issue. It investigated the layout definition file for the employer section:
-- **File:** 
+The AI engineer has already **completed the backend portion** of this task. The following changes were made in :
 
-It found hardcoded style values in the :
+- The Pydantic models (, , ) were updated to include the new fields:
+  
+- The  endpoint logic was expanded to process and save these new fields from the request body into the  collection in the database.
 
-The AI deduced these values were insufficient for the larger safe area of modern iPhones and applied a fix:
-
-The very last action was the intention to restart the Expo development server to apply this change. The investigation into the non-functional button has not yet begun.
+The work concluded just before starting the corresponding frontend changes.
 </current_work>
 
 <optional_next_step>
-Restart the Expo frontend server to apply the tab bar style changes, and then ask the user to verify if the footer position is now correct on their iPhone 16 Pro.
+Continue the work by implementing the frontend changes. Modify  to add the new input fields and checkboxes to the form.
 </optional_next_step>

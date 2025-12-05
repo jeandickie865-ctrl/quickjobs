@@ -4055,7 +4055,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://worklink-30.preview.emergentagent.com",
+        "https://quick-shift.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"

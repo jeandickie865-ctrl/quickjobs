@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://worklink-30.preview.emergentagent.com`
-- Backend: `https://worklink-30.preview.emergentagent.com/api`
+- Frontend: `https://quick-shift.preview.emergentagent.com`
+- Backend: `https://quick-shift.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)
