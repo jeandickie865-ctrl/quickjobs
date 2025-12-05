@@ -1083,8 +1083,12 @@ async def get_worker_registration_status(worker_id: str):
 class WorkerRegistrationData(BaseModel):
     steuerId: Optional[str] = None
     geburtsdatum: Optional[str] = None
+    geburtsort: Optional[str] = None
+    staatsangehoerigkeit: Optional[str] = None
     sozialversicherungsnummer: Optional[str] = None
     krankenkasse: Optional[str] = None
+    kurzfristigkeit_bestaetigt: Optional[bool] = None
+    kurzfristigkeit_nicht_berufsmaeßig: Optional[bool] = None
 
 @api_router.put("/profiles/worker/me/registration-data", response_model=WorkerProfile)
 async def update_worker_registration_data(
