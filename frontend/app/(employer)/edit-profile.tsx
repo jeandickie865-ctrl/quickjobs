@@ -410,6 +410,32 @@ export default function EmployerProfileScreen() {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Success Toast */}
+      {showToast && (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            top: 60,
+            left: 20,
+            right: 20,
+            backgroundColor: COLORS.neon,
+            borderRadius: 12,
+            padding: 16,
+            opacity: toastOpacity,
+            zIndex: 9999,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
+            elevation: 10,
+          }}
+        >
+          <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '700', textAlign: 'center' }}>
+            ✅ Profil erfolgreich gespeichert!
+          </Text>
+        </Animated.View>
+      )}
     </View>
   );
 }
