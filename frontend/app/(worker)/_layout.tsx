@@ -18,6 +18,7 @@ const COLORS = {
 export default function WorkerLayout() {
   const { user, loading } = useAuth();
   const [matchesCount, setMatchesCount] = useState(0);
+  const insets = useSafeAreaInsets();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -58,8 +59,8 @@ export default function WorkerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: Platform.OS === 'ios' ? 85 : 75,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 14,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom,
           paddingTop: 12,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
