@@ -166,6 +166,8 @@ export default function AddressAutocompleteInput({
           placeholder="Straße"
           placeholderTextColor={COLORS.muted}
           style={styles.input}
+          autoCapitalize="words"
+          autoCorrect={false}
         />
       </View>
 
@@ -178,6 +180,8 @@ export default function AddressAutocompleteInput({
           placeholder="Nr."
           placeholderTextColor={COLORS.muted}
           style={styles.input}
+          autoCapitalize="none"
+          autoCorrect={false}
         />
       </View>
 
@@ -191,6 +195,8 @@ export default function AddressAutocompleteInput({
           placeholderTextColor={COLORS.muted}
           keyboardType="numeric"
           style={styles.input}
+          autoCapitalize="none"
+          autoCorrect={false}
         />
       </View>
 
@@ -203,6 +209,8 @@ export default function AddressAutocompleteInput({
           placeholder="Stadt"
           placeholderTextColor={COLORS.muted}
           style={styles.input}
+          autoCapitalize="words"
+          autoCorrect={false}
         />
       </View>
 
