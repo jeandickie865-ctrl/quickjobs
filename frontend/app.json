@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Backup",
-    "slug": "backup",
+    "slug": "backup-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
 
     "ios": {
-      "bundleIdentifier": "de.dickie.backup",
+      "bundleIdentifier": "com.backup.app",
       "buildNumber": "1",
       "supportsTablet": false
     },
@@ -21,7 +21,7 @@
         "backgroundColor": "#000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "de.dickie.backup"
+      "package": "com.backup.app"
     },
 
     "web": {
