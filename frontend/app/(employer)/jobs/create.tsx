@@ -452,8 +452,6 @@ export default function CreateJob() {
             </View>
           </View>
         )}
-          </>
-        )}
 
         {/* === ORT & ZEIT === */}
         <SectionHeader
