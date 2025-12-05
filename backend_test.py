@@ -98,9 +98,9 @@ class BackendTester:
                     "lastName": "Mustermann",
                     "phone": "+49 123 456789",
                     "email": f"testworker_reg_{self.test_timestamp}@test.de",
-                    "categories": ["sicherheit"],
+                    "categories": ["security"],
                     "subcategories": ["objektschutz"],
-                    "qualifications": ["sicherheitsschein"],
+                    "qualifications": ["sachkunde_34a"],
                     "radiusKm": 25,
                     "homeAddress": {
                         "street": "Teststraße",
