@@ -32,7 +32,13 @@ const COLORS = {
 
 const signupSchema = z
   .object({
-    email: z.string().min(1, 'E-Mail erforderlich').email('Ungültige E-Mail-Adresse'),
+    email: z
+      .string()
+      .min(1, 'E-Mail erforderlich')
+      .regex(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        'Ungültige E-Mail-Adresse'
+      ),
     password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
     confirm: z.string().min(1, 'Passwort-Bestätigung erforderlich')
   })
