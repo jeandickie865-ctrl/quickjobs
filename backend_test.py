@@ -17,7 +17,7 @@ import os
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = os.environ.get('EXPO_PUBLIC_API_URL', 'https://backup.dickie.app/api')
+BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://quick-shift.preview.emergentagent.com') + '/api'
 
 class BackendTester:
     def __init__(self):
