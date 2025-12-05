@@ -10,7 +10,7 @@ import { getWorkerProfile } from "../../utils/profileStore";
 
 const COLORS = {
   bg: '#141126',
-  card: '#141126',
+  card: '#1C1838',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.7)',
   purple: '#6B4BFF',

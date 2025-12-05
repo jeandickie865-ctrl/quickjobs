@@ -11,7 +11,7 @@ const COLORS = {
   white: '#FFFFFF',
   inactive: 'rgba(255,255,255,0.55)',
   bg: '#141126',
-  card: '#141126',
+  card: '#1C1838',
   border: 'rgba(255,255,255,0.06)',
 };
 

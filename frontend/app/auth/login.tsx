@@ -18,7 +18,7 @@ import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
   bg: '#141126',
-  card: '#141126',
+  card: '#1C1838',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.7)',
   placeholder: 'rgba(255,255,255,0.4)',

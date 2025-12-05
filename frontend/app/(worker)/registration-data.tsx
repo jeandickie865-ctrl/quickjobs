@@ -8,7 +8,7 @@ import { getWorkerProfile } from '../../utils/profileStore';
 
 const COLORS = {
   bg: '#141126',
-  card: '#141126',
+  card: '#1C1838',
   border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.7)',
