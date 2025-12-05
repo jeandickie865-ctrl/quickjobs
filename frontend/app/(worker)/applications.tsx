@@ -106,7 +106,7 @@ export default function WorkerApplicationsScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#0E0B1F' }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: '#141126' }]}>
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color="#C8FF16" />
         </View>
@@ -169,7 +169,7 @@ export default function WorkerApplicationsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: '#0E0B1F' }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: '#141126' }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -306,7 +306,7 @@ export default function WorkerApplicationsScreen() {
                 style={[
                   styles.statusContainer,
                   {
-                    backgroundColor: '#0E0B1F',
+                    backgroundColor: '#141126',
                     padding: spacing.sm,
                     marginTop: spacing.sm,
                   },
