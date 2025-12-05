@@ -279,6 +279,43 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
+          {/* Selbstständig Status */}
+          {profile.isSelfEmployed && (
+            <View
+              style={{
+                backgroundColor: COLORS.card,
+                borderRadius: 18,
+                padding: 20,
+                borderWidth: 1,
+                borderColor: COLORS.neon,
+                marginBottom: 20,
+              }}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    backgroundColor: COLORS.neon,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Ionicons name="briefcase" size={20} color={COLORS.bg} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>
+                    Selbstständig
+                  </Text>
+                  <Text style={{ fontSize: 13, color: COLORS.muted, marginTop: 2 }}>
+                    Keine Anmeldung erforderlich
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
           {/* Kategorien & Tags */}
           {(categoryLabels.length > 0 || tagLabels.length > 0) && (
             <View
