@@ -609,8 +609,6 @@ export default function CreateJob() {
             onLonChange={setLon}
           />
         </View>
-          </>
-        )}
 
         {/* === BEZAHLUNG === */}
         <SectionHeader
