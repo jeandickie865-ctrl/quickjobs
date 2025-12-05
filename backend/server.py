@@ -2535,10 +2535,16 @@ def generate_contract_pdf(
             return ""
         try:
             from datetime import datetime
+            # Try YYYY-MM-DD format first
             dt = datetime.strptime(date_str, "%Y-%m-%d")
             return dt.strftime("%d.%m.%Y")
         except:
-            return ""
+            try:
+                # Try DD.MM.YYYY format (already formatted)
+                datetime.strptime(date_str, "%d.%m.%Y")
+                return date_str  # Already in correct format
+            except:
+                return ""
     
     # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
@@ -2771,10 +2777,16 @@ def generate_sofortmeldung_pdf(
             return ""
         try:
             from datetime import datetime
+            # Try YYYY-MM-DD format first
             dt = datetime.strptime(date_str, "%Y-%m-%d")
             return dt.strftime("%d.%m.%Y")
         except:
-            return ""
+            try:
+                # Try DD.MM.YYYY format (already formatted)
+                datetime.strptime(date_str, "%d.%m.%Y")
+                return date_str  # Already in correct format
+            except:
+                return ""
     
     # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
@@ -3062,10 +3074,16 @@ def generate_payroll_pdf(
             return ""
         try:
             from datetime import datetime
+            # Try YYYY-MM-DD format first
             dt = datetime.strptime(date_str, "%Y-%m-%d")
             return dt.strftime("%d.%m.%Y")
         except:
-            return ""
+            try:
+                # Try DD.MM.YYYY format (already formatted)
+                datetime.strptime(date_str, "%d.%m.%Y")
+                return date_str  # Already in correct format
+            except:
+                return ""
     
     # Ordner erstellen
     contracts_dir = Path("/app/backend/generated_contracts")
