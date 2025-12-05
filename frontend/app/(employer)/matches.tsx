@@ -464,27 +464,66 @@ export default function EmployerMatchesScreen() {
 
                     {/* DOCUMENTS BUTTON */}
                     {match.application.paymentStatus === "paid" && !match.workerProfile?.isSelfEmployed && (
-                      <Pressable
-                        onPress={() =>
-                          router.push(
-                            `/(employer)/registration/confirm?applicationId=${match.application.id}&type=kurzfristig`
-                          )
-                        }
-                        style={{
-                          width: "60%",
-                          maxWidth: 300,
-                          minWidth: 220,
-                          alignSelf: "center",
-                          backgroundColor: COLORS.purpleLight,
-                          paddingVertical: 14,
-                          borderRadius: 14,
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text style={{ color: COLORS.textWhite, fontSize: 15, fontWeight: "700" }}>
-                          Dokumente erstellen
-                        </Text>
-                      </Pressable>
+                      workerDataStatus[match.application.workerId] ? (
+                        
+                        // Worker hat Daten → Button aktiv
+                        <Pressable
+                          onPress={() =>
+                            router.push(
+                              `/(employer)/registration/confirm?applicationId=${match.application.id}&type=kurzfristig`
+                            )
+                          }
+                          style={{
+                            width: "60%",
+                            maxWidth: 300,
+                            minWidth: 220,
+                            alignSelf: "center",
+                            backgroundColor: COLORS.purpleLight,
+                            paddingVertical: 14,
+                            borderRadius: 14,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text style={{ color: COLORS.textWhite, fontSize: 15, fontWeight: "700" }}>
+                            Dokumente erstellen
+                          </Text>
+                        </Pressable>
+
+                      ) : (
+
+                        // Worker-Daten fehlen → Warteanzeige
+                        <View
+                          style={{
+                            width: "60%",
+                            maxWidth: 300,
+                            minWidth: 220,
+                            alignSelf: "center",
+                            backgroundColor: "#1A1729",
+                            paddingVertical: 14,
+                            borderRadius: 14,
+                            alignItems: "center",
+                            borderWidth: 1,
+                            borderColor: "rgba(255,255,255,0.1)",
+                            opacity: 0.7,
+                          }}
+                        >
+                          <Text style={{ color: COLORS.textMuted, fontSize: 15, fontWeight: "700" }}>
+                            Warten auf Worker-Daten
+                          </Text>
+                          <Text
+                            style={{
+                              color: COLORS.textMuted,
+                              fontSize: 12,
+                              marginTop: 4,
+                              textAlign: "center",
+                              paddingHorizontal: 16,
+                            }}
+                          >
+                            Worker muss die Daten eingeben, bevor du Dokumente erstellen kannst
+                          </Text>
+                        </View>
+
+                      )
                     )}
 
                     {/* DETAILS BUTTON */}
