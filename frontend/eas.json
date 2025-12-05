@@ -4,6 +4,7 @@
   },
   "build": {
     "production": {
+      "node": "22.12.0",
       "ios": {
         "simulator": false
       },
