@@ -3124,7 +3124,10 @@ def generate_payroll_pdf(
     story = []
     
     # Header
-    story.append(Paragraph("Gehaltsabrechnung – Kurzfristige Beschäftigung (§ 40a EStG)", title_style))
+    story.append(Paragraph("LOHNABRECHNUNG", title_style))
+    story.append(Spacer(1, 0.2*cm))
+    subtitle = ParagraphStyle("Subtitle", parent=styles["Normal"], fontSize=10, textColor=rl_colors.HexColor("#555555"), alignment=1)
+    story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle))
     story.append(Spacer(1, 6))
     
     # Worker info
