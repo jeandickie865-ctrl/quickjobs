@@ -2625,7 +2625,8 @@ def generate_contract_pdf(
     story = []
     
     # Header
-    story.append(Paragraph("Arbeitsvertrag – Kurzfristige Beschäftigung (§ 40a EStG)", title_style))
+    story.append(Paragraph("ARBEITSVERTRAG", title_style))
+    story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle_style))
     story.append(Spacer(1, 6))
     
     # Vertragsparteien
