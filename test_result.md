@@ -527,6 +527,21 @@ frontend:
         agent: "main"
         comment: "Gleiche Implementierung wie Worker-Seite: State, loadUnreadCounts Funktion und UI-Badge wurden hinzugefügt. Badge zeigt Anzahl ungelesener Nachrichten neben dem Chat-Button an."
 
+  - task: "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
+    implemented: true
+    working: false
+    file: "app/(worker)/registration-data.tsx"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Frontend erweitert: registration-data.tsx Screen wurde um 4 neue Felder erweitert: geburtsort (Geburtsort), staatsangehoerigkeit (Staatsangehörigkeit), confirm70Days (Checkbox: 70 Arbeitstage), confirmNotProfessional (Checkbox: nicht Hauptbeschäftigung). UI zeigt alle 8 Felder mit korrektem Styling. Save-Funktion sendet alle Daten an PUT /api/profiles/worker/me/registration-data. Navigation über 'Offizielle Daten bearbeiten' Button im Worker-Profil."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Registration-Data Screen ist vollständig unzugänglich auf Mobile (390x844). Umfassende Tests durchgeführt: Account-Erstellung (testworker_1764964696@test.de), Rolle-Auswahl (Auftragnehmer), aber alle Worker-Routen redirecten zu /auth/start. Direkte Navigation zu /(worker)/registration-data fehlgeschlagen. Alle 8 Felder (Geburtsort, Staatsangehörigkeit, Checkboxen) nicht testbar da Screen nicht erreichbar. Root Cause: Authentication/Authorization System blockiert Zugang zu geschützten Worker-Bereichen. Alle Test-Szenarien aus Review-Anfrage (Navigation, UI-Darstellung, Eingabe, Speichern, Persistenz) unmöglich durchzuführen. PRIORITY UPGRADED TO CRITICAL."
+
 
 
 backend:
