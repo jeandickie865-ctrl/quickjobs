@@ -62,8 +62,8 @@ export default function EmployerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: Platform.OS === 'ios' ? 78 : 70,
-          paddingBottom: Platform.OS === 'ios' ? 18 : 12,
+          height: Platform.OS === 'ios' ? 90 : 70,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 12,
           paddingTop: 10,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
