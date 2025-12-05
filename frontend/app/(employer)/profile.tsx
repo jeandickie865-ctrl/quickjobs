@@ -314,7 +314,9 @@ export default function EmployerProfileViewScreen() {
                   <Ionicons name="location" size={20} color={COLORS.neon} />
                   <View>
                     {profile?.street && (
-                      <Text style={{ fontSize: 15, color: COLORS.white }}>{profile.street}</Text>
+                      <Text style={{ fontSize: 15, color: COLORS.white }}>
+                        {profile.street}{profile.houseNumber ? ` ${profile.houseNumber}` : ''}
+                      </Text>
                     )}
                     {(profile?.postalCode || profile?.city) && (
                       <Text style={{ fontSize: 15, color: COLORS.white }}>
