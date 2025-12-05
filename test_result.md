@@ -442,7 +442,7 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "Worker Edit Profile - Tab-based Layout Refactoring"
+    - "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
