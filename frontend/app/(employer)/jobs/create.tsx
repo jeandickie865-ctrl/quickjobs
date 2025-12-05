@@ -756,3 +756,47 @@ export default function CreateJob() {
     </View>
   );
 }
+
+// Collapsible Section Header Component
+function SectionHeader({ 
+  title, 
+  isExpanded, 
+  onPress 
+}: { 
+  title: string; 
+  isExpanded: boolean; 
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 4,
+      }}
+    >
+      <Text 
+        style={{ 
+          color: COLORS.neon, 
+          fontSize: 13, 
+          fontWeight: '700', 
+          letterSpacing: 1 
+        }}
+      >
+        {title}
+      </Text>
+      <Text 
+        style={{ 
+          color: COLORS.neon, 
+          fontSize: 16, 
+          fontWeight: '700' 
+        }}
+      >
+        {isExpanded ? '▼' : '▶'}
+      </Text>
+    </Pressable>
+  );
+}
