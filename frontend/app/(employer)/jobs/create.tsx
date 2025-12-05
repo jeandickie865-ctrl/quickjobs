@@ -260,6 +260,13 @@ export default function CreateJob() {
           keyboardShouldPersistTaps="handled"
         >
 
+        {/* === GRUNDINFO === */}
+        <View style={{ marginTop: SPACING.sm }}>
+          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+            GRUNDINFO
+          </Text>
+        </View>
+
         {/* Titel */}
         <View
           style={{
