@@ -316,23 +316,18 @@ export default function WorkerRegistrationDataScreen() {
             }}
             disabled={saving}
             style={{
-              backgroundColor: saving ? COLORS.card : COLORS.neon,
+              backgroundColor: saving ? COLORS.card : COLORS.purple,
               paddingVertical: 18,
               borderRadius: 16,
               alignItems: "center",
-              width: "100%",
-              maxWidth: 360,
+              width: "60%",
               alignSelf: "center",
-              shadowColor: COLORS.neon,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: saving ? 0 : 0.3,
-              shadowRadius: 8,
             }}
           >
             {saving ? (
               <ActivityIndicator color={COLORS.white} />
             ) : (
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>
                 Daten speichern und weiter
               </Text>
             )}
