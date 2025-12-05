@@ -606,6 +606,13 @@ export default function CreateJob() {
           />
         </View>
 
+        {/* === BEZAHLUNG === */}
+        <View style={{ marginTop: SPACING.lg }}>
+          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+            BEZAHLUNG
+          </Text>
+        </View>
+
         {/* Lohn */}
         <View
           style={{
