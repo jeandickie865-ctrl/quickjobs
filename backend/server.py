@@ -35,6 +35,16 @@ load_dotenv(ROOT_DIR / '.env')
 # Load taxonomy.json for validation
 TAXONOMY = json.loads((ROOT_DIR / "taxonomy.json").read_text())
 
+# 🚨 SOFORTMELDEPFLICHTIGE KATEGORIEN nach § 28a Abs. 4 SGB IV
+# Diese Branchen müssen VOR Arbeitsbeginn gemeldet werden!
+SOFORTMELDEPFLICHTIG = {
+    "cleaning",      # Gebäudereinigung
+    "gastronomy",    # Gaststätten- und Beherbergungsgewerbe
+    "logistics",     # Lager und Logistik (Spedition, Transport, Logistik)
+    "transport",     # Personenbeförderung
+    "moving"         # Umzugsgewerbe (Transport- und Logistikgewerbe)
+}
+
 # MongoDB connection
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(mongo_url)
