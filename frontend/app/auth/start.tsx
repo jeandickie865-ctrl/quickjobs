@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
 
   return (
     <LinearGradient
-      colors={['#0E0B1F', '#141126']}
+      colors={['#141126', '#141126']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>

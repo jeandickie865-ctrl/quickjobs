@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = {
-  bgDark: '#0E0B1F',
+  bgDark: '#141126',
   bgCard: '#141126',
   purple: '#6B4BFF',
   white: '#FFFFFF',
