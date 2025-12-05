@@ -1077,25 +1077,20 @@ export default function EditWorkerProfileScreen() {
           onPress={handleSave}
           disabled={!isFormValid() || saving}
           style={{
-            width: '100%',
-            maxWidth: 360,
+            width: '60%',
             alignSelf: 'center',
-            backgroundColor: isFormValid() && !saving ? COLORS.neon : COLORS.card,
+            backgroundColor: isFormValid() && !saving ? COLORS.purple : COLORS.card,
             paddingVertical: 18,
             borderRadius: 16,
             alignItems: 'center',
             borderWidth: isFormValid() ? 0 : 2,
             borderColor: COLORS.border,
-            shadowColor: COLORS.neon,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: isFormValid() ? 0.3 : 0,
-            shadowRadius: 8,
           }}
         >
           {saving ? (
-            <ActivityIndicator color={COLORS.black} />
+            <ActivityIndicator color={COLORS.white} />
           ) : (
-            <Text style={{ color: isFormValid() ? COLORS.black : COLORS.muted, fontSize: 17, fontWeight: '700' }}>
+            <Text style={{ color: isFormValid() ? COLORS.white : COLORS.muted, fontSize: 17, fontWeight: '700' }}>
               Profil speichern
             </Text>
           )}
