@@ -282,7 +282,7 @@ export default function WorkerRegistrationDataScreen() {
                 if (!token) return;
 
                 // Original-API-Call unverändert lassen
-                const response = await fetch("/api/profiles/worker/me/registration-data", {
+                const response = await fetch(`${API_URL}/profiles/worker/me/registration-data`, {
                   method: "PUT",
                   headers: {
                     "Content-Type": "application/json",
