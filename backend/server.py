@@ -3063,28 +3063,33 @@ def generate_payroll_pdf(
     # Styles - Optimized for single page
     styles = getSampleStyleSheet()
     
+    # 🎨 PROFESSIONELLE STYLES für Lohnabrechnung
     title_style = ParagraphStyle(
-        "TitleCustom",
+        "ProfTitle",
         parent=styles["Title"],
-        textColor="#5941FF",
+        textColor=rl_colors.HexColor("#1a1a1a"),
         fontSize=16,
-        spaceAfter=10
+        fontName="Helvetica-Bold",
+        spaceAfter=15,
+        alignment=1  # CENTER
     )
     
     section_title = ParagraphStyle(
-        "SectionTitle",
+        "Section",
         parent=styles["Heading2"],
-        textColor="#5941FF",
+        textColor=rl_colors.HexColor("#2c3e50"),
         fontSize=11,
         fontName="Helvetica-Bold",
-        spaceAfter=6
+        spaceAfter=8,
+        spaceBefore=10
     )
     
     normal = ParagraphStyle(
-        "NormalCustom",
+        "NormalText",
         parent=styles["Normal"],
-        fontSize=9,
-        leading=11
+        fontSize=10,
+        leading=14,
+        textColor=rl_colors.HexColor("#333333")
     )
     
     # Calculate amounts
