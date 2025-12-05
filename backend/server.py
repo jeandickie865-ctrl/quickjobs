@@ -135,6 +135,11 @@ class WorkerProfile(BaseModel):
     profilePhotoUri: Optional[str] = None
     shortBio: Optional[str] = None
     isSelfEmployed: bool = False
+    # Registration/Official Data
+    geburtsdatum: Optional[str] = None
+    steuerId: Optional[str] = None
+    sozialversicherungsnummer: Optional[str] = None
+    krankenkasse: Optional[str] = None
     # Deprecated fields for backward compatibility
     selectedTags: Optional[List[str]] = []  # DEPRECATED - kept for compatibility
     activities: Optional[List[str]] = []  # DEPRECATED
