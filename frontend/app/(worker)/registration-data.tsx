@@ -294,8 +294,8 @@ export default function WorkerRegistrationDataScreen() {
                     krankenkasse,
                     geburtsort,
                     staatsangehoerigkeit,
-                    confirm_70_days: confirm70Days,
-                    confirm_not_professional: confirmNotProfessional
+                    kurzfristigkeit_bestaetigt: confirm70Days,
+                    kurzfristigkeit_nicht_berufsmaeßig: confirmNotProfessional
                   })
                 });
 
