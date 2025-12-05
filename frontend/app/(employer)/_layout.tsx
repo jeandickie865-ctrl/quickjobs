@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Platform, Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getEmployerJobs } from '../../utils/jobStore';
 import { getApplicationsForJob } from '../../utils/applicationStore';
 
