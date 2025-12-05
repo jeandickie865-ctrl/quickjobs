@@ -97,8 +97,8 @@ function TAB(name, label, badge) {
       options={{
         tabBarIcon: () => null,
         title: label,
-        tabBarBadge: badge || undefined,
-        tabBarBadgeStyle: badge ? {
+        tabBarBadge: badge !== undefined && badge > 0 ? badge : undefined,
+        tabBarBadgeStyle: badge && badge > 0 ? {
           backgroundColor: COLORS.neon,
           color: '#000000',
           fontSize: 10,
