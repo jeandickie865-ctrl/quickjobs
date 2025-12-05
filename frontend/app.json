@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "backup",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "bundleIdentifier": "de.dickie.backup",
       "buildNumber": "1",
