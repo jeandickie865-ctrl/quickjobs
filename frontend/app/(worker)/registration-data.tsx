@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile } from '../../utils/profileStore';
+import { API_URL } from '../../config';
 
 const COLORS = {
   bg: '#141126',
