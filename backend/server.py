@@ -2554,6 +2554,15 @@ def generate_contract_pdf(
         textColor=rl_colors.HexColor("#1a1a1a"),
         fontSize=18,
         fontName="Helvetica-Bold",
+        spaceAfter=5,
+        alignment=1  # CENTER
+    )
+    subtitle_style = ParagraphStyle(
+        "Subtitle",
+        parent=styles["Normal"],
+        fontSize=11,
+        textColor=rl_colors.HexColor("#555555"),
+        fontName="Helvetica",
         spaceAfter=20,
         alignment=1  # CENTER
     )
