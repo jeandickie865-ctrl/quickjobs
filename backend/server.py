@@ -2837,7 +2837,7 @@ def generate_contract_pdf(
     return f"/api/generated_contracts/{filename}"
 
 
-def generate_sofortmeldung_pdf(
+def generate_meldecheck_pdf(
     registration_id: str,
     job_data: dict,
     employer_data: dict,
