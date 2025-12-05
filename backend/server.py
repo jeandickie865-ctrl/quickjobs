@@ -3023,12 +3023,27 @@ def generate_sofortmeldung_pdf(
     
     # Job Data
     job_title = job_data.get('title', '').strip() or "Nicht angegeben"
+    job_category = job_data.get('category', '').strip().lower()
     job_addr = job_data.get('address', {})
     job_address = format_address(job_addr) or "Nicht angegeben"
     job_date = format_date(job_data.get('date', '')) or "Nicht angegeben"
     
+    # 🚨 Prüfe ob Sofortmeldung erforderlich
+    ist_sofortmeldepflichtig = job_category in SOFORTMELDEPFLICHTIG
+    
     # Erstellungsdatum
     created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else format_date(created_at)
+    
+    # Berechne Meldefrist (6 Wochen nach Job-Datum für normale Anmeldung)
+    from datetime import datetime, timedelta
+    meldefrist = ""
+    if not ist_sofortmeldepflichtig and job_date and job_date != "Nicht angegeben":
+        try:
+            job_dt = datetime.strptime(job_date, "%d.%m.%Y")
+            frist_dt = job_dt + timedelta(weeks=6)
+            meldefrist = frist_dt.strftime("%d.%m.%Y")
+        except:
+            pass
     
     # 📄 BUILD PDF
     doc = SimpleDocTemplate(
@@ -3041,13 +3056,22 @@ def generate_sofortmeldung_pdf(
     )
     story = []
     
-    # HEADER
-    story.append(Paragraph("Sofortmeldung zur Sozialversicherung", title_style))
-    story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle_style))
+    # HEADER - Dynamisch je nach Kategorie
+    if ist_sofortmeldepflichtig:
+        story.append(Paragraph("⚠️ SOFORTMELDUNG zur Sozialversicherung", title_style))
+        story.append(Paragraph("Meldung VOR Arbeitsbeginn erforderlich | § 28a Abs. 4 SGB IV", subtitle_style))
+    else:
+        story.append(Paragraph("ANMELDUNG zur Sozialversicherung", title_style))
+        frist_text = f"Meldung bis spätestens {meldefrist}" if meldefrist else "Meldung innerhalb 6 Wochen"
+        story.append(Paragraph(f"{frist_text} | Kurzfristige Beschäftigung nach § 40a EStG", subtitle_style))
     story.append(Spacer(1, 0.5*cm))
     
     # INFO BOX - Wichtiger Hinweis
-    info_text = "✓ Sozialversicherungsfreie kurzfristige Beschäftigung | Der Arbeitnehmer erhält Brutto = Netto"
+    if ist_sofortmeldepflichtig:
+        info_text = "⚠️ SOFORTMELDEPFLICHTIGE BRANCHE - Diese Meldung muss VOR Arbeitsbeginn erfolgen! | Brutto = Netto für Arbeitnehmer"
+    else:
+        frist_info = f"bis {meldefrist}" if meldefrist else "innerhalb 6 Wochen"
+        info_text = f"✓ Meldung {frist_info} nach Arbeitsbeginn | Sozialversicherungsfreie Beschäftigung | Brutto = Netto"
     story.append(Paragraph(info_text, highlight_style))
     
     # Trennlinie
