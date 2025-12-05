@@ -183,9 +183,19 @@ export default function EmployerDashboard() {
                     marginBottom: 16,
                   }}
                 >
-                  <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginBottom: 4 }}>
-                    {job.title}
-                  </Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4, gap: 8 }}>
+                    <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', flex: 1 }}>
+                      {job.title}
+                    </Text>
+                    {/* 🚨 Badge für sofortmeldepflichtige Jobs */}
+                    {job.category && SOFORTMELDEPFLICHTIG.has(job.category.toLowerCase()) && (
+                      <View style={{ backgroundColor: '#FF8C00', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+                        <Text style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '700' }}>
+                          ⚠️ Sofortmeldung
+                        </Text>
+                      </View>
+                    )}
+                  </View>
 
                   <Text style={{ color: COLORS.muted, fontSize: 14 }}>{job.category}</Text>
 
