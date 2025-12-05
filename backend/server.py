@@ -2513,12 +2513,14 @@ def generate_contract_pdf(
     created_at: str
 ) -> str:
     """
-    Modern contract PDF with Deep-In design (Purple + Neon)
+    🎯 KOMPAKTER Arbeitsvertrag nach ChatGPT-Vorlage - Rechtssicher & Übersichtlich
     """
     from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import cm
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib import colors as rl_colors
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
     
     # Helper functions
     def format_address(addr_dict):
@@ -2552,63 +2554,71 @@ def generate_contract_pdf(
             try:
                 # Try DD.MM.YYYY format (already formatted)
                 datetime.strptime(date_str, "%d.%m.%Y")
-                return date_str  # Already in correct format
+                return date_str
             except:
                 return ""
+    
+    def format_time(time_str):
+        if not time_str:
+            return ""
+        # Wenn Format HH:MM:SS, nur HH:MM nehmen
+        return time_str[:5] if len(time_str) >= 5 else time_str
     
     # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
     contracts_dir.mkdir(exist_ok=True)
-    filename = f"contract_{registration_id}.pdf"
+    filename = f"contract_reg_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # 🎨 PROFESSIONELLE STYLES für Arbeitsvertrag
+    # 🎨 PROFESSIONELLE STYLES
     styles = getSampleStyleSheet()
+    
     title_style = ParagraphStyle(
-        "ProfTitle",
+        "Title",
         parent=styles["Title"],
-        textColor=rl_colors.HexColor("#1a1a1a"),
         fontSize=18,
+        textColor=rl_colors.HexColor("#1a1a1a"),
         fontName="Helvetica-Bold",
-        spaceAfter=5,
-        alignment=1  # CENTER
+        spaceAfter=10,
+        alignment=TA_CENTER
     )
+    
     subtitle_style = ParagraphStyle(
         "Subtitle",
         parent=styles["Normal"],
         fontSize=11,
         textColor=rl_colors.HexColor("#555555"),
-        fontName="Helvetica",
-        spaceAfter=20,
-        alignment=1  # CENTER
+        alignment=TA_CENTER,
+        spaceAfter=20
     )
-    section_title = ParagraphStyle(
+    
+    section_style = ParagraphStyle(
         "Section",
         parent=styles["Heading2"],
-        textColor=rl_colors.HexColor("#2c3e50"),
         fontSize=12,
+        textColor=rl_colors.HexColor("#2c3e50"),
         fontName="Helvetica-Bold",
-        spaceAfter=10,
-        spaceBefore=15
+        spaceAfter=8,
+        spaceBefore=12
     )
-    normal = ParagraphStyle(
-        "NormalText",
+    
+    body_style = ParagraphStyle(
+        "Body",
         parent=styles["Normal"],
         fontSize=10,
-        leading=14,
-        textColor=rl_colors.HexColor("#333333")
+        leading=16,
+        textColor=rl_colors.HexColor("#333333"),
+        alignment=TA_JUSTIFY
     )
     
-    # Data extraction
+    # DATA EXTRACTION
+    # Employer
     emp_first = employer_data.get('firstName', '').strip()
     emp_last = employer_data.get('lastName', '').strip()
-    emp_name = " ".join([p for p in [emp_first, emp_last] if p]) or "Arbeitgeber"
+    emp_name = f"{emp_first} {emp_last}".strip() or "___________________"
     emp_company = employer_data.get('companyName', '') or employer_data.get('company', '')
     
-    # Try different address formats
     emp_addr = employer_data.get('businessAddress', {}) or employer_data.get('homeAddress', {})
-    
-    # If no nested address, build from flat fields
     if not emp_addr or not any(emp_addr.values() if isinstance(emp_addr, dict) else []):
         emp_addr = {
             'street': employer_data.get('street', ''),
@@ -2616,223 +2626,172 @@ def generate_contract_pdf(
             'postalCode': employer_data.get('postalCode', ''),
             'city': employer_data.get('city', '')
         }
+    emp_address = format_address(emp_addr) or "___________________"
     
-    emp_address = format_address(emp_addr)
-    
+    # Worker
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
-    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Arbeitnehmer"
+    work_name = f"{work_first} {work_last}".strip() or "___________________"
     work_addr = worker_data.get('homeAddress', {})
-    work_address = format_address(work_addr)
-    
-    # Worker Registrierungsdaten
+    work_address = format_address(work_addr) or "___________________"
     work_geburtsdatum_raw = worker_data.get('geburtsdatum', '')
-    work_geburtsdatum = format_date(work_geburtsdatum_raw) if work_geburtsdatum_raw else "_______________"
-    work_steuer_id = worker_data.get('steuerId', '') or "_______________"
+    work_geburtsdatum = format_date(work_geburtsdatum_raw) if work_geburtsdatum_raw else "___________________"
+    work_steuer_id = worker_data.get('steuerId', '') or "___________________"
     
-    job_title = job_data.get('title', '').strip() or "Nicht angegeben"
-    job_desc = job_data.get('description', '').strip() or "Nicht angegeben"
+    # Job
+    job_title = job_data.get('title', '').strip() or "___________________"
     job_addr = job_data.get('address', {})
-    job_address = format_address(job_addr) or "Nicht angegeben"
+    job_address = format_address(job_addr) or "___________________"
+    job_date = format_date(job_data.get('date', '')) or "___________________"
+    job_start = format_time(job_data.get('start_at', '')) or "__:__"
+    job_end = format_time(job_data.get('end_at', '')) or "__:__"
     
-    brutto_cents = job_data.get('workerAmountCents', 0)
-    brutto = brutto_cents / 100
+    # Vergütung - Berechne "pro Tag"
+    worker_amount_cents = job_data.get('workerAmountCents', 0)
+    verguetung = f"{worker_amount_cents / 100:.2f}" if worker_amount_cents else "___"
     
-    job_date = format_date(job_data.get('date', ''))
-    start_time = job_data.get('start_at', '') or job_data.get('startAt', '')
-    end_time = job_data.get('end_at', '') or job_data.get('endAt', '')
+    created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else format_date(created_at)
     
-    # Arbeitgeber costs - KORRIGIERT nach § 40a EStG
-    lohnsteuer = brutto * 0.25  # 25% Pauschsteuer
-    kirchensteuer = lohnsteuer * 0.09  # 9% auf Lohnsteuer (nicht auf Brutto!)
-    soli = lohnsteuer * 0.055  # 5,5% auf Lohnsteuer
-    unfallvers = brutto * 0.013  # 1,3% Unfallversicherung
-    gesamt_abgaben = lohnsteuer + kirchensteuer + soli + unfallvers
-    total_employer_costs = brutto + gesamt_abgaben
-    
-    # Build PDF
-    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
+    # 📄 BUILD PDF
+    doc = SimpleDocTemplate(
+        str(filepath),
+        pagesize=A4,
+        leftMargin=2.5*cm,
+        rightMargin=2.5*cm,
+        topMargin=2*cm,
+        bottomMargin=2*cm
+    )
     story = []
     
-    # Header
+    # TITEL
     story.append(Paragraph("ARBEITSVERTRAG", title_style))
     story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle_style))
-    story.append(Spacer(1, 6))
     
-    # SECTION 1: Angaben zum Arbeitgeber
-    story.append(Paragraph("1. Angaben zum Arbeitgeber", section_title))
+    # ARBEITGEBER
+    story.append(Paragraph("Arbeitgeber", section_style))
     ag_data = [
         ["Name:", emp_name],
     ]
     if emp_company:
         ag_data.append(["Unternehmen:", emp_company])
-    ag_data.append(["Anschrift:", emp_address or "Nicht angegeben"])
-    ag_data.append(["Betriebsnummer:", "_______________"])  # Zum manuellen Ausfüllen
+    ag_data.append(["Adresse:", emp_address])
+    ag_data.append(["Betriebsnummer:", "___________________"])
     
-    ag_table = Table(ag_data, colWidths=[4*cm, 13*cm])
+    ag_table = Table(ag_data, colWidths=[4*cm, 12*cm])
     ag_table.setStyle(TableStyle([
         ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
-        ("FONTNAME", (1,0), (1,-1), "Helvetica"),
         ("FONTSIZE", (0,0), (-1,-1), 10),
-        ("TEXTCOLOR", (0,0), (0,-1), rl_colors.HexColor("#555555")),
-        ("TEXTCOLOR", (1,0), (1,-1), rl_colors.HexColor("#000000")),
         ("VALIGN", (0,0), (-1,-1), "TOP"),
-        ("TOPPADDING", (0,0), (-1,-1), 4),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+        ("TOPPADDING", (0,0), (-1,-1), 3),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 3),
     ]))
     story.append(ag_table)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 0.3*cm))
     
-    # SECTION 2: Angaben zum Arbeitnehmer
-    story.append(Paragraph("2. Angaben zum Arbeitnehmer", section_title))
+    # ARBEITNEHMER
+    story.append(Paragraph("Arbeitnehmer", section_style))
     an_data = [
         ["Name:", work_name],
-        ["Anschrift:", work_address or "Nicht angegeben"],
+        ["Adresse:", work_address],
         ["Geburtsdatum:", work_geburtsdatum],
         ["Steuer-ID:", work_steuer_id],
-        ["Eintrittsdatum:", job_date or "Nicht angegeben"],
-        ["Austrittsdatum:", job_date or "Nicht angegeben"],
     ]
     
-    an_table = Table(an_data, colWidths=[4*cm, 13*cm])
+    an_table = Table(an_data, colWidths=[4*cm, 12*cm])
     an_table.setStyle(TableStyle([
         ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
-        ("FONTNAME", (1,0), (1,-1), "Helvetica"),
         ("FONTSIZE", (0,0), (-1,-1), 10),
-        ("TEXTCOLOR", (0,0), (0,-1), rl_colors.HexColor("#555555")),
-        ("TEXTCOLOR", (1,0), (1,-1), rl_colors.HexColor("#000000")),
         ("VALIGN", (0,0), (-1,-1), "TOP"),
-        ("TOPPADDING", (0,0), (-1,-1), 4),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+        ("TOPPADDING", (0,0), (-1,-1), 3),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 3),
     ]))
     story.append(an_table)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 0.4*cm))
     
-    # Tätigkeitsbeschreibung
-    story.append(Paragraph("Tätigkeitsbeschreibung", section_title))
-    story.append(Paragraph(f"<b>Tätigkeit:</b> {job_title}", normal))
-    story.append(Paragraph(f"<b>Beschreibung:</b> {job_desc}", normal))
-    story.append(Spacer(1, 8))
+    # 1. EINSATZ
+    story.append(Paragraph("1. Einsatz", section_style))
+    einsatz_text = f"""
+    Der Arbeitnehmer arbeitet am <b>{job_date}</b> von <b>{job_start}</b> bis <b>{job_end}</b> Uhr.<br/>
+    <b>Tätigkeit:</b> {job_title}<br/>
+    <b>Einsatzort:</b> {job_address}
+    """
+    story.append(Paragraph(einsatz_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
     
-    # Einsatzzeitraum und Einsatzort
-    story.append(Paragraph("Einsatzzeitraum und Einsatzort", section_title))
-    story.append(Paragraph(f"<b>Ort:</b> {job_address}", normal))
-    if job_date:
-        if start_time and end_time:
-            story.append(Paragraph(f"<b>Zeitraum:</b> {job_date}, {start_time} – {end_time} Uhr", normal))
-        else:
-            story.append(Paragraph(f"<b>Datum:</b> {job_date}", normal))
-    story.append(Spacer(1, 8))
+    # 2. VERGÜTUNG
+    story.append(Paragraph("2. Vergütung", section_style))
+    verguetung_text = f"""
+    <b>Vergütung:</b> {verguetung} Euro pro Tag.<br/>
+    Die Beschäftigung ist pauschal versteuert nach § 40a EStG.<br/>
+    Der Arbeitgeber trägt alle Abgaben. Der Arbeitnehmer erhält den Nettobetrag in voller Höhe.
+    """
+    story.append(Paragraph(verguetung_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
     
-    # Vergütung
-    story.append(Paragraph("Vergütung", section_title))
-    story.append(Paragraph(f"<b>Gesamtvergütung (Brutto = Netto):</b> {brutto:.2f} EUR", normal))
-    story.append(Paragraph(
-        "Bei kurzfristiger Beschäftigung nach § 40a EStG fallen für den Arbeitnehmer keine Abzüge an.",
-        normal
-    ))
-    story.append(Spacer(1, 8))
+    # 3. KURZFRISTIGE BESCHÄFTIGUNG
+    story.append(Paragraph("3. Kurzfristige Beschäftigung", section_style))
+    kurzfristig_text = """
+    Die Beschäftigung ist kurzfristig.<br/>
+    Sie überschreitet nicht die Grenze von 3 Monaten oder 70 Arbeitstagen pro Kalenderjahr.<br/>
+    Sie ist sozialversicherungsfrei nach § 8 Abs. 1 Nr. 2 SGB IV.
+    """
+    story.append(Paragraph(kurzfristig_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
     
-    # SECTION 5: Steuerangaben - Pauschal versteuert nach § 40a EStG
-    story.append(Paragraph("5. Steuerangaben – Pauschal versteuert nach § 40a EStG", section_title))
-    story.append(Paragraph("Der Arbeitgeber trägt folgende pauschale Abgaben:", normal))
-    story.append(Spacer(1, 6))
+    # 4. UNFALLVERSICHERUNG
+    story.append(Paragraph("4. Unfallversicherung", section_style))
+    unfall_text = """
+    Der Arbeitnehmer ist über die zuständige Berufsgenossenschaft des Arbeitgebers abgesichert.
+    """
+    story.append(Paragraph(unfall_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
     
-    steuer_data = [
-        ["", "Bemessungsgrundlage", "Betrag"],
-        ["Bruttolohn", "", f"{brutto:.2f} EUR"],
-        ["", "", ""],
-        ["Pauschsteuer (25%)", f"{brutto:.2f} EUR", f"{lohnsteuer:.2f} EUR"],
-        ["Solidaritätszuschlag (5,5%)", f"{lohnsteuer:.2f} EUR", f"{soli:.2f} EUR"],
-        ["Kirchensteuer (9%)", f"{lohnsteuer:.2f} EUR", f"{kirchensteuer:.2f} EUR"],
-        ["Unfallversicherung (1,3%)", f"{brutto:.2f} EUR", f"{unfallvers:.2f} EUR"],
-        ["", "", ""],
-        ["Gesamt Arbeitgeberabgaben", "", f"{gesamt_abgaben:.2f} EUR"],
-        ["GESAMTKOSTEN ARBEITGEBER", "", f"{total_employer_costs:.2f} EUR"],
-    ]
+    # 5. ENDE DES EINSATZES
+    story.append(Paragraph("5. Ende des Einsatzes", section_style))
+    ende_text = """
+    Das Arbeitsverhältnis endet automatisch nach Abschluss des Einsatzes.<br/>
+    Eine Kündigung ist nicht erforderlich.
+    """
+    story.append(Paragraph(ende_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
     
-    steuer_table = Table(steuer_data, colWidths=[8*cm, 5*cm, 4*cm])
-    steuer_table.setStyle(TableStyle([
-        ("FONTNAME", (0,0), (2,0), "Helvetica-Bold"),
-        ("FONTSIZE", (0,0), (-1,-1), 9),
-        ("BACKGROUND", (0,0), (2,0), rl_colors.HexColor("#e0e0e0")),
-        ("ALIGN", (1,0), (2,-1), "RIGHT"),
-        ("LINEBELOW", (0,0), (2,0), 1, rl_colors.black),
-        ("FONTNAME", (0,1), (2,1), "Helvetica-Bold"),
-        ("LINEBELOW", (0,7), (2,7), 1, rl_colors.HexColor("#cccccc")),
-        ("FONTNAME", (0,8), (2,8), "Helvetica-Bold"),
-        ("LINEABOVE", (0,9), (2,9), 2, rl_colors.black),
-        ("FONTNAME", (0,9), (2,9), "Helvetica-Bold"),
-        ("FONTSIZE", (0,9), (2,9), 10),
-        ("BACKGROUND", (0,9), (2,9), rl_colors.HexColor("#C8FF16")),
-        ("VALIGN", (0,0), (2,-1), "MIDDLE"),
+    # 6. DATENSCHUTZ UND VERTRAULICHKEIT
+    story.append(Paragraph("6. Datenschutz und Vertraulichkeit", section_style))
+    daten_text = """
+    Der Arbeitnehmer behandelt alle Informationen aus dem Einsatz vertraulich.
+    """
+    story.append(Paragraph(daten_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
+    
+    # 7. GÜLTIGKEIT OHNE UNTERSCHRIFT
+    story.append(Paragraph("7. Gültigkeit ohne Unterschrift", section_style))
+    gueltig_text = """
+    Dieser Vertrag ist auch ohne Unterschrift gültig, sobald der Arbeitnehmer den Einsatz antritt 
+    oder der Arbeitgeber den Einsatz bestätigt. Eine mündliche Vereinbarung reicht für die Wirksamkeit aus.
+    """
+    story.append(Paragraph(gueltig_text, body_style))
+    story.append(Spacer(1, 0.5*cm))
+    
+    # FOOTER
+    footer_line = Table([[""]], colWidths=[16*cm])
+    footer_line.setStyle(TableStyle([
+        ("LINEABOVE", (0,0), (-1,0), 0.5, rl_colors.HexColor("#cccccc")),
     ]))
-    story.append(steuer_table)
-    story.append(Spacer(1, 10))
+    story.append(footer_line)
+    story.append(Spacer(1, 0.2*cm))
     
-    # SECTION 6: Sozialversicherung - Sozialversicherungsfrei
-    story.append(Paragraph("6. Sozialversicherung – Sozialversicherungsfrei", section_title))
-    story.append(Paragraph("Die Beschäftigung ist sozialversicherungsfrei für den Arbeitnehmer:", normal))
-    story.append(Spacer(1, 6))
+    footer_style = ParagraphStyle(
+        "Footer",
+        parent=styles["Normal"],
+        fontSize=8,
+        textColor=rl_colors.HexColor("#888888"),
+        alignment=TA_CENTER
+    )
+    story.append(Paragraph(f"Erstellt am {created_date} | Registrierungs-ID: {registration_id}", footer_style))
     
-    sv_data = [
-        ["", "Betrag"],
-        ["Krankenversicherung", "0,00 EUR"],
-        ["Pflegeversicherung", "0,00 EUR"],
-        ["Rentenversicherung", "0,00 EUR"],
-        ["Arbeitslosenversicherung", "0,00 EUR"],
-    ]
-    
-    sv_table = Table(sv_data, colWidths=[13*cm, 4*cm])
-    sv_table.setStyle(TableStyle([
-        ("FONTNAME", (0,0), (1,0), "Helvetica-Bold"),
-        ("FONTSIZE", (0,0), (-1,-1), 9),
-        ("BACKGROUND", (0,0), (1,0), rl_colors.HexColor("#e0e0e0")),
-        ("ALIGN", (1,0), (1,-1), "RIGHT"),
-        ("LINEBELOW", (0,0), (1,0), 1, rl_colors.black),
-        ("VALIGN", (0,0), (1,-1), "MIDDLE"),
-    ]))
-    story.append(sv_table)
-    story.append(Spacer(1, 10))
-    
-    # SECTION 7: Nettoauszahlung
-    story.append(Paragraph("7. Nettoauszahlung an Arbeitnehmer", section_title))
-    netto_data = [
-        ["Bruttolohn", f"{brutto:.2f} EUR"],
-        ["Abzüge für Arbeitnehmer", "0,00 EUR"],
-        ["", ""],
-        ["NETTOAUSZAHLUNG (Brutto = Netto)", f"{brutto:.2f} EUR"],
-    ]
-    
-    netto_table = Table(netto_data, colWidths=[13*cm, 4*cm])
-    netto_table.setStyle(TableStyle([
-        ("FONTSIZE", (0,0), (-1,-1), 9),
-        ("ALIGN", (1,0), (1,-1), "RIGHT"),
-        ("LINEABOVE", (0,3), (1,3), 2, rl_colors.black),
-        ("FONTNAME", (0,3), (1,3), "Helvetica-Bold"),
-        ("FONTSIZE", (0,3), (1,3), 11),
-        ("BACKGROUND", (0,3), (1,3), rl_colors.HexColor("#C8FF16")),
-        ("VALIGN", (0,0), (1,-1), "MIDDLE"),
-    ]))
-    story.append(netto_table)
-    story.append(Spacer(1, 8))
-    
-    # Rechtliche Hinweise
-    story.append(Paragraph("Rechtliche Hinweise", section_title))
-    story.append(Paragraph(
-        "Dieser Vertrag unterliegt den Regelungen des § 40a EStG (kurzfristige Beschäftigung). "
-        "Der Arbeitgeber trägt sämtliche Abgaben. "
-        "Der Arbeitnehmer erhält die vereinbarte Vergütung ohne steuerliche Abzüge.",
-        normal
-    ))
-    story.append(Spacer(1, 6))
-    
-    created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else created_at
-    story.append(Paragraph(f"<i>Erstellt am: {created_date}</i>", normal))
-    
-    # Build
+    # BUILD
     doc.build(story)
-    logger.info(f"Generated modern contract PDF: {filename}")
+    logger.info(f"✅ Kompakter Arbeitsvertrag generiert: {filename}")
     
     return f"/api/generated_contracts/{filename}"
 
