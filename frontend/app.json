@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "com.backup.app",
+      "bundleIdentifier": "de.dickie.backup",
       "buildNumber": "1",
       "supportsTablet": false,
       "infoPlist": {
@@ -22,7 +22,7 @@
         "backgroundColor": "#000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.backup.app"
+      "package": "de.dickie.backup"
     },
     "web": {
       "bundler": "metro",
