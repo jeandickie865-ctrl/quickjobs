@@ -98,7 +98,7 @@ export const Button: React.FC<ButtonProps> = ({
 
     switch (variant) {
       case 'primary':
-        return { ...base, color: '#111111' }; // Brand Black
+        return { ...base, color: colors.white }; // White text on purple
       case 'secondary':
         return { ...base, color: colors.accent };
       case 'ghost':
