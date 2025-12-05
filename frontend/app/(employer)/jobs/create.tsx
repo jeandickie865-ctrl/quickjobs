@@ -69,6 +69,9 @@ export default function CreateJob() {
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Collapsible sections state
+  const [expandedSection, setExpandedSection] = useState<'grundinfo' | 'details' | 'ort' | 'bezahlung'>('grundinfo');
+
   const subcategoryOptions =
     category && taxonomy[category]
       ? taxonomy[category].subcategories || []
