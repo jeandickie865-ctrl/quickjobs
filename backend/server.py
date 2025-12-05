@@ -3144,168 +3144,335 @@ def generate_payroll_pdf(
     employer_data: dict,
     worker_data: dict,
     registration_type: str,
-    created_at: str,
-    additional_data: dict
+    created_at: str
 ) -> str:
     """
-    Modern payroll PDF with Deep-In design (Purple + Neon)
+    🎯 KOMPAKTE Lohnabrechnung nach ChatGPT-Vorlage - Übersichtlich & Rechtssicher
     """
     from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import cm
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib import colors as rl_colors
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
     
     # Helper functions
+    def format_address(addr_dict):
+        if not addr_dict:
+            return ""
+        parts = []
+        street = addr_dict.get('street', '').strip()
+        house_num = addr_dict.get('house_number', '') or addr_dict.get('houseNumber', '')
+        if isinstance(house_num, (int, float)):
+            house_num = str(house_num)
+        house_num = house_num.strip() if house_num else ''
+        if street:
+            parts.append(f"{street} {house_num}" if house_num else street)
+        postal = addr_dict.get('postal_code', '') or addr_dict.get('postalCode', '')
+        city = addr_dict.get('city', '').strip()
+        if postal and city:
+            parts.append(f"{postal} {city}")
+        elif city:
+            parts.append(city)
+        return ", ".join(parts) if parts else ""
+    
     def format_date(date_str):
         if not date_str or date_str == 'None':
             return ""
         try:
             from datetime import datetime
-            # Try YYYY-MM-DD format first
             dt = datetime.strptime(date_str, "%Y-%m-%d")
             return dt.strftime("%d.%m.%Y")
         except:
             try:
-                # Try DD.MM.YYYY format (already formatted)
                 datetime.strptime(date_str, "%d.%m.%Y")
-                return date_str  # Already in correct format
+                return date_str
             except:
                 return ""
     
-    # Ordner erstellen
+    def format_time(time_str):
+        if not time_str:
+            return ""
+        return time_str[:5] if len(time_str) >= 5 else time_str
+    
+    # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
     contracts_dir.mkdir(exist_ok=True)
-    
-    filename = f"payroll_{registration_id}.pdf"
+    filename = f"payroll_reg_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # Styles - Optimized for single page
+    # 🎨 PROFESSIONELLE STYLES
     styles = getSampleStyleSheet()
     
-    # 🎨 PROFESSIONELLE STYLES für Lohnabrechnung
     title_style = ParagraphStyle(
-        "ProfTitle",
+        "Title",
         parent=styles["Title"],
+        fontSize=18,
         textColor=rl_colors.HexColor("#1a1a1a"),
-        fontSize=16,
         fontName="Helvetica-Bold",
-        spaceAfter=15,
-        alignment=1  # CENTER
+        spaceAfter=5,
+        alignment=TA_CENTER
     )
     
-    section_title = ParagraphStyle(
+    subtitle_style = ParagraphStyle(
+        "Subtitle",
+        parent=styles["Normal"],
+        fontSize=11,
+        textColor=rl_colors.HexColor("#555555"),
+        alignment=TA_CENTER,
+        spaceAfter=20
+    )
+    
+    section_style = ParagraphStyle(
         "Section",
         parent=styles["Heading2"],
-        textColor=rl_colors.HexColor("#2c3e50"),
         fontSize=11,
+        textColor=rl_colors.HexColor("#2c3e50"),
         fontName="Helvetica-Bold",
-        spaceAfter=8,
+        spaceAfter=6,
         spaceBefore=10
     )
     
-    normal = ParagraphStyle(
-        "NormalText",
+    body_style = ParagraphStyle(
+        "Body",
         parent=styles["Normal"],
         fontSize=10,
         leading=14,
         textColor=rl_colors.HexColor("#333333")
     )
     
-    # Calculate amounts
-    brutto_cents = job_data.get('workerAmountCents', 0)
-    brutto = brutto_cents / 100
-    netto = brutto  # Brutto = Netto for § 40a
+    # DATA EXTRACTION
+    # Employer
+    emp_first = employer_data.get('firstName', '').strip()
+    emp_last = employer_data.get('lastName', '').strip()
+    emp_name = f"{emp_first} {emp_last}".strip() or "___________________"
     
-    # Arbeitgeber costs - KORRIGIERT nach § 40a EStG
-    lohnsteuer = brutto * 0.25  # 25% Pauschsteuer
-    kirchensteuer = lohnsteuer * 0.09  # 9% auf Lohnsteuer (nicht auf Brutto!)
-    soli = lohnsteuer * 0.055  # 5,5% auf Lohnsteuer
-    unfallvers = brutto * 0.013  # 1,3% Unfallversicherung
-    gesamt_abgaben = lohnsteuer + kirchensteuer + soli + unfallvers
-    total_employer_costs = brutto + gesamt_abgaben
+    emp_addr = employer_data.get('businessAddress', {}) or employer_data.get('homeAddress', {})
+    if not emp_addr or not any(emp_addr.values() if isinstance(emp_addr, dict) else []):
+        emp_addr = {
+            'street': employer_data.get('street', ''),
+            'houseNumber': employer_data.get('houseNumber', ''),
+            'postalCode': employer_data.get('postalCode', ''),
+            'city': employer_data.get('city', '')
+        }
+    emp_address = format_address(emp_addr) or "___________________"
     
-    # PDF Doc
-    doc = SimpleDocTemplate(str(filepath), pagesize=A4)
-    story = []
-    
-    # Header
-    story.append(Paragraph("LOHNABRECHNUNG", title_style))
-    story.append(Spacer(1, 0.2*cm))
-    subtitle = ParagraphStyle("Subtitle", parent=styles["Normal"], fontSize=10, textColor=rl_colors.HexColor("#555555"), alignment=1)
-    story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle))
-    story.append(Spacer(1, 6))
-    
-    # Worker info
+    # Worker
     work_first = worker_data.get('firstName', '').strip()
     work_last = worker_data.get('lastName', '').strip()
-    work_name = " ".join([p for p in [work_first, work_last] if p]) or "Arbeitnehmer"
-    story.append(Paragraph(f"<b>Arbeitnehmer:</b> {work_name}", normal))
-    story.append(Spacer(1, 8))
+    work_name = f"{work_first} {work_last}".strip() or "___________________"
+    work_addr = worker_data.get('homeAddress', {})
+    work_address = format_address(work_addr) or "___________________"
+    work_geburtsdatum_raw = worker_data.get('geburtsdatum', '')
+    work_geburtsdatum = format_date(work_geburtsdatum_raw) if work_geburtsdatum_raw else "___________________"
+    work_steuer_id = worker_data.get('steuerId', '') or "___________________"
     
-    # Section 1: Verdienstübersicht
-    story.append(Paragraph("Verdienstübersicht", section_title))
+    # Job
+    job_title = job_data.get('title', '').strip() or "___________________"
+    job_date = format_date(job_data.get('date', '')) or "___________________"
+    job_start = format_time(job_data.get('start_at', '')) or "__:__"
+    job_end = format_time(job_data.get('end_at', '')) or "__:__"
     
-    verdienst_data = [
-        ["", "Betrag in EUR"],
-        ["Bruttolohn", f"{brutto:.2f}"],
-        ["Nettoverdienst", f"{netto:.2f}"],
+    # Berechnungen
+    worker_amount_cents = job_data.get('workerAmountCents', 0)
+    brutto = worker_amount_cents / 100 if worker_amount_cents else 0
+    
+    # Steuerliche Abgaben - KORRIGIERT nach § 40a EStG
+    pauschsteuer = brutto * 0.25  # 25%
+    soli = pauschsteuer * 0.055  # 5,5% auf Pauschsteuer
+    kirchensteuer = pauschsteuer * 0.09  # 9% auf Pauschsteuer
+    gesamtsteuer = pauschsteuer + soli + kirchensteuer
+    
+    # Unfallversicherung
+    unfallvers = brutto * 0.013  # 1,3%
+    
+    # Auszahlungsdatum = Job-Datum
+    auszahlung_datum = job_date
+    
+    created_date = format_date(created_at.split('T')[0]) if 'T' in created_at else format_date(created_at)
+    
+    # 📄 BUILD PDF
+    doc = SimpleDocTemplate(
+        str(filepath),
+        pagesize=A4,
+        leftMargin=2.5*cm,
+        rightMargin=2.5*cm,
+        topMargin=2*cm,
+        bottomMargin=2*cm
+    )
+    story = []
+    
+    # TITEL
+    story.append(Paragraph("LOHNABRECHNUNG", title_style))
+    story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle_style))
+    
+    # ARBEITGEBER
+    story.append(Paragraph("Arbeitgeber", section_style))
+    ag_data = [
+        ["Name:", emp_name],
+        ["Adresse:", emp_address],
+        ["Betriebsnummer:", "___________________"],
     ]
     
-    verdienst_table = Table(verdienst_data, colWidths=[280, 130])
-    verdienst_table.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), rl_colors.HexColor("#5941FF")),
-        ("TEXTCOLOR", (0,0), (-1,0), rl_colors.white),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
-        ("GRID", (0,0), (-1,-1), 0.2, rl_colors.grey),
+    ag_table = Table(ag_data, colWidths=[4*cm, 12*cm])
+    ag_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ("TOPPADDING", (0,0), (-1,-1), 2),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 2),
     ]))
+    story.append(ag_table)
+    story.append(Spacer(1, 0.3*cm))
     
-    story.append(verdienst_table)
-    story.append(Spacer(1, 10))
-    
-    # Section 2: Arbeitgeberabgaben
-    story.append(Paragraph("Pauschale Arbeitgeberabgaben", section_title))
-    
-    abgaben_data = [
-        ["Art der Abgabe", "Betrag in EUR"],
-        ["Pauschale Lohnsteuer (25 %)", f"{lohnsteuer:.2f}"],
-        ["Kirchensteuer pauschal (5 %)", f"{kirchensteuer:.2f}"],
-        ["Solidaritätszuschlag (5,5 % auf LSt)", f"{soli:.2f}"],
-        ["Pauschale Unfallversicherung (1,3 %)", f"{unfallvers:.2f}"],
-        ["Gesamt-Arbeitgeberkosten", f"{total_employer_costs:.2f}"],
+    # ARBEITNEHMER
+    story.append(Paragraph("Arbeitnehmer", section_style))
+    an_data = [
+        ["Name:", work_name],
+        ["Adresse:", work_address],
+        ["Geburtsdatum:", work_geburtsdatum],
+        ["Steuer-ID:", work_steuer_id],
     ]
     
-    abgaben_table = Table(abgaben_data, colWidths=[280, 130])
-    abgaben_table.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), rl_colors.HexColor("#5941FF")),
-        ("TEXTCOLOR", (0,0), (-1,0), rl_colors.white),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-        
-        ("BACKGROUND", (0,1), (-1,-2), rl_colors.whitesmoke),
-        
-        ("BACKGROUND", (0,-1), (-1,-1), rl_colors.HexColor("#C8FF16")),
-        ("TEXTCOLOR", (0,-1), (-1,-1), rl_colors.black),
-        ("FONTNAME", (0,-1), (-1,-1), "Helvetica-Bold"),
-        
-        ("ALIGN", (1,1), (-1,-1), "RIGHT"),
-        ("GRID", (0,0), (-1,-1), 0.2, rl_colors.grey),
+    an_table = Table(an_data, colWidths=[4*cm, 12*cm])
+    an_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ("TOPPADDING", (0,0), (-1,-1), 2),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 2),
     ]))
+    story.append(an_table)
+    story.append(Spacer(1, 0.3*cm))
     
-    story.append(abgaben_table)
-    story.append(Spacer(1, 10))
+    # ABRECHNUNGSZEITRAUM
+    story.append(Paragraph("Abrechnungszeitraum", section_style))
+    zeitraum_data = [
+        ["Datum:", job_date],
+        ["Einsatztag:", job_date],
+        ["Arbeitszeit:", f"{job_start} bis {job_end} Uhr"],
+        ["Tätigkeit:", job_title],
+    ]
     
-    # Final note
-    story.append(Paragraph(
-        "Hinweis: Bei kurzfristiger Beschäftigung nach § 40a EStG trägt der Arbeitgeber sämtliche Abgaben. "
-        "Für den Arbeitnehmer entstehen keine steuerlichen Abzüge (Brutto = Netto).",
-        normal
-    ))
+    zeitraum_table = Table(zeitraum_data, colWidths=[4*cm, 12*cm])
+    zeitraum_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ("TOPPADDING", (0,0), (-1,-1), 2),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 2),
+    ]))
+    story.append(zeitraum_table)
+    story.append(Spacer(1, 0.3*cm))
     
-    # Build PDF
+    # 1. ENTGELT
+    story.append(Paragraph("1. Entgelt", section_style))
+    story.append(Paragraph(f"<b>Bruttolohn:</b> {brutto:.2f} Euro", body_style))
+    story.append(Spacer(1, 0.3*cm))
+    
+    # 2. STEUERLICHE ABGABEN
+    story.append(Paragraph("2. Steuerliche Abgaben (vom Arbeitgeber getragen)", section_style))
+    steuer_data = [
+        ["Pauschsteuer (25%)", f"{pauschsteuer:.2f} Euro"],
+        ["Solidaritätszuschlag (5,5% auf Pauschsteuer)", f"{soli:.2f} Euro"],
+        ["Kirchensteuer (9% auf Pauschsteuer)", f"{kirchensteuer:.2f} Euro"],
+        ["", ""],
+        ["Gesamtsteuerlast Arbeitgeber", f"{gesamtsteuer:.2f} Euro"],
+    ]
+    
+    steuer_table = Table(steuer_data, colWidths=[12*cm, 4*cm])
+    steuer_table.setStyle(TableStyle([
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("ALIGN", (1,0), (1,-1), "RIGHT"),
+        ("LINEABOVE", (0,4), (1,4), 1, rl_colors.black),
+        ("FONTNAME", (0,4), (1,4), "Helvetica-Bold"),
+        ("TOPPADDING", (0,0), (-1,-1), 2),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 2),
+    ]))
+    story.append(steuer_table)
+    story.append(Spacer(1, 0.3*cm))
+    
+    # 3. SOZIALVERSICHERUNG
+    story.append(Paragraph("3. Sozialversicherung (sozialversicherungsfrei)", section_style))
+    sv_data = [
+        ["Krankenversicherung", "0,00 Euro"],
+        ["Pflegeversicherung", "0,00 Euro"],
+        ["Rentenversicherung", "0,00 Euro"],
+        ["Arbeitslosenversicherung", "0,00 Euro"],
+    ]
+    
+    sv_table = Table(sv_data, colWidths=[12*cm, 4*cm])
+    sv_table.setStyle(TableStyle([
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("ALIGN", (1,0), (1,-1), "RIGHT"),
+        ("TOPPADDING", (0,0), (-1,-1), 2),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 2),
+    ]))
+    story.append(sv_table)
+    story.append(Spacer(1, 0.3*cm))
+    
+    # 4. UNFALLVERSICHERUNG
+    story.append(Paragraph("4. Unfallversicherung", section_style))
+    story.append(Paragraph(f"<b>Beitrag des Arbeitgebers (BG):</b> {unfallvers:.2f} Euro (1,3% vom Bruttolohn)", body_style))
+    story.append(Spacer(1, 0.3*cm))
+    
+    # 5. NETTOAUSZAHLUNG
+    story.append(Paragraph("5. Nettoauszahlung an den Arbeitnehmer", section_style))
+    netto_data = [
+        ["Bruttolohn", f"{brutto:.2f} Euro"],
+        ["./. Abzüge Arbeitnehmer", "0,00 Euro"],
+        ["", ""],
+        ["Nettoauszahlung", f"{brutto:.2f} Euro"],
+        ["Auszahlungsdatum", auszahlung_datum],
+    ]
+    
+    netto_table = Table(netto_data, colWidths=[12*cm, 4*cm])
+    netto_table.setStyle(TableStyle([
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("ALIGN", (1,0), (1,-1), "RIGHT"),
+        ("LINEABOVE", (0,3), (1,3), 2, rl_colors.black),
+        ("FONTNAME", (0,3), (1,3), "Helvetica-Bold"),
+        ("FONTSIZE", (0,3), (1,3), 11),
+        ("BACKGROUND", (0,3), (1,3), rl_colors.HexColor("#C8FF16")),
+        ("TOPPADDING", (0,0), (-1,-1), 3),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 3),
+    ]))
+    story.append(netto_table)
+    story.append(Spacer(1, 0.4*cm))
+    
+    # HINWEIS
+    story.append(Paragraph("Hinweis", section_style))
+    hinweis_text = """
+    Die Beschäftigung ist kurzfristig nach § 40a EStG.<br/>
+    Alle Abgaben trägt der Arbeitgeber.<br/>
+    Für den Arbeitnehmer entstehen keine steuerlichen oder sozialversicherungsrechtlichen Abzüge.
+    """
+    story.append(Paragraph(hinweis_text, body_style))
+    story.append(Spacer(1, 0.3*cm))
+    
+    # FOOTER
+    footer_line = Table([[""]], colWidths=[16*cm])
+    footer_line.setStyle(TableStyle([
+        ("LINEABOVE", (0,0), (-1,0), 0.5, rl_colors.HexColor("#cccccc")),
+    ]))
+    story.append(footer_line)
+    story.append(Spacer(1, 0.2*cm))
+    
+    footer_style = ParagraphStyle(
+        "Footer",
+        parent=styles["Normal"],
+        fontSize=8,
+        textColor=rl_colors.HexColor("#888888"),
+        alignment=TA_CENTER
+    )
+    story.append(Paragraph(f"Erstellt am {created_date} | Registrierungs-ID: {registration_id}", footer_style))
+    
+    # BUILD
     doc.build(story)
-    logger.info(f"Generated modern payroll PDF: {filename}")
+    logger.info(f"✅ Kompakte Lohnabrechnung generiert: {filename}")
     
     return f"/api/generated_contracts/{filename}"
+
 
 def generate_employer_costs_pdf(job, worker_profile):
     from reportlab.lib.pagesizes import A4
