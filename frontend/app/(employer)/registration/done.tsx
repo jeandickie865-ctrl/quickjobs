@@ -178,7 +178,7 @@ export default function RegistrationDoneScreen() {
               )}
             </Pressable>
 
-            {/* Sofortmeldung Button */}
+            {/* Meldecheck Button */}
             <Pressable
               onPress={() => handleDownload('generate-meldecheck', setLoadingSofortmeldung, 'meldecheckUrl')}
               disabled={loadingSofortmeldung}
