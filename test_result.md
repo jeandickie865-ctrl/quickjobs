@@ -1704,6 +1704,50 @@ backend:
       - Konsistentes Tab-Design (nur Text, keine Icons)
       - AsyncStorage nur noch für Auth-Token
 
+
+  - agent: "main"
+    message: |
+      **Feature-Erweiterung: Neue Felder im Worker Registrierungsformular**
+      
+      **User-Anforderung:**
+      - Staatsangehörigkeit Feld hinzufügen
+      - Geburtsort Feld hinzufügen
+      - Zwei Bestätigungs-Checkboxen für Kurzfristigkeits-Nachweis
+      
+      **Backend-Implementierung (bereits abgeschlossen):**
+      ✅ server.py erweitert mit neuen Feldern in Pydantic-Modellen:
+      - geburtsort: Optional[str]
+      - staatsangehoerigkeit: Optional[str]
+      - confirm_70_days: Optional[bool]
+      - confirm_not_professional: Optional[bool]
+      ✅ PUT /api/profiles/worker/me/registration-data akzeptiert neue Felder
+      
+      **Frontend-Implementierung (jetzt durchgeführt):**
+      ✅ app/(worker)/registration-data.tsx erweitert:
+      1. State-Management: 4 neue States hinzugefügt
+      2. Daten-Laden: useEffect lädt neue Felder aus getWorkerProfile
+      3. UI-Felder hinzugefügt:
+         - Geburtsort Textfeld
+         - Staatsangehörigkeit Textfeld
+         - Checkbox "Ich bestätige, dass ich nicht mehr als 70 Arbeitstage pro Jahr arbeite"
+         - Checkbox "Ich bestätige, dass diese Art von Arbeit nicht meine Hauptbeschäftigung ist"
+      4. API-Call: JSON.stringify sendet alle neuen Felder an Backend
+      
+      **Bestehende Logik unverändert:**
+      - Keine Änderungen an existierenden Feldern
+      - Validierung bleibt gleich
+      - Navigation und Save-Flow bleiben unverändert
+      
+      **Erwartetes Verhalten:**
+      - Worker können Staatsangehörigkeit und Geburtsort eingeben
+      - Beide Checkboxen müssen bestätigt werden (UI zeigt visuelle Checkmarks)
+      - Daten werden in MongoDB gespeichert
+      - Beim erneuten Laden werden alle Felder korrekt vorausgefüllt
+      
+      **Nächste Schritte:**
+      - Backend-Testing des erweiterten Endpoints
+      - Dann User fragen ob Frontend-Testing gewünscht ist
+
 backend:
   - task: "Chat Messages API"
     implemented: true
