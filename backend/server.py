@@ -2895,7 +2895,7 @@ def generate_meldecheck_pdf(
     # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
     contracts_dir.mkdir(exist_ok=True)
-    filename = f"sofortmeldung_{registration_id}.pdf"
+    filename = f"meldecheck_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
     # 🎨 PROFESSIONELLE STYLES
