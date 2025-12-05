@@ -34,7 +34,12 @@
       }
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://backup.dickie.app"
+        }
+      ],
       "expo-notifications",
       [
         "expo-splash-screen",
