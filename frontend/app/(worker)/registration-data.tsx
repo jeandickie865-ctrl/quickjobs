@@ -176,6 +176,98 @@ export default function WorkerRegistrationDataScreen() {
                 style={inputStyle}
               />
             </View>
+
+            {/* Geburtsort */}
+            <View>
+              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+                Geburtsort *
+              </Text>
+              <TextInput
+                value={geburtsort}
+                onChangeText={setGeburtsort}
+                placeholder="Geburtsort"
+                placeholderTextColor={COLORS.muted}
+                style={inputStyle}
+              />
+            </View>
+
+            {/* Staatsangehörigkeit */}
+            <View>
+              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+                Staatsangehörigkeit *
+              </Text>
+              <TextInput
+                value={staatsangehoerigkeit}
+                onChangeText={setStaatsangehoerigkeit}
+                placeholder="Staatsangehörigkeit"
+                placeholderTextColor={COLORS.muted}
+                style={inputStyle}
+              />
+            </View>
+
+            {/* Checkbox: 70 Tage */}
+            <Pressable
+              onPress={() => setConfirm70Days(!confirm70Days)}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                gap: 12,
+                paddingVertical: 8
+              }}
+            >
+              <View
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  borderWidth: 2,
+                  borderColor: confirm70Days ? COLORS.neon : COLORS.border,
+                  backgroundColor: confirm70Days ? COLORS.neon : 'transparent',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 2
+                }}
+              >
+                {confirm70Days && (
+                  <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '900' }}>✓</Text>
+                )}
+              </View>
+              <Text style={{ color: COLORS.white, fontSize: 14, lineHeight: 20, flex: 1 }}>
+                Ich bestätige, dass ich nicht mehr als 70 Arbeitstage pro Jahr arbeite *
+              </Text>
+            </Pressable>
+
+            {/* Checkbox: Nicht Hauptbeschäftigung */}
+            <Pressable
+              onPress={() => setConfirmNotProfessional(!confirmNotProfessional)}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                gap: 12,
+                paddingVertical: 8
+              }}
+            >
+              <View
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  borderWidth: 2,
+                  borderColor: confirmNotProfessional ? COLORS.neon : COLORS.border,
+                  backgroundColor: confirmNotProfessional ? COLORS.neon : 'transparent',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 2
+                }}
+              >
+                {confirmNotProfessional && (
+                  <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '900' }}>✓</Text>
+                )}
+              </View>
+              <Text style={{ color: COLORS.white, fontSize: 14, lineHeight: 20, flex: 1 }}>
+                Ich bestätige, dass diese Art von Arbeit nicht meine Hauptbeschäftigung ist *
+              </Text>
+            </Pressable>
           </View>
         </ScrollView>
 
