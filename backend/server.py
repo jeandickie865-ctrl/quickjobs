@@ -2632,11 +2632,11 @@ def generate_contract_pdf(
     start_time = job_data.get('start_at', '') or job_data.get('startAt', '')
     end_time = job_data.get('end_at', '') or job_data.get('endAt', '')
     
-    # Arbeitgeber costs
-    lohnsteuer = brutto * 0.25
-    kirchensteuer = brutto * 0.05
-    soli = lohnsteuer * 0.055
-    unfallvers = brutto * 0.013
+    # Arbeitgeber costs - KORRIGIERT nach § 40a EStG
+    lohnsteuer = brutto * 0.25  # 25% Pauschsteuer
+    kirchensteuer = lohnsteuer * 0.09  # 9% auf Lohnsteuer (nicht auf Brutto!)
+    soli = lohnsteuer * 0.055  # 5,5% auf Lohnsteuer
+    unfallvers = brutto * 0.013  # 1,3% Unfallversicherung
     gesamt_abgaben = lohnsteuer + kirchensteuer + soli + unfallvers
     total_employer_costs = brutto + gesamt_abgaben
     
@@ -3134,11 +3134,11 @@ def generate_payroll_pdf(
     brutto = brutto_cents / 100
     netto = brutto  # Brutto = Netto for § 40a
     
-    # Arbeitgeber costs
-    lohnsteuer = brutto * 0.25
-    kirchensteuer = brutto * 0.05
-    soli = lohnsteuer * 0.055
-    unfallvers = brutto * 0.013
+    # Arbeitgeber costs - KORRIGIERT nach § 40a EStG
+    lohnsteuer = brutto * 0.25  # 25% Pauschsteuer
+    kirchensteuer = lohnsteuer * 0.09  # 9% auf Lohnsteuer (nicht auf Brutto!)
+    soli = lohnsteuer * 0.055  # 5,5% auf Lohnsteuer
+    unfallvers = brutto * 0.013  # 1,3% Unfallversicherung
     gesamt_abgaben = lohnsteuer + kirchensteuer + soli + unfallvers
     total_employer_costs = brutto + gesamt_abgaben
     
