@@ -2649,18 +2649,54 @@ def generate_contract_pdf(
     story.append(Paragraph("Kurzfristige Beschäftigung nach § 40a EStG", subtitle_style))
     story.append(Spacer(1, 6))
     
-    # Vertragsparteien
-    story.append(Paragraph("Vertragsparteien", section_title))
-    story.append(Paragraph(f"<b>Arbeitgeber:</b> {emp_name}", normal))
+    # SECTION 1: Angaben zum Arbeitgeber
+    story.append(Paragraph("1. Angaben zum Arbeitgeber", section_title))
+    ag_data = [
+        ["Name:", emp_name],
+    ]
     if emp_company:
-        story.append(Paragraph(f"<b>Firma:</b> {emp_company}", normal))
-    if emp_address:
-        story.append(Paragraph(f"<b>Adresse:</b> {emp_address}", normal))
-    story.append(Spacer(1, 4))
-    story.append(Paragraph(f"<b>Arbeitnehmer:</b> {work_name}", normal))
-    if work_address:
-        story.append(Paragraph(f"<b>Adresse:</b> {work_address}", normal))
-    story.append(Spacer(1, 8))
+        ag_data.append(["Unternehmen:", emp_company])
+    ag_data.append(["Anschrift:", emp_address or "Nicht angegeben"])
+    ag_data.append(["Betriebsnummer:", "_______________"])  # Zum manuellen Ausfüllen
+    
+    ag_table = Table(ag_data, colWidths=[4*cm, 13*cm])
+    ag_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
+        ("FONTNAME", (1,0), (1,-1), "Helvetica"),
+        ("FONTSIZE", (0,0), (-1,-1), 10),
+        ("TEXTCOLOR", (0,0), (0,-1), rl_colors.HexColor("#555555")),
+        ("TEXTCOLOR", (1,0), (1,-1), rl_colors.HexColor("#000000")),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ("TOPPADDING", (0,0), (-1,-1), 4),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+    ]))
+    story.append(ag_table)
+    story.append(Spacer(1, 10))
+    
+    # SECTION 2: Angaben zum Arbeitnehmer
+    story.append(Paragraph("2. Angaben zum Arbeitnehmer", section_title))
+    an_data = [
+        ["Name:", work_name],
+        ["Anschrift:", work_address or "Nicht angegeben"],
+        ["Geburtsdatum:", work_geburtsdatum],
+        ["Steuer-ID:", work_steuer_id],
+        ["Eintrittsdatum:", job_date or "Nicht angegeben"],
+        ["Austrittsdatum:", job_date or "Nicht angegeben"],
+    ]
+    
+    an_table = Table(an_data, colWidths=[4*cm, 13*cm])
+    an_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
+        ("FONTNAME", (1,0), (1,-1), "Helvetica"),
+        ("FONTSIZE", (0,0), (-1,-1), 10),
+        ("TEXTCOLOR", (0,0), (0,-1), rl_colors.HexColor("#555555")),
+        ("TEXTCOLOR", (1,0), (1,-1), rl_colors.HexColor("#000000")),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ("TOPPADDING", (0,0), (-1,-1), 4),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+    ]))
+    story.append(an_table)
+    story.append(Spacer(1, 10))
     
     # Tätigkeitsbeschreibung
     story.append(Paragraph("Tätigkeitsbeschreibung", section_title))
