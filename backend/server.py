@@ -2546,28 +2546,32 @@ def generate_contract_pdf(
     filename = f"contract_{registration_id}.pdf"
     filepath = contracts_dir / filename
     
-    # Styles - Optimized for single page
+    # 🎨 PROFESSIONELLE STYLES für Arbeitsvertrag
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
-        "TitleCustom",
+        "ProfTitle",
         parent=styles["Title"],
-        textColor="#5941FF",
-        fontSize=16,
-        spaceAfter=10
+        textColor=rl_colors.HexColor("#1a1a1a"),
+        fontSize=18,
+        fontName="Helvetica-Bold",
+        spaceAfter=20,
+        alignment=1  # CENTER
     )
     section_title = ParagraphStyle(
-        "SectionTitle",
+        "Section",
         parent=styles["Heading2"],
-        textColor="#5941FF",
-        fontSize=11,
+        textColor=rl_colors.HexColor("#2c3e50"),
+        fontSize=12,
         fontName="Helvetica-Bold",
-        spaceAfter=6
+        spaceAfter=10,
+        spaceBefore=15
     )
     normal = ParagraphStyle(
-        "NormalCustom",
+        "NormalText",
         parent=styles["Normal"],
-        fontSize=9,
-        leading=11
+        fontSize=10,
+        leading=14,
+        textColor=rl_colors.HexColor("#333333")
     )
     
     # Data extraction
