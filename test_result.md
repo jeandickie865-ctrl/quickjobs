@@ -436,15 +436,18 @@ backend:
 
   - task: "Extended Worker Registration Data Fields"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Backend erweitert: PUT /api/profiles/worker/me/registration-data Endpoint akzeptiert nun die neuen Felder geburtsort, staatsangehoerigkeit, confirm_70_days, confirm_not_professional. Pydantic-Modelle (RegistrationDataPayload, WorkerProfileUpdate, WorkerProfile) wurden aktualisiert. Daten werden korrekt in MongoDB gespeichert."
+      - working: true
+        agent: "testing"
+        comment: "🎉 EXTENDED WORKER REGISTRATION DATA FIELDS VOLLSTÄNDIG GETESTET UND FUNKTIONAL: Alle 7/7 Tests bestanden (100% Success Rate). ✅ Vollständiger Daten-Flow: Worker-Account erstellt → Worker-Profil erstellt → PUT /api/profiles/worker/me/registration-data mit ALLEN Feldern erfolgreich. ✅ Daten-Persistenz: Alle neuen Felder (geburtsort: Berlin, staatsangehoerigkeit: Deutsch, kurzfristigkeit_bestaetigt: true, kurzfristigkeit_nicht_berufsmaeßig: true) korrekt in MongoDB gespeichert. ✅ Optionale Felder: Endpoint funktioniert bei partiellen Updates, alte Daten bleiben erhalten. ✅ Validierung: 200 OK Response mit korrekter Datenstruktur. WICHTIGER HINWEIS: Backend verwendet deutsche Feldnamen (kurzfristigkeit_bestaetigt, kurzfristigkeit_nicht_berufsmaeßig) statt englischer Namen (confirm_70_days, confirm_not_professional) aus Review-Anfrage. Alle 4 neuen Felder funktionieren einwandfrei."
 
 metadata:
   created_by: "main_agent"
