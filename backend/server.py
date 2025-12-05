@@ -3777,9 +3777,9 @@ async def generate_sofortmeldung(request: GenerateSofortmeldungRequest):
         }}
     )
     
-    logger.info(f"Sofortmeldung generated and saved: {sofortmeldung_url}")
+    logger.info(f"Meldecheck generated and saved: {meldecheck_url}")
     
-    return {"sofortmeldungUrl": sofortmeldung_url}
+    return {"meldecheckUrl": meldecheck_url}
 
 
 # Request Body Model for generating Payroll
