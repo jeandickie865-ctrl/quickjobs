@@ -2829,6 +2829,12 @@ def generate_sofortmeldung_pdf(
     work_addr = worker_data.get('homeAddress', {})
     work_address = format_address(work_addr) or "Nicht angegeben"
     
+    # DEBUG: Log what we have
+    logger.info(f"DEBUG Sofortmeldung - worker_data keys: {worker_data.keys()}")
+    logger.info(f"DEBUG Sofortmeldung - additional_data: {additional_data}")
+    logger.info(f"DEBUG Sofortmeldung - geburtsdatum from worker: {worker_data.get('geburtsdatum')}")
+    logger.info(f"DEBUG Sofortmeldung - geburtsdatum from additional: {additional_data.get('geburtsdatum')}")
+    
     geburtsdatum = worker_data.get('birthDate') or worker_data.get('geburtsdatum') or additional_data.get('geburtsdatum', '')
     geburtsdatum_formatted = format_date(geburtsdatum) if geburtsdatum else "Nicht angegeben"
     
