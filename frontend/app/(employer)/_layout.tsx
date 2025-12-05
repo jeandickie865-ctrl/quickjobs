@@ -19,6 +19,7 @@ const COLORS = {
 
 export default function EmployerLayout() {
   const { user, loading } = useAuth();
+  const insets = useSafeAreaInsets();
   const [matchesCount, setMatchesCount] = useState(0);
 
   useEffect(() => {
