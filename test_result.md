@@ -527,17 +527,7 @@ frontend:
         agent: "main"
         comment: "Gleiche Implementierung wie Worker-Seite: State, loadUnreadCounts Funktion und UI-Badge wurden hinzugefügt. Badge zeigt Anzahl ungelesener Nachrichten neben dem Chat-Button an."
 
-  - task: "Worker Registration Data Form - Extended Fields"
-    implemented: true
-    working: "NA"
-    file: "app/(worker)/registration-data.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Frontend-Formular erweitert: Neue Eingabefelder für Geburtsort und Staatsangehörigkeit hinzugefügt. Zwei Bestätigungs-Checkboxen implementiert für Kurzfristigkeits-Nachweis (70 Tage Regel und Nicht-Hauptbeschäftigung). State-Management für alle neuen Felder hinzugefügt. API-Call angepasst, um alle neuen Felder (geburtsort, staatsangehoerigkeit, confirm_70_days, confirm_not_professional) an Backend zu senden. Bestehende Logik bleibt unverändert."
+
 
 backend:
   - task: "GET /api/jobs Endpoint Verification"
