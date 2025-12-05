@@ -564,6 +564,13 @@ export default function CreateJob() {
           </View>
         </View>
 
+        {/* === ORT & ZEIT === */}
+        <View style={{ marginTop: SPACING.lg }}>
+          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+            ORT & ZEIT
+          </Text>
+        </View>
+
         {/* Adresse */}
         <View
           style={{
