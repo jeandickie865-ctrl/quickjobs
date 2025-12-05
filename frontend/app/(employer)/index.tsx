@@ -20,6 +20,15 @@ const COLORS = {
   neon: '#C8FF16',
 };
 
+// 🚨 Sofortmeldepflichtige Kategorien
+const SOFORTMELDEPFLICHTIG = new Set([
+  'cleaning',
+  'gastronomy',
+  'logistics',
+  'transport',
+  'moving'
+]);
+
 export default function EmployerDashboard() {
   const { user } = useAuth();
   const router = useRouter();
