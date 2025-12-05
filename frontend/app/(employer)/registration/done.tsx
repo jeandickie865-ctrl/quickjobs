@@ -180,7 +180,7 @@ export default function RegistrationDoneScreen() {
 
             {/* Sofortmeldung Button */}
             <Pressable
-              onPress={() => handleDownload('generate-sofortmeldung', setLoadingSofortmeldung, 'sofortmeldungUrl')}
+              onPress={() => handleDownload('generate-meldecheck', setLoadingSofortmeldung, 'meldecheckUrl')}
               disabled={loadingSofortmeldung}
               style={{
                 backgroundColor: COLORS.card,
