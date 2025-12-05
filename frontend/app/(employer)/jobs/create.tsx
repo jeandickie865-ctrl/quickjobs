@@ -388,6 +388,27 @@ export default function CreateJob() {
           </View>
         </View>
 
+        {/* 🚨 WARNUNG: Sofortmeldepflichtige Kategorie */}
+        {category && SOFORTMELDEPFLICHTIG.has(category) && (
+          <View
+            style={{
+              backgroundColor: '#FF8C00',
+              borderRadius: 12,
+              padding: 14,
+              borderLeftWidth: 4,
+              borderLeftColor: '#FF4500',
+            }}
+          >
+            <Text style={{ color: '#FFFFFF', fontSize: 13, fontWeight: '700', marginBottom: 4 }}>
+              ⚠️ Sofortmeldepflichtige Branche
+            </Text>
+            <Text style={{ color: '#FFFFFF', fontSize: 12, lineHeight: 18 }}>
+              Diese Kategorie erfordert eine Sofortmeldung VOR Arbeitsbeginn nach § 28a Abs. 4 SGB IV.
+              Die Dokumente werden automatisch entsprechend erstellt.
+            </Text>
+          </View>
+        )}
+
         {/* Subcategory */}
         {category && subcategoryOptions.length > 0 && (
           <View
