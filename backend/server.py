@@ -3678,7 +3678,7 @@ async def generate_contract(request: GenerateContractRequest):
 class GenerateSofortmeldungRequest(BaseModel):
     applicationId: str
 
-@api_router.post("/registrations/generate-sofortmeldung")
+@api_router.post("/registrations/generate-meldecheck")
 async def generate_sofortmeldung(request: GenerateSofortmeldungRequest):
     """
     Generiert eine PDF-Sofortmeldung für eine offizielle Anmeldung.
