@@ -4,7 +4,7 @@
     "slug": "backup-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/store-icons/app-icon.png",
     "scheme": "backup",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
