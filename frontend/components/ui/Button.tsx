@@ -117,7 +117,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const getLoadingColor = (): string => {
     if (variant === 'primary') {
-      return '#111111';
+      return colors.white;
     }
     if (variant === 'danger') {
       return colors.white;
