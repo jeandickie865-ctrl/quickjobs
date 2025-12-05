@@ -6,11 +6,11 @@ export const palette = {
   primaryDark: '#4530E0',
   primaryLight: '#7B68FF',
   
-  // Accent - BACKUP Neon Lime
+  // Accent - Purple (changed from Neon Lime)
   neon: '#C8FF16',
   neonDark: '#B3E612',
   neonLight: '#D4FF4D',
-  accent: '#C8FF16',
+  accent: '#7C5CFF',
   
   // ===== BACKGROUNDS =====
   background: '#5941FF',        // Global background - always purple
