@@ -1125,10 +1125,24 @@ async def update_worker_registration_data(
         update_data["steuerId"] = data.steuerId.strip() if data.steuerId else ""
     if data.geburtsdatum is not None:
         update_data["geburtsdatum"] = data.geburtsdatum.strip() if data.geburtsdatum else ""
+    if data.geburtsort is not None:
+        update_data["geburtsort"] = data.geburtsort.strip() if data.geburtsort else ""
+    if data.staatsangehoerigkeit is not None:
+        update_data["staatsangehoerigkeit"] = data.staatsangehoerigkeit.strip() if data.staatsangehoerigkeit else ""
     if data.sozialversicherungsnummer is not None:
         update_data["sozialversicherungsnummer"] = data.sozialversicherungsnummer.strip() if data.sozialversicherungsnummer else ""
     if data.krankenkasse is not None:
         update_data["krankenkasse"] = data.krankenkasse.strip() if data.krankenkasse else ""
+    
+    # Kurzfristigkeits-Bestätigungen
+    if data.kurzfristigkeit_bestaetigt is not None:
+        update_data["kurzfristigkeit_bestaetigt"] = data.kurzfristigkeit_bestaetigt
+    if data.kurzfristigkeit_nicht_berufsmaeßig is not None:
+        update_data["kurzfristigkeit_nicht_berufsmaeßig"] = data.kurzfristigkeit_nicht_berufsmaeßig
+    
+    # Wenn beide Bestätigungen gesetzt sind, speichere Zeitstempel
+    if data.kurzfristigkeit_bestaetigt and data.kurzfristigkeit_nicht_berufsmaeßig:
+        update_data["kurzfristigkeit_bestaetigt_am"] = datetime.utcnow().isoformat()
     
     # Timestamp aktualisieren
     update_data["updatedAt"] = datetime.utcnow().isoformat()
