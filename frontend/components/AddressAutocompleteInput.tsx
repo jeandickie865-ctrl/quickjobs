@@ -328,11 +328,15 @@ export default function AddressAutocompleteInput({
       {/* AUTOCOMPLETE DROPDOWN */}
       {show && suggestions.length > 0 && (
         <View style={styles.dropdown}>
-          <ScrollView style={{ maxHeight: 220 }}>
+          <ScrollView 
+            style={{ maxHeight: 220 }}
+            keyboardShouldPersistTaps="handled"
+          >
             {suggestions.map((s, i) => (
               <Pressable
                 key={i}
                 onPress={() => select(s)}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                 style={({ pressed }) => [
                   styles.item,
                   { backgroundColor: pressed ? '#1D1A2B' : COLORS.card },
