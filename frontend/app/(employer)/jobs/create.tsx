@@ -35,6 +35,15 @@ const SPACING = {
   xl: 32,
 };
 
+// 🚨 Sofortmeldepflichtige Kategorien nach § 28a Abs. 4 SGB IV
+const SOFORTMELDEPFLICHTIG = new Set([
+  'cleaning',
+  'gastronomy', 
+  'logistics',
+  'transport',
+  'moving'
+]);
+
 export default function CreateJob() {
   const { user } = useAuth();
   const router = useRouter();
