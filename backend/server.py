@@ -2615,6 +2615,11 @@ def generate_contract_pdf(
     work_addr = worker_data.get('homeAddress', {})
     work_address = format_address(work_addr)
     
+    # Worker Registrierungsdaten
+    work_geburtsdatum_raw = worker_data.get('geburtsdatum', '')
+    work_geburtsdatum = format_date(work_geburtsdatum_raw) if work_geburtsdatum_raw else "_______________"
+    work_steuer_id = worker_data.get('steuerId', '') or "_______________"
+    
     job_title = job_data.get('title', '').strip() or "Nicht angegeben"
     job_desc = job_data.get('description', '').strip() or "Nicht angegeben"
     job_addr = job_data.get('address', {})
