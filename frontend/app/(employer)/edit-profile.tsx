@@ -160,12 +160,25 @@ export default function EmployerProfileScreen() {
 
       await saveEmployerProfile(user!.id, payload);
 
-      Alert.alert('Erfolg', 'Profil erfolgreich gespeichert!', [
-        {
-          text: 'OK',
-          onPress: () => router.back()
-        }
-      ]);
+      // Show success toast
+      setShowToast(true);
+      Animated.timing(toastOpacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+
+      // Hide toast and navigate back after 2 seconds
+      setTimeout(() => {
+        Animated.timing(toastOpacity, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          setShowToast(false);
+          router.push('/(employer)');
+        });
+      }, 2000);
     }
 
     catch (e: any) {
