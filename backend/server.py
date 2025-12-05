@@ -3758,7 +3758,7 @@ async def generate_sofortmeldung(request: GenerateSofortmeldungRequest):
     employer.pop("_id", None)
     
     # PDF generieren
-    sofortmeldung_url = generate_sofortmeldung_pdf(
+    meldecheck_url = generate_meldecheck_pdf(
         registration_id=registration_id,
         job_data=job,
         employer_data=employer,
