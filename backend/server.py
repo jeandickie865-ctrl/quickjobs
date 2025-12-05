@@ -3772,7 +3772,7 @@ async def generate_sofortmeldung(request: GenerateSofortmeldungRequest):
     await db.official_registrations.update_one(
         {"id": registration_id},
         {"$set": {
-            "sofortmeldungUrl": sofortmeldung_url,
+            "meldecheckUrl": meldecheck_url,
             "updatedAt": datetime.utcnow().isoformat()
         }}
     )
