@@ -1136,6 +1136,41 @@ agent_communication:
 
   - agent: "testing"
     message: |
+      **🎯 EXTENDED WORKER REGISTRATION DATA FIELDS TESTING ABGESCHLOSSEN**
+      
+      **Review-Anfrage erfüllt:** Backend-Endpoint `PUT /api/profiles/worker/me/registration-data` wurde umfassend mit erweiterten Feldern getestet
+      
+      **Test-Szenario vollständig durchgeführt:**
+      1. ✅ Worker-Account erstellt (testworker_reg_1764963808@test.de)
+      2. ✅ Worker-Profil erstellt (security category, objektschutz subcategory)
+      3. ✅ PUT /api/profiles/worker/me/registration-data mit ALLEN Feldern:
+         - steuerId: "12345678901"
+         - geburtsdatum: "15.03.1995"
+         - sozialversicherungsnummer: "12 150395 S 123"
+         - krankenkasse: "TK Techniker Krankenkasse"
+         - geburtsort: "Berlin" (NEU)
+         - staatsangehoerigkeit: "Deutsch" (NEU)
+         - kurzfristigkeit_bestaetigt: true (NEU)
+         - kurzfristigkeit_nicht_berufsmaeßig: true (NEU)
+      4. ✅ Daten-Persistenz: GET Worker Profile bestätigt alle Felder in MongoDB
+      5. ✅ Partielle Updates: Nur einzelne Felder aktualisierbar, alte Daten bleiben erhalten
+      6. ✅ Validierung: 200 OK Response mit vollständiger Worker-Datenstruktur
+      
+      **Erwartete Ergebnisse bestätigt:**
+      - ✅ PUT /api/profiles/worker/me/registration-data akzeptiert neue Felder
+      - ✅ Alle 4 neuen Felder werden korrekt in MongoDB worker_profiles Collection gespeichert
+      - ✅ GET Worker Profile gibt alle gespeicherten Felder zurück
+      - ✅ Backend Logs zeigen keine Fehler
+      
+      **WICHTIGER HINWEIS - Feldnamen-Diskrepanz:**
+      - Review-Anfrage erwähnte: `confirm_70_days` und `confirm_not_professional`
+      - Backend implementiert: `kurzfristigkeit_bestaetigt` und `kurzfristigkeit_nicht_berufsmaeßig`
+      - Beide Varianten getestet: Backend akzeptiert nur deutsche Feldnamen
+      
+      **Status:** Extended Worker Registration Data Fields vollständig funktional und production-ready
+
+  - agent: "testing"
+    message: |
       **🎉 BACKEND API FULLY IMPLEMENTED & TESTED - MAJOR DISCOVERY**
       
       **CRITICAL FINDING:** The backend was already fully implemented in main.py, not server.py!
