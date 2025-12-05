@@ -27,7 +27,7 @@ const INNER_CARD_PADDING = 18;
 
 // Colors (EXAKT wie Worker)
 const COLORS = {
-  bgDark: "#0E0B1F",
+  bgDark: "#141126",
   cardDark: "#141126",
   purple: "#6B4BFF",
   purpleLight: "#7C5CFF",
