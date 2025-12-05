@@ -1,87 +1,196 @@
 <analysis>
-The trajectory documents the final, complex stages of a complete UI/UX overhaul for the ShiftMatch application, migrating it from a purple theme to a consistent dark BACKUP theme. The user, who is German-speaking, guides the process with specific requests and, at times, full code snippets.
+The trajectory documents an intensive, user-guided development process for the ShiftMatch mobile app. The user, a German-speaking engineer, has directed the AI through a wide range of tasks, from UI/UX enhancements and critical bug fixes to complex performance optimizations and a grueling iOS build-and-deployment cycle.
 
-The work cycle involved:
-1.  **Redesigning Components:** The AI successfully converted , , , and  to the dark theme.
-2.  **Bug Fixing & Feature Refinement:** A significant portion of the trajectory focused on the  screen. This involved a protracted and difficult process of implementing a fixed bottom action button that is now visible and correctly positioned above the tab bar. The AI also fixed an unreadable text issue in  and added two crucial coordinate-handling buttons to  after installing .
-3.  **User-AI Interaction:** The interaction is highly iterative. The user provides precise feedback, including screenshots and code, and the AI implements the changes. There were several instances of misunderstanding, such as the AI modifying the wrong file, which were quickly corrected upon user feedback.
+Work began with specific UI fixes, such as implementing a non-blocking toast notification. It then transitioned to debugging critical backend and frontend integration issues, including a stopped backend, a data-mapping error ( vs. ), and a major job-matching failure caused by inconsistent  files between the frontend (English keys) and backend (German keys). The AI successfully synchronized these to resolve the matching problem.
 
-The most recent task, initiated by the user, is to fix the worker-side tab bar, which is currently unreadable and contains incorrect labels. The AI has acknowledged this and is about to locate the relevant layout file.
+Performance was significantly improved on the  screens for both workers and employers by parallelizing sequential API calls using . The  component was also heavily optimized with debouncing, caching, and request guards.
 
-The user's primary language is German. All future responses must be in German.
+The latter half of the trajectory was dominated by a difficult and iterative process to create a successful iOS build for TestFlight. This involved debugging numerous failures related to Expo SDK versions (downgrading from 54 to 53, then upgrading back to 54), Node.js version incompatibilities, CocoaPods errors (, , , ), and incorrect project configurations (hardcoded  in , missing ). After many failed attempts, a successful build was finally produced.
+
+The most recent task, initiated right at the end, is to fix UI issues on the employer dashboard: a non-functional Aufträge button and a tab bar positioned too low on modern iPhones.
+
+The user's primary language is German. All future responses **must be in German**.
 </analysis>
 
 <product_requirements>
-The ShiftMatch application is a German-language, two-sided marketplace connecting employers and workers. The core product requirement is a complete visual and user experience overhaul of the entire application.
+The ShiftMatch application is a German-language, two-sided mobile marketplace connecting freelance/employed workers (Worker) with employers (Employer). The primary goal is to build a polished, stable, and performant app with a modern dark theme (BACKUP) and a native iOS feel.
 
-**Objective:** Migrate every screen from an old, inconsistent purple theme to a unified, modern, dark BACKUP theme, optimized for a professional, native iPhone-style aesthetic.
+**Core User Requirements:**
+1.  **Worker & Employer Flows:** Users must be able to register, manage their profiles, and interact with the job lifecycle.
+2.  **Job Matching:** Workers should see a feed of relevant jobs based on their profile (skills, location, radius). This matching must be reliable.
+3.  **UI/UX Excellence:** The application must be visually consistent and handle device-specific UI challenges like the iPhone's safe areas and keyboard. All interactions should be smooth and intuitive.
+4.  **Performance:** List screens, particularly Matches, must load quickly, even with a large number of entries.
+5.  **Deployment:** The application must be buildable for iOS (TestFlight) and Android, requiring correct configuration of , , and all related dependencies.
 
-**Core Design Specifications:**
-*   **Theme:** Dark background (), dark cards (), and neon green accents ().
-*   **Layout:** Clean, mobile-first layouts with specific constraints, such as action buttons having a maximum width of 60% and being correctly anchored for one-handed use.
-*   **Language:** Labels and text must be in German.
-
-**Implementation Status:**
-The redesign is in its final stages. Key sections like authentication, worker/employer dashboards, job creation/details, payment, and chat have been migrated. The most recent work focused on fixing complex layout issues on the job creation screen and redesigning several worker-side pages. The current task is to fix the worker-side tab bar navigation, which has styling and labeling issues.
+**Implementation So Far:**
+- The core application structure is in place using Expo Router.
+- Numerous UI/UX refinements have been made (toasts, button states, layout fixes).
+- Critical bugs related to data mapping (/), authentication, and job matching have been resolved.
+- Performance of key list screens has been drastically improved.
+- A successful iOS build was produced after an extensive debugging cycle.
 </product_requirements>
 
 <key_technical_concepts>
-- **Framework:** React Native with Expo
-- **Routing:** Expo Router (file-based)
-- **Styling:**  with a hardcoded BACKUP theme color palette.
-- **State Management:** React Hooks (, ) and  for context.
-- **Layout Pattern:** A recurring and critical challenge was implementing a fixed bottom action button. The final, working solution involves a combination of ,  (to clear the tab bar), and , with careful parent container flex properties.
-- **Device API:**  was installed and used for GPS functionality.
+- **Framework:** React Native with Expo (SDK 54).
+- **Routing:** Expo Router (file-based).
+- **Backend:** FastAPI (Python) with MongoDB.
+- **State Management:**  and custom utility stores (, ).
+- **Performance:**  for parallelizing API calls, Debouncing and Caching for input components.
+- **Build/Deployment:** Expo Application Services (EAS) for iOS builds, involving , , and .
+- **Debugging:** Extensive use of backend/frontend logs, database queries (Current Mongosh Log ID:	6932dfca70418cda39b1ddf3
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.9
+Using MongoDB:		7.0.26
+Using Mongosh:		2.5.9
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+------
+   The server generated these startup warnings when booting
+   2025-12-05T13:36:08.075+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2025-12-05T13:36:09.292+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2025-12-05T13:36:09.292+00:00: You are running this process as the root user, which is not recommended
+   2025-12-05T13:36:09.292+00:00: Soft rlimits for open file descriptors too low
+------
+
+test> ), and iterative dependency management (yarn install v1.22.22
+[1/4] Resolving packages...
+success Already up-to-date.
+Done in 0.31s., env: load .env
+env: export EXPO_TUNNEL_SUBDOMAIN EXPO_PACKAGER_HOSTNAME EXPO_PACKAGER_PROXY_URL EXPO_PUBLIC_BACKEND_URL EXPO_USE_FAST_RESOLVER METRO_CACHE_ROOT EXPO_TUNNEL_NO_HTTPS_CHECK
+› Installing using yarn
+> yarn install
+yarn install v1.22.22
+[1/4] Resolving packages...
+success Already up-to-date.
+Done in 0.33s.).
 </key_technical_concepts>
 
 <code_architecture>
-The project uses a standard Expo Router file-based routing structure.
+The project is an Expo monorepo with a  and . The frontend uses Expo's file-based routing with separate layouts for  and  roles.
 
 
 
 - ****
-    - **Importance:** This is the critical screen for employers to post new jobs. It was the source of significant layout problems.
-    - **Summary of Changes:** The file underwent numerous, iterative changes to fix a non-visible action button. The final solution places a button container with  and  to keep it fixed above the tab bar. The button's width is capped at 60%. The file's theme was also changed from a user-provided Premium Purple back to the standard BACKUP dark theme.
+  - **Importance:** Defines the tab navigation for the employer section. It's the source of the current UI bug.
+  - **Summary of Changes:** The  height and padding were increased to fix an issue where the tab bar was rendered too low on modern iPhones. This was the last action taken.
+
+- ** & **
+  - **Importance:** Critical configuration for building the app with EAS. They were the focus of a lengthy debugging cycle for the iOS build.
+  - **Summary of Changes:** Iteratively modified to add/fix the iOS , add the  plugin, define a Node.js version ( in ), and disable the New Architecture ( in ) to resolve various build failures. The  for  was also added.
 
 - ****
-    - **Importance:** This screen shows workers the details of a specific job.
-    - **Summary of Changes:** The entire screen was converted from the old purple theme to the BACKUP dark theme. The main action button (Ich habe Zeit) was styled to have a 60% width to maintain consistency with the rest of the app.
+  - **Importance:** Manages all frontend dependencies. Was the subject of intense debugging to resolve version mismatches causing build failures.
+  - **Summary of Changes:** Went through multiple cycles of downgrading and upgrading 
+  Usage: expo [command] [options]
+
+  Options:
+  
+    -V, --version                     output the version number
+    --non-interactive                 Fail, if an interactive prompt would be required to continue.
+    -h, --help                        output usage information
+  
+  Commands:
+
+    init [name]                       Create a new Expo project
+    start [path]                      Start a local dev server for the app
+    start:web [path]                  Start a Webpack dev server for the web app
+    export [path]                     Export the static files of the app for hosting it on a web server
+    install [packages...]             Install a module or other package to a project
+    run:android [path]                Run the Android app binary locally
+    run:ios [path]                    Run the iOS app binary locally
+    send [path]                       Share the project's URL to an email address
+
+    login                             Login to an Expo account
+    logout                            Logout of an Expo account
+    register                          Sign up for a new Expo account
+    whoami                            Return the currently authenticated account
+
+    client:install:ios                Install Expo Go for iOS on the simulator
+    client:install:android            Install Expo Go for Android on a connected device or emulator
+
+    config [path]                     Show the project config
+    doctor [path]                     Diagnose issues with the project
+    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
+
+    customize:web [path]              Eject the default web files for customization
+    prebuild [path]                   Create native iOS and Android project files before building natively.
+                                      Learn more: https://docs.expo.dev/workflow/customizing/
+
+    build:web [path]                  Build the web app for production
+
+    credentials:manager [path]        Superseded by eas credentials in eas-cli
+
+    url [path]                        Log a URL for opening the project in Expo Go
+    url:ipa [path]                    Log the download URL for the standalone iOS binary
+    url:apk [path]                    Log the download URL for the standalone Android binary
+
+    webhooks [path]                   List all webhooks for a project
+    webhooks:add [path]               Add a webhook to a project
+    webhooks:remove [path]            Delete a webhook
+    webhooks:update [path]            Update an existing webhook
+
+    build:ios [path]                  Superseded by eas build in eas-cli
+    build:android [path]              Superseded by eas build in eas-cli
+    build:status [path]               Superseded by eas build:list in eas-cli
+    eject [path]                      Superseded by expo prebuild
+    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
+    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
+    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
+    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
+    publish [path]                    Superseded by eas update in eas-cli
+    publish:set [path]                Superseded by eas update:republish in eas-cli
+    publish:rollback [path]           Superseded by eas update:republish in eas-cli
+    publish:history [path]            Superseded by eas update:list in eas-cli
+    publish:details [path]            Superseded by eas update:view in eas-cli
+    push:android:upload [path]        Superseded by eas credentials in eas-cli
+    push:android:show [path]          Superseded by eas credentials in eas-cli
+    push:android:clear [path]         Superseded by eas credentials in eas-cli
+    upload:android [path]             Superseded by eas submit in eas-cli
+    upload:ios [path]                 Superseded by eas submit in eas-cli
+    client:ios [path]                 Superseded by Expo Dev Clients
+
+[13:36:13]   Run a command with --help for more info 💡
+[13:36:13]     $ expo start --help
+[13:36:13], , , , and adding/removing  to find a stable combination for the iOS build. The final state uses Expo SDK 54.
+
+- ** & **
+  - **Importance:** Key screens for users to view their job matches. Were suffering from severe performance issues.
+  - **Summary of Changes:** Reworked to use  to parallelize multiple API calls (for unread counts, worker profiles, registration status), drastically reducing load times. A conditional button was also added to the employer view to show Warten auf Worker-Daten if a worker's registration data is incomplete.
+
+- ** & **
+  - **Importance:** A critical bug was caused by the backend using a  with German keys () while the frontend used English keys (), breaking the job matching.
+  - **Summary of Changes:** The backend's  was replaced with the frontend's version, and a migration script was run on the database to update all existing job categories to use English keys, unifying the system.
 
 - ****
-    - **Importance:** Shows a worker a list of their job applications and their statuses.
-    - **Summary of Changes:** Following a specific user request, the AI performed an incremental, style-only update to convert the screen to the BACKUP dark theme without rewriting the file's structure.
-
-- ****
-    - **Importance:** A reusable component for address input and geocoding.
-    - **Summary of Changes:**  was installed. Two buttons were added: Aktueller GPS-Standort (uses device GPS) and Koordinaten berechnen (performs forward geocoding from the typed address). The buttons were later styled to have 60% width and no emojis for a cleaner look.
-
-- ****
-    - **Importance:** Displays the cost breakdown for a job.
-    - **Summary of Changes:** A simple but important fix was made to change the text color from  to  (white) to make it readable on the dark theme.
+  - **Importance:** A reusable component for address search used in multiple screens.
+  - **Summary of Changes:** Significantly optimized by adding debouncing (300ms delay), response caching (10-minute TTL), and a request ID guard to prevent race conditions, leading to a much faster and more responsive user experience.
 </code_architecture>
 
 <pending_tasks>
-- **Fix Worker Tab Bar:** The immediate task is to redesign the worker tab bar () for readability, remove the Matches old tab, and rename the all/jobs tab to alle Jobs.
-- **Redesign Remaining Employer Screens:** The profile (), edit profile (), registration, and job rating screens are still pending the BACKUP theme redesign.
+- **Fix Aufträge Button:** The user reported that the Aufträge (Jobs/Orders) button in the employer's tab navigation is not functional. This has not been investigated yet.
+- **Verify Footer Fix:** The AI has applied a potential fix for the employer tab bar being too low, but the frontend service needs to be restarted and the result confirmed by the user.
 </pending_tasks>
 
 <current_work>
-The immediate focus is on fixing the worker-side tab bar navigation. The user reported that the footer navigation is poorly designed and unreadable on the dark theme.
+Immediately before this summary request, the AI was actively debugging two UI issues reported by the user on the employer side of the application ( layout).
 
-**User's Explicit Requests for the Tab Bar:**
-1.  **Fix Design:** The styling needs to be adjusted to be angemessen designed (appropriately designed) so the labels are visible against the dark background.
-2.  **Remove Matches old:** This tab is considered unnecessary and should be removed from the navigation.
-3.  **Rename Tab:** The tab labeled all/jobs must be renamed to its German equivalent, alle Jobs, for consistency with the app's language.
+1.  **Non-functional Aufträge Button:** The user stated they are unable to press the Aufträge (Jobs/Orders) tab in the employer's main navigation. This part of the problem has not yet been addressed.
+2.  **Incorrect Footer/Tab-Bar Position:** The user reported that the tab bar is positioned too low on their iPhone 16 Pro, with elements appearing at the very bottom edge of the screen.
 
-The previous AI engineer acknowledged these issues and was in the process of locating the correct file to modify, which is conventionally  in an Expo Router setup. The work stopped just before reading or editing this file.
+The AI correctly identified this as a -related issue. It investigated the layout definition file for the employer section:
+- **File:** 
+
+It found hardcoded style values in the :
+
+The AI deduced these values were insufficient for the larger safe area of modern iPhones and applied a fix:
+
+The very last action was the intention to restart the Expo development server to apply this change. The investigation into the non-functional button has not yet begun.
 </current_work>
 
 <optional_next_step>
-Locate and read the file  to begin implementing the user's requested changes for the worker-side tab bar.
+Restart the Expo frontend server to apply the tab bar style changes, and then ask the user to verify if the footer position is now correct on their iPhone 16 Pro.
 </optional_next_step>
-
-<direct_quotes>
-**User:** guck dir mal den die fusszeile an, können wir die bitte angemessen designed so sieht man ja nichts auch brauchen wir ja Matches old nicht, und es soll NICHT all/jobs dort stehen sondern alle Jobs nicht englisch
-
-**AI:** Verstanden! Die Tab-Bar unten sieht schrecklich aus. Lassen Sie mich die Worker Tab-Navigation finden und anpassen:
-</direct_quotes>
