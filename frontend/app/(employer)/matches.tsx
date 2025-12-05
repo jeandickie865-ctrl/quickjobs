@@ -365,14 +365,26 @@ export default function EmployerMatchesScreen() {
                         🔓 KONTAKTDATEN
                       </Text>
 
+                      {/* WORKER NAME - PROMINENT */}
+                      {match.workerProfile && (match.workerProfile.firstName || match.workerProfile.lastName) && (
+                        <Text style={{ 
+                          color: COLORS.textWhite, 
+                          fontSize: 18, 
+                          fontWeight: "900", 
+                          marginBottom: 12 
+                        }}>
+                          {match.workerProfile.firstName} {match.workerProfile.lastName}
+                        </Text>
+                      )}
+
                       {match.workerProfile.email && (
                         <Text style={{ color: COLORS.textWhite, marginBottom: 4, fontSize: 13 }}>
-                          {match.workerProfile.email}
+                          📧 {match.workerProfile.email}
                         </Text>
                       )}
                       {match.workerProfile.phone && (
                         <Text style={{ color: COLORS.textWhite, fontSize: 13 }}>
-                          {match.workerProfile.phone}
+                          📞 {match.workerProfile.phone}
                         </Text>
                       )}
                     </View>
