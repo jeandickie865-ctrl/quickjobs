@@ -3144,7 +3144,8 @@ def generate_payroll_pdf(
     employer_data: dict,
     worker_data: dict,
     registration_type: str,
-    created_at: str
+    created_at: str,
+    additional_data: dict = None
 ) -> str:
     """
     🎯 KOMPAKTE Lohnabrechnung nach ChatGPT-Vorlage - Übersichtlich & Rechtssicher
