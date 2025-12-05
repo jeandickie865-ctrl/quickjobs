@@ -8,13 +8,14 @@
     "scheme": "backup",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-
     "ios": {
       "bundleIdentifier": "com.backup.app",
       "buildNumber": "1",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -23,7 +24,6 @@
       "edgeToEdgeEnabled": true,
       "package": "com.backup.app"
     },
-
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -33,7 +33,6 @@
         "google": "notranslate"
       }
     },
-
     "plugins": [
       "expo-router",
       "expo-notifications",
@@ -47,13 +46,18 @@
         }
       ]
     ],
-
     "experiments": {
       "typedRoutes": true
     },
-
     "extra": {
-      "backendUrl": ""
-    }
+      "backendUrl": "",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6bf49238-ee15-46b2-bc4a-253d1c903563"
+      }
+    },
+    "owner": "backupkj"
   }
 }
