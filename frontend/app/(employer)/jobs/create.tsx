@@ -721,6 +721,8 @@ export default function CreateJob() {
             ))}
           </View>
         </View>
+          </>
+        )}
       </ScrollView>
       </KeyboardAvoidingView>
       </SafeAreaView>
