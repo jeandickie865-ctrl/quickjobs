@@ -1,6 +1,6 @@
 export const API_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  "https://worklink-30.preview.emergentagent.com/api";
+  "https://backup.dickie.app/api";
 
 export const APP_VERSION = "1.0.0";
 
