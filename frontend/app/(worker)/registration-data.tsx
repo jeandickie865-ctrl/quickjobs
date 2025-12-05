@@ -56,6 +56,10 @@ export default function WorkerRegistrationDataScreen() {
           setSteuerId(profile.steuerId || '');
           setSozialversicherungsnummer(profile.sozialversicherungsnummer || '');
           setKrankenkasse(profile.krankenkasse || '');
+          setGeburtsort(profile.geburtsort || '');
+          setStaatsangehoerigkeit(profile.staatsangehoerigkeit || '');
+          setConfirm70Days(profile.confirm_70_days || false);
+          setConfirmNotProfessional(profile.confirm_not_professional || false);
         }
       } catch (error) {
         console.error('Error loading registration data:', error);
