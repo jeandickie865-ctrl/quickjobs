@@ -457,7 +457,18 @@ export default function CreateJob() {
             </View>
           </View>
         )}
+          </>
+        )}
 
+        {/* === ORT & ZEIT === */}
+        <SectionHeader
+          title="ORT & ZEIT"
+          isExpanded={expandedSection === 'ort'}
+          onPress={() => setExpandedSection(expandedSection === 'ort' ? null : 'ort')}
+        />
+
+        {expandedSection === 'ort' && (
+          <>
         {/* Datum / Zeit */}
         <View
           style={{
