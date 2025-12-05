@@ -205,7 +205,7 @@ export default function RegistrationDoneScreen() {
                 <>
                   <Ionicons name="flash" size={20} color={COLORS.neon} />
                   <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.white }}>
-                    Sofortmeldung
+                    Meldecheck
                   </Text>
                 </>
               )}
