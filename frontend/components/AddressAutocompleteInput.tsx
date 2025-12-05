@@ -1,4 +1,4 @@
-// components/AddressAutocompleteInput.tsx – BACKUP DARK ULTRA CLEAN
+// components/AddressAutocompleteInput.tsx – BACKUP DARK ULTRA CLEAN (OPTIMIZED)
 
 import React, { useState, useRef } from 'react';
 import {
@@ -19,6 +19,15 @@ const COLORS = {
   neon: '#C8FF16',
 };
 
+// CACHE: Response Caching (max 50 entries, 10 min TTL)
+interface CacheEntry {
+  results: any[];
+  timestamp: number;
+}
+const searchCache = new Map<string, CacheEntry>();
+const CACHE_MAX_SIZE = 50;
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
 export default function AddressAutocompleteInput({
   street,
   postalCode,
@@ -31,37 +40,102 @@ export default function AddressAutocompleteInput({
   onLatChange,
   onLonChange,
 }) {
+  // STATE
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [show, setShow] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // DEBOUNCE: Wait 300ms after user stops typing
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // REQUEST ID GUARD: Only use response from latest request
+  const requestIdRef = useRef(0);
+
+  // CACHE MANAGEMENT: Add to cache with FIFO eviction
+  function addToCache(query: string, results: any[]) {
+    // Remove oldest if cache is full
+    if (searchCache.size >= CACHE_MAX_SIZE) {
+      const firstKey = searchCache.keys().next().value;
+      searchCache.delete(firstKey);
+    }
+
+    searchCache.set(query, {
+      results,
+      timestamp: Date.now(),
+    });
+  }
+
+  // CACHE RETRIEVAL: Get from cache if valid
+  function getFromCache(query: string): any[] | null {
+    const cached = searchCache.get(query);
+    if (!cached) return null;
+
+    const age = Date.now() - cached.timestamp;
+    if (age > CACHE_TTL) {
+      searchCache.delete(query);
+      return null;
+    }
+
+    return cached.results;
+  }
+
+  // SEARCH FUNCTION: Fetch suggestions with caching & request guards
   async function search(q: string) {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    // Clear debounce timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
 
+    // Reset if query too short
     if (!q || q.length < 3) {
       setSuggestions([]);
       setShow(false);
       return;
     }
 
-    timeoutRef.current = setTimeout(async () => {
-      try {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(
-          q
-        )}`;
+    // DEBOUNCE: Wait 300ms before executing
+    debounceTimerRef.current = setTimeout(async () => {
+      // Check cache first
+      const cachedResults = getFromCache(q);
+      if (cachedResults !== null) {
+        setSuggestions(cachedResults);
+        setShow(cachedResults.length > 0);
+        return;
+      }
 
+      // REQUEST ID GUARD: Increment request counter
+      requestIdRef.current += 1;
+      const currentRequestId = requestIdRef.current;
+
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(q)}`;
         const res = await fetch(url);
         const data = await res.json();
 
-        setSuggestions(data || []);
-        setShow(data.length > 0);
+        // REQUEST ID GUARD: Only use if this is still the latest request
+        if (currentRequestId !== requestIdRef.current) {
+          return;
+        }
+
+        const results = data || [];
+
+        // Add to cache
+        addToCache(q, results);
+
+        setSuggestions(results);
+        setShow(results.length > 0);
       } catch {
+        // REQUEST ID GUARD: Only update if this is still the latest request
+        if (currentRequestId !== requestIdRef.current) {
+          return;
+        }
+
         setSuggestions([]);
         setShow(false);
       }
-    }, 350);
+    }, 300);
   }
 
+  // SELECT HANDLER: Fill form with selected address
   function select(item: any) {
     const addr = item.address || {};
 
