@@ -435,11 +435,27 @@ export default function WorkerProfileScreen() {
               borderRadius: 14,
               paddingVertical: 16,
               alignItems: 'center',
-              marginBottom: 40,
+              marginBottom: 16,
               width: '100%',
             }}
           >
             <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>Profil bearbeiten</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push('/(worker)/registration-data')}
+            style={{
+              backgroundColor: COLORS.card,
+              borderRadius: 14,
+              paddingVertical: 16,
+              alignItems: 'center',
+              marginBottom: 40,
+              width: '100%',
+              borderWidth: 1,
+              borderColor: COLORS.border,
+            }}
+          >
+            <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>Offizielle Daten bearbeiten</Text>
           </Pressable>
         </View>
       </ScrollView>
