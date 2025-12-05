@@ -41,12 +41,13 @@ export default function EmployerDashboard() {
 
           const isValidProfile =
             p &&
-            (
-              p.companyName ||
-              p.firstName || 
-              p.lastName ||
-              p.email
-            );
+            p.firstName && 
+            p.lastName &&
+            p.email &&
+            p.phone &&
+            p.street &&
+            p.city &&
+            p.postalCode;
 
           setHasProfile(!!isValidProfile);
         } catch {
