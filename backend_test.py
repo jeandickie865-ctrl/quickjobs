@@ -139,11 +139,13 @@ class BackendTester:
                     "geburtsdatum": "15.03.1995",
                     "sozialversicherungsnummer": "12 150395 S 123",
                     "krankenkasse": "TK Techniker Krankenkasse",
-                    # NEW FIELDS
+                    # NEW FIELDS (testing both German request names and backend field names)
                     "geburtsort": "Berlin",
                     "staatsangehoerigkeit": "Deutsch",
-                    "kurzfristigkeit_bestaetigt": True,  # This maps to confirm_70_days
-                    "kurzfristigkeit_nicht_berufsmaeßig": True  # This maps to confirm_not_professional
+                    "confirm_70_days": True,  # German request field name
+                    "confirm_not_professional": True,  # German request field name
+                    "kurzfristigkeit_bestaetigt": True,  # Backend field name
+                    "kurzfristigkeit_nicht_berufsmaeßig": True  # Backend field name
                 }
                 
                 headers = {"Authorization": f"Bearer {self.worker_token}"}
