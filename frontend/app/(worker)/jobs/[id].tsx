@@ -415,20 +415,14 @@ export default function WorkerJobDetailScreen() {
                   }
                 }}
                 style={{
-                  width: '100%',
-                  maxWidth: 360,
-                  backgroundColor: COLORS.neon,
+                  width: '60%',
+                  backgroundColor: '#7C5CFF',
                   paddingVertical: 20,
                   borderRadius: 16,
                   alignItems: 'center',
-                  shadowColor: '#000000',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 4,
-                  elevation: 8,
                 }}
               >
-                <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.bg, letterSpacing: 0.5 }}>
+                <Text style={{ fontSize: 20, fontWeight: '900', color: COLORS.white, letterSpacing: 0.5 }}>
                   ✓ Ich habe Zeit
                 </Text>
               </Pressable>
