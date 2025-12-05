@@ -458,7 +458,8 @@ metadata:
 test_plan:
   current_focus: 
     - "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
   test_all: false
   test_priority: "high_first"
 
