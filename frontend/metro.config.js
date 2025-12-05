@@ -22,4 +22,8 @@ config.cacheStores = [
 // Reduce the number of workers to decrease resource usage
 config.maxWorkers = 2;
 
+// Optional: support for .cjs, .mjs if needed
+config.resolver.sourceExts.push("cjs");
+config.resolver.sourceExts.push("mjs");
+
 module.exports = config;
