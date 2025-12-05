@@ -18,8 +18,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#000"
+        "foregroundImage": "./assets/store-icons/app-icon.png",
+        "backgroundColor": "#6B4BFF"
       },
       "edgeToEdgeEnabled": true,
       "package": "de.dickie.backup"
