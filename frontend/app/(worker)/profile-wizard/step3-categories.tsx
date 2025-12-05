@@ -13,7 +13,7 @@ const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 // D+ PREMIUM COLORS
 const COLORS = {
-  bg: '#0A0816',
+  bg: '#141126',
   card: '#141126',
   border: 'rgba(255,255,255,0.05)',
   white: '#FFFFFF',

@@ -20,7 +20,7 @@ import { useWizard } from '../../../contexts/WizardContext';
 import { useAuth } from '../../../contexts/AuthContext';
 
 const COLORS = {
-  bg: '#0A0816',
+  bg: '#141126',
   card: '#141126',
   border: 'rgba(255,255,255,0.06)',
   text: '#FFFFFF',
