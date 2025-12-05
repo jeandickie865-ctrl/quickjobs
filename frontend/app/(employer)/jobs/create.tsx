@@ -261,14 +261,12 @@ export default function CreateJob() {
         >
 
         {/* === GRUNDINFO === */}
-        <SectionHeader
-          title="GRUNDINFO"
-          isExpanded={expandedSection === 'grundinfo'}
-          onPress={() => setExpandedSection(expandedSection === 'grundinfo' ? null : 'grundinfo')}
-        />
+        <View style={{ marginTop: SPACING.sm }}>
+          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+            GRUNDINFO
+          </Text>
+        </View>
 
-        {expandedSection === 'grundinfo' && (
-          <>
         {/* Titel */}
         <View
           style={{
