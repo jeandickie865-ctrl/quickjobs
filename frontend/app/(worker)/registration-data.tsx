@@ -58,8 +58,8 @@ export default function WorkerRegistrationDataScreen() {
           setKrankenkasse(profile.krankenkasse || '');
           setGeburtsort(profile.geburtsort || '');
           setStaatsangehoerigkeit(profile.staatsangehoerigkeit || '');
-          setConfirm70Days(profile.confirm_70_days || false);
-          setConfirmNotProfessional(profile.confirm_not_professional || false);
+          setConfirm70Days(profile.kurzfristigkeit_bestaetigt || false);
+          setConfirmNotProfessional(profile.kurzfristigkeit_nicht_berufsmaeßig || false);
         }
       } catch (error) {
         console.error('Error loading registration data:', error);
