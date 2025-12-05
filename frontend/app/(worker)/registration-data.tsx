@@ -37,6 +37,10 @@ export default function WorkerRegistrationDataScreen() {
   const [steuerId, setSteuerId] = useState('');
   const [sozialversicherungsnummer, setSozialversicherungsnummer] = useState('');
   const [krankenkasse, setKrankenkasse] = useState('');
+  const [geburtsort, setGeburtsort] = useState('');
+  const [staatsangehoerigkeit, setStaatsangehoerigkeit] = useState('');
+  const [confirm70Days, setConfirm70Days] = useState(false);
+  const [confirmNotProfessional, setConfirmNotProfessional] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
