@@ -8,7 +8,7 @@ import asyncio
 import httpx
 from datetime import datetime
 
-BACKEND_URL = "https://worker-connect-10.preview.emergentagent.com/api"
+BACKEND_URL = "https://worklink-30.preview.emergentagent.com/api"
 
 async def test_unread_message_flow():
     """Test the complete unread message flow"""
