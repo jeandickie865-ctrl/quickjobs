@@ -2723,35 +2723,88 @@ def generate_contract_pdf(
     ))
     story.append(Spacer(1, 8))
     
-    # Arbeitgeberabgaben
-    story.append(Paragraph("Arbeitgeberabgaben", section_title))
+    # SECTION 5: Steuerangaben - Pauschal versteuert nach § 40a EStG
+    story.append(Paragraph("5. Steuerangaben – Pauschal versteuert nach § 40a EStG", section_title))
+    story.append(Paragraph("Der Arbeitgeber trägt folgende pauschale Abgaben:", normal))
+    story.append(Spacer(1, 6))
     
-    abgaben_data = [
-        ["Abgabe", "Satz", "Kosten in EUR"],
-        ["Pauschale Lohnsteuer", "25 %", f"{lohnsteuer:.2f}"],
-        ["Kirchensteuer pauschal", "5 %", f"{kirchensteuer:.2f}"],
-        ["Solidaritätszuschlag", "5,5 % auf LSt", f"{soli:.2f}"],
-        ["Pauschale Unfallversicherung", "1,3 %", f"{unfallvers:.2f}"],
-        ["Gesamt-Arbeitgeberkosten", "", f"{total_employer_costs:.2f}"],
+    steuer_data = [
+        ["", "Bemessungsgrundlage", "Betrag"],
+        ["Bruttolohn", "", f"{brutto:.2f} EUR"],
+        ["", "", ""],
+        ["Pauschsteuer (25%)", f"{brutto:.2f} EUR", f"{lohnsteuer:.2f} EUR"],
+        ["Solidaritätszuschlag (5,5%)", f"{lohnsteuer:.2f} EUR", f"{soli:.2f} EUR"],
+        ["Kirchensteuer (9%)", f"{lohnsteuer:.2f} EUR", f"{kirchensteuer:.2f} EUR"],
+        ["Unfallversicherung (1,3%)", f"{brutto:.2f} EUR", f"{unfallvers:.2f} EUR"],
+        ["", "", ""],
+        ["Gesamt Arbeitgeberabgaben", "", f"{gesamt_abgaben:.2f} EUR"],
+        ["GESAMTKOSTEN ARBEITGEBER", "", f"{total_employer_costs:.2f} EUR"],
     ]
     
-    abgaben_table = Table(abgaben_data, colWidths=[200, 80, 100])
-    abgaben_table.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), rl_colors.HexColor("#5941FF")),
-        ("TEXTCOLOR", (0,0), (-1,0), rl_colors.white),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-        
-        ("BACKGROUND", (0,1), (-1,-2), rl_colors.whitesmoke),
-        
-        ("BACKGROUND", (0,-1), (-1,-1), rl_colors.HexColor("#C8FF16")),
-        ("TEXTCOLOR", (0,-1), (-1,-1), rl_colors.black),
-        ("FONTNAME", (0,-1), (-1,-1), "Helvetica-Bold"),
-        
-        ("ALIGN", (2,1), (-1,-1), "RIGHT"),
-        ("GRID", (0,0), (-1,-1), 0.2, rl_colors.grey),
+    steuer_table = Table(steuer_data, colWidths=[8*cm, 5*cm, 4*cm])
+    steuer_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (2,0), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("BACKGROUND", (0,0), (2,0), rl_colors.HexColor("#e0e0e0")),
+        ("ALIGN", (1,0), (2,-1), "RIGHT"),
+        ("LINEBELOW", (0,0), (2,0), 1, rl_colors.black),
+        ("FONTNAME", (0,1), (2,1), "Helvetica-Bold"),
+        ("LINEBELOW", (0,7), (2,7), 1, rl_colors.HexColor("#cccccc")),
+        ("FONTNAME", (0,8), (2,8), "Helvetica-Bold"),
+        ("LINEABOVE", (0,9), (2,9), 2, rl_colors.black),
+        ("FONTNAME", (0,9), (2,9), "Helvetica-Bold"),
+        ("FONTSIZE", (0,9), (2,9), 10),
+        ("BACKGROUND", (0,9), (2,9), rl_colors.HexColor("#C8FF16")),
+        ("VALIGN", (0,0), (2,-1), "MIDDLE"),
     ]))
+    story.append(steuer_table)
+    story.append(Spacer(1, 10))
     
-    story.append(abgaben_table)
+    # SECTION 6: Sozialversicherung - Sozialversicherungsfrei
+    story.append(Paragraph("6. Sozialversicherung – Sozialversicherungsfrei", section_title))
+    story.append(Paragraph("Die Beschäftigung ist sozialversicherungsfrei für den Arbeitnehmer:", normal))
+    story.append(Spacer(1, 6))
+    
+    sv_data = [
+        ["", "Betrag"],
+        ["Krankenversicherung", "0,00 EUR"],
+        ["Pflegeversicherung", "0,00 EUR"],
+        ["Rentenversicherung", "0,00 EUR"],
+        ["Arbeitslosenversicherung", "0,00 EUR"],
+    ]
+    
+    sv_table = Table(sv_data, colWidths=[13*cm, 4*cm])
+    sv_table.setStyle(TableStyle([
+        ("FONTNAME", (0,0), (1,0), "Helvetica-Bold"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("BACKGROUND", (0,0), (1,0), rl_colors.HexColor("#e0e0e0")),
+        ("ALIGN", (1,0), (1,-1), "RIGHT"),
+        ("LINEBELOW", (0,0), (1,0), 1, rl_colors.black),
+        ("VALIGN", (0,0), (1,-1), "MIDDLE"),
+    ]))
+    story.append(sv_table)
+    story.append(Spacer(1, 10))
+    
+    # SECTION 7: Nettoauszahlung
+    story.append(Paragraph("7. Nettoauszahlung an Arbeitnehmer", section_title))
+    netto_data = [
+        ["Bruttolohn", f"{brutto:.2f} EUR"],
+        ["Abzüge für Arbeitnehmer", "0,00 EUR"],
+        ["", ""],
+        ["NETTOAUSZAHLUNG (Brutto = Netto)", f"{brutto:.2f} EUR"],
+    ]
+    
+    netto_table = Table(netto_data, colWidths=[13*cm, 4*cm])
+    netto_table.setStyle(TableStyle([
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("ALIGN", (1,0), (1,-1), "RIGHT"),
+        ("LINEABOVE", (0,3), (1,3), 2, rl_colors.black),
+        ("FONTNAME", (0,3), (1,3), "Helvetica-Bold"),
+        ("FONTSIZE", (0,3), (1,3), 11),
+        ("BACKGROUND", (0,3), (1,3), rl_colors.HexColor("#C8FF16")),
+        ("VALIGN", (0,0), (1,-1), "MIDDLE"),
+    ]))
+    story.append(netto_table)
     story.append(Spacer(1, 8))
     
     # Rechtliche Hinweise
