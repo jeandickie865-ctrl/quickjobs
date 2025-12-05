@@ -614,14 +614,18 @@ export default function CreateJob() {
             onLonChange={setLon}
           />
         </View>
+          </>
+        )}
 
         {/* === BEZAHLUNG === */}
-        <View style={{ marginTop: SPACING.lg }}>
-          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
-            BEZAHLUNG
-          </Text>
-        </View>
+        <SectionHeader
+          title="BEZAHLUNG"
+          isExpanded={expandedSection === 'bezahlung'}
+          onPress={() => setExpandedSection(expandedSection === 'bezahlung' ? null : 'bezahlung')}
+        />
 
+        {expandedSection === 'bezahlung' && (
+          <>
         {/* Lohn */}
         <View
           style={{
