@@ -355,15 +355,21 @@ export default function WorkerApplicationsScreen() {
                     }
                   }}
                   style={({ pressed }) => ({
-                    marginTop: spacing.sm,
-                    backgroundColor: pressed ? '#e00' : '#c00',
-                    padding: spacing.sm,
-                    borderRadius: 8,
+                    marginTop: spacing.md,
+                    backgroundColor: 'transparent',
+                    borderWidth: 1,
+                    borderColor: pressed ? 'rgba(255,77,77,0.5)' : 'rgba(255,77,77,0.3)',
+                    paddingVertical: 12,
+                    paddingHorizontal: 20,
+                    borderRadius: 12,
                     alignItems: 'center',
+                    alignSelf: 'center',
+                    width: '60%',
+                    maxWidth: 240,
                   })}
                 >
-                  <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>
-                    Bewerbung löschen
+                  <Text style={{ color: 'rgba(255,77,77,0.8)', fontWeight: '600', fontSize: 14 }}>
+                    Bewerbung entfernen
                   </Text>
                 </Pressable>
               )}
