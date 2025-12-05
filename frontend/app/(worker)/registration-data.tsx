@@ -291,7 +291,11 @@ export default function WorkerRegistrationDataScreen() {
                     steuerId,
                     geburtsdatum,
                     sozialversicherungsnummer,
-                    krankenkasse
+                    krankenkasse,
+                    geburtsort,
+                    staatsangehoerigkeit,
+                    confirm_70_days: confirm70Days,
+                    confirm_not_professional: confirmNotProfessional
                   })
                 });
 
