@@ -17,7 +17,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
-  bg: '#0E0B1F',
+  bg: '#141126',
   card: '#141126',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.7)',

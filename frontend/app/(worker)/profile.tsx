@@ -12,7 +12,7 @@ import taxonomy from '../../shared/taxonomy.json';
 import { getTagLabel } from '../../utils/taxonomy';
 
 const COLORS = {
-  bg: '#0E0B1F',
+  bg: '#141126',
   card: '#141126',
   border: 'rgba(255,255,255,0.06)',
   white: '#FFFFFF',

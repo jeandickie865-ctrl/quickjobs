@@ -11,7 +11,7 @@ import Slider from '@react-native-community/slider';
 import { useWizard } from '../../../contexts/WizardContext';
 
 const COLORS = {
-  bg: '#0E0B1F',
+  bg: '#141126',
   card: '#141126',
   border: 'rgba(255,255,255,0.06)',
   text: '#FFFFFF',

@@ -10,7 +10,7 @@ const COLORS = {
   neon: '#C8FF16',
   white: '#FFFFFF',
   inactive: 'rgba(255,255,255,0.55)',
-  bg: '#0E0B1F',
+  bg: '#141126',
   card: '#141126',
   border: 'rgba(255,255,255,0.06)',
 };
