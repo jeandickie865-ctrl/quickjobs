@@ -156,7 +156,12 @@ export default function EmployerProfileScreen() {
 
       await saveEmployerProfile(user!.id, payload);
 
-      router.replace('/(employer)/profile');
+      Alert.alert('Erfolg', 'Profil erfolgreich gespeichert!', [
+        {
+          text: 'OK',
+          onPress: () => router.back()
+        }
+      ]);
     }
 
     catch (e: any) {
