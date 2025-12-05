@@ -9,7 +9,7 @@ import { API_URL } from "../../config";
 import { getAuthHeaders } from "../../utils/api";
 
 const COLORS = {
-  background: "#0E0B1F",
+  background: "#141126",
   card: "#141126",
   neon: "#C8FF16",
   white: "#FFFFFF",
