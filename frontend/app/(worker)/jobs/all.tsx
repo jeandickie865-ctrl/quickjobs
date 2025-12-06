@@ -246,7 +246,7 @@ export default function AllJobsScreen() {
       >
         <Text
           style={{
-            color: COLORS.black,
+            color: COLORS.bg,
             fontWeight: "700",
             fontSize: 12,
           }}
