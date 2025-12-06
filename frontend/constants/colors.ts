@@ -1,3 +1,15 @@
+export const COLORS = {
+  bg: '#141126',
+  card: '#252041',
+  border: 'rgba(255,255,255,0.1)',
+  purple: '#7C5CFF',
+  neon: '#C8FF16',
+  white: '#FFFFFF',
+  inactive: 'rgba(255,255,255,0.5)',
+  muted: 'rgba(255,255,255,0.7)',
+};
+
+// Legacy export for backwards compatibility
 export const colors = {
   primary: '#5941FF',
   accent: '#C8FF16',
@@ -14,10 +26,9 @@ export const colors = {
   error: '#FF4D4D',
 
   // Modern additions
-  primaryDark: '#3E2DD9',     // Für dunkle Buttons / Headers
-  primarySoft: '#ECE9FF',     // Für ruhige Purple-Karten
-  neonDark: '#A7D012',        // Für dezentere Neon-Effekte
+  primaryDark: '#3E2DD9',
+  primarySoft: '#ECE9FF',
+  neonDark: '#A7D012',
 };
 
-// Legacy export for backwards compatibility
 export default colors;
