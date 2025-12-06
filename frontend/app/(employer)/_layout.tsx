@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const COLORS = {
@@ -13,6 +13,45 @@ const COLORS = {
   card: '#252041',
   border: 'rgba(255,255,255,0.1)',
 };
+
+// Custom Tab Button Component (Pill-Style)
+function PillTabButton({ label, isFocused, onPress }: any) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 4,
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: isFocused ? COLORS.purple : 'transparent',
+          borderRadius: 20,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          minWidth: 60,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: isFocused ? 0 : 1,
+          borderColor: COLORS.border,
+        }}
+      >
+        <Text
+          style={{
+            color: isFocused ? COLORS.white : COLORS.inactive,
+            fontSize: 12,
+            fontWeight: '600',
+          }}
+        >
+          {label}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export default function EmployerLayout() {
   const { user, loading } = useAuth();
