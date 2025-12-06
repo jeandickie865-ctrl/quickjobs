@@ -599,7 +599,7 @@ export default function SignupScreen() {
                 onPress={handleSignup}
                 disabled={loading}
                 style={({ pressed }) => ({
-                  backgroundColor: loading ? '#999' : COLORS.neon,
+                  backgroundColor: loading ? '#999' : COLORS.purple,
                   height: 56,
                   borderRadius: 12,
                   alignItems: 'center',
@@ -616,7 +616,7 @@ export default function SignupScreen() {
                   style={{
                     fontSize: 17,
                     fontWeight: '700',
-                    color: COLORS.bg
+                    color: COLORS.white
                   }}
                 >
                   {loading ? 'Wird erstellt...' : 'Account erstellen'}
