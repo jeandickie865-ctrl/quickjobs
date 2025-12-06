@@ -156,6 +156,7 @@ export default function WorkerLayout() {
         name="jobs" 
         options={{ 
           title: 'Alle Jobs',
+          tabBarLabel: 'Alle Jobs',
           tabBarItemStyle: {
             flex: 1,
             backgroundColor: COLORS.lightPurple,
