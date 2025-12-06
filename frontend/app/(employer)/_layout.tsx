@@ -145,31 +145,7 @@ function TAB(name, label, badge = 0) {
             }}
           >
             {label}
-
-            {badge > 0 && (
-              <View
-                style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -14,
-                  backgroundColor: COLORS.neon,
-                  paddingHorizontal: 6,
-                  paddingVertical: 2,
-                  borderRadius: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    color: '#000',
-                    fontSize: 11,
-                    fontWeight: '900',
-                  }}
-                >
-                  {badge}
-                </Text>
-              </View>
-            )}
-          </View>
+          </Text>
         ),
       }}
     />
