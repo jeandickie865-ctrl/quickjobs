@@ -182,49 +182,51 @@ export default function WorkerRegistrationDataScreen() {
               />
             </View>
 
-            {/* Kirchensteuer */}
-            <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 12, fontSize: 14, fontWeight: '600' }}>
-                Kirchenzugehörigkeit *
-              </Text>
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <Pressable
-                  onPress={() => setKirchensteuerpflichtig(true)}
-                  style={{
-                    flex: 1,
-                    backgroundColor: kirchensteuerpflichtig ? COLORS.purple : 'transparent',
-                    borderWidth: 1,
-                    borderColor: kirchensteuerpflichtig ? COLORS.purple : COLORS.border,
-                    borderRadius: 12,
-                    paddingVertical: 14,
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{ color: COLORS.white, fontSize: 14, fontWeight: '600' }}>
-                    In der Kirche
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => setKirchensteuerpflichtig(false)}
-                  style={{
-                    flex: 1,
-                    backgroundColor: !kirchensteuerpflichtig ? COLORS.purple : 'transparent',
-                    borderWidth: 1,
-                    borderColor: !kirchensteuerpflichtig ? COLORS.purple : COLORS.border,
-                    borderRadius: 12,
-                    paddingVertical: 14,
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{ color: COLORS.white, fontSize: 14, fontWeight: '600' }}>
-                    Nicht in der Kirche
-                  </Text>
-                </Pressable>
+            {/* Kirchensteuer - nur für Angestellte, nicht für Selbstständige */}
+            {!isSelfEmployed && (
+              <View>
+                <Text style={{ color: COLORS.muted, marginBottom: 12, fontSize: 14, fontWeight: '600' }}>
+                  Kirchenzugehörigkeit *
+                </Text>
+                <View style={{ flexDirection: 'row', gap: 12 }}>
+                  <Pressable
+                    onPress={() => setKirchensteuerpflichtig(true)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: kirchensteuerpflichtig ? COLORS.purple : 'transparent',
+                      borderWidth: 1,
+                      borderColor: kirchensteuerpflichtig ? COLORS.purple : COLORS.border,
+                      borderRadius: 12,
+                      paddingVertical: 14,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ color: COLORS.white, fontSize: 14, fontWeight: '600' }}>
+                      In der Kirche
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setKirchensteuerpflichtig(false)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: !kirchensteuerpflichtig ? COLORS.purple : 'transparent',
+                      borderWidth: 1,
+                      borderColor: !kirchensteuerpflichtig ? COLORS.purple : COLORS.border,
+                      borderRadius: 12,
+                      paddingVertical: 14,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ color: COLORS.white, fontSize: 14, fontWeight: '600' }}>
+                      Nicht in der Kirche
+                    </Text>
+                  </Pressable>
+                </View>
+                <Text style={{ color: COLORS.muted, fontSize: 12, marginTop: 8, lineHeight: 16 }}>
+                  Diese Information wird für die korrekte Berechnung der Lohnsteuer benötigt.
+                </Text>
               </View>
-              <Text style={{ color: COLORS.muted, fontSize: 12, marginTop: 8, lineHeight: 16 }}>
-                Diese Information wird für die korrekte Berechnung der Lohnsteuer benötigt.
-              </Text>
-            </View>
+            )}
 
             {/* Geburtsort */}
             <View>
