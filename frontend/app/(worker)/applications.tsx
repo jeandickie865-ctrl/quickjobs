@@ -262,7 +262,7 @@ export default function WorkerApplicationsScreen() {
               onPress={() => {
                 if (job?.id) {
                   // Navigate to job details screen (we need to create this route for workers)
-                  router.push(`/(worker)/jobs/${job.id}`);
+                  router.push(`/(worker)/alljobs/${job.id}`);
                 }
               }}
               style={({ pressed }) => [
