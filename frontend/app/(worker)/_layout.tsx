@@ -212,6 +212,7 @@ export default function WorkerLayout() {
       <Tabs.Screen name="rate" options={{ href: null }} />
       <Tabs.Screen name="profile-wizard" options={{ href: null }} />
       <Tabs.Screen name="registration-data" options={{ href: null }} />
+      <Tabs.Screen name="jobs/index" options={{ href: null }} />
       <Tabs.Screen name="jobs/[id]" options={{ href: null }} />
     </Tabs>
   );
