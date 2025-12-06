@@ -111,23 +111,24 @@ export default function WorkerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 90,
-          paddingBottom: Math.max(insets.bottom, 15),
-          paddingTop: 12,
+          height: 80,
+          paddingBottom: Math.max(insets.bottom, 10),
+          paddingTop: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
-        tabBarActiveTintColor: '#1A0F3D',
+        tabBarActiveTintColor: '#FFFFFF',
         tabBarInactiveTintColor: '#1A0F3D',
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '700',
+          marginTop: -2,
         },
         tabBarItemStyle: {
-          backgroundColor: COLORS.lightPurple,
-          borderRadius: 20,
-          marginHorizontal: 4,
-          paddingVertical: 4,
+          borderRadius: 18,
+          marginHorizontal: 3,
+          height: 36,
+          justifyContent: 'center',
         },
         tabBarIconStyle: {
           display: 'none',
@@ -140,8 +141,9 @@ export default function WorkerLayout() {
           title: 'Aktuell',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -149,10 +151,12 @@ export default function WorkerLayout() {
         name="jobs" 
         options={{ 
           title: 'Jobs',
+          href: '/jobs',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -162,8 +166,9 @@ export default function WorkerLayout() {
           title: 'Bewerbungen',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -174,8 +179,9 @@ export default function WorkerLayout() {
           tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -185,8 +191,9 @@ export default function WorkerLayout() {
           title: 'Profil',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
