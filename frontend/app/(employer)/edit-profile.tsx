@@ -168,25 +168,21 @@ export default function EmployerProfileScreen() {
         useNativeDriver: true,
       }).start();
 
-      // Hide toast and navigate back after 2 seconds
+      // Navigate immediately after save
       setTimeout(() => {
-        Animated.timing(toastOpacity, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          setShowToast(false);
-          router.push('/(employer)');
-        });
-      }, 2000);
+        setShowToast(false);
+        router.replace('/(employer)');
+      }, 1000);
     }
 
     catch (e: any) {
+      console.error('❌ Employer Profile Save Error:', e);
       Alert.alert('Fehler', e?.message || 'Profil konnte nicht gespeichert werden');
+      setSaving(false);
     }
 
     finally {
-      setSaving(false);
+      // Don't set saving false here if success, let navigation handle it
     }
   }
 
