@@ -19,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/store-icons/app-icon.png",
-        "backgroundColor": "#6B4BFF"
+        "backgroundColor": "#141126"
       },
       "edgeToEdgeEnabled": true,
       "package": "de.dickie.backup"
