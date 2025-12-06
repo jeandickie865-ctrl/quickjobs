@@ -3306,7 +3306,11 @@ def generate_payroll_pdf(
     # Steuerliche Abgaben - KORRIGIERT nach § 40a EStG
     pauschsteuer = brutto * 0.25  # 25%
     soli = pauschsteuer * 0.055  # 5,5% auf Pauschsteuer
-    kirchensteuer = pauschsteuer * 0.09  # 9% auf Pauschsteuer
+    
+    # Kirchensteuer nur wenn kirchensteuerpflichtig = true
+    kirchensteuerpflichtig = worker_data.get('kirchensteuerpflichtig', True)
+    kirchensteuer = pauschsteuer * 0.09 if kirchensteuerpflichtig else 0  # 9% auf Pauschsteuer oder 0
+    
     gesamtsteuer = pauschsteuer + soli + kirchensteuer
     
     # Unfallversicherung
