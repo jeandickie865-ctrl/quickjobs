@@ -12,6 +12,7 @@
       "bundleIdentifier": "de.dickie.backup",
       "buildNumber": "2",
       "supportsTablet": false,
+      "appStoreUrl": "https://apps.apple.com/app/id6756192609",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
