@@ -388,7 +388,7 @@ export default function WorkerMatchesScreen() {
                           </Text>
                         </View>
 
-                        <View style={{ marginLeft: 12 }}>
+                        <View style={{ marginLeft: 12, flex: 1 }}>
                           <Text
                             style={{
                               color: COLORS.textWhite,
@@ -407,6 +407,23 @@ export default function WorkerMatchesScreen() {
                           >
                             von {employerName}
                           </Text>
+                          {/* BADGE: Privatperson/Unternehmen */}
+                          <View style={{ 
+                            backgroundColor: job.employerType === 'business' ? '#7C5CFF' : '#1C1838',
+                            paddingHorizontal: 8,
+                            paddingVertical: 3,
+                            borderRadius: 5,
+                            alignSelf: 'flex-start',
+                            marginTop: 6
+                          }}>
+                            <Text style={{ 
+                              color: COLORS.textWhite, 
+                              fontSize: 10, 
+                              fontWeight: '700' 
+                            }}>
+                              {job.employerType === 'business' ? '🏢 Unternehmen' : '👤 Privatperson'}
+                            </Text>
+                          </View>
                         </View>
                       </View>
 
