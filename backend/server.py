@@ -3090,13 +3090,19 @@ def generate_meldecheck_pdf(
     
     # SECTION 2: Arbeitnehmer - KRITISCH für Behörden!
     story.append(Paragraph("2. Angaben zum Arbeitnehmer", section_style))
+    
+    # Kirchensteuerpflicht ermitteln
+    kirchensteuerpflichtig = worker_data.get('kirchensteuerpflichtig', True)
+    kirchensteuer_info = "Ja" if kirchensteuerpflichtig else "Nein (konfessionslos)"
+    
     an_data = [
         ["Name:", work_name],
         ["Adresse:", work_address],
         ["Geburtsdatum:", geburtsdatum],
         ["Steuer-ID:", steuer_id],
         ["Sozialversicherungsnr.:", sv_nummer],
-        ["Krankenkasse:", krankenkasse]
+        ["Krankenkasse:", krankenkasse],
+        ["Kirchensteuerpflichtig:", kirchensteuer_info]
     ]
     an_table = Table(an_data, colWidths=[4.5*cm, 12.5*cm])
     an_table.setStyle(TableStyle([
