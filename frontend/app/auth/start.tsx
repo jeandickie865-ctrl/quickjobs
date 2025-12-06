@@ -78,7 +78,7 @@ export default function WelcomeScreen() {
             style={{
               width: 55,
               height: 3,
-              backgroundColor: '#C8FF16',
+              backgroundColor: '#7C5CFF',
               borderRadius: 2
             }}
           />

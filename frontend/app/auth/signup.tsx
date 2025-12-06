@@ -157,7 +157,7 @@ export default function SignupScreen() {
                   marginTop: 8,
                   height: 4,
                   width: '100%',
-                  backgroundColor: COLORS.neon
+                  backgroundColor: COLORS.purple
                 }}
               />
             </View>

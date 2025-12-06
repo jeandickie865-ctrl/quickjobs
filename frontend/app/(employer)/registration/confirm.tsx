@@ -307,7 +307,7 @@ function ConfirmContent() {
                   router.push('/(employer)/matches');
                 }}
                 style={{
-                  backgroundColor: COLORS.neon,
+                  backgroundColor: COLORS.purple,
                   padding: 16,
                   borderRadius: 14,
                   alignItems: 'center',
