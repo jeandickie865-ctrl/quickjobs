@@ -117,44 +117,79 @@ export default function WorkerLayout() {
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
-        tabBarShowLabel: false,
-        tabBarButton: (props: any) => {
-          const { children, onPress, accessibilityState, route } = props;
-          const isFocused = accessibilityState?.selected;
-          
-          // Extract route name from props
-          const routeName = route?.name || props.to?.split('/').pop() || '';
-          
-          // Map route names to display labels
-          const labelMap: any = {
-            feed: 'Aktuell',
-            jobs: 'Jobs',
-            applications: 'Bewerbungen',
-            matches: 'Matches',
-            profile: 'Profil',
-          };
-          
-          const displayLabel = labelMap[routeName] || routeName;
-          
-          // Get badge if it's matches tab
-          const badge = routeName === 'matches' ? matchesCount : undefined;
-          
-          return (
-            <PillTabButton 
-              label={displayLabel} 
-              isFocused={isFocused} 
-              onPress={onPress}
-              badge={badge}
-            />
-          );
+        tabBarActiveTintColor: '#1A0F3D',
+        tabBarInactiveTintColor: '#1A0F3D',
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '700',
+        },
+        tabBarItemStyle: {
+          backgroundColor: COLORS.lightPurple,
+          borderRadius: 20,
+          marginHorizontal: 4,
+          paddingVertical: 4,
+        },
+        tabBarIconStyle: {
+          display: 'none',
         },
       }}
     >
-      <Tabs.Screen name="feed" options={{ title: 'Aktuell' }} />
-      <Tabs.Screen name="jobs" options={{ title: 'Alle Jobs' }} />
-      <Tabs.Screen name="applications" options={{ title: 'Bewerbungen' }} />
-      <Tabs.Screen name="matches" options={{ title: 'Matches' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profil' }} />
+      <Tabs.Screen 
+        name="feed" 
+        options={{ 
+          title: 'Aktuell',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="jobs" 
+        options={{ 
+          title: 'Jobs',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="applications" 
+        options={{ 
+          title: 'Bewerbungen',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="matches" 
+        options={{ 
+          title: 'Matches',
+          tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="profile" 
+        options={{ 
+          title: 'Profil',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
 
       <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
