@@ -14,7 +14,9 @@
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/app/id6756192609",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "SKU": "backup001",
+        "appleAppId": "6756192609"
       }
     },
     "android": {
