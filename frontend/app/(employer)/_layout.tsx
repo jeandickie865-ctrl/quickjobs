@@ -73,23 +73,24 @@ export default function EmployerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 90,
-          paddingBottom: Math.max(insets.bottom, 15),
-          paddingTop: 12,
+          height: 80,
+          paddingBottom: Math.max(insets.bottom, 10),
+          paddingTop: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
-        tabBarActiveTintColor: '#1A0F3D',
+        tabBarActiveTintColor: '#FFFFFF',
         tabBarInactiveTintColor: '#1A0F3D',
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '700',
+          marginTop: -2,
         },
         tabBarItemStyle: {
-          backgroundColor: COLORS.lightPurple,
-          borderRadius: 20,
-          marginHorizontal: 4,
-          paddingVertical: 4,
+          borderRadius: 18,
+          marginHorizontal: 3,
+          height: 36,
+          justifyContent: 'center',
         },
         tabBarIconStyle: {
           display: 'none',
@@ -102,8 +103,9 @@ export default function EmployerLayout() {
           title: 'Dashboard',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -113,8 +115,9 @@ export default function EmployerLayout() {
           title: 'Aufträge',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -124,8 +127,9 @@ export default function EmployerLayout() {
           title: 'Matches',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
@@ -135,8 +139,9 @@ export default function EmployerLayout() {
           title: 'Profil',
           tabBarItemStyle: {
             backgroundColor: COLORS.lightPurple,
-            borderRadius: 20,
-            marginHorizontal: 4,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
           }
         }} 
       />
