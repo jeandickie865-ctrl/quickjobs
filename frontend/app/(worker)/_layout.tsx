@@ -154,7 +154,7 @@ export default function WorkerLayout() {
         }} 
       />
       <Tabs.Screen 
-        name="jobs" 
+        name="alljobs" 
         options={{ 
           title: 'Alle Jobs',
           tabBarLabel: 'Alle Jobs',
