@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
 import { RatingDisplay } from '../../../components/RatingDisplay';
 import { getTagLabel } from '../../../utils/taxonomy';
-import { addApplication } from '../../../utils/applicationStore';
+import { addApplication, getWorkerApplications } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { useAuth } from '../../../contexts/AuthContext';
 
