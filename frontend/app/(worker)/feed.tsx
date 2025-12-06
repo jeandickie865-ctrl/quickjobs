@@ -351,7 +351,7 @@ export default function WorkerFeedScreen() {
 
         {/* BUTTON */}
         <Pressable
-          onPress={() => router.push(`/jobs/${item.id}`)}
+          onPress={() => router.push(`/alljobs/${item.id}`)}
           style={({ pressed }) => ({
             backgroundColor: COLORS.purple,
             height: 48,
