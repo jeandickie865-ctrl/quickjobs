@@ -76,6 +76,7 @@ export default function EmployerLayout() {
           height: 80,
           paddingBottom: Math.max(insets.bottom, 10),
           paddingTop: 8,
+          paddingHorizontal: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
@@ -84,13 +85,16 @@ export default function EmployerLayout() {
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '700',
-          marginTop: -2,
+          marginTop: 0,
+          marginBottom: 0,
         },
         tabBarItemStyle: {
+          flex: 1,
           borderRadius: 18,
           marginHorizontal: 3,
           height: 36,
           justifyContent: 'center',
+          alignItems: 'center',
         },
         tabBarIconStyle: {
           display: 'none',
@@ -102,6 +106,7 @@ export default function EmployerLayout() {
         options={{ 
           title: 'Dashboard',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -114,6 +119,7 @@ export default function EmployerLayout() {
         options={{ 
           title: 'Aufträge',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -126,6 +132,7 @@ export default function EmployerLayout() {
         options={{ 
           title: 'Matches',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -138,6 +145,7 @@ export default function EmployerLayout() {
         options={{ 
           title: 'Profil',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
