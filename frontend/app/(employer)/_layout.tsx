@@ -64,18 +64,28 @@ export default function EmployerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 65,
-          paddingBottom: Math.max(insets.bottom, 8),
-          paddingTop: 8,
+          height: 70,
+          paddingBottom: Math.max(insets.bottom, 10),
+          paddingTop: 10,
+          paddingHorizontal: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
           elevation: 0,
         },
         tabBarLabelStyle: {
-          fontSize: 13,
+          fontSize: 11,
           fontWeight: '700',
+          marginTop: 4,
         },
+        tabBarItemStyle: {
+          borderRadius: 12,
+          marginHorizontal: 2,
+          paddingVertical: 4,
+        },
+        tabBarActiveTintColor: COLORS.white,
+        tabBarInactiveTintColor: COLORS.muted,
+        tabBarActiveBackgroundColor: COLORS.purple,
       }}
     >
       {TAB('index', 'Aufträge')}
