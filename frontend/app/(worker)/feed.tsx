@@ -223,18 +223,31 @@ export default function WorkerFeedScreen() {
           {item.title}
         </Text>
 
-        {/* KATEGORIE BADGE */}
-        <View style={{
-          backgroundColor: COLORS.neon,
-          alignSelf: 'flex-start',
-          paddingVertical: 6,
-          paddingHorizontal: 12,
-          borderRadius: 8,
-          marginBottom: 16
-        }}>
-          <Text style={{ color: COLORS.bg, fontWeight: '700', fontSize: 12, textTransform: 'uppercase' }}>
-            {item.category}
-          </Text>
+        {/* BADGES ROW */}
+        <View style={{ flexDirection: 'row', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+          {/* KATEGORIE BADGE */}
+          <View style={{
+            backgroundColor: COLORS.neon,
+            paddingVertical: 6,
+            paddingHorizontal: 12,
+            borderRadius: 8,
+          }}>
+            <Text style={{ color: COLORS.bg, fontWeight: '700', fontSize: 12, textTransform: 'uppercase' }}>
+              {item.category}
+            </Text>
+          </View>
+          
+          {/* EMPLOYER TYPE BADGE */}
+          <View style={{
+            backgroundColor: item.employerType === 'business' ? '#7C5CFF' : '#1C1838',
+            paddingVertical: 6,
+            paddingHorizontal: 12,
+            borderRadius: 8,
+          }}>
+            <Text style={{ color: COLORS.white, fontWeight: '700', fontSize: 12 }}>
+              {item.employerType === 'business' ? '🏢 Unternehmen' : '👤 Privatperson'}
+            </Text>
+          </View>
         </View>
 
         {/* BESCHREIBUNG */}
