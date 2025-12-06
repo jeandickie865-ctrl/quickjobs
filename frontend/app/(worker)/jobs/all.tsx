@@ -183,7 +183,7 @@ export default function AllJobsScreen() {
             backgroundColor: COLORS.purple,
           }}
         >
-          <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold" }}>
+          <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold", letterSpacing: 0 }}>
             Alle Jobs
           </Text>
         </View>
