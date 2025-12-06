@@ -59,9 +59,9 @@ export default function WorkerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 60 + insets.bottom,
-          paddingBottom: insets.bottom,
-          paddingTop: 12,
+          height: 65,
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingTop: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
