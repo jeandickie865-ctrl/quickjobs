@@ -201,7 +201,7 @@ export default function AllJobsScreen() {
 
   const renderJobCard = ({ item }) => (
     <Pressable
-      onPress={() => router.push(`/(worker)/jobs/${item.id}`)}
+      onPress={() => router.push(`/(worker)/alljobs/${item.id}`)}
       style={({ pressed }) => ({
         backgroundColor: COLORS.purple,
         borderRadius: 14,
