@@ -1088,6 +1088,7 @@ class WorkerRegistrationData(BaseModel):
     staatsangehoerigkeit: Optional[str] = None
     sozialversicherungsnummer: Optional[str] = None
     krankenkasse: Optional[str] = None
+    kirchensteuerpflichtig: Optional[bool] = None
     kurzfristigkeit_bestaetigt: Optional[bool] = None
     kurzfristigkeit_nicht_berufsmaeßig: Optional[bool] = None
 
