@@ -79,18 +79,34 @@ export default function EmployerLayout() {
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
+        tabBarShowLabel: false,
+        tabBarButton: (props: any) => {
+          const { children, onPress, accessibilityState } = props;
+          const isFocused = accessibilityState?.selected;
+          const label = props.to?.split('/').pop() || '';
+          
+          // Map route names to display labels
+          const labelMap: any = {
+            index: 'Dashboard',
+            applications: 'Aufträge',
+            matches: 'Matches',
+            profile: 'Profil',
+          };
+          
+          return (
+            <PillTabButton 
+              label={labelMap[label] || label} 
+              isFocused={isFocused} 
+              onPress={onPress}
+            />
+          );
         },
-        tabBarActiveTintColor: COLORS.neon,
-        tabBarInactiveTintColor: COLORS.inactive,
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Dashboard', tabBarIcon: () => null }} />
-      <Tabs.Screen name="applications" options={{ title: 'Aufträge', tabBarIcon: () => null }} />
-      <Tabs.Screen name="matches" options={{ title: 'Matches', tabBarIcon: () => null }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profil', tabBarIcon: () => null }} />
+      <Tabs.Screen name="index" options={{ title: 'Dashboard' }} />
+      <Tabs.Screen name="applications" options={{ title: 'Aufträge' }} />
+      <Tabs.Screen name="matches" options={{ title: 'Matches' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profil' }} />
 
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
       <Tabs.Screen name="jobs" options={{ href: null }} />
