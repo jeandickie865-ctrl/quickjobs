@@ -422,6 +422,7 @@ export default function WorkerJobDetailScreen() {
 
                   try {
                     const result = await addApplication(job.id);
+                    setHasApplied(true); // Update state sofort nach erfolgreicher Bewerbung
                     alert('Erfolg! Bewerbung wurde erstellt.');
                     setTimeout(() => router.push('/(worker)/applications'), 500);
                   } catch (err: any) {
