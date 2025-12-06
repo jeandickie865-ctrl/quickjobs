@@ -61,6 +61,7 @@ export default function WorkerRegistrationDataScreen() {
           setKrankenkasse(profile.krankenkasse || '');
           setGeburtsort(profile.geburtsort || '');
           setStaatsangehoerigkeit(profile.staatsangehoerigkeit || '');
+          setIsSelfEmployed(profile.isSelfEmployed || false);
           setKirchensteuerpflichtig(profile.kirchensteuerpflichtig !== undefined ? profile.kirchensteuerpflichtig : true);
           setConfirm70Days(profile.kurzfristigkeit_bestaetigt || false);
           setConfirmNotProfessional(profile.kurzfristigkeit_nicht_berufsmaeßig || false);
