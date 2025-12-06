@@ -39,6 +39,7 @@ export default function WorkerJobDetailScreen() {
   const [employerReviewCount, setEmployerReviewCount] = useState(0);
   const [buttonClickCount, setButtonClickCount] = useState(0);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
+  const [hasApplied, setHasApplied] = useState(false);
 
   const loadWorkerProfile = async () => {
     try {
