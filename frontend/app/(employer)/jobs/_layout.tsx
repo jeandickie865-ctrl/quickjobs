@@ -7,6 +7,7 @@ export default function JobsLayout() {
         headerShown: false,
       }}
     >
+      <Stack.Screen name="index" />
       <Stack.Screen name="[id]" />
       <Stack.Screen name="create" />
       <Stack.Screen name="rate" />
