@@ -152,6 +152,7 @@ class WorkerProfile(BaseModel):
     steuerId: Optional[str] = None
     sozialversicherungsnummer: Optional[str] = None
     krankenkasse: Optional[str] = None
+    kirchensteuerpflichtig: Optional[bool] = True  # Default: ja, in der Kirche
     # Kurzfristigkeits-Nachweis
     kurzfristigkeit_bestaetigt: Optional[bool] = False
     kurzfristigkeit_nicht_berufsmaeßig: Optional[bool] = False
