@@ -59,9 +59,10 @@ export default function WorkerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 65,
-          paddingBottom: Math.max(insets.bottom, 8),
-          paddingTop: 8,
+          height: 70,
+          paddingBottom: Math.max(insets.bottom, 10),
+          paddingTop: 10,
+          paddingHorizontal: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
@@ -69,10 +70,17 @@ export default function WorkerLayout() {
         },
         tabBarLabelStyle: {
           fontSize: 11,
-          fontWeight: '600',
+          fontWeight: '700',
+          marginTop: 4,
         },
-        tabBarActiveTintColor: COLORS.neon,
+        tabBarItemStyle: {
+          borderRadius: 12,
+          marginHorizontal: 2,
+          paddingVertical: 4,
+        },
+        tabBarActiveTintColor: COLORS.white,
         tabBarInactiveTintColor: COLORS.inactive,
+        tabBarActiveBackgroundColor: COLORS.purple,
       }}
     >
       {TAB('feed', 'Aktuelle Jobs')}
