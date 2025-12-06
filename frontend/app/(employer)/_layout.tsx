@@ -1,144 +1,47 @@
-// app/(employer)/_layout.tsx – BACKUP DARK DESIGN
-import React, { useState, useEffect } from 'react';
-import { Tabs, Redirect } from 'expo-router';
-import { useAuth } from '../../contexts/AuthContext';
-import { View, ActivityIndicator, Platform, Text } from 'react-native';
+import { Tabs } from 'expo-router';
+import { COLORS } from '../../constants/colors';
+import { TabButton } from '../../components/TabButton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getEmployerJobs } from '../../utils/jobStore';
-import { getApplicationsForJob } from '../../utils/applicationStore';
-
-const COLORS = {
-  bg: '#141126',
-  card: '#252041',
-  border: 'rgba(255,255,255,0.1)',
-  white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.5)',
-  purple: '#6B4BFF',
-  neon: '#C8FF16',
-};
 
 export default function EmployerLayout() {
-  const { user, loading } = useAuth();
   const insets = useSafeAreaInsets();
-  const [matchesCount, setMatchesCount] = useState(0);
-
-  useEffect(() => {
-    if (!user || user.role !== 'employer') return;
-
-    const loadMatchesCount = async () => {
-      try {
-        const jobs = await getEmployerJobs(user.id);
-        let count = 0;
-
-        for (const job of jobs) {
-          const apps = await getApplicationsForJob(job.id);
-          const paidMatches = apps.filter(
-            app => app.status === 'accepted' && app.paymentStatus === 'paid'
-          );
-          count += paidMatches.length;
-        }
-
-        setMatchesCount(count);
-      } catch {}
-    };
-
-    loadMatchesCount();
-    const interval = setInterval(loadMatchesCount, 5000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={COLORS.neon} />
-      </View>
-    );
-  }
-
-  if (!user) return <Redirect href="/auth/start" />;
-  if (user.role !== 'employer') return <Redirect href="/start" />;
 
   return (
     <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: COLORS.card,
-          height: 65,
-          paddingBottom: Math.max(insets.bottom, 8),
-          paddingTop: 8,
-          borderTopWidth: 1,
-          borderTopColor: COLORS.border,
-          shadowOpacity: 0,
-          elevation: 0,
-        },
-        tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '600',
-        },
-        tabBarActiveTintColor: COLORS.neon,
-        tabBarInactiveTintColor: COLORS.muted,
-      }}
-    >
-      {TAB('index', 'Aufträge')}
-      {TAB('applications', 'Bewerbungen')}
-      {TAB('matches', 'Matches', matchesCount)}
-      {TAB('profile', 'Profil')}
+      screenOptions={({ route }) => {
+        const map = {
+          index: { label: 'Dashboard' },
+          applications: { label: 'Aufträge' },
+          matches: { label: 'Matches' },
+          profile: { label: 'Profil' },
+        };
 
-      {/* Hidden */}
-      <Tabs.Screen name="jobs" options={{ href: null }} />
-      <Tabs.Screen name="payment" options={{ href: null }} />
-      <Tabs.Screen name="edit-profile" options={{ href: null }} />
-      <Tabs.Screen name="registration/[applicationId]" options={{ href: null }} />
-      <Tabs.Screen name="registration/start" options={{ href: null }} />
-      <Tabs.Screen name="registration/prepare" options={{ href: null }} />
-      <Tabs.Screen name="registration/confirm" options={{ href: null }} />
-      <Tabs.Screen name="registration/done" options={{ href: null }} />
-      <Tabs.Screen name="matches_OLD" options={{ href: null }} />
-      <Tabs.Screen name="index-old-backup" options={{ href: null }} />
-      <Tabs.Screen name="_layout-old-backup" options={{ href: null }} />
-      <Tabs.Screen name="payment-old-backup" options={{ href: null }} />
-      <Tabs.Screen name="applications-old-backup" options={{ href: null }} />
-    </Tabs>
-  );
-}
+        const tab = map[route.name];
 
-function TAB(name, label, badge = 0) {
-  const COLORS = {
-    white: '#FFFFFF',
-    muted: 'rgba(255,255,255,0.55)',
-    purple: '#6B4BFF',
-    neon: '#C8FF16',
-  };
+        return {
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: COLORS.card,
+            height: 60,
+            borderTopWidth: 1,
+            borderTopColor: COLORS.border,
+            paddingTop: 8,
+            paddingBottom: 12,
+            elevation: 0,
+          },
+          tabBarButton: (props) => {
+            const { onPress, accessibilityState } = props;
+            const focused = accessibilityState.selected;
 
-  return (
-    <Tabs.Screen
-      key={name}
-      name={name}
-      options={{
-        tabBarIcon: () => null,
-        title: label,
-        tabBarBadge: badge !== undefined && badge > 0 ? badge : undefined,
-        tabBarBadgeStyle: badge && badge > 0 ? {
-          backgroundColor: '#FF4444',
-          color: COLORS.white,
-          fontSize: 9,
-          fontWeight: '700',
-          minWidth: 16,
-          height: 16,
-          borderRadius: 8,
-        } : undefined,
-        tabBarLabel: ({ focused }) => (
-          <Text
-            style={{
-              color: focused ? COLORS.white : COLORS.muted,
-              fontWeight: focused ? '800' : '600',
-              fontSize: 11,
-            }}
-          >
-            {label}
-          </Text>
-        ),
+            return (
+              <TabButton
+                onPress={onPress}
+                focused={focused}
+                label={tab?.label}
+              />
+            );
+          },
+        };
       }}
     />
   );
