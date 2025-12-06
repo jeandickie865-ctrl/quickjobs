@@ -117,7 +117,7 @@ export default function EmployerLayout() {
       <Tabs.Screen 
         name="applications" 
         options={{ 
-          title: 'Aufträge',
+          title: 'Bewerber',
           tabBarItemStyle: {
             flex: 1,
             backgroundColor: COLORS.lightPurple,
