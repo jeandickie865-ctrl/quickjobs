@@ -117,23 +117,40 @@ export default function WorkerLayout() {
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
+        tabBarShowLabel: false,
+        tabBarButton: (props: any) => {
+          const { children, onPress, accessibilityState } = props;
+          const isFocused = accessibilityState?.selected;
+          const label = props.to?.split('/').pop() || '';
+          
+          // Map route names to display labels
+          const labelMap: any = {
+            feed: 'Aktuell',
+            jobs: 'Alle Jobs',
+            applications: 'Bewerbungen',
+            matches: 'Matches',
+            profile: 'Profil',
+          };
+          
+          // Get badge if it's matches tab
+          const badge = label === 'matches' ? matchesCount : undefined;
+          
+          return (
+            <PillTabButton 
+              label={labelMap[label] || label} 
+              isFocused={isFocused} 
+              onPress={onPress}
+              badge={badge}
+            />
+          );
         },
-        tabBarActiveTintColor: COLORS.neon,
-        tabBarInactiveTintColor: COLORS.inactive,
       }}
     >
-      <Tabs.Screen name="feed" options={{ title: 'Aktuell', tabBarIcon: () => null }} />
-      <Tabs.Screen name="jobs" options={{ title: 'Alle Jobs', tabBarIcon: () => null }} />
-      <Tabs.Screen name="applications" options={{ title: 'Bewerbungen', tabBarIcon: () => null }} />
-      <Tabs.Screen name="matches" options={{ 
-        title: 'Matches', 
-        tabBarIcon: () => null,
-        tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
-      }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profil', tabBarIcon: () => null }} />
+      <Tabs.Screen name="feed" options={{ title: 'Aktuell' }} />
+      <Tabs.Screen name="jobs" options={{ title: 'Alle Jobs' }} />
+      <Tabs.Screen name="applications" options={{ title: 'Bewerbungen' }} />
+      <Tabs.Screen name="matches" options={{ title: 'Matches' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profil' }} />
 
       <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
