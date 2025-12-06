@@ -34,9 +34,9 @@ export default function EmployerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 75,
-          paddingBottom: Math.max(insets.bottom, 10),
-          paddingTop: 10,
+          height: 90,
+          paddingBottom: Math.max(insets.bottom, 15),
+          paddingTop: 12,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
