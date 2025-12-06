@@ -98,7 +98,6 @@ export default function WorkerLayout() {
               focused={focused}
               label={label}
               badge={badge}
-              icon={<Ionicons name={iconName} size={20} color={focused ? COLORS.white : COLORS.inactive} />}
             />
           );
         },
