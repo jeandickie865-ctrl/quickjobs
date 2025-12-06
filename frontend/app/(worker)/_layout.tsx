@@ -33,7 +33,7 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
           backgroundColor: isFocused ? COLORS.purple : COLORS.lightPurple,
           borderRadius: 20,
           paddingVertical: 10,
-          paddingHorizontal: 16,
+          paddingHorizontal: 14,
           minWidth: 60,
           alignItems: 'center',
           justifyContent: 'center',
@@ -41,9 +41,9 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
       >
         <Text
           style={{
-            color: COLORS.white,
+            color: isFocused ? '#FFFFFF' : '#1A0F3D',
             fontSize: 11,
-            fontWeight: '600',
+            fontWeight: '700',
           }}
           numberOfLines={1}
         >
