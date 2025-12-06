@@ -64,12 +64,13 @@ export default function EmployerLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: Platform.OS === 'ios' ? 60 + insets.bottom : 70,
-          paddingBottom: Platform.OS === 'ios' ? insets.bottom : 12,
-          paddingTop: 10,
+          height: 65,
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingTop: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           shadowOpacity: 0,
+          elevation: 0,
         },
         tabBarLabelStyle: {
           fontSize: 13,
