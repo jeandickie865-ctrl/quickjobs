@@ -143,7 +143,7 @@ export default function AllJobsScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.white }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg }}>
         <ActivityIndicator color={COLORS.neon} size="large" />
         <Text style={{ marginTop: 16, color: COLORS.gray }}>Lade alle Jobs...</Text>
       </View>
@@ -152,7 +152,7 @@ export default function AllJobsScreen() {
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.white, padding: 20 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg, padding: 20 }}>
         <Ionicons name="alert-circle-outline" size={64} color={COLORS.gray} />
         <Text style={{ marginTop: 16, color: COLORS.gray, fontSize: 16, textAlign: "center" }}>{error}</Text>
         <Pressable
@@ -173,7 +173,7 @@ export default function AllJobsScreen() {
 
   if (jobs.length === 0) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         {/* Header */}
         <View
           style={{
@@ -283,7 +283,7 @@ export default function AllJobsScreen() {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       {/* Header */}
       <View
         style={{
