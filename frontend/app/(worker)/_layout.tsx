@@ -142,7 +142,8 @@ export default function WorkerLayout() {
       <Tabs.Screen 
         name="feed" 
         options={{ 
-          title: 'Aktuell',
+          title: 'Aktuelle Jobs',
+          tabBarLabel: 'Aktuelle Jobs',
           tabBarItemStyle: {
             flex: 1,
             backgroundColor: COLORS.lightPurple,
