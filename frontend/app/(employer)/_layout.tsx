@@ -125,27 +125,26 @@ function TAB(name, label, badge = 0) {
       name={name}
       options={{
         tabBarIcon: () => null,
+        title: label,
+        tabBarBadge: badge !== undefined && badge > 0 ? badge : undefined,
+        tabBarBadgeStyle: badge && badge > 0 ? {
+          backgroundColor: '#FF4444',
+          color: COLORS.white,
+          fontSize: 9,
+          fontWeight: '700',
+          minWidth: 16,
+          height: 16,
+          borderRadius: 8,
+        } : undefined,
         tabBarLabel: ({ focused }) => (
-          <View style={{ alignItems: 'center', gap: 4 }}>
-            <Text
-              style={{
-                color: focused ? COLORS.white : COLORS.muted,
-                fontWeight: focused ? '800' : '600',
-              }}
-            >
-              {label}
-            </Text>
-
-            {focused && (
-              <View
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: 3,
-                  backgroundColor: COLORS.neon,
-                }}
-              />
-            )}
+          <Text
+            style={{
+              color: focused ? COLORS.white : COLORS.muted,
+              fontWeight: focused ? '800' : '600',
+              fontSize: 11,
+            }}
+          >
+            {label}
 
             {badge > 0 && (
               <View
