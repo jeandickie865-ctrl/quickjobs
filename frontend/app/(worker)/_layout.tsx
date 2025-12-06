@@ -42,9 +42,10 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
         <Text
           style={{
             color: COLORS.white,
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: '600',
           }}
+          numberOfLines={1}
         >
           {label}
         </Text>
