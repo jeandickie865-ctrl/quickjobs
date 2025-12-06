@@ -8,7 +8,7 @@ export default function WorkerLayout() {
       screenOptions={({ route }) => {
         const map = {
           feed: { label: 'Aktuell' },
-          all: { label: 'Alle Jobs' },
+          jobs: { label: 'Alle Jobs' },
           applications: { label: 'Bewerbungen' },
           matches: { label: 'Matches' },
           profile: { label: 'Profil' },
