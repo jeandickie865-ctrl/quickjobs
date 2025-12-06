@@ -170,19 +170,25 @@ export default function EmployerProfileScreen() {
 
       // Navigate immediately after save
       setTimeout(() => {
-        setShowToast(false);
-        router.replace('/(employer)');
-      }, 1000);
+        Animated.timing(toastOpacity, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => {
+          setShowToast(false);
+          setSaving(false);
+          router.replace('/(employer)/profile');
+        });
+      }, 1200);
     }
 
     catch (e: any) {
       console.error('❌ Employer Profile Save Error:', e);
       Alert.alert('Fehler', e?.message || 'Profil konnte nicht gespeichert werden');
-      setSaving(false);
     }
 
     finally {
-      // Don't set saving false here if success, let navigation handle it
+      // Only reset saving state if there was an error (success handled in timeout)
     }
   }
 
