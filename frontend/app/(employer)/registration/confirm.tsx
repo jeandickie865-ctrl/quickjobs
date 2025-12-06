@@ -240,9 +240,9 @@ function ConfirmContent() {
             }}
           >
             {loading ? (
-              <ActivityIndicator color={COLORS.bg} />
+              <ActivityIndicator color={COLORS.white} />
             ) : (
-              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
                 Anmeldung jetzt erstellen
               </Text>
             )}
