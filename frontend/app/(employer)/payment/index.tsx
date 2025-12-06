@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Pressable, ScrollView, Animated, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
-import { useAuth } from '../../contexts/AuthContext';
-import { getJobById } from '../../utils/jobStore';
-import { Job } from '../../types/job';
-import { euro } from '../../utils/pricing';
+import { useAuth } from '../../../contexts/AuthContext';
+import { getJobById } from '../../../utils/jobStore';
+import { Job } from '../../../types/job';
+import { euro } from '../../../utils/pricing';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
