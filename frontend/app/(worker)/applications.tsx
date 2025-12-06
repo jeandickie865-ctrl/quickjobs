@@ -424,7 +424,7 @@ export default function WorkerApplicationsScreen() {
                     <Button
                       title="Jobdetails ansehen"
                       variant="primary"
-                      onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
+                      onPress={() => router.push(`/(worker)/alljobs/${job.id}`)}
                       style={{ backgroundColor: '#C8FF16' }}
                       textStyle={{ color: '#000000', fontWeight: '700' }}
                     />
