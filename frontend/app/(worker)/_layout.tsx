@@ -57,25 +57,52 @@ export default function WorkerLayout() {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
           backgroundColor: COLORS.card,
-          height: 65,
-          paddingBottom: Math.max(insets.bottom, 8),
-          paddingTop: 8,
+          height: 70,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
-          shadowOpacity: 0,
           elevation: 0,
         },
-        tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '600',
+        tabBarButton: (props: any) => {
+          const { onPress, accessibilityState } = props;
+          const focused = accessibilityState?.selected;
+
+          let iconName: any = 'home';
+          let label = 'Home';
+          let badge = undefined;
+
+          if (route.name === 'feed') {
+            iconName = 'thunderstorm';
+            label = 'Aktuell';
+          } else if (route.name === 'jobs') {
+            iconName = 'briefcase';
+            label = 'Alle Jobs';
+          } else if (route.name === 'applications') {
+            iconName = 'document-text';
+            label = 'Bewerbungen';
+          } else if (route.name === 'matches') {
+            iconName = 'heart';
+            label = 'Matches';
+            badge = matchesCount;
+          } else if (route.name === 'profile') {
+            iconName = 'person';
+            label = 'Profil';
+          }
+
+          return (
+            <TabButton
+              onPress={onPress}
+              focused={focused}
+              label={label}
+              badge={badge}
+              icon={<Ionicons name={iconName} size={20} color={focused ? COLORS.white : COLORS.inactive} />}
+            />
+          );
         },
-        tabBarActiveTintColor: COLORS.neon,
-        tabBarInactiveTintColor: COLORS.inactive,
-      }}
+      })}
     >
       {TAB('feed', 'Aktuelle Jobs')}
       {TAB('applications', 'Bewerbungen')}
