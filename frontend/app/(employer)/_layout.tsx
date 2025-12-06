@@ -79,38 +79,67 @@ export default function EmployerLayout() {
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
-        tabBarShowLabel: false,
-        tabBarButton: (props: any) => {
-          const { children, onPress, accessibilityState, route } = props;
-          const isFocused = accessibilityState?.selected;
-          
-          // Extract route name from props
-          const routeName = route?.name || props.to?.split('/').pop() || '';
-          
-          // Map route names to display labels
-          const labelMap: any = {
-            index: 'Dashboard',
-            applications: 'Aufträge',
-            matches: 'Matches',
-            profile: 'Profil',
-          };
-          
-          const displayLabel = labelMap[routeName] || routeName;
-          
-          return (
-            <PillTabButton 
-              label={displayLabel} 
-              isFocused={isFocused} 
-              onPress={onPress}
-            />
-          );
+        tabBarActiveTintColor: '#1A0F3D',
+        tabBarInactiveTintColor: '#1A0F3D',
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '700',
+        },
+        tabBarItemStyle: {
+          backgroundColor: COLORS.lightPurple,
+          borderRadius: 20,
+          marginHorizontal: 4,
+          paddingVertical: 4,
+        },
+        tabBarIconStyle: {
+          display: 'none',
         },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Dashboard' }} />
-      <Tabs.Screen name="applications" options={{ title: 'Aufträge' }} />
-      <Tabs.Screen name="matches" options={{ title: 'Matches' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profil' }} />
+      <Tabs.Screen 
+        name="index" 
+        options={{ 
+          title: 'Dashboard',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="applications" 
+        options={{ 
+          title: 'Aufträge',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="matches" 
+        options={{ 
+          title: 'Matches',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
+      <Tabs.Screen 
+        name="profile" 
+        options={{ 
+          title: 'Profil',
+          tabBarItemStyle: {
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 20,
+            marginHorizontal: 4,
+          }
+        }} 
+      />
 
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
       <Tabs.Screen name="jobs" options={{ href: null }} />
