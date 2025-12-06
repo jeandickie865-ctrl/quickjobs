@@ -2,20 +2,21 @@ import React from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator } from 'react-native';
-import { TabButton } from '../../components/TabButton';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const COLORS = {
-  bg: '#141126',
-  card: '#252041',
-  border: 'rgba(255,255,255,0.1)',
   purple: '#7C5CFF',
   neon: '#C8FF16',
   white: '#FFFFFF',
-  inactive: 'rgba(255,255,255,0.5)',
+  inactive: 'rgba(255,255,255,0.65)',
+  bg: '#141126',
+  card: '#252041',
+  border: 'rgba(255,255,255,0.1)',
 };
 
 export default function EmployerLayout() {
   const { user, loading } = useAuth();
+  const insets = useSafeAreaInsets();
 
   if (loading) {
     return (
@@ -29,47 +30,29 @@ export default function EmployerLayout() {
 
   return (
     <Tabs
-      screenOptions={({ route }) => {
-        const map = {
-          index: { label: 'Dashboard' },
-          applications: { label: 'Aufträge' },
-          matches: { label: 'Matches' },
-          profile: { label: 'Profil' },
-        };
-
-        const tab = map[route.name];
-
-        return {
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: COLORS.card,
-            height: 85,
-            borderTopWidth: 1,
-            borderTopColor: COLORS.border,
-            paddingTop: 12,
-            paddingBottom: 20,
-            paddingHorizontal: 8,
-            elevation: 0,
-          },
-          tabBarButton: (props) => {
-            const { onPress, accessibilityState } = props;
-            const focused = accessibilityState?.selected;
-
-            return (
-              <TabButton
-                onPress={onPress}
-                focused={focused}
-                label={tab?.label}
-              />
-            );
-          },
-        };
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: COLORS.card,
+          height: 75,
+          paddingBottom: Math.max(insets.bottom, 10),
+          paddingTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: COLORS.border,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
+        },
+        tabBarActiveTintColor: COLORS.neon,
+        tabBarInactiveTintColor: COLORS.inactive,
       }}
     >
-      <Tabs.Screen name="index" />
-      <Tabs.Screen name="applications" />
-      <Tabs.Screen name="matches" />
-      <Tabs.Screen name="profile" />
+      <Tabs.Screen name="index" options={{ title: 'Dashboard', tabBarIcon: () => null }} />
+      <Tabs.Screen name="applications" options={{ title: 'Aufträge', tabBarIcon: () => null }} />
+      <Tabs.Screen name="matches" options={{ title: 'Matches', tabBarIcon: () => null }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profil', tabBarIcon: () => null }} />
+
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
       <Tabs.Screen name="jobs" options={{ href: null }} />
       <Tabs.Screen name="payment" options={{ href: null }} />
