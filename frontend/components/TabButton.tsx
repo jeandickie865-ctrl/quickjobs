@@ -12,13 +12,12 @@ const COLORS = {
 
 interface TabButtonProps {
   label: string;
-  icon: React.ReactNode;
   focused: boolean;
   onPress: () => void;
   badge?: number;
 }
 
-export function TabButton({ label, icon, focused, onPress, badge }: TabButtonProps) {
+export function TabButton({ label, focused, onPress, badge }: TabButtonProps) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -32,21 +31,19 @@ export function TabButton({ label, icon, focused, onPress, badge }: TabButtonPro
       <View
         style={{
           backgroundColor: focused ? COLORS.purple : 'transparent',
-          paddingVertical: 8,
-          paddingHorizontal: 14,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
           borderRadius: 14,
           alignItems: 'center',
           justifyContent: 'center',
           minWidth: 70,
         }}
       >
-        {icon}
         <Text
           style={{
-            fontSize: 10,
-            fontWeight: '600',
+            fontSize: 11,
+            fontWeight: '700',
             color: focused ? COLORS.white : COLORS.inactive,
-            marginTop: 4,
           }}
         >
           {label}
