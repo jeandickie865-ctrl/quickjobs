@@ -1257,6 +1257,11 @@ async def get_matched_jobs_for_me(
         logger.error(f"❌ Worker profile not found for user {worker_id}")
         raise HTTPException(status_code=404, detail="Worker profile not found")
     
+    # B1: Selbstständige dürfen keine Jobs matchen (brauchen keine Anmeldung)
+    if worker_profile.get('isSelfEmployed', False):
+        logger.info(f"⚠️ Worker {worker_id} is selbstständig - no matching jobs")
+        return []
+    
     logger.info(f"📋 Worker profile loaded: categories={worker_profile.get('categories')}, radiusKm={worker_profile.get('radiusKm')}")
     
     # B1: Load only future/today jobs that are open and unmatched
