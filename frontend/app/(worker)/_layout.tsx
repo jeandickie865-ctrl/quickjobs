@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text, Pressable } from 'react-native';
 import { getWorkerApplications } from '../../utils/applicationStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,6 +14,65 @@ const COLORS = {
   card: '#252041',
   border: 'rgba(255,255,255,0.1)',
 };
+
+// Custom Tab Button Component (Pill-Style)
+function PillTabButton({ label, isFocused, onPress, badge }: any) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 4,
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: isFocused ? COLORS.purple : 'transparent',
+          borderRadius: 20,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          minWidth: 60,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: isFocused ? 0 : 1,
+          borderColor: COLORS.border,
+        }}
+      >
+        <Text
+          style={{
+            color: isFocused ? COLORS.white : COLORS.inactive,
+            fontSize: 12,
+            fontWeight: '600',
+          }}
+        >
+          {label}
+        </Text>
+        {badge !== undefined && badge > 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              top: -4,
+              right: -4,
+              backgroundColor: COLORS.neon,
+              borderRadius: 10,
+              minWidth: 20,
+              height: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 6,
+            }}
+          >
+            <Text style={{ color: COLORS.bg, fontSize: 11, fontWeight: 'bold' }}>
+              {badge}
+            </Text>
+          </View>
+        )}
+      </View>
+    </Pressable>
+  );
+}
 
 export default function WorkerLayout() {
   const { user, loading } = useAuth();
