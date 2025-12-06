@@ -145,7 +145,7 @@ export default function AllJobsScreen() {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg }}>
         <ActivityIndicator color={COLORS.neon} size="large" />
-        <Text style={{ marginTop: 16, color: COLORS.gray }}>Lade alle Jobs...</Text>
+        <Text style={{ marginTop: 16, color: COLORS.muted }}>Lade alle Jobs...</Text>
       </View>
     );
   }
@@ -154,7 +154,7 @@ export default function AllJobsScreen() {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg, padding: 20 }}>
         <Ionicons name="alert-circle-outline" size={64} color={COLORS.gray} />
-        <Text style={{ marginTop: 16, color: COLORS.gray, fontSize: 16, textAlign: "center" }}>{error}</Text>
+        <Text style={{ marginTop: 16, color: COLORS.muted, fontSize: 16, textAlign: "center" }}>{error}</Text>
         <Pressable
           onPress={() => router.back()}
           style={{
@@ -194,7 +194,7 @@ export default function AllJobsScreen() {
         {/* Leer-Zustand */}
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
           <Ionicons name="briefcase-outline" size={64} color={COLORS.gray} />
-          <Text style={{ marginTop: 16, color: COLORS.gray, fontSize: 16, textAlign: "center" }}>
+          <Text style={{ marginTop: 16, color: COLORS.muted, fontSize: 16, textAlign: "center" }}>
             Keine Jobs in deinem Umkreis gefunden
           </Text>
         </View>
