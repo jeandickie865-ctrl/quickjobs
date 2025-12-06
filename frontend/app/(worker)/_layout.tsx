@@ -45,11 +45,12 @@ export default function WorkerLayout() {
           headerShown: false,
           tabBarStyle: {
             backgroundColor: COLORS.card,
-            height: 60,
+            height: 85,
             borderTopWidth: 1,
             borderTopColor: COLORS.border,
-            paddingTop: 8,
-            paddingBottom: 12,
+            paddingTop: 12,
+            paddingBottom: 20,
+            paddingHorizontal: 8,
             elevation: 0,
           },
           tabBarButton: (props) => {
