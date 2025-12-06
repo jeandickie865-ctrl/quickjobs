@@ -55,7 +55,7 @@ export default function EmployerLayout() {
 
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
       <Tabs.Screen name="jobs" options={{ href: null }} />
-      <Tabs.Screen name="payment" options={{ href: null }} />
+      <Tabs.Screen name="payment/index" options={{ href: null }} />
       <Tabs.Screen name="registration/start" options={{ href: null }} />
       <Tabs.Screen name="registration/prepare" options={{ href: null }} />
       <Tabs.Screen name="registration/confirm" options={{ href: null }} />
