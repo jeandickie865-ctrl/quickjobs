@@ -155,8 +155,7 @@ export default function WorkerLayout() {
       <Tabs.Screen 
         name="jobs" 
         options={{ 
-          title: 'Jobs',
-          href: '/jobs',
+          title: 'Alle Jobs',
           tabBarItemStyle: {
             flex: 1,
             backgroundColor: COLORS.lightPurple,
