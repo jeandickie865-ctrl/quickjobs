@@ -4064,7 +4064,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://quick-shift.preview.emergentagent.com",
+        "https://shift-portal.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
