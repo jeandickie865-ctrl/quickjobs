@@ -394,7 +394,7 @@ export default function WorkerJobDetailScreen() {
           </View>
 
           {/* Button "Ich habe Zeit" */}
-          {job.status !== 'matched' && (
+          {job.status !== 'matched' && !hasApplied && (
             <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
               <Pressable
                 onPress={async () => {
