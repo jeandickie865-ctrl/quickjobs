@@ -119,25 +119,29 @@ export default function WorkerLayout() {
         },
         tabBarShowLabel: false,
         tabBarButton: (props: any) => {
-          const { children, onPress, accessibilityState } = props;
+          const { children, onPress, accessibilityState, route } = props;
           const isFocused = accessibilityState?.selected;
-          const label = props.to?.split('/').pop() || '';
+          
+          // Extract route name from props
+          const routeName = route?.name || props.to?.split('/').pop() || '';
           
           // Map route names to display labels
           const labelMap: any = {
             feed: 'Aktuell',
-            jobs: 'Alle Jobs',
+            jobs: 'Jobs',
             applications: 'Bewerbungen',
             matches: 'Matches',
             profile: 'Profil',
           };
           
+          const displayLabel = labelMap[routeName] || routeName;
+          
           // Get badge if it's matches tab
-          const badge = label === 'matches' ? matchesCount : undefined;
+          const badge = routeName === 'matches' ? matchesCount : undefined;
           
           return (
             <PillTabButton 
-              label={labelMap[label] || label} 
+              label={displayLabel} 
               isFocused={isFocused} 
               onPress={onPress}
               badge={badge}
