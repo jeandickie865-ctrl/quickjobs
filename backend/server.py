@@ -3405,10 +3405,18 @@ def generate_payroll_pdf(
     steuer_data = [
         ["Pauschsteuer (25%)", f"{pauschsteuer:.2f} Euro"],
         ["Solidaritätszuschlag (5,5% auf Pauschsteuer)", f"{soli:.2f} Euro"],
-        ["Kirchensteuer (9% auf Pauschsteuer)", f"{kirchensteuer:.2f} Euro"],
+    ]
+    
+    # Kirchensteuer nur anzeigen wenn vorhanden
+    if kirchensteuerpflichtig:
+        steuer_data.append(["Kirchensteuer (9% auf Pauschsteuer)", f"{kirchensteuer:.2f} Euro"])
+    else:
+        steuer_data.append(["Kirchensteuer", "Nicht kirchensteuerpflichtig"])
+    
+    steuer_data.extend([
         ["", ""],
         ["Gesamtsteuerlast Arbeitgeber", f"{gesamtsteuer:.2f} Euro"],
-    ]
+    ])
     
     steuer_table = Table(steuer_data, colWidths=[12*cm, 4*cm])
     steuer_table.setStyle(TableStyle([
