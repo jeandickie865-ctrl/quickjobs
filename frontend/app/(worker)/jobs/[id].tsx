@@ -102,6 +102,7 @@ export default function WorkerJobDetailScreen() {
   useEffect(() => {
     loadJob();
     loadWorkerProfile();
+    checkIfApplied();
   }, [id]);
 
   if (loading) {
