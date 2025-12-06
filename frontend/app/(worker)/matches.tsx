@@ -559,7 +559,7 @@ export default function WorkerMatchesScreen() {
 
                       {/* DETAILS BUTTON */}
                       <Pressable
-                        onPress={() => router.push(`/(worker)/jobs/${job.id}`)}
+                        onPress={() => router.push(`/(worker)/alljobs/${job.id}`)}
                         style={{
                           width: "70%",
                           maxWidth: 340,
