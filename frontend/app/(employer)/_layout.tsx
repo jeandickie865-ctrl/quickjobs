@@ -115,6 +115,19 @@ export default function EmployerLayout() {
         }} 
       />
       <Tabs.Screen 
+        name="jobs" 
+        options={{ 
+          title: 'Aufträge',
+          tabBarItemStyle: {
+            flex: 1,
+            backgroundColor: COLORS.lightPurple,
+            borderRadius: 18,
+            marginHorizontal: 3,
+            height: 36,
+          }
+        }} 
+      />
+      <Tabs.Screen 
         name="applications" 
         options={{ 
           title: 'Bewerber',
@@ -155,13 +168,15 @@ export default function EmployerLayout() {
       />
 
       <Tabs.Screen name="edit-profile" options={{ href: null }} />
-      <Tabs.Screen name="jobs" options={{ href: null }} />
       <Tabs.Screen name="payment/index" options={{ href: null }} />
       <Tabs.Screen name="registration/start" options={{ href: null }} />
       <Tabs.Screen name="registration/prepare" options={{ href: null }} />
       <Tabs.Screen name="registration/confirm" options={{ href: null }} />
       <Tabs.Screen name="registration/done" options={{ href: null }} />
       <Tabs.Screen name="registration/[applicationId]" options={{ href: null }} />
+      <Tabs.Screen name="jobs/create" options={{ href: null }} />
+      <Tabs.Screen name="jobs/[id]" options={{ href: null }} />
+      <Tabs.Screen name="jobs/rate" options={{ href: null }} />
     </Tabs>
   );
 }
