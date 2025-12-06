@@ -3626,6 +3626,15 @@ async def create_official_registration(request: CreateRegistrationRequest):
         logger.error(f"Worker profile {worker_id} not found")
         raise HTTPException(status_code=404, detail="Worker-Profil nicht gefunden")
     
+    # Wenn Worker selbstständig ist, keine Registrierung erlaubt
+    is_self_employed = worker.get("isSelfEmployed", False)
+    if is_self_employed:
+        logger.error(f"Worker {worker_id} is self-employed, cannot create official registration")
+        raise HTTPException(
+            status_code=400,
+            detail="Selbstständige benötigen keine offizielle Anmeldung"
+        )
+    
     required_fields = ["geburtsdatum", "steuerId", "sozialversicherungsnummer", "krankenkasse"]
     missing = [f for f in required_fields if not worker.get(f)]
     
