@@ -41,6 +41,7 @@ export default function WorkerRegistrationDataScreen() {
   const [geburtsort, setGeburtsort] = useState('');
   const [staatsangehoerigkeit, setStaatsangehoerigkeit] = useState('');
   const [kirchensteuerpflichtig, setKirchensteuerpflichtig] = useState(true); // Default: ja
+  const [isSelfEmployed, setIsSelfEmployed] = useState(false); // Wird vom Profil geladen
   const [confirm70Days, setConfirm70Days] = useState(false);
   const [confirmNotProfessional, setConfirmNotProfessional] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
