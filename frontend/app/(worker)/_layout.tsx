@@ -114,6 +114,7 @@ export default function WorkerLayout() {
           height: 80,
           paddingBottom: Math.max(insets.bottom, 10),
           paddingTop: 8,
+          paddingHorizontal: 8,
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
         },
@@ -122,13 +123,16 @@ export default function WorkerLayout() {
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '700',
-          marginTop: -2,
+          marginTop: 0,
+          marginBottom: 0,
         },
         tabBarItemStyle: {
+          flex: 1,
           borderRadius: 18,
           marginHorizontal: 3,
           height: 36,
           justifyContent: 'center',
+          alignItems: 'center',
         },
         tabBarIconStyle: {
           display: 'none',
@@ -140,6 +144,7 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Aktuell',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -153,6 +158,7 @@ export default function WorkerLayout() {
           title: 'Jobs',
           href: '/jobs',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -165,6 +171,7 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Bewerbungen',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -178,6 +185,7 @@ export default function WorkerLayout() {
           title: 'Matches',
           tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
@@ -190,6 +198,7 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Profil',
           tabBarItemStyle: {
+            flex: 1,
             backgroundColor: COLORS.lightPurple,
             borderRadius: 18,
             marginHorizontal: 3,
