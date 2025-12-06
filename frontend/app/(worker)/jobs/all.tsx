@@ -290,9 +290,6 @@ export default function AllJobsScreen() {
           backgroundColor: COLORS.purple,
         }}
       >
-        <Pressable onPress={() => router.back()} style={{ marginRight: 16 }}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
-        </Pressable>
         <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold", flex: 1 }}>
           Alle Jobs
         </Text>
