@@ -76,12 +76,12 @@ export default function EmployerLayout() {
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '700',
-          marginTop: 4,
         },
         tabBarItemStyle: {
-          borderRadius: 12,
-          marginHorizontal: 2,
-          paddingVertical: 4,
+          borderRadius: 20,
+          marginHorizontal: 4,
+          paddingVertical: 8,
+          paddingHorizontal: 8,
         },
         tabBarActiveTintColor: COLORS.white,
         tabBarInactiveTintColor: COLORS.muted,
