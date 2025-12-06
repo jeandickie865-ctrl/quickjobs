@@ -367,14 +367,33 @@ export default function EmployerMatchesScreen() {
 
                       {/* WORKER NAME - PROMINENT */}
                       {match.workerProfile && (match.workerProfile.firstName || match.workerProfile.lastName) && (
-                        <Text style={{ 
-                          color: COLORS.textWhite, 
-                          fontSize: 18, 
-                          fontWeight: "900", 
-                          marginBottom: 12 
-                        }}>
-                          {match.workerProfile.firstName} {match.workerProfile.lastName}
-                        </Text>
+                        <View>
+                          <Text style={{ 
+                            color: COLORS.textWhite, 
+                            fontSize: 18, 
+                            fontWeight: "900", 
+                            marginBottom: 8 
+                          }}>
+                            {match.workerProfile.firstName} {match.workerProfile.lastName}
+                          </Text>
+                          {/* BADGE: Selbstständig/Angestellt */}
+                          <View style={{ 
+                            backgroundColor: match.workerProfile.isSelfEmployed ? '#7C5CFF' : '#1C1838',
+                            paddingHorizontal: 10,
+                            paddingVertical: 4,
+                            borderRadius: 6,
+                            alignSelf: 'flex-start',
+                            marginBottom: 8
+                          }}>
+                            <Text style={{ 
+                              color: COLORS.textWhite, 
+                              fontSize: 11, 
+                              fontWeight: '700' 
+                            }}>
+                              {match.workerProfile.isSelfEmployed ? '💼 Selbstständig' : '👤 Angestellt'}
+                            </Text>
+                          </View>
+                        </View>
                       )}
 
                       {match.workerProfile.email && (
