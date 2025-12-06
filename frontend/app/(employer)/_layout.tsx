@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const COLORS = {
   purple: '#7C5CFF',
+  lightPurple: '#A891FF',
   neon: '#C8FF16',
   white: '#FFFFFF',
   inactive: 'rgba(255,255,255,0.65)',
