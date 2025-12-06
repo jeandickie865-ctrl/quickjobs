@@ -60,6 +60,18 @@ export default function WorkerJobDetailScreen() {
     }
   };
 
+  const checkIfApplied = async () => {
+    try {
+      if (!id) return;
+      const applications = await getWorkerApplications();
+      const applied = applications.some(app => app.jobId === String(id));
+      setHasApplied(applied);
+      console.log('Has applied to this job:', applied);
+    } catch (err) {
+      console.error('Error checking applications:', err);
+    }
+  };
+
   const loadJob = async () => {
     try {
       if (!id) return;
