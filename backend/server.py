@@ -2840,7 +2840,15 @@ def generate_meldecheck_pdf(
 ) -> str:
     """
     🎨 PROFESSIONELLE Sofortmeldung zur Sozialversicherung - Behördenkonform
+    Raises ValueError if required data is missing
     """
+    # Validate required data
+    if not worker_data:
+        raise ValueError("Worker data is required for Sofortmeldung generation")
+    if not employer_data:
+        raise ValueError("Employer data is required for Sofortmeldung generation")
+    if not job_data:
+        raise ValueError("Job data is required for Sofortmeldung generation")
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import cm
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
