@@ -30,20 +30,18 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
     >
       <View
         style={{
-          backgroundColor: isFocused ? COLORS.purple : 'transparent',
+          backgroundColor: isFocused ? COLORS.purple : COLORS.lightPurple,
           borderRadius: 20,
           paddingVertical: 10,
           paddingHorizontal: 16,
           minWidth: 60,
           alignItems: 'center',
           justifyContent: 'center',
-          borderWidth: isFocused ? 0 : 1,
-          borderColor: COLORS.border,
         }}
       >
         <Text
           style={{
-            color: isFocused ? COLORS.white : COLORS.inactive,
+            color: COLORS.white,
             fontSize: 12,
             fontWeight: '600',
           }}
