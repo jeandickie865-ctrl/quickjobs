@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Tabs, Redirect, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { View, ActivityIndicator, Platform, Text } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { getWorkerApplications } from '../../utils/applicationStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TabButton } from '../../components/TabButton';
+import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   purple: '#6B4BFF',
