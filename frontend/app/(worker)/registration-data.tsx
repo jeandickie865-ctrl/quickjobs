@@ -341,6 +341,7 @@ export default function WorkerRegistrationDataScreen() {
                     krankenkasse,
                     geburtsort,
                     staatsangehoerigkeit,
+                    kirchensteuerpflichtig,
                     kurzfristigkeit_bestaetigt: confirm70Days,
                     kurzfristigkeit_nicht_berufsmaeßig: confirmNotProfessional
                   })
