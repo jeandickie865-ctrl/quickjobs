@@ -109,11 +109,13 @@ function TAB(name, label, badge) {
         title: label,
         tabBarBadge: badge !== undefined && badge > 0 ? badge : undefined,
         tabBarBadgeStyle: badge && badge > 0 ? {
-          backgroundColor: COLORS.neon,
-          color: '#000000',
-          fontSize: 10,
-          fontWeight: '900',
-          minWidth: 18,
+          backgroundColor: '#FF4444',
+          color: COLORS.white,
+          fontSize: 9,
+          fontWeight: '700',
+          minWidth: 16,
+          height: 16,
+          borderRadius: 8,
         } : undefined,
       }}
     />
