@@ -1135,6 +1135,8 @@ async def update_worker_registration_data(
         update_data["sozialversicherungsnummer"] = data.sozialversicherungsnummer.strip() if data.sozialversicherungsnummer else ""
     if data.krankenkasse is not None:
         update_data["krankenkasse"] = data.krankenkasse.strip() if data.krankenkasse else ""
+    if data.kirchensteuerpflichtig is not None:
+        update_data["kirchensteuerpflichtig"] = data.kirchensteuerpflichtig
     
     # Kurzfristigkeits-Bestätigungen
     if data.kurzfristigkeit_bestaetigt is not None:
