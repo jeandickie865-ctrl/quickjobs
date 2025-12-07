@@ -212,17 +212,27 @@ export default function CreateJob() {
         if (isNaN(dateObj.getTime())) {
           console.error('❌ Invalid date:', date);
         } else {
-          // Setze die Startzeit
+          // Setze die Startzeit (lokale Zeit, nicht UTC!)
           const [startHour, startMin] = startAt.split(':');
           dateObj.setHours(parseInt(startHour), parseInt(startMin || '0'), 0, 0);
-          startAtISO = dateObj.toISOString();
+          
+          // Erstelle ISO-String mit lokaler Zeit (ohne UTC-Konvertierung)
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dateObj.getDate()).padStart(2, '0');
+          const hours = String(dateObj.getHours()).padStart(2, '0');
+          const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+          startAtISO = `${year}-${month}-${day}T${hours}:${minutes}:00`;
           
           // Setze die Endzeit
           if (endAt) {
             const endDateObj = new Date(dateObj);
             const [endHour, endMin] = endAt.split(':');
             endDateObj.setHours(parseInt(endHour), parseInt(endMin || '0'), 0, 0);
-            endAtISO = endDateObj.toISOString();
+            
+            const endHours = String(endDateObj.getHours()).padStart(2, '0');
+            const endMinutes = String(endDateObj.getMinutes()).padStart(2, '0');
+            endAtISO = `${year}-${month}-${day}T${endHours}:${endMinutes}:00`;
           }
         }
       } catch (error) {
