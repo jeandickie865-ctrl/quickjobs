@@ -1029,19 +1029,25 @@ async def update_worker_profile(
 
 # ===== WORKER DOCUMENT MANAGEMENT ENDPOINTS =====
 
+class DocumentUploadPayload(BaseModel):
+    filename: str
+    content_type: str
+    data: str  # Base64 encoded
+
 @api_router.post("/profiles/worker/{user_id}/documents")
 async def upload_worker_document(
     user_id: str,
-    file: UploadFile = File(...),
+    payload: DocumentUploadPayload,
     authorization: Optional[str] = Header(None)
 ):
     """
     Upload a qualification document for a worker.
     Stores the file as Base64 in MongoDB.
+    Expects JSON body with: {filename, content_type, data (Base64)}
     """
     try:
         logger.info(f"📤 Upload request for worker {user_id}")
-        logger.info(f"📋 File info: filename={file.filename}, content_type={file.content_type}, size={file.size if hasattr(file, 'size') else 'unknown'}")
+        logger.info(f"📋 File info: filename={payload.filename}, content_type={payload.content_type}")
         
         # Verify token - user can only upload to their own profile
         requesting_user = await get_user_id_from_token(authorization)
@@ -1055,9 +1061,13 @@ async def upload_worker_document(
             logger.warning(f"❌ Profile not found for user {user_id}")
             raise HTTPException(status_code=404, detail="Profile not found")
         
-        # Validate file size (max 5MB for Base64 storage)
-        file_content = await file.read()
-        file_size_mb = len(file_content) / (1024 * 1024)
+        # Validate Base64 data
+        try:
+            decoded_data = base64.b64decode(payload.data)
+            file_size_mb = len(decoded_data) / (1024 * 1024)
+        except Exception as e:
+            logger.error(f"❌ Invalid Base64 data: {str(e)}")
+            raise HTTPException(status_code=400, detail="Ungültige Base64-Daten")
         
         logger.info(f"📦 File size: {file_size_mb:.2f} MB")
         
@@ -1077,22 +1087,20 @@ async def upload_worker_document(
             "image/webp"
         ]
         
-        if file.content_type not in allowed_types:
-            logger.warning(f"❌ Invalid file type: {file.content_type}")
+        if payload.content_type not in allowed_types:
+            logger.warning(f"❌ Invalid file type: {payload.content_type}")
             raise HTTPException(
                 status_code=400,
-                detail=f"Dateityp nicht erlaubt: {file.content_type}. Erlaubt: PDF, JPG, PNG, WEBP"
+                detail=f"Dateityp nicht erlaubt: {payload.content_type}. Erlaubt: PDF, JPG, PNG, WEBP"
             )
         
-        # Encode file to Base64
-        base64_data = base64.b64encode(file_content).decode('utf-8')
-        logger.info(f"✅ File encoded to Base64 ({len(base64_data)} chars)")
+        logger.info(f"✅ File validated ({len(payload.data)} Base64 chars)")
         
         # Create document object
         new_document = WorkerDocument(
-            filename=file.filename,
-            content_type=file.content_type,
-            data=base64_data,
+            filename=payload.filename,
+            content_type=payload.content_type,
+            data=payload.data,
             uploaded_at=datetime.utcnow().isoformat()
         )
     except HTTPException:
