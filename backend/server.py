@@ -1027,6 +1027,156 @@ async def update_worker_profile(
     return WorkerProfile(**updated_profile)
 
 
+# ===== WORKER DOCUMENT MANAGEMENT ENDPOINTS =====
+
+@api_router.post("/profiles/worker/{user_id}/documents")
+async def upload_worker_document(
+    user_id: str,
+    file: UploadFile = File(...),
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Upload a qualification document for a worker.
+    Stores the file as Base64 in MongoDB.
+    """
+    logger.info(f"Uploading document for worker {user_id}: {file.filename}")
+    
+    # Verify token - user can only upload to their own profile
+    requesting_user = await get_user_id_from_token(authorization)
+    if requesting_user != user_id:
+        raise HTTPException(status_code=403, detail="Cannot upload documents for another user")
+    
+    # Check if profile exists
+    profile = await db.worker_profiles.find_one({"userId": user_id})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Validate file size (max 5MB for Base64 storage)
+    file_content = await file.read()
+    file_size_mb = len(file_content) / (1024 * 1024)
+    
+    if file_size_mb > 5:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Datei zu groß ({file_size_mb:.2f} MB). Maximum: 5 MB"
+        )
+    
+    # Validate file type (PDFs, images)
+    allowed_types = [
+        "application/pdf",
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp"
+    ]
+    
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Dateityp nicht erlaubt: {file.content_type}. Erlaubt: PDF, JPG, PNG, WEBP"
+        )
+    
+    # Encode file to Base64
+    base64_data = base64.b64encode(file_content).decode('utf-8')
+    
+    # Create document object
+    new_document = WorkerDocument(
+        filename=file.filename,
+        content_type=file.content_type,
+        data=base64_data,
+        uploaded_at=datetime.utcnow().isoformat()
+    )
+    
+    # Add to documents array in profile
+    await db.worker_profiles.update_one(
+        {"userId": user_id},
+        {"$push": {"documents": new_document.dict()}}
+    )
+    
+    logger.info(f"✅ Document uploaded successfully for worker {user_id}: {file.filename} ({file_size_mb:.2f} MB)")
+    
+    return {
+        "message": "Dokument erfolgreich hochgeladen",
+        "document": new_document.dict()
+    }
+
+
+@api_router.get("/profiles/worker/{user_id}/documents/{document_id}")
+async def get_worker_document(
+    user_id: str,
+    document_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Get a specific document by ID.
+    Returns the Base64-encoded document data.
+    """
+    logger.info(f"Fetching document {document_id} for worker {user_id}")
+    
+    # Verify token
+    requesting_user = await get_user_id_from_token(authorization)
+    if not requesting_user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # Find profile and document
+    profile = await db.worker_profiles.find_one({"userId": user_id})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Find document in array
+    documents = profile.get("documents", [])
+    document = next((doc for doc in documents if doc.get("id") == document_id), None)
+    
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    logger.info(f"✅ Document found: {document.get('filename')}")
+    return document
+
+
+@api_router.delete("/profiles/worker/{user_id}/documents/{document_id}")
+async def delete_worker_document(
+    user_id: str,
+    document_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Delete a specific document by ID.
+    """
+    logger.info(f"Deleting document {document_id} for worker {user_id}")
+    
+    # Verify token - user can only delete their own documents
+    requesting_user = await get_user_id_from_token(authorization)
+    if requesting_user != user_id:
+        raise HTTPException(status_code=403, detail="Cannot delete documents for another user")
+    
+    # Check if profile exists
+    profile = await db.worker_profiles.find_one({"userId": user_id})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Check if document exists
+    documents = profile.get("documents", [])
+    document = next((doc for doc in documents if doc.get("id") == document_id), None)
+    
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    # Remove document from array
+    await db.worker_profiles.update_one(
+        {"userId": user_id},
+        {"$pull": {"documents": {"id": document_id}}}
+    )
+    
+    logger.info(f"🗑️ Document deleted successfully: {document.get('filename')}")
+    
+    return {
+        "message": "Dokument erfolgreich gelöscht",
+        "document_id": document_id
+    }
+
+
+
 @api_router.get("/profiles/worker/{worker_id}/registration-status")
 async def get_worker_registration_status(worker_id: str):
     """
