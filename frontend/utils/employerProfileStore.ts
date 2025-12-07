@@ -2,7 +2,7 @@
 import { EmployerProfile } from '../types/profile';
 import { API_BASE, getUserId, getAuthHeaders } from './api';
 
-// ===== GET EMPLOYER PROFILE =====
+// ===== GET EMPLOYER PROFILE (Own profile) =====
 export async function getEmployerProfile(userId: string): Promise<EmployerProfile | null> {
   console.log('🔍 getEmployerProfile: Loading profile for user', userId);
   
@@ -30,6 +30,38 @@ export async function getEmployerProfile(userId: string): Promise<EmployerProfil
     return profile;
   } catch (error) {
     console.error('❌ getEmployerProfile: Error', error);
+    throw error;
+  }
+}
+
+// ===== GET EMPLOYER PROFILE - PUBLIC VIEW (For workers) =====
+export async function getEmployerProfilePublicView(userId: string): Promise<any | null> {
+  console.log('🔍 getEmployerProfilePublicView: Loading public profile for user', userId);
+  
+  try {
+    const headers = await getAuthHeaders();
+    
+    const response = await fetch(`${API_BASE}/profiles/employer/${userId}/public-view`, {
+      method: 'GET',
+      headers,
+    });
+    
+    if (response.status === 404) {
+      console.log('⚠️ getEmployerProfilePublicView: Profile not found (404)');
+      return null;
+    }
+    
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('❌ getEmployerProfilePublicView: API error', response.status, error);
+      throw new Error(`Failed to fetch profile: ${response.status}`);
+    }
+    
+    const profile = await response.json();
+    console.log('✅ getEmployerProfilePublicView: Public profile loaded');
+    return profile;
+  } catch (error) {
+    console.error('❌ getEmployerProfilePublicView: Error', error);
     throw error;
   }
 }
