@@ -2388,7 +2388,7 @@ async def create_employer_profile(
     logger.info(f"Employer profile created for user {userId}")
     return EmployerProfile(**created_profile)
 
-@api_router.get("/profiles/employer/{user_id}", response_model=EmployerProfile)
+@api_router.get("/profiles/employer/{user_id}")
 async def get_employer_profile(
     user_id: str,
     authorization: Optional[str] = Header(None)
@@ -2413,7 +2413,41 @@ async def get_employer_profile(
     profile.pop("_id", None)
     
     logger.info(f"Employer profile found for user {user_id}")
-    return EmployerProfile(**profile)
+    return profile
+
+@api_router.get("/profiles/employer/{user_id}/public-view")
+async def get_employer_profile_public_view(
+    user_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Get employer profile for public viewing (e.g., by workers viewing applications).
+    Returns limited data suitable for workers to see.
+    """
+    logger.info(f"Fetching public employer profile for user {user_id}")
+    
+    # Verify token - must be logged in
+    requesting_user = await get_user_id_from_token(authorization)
+    if not requesting_user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # Find profile
+    profile = await db.employer_profiles.find_one({"userId": user_id})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Return limited public data
+    return {
+        "userId": profile.get("userId"),
+        "companyName": profile.get("companyName"),
+        "industry": profile.get("industry"),
+        "companySize": profile.get("companySize"),
+        "description": profile.get("description"),
+        "logoUrl": profile.get("logoUrl"),
+        "location": profile.get("location"),
+        # Reviews will be fetched separately via /reviews/employer/{employer_id}
+    }
 
 @api_router.put("/profiles/employer/{user_id}", response_model=EmployerProfile)
 async def update_employer_profile(
