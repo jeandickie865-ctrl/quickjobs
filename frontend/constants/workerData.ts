@@ -306,6 +306,36 @@ export const TAXONOMY: TaxonomyCategory[] = [
       "Tressen",
     ],
   },
+  {
+    key: "kosmetik",
+    title: "Kosmetik",
+    activities: [
+      "Kosmetik",
+      "Visagist:IN",
+      "Make-up Artist",
+      "Permanent Make-up",
+      "Wimpernverlängerung",
+      "Brow Artist",
+      "Nageldesign",
+      "Fußpflege medizinisch",
+      "Fußpflege kosmetisch",
+      "Hautpflegeberatung",
+    ],
+    qualifications: [
+      "Ausbildung Kosmetikerin",
+      "Weiterbildung Visagistik",
+      "Make-up Schulungen",
+      "Permanent Make-up Zertifikat",
+      "Microblading Zertifikat",
+      "Wimpernverlängerung 1:1 Technik",
+      "Wimpernvolumentechnik",
+      "Brow Lifting",
+      "Nageldesign Zertifikat",
+      "Hygieneschulung",
+      "Hautanalyse Skills",
+      "Produktwissen Skincare Marken",
+    ],
+  },
 ];
 
 // Helper: Get all category keys
