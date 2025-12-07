@@ -570,6 +570,18 @@ backend:
         agent: "testing"
         comment: "🎉 DELETE MATCH FEATURE VOLLSTÄNDIG GETESTET UND FUNKTIONAL: Alle 7/7 Tests bestanden (100% Success Rate). ✅ Test-Szenario komplett durchgeführt: Worker + Employer erstellt → Job erstellt → Application erstellt → Application akzeptiert (Status: accepted) → DELETE /api/applications/{application_id} erfolgreich → Application aus MongoDB gelöscht → GET /api/applications/{application_id} gibt 404. ✅ Erwartetes Ergebnis bestätigt: DELETE-Request gibt 200 OK mit {'message': 'Application deleted successfully'} zurück. ✅ Authorization korrekt implementiert: Sowohl Worker als auch Employer können ihre eigenen Matches löschen. ✅ Sicherheit gewährleistet: Invalid Token gibt 401, nicht-existierende Applications geben 404. ✅ Backend Logs bestätigen: '🗑️ Deleting application app_xxx' und '✅ Application app_xxx deleted'. DELETE-Endpoint ist production-ready und erfüllt alle deutschen Review-Anforderungen."
 
+  - task: "Worker Document Upload Feature - Backend API Endpoints"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "🎉 WORKER DOCUMENT UPLOAD FEATURE VOLLSTÄNDIG GETESTET UND FUNKTIONAL: Alle 10/10 Tests bestanden (100% Success Rate). ✅ Upload Flow: POST /api/profiles/worker/{user_id}/documents erfolgreich mit Base64-Speicherung in MongoDB. ✅ Download/Abruf: GET /api/profiles/worker/{user_id}/documents/{document_id} gibt korrekte Base64-Daten zurück. ✅ Löschen: DELETE /api/profiles/worker/{user_id}/documents/{document_id} entfernt Dokument aus MongoDB und gibt 404 bei nachfolgenden GET-Requests. ✅ Validierung: Dateien >5MB werden mit 400 Bad Request abgelehnt, ungültige Dateitypen (TXT) werden korrekt zurückgewiesen. ✅ Authorization: Requests ohne Token geben 401, Cross-User-Uploads geben 403. ✅ Persistenz: Hochgeladene Dokumente erscheinen im Worker-Profil documents Array. Alle Endpoints (POST/GET/DELETE) funktionieren einwandfrei mit korrekter Bearer Token Authentifizierung. Erlaubte Dateitypen: PDF, JPG, PNG, WEBP. Max Dateigröße: 5MB. Feature ist production-ready."
+
 agent_communication:
   - agent: "testing"
     message: |
