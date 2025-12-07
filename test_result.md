@@ -457,7 +457,6 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "Worker Document Upload Feature - Backend API Endpoints"
     - "Worker Document Upload Feature - Frontend UI"
   stuck_tasks: []
   test_all: false
