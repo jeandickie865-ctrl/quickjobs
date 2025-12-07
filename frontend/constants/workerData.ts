@@ -277,6 +277,34 @@ export const TAXONOMY: TaxonomyCategory[] = [
       "Körperlich belastbar",
     ],
   },
+  {
+    key: "friseur",
+    title: "Friseur",
+    activities: [
+      "Damenfriseur",
+      "Herrenfriseur",
+      "Colorist",
+      "Balayage Spezialist",
+      "Blond-Experte",
+      "Extensions Stylist",
+      "Brautstyling",
+      "Barbier",
+    ],
+    qualifications: [
+      "Ausbildung Friseur",
+      "Meisterbrief",
+      "Colorationskenntnisse",
+      "Schnitttechniken für Damen",
+      "Schnitttechniken für Herren",
+      "Rasurtechniken",
+      "Styling für Hochzeiten",
+      "Kenntnisse in Haar- und Kopfhautpflege",
+      "Produktschulungen",
+      "Bonding",
+      "Tape-In",
+      "Tressen",
+    ],
+  },
 ];
 
 // Helper: Get all category keys
