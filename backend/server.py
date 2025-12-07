@@ -162,7 +162,8 @@ class WorkerProfile(BaseModel):
     activities: Optional[List[str]] = []  # DEPRECATED
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
-    documents: Optional[List[WorkerDocument]] = []
+    # Qualification Documents (Base64 storage)
+    documents: List[dict] = []  # [{id, name, type, data, uploadedAt}]
     pushToken: Optional[str] = None
     createdAt: Optional[str] = None
     updatedAt: Optional[str] = None
