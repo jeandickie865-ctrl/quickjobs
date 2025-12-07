@@ -182,7 +182,22 @@ export default function EmployerJobsScreen() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
                   <Ionicons name="calendar-outline" size={16} color={COLORS.muted} />
                   <Text style={{ color: COLORS.muted, fontSize: 14, marginLeft: 6 }}>
-                    {new Date(job.date).toLocaleDateString('de-DE')} · {job.startAt} - {job.endAt}
+                    {(() => {
+                      // Neue Format: ISO-Timestamps
+                      if (job.startAt && job.startAt.includes('T')) {
+                        const startDate = new Date(job.startAt);
+                        const endDate = job.endAt ? new Date(job.endAt) : null;
+                        const dateStr = startDate.toLocaleDateString('de-DE');
+                        const startTime = startDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                        const endTime = endDate ? endDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                        return `${dateStr} · ${startTime}${endTime ? ' - ' + endTime : ''}`;
+                      }
+                      // Altes Format: date + startAt/endAt als Uhrzeiten
+                      if (job.date) {
+                        return `${new Date(job.date).toLocaleDateString('de-DE')} · ${job.startAt} - ${job.endAt}`;
+                      }
+                      return 'Datum nicht verfügbar';
+                    })()}
                   </Text>
                 </View>
 
