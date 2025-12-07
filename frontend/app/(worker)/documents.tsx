@@ -168,6 +168,8 @@ export default function WorkerDocumentsScreen() {
 
   // Dokument löschen
   const handleDelete = async (documentId: string, filename: string) => {
+    console.log('🗑️ Delete button clicked for:', documentId, filename);
+    
     Alert.alert(
       'Dokument löschen',
       `Möchten Sie "${filename}" wirklich löschen?`,
@@ -177,26 +179,38 @@ export default function WorkerDocumentsScreen() {
           text: 'Löschen',
           style: 'destructive',
           onPress: async () => {
+            console.log('🗑️ User confirmed deletion');
             try {
               const token = await AsyncStorage.getItem("token");
-              if (!token) return;
+              if (!token) {
+                console.error('❌ No token found');
+                return;
+              }
 
-              const response = await fetch(`${API_URL}/profiles/worker/${user?.id}/documents/${documentId}`, {
+              const deleteUrl = `${API_URL}/profiles/worker/${user?.id}/documents/${documentId}`;
+              console.log('🗑️ Sending DELETE request to:', deleteUrl);
+
+              const response = await fetch(deleteUrl, {
                 method: 'DELETE',
                 headers: {
                   "Authorization": `Bearer ${token}`
                 }
               });
 
+              console.log('🗑️ DELETE response status:', response.status);
+
               if (response.ok) {
+                console.log('✅ Document deleted successfully');
                 // Lade Dokumente neu
                 await loadDocuments();
                 Alert.alert('Erfolg', 'Dokument wurde gelöscht.', [{ text: 'OK' }]);
               } else {
+                const errorText = await response.text();
+                console.error('❌ Delete failed:', response.status, errorText);
                 Alert.alert('Fehler', 'Dokument konnte nicht gelöscht werden.', [{ text: 'OK' }]);
               }
             } catch (error) {
-              console.error('Delete error:', error);
+              console.error('❌ Delete error:', error);
               Alert.alert('Fehler', 'Ein Fehler ist beim Löschen aufgetreten.', [{ text: 'OK' }]);
             }
           }
