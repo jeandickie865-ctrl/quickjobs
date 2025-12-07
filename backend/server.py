@@ -1039,53 +1039,67 @@ async def upload_worker_document(
     Upload a qualification document for a worker.
     Stores the file as Base64 in MongoDB.
     """
-    logger.info(f"Uploading document for worker {user_id}: {file.filename}")
-    
-    # Verify token - user can only upload to their own profile
-    requesting_user = await get_user_id_from_token(authorization)
-    if requesting_user != user_id:
-        raise HTTPException(status_code=403, detail="Cannot upload documents for another user")
-    
-    # Check if profile exists
-    profile = await db.worker_profiles.find_one({"userId": user_id})
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
-    
-    # Validate file size (max 5MB for Base64 storage)
-    file_content = await file.read()
-    file_size_mb = len(file_content) / (1024 * 1024)
-    
-    if file_size_mb > 5:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Datei zu groß ({file_size_mb:.2f} MB). Maximum: 5 MB"
+    try:
+        logger.info(f"📤 Upload request for worker {user_id}")
+        logger.info(f"📋 File info: filename={file.filename}, content_type={file.content_type}, size={file.size if hasattr(file, 'size') else 'unknown'}")
+        
+        # Verify token - user can only upload to their own profile
+        requesting_user = await get_user_id_from_token(authorization)
+        if requesting_user != user_id:
+            logger.warning(f"❌ Authorization failed: {requesting_user} tried to upload for {user_id}")
+            raise HTTPException(status_code=403, detail="Cannot upload documents for another user")
+        
+        # Check if profile exists
+        profile = await db.worker_profiles.find_one({"userId": user_id})
+        if not profile:
+            logger.warning(f"❌ Profile not found for user {user_id}")
+            raise HTTPException(status_code=404, detail="Profile not found")
+        
+        # Validate file size (max 5MB for Base64 storage)
+        file_content = await file.read()
+        file_size_mb = len(file_content) / (1024 * 1024)
+        
+        logger.info(f"📦 File size: {file_size_mb:.2f} MB")
+        
+        if file_size_mb > 5:
+            logger.warning(f"❌ File too large: {file_size_mb:.2f} MB")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Datei zu groß ({file_size_mb:.2f} MB). Maximum: 5 MB"
+            )
+        
+        # Validate file type (PDFs, images)
+        allowed_types = [
+            "application/pdf",
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/webp"
+        ]
+        
+        if file.content_type not in allowed_types:
+            logger.warning(f"❌ Invalid file type: {file.content_type}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Dateityp nicht erlaubt: {file.content_type}. Erlaubt: PDF, JPG, PNG, WEBP"
+            )
+        
+        # Encode file to Base64
+        base64_data = base64.b64encode(file_content).decode('utf-8')
+        logger.info(f"✅ File encoded to Base64 ({len(base64_data)} chars)")
+        
+        # Create document object
+        new_document = WorkerDocument(
+            filename=file.filename,
+            content_type=file.content_type,
+            data=base64_data,
+            uploaded_at=datetime.utcnow().isoformat()
         )
-    
-    # Validate file type (PDFs, images)
-    allowed_types = [
-        "application/pdf",
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/webp"
-    ]
-    
-    if file.content_type not in allowed_types:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Dateityp nicht erlaubt: {file.content_type}. Erlaubt: PDF, JPG, PNG, WEBP"
-        )
-    
-    # Encode file to Base64
-    base64_data = base64.b64encode(file_content).decode('utf-8')
-    
-    # Create document object
-    new_document = WorkerDocument(
-        filename=file.filename,
-        content_type=file.content_type,
-        data=base64_data,
-        uploaded_at=datetime.utcnow().isoformat()
-    )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Unexpected error during upload: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
     
     # Add to documents array in profile
     await db.worker_profiles.update_one(
