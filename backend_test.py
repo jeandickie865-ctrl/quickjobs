@@ -81,9 +81,9 @@ class DocumentUploadTester:
             "firstName": "Test",
             "lastName": "Worker",
             "phone": "+49123456789",
-            "categories": ["sicherheit"],
+            "categories": ["security"],
             "subcategories": ["objektschutz"],
-            "qualifications": ["sicherheitsschein"],
+            "qualifications": ["sachkunde_34a"],
             "radiusKm": 25,
             "homeAddress": {
                 "street": "Teststraße 1",
