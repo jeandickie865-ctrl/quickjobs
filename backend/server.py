@@ -1026,6 +1026,10 @@ async def update_worker_profile(
     updated_profile = await db.worker_profiles.find_one({"userId": user_id})
     updated_profile.pop("_id", None)
     
+    # Ensure documents is always a list for compatibility
+    if "documents" not in updated_profile or updated_profile["documents"] is None:
+        updated_profile["documents"] = []
+    
     logger.info(f"Worker profile updated successfully for user {user_id}")
     return WorkerProfile(**updated_profile)
 
