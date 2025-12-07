@@ -17,342 +17,554 @@ from pathlib import Path
 # Backend URL from environment
 BACKEND_URL = "https://shiftmatch-2.preview.emergentagent.com/api"
 
-class BackendTester:
+class DocumentUploadTester:
     def __init__(self):
-        self.base_url = BACKEND_URL
+        self.session = None
         self.test_results = []
         self.worker_token = None
-        self.worker_id = None
-        self.test_timestamp = int(datetime.now().timestamp())
+        self.worker_user_id = None
+        self.test_document_id = None
         
-    def log_test(self, test_name: str, success: bool, details: str = ""):
+    async def setup_session(self):
+        """Initialize HTTP session"""
+        self.session = aiohttp.ClientSession()
+        
+    async def cleanup_session(self):
+        """Cleanup HTTP session"""
+        if self.session:
+            await self.session.close()
+            
+    def log_test(self, test_name, success, details=""):
         """Log test result"""
         status = "✅ PASS" if success else "❌ FAIL"
-        self.test_results.append({
-            "test": test_name,
-            "status": status,
-            "details": details,
-            "success": success
-        })
         print(f"{status}: {test_name}")
         if details:
             print(f"   Details: {details}")
-    
-    async def test_health_check(self):
-        """Test basic backend health"""
-        try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.get(f"{self.base_url}/health")
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    self.log_test("Backend Health Check", True, f"Status: {data.get('status')}")
-                    return True
-                else:
-                    self.log_test("Backend Health Check", False, f"Status: {response.status_code}")
-                    return False
-                    
-        except Exception as e:
-            self.log_test("Backend Health Check", False, f"Error: {str(e)}")
-            return False
-    
+        self.test_results.append({
+            "test": test_name,
+            "success": success,
+            "details": details,
+            "timestamp": datetime.now().isoformat()
+        })
+        
     async def create_test_worker(self):
-        """Create a test worker account"""
+        """Create a test worker account for document testing"""
+        timestamp = int(datetime.now().timestamp())
+        test_email = f"testworker_docs_{timestamp}@test.de"
+        
+        # Register worker
+        signup_data = {
+            "email": test_email,
+            "password": "TestPass123!",
+            "role": "worker"
+        }
+        
         try:
-            # Generate unique email
-            test_email = f"testworker_reg_{self.test_timestamp}@test.de"
-            
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                # Register worker
-                signup_data = {
-                    "email": test_email,
-                    "password": "TestPass123!",
-                    "role": "worker",
-                    "accountType": "private"
-                }
-                
-                response = await client.post(f"{self.base_url}/auth/signup", json=signup_data)
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    self.worker_token = data["token"]
-                    self.worker_id = data["userId"]
-                    self.log_test("Worker Account Creation", True, f"Email: {test_email}, ID: {self.worker_id}")
+            async with self.session.post(f"{BACKEND_URL}/auth/signup", json=signup_data) as resp:
+                if resp.status == 200:
+                    auth_data = await resp.json()
+                    self.worker_token = auth_data["token"]
+                    self.worker_user_id = auth_data["userId"]
+                    self.log_test("Worker Account Creation", True, f"Created worker: {test_email}")
                     return True
                 else:
-                    self.log_test("Worker Account Creation", False, f"Status: {response.status_code}, Response: {response.text}")
+                    error_text = await resp.text()
+                    self.log_test("Worker Account Creation", False, f"Status {resp.status}: {error_text}")
                     return False
-                    
         except Exception as e:
-            self.log_test("Worker Account Creation", False, f"Error: {str(e)}")
+            self.log_test("Worker Account Creation", False, f"Exception: {str(e)}")
             return False
-    
+            
     async def create_worker_profile(self):
-        """Create worker profile"""
+        """Create a basic worker profile"""
+        profile_data = {
+            "firstName": "Test",
+            "lastName": "Worker",
+            "phone": "+49123456789",
+            "categories": ["sicherheit"],
+            "subcategories": ["objektschutz"],
+            "qualifications": ["sicherheitsschein"],
+            "radiusKm": 25,
+            "homeAddress": {
+                "street": "Teststraße 1",
+                "postalCode": "10115",
+                "city": "Berlin",
+                "country": "DE"
+            },
+            "email": f"testworker_docs_{int(datetime.now().timestamp())}@test.de"
+        }
+        
+        headers = {"Authorization": f"Bearer {self.worker_token}"}
+        
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                profile_data = {
-                    "firstName": "Max",
-                    "lastName": "Mustermann",
-                    "phone": "+49 123 456789",
-                    "email": f"testworker_reg_{self.test_timestamp}@test.de",
-                    "categories": ["security"],
-                    "subcategories": ["objektschutz"],
-                    "qualifications": ["sachkunde_34a"],
-                    "radiusKm": 25,
-                    "homeAddress": {
-                        "street": "Teststraße",
-                        "houseNumber": "123",
-                        "postalCode": "10115",
-                        "city": "Berlin",
-                        "country": "DE"
-                    },
-                    "homeLat": 52.5200,
-                    "homeLon": 13.4050,
-                    "shortBio": "Erfahrener Sicherheitsmitarbeiter"
-                }
-                
-                headers = {"Authorization": f"Bearer {self.worker_token}"}
-                response = await client.post(f"{self.base_url}/profiles/worker", json=profile_data, headers=headers)
-                
-                if response.status_code == 200:
+            async with self.session.post(f"{BACKEND_URL}/profiles/worker", json=profile_data, headers=headers) as resp:
+                if resp.status == 200:
                     self.log_test("Worker Profile Creation", True, "Profile created successfully")
                     return True
                 else:
-                    self.log_test("Worker Profile Creation", False, f"Status: {response.status_code}, Response: {response.text}")
+                    error_text = await resp.text()
+                    self.log_test("Worker Profile Creation", False, f"Status {resp.status}: {error_text}")
                     return False
-                    
         except Exception as e:
-            self.log_test("Worker Profile Creation", False, f"Error: {str(e)}")
+            self.log_test("Worker Profile Creation", False, f"Exception: {str(e)}")
             return False
-    
-    async def test_registration_data_full_fields(self):
-        """Test PUT /api/profiles/worker/me/registration-data with ALL fields including new ones"""
+            
+    def create_test_pdf(self, size_mb=0.1):
+        """Create a test PDF file of specified size"""
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                # Test data with ALL fields including new ones
-                registration_data = {
-                    # Existing fields
-                    "steuerId": "12345678901",
-                    "geburtsdatum": "15.03.1995",
-                    "sozialversicherungsnummer": "12 150395 S 123",
-                    "krankenkasse": "TK Techniker Krankenkasse",
-                    # NEW FIELDS (testing both German request names and backend field names)
-                    "geburtsort": "Berlin",
-                    "staatsangehoerigkeit": "Deutsch",
-                    "confirm_70_days": True,  # German request field name
-                    "confirm_not_professional": True,  # German request field name
-                    "kurzfristigkeit_bestaetigt": True,  # Backend field name
-                    "kurzfristigkeit_nicht_berufsmaeßig": True  # Backend field name
-                }
+            # Create temporary file with PDF-like content
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+            
+            # Create simple PDF-like content (not a real PDF but will work for testing)
+            pdf_header = b"%PDF-1.4\n"
+            content = b"Test Document for ShiftMatch Worker Document Upload\n"
+            content += f"Generated: {datetime.now().isoformat()}\n".encode()
+            content += b"This is a test qualification document.\n"
+            
+            # Add content to reach desired size
+            content_lines = int(size_mb * 1000)  # Rough estimation
+            for i in range(min(content_lines, 1000)):
+                content += f"Test line {i+1}: Lorem ipsum dolor sit amet consectetur adipiscing elit\n".encode()
+            
+            # Write PDF header and content
+            temp_file.write(pdf_header)
+            temp_file.write(content)
+            temp_file.close()
+            
+            return temp_file.name
+        except Exception as e:
+            # Fallback: create a simple text file
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf', mode='wb')
+            content = f"Test Document Content\nGenerated: {datetime.now().isoformat()}\n".encode()
+            content += b"Test content " * int(size_mb * 1000)
+            temp_file.write(content)
+            temp_file.close()
+            return temp_file.name
+            
+    def create_test_image(self, size_mb=0.1):
+        """Create a test image file"""
+        # Create a simple JPEG-like file
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.jpg', mode='wb')
+        
+        # JPEG header
+        jpeg_header = b"\xff\xd8\xff\xe0\x00\x10JFIF"
+        content = b"Fake JPEG content for testing\n"
+        content += b"Test image data " * int(size_mb * 1000)
+        
+        temp_file.write(jpeg_header)
+        temp_file.write(content)
+        temp_file.close()
+        
+        return temp_file.name
+            
+    async def test_document_upload_success(self):
+        """Test 1: Successful document upload"""
+        test_file = self.create_test_pdf(0.1)  # 100KB PDF
+        
+        try:
+            headers = {"Authorization": f"Bearer {self.worker_token}"}
+            
+            with open(test_file, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename='test_certificate.pdf', content_type='application/pdf')
                 
-                headers = {"Authorization": f"Bearer {self.worker_token}"}
-                response = await client.put(
-                    f"{self.base_url}/profiles/worker/me/registration-data", 
-                    json=registration_data, 
+                async with self.session.post(
+                    f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents",
+                    data=data,
                     headers=headers
-                )
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    # Verify all fields are in response
-                    checks = []
-                    checks.append(("steuerId", data.get("steuerId") == "12345678901"))
-                    checks.append(("geburtsdatum", data.get("geburtsdatum") == "15.03.1995"))
-                    checks.append(("sozialversicherungsnummer", data.get("sozialversicherungsnummer") == "12 150395 S 123"))
-                    checks.append(("krankenkasse", data.get("krankenkasse") == "TK Techniker Krankenkasse"))
-                    checks.append(("geburtsort", data.get("geburtsort") == "Berlin"))
-                    checks.append(("staatsangehoerigkeit", data.get("staatsangehoerigkeit") == "Deutsch"))
-                    checks.append(("kurzfristigkeit_bestaetigt", data.get("kurzfristigkeit_bestaetigt") == True))
-                    checks.append(("kurzfristigkeit_nicht_berufsmaeßig", data.get("kurzfristigkeit_nicht_berufsmaeßig") == True))
-                    
-                    failed_checks = [field for field, passed in checks if not passed]
-                    
-                    if not failed_checks:
-                        self.log_test("Registration Data - Full Fields", True, "All fields correctly saved and returned")
-                        return True
+                ) as resp:
+                    if resp.status == 200:
+                        result = await resp.json()
+                        if 'document' in result and 'id' in result['document']:
+                            self.test_document_id = result['document']['id']
+                            self.log_test("Document Upload - Success", True, 
+                                        f"Document uploaded with ID: {self.test_document_id}")
+                            return True
+                        else:
+                            self.log_test("Document Upload - Success", False, "Missing document ID in response")
+                            return False
                     else:
-                        self.log_test("Registration Data - Full Fields", False, f"Failed fields: {failed_checks}")
+                        error_text = await resp.text()
+                        self.log_test("Document Upload - Success", False, f"Status {resp.status}: {error_text}")
+                        return False
+        except Exception as e:
+            self.log_test("Document Upload - Success", False, f"Exception: {str(e)}")
+            return False
+        finally:
+            # Cleanup temp file
+            try:
+                os.unlink(test_file)
+            except:
+                pass
+                
+    async def test_document_retrieval(self):
+        """Test 2: Document retrieval"""
+        if not self.test_document_id:
+            self.log_test("Document Retrieval", False, "No document ID available from upload test")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.worker_token}"}
+        
+        try:
+            async with self.session.get(
+                f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents/{self.test_document_id}",
+                headers=headers
+            ) as resp:
+                if resp.status == 200:
+                    document = await resp.json()
+                    required_fields = ['id', 'filename', 'content_type', 'data', 'uploaded_at']
+                    
+                    missing_fields = [field for field in required_fields if field not in document]
+                    if not missing_fields:
+                        # Verify Base64 data
+                        try:
+                            base64.b64decode(document['data'])
+                            self.log_test("Document Retrieval", True, 
+                                        f"Document retrieved successfully: {document['filename']}")
+                            return True
+                        except Exception:
+                            self.log_test("Document Retrieval", False, "Invalid Base64 data in response")
+                            return False
+                    else:
+                        self.log_test("Document Retrieval", False, f"Missing fields: {missing_fields}")
                         return False
                 else:
-                    self.log_test("Registration Data - Full Fields", False, f"Status: {response.status_code}, Response: {response.text}")
+                    error_text = await resp.text()
+                    self.log_test("Document Retrieval", False, f"Status {resp.status}: {error_text}")
                     return False
-                    
         except Exception as e:
-            self.log_test("Registration Data - Full Fields", False, f"Error: {str(e)}")
+            self.log_test("Document Retrieval", False, f"Exception: {str(e)}")
             return False
-    
-    async def test_registration_data_persistence(self):
-        """Test data persistence by retrieving worker profile after update"""
+            
+    async def test_document_deletion(self):
+        """Test 3: Document deletion"""
+        if not self.test_document_id:
+            self.log_test("Document Deletion", False, "No document ID available")
+            return False
+            
+        headers = {"Authorization": f"Bearer {self.worker_token}"}
+        
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                headers = {"Authorization": f"Bearer {self.worker_token}"}
-                response = await client.get(f"{self.base_url}/profiles/worker/{self.worker_id}", headers=headers)
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    # Verify all new fields are persisted in MongoDB
-                    checks = []
-                    checks.append(("geburtsort", data.get("geburtsort") == "Berlin"))
-                    checks.append(("staatsangehoerigkeit", data.get("staatsangehoerigkeit") == "Deutsch"))
-                    checks.append(("kurzfristigkeit_bestaetigt", data.get("kurzfristigkeit_bestaetigt") == True))
-                    checks.append(("kurzfristigkeit_nicht_berufsmaeßig", data.get("kurzfristigkeit_nicht_berufsmaeßig") == True))
-                    
-                    failed_checks = [field for field, passed in checks if not passed]
-                    
-                    if not failed_checks:
-                        self.log_test("Data Persistence Check", True, "All new fields correctly persisted in MongoDB")
-                        return True
+            # Delete document
+            async with self.session.delete(
+                f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents/{self.test_document_id}",
+                headers=headers
+            ) as resp:
+                if resp.status == 200:
+                    result = await resp.json()
+                    if 'message' in result and 'document_id' in result:
+                        # Verify document is actually deleted
+                        async with self.session.get(
+                            f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents/{self.test_document_id}",
+                            headers=headers
+                        ) as get_resp:
+                            if get_resp.status == 404:
+                                self.log_test("Document Deletion", True, "Document deleted and verified")
+                                return True
+                            else:
+                                self.log_test("Document Deletion", False, "Document still exists after deletion")
+                                return False
                     else:
-                        self.log_test("Data Persistence Check", False, f"Not persisted: {failed_checks}")
+                        self.log_test("Document Deletion", False, "Invalid deletion response format")
                         return False
                 else:
-                    self.log_test("Data Persistence Check", False, f"Status: {response.status_code}")
+                    error_text = await resp.text()
+                    self.log_test("Document Deletion", False, f"Status {resp.status}: {error_text}")
                     return False
-                    
         except Exception as e:
-            self.log_test("Data Persistence Check", False, f"Error: {str(e)}")
+            self.log_test("Document Deletion", False, f"Exception: {str(e)}")
             return False
-    
-    async def test_partial_fields_update(self):
-        """Test that endpoint works when only SOME new fields are sent"""
+            
+    async def test_file_size_validation(self):
+        """Test 4: File size validation (>5MB should fail)"""
+        test_file = self.create_test_pdf(6)  # 6MB PDF (should fail)
+        
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                # Test with only some new fields
-                partial_data = {
-                    "geburtsort": "München",  # Update only this new field
-                    "steuerId": "98765432109"  # Update existing field
-                }
+            headers = {"Authorization": f"Bearer {self.worker_token}"}
+            
+            with open(test_file, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename='large_certificate.pdf', content_type='application/pdf')
                 
-                headers = {"Authorization": f"Bearer {self.worker_token}"}
-                response = await client.put(
-                    f"{self.base_url}/profiles/worker/me/registration-data", 
-                    json=partial_data, 
+                async with self.session.post(
+                    f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents",
+                    data=data,
                     headers=headers
-                )
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    # Verify partial update worked
-                    checks = []
-                    checks.append(("geburtsort_updated", data.get("geburtsort") == "München"))
-                    checks.append(("steuerId_updated", data.get("steuerId") == "98765432109"))
-                    # Old data should be preserved
-                    checks.append(("staatsangehoerigkeit_preserved", data.get("staatsangehoerigkeit") == "Deutsch"))
-                    checks.append(("kurzfristigkeit_bestaetigt_preserved", data.get("kurzfristigkeit_bestaetigt") == True))
-                    
-                    failed_checks = [field for field, passed in checks if not passed]
-                    
-                    if not failed_checks:
-                        self.log_test("Partial Fields Update", True, "Partial update successful, old data preserved")
-                        return True
+                ) as resp:
+                    if resp.status == 400:
+                        error_text = await resp.text()
+                        if "zu groß" in error_text.lower() or "5 mb" in error_text.lower():
+                            self.log_test("File Size Validation", True, "Large file correctly rejected")
+                            return True
+                        else:
+                            self.log_test("File Size Validation", False, f"Wrong error message: {error_text}")
+                            return False
                     else:
-                        self.log_test("Partial Fields Update", False, f"Failed checks: {failed_checks}")
+                        self.log_test("File Size Validation", False, f"Expected 400, got {resp.status}")
                         return False
-                else:
-                    self.log_test("Partial Fields Update", False, f"Status: {response.status_code}, Response: {response.text}")
-                    return False
-                    
         except Exception as e:
-            self.log_test("Partial Fields Update", False, f"Error: {str(e)}")
+            self.log_test("File Size Validation", False, f"Exception: {str(e)}")
             return False
-    
-    async def test_validation_and_response(self):
-        """Test endpoint validation and response format"""
+        finally:
+            try:
+                os.unlink(test_file)
+            except:
+                pass
+                
+    async def test_file_type_validation(self):
+        """Test 5: File type validation (invalid types should fail)"""
+        # Create a text file with .txt extension (should fail)
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w')
+        temp_file.write("This is a text file that should be rejected")
+        temp_file.close()
+        
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                # Test with valid data
-                valid_data = {
-                    "geburtsort": "Hamburg",
-                    "staatsangehoerigkeit": "Österreichisch",
-                    "kurzfristigkeit_bestaetigt": False,
-                    "kurzfristigkeit_nicht_berufsmaeßig": False
-                }
+            headers = {"Authorization": f"Bearer {self.worker_token}"}
+            
+            with open(temp_file.name, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename='invalid.txt', content_type='text/plain')
                 
-                headers = {"Authorization": f"Bearer {self.worker_token}"}
-                response = await client.put(
-                    f"{self.base_url}/profiles/worker/me/registration-data", 
-                    json=valid_data, 
+                async with self.session.post(
+                    f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents",
+                    data=data,
                     headers=headers
-                )
+                ) as resp:
+                    if resp.status == 400:
+                        error_text = await resp.text()
+                        if "dateityp" in error_text.lower() or "nicht erlaubt" in error_text.lower():
+                            self.log_test("File Type Validation", True, "Invalid file type correctly rejected")
+                            return True
+                        else:
+                            self.log_test("File Type Validation", False, f"Wrong error message: {error_text}")
+                            return False
+                    else:
+                        self.log_test("File Type Validation", False, f"Expected 400, got {resp.status}")
+                        return False
+        except Exception as e:
+            self.log_test("File Type Validation", False, f"Exception: {str(e)}")
+            return False
+        finally:
+            try:
+                os.unlink(temp_file.name)
+            except:
+                pass
                 
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    # Verify response structure
-                    required_fields = ["userId", "firstName", "lastName", "email"]
-                    has_required = all(field in data for field in required_fields)
-                    
-                    if has_required:
-                        self.log_test("Validation and Response Format", True, "200 OK with correct response structure")
+    async def test_authorization_missing_token(self):
+        """Test 6: Authorization - Missing token should fail"""
+        test_file = self.create_test_pdf(0.1)
+        
+        try:
+            # No Authorization header
+            with open(test_file, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename='test.pdf', content_type='application/pdf')
+                
+                async with self.session.post(
+                    f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents",
+                    data=data
+                ) as resp:
+                    if resp.status == 401:
+                        self.log_test("Authorization - Missing Token", True, "Correctly rejected request without token")
                         return True
                     else:
-                        missing = [f for f in required_fields if f not in data]
-                        self.log_test("Validation and Response Format", False, f"Missing fields in response: {missing}")
+                        self.log_test("Authorization - Missing Token", False, f"Expected 401, got {resp.status}")
                         return False
-                else:
-                    self.log_test("Validation and Response Format", False, f"Status: {response.status_code}")
+        except Exception as e:
+            self.log_test("Authorization - Missing Token", False, f"Exception: {str(e)}")
+            return False
+        finally:
+            try:
+                os.unlink(test_file)
+            except:
+                pass
+                
+    async def test_authorization_wrong_user(self):
+        """Test 7: Authorization - User A trying to upload to User B should fail"""
+        # Create another worker account
+        timestamp = int(datetime.now().timestamp())
+        other_email = f"otherworker_{timestamp}@test.de"
+        
+        signup_data = {
+            "email": other_email,
+            "password": "TestPass123!",
+            "role": "worker"
+        }
+        
+        try:
+            # Create second worker
+            async with self.session.post(f"{BACKEND_URL}/auth/signup", json=signup_data) as resp:
+                if resp.status != 200:
+                    self.log_test("Authorization - Wrong User", False, "Could not create second worker")
                     return False
                     
+                other_auth = await resp.json()
+                other_user_id = other_auth["userId"]
+                
+            # Try to upload to first worker's profile using second worker's token
+            test_file = self.create_test_pdf(0.1)
+            headers = {"Authorization": f"Bearer {other_auth['token']}"}
+            
+            with open(test_file, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename='test.pdf', content_type='application/pdf')
+                
+                async with self.session.post(
+                    f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents",  # First worker's ID
+                    data=data,
+                    headers=headers  # Second worker's token
+                ) as resp:
+                    if resp.status == 403:
+                        self.log_test("Authorization - Wrong User", True, "Correctly rejected cross-user upload")
+                        return True
+                    else:
+                        self.log_test("Authorization - Wrong User", False, f"Expected 403, got {resp.status}")
+                        return False
         except Exception as e:
-            self.log_test("Validation and Response Format", False, f"Error: {str(e)}")
+            self.log_test("Authorization - Wrong User", False, f"Exception: {str(e)}")
             return False
-    
+        finally:
+            try:
+                os.unlink(test_file)
+            except:
+                pass
+                
+    async def test_persistence_in_profile(self):
+        """Test 8: Verify document appears in worker profile"""
+        # Upload a new document for persistence test
+        test_file = self.create_test_pdf(0.1)
+        
+        try:
+            headers = {"Authorization": f"Bearer {self.worker_token}"}
+            
+            # Upload document
+            with open(test_file, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename='persistence_test.pdf', content_type='application/pdf')
+                
+                async with self.session.post(
+                    f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}/documents",
+                    data=data,
+                    headers=headers
+                ) as resp:
+                    if resp.status != 200:
+                        self.log_test("Persistence Test", False, "Could not upload document for persistence test")
+                        return False
+                        
+                    upload_result = await resp.json()
+                    doc_id = upload_result['document']['id']
+                    
+            # Check if document appears in profile
+            async with self.session.get(
+                f"{BACKEND_URL}/profiles/worker/{self.worker_user_id}",
+                headers=headers
+            ) as resp:
+                if resp.status == 200:
+                    profile = await resp.json()
+                    documents = profile.get('documents', [])
+                    
+                    # Find our document
+                    found_doc = next((doc for doc in documents if doc.get('id') == doc_id), None)
+                    
+                    if found_doc:
+                        self.log_test("Persistence Test", True, 
+                                    f"Document found in profile: {found_doc.get('filename')}")
+                        return True
+                    else:
+                        self.log_test("Persistence Test", False, "Document not found in profile documents array")
+                        return False
+                else:
+                    self.log_test("Persistence Test", False, f"Could not fetch profile: {resp.status}")
+                    return False
+        except Exception as e:
+            self.log_test("Persistence Test", False, f"Exception: {str(e)}")
+            return False
+        finally:
+            try:
+                os.unlink(test_file)
+            except:
+                pass
+                
     async def run_all_tests(self):
-        """Run all tests in sequence"""
-        print("🎯 BACKEND TESTING: Extended Worker Registration Data Fields")
-        print("=" * 70)
+        """Run all document upload tests"""
+        print("🚀 Starting Worker Document Upload Feature Backend Tests")
+        print(f"🎯 Backend URL: {BACKEND_URL}")
+        print("=" * 80)
         
-        # Test sequence
-        tests = [
-            ("Backend Health Check", self.test_health_check),
-            ("Create Test Worker Account", self.create_test_worker),
-            ("Create Worker Profile", self.create_worker_profile),
-            ("Test Full Registration Data Fields", self.test_registration_data_full_fields),
-            ("Test Data Persistence", self.test_registration_data_persistence),
-            ("Test Partial Fields Update", self.test_partial_fields_update),
-            ("Test Validation and Response", self.test_validation_and_response)
-        ]
+        await self.setup_session()
         
-        success_count = 0
-        total_tests = len(tests)
-        
-        for test_name, test_func in tests:
-            print(f"\n🔍 Running: {test_name}")
-            success = await test_func()
-            if success:
-                success_count += 1
-            else:
-                print(f"❌ Test failed: {test_name}")
-                # Continue with other tests even if one fails
-        
+        try:
+            # Setup phase
+            if not await self.create_test_worker():
+                print("❌ CRITICAL: Could not create test worker - aborting tests")
+                return False
+                
+            if not await self.create_worker_profile():
+                print("❌ CRITICAL: Could not create worker profile - aborting tests")
+                return False
+                
+            print("\n📋 Running Document Upload Tests:")
+            print("-" * 50)
+            
+            # Core functionality tests
+            await self.test_document_upload_success()
+            await self.test_document_retrieval()
+            await self.test_document_deletion()
+            
+            print("\n🔒 Running Validation Tests:")
+            print("-" * 50)
+            
+            # Validation tests
+            await self.test_file_size_validation()
+            await self.test_file_type_validation()
+            
+            print("\n🛡️ Running Authorization Tests:")
+            print("-" * 50)
+            
+            # Authorization tests
+            await self.test_authorization_missing_token()
+            await self.test_authorization_wrong_user()
+            
+            print("\n💾 Running Persistence Tests:")
+            print("-" * 50)
+            
+            # Persistence tests
+            await self.test_persistence_in_profile()
+            
+        finally:
+            await self.cleanup_session()
+            
         # Summary
-        print("\n" + "=" * 70)
+        print("\n" + "=" * 80)
         print("📊 TEST SUMMARY")
-        print("=" * 70)
+        print("=" * 80)
         
-        for result in self.test_results:
-            print(f"{result['status']}: {result['test']}")
-            if result['details']:
-                print(f"   → {result['details']}")
+        passed = sum(1 for result in self.test_results if result['success'])
+        total = len(self.test_results)
         
-        print(f"\n🎯 OVERALL RESULT: {success_count}/{total_tests} tests passed")
+        print(f"✅ Passed: {passed}/{total}")
+        print(f"❌ Failed: {total - passed}/{total}")
+        print(f"📈 Success Rate: {(passed/total*100):.1f}%")
         
-        if success_count == total_tests:
-            print("🎉 ALL TESTS PASSED - Extended Worker Registration Data Fields are fully functional!")
-            return True
-        else:
-            print(f"⚠️  {total_tests - success_count} tests failed - Issues found with extended registration data fields")
-            return False
+        if total - passed > 0:
+            print("\n❌ FAILED TESTS:")
+            for result in self.test_results:
+                if not result['success']:
+                    print(f"   • {result['test']}: {result['details']}")
+                    
+        return passed == total
 
 async def main():
     """Main test runner"""
-    tester = BackendTester()
+    tester = DocumentUploadTester()
     success = await tester.run_all_tests()
-    return success
+    
+    if success:
+        print("\n🎉 ALL TESTS PASSED - Worker Document Upload Feature is fully functional!")
+        sys.exit(0)
+    else:
+        print("\n💥 SOME TESTS FAILED - Check the details above")
+        sys.exit(1)
 
 if __name__ == "__main__":
     asyncio.run(main())
