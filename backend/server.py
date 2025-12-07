@@ -212,7 +212,7 @@ class WorkerProfileUpdate(BaseModel):
     activities: Optional[List[str]] = None  # DEPRECATED
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
-    documents: Optional[List[WorkerDocument]] = None
+    # documents: REMOVED - use dedicated document endpoints instead
     pushToken: Optional[str] = None
 
 # Job Models (B1: aktualisiert mit date, start_at, end_at)
