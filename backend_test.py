@@ -607,7 +607,7 @@ class BackendTester:
         # Create job with ISO timestamp format
         iso_job = {
             "title": "ISO Format Job",
-            "category": "sicherheit",
+            "category": "security",
             "timeMode": "fixed_time",
             "startAt": "2025-12-25T15:00:00Z",
             "endAt": "2025-12-25T19:00:00Z",
