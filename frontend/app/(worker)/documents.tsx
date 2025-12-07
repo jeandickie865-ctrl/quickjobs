@@ -98,23 +98,29 @@ export default function WorkerDocumentsScreen() {
           return;
         }
 
-        // Erstelle FormData für Upload
-        const formData = new FormData();
-        formData.append('file', {
-          uri: file.uri,
-          type: file.mimeType || 'application/pdf',
-          name: file.name
-        } as any);
+        // Lese Datei als Base64
+        const fileResponse = await fetch(file.uri);
+        const blob = await fileResponse.blob();
+        
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          try {
+            const base64data = reader.result as string;
+            const base64String = base64data.split(',')[1]; // Entferne "data:*/*;base64," prefix
 
-        const uploadResponse = await fetch(`${API_URL}/profiles/worker/${user?.id}/documents`, {
-          method: 'POST',
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            // WICHTIG: Content-Type NICHT setzen bei FormData!
-            // Der Browser setzt automatisch "multipart/form-data" mit boundary
-          },
-          body: formData
-        });
+            // Sende als JSON
+            const uploadResponse = await fetch(`${API_URL}/profiles/worker/${user?.id}/documents`, {
+              method: 'POST',
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                filename: file.name,
+                content_type: file.mimeType || 'application/pdf',
+                data: base64String
+              })
+            });
 
         if (uploadResponse.ok) {
           Alert.alert(
