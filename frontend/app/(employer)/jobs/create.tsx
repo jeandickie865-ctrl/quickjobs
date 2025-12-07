@@ -223,7 +223,7 @@ export default function CreateJob() {
       lon,
     };
 
-    console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO });
+    console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO, jobCreate });
 
     try {
       setIsSaving(true);
