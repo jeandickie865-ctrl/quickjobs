@@ -91,64 +91,57 @@ export default function WorkerDocumentsScreen() {
 
       setUploading(true);
 
-      // Lese Datei als Base64
-      const response = await fetch(file.uri);
-      const blob = await response.blob();
-      
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64data = reader.result as string;
-        const base64String = base64data.split(',')[1]; // Entferne "data:*/*;base64," prefix
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          setUploading(false);
+          return;
+        }
 
-        try {
-          const token = await AsyncStorage.getItem("token");
-          if (!token) return;
+        // Erstelle FormData für Upload
+        const formData = new FormData();
+        formData.append('file', {
+          uri: file.uri,
+          type: file.mimeType || 'application/pdf',
+          name: file.name
+        } as any);
 
-          // Erstelle FormData für Upload
-          const formData = new FormData();
-          formData.append('file', {
-            uri: file.uri,
-            type: file.mimeType || 'application/octet-stream',
-            name: file.name
-          } as any);
+        const uploadResponse = await fetch(`${API_URL}/profiles/worker/${user?.id}/documents`, {
+          method: 'POST',
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            // WICHTIG: Content-Type NICHT setzen bei FormData!
+            // Der Browser setzt automatisch "multipart/form-data" mit boundary
+          },
+          body: formData
+        });
 
-          const uploadResponse = await fetch(`${API_URL}/profiles/worker/${user?.id}/documents`, {
-            method: 'POST',
-            headers: {
-              "Authorization": `Bearer ${token}`
-            },
-            body: formData
-          });
-
-          if (uploadResponse.ok) {
-            Alert.alert(
-              'Erfolg',
-              'Dokument wurde hochgeladen.',
-              [{ text: 'OK' }]
-            );
-            // Lade Dokumente neu
-            await loadDocuments();
-          } else {
-            const errorData = await uploadResponse.json();
-            Alert.alert(
-              'Fehler',
-              errorData.detail || 'Dokument konnte nicht hochgeladen werden.',
-              [{ text: 'OK' }]
-            );
-          }
-        } catch (error) {
-          console.error('Upload error:', error);
+        if (uploadResponse.ok) {
           Alert.alert(
-            'Fehler',
-            'Ein Fehler ist beim Hochladen aufgetreten.',
+            'Erfolg',
+            'Dokument wurde hochgeladen.',
             [{ text: 'OK' }]
           );
-        } finally {
-          setUploading(false);
+          // Lade Dokumente neu
+          await loadDocuments();
+        } else {
+          const errorData = await uploadResponse.json().catch(() => ({}));
+          Alert.alert(
+            'Fehler',
+            errorData.detail || 'Dokument konnte nicht hochgeladen werden.',
+            [{ text: 'OK' }]
+          );
         }
-      };
-
-      reader.readAsDataURL(blob);
+      } catch (error) {
+        console.error('Upload error:', error);
+        Alert.alert(
+          'Fehler',
+          'Ein Fehler ist beim Hochladen aufgetreten.',
+          [{ text: 'OK' }]
+        );
+      } finally {
+        setUploading(false);
+      }
     } catch (error) {
       console.error('Document picker error:', error);
       setUploading(false);
