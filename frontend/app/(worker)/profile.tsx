@@ -467,7 +467,7 @@ export default function WorkerProfileScreen() {
               borderRadius: 14,
               paddingVertical: 16,
               alignItems: 'center',
-              marginBottom: 40,
+              marginBottom: 24,
               width: '100%',
               borderWidth: 1,
               borderColor: COLORS.border,
@@ -475,6 +475,62 @@ export default function WorkerProfileScreen() {
           >
             <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>Qualifikationsnachweise</Text>
           </Pressable>
+
+          {/* Bewertungen Sektion */}
+          {reviews.length > 0 && (
+            <View
+              style={{
+                backgroundColor: COLORS.card,
+                borderRadius: 18,
+                padding: 20,
+                borderWidth: 1,
+                borderColor: COLORS.border,
+                marginBottom: 40,
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 16 }}>
+                Bewertungen ({reviews.length})
+              </Text>
+              
+              {reviews.map((review, index) => (
+                <View
+                  key={review.id || index}
+                  style={{
+                    paddingVertical: 16,
+                    borderTopWidth: index > 0 ? 1 : 0,
+                    borderTopColor: COLORS.border,
+                  }}
+                >
+                  {/* Sterne */}
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Ionicons
+                        key={star}
+                        name={star <= review.rating ? 'star' : 'star-outline'}
+                        size={18}
+                        color={star <= review.rating ? COLORS.neon : COLORS.muted}
+                        style={{ marginRight: 4 }}
+                      />
+                    ))}
+                    <Text style={{ color: COLORS.muted, marginLeft: 8, fontSize: 14 }}>
+                      {new Date(review.createdAt).toLocaleDateString('de-DE', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })}
+                    </Text>
+                  </View>
+
+                  {/* Kommentar */}
+                  {review.comment && (
+                    <Text style={{ color: COLORS.white, fontSize: 15, lineHeight: 22 }}>
+                      {review.comment}
+                    </Text>
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
