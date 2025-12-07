@@ -195,15 +195,38 @@ export default function CreateJob() {
     let endAtISO: string | undefined = undefined;
     
     if (date && startAt) {
-      // Parsen des ISO-Datums (YYYY-MM-DD)
-      const [startHour, startMin] = startAt.split(':');
-      const startDate = new Date(`${date}T${startHour.padStart(2, '0')}:${(startMin || '0').padStart(2, '0')}:00`);
-      startAtISO = startDate.toISOString();
-      
-      if (endAt) {
-        const [endHour, endMin] = endAt.split(':');
-        const endDate = new Date(`${date}T${endHour.padStart(2, '0')}:${(endMin || '0').padStart(2, '0')}:00`);
-        endAtISO = endDate.toISOString();
+      try {
+        // Parsen des deutschen Datums (DD.MM.YYYY) oder ISO-Datums (YYYY-MM-DD)
+        let dateObj: Date;
+        
+        if (date.includes('.')) {
+          // Deutsches Format: DD.MM.YYYY
+          const [day, month, year] = date.split('.');
+          dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        } else {
+          // ISO Format: YYYY-MM-DD
+          dateObj = new Date(date);
+        }
+        
+        // Validiere, dass das Datum gültig ist
+        if (isNaN(dateObj.getTime())) {
+          console.error('❌ Invalid date:', date);
+        } else {
+          // Setze die Startzeit
+          const [startHour, startMin] = startAt.split(':');
+          dateObj.setHours(parseInt(startHour), parseInt(startMin || '0'), 0, 0);
+          startAtISO = dateObj.toISOString();
+          
+          // Setze die Endzeit
+          if (endAt) {
+            const endDateObj = new Date(dateObj);
+            const [endHour, endMin] = endAt.split(':');
+            endDateObj.setHours(parseInt(endHour), parseInt(endMin || '0'), 0, 0);
+            endAtISO = endDateObj.toISOString();
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error parsing date/time:', error, { date, startAt, endAt });
       }
     }
 
