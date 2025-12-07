@@ -39,6 +39,14 @@ export function formatGermanDate(dateStr?: string): string {
  */
 export function formatDateWithWeekday(isoDate?: string): string {
   if (!isoDate) return '';
+  
+  // QUICK FIX: Falls nur Zeit (z.B. "18:00" oder "1100") übergeben wird, nicht anzeigen
+  // Valider ISO-String muss mindestens "YYYY-MM-DD" enthalten
+  if (isoDate.length < 10 || !isoDate.includes('-')) {
+    console.warn('⚠️ Invalid date format (only time provided):', isoDate);
+    return '';
+  }
+  
   const d = new Date(isoDate);
   if (isNaN(d.getTime())) return '';
 
