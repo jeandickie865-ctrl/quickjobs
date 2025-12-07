@@ -198,15 +198,19 @@ export default function CreateJob() {
     
     if (date && startAt) {
       try {
-        // Parsen des deutschen Datums (DD.MM.YYYY) oder ISO-Datums (YYYY-MM-DD)
+        // Parsen des Datums - HTML5 date picker gibt YYYY-MM-DD zurück
         let dateObj: Date;
         
         if (date.includes('.')) {
-          // Deutsches Format: DD.MM.YYYY
+          // Deutsches Format: DD.MM.YYYY (manuell eingegeben)
           const [day, month, year] = date.split('.');
           dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        } else if (date.includes('-')) {
+          // ISO Format: YYYY-MM-DD (vom HTML5 date picker)
+          const [year, month, day] = date.split('-');
+          dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         } else {
-          // ISO Format: YYYY-MM-DD
+          // Fallback
           dateObj = new Date(date);
         }
         
