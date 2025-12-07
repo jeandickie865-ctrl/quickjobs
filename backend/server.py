@@ -938,6 +938,9 @@ async def update_worker_profile(
     if not update_data:
         # No fields to update
         existing.pop("_id", None)
+        # Ensure documents is always a list for compatibility
+        if "documents" not in existing or existing["documents"] is None:
+            existing["documents"] = []
         return WorkerProfile(**existing)
     
     # VALIDATION: Check required fields
