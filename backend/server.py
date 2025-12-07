@@ -123,11 +123,10 @@ class Address(BaseModel):
 
 class WorkerDocument(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    type: str
-    fileUri: str
-    fileName: str
-    uploadedAt: str
-    mimeType: Optional[str] = None
+    filename: str
+    content_type: str
+    data: str  # Base64 encoded file
+    uploaded_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 class WorkerProfile(BaseModel):
     userId: str
