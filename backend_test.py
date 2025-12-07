@@ -121,10 +121,20 @@ class DocumentUploadTester:
             content += f"Generated: {datetime.now().isoformat()}\n".encode()
             content += b"This is a test qualification document.\n"
             
-            # Add content to reach desired size
-            content_lines = int(size_mb * 1000)  # Rough estimation
-            for i in range(min(content_lines, 1000)):
-                content += f"Test line {i+1}: Lorem ipsum dolor sit amet consectetur adipiscing elit\n".encode()
+            # Calculate target size in bytes
+            target_size = int(size_mb * 1024 * 1024)  # Convert MB to bytes
+            base_content_size = len(pdf_header) + len(content)
+            
+            # Add padding to reach target size
+            if target_size > base_content_size:
+                padding_needed = target_size - base_content_size
+                # Create padding with repeated content
+                padding_line = b"Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
+                padding_repeats = padding_needed // len(padding_line)
+                padding_remainder = padding_needed % len(padding_line)
+                
+                content += padding_line * padding_repeats
+                content += padding_line[:padding_remainder]
             
             # Write PDF header and content
             temp_file.write(pdf_header)
@@ -133,11 +143,18 @@ class DocumentUploadTester:
             
             return temp_file.name
         except Exception as e:
-            # Fallback: create a simple text file
+            # Fallback: create a simple text file with proper size
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf', mode='wb')
-            content = f"Test Document Content\nGenerated: {datetime.now().isoformat()}\n".encode()
-            content += b"Test content " * int(size_mb * 1000)
-            temp_file.write(content)
+            target_size = int(size_mb * 1024 * 1024)  # Convert MB to bytes
+            
+            base_content = f"Test Document Content\nGenerated: {datetime.now().isoformat()}\n".encode()
+            padding_line = b"Test content line with sufficient length to create proper file size padding.\n"
+            
+            # Calculate how many padding lines we need
+            padding_repeats = (target_size - len(base_content)) // len(padding_line)
+            
+            temp_file.write(base_content)
+            temp_file.write(padding_line * padding_repeats)
             temp_file.close()
             return temp_file.name
             
