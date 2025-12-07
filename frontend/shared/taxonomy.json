@@ -295,5 +295,35 @@
       { "key": "tape_in", "label": "Tape-In" },
       { "key": "tressen", "label": "Tressen" }
     ]
+  },
+
+  "kosmetik": {
+    "label": "Kosmetik",
+    "subcategories": [
+      { "key": "kosmetik", "label": "Kosmetik" },
+      { "key": "visagist", "label": "Visagist:IN" },
+      { "key": "makeup_artist", "label": "Make-up Artist" },
+      { "key": "permanent_makeup", "label": "Permanent Make-up" },
+      { "key": "wimpernverlaengerung", "label": "Wimpernverlängerung" },
+      { "key": "brow_artist", "label": "Brow Artist" },
+      { "key": "nageldesign", "label": "Nageldesign" },
+      { "key": "fusspflege_medizinisch", "label": "Fußpflege medizinisch" },
+      { "key": "fusspflege_kosmetisch", "label": "Fußpflege kosmetisch" },
+      { "key": "hautpflegeberatung", "label": "Hautpflegeberatung" }
+    ],
+    "qualifications": [
+      { "key": "ausbildung_kosmetikerin", "label": "Ausbildung Kosmetikerin" },
+      { "key": "weiterbildung_visagistik", "label": "Weiterbildung Visagistik" },
+      { "key": "makeup_schulungen", "label": "Make-up Schulungen" },
+      { "key": "permanent_makeup_zertifikat", "label": "Permanent Make-up Zertifikat" },
+      { "key": "microblading_zertifikat", "label": "Microblading Zertifikat" },
+      { "key": "wimpernverlaengerung_1zu1", "label": "Wimpernverlängerung 1:1 Technik" },
+      { "key": "wimpernvolumentechnik", "label": "Wimpernvolumentechnik" },
+      { "key": "brow_lifting", "label": "Brow Lifting" },
+      { "key": "nageldesign_zertifikat", "label": "Nageldesign Zertifikat" },
+      { "key": "hygieneschulung", "label": "Hygieneschulung" },
+      { "key": "hautanalyse_skills", "label": "Hautanalyse Skills" },
+      { "key": "produktwissen_skincare", "label": "Produktwissen Skincare Marken" }
+    ]
   }
 }
