@@ -122,30 +122,42 @@ export default function WorkerDocumentsScreen() {
               })
             });
 
-        if (uploadResponse.ok) {
-          Alert.alert(
-            'Erfolg',
-            'Dokument wurde hochgeladen.',
-            [{ text: 'OK' }]
-          );
-          // Lade Dokumente neu
-          await loadDocuments();
-        } else {
-          const errorData = await uploadResponse.json().catch(() => ({}));
-          Alert.alert(
-            'Fehler',
-            errorData.detail || 'Dokument konnte nicht hochgeladen werden.',
-            [{ text: 'OK' }]
-          );
-        }
+            if (uploadResponse.ok) {
+              Alert.alert(
+                'Erfolg',
+                'Dokument wurde hochgeladen.',
+                [{ text: 'OK' }]
+              );
+              // Lade Dokumente neu
+              await loadDocuments();
+            } else {
+              const errorData = await uploadResponse.json().catch(() => ({}));
+              Alert.alert(
+                'Fehler',
+                errorData.detail || 'Dokument konnte nicht hochgeladen werden.',
+                [{ text: 'OK' }]
+              );
+            }
+          } catch (error) {
+            console.error('Upload error:', error);
+            Alert.alert(
+              'Fehler',
+              'Ein Fehler ist beim Hochladen aufgetreten.',
+              [{ text: 'OK' }]
+            );
+          } finally {
+            setUploading(false);
+          }
+        };
+
+        reader.readAsDataURL(blob);
       } catch (error) {
-        console.error('Upload error:', error);
+        console.error('FileReader error:', error);
         Alert.alert(
           'Fehler',
-          'Ein Fehler ist beim Hochladen aufgetreten.',
+          'Datei konnte nicht gelesen werden.',
           [{ text: 'OK' }]
         );
-      } finally {
         setUploading(false);
       }
     } catch (error) {
