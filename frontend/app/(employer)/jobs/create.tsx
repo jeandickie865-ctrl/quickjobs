@@ -246,14 +246,25 @@ export default function CreateJob() {
       lon,
     };
 
-    console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO, jobCreate });
+    console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO });
+    console.log('💾 Full job payload:', JSON.stringify(jobCreate, null, 2));
+
+    // Validiere, dass startAtISO und endAtISO gesetzt wurden
+    if (!startAtISO || !endAtISO) {
+      console.error('❌ Invalid timestamps:', { startAtISO, endAtISO });
+      setError('Ungültiges Datum oder Uhrzeit. Bitte prüfe deine Eingaben.');
+      return;
+    }
 
     try {
       setIsSaving(true);
+      console.log('📤 Sending job to backend...');
       await addJob(jobCreate);
+      console.log('✅ Job created successfully!');
       router.replace('/(employer)');
     } catch (e) {
-      setError('Der Auftrag wurde nicht gespeichert.');
+      console.error('❌ Error creating job:', e);
+      setError('Der Auftrag wurde nicht gespeichert: ' + (e instanceof Error ? e.message : 'Unbekannter Fehler'));
     } finally {
       setIsSaving(false);
     }
