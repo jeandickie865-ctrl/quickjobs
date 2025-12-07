@@ -264,7 +264,7 @@ export default function CreateJob() {
       console.log('📤 Sending job to backend...');
       await addJob(jobCreate);
       console.log('✅ Job created successfully!');
-      router.replace('/(employer)/index');
+      router.push('/(employer)');
     } catch (e) {
       console.error('❌ Error creating job:', e);
       setError('Der Auftrag wurde nicht gespeichert: ' + (e instanceof Error ? e.message : 'Unbekannter Fehler'));
