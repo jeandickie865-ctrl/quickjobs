@@ -287,8 +287,8 @@ class BackendTester:
         iso_job = {
             "title": "Security Event Job",
             "description": "Sicherheitsdienst für Veranstaltung",
-            "category": "sicherheit",
-            "subcategory": "veranstaltungssicherheit",
+            "category": "security",
+            "subcategory": "event_security",
             "timeMode": "fixed_time",
             "date": "2025-12-10",
             "startAt": "2025-12-10T18:00:00Z",
