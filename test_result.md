@@ -478,6 +478,10 @@ test_plan:
   stuck_tasks: []
   test_all: true
   test_priority: "critical_first"
+  
+  frontend_testing_approved: true
+  mongodb_testing_approved: true
+  comprehensive_testing_mode: true
 
 backend:
   - task: "Backend Infrastructure Check nach UI/UX Redesign"
