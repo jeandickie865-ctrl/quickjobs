@@ -25,7 +25,7 @@ from typing import Dict, List, Optional, Any
 import uuid
 
 # Backend Configuration
-BACKEND_URL = "https://shiftmatch-2.preview.emergentagent.com/api"
+BACKEND_URL = "https://shiftmatch-dev.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
