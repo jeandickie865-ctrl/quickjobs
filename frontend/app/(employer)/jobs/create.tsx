@@ -196,69 +196,39 @@ export default function CreateJob() {
     
     console.log('🔍 Input values:', { date, startAt, endAt });
     
-    if (date && startAt) {
+    if (date && startAt && endAt) {
       try {
-        // Parsen des Datums - HTML5 date picker gibt YYYY-MM-DD zurück
-        let dateObj: Date;
-        
+        // Parse date: YYYY-MM-DD (from HTML5 picker) or DD.MM.YYYY (manual)
+        let dateStr = date;
         if (date.includes('.')) {
-          // Deutsches Format: DD.MM.YYYY (manuell eingegeben)
+          // Convert DD.MM.YYYY → YYYY-MM-DD
           const [day, month, year] = date.split('.');
-          dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-        } else if (date.includes('-')) {
-          // ISO Format: YYYY-MM-DD (vom HTML5 date picker)
-          const [year, month, day] = date.split('-');
-          dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-        } else {
-          // Fallback
-          dateObj = new Date(date);
+          dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }
         
-        // Validiere, dass das Datum gültig ist
-        if (isNaN(dateObj.getTime())) {
-          console.error('❌ Invalid date:', date);
+        // Create ISO timestamps in UTC (will be converted by backend)
+        // Format: YYYY-MM-DDTHH:MM:SS.000Z
+        startAtISO = `${dateStr}T${startAt}:00.000Z`;
+        
+        // Check if end time is earlier than start time (job goes over midnight)
+        const [startHour, startMin] = startAt.split(':').map(Number);
+        const [endHour, endMin] = endAt.split(':').map(Number);
+        const startMinutes = startHour * 60 + startMin;
+        const endMinutes = endHour * 60 + endMin;
+        
+        if (endMinutes <= startMinutes) {
+          // Job goes over midnight - add one day to end date
+          const dateObj = new Date(dateStr);
+          dateObj.setDate(dateObj.getDate() + 1);
+          const nextDay = dateObj.toISOString().split('T')[0];
+          endAtISO = `${nextDay}T${endAt}:00.000Z`;
+          console.log('⏰ Job goes over midnight - end date +1 day');
         } else {
-          // Setze die Startzeit (lokale Zeit, nicht UTC!)
-          const [startHour, startMin] = startAt.split(':');
-          dateObj.setHours(parseInt(startHour), parseInt(startMin || '0'), 0, 0);
-          
-          // Erstelle ISO-String mit lokaler Zeit + Timezone Offset
-          const year = dateObj.getFullYear();
-          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-          const day = String(dateObj.getDate()).padStart(2, '0');
-          const hours = String(dateObj.getHours()).padStart(2, '0');
-          const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-          
-          // Get timezone offset (z.B. +01:00 für CET oder +02:00 für CEST)
-          const tzOffset = -dateObj.getTimezoneOffset();
-          const tzOffsetHours = String(Math.floor(Math.abs(tzOffset) / 60)).padStart(2, '0');
-          const tzOffsetMins = String(Math.abs(tzOffset) % 60).padStart(2, '0');
-          const tzSign = tzOffset >= 0 ? '+' : '-';
-          const tzString = `${tzSign}${tzOffsetHours}:${tzOffsetMins}`;
-          
-          startAtISO = `${year}-${month}-${day}T${hours}:${minutes}:00${tzString}`;
-          
-          // Setze die Endzeit
-          if (endAt) {
-            const endDateObj = new Date(dateObj);
-            const [endHour, endMin] = endAt.split(':');
-            endDateObj.setHours(parseInt(endHour), parseInt(endMin || '0'), 0, 0);
-            
-            // Wenn Endzeit < Startzeit → Job geht über Mitternacht → Tag +1
-            if (endDateObj < dateObj) {
-              endDateObj.setDate(endDateObj.getDate() + 1);
-              console.log('⏰ Endzeit ist früher als Startzeit → Job geht über Mitternacht → +1 Tag');
-            }
-            
-            // Extrahiere Datum und Zeit für Endzeit
-            const endYear = endDateObj.getFullYear();
-            const endMonth = String(endDateObj.getMonth() + 1).padStart(2, '0');
-            const endDay = String(endDateObj.getDate()).padStart(2, '0');
-            const endHours = String(endDateObj.getHours()).padStart(2, '0');
-            const endMinutes = String(endDateObj.getMinutes()).padStart(2, '0');
-            endAtISO = `${endYear}-${endMonth}-${endDay}T${endHours}:${endMinutes}:00${tzString}`;
-          }
+          // Same day
+          endAtISO = `${dateStr}T${endAt}:00.000Z`;
         }
+        
+        console.log('✅ Created timestamps:', { startAtISO, endAtISO });
       } catch (error) {
         console.error('❌ Error parsing date/time:', error, { date, startAt, endAt });
       }
