@@ -207,23 +207,20 @@ export default function CreateJob() {
       }
     }
 
-    const jobCreate: JobCreate = {
-      employerType: user.accountType === 'business' ? 'business' : 'private',
+    const jobCreate = {
       title: title.trim(),
       description: fullDescription,
-      category: category || undefined,
-      subcategory: subcategory || undefined,
+      categories: category ? [category] : [],
       qualifications: qualifications || [],
-      timeMode: 'fixed_time',
+      timeMode: 'fixed_time' as const,
       startAt: startAtISO,
       endAt: endAtISO,
-      address: location,
+      street: location.street,
+      house_number: location.houseNumber,
+      postal_code: location.postalCode,
+      city: location.city,
       lat,
       lon,
-      workerAmountCents,
-      paymentToWorker: paymentMethod,
-      required_all_tags: [],
-      required_any_tags: [],
     };
 
     console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO });
