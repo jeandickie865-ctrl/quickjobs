@@ -206,29 +206,32 @@ export default function CreateJob() {
           dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }
         
-        // Create ISO timestamps in UTC (will be converted by backend)
-        // Format: YYYY-MM-DDTHH:MM:SS.000Z
-        startAtISO = `${dateStr}T${startAt}:00.000Z`;
-        
-        // Check if end time is earlier than start time (job goes over midnight)
+        // Parse date and times as local Date objects
+        const [year, month, day] = dateStr.split('-').map(Number);
         const [startHour, startMin] = startAt.split(':').map(Number);
         const [endHour, endMin] = endAt.split(':').map(Number);
-        const startMinutes = startHour * 60 + startMin;
-        const endMinutes = endHour * 60 + endMin;
         
-        if (endMinutes <= startMinutes) {
-          // Job goes over midnight - add one day to end date
-          const dateObj = new Date(dateStr);
-          dateObj.setDate(dateObj.getDate() + 1);
-          const nextDay = dateObj.toISOString().split('T')[0];
-          endAtISO = `${nextDay}T${endAt}:00.000Z`;
+        // Create Date objects in LOCAL timezone (browser's timezone)
+        const startDate = new Date(year, month - 1, day, startHour, startMin, 0);
+        let endDate = new Date(year, month - 1, day, endHour, endMin, 0);
+        
+        // Check if end time is earlier than start time (job goes over midnight)
+        if (endDate <= startDate) {
+          // Job goes over midnight - add one day
+          endDate.setDate(endDate.getDate() + 1);
           console.log('⏰ Job goes over midnight - end date +1 day');
-        } else {
-          // Same day
-          endAtISO = `${dateStr}T${endAt}:00.000Z`;
         }
         
-        console.log('✅ Created timestamps:', { startAtISO, endAtISO });
+        // Convert to ISO strings (includes timezone offset automatically)
+        startAtISO = startDate.toISOString();
+        endAtISO = endDate.toISOString();
+        
+        console.log('✅ Created timestamps:', { 
+          startAtISO, 
+          endAtISO,
+          startLocal: startDate.toLocaleString('de-DE'),
+          endLocal: endDate.toLocaleString('de-DE')
+        });
       } catch (error) {
         console.error('❌ Error parsing date/time:', error, { date, startAt, endAt });
       }
