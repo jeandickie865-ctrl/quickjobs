@@ -720,9 +720,9 @@ class BackendTester:
         complete_job = {
             "title": "Complete Job Test",
             "description": "Job with all required fields for consistency test",
-            "category": "sicherheit",
+            "category": "security",
             "subcategory": "objektschutz",
-            "qualifications": ["sicherheitsschein"],
+            "qualifications": ["sachkunde_34a"],
             "timeMode": "fixed_time",
             "date": "2025-12-30",
             "startAt": "2025-12-30T09:00:00Z",
