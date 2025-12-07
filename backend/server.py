@@ -1637,7 +1637,9 @@ async def get_employer_jobs(
         job.pop("_id", None)
     
     logger.info(f"Found {len(jobs)} future/today jobs for employer {employer_id}")
-    return [Job(**job) for job in jobs]
+    
+    # Return without validation to avoid errors with new fields
+    return jobs
 
 @api_router.get("/jobs/{job_id}", response_model=Job)
 async def get_job(
