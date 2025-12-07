@@ -223,23 +223,18 @@ export default function WorkerJobDetailScreen() {
                   }
                 };
 
-                // Extract time from ISO timestamp: "2026-01-24T20:00:00+01:00" → "20:00"
+                // Extract time from ISO timestamp and convert to local time
                 const extractTime = (isoString) => {
                   if (!isoString) return null;
                   try {
-                    // Handle both ISO format (with T) and simple HH:MM format
-                    if (isoString.includes('T')) {
-                      // Extract time part after T: "2026-01-24T20:00:00+01:00" → "20:00:00+01:00"
-                      const timePart = isoString.split('T')[1];
-                      // Extract HH:MM: "20:00:00+01:00" → "20:00"
-                      const [hours, minutes] = timePart.split(':');
-                      return `${hours}:${minutes}`;
-                    } else if (isoString.includes(':')) {
-                      // Already in HH:MM format
-                      const parts = isoString.split(':');
-                      return `${parts[0]}:${parts[1]}`;
-                    }
-                    return null;
+                    // Parse ISO timestamp to Date object (handles UTC conversion automatically)
+                    const date = new Date(isoString);
+                    if (isNaN(date.getTime())) return null;
+                    
+                    // Get local hours and minutes
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    return `${hours}:${minutes}`;
                   } catch {
                     return null;
                   }
