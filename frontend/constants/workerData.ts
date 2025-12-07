@@ -13,7 +13,10 @@ export type CategoryKey =
   | "buero_kundenservice"
   | "inventur"
   | "friseur"
-  | "kosmetik";
+  | "kosmetik"
+  | "dj"
+  | "ton"
+  | "stage";
 
 export type TaxonomyCategory = {
   key: CategoryKey;
