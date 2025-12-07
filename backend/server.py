@@ -1619,17 +1619,24 @@ async def get_employer_jobs(
         raise HTTPException(status_code=403, detail="Cannot view another employer's jobs")
     
     # B1: Find only future/today jobs for this employer
-    today = datetime.utcnow().strftime("%Y-%m-%d")
+    # Filter by startAt (ISO timestamp) instead of date field
+    now = datetime.utcnow().isoformat()
+    
+    # Find jobs where startAt >= now OR where date field exists and >= today
     jobs = await db.jobs.find({
         "employerId": employer_id,
-        "date": {"$gte": today}
+        "$or": [
+            {"startAt": {"$gte": now}},  # New format: ISO timestamps
+            {"start_at": {"$gte": now}},  # New format: snake_case
+            {"date": {"$gte": datetime.utcnow().strftime("%Y-%m-%d")}}  # Old format
+        ]
     }).to_list(1000)
     
     # Remove MongoDB _id field
     for job in jobs:
         job.pop("_id", None)
     
-    logger.info(f"Found {len(jobs)} future/today jobs for employer {employer_id} (date >= {today})")
+    logger.info(f"Found {len(jobs)} future/today jobs for employer {employer_id}")
     return [Job(**job) for job in jobs]
 
 @api_router.get("/jobs/{job_id}", response_model=Job)
