@@ -181,7 +181,7 @@ class WorkerProfileCreate(BaseModel):
     homeLon: Optional[float] = None
     photoUrl: Optional[str] = None
     profilePhotoUri: Optional[str] = None
-    documents: Optional[List[WorkerDocument]] = []
+    # documents: REMOVED - use dedicated document endpoints instead
     shortBio: Optional[str] = None
     email: Optional[str] = None
     isSelfEmployed: bool = False
@@ -189,7 +189,7 @@ class WorkerProfileCreate(BaseModel):
     contactEmail: Optional[str] = None
     pushToken: Optional[str] = None
     # Deprecated
-    selectedTags: Optional[List[str]] = []
+    selectedTags: Optional[str] = []
 
 class WorkerProfileUpdate(BaseModel):
     firstName: Optional[str] = None
