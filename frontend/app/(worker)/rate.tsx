@@ -5,7 +5,7 @@ import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { getJobById, updateJob } from '../../utils/jobStore';
-import { getEmployerProfile } from '../../utils/employerProfileStore';
+import { getEmployerProfilePublicView } from '../../utils/employerProfileStore';
 import { addReview } from '../../utils/reviewStore';
 import { Job } from '../../types/job';
 import { EmployerProfile } from '../../utils/employerProfileStore';
