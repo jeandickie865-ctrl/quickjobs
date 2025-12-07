@@ -631,7 +631,7 @@ class BackendTester:
         # Create job with legacy date string format
         legacy_job = {
             "title": "Legacy Format Job",
-            "category": "sicherheit",
+            "category": "security",
             "timeMode": "fixed_time",
             "date": "2025-12-26",
             "start_at": "16:00",
