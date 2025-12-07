@@ -208,8 +208,30 @@ export default function CreateJob() {
         
         // Parse date and times as local Date objects
         const [year, month, day] = dateStr.split('-').map(Number);
-        const [startHour, startMin] = startAt.split(':').map(Number);
-        const [endHour, endMin] = endAt.split(':').map(Number);
+        
+        // Parse time - accept both "HH:MM" and "HHMM" formats
+        const parseTime = (timeStr: string): [number, number] => {
+          if (timeStr.includes(':')) {
+            // Format: "11:00"
+            const [h, m] = timeStr.split(':').map(Number);
+            return [h, m || 0];
+          } else if (timeStr.length === 4) {
+            // Format: "1100" → 11:00
+            const h = Number(timeStr.substring(0, 2));
+            const m = Number(timeStr.substring(2, 4));
+            return [h, m];
+          } else if (timeStr.length === 3) {
+            // Format: "900" → 09:00
+            const h = Number(timeStr.substring(0, 1));
+            const m = Number(timeStr.substring(1, 3));
+            return [h, m];
+          } else {
+            throw new Error(`Invalid time format: ${timeStr}`);
+          }
+        };
+        
+        const [startHour, startMin] = parseTime(startAt);
+        const [endHour, endMin] = parseTime(endAt);
         
         // Create Date objects in LOCAL timezone (browser's timezone)
         const startDate = new Date(year, month - 1, day, startHour, startMin, 0);
