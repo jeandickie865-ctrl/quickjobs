@@ -311,4 +311,3 @@ export const TAXONOMY: TaxonomyCategory[] = [
 export function listCategories(): { key: CategoryKey; title: string }[] {
   return TAXONOMY.map(c => ({ key: c.key, title: c.title }));
 }
-// Force reload
