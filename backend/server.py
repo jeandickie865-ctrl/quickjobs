@@ -163,7 +163,7 @@ class WorkerProfile(BaseModel):
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     # Qualification Documents (Base64 storage)
-    documents: List[WorkerDocument] = []
+    documents: List[dict] = []  # Using dict for flexibility - managed via dedicated endpoints
     pushToken: Optional[str] = None
     createdAt: Optional[str] = None
     updatedAt: Optional[str] = None
