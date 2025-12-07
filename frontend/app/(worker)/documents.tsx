@@ -170,53 +170,50 @@ export default function WorkerDocumentsScreen() {
   const handleDelete = async (documentId: string, filename: string) => {
     console.log('🗑️ Delete button clicked for:', documentId, filename);
     
-    Alert.alert(
-      'Dokument löschen',
-      `Möchten Sie "${filename}" wirklich löschen?`,
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Löschen',
-          style: 'destructive',
-          onPress: async () => {
-            console.log('🗑️ User confirmed deletion');
-            try {
-              const token = await AsyncStorage.getItem("token");
-              if (!token) {
-                console.error('❌ No token found');
-                return;
-              }
+    // Use native confirm for better web compatibility
+    const confirmed = window.confirm(`Möchten Sie "${filename}" wirklich löschen?`);
+    
+    if (!confirmed) {
+      console.log('❌ User cancelled deletion');
+      return;
+    }
 
-              const deleteUrl = `${API_URL}/profiles/worker/${user?.id}/documents/${documentId}`;
-              console.log('🗑️ Sending DELETE request to:', deleteUrl);
+    console.log('🗑️ User confirmed deletion');
+    
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.error('❌ No token found');
+        alert('Fehler: Keine Authentifizierung gefunden');
+        return;
+      }
 
-              const response = await fetch(deleteUrl, {
-                method: 'DELETE',
-                headers: {
-                  "Authorization": `Bearer ${token}`
-                }
-              });
+      const deleteUrl = `${API_URL}/profiles/worker/${user?.id}/documents/${documentId}`;
+      console.log('🗑️ Sending DELETE request to:', deleteUrl);
 
-              console.log('🗑️ DELETE response status:', response.status);
-
-              if (response.ok) {
-                console.log('✅ Document deleted successfully');
-                // Lade Dokumente neu
-                await loadDocuments();
-                Alert.alert('Erfolg', 'Dokument wurde gelöscht.', [{ text: 'OK' }]);
-              } else {
-                const errorText = await response.text();
-                console.error('❌ Delete failed:', response.status, errorText);
-                Alert.alert('Fehler', 'Dokument konnte nicht gelöscht werden.', [{ text: 'OK' }]);
-              }
-            } catch (error) {
-              console.error('❌ Delete error:', error);
-              Alert.alert('Fehler', 'Ein Fehler ist beim Löschen aufgetreten.', [{ text: 'OK' }]);
-            }
-          }
+      const response = await fetch(deleteUrl, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": `Bearer ${token}`
         }
-      ]
-    );
+      });
+
+      console.log('🗑️ DELETE response status:', response.status);
+
+      if (response.ok) {
+        console.log('✅ Document deleted successfully');
+        // Lade Dokumente neu
+        await loadDocuments();
+        alert('Dokument wurde gelöscht');
+      } else {
+        const errorText = await response.text();
+        console.error('❌ Delete failed:', response.status, errorText);
+        alert('Fehler: Dokument konnte nicht gelöscht werden');
+      }
+    } catch (error) {
+      console.error('❌ Delete error:', error);
+      alert('Fehler: Ein Fehler ist beim Löschen aufgetreten');
+    }
   };
 
   // Formatiere Dateigröße
