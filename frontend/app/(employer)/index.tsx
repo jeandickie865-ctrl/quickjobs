@@ -72,7 +72,21 @@ export default function EmployerDashboard() {
   );
 
   const isUpcomingJob = job => {
-    if (!job || !job.date) return false;
+    if (!job) return false;
+    
+    const now = new Date();
+    
+    // Neue Format: ISO-Timestamps (startAt, endAt)
+    if (job.startAt && job.startAt.includes('T')) {
+      const jobStartDate = new Date(job.startAt);
+      const jobEndDate = job.endAt ? new Date(job.endAt) : jobStartDate;
+      
+      // Job ist upcoming wenn endAt in der Zukunft ist
+      return jobEndDate > now;
+    }
+    
+    // Altes Format: date + startAt/endAt als Uhrzeiten
+    if (!job.date) return false;
     if (!job.startAt || !job.endAt) return false;
     
     const today = new Date();
@@ -82,7 +96,6 @@ export default function EmployerDashboard() {
     if (jobDate < today) return false;
 
     if (jobDate.getTime() === today.getTime()) {
-      const now = new Date();
       const [endH, endM] = job.endAt.split(':').map(Number);
       const endTime = new Date();
       endTime.setHours(endH, endM, 0, 0);
