@@ -2935,3 +2935,38 @@ agent_communication:
       **Bestätigung:** Wie erwartet haben die reinen Frontend UI-Änderungen (Tab-basiertes Layout für app/(worker)/edit-profile.tsx) KEINE Auswirkungen auf das Backend
       
       **Status:** Backend Infrastructure vollständig stabil nach Frontend UI-Reorganisation
+
+  - agent: "testing"
+    message: |
+      **🎉 WORKER DOCUMENT UPLOAD FEATURE BACKEND TESTING ABGESCHLOSSEN**
+      
+      **Review-Anfrage erfüllt:** Backend Testing für Worker Document Upload Feature nach deutscher Review-Anfrage durchgeführt
+      
+      **Getestete Endpoints:**
+      1. ✅ POST /api/profiles/worker/{user_id}/documents - Document Upload
+      2. ✅ GET /api/profiles/worker/{user_id}/documents/{document_id} - Document Retrieval  
+      3. ✅ DELETE /api/profiles/worker/{user_id}/documents/{document_id} - Document Deletion
+      
+      **Test-Szenarien vollständig durchgeführt:**
+      1. ✅ Upload Flow: PDF-Dokument erfolgreich hochgeladen, Base64-Speicherung in MongoDB
+      2. ✅ Download/Abruf: Dokument korrekt abgerufen mit allen Feldern (id, filename, content_type, data, uploaded_at)
+      3. ✅ Löschen: Dokument erfolgreich gelöscht, GET danach gibt 404
+      4. ✅ Validierung: Dateien >5MB korrekt abgelehnt (400 Bad Request)
+      5. ✅ Dateityp-Validierung: TXT-Dateien korrekt zurückgewiesen (400 Bad Request)
+      6. ✅ Authorization: Requests ohne Token geben 401, Cross-User-Uploads geben 403
+      7. ✅ Persistenz: Hochgeladene Dokumente erscheinen im Worker-Profil documents Array
+      
+      **Erwartetes Ergebnis bestätigt:**
+      - ✅ Alle 10/10 Tests bestanden (100% Success Rate)
+      - ✅ Max Dateigröße: 5 MB korrekt implementiert
+      - ✅ Erlaubte Dateitypen: PDF, JPG, PNG, WEBP korrekt validiert
+      - ✅ Bearer Token Authorization funktioniert einwandfrei
+      - ✅ Base64-Speicherung in MongoDB funktional
+      
+      **Backend Logs Verification:**
+      - "✅ Document uploaded successfully for worker user_xxx: test_certificate.pdf (0.10 MB)"
+      - "✅ Document found: test_certificate.pdf"
+      - "🗑️ Document deleted successfully: test_certificate.pdf"
+      - Korrekte HTTP Status Codes: 200 OK, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found
+      
+      **Status:** Worker Document Upload Feature Backend ist vollständig funktional und production-ready
