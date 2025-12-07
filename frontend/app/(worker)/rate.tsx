@@ -104,7 +104,7 @@ export default function RateEmployerScreen() {
     if (!job || !user) return;
 
     if (rating < 1 || rating > 5) {
-      Alert.alert('Fehler', 'Bitte wähle mindestens 1 Stern');
+      alert('Bitte wähle mindestens 1 Stern');
       return;
     }
 
@@ -126,14 +126,14 @@ export default function RateEmployerScreen() {
       await updateJob(job.id, { status: 'done' });
       console.log('✅ Job marked as completed after worker review');
       
-      setShowSuccessModal(true);
-
-      setTimeout(() => {
-        router.replace('/(worker)/matches');
-      }, 2500);
+      // Erfolgsmeldung
+      alert('Bewertung wurde erfolgreich gespeichert!');
+      
+      // Zurück navigieren
+      router.back();
     } catch (error) {
       console.error('❌ Error saving review:', error);
-      Alert.alert('Fehler', 'Bewertung konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : 'Unbekannter Fehler'));
+      alert('Bewertung konnte nicht gespeichert werden: ' + (error instanceof Error ? error.message : 'Unbekannter Fehler'));
     } finally {
       setSaving(false);
     }
