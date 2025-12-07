@@ -216,13 +216,21 @@ export default function CreateJob() {
           const [startHour, startMin] = startAt.split(':');
           dateObj.setHours(parseInt(startHour), parseInt(startMin || '0'), 0, 0);
           
-          // Erstelle ISO-String mit lokaler Zeit (ohne UTC-Konvertierung)
+          // Erstelle ISO-String mit lokaler Zeit + Timezone Offset
           const year = dateObj.getFullYear();
           const month = String(dateObj.getMonth() + 1).padStart(2, '0');
           const day = String(dateObj.getDate()).padStart(2, '0');
           const hours = String(dateObj.getHours()).padStart(2, '0');
           const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-          startAtISO = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+          
+          // Get timezone offset (z.B. +01:00 für CET oder +02:00 für CEST)
+          const tzOffset = -dateObj.getTimezoneOffset();
+          const tzOffsetHours = String(Math.floor(Math.abs(tzOffset) / 60)).padStart(2, '0');
+          const tzOffsetMins = String(Math.abs(tzOffset) % 60).padStart(2, '0');
+          const tzSign = tzOffset >= 0 ? '+' : '-';
+          const tzString = `${tzSign}${tzOffsetHours}:${tzOffsetMins}`;
+          
+          startAtISO = `${year}-${month}-${day}T${hours}:${minutes}:00${tzString}`;
           
           // Setze die Endzeit
           if (endAt) {
@@ -232,7 +240,7 @@ export default function CreateJob() {
             
             const endHours = String(endDateObj.getHours()).padStart(2, '0');
             const endMinutes = String(endDateObj.getMinutes()).padStart(2, '0');
-            endAtISO = `${year}-${month}-${day}T${endHours}:${endMinutes}:00`;
+            endAtISO = `${year}-${month}-${day}T${endHours}:${endMinutes}:00${tzString}`;
           }
         }
       } catch (error) {
