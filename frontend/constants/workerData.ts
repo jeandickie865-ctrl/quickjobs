@@ -11,7 +11,8 @@ export type CategoryKey =
   | "seniorenhilfe"
   | "nachhilfe_unterricht"
   | "buero_kundenservice"
-  | "inventur";
+  | "inventur"
+  | "friseur";
 
 export type TaxonomyCategory = {
   key: CategoryKey;
