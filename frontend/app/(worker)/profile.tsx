@@ -57,9 +57,10 @@ export default function WorkerProfileScreen() {
 
       setProfile(data);
 
-      const reviews = await getReviewsForWorker(user.id);
-      setAvgRating(calculateAverageRating(reviews));
-      setReviewCount(reviews.length);
+      const reviewsData = await getReviewsForWorker(user.id);
+      setReviews(reviewsData);
+      setAvgRating(calculateAverageRating(reviewsData));
+      setReviewCount(reviewsData.length);
 
       const apps = await getWorkerApplications();
       const accepted = apps.filter(a => a.status === 'accepted');
