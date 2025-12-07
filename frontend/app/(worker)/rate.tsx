@@ -276,7 +276,7 @@ export default function RateEmployerScreen() {
                   AUFTRAGGEBER
                 </Text>
                 <Text style={{ fontSize: 18, color: COLORS.white, fontWeight: '700' }}>
-                  {employer?.company || employer?.firstName || employer?.lastName || 'Auftraggeber'}
+                  {employer?.companyName || employer?.company || employer?.firstName || employer?.lastName || 'Auftraggeber'}
                 </Text>
               </View>
 
