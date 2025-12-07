@@ -48,7 +48,6 @@
       { "key": "promotion", "label": "Promotion" },
       { "key": "garderobe", "label": "Garderobe" },
       { "key": "auf_abbau", "label": "Auf- und Abbau" },
-      { "key": "stagehand", "label": "Stagehand" },
       { "key": "akkreditierung", "label": "Akkreditierung" },
       { "key": "flyerverteilung", "label": "Flyerverteilung" }
     ],
