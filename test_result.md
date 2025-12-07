@@ -1183,6 +1183,242 @@ backend:
   - task: "Worker Document Upload - API Endpoints"
     implemented: true
     working: "NA"
+
+
+  - agent: "main"
+    message: |
+      **🚨 UMFASSENDE SYSTEM-PRÜFUNG - Alle heute implementierten Features**
+      
+      **User-Anfrage:** "Größte Prüfung die du an Möglichkeiten hast - prüfe alles auf Richtigkeit, Schnelligkeit, Logik, Speicherung, etc."
+      
+      **Heute implementierte Features (7. Dezember 2025):**
+      
+      1. **Neue Kategorien Integration:**
+         - Friseur, Kosmetik, DJ, Ton, Stage
+         - Backend taxonomy.json synchronisiert mit Frontend
+         - Validierung bei Worker-Profil-Erstellung und Job-Erstellung
+      
+      2. **Job-Erstellung mit ISO-Timestamps:**
+         - Frontend kombiniert Datum + Uhrzeit zu ISO-Timestamps
+         - Backend speichert startAt/endAt als ISO-Strings
+         - Support für deutsches (DD.MM.YYYY) und ISO-Format (YYYY-MM-DD)
+      
+      3. **Dokumenten-Upload-System:**
+         - Backend: POST/GET/DELETE Endpoints für Worker-Dokumente
+         - Frontend: documents.tsx Screen mit expo-document-picker
+         - Base64-Speicherung in MongoDB
+         - Validierung: Max 5MB, nur PDF/JPG/PNG/WEBP
+      
+      4. **Bewertungssystem:**
+         - Worker können Employer bewerten
+         - Public-view Endpoint für Employer-Profile
+         - Bewertungen werden im Worker-Profil angezeigt
+         - Sterne-Rating + Kommentar + Datum
+      
+      5. **Datums-/Uhrzeitanzeige-Fixes:**
+         - formatDateWithWeekday() prüft auf valide ISO-Strings
+         - isUpcomingJob() unterstützt ISO-Timestamps
+         - Backend-Filter für Jobs erweitert (startAt/start_at/date)
+      
+      **Test-Prioritäten:**
+      1. ✅ CRITICAL: Job-Erstellung mit neuen Kategorien
+      2. ✅ CRITICAL: Job-Anzeige nach Erstellung
+      3. ✅ HIGH: Worker-Profil-Speicherung mit neuen Kategorien
+      4. ✅ HIGH: Dokumenten-Upload/Download/Löschen
+      5. ✅ HIGH: Bewertungen erstellen und anzeigen
+      6. ✅ MEDIUM: Datums-/Uhrzeitanzeige in allen Screens
+      7. ✅ MEDIUM: Performance und Response-Zeiten
+      
+      **Erwartete Test-Szenarien:**
+      - Worker-Registrierung mit "Friseur" Kategorie
+      - Employer erstellt Job mit "Friseur" → "Damenfriseur"
+      - Job erscheint in Employer-Dashboard
+      - Job erscheint in Worker "Alle Jobs"
+      - Worker kann sich bewerben
+      - Match erstellen und Bewertung abgeben
+      - Dokumenten-Upload und Anzeige
+      - Alle Datums-/Uhrzeitfelder korrekt
+
+backend:
+  - task: "New Categories - Backend Validation"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py, backend/taxonomy.json"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Backend taxonomy.json mit neuen Kategorien aktualisiert (Friseur, Kosmetik, DJ, Ton, Stage). Funktion validate_category() prüft gegen diese taxonomy.json. Backend neu gestartet um taxonomy.json zu laden."
+
+  - task: "Job Creation with ISO Timestamps"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Job-Modell speichert startAt/endAt als ISO-Timestamps statt date+time. Backend-Filter erweitert für Jobs-Abfrage: $or Filter für startAt/start_at/date. Response ohne Validierung (return jobs statt Job(**job)) um Fehler zu vermeiden."
+
+  - task: "Document Upload/Download/Delete API"
+    implemented: true
+    working: "true"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "true"
+        agent: "main"
+        comment: "Backend Document-Endpoints funktionieren: POST /api/profiles/worker/{user_id}/documents (Base64 upload), GET (retrieve), DELETE (remove). WorkerDocument Model mit Base64-Speicherung. Testing-Agent bestätigte 10/10 Tests bestanden."
+
+  - task: "Employer Profile Public View"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Neuer Endpoint GET /api/profiles/employer/{user_id}/public-view erstellt. Worker können jetzt Employer-Profile sehen ohne 403-Fehler. Gibt limitierte öffentliche Daten zurück (companyName, industry, etc.)."
+
+frontend:
+  - task: "Job Creation Form - New Categories & ISO Timestamps"
+    implemented: true
+    working: "NA"
+    file: "app/(employer)/jobs/create.tsx"
+    stuck_count: 2
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "false"
+        agent: "user"
+        comment: "User: Job mit Friseur kann nicht erstellt werden. Button wird grau, nichts passiert."
+      - working: "NA"
+        agent: "main"
+        comment: "FIXES: 1) Payload von categories:[] zu category:'' geändert. 2) Datums-Parser für DD.MM.YYYY und YYYY-MM-DD Support. 3) Alle Pflichtfelder hinzugefügt (address, workerAmountCents, etc.). 4) Try-Catch für Fehlerbehandlung. 5) Validation für startAtISO/endAtISO."
+
+  - task: "Job Display - ISO Timestamp Support"
+    implemented: true
+    working: "NA"
+    file: "app/(employer)/index.tsx"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "false"
+        agent: "user"
+        comment: "User: Jobs verschwinden nach Speicherung, nicht sichtbar in Aufträge-Liste."
+      - working: "NA"
+        agent: "main"
+        comment: "FIX: isUpcomingJob() Funktion erweitert um ISO-Timestamps zu unterstützen. Alte Filter prüfte nur date-Feld, neue prüft startAt (ISO). Jobs mit startAt.includes('T') werden jetzt als ISO erkannt und korrekt gefiltert."
+
+  - task: "Worker Document Management UI"
+    implemented: true
+    working: "NA"
+    file: "app/(worker)/documents.tsx"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "false"
+        agent: "user"
+        comment: "User: Löschen-Button funktioniert nicht auf Mobile Web."
+      - working: "NA"
+        agent: "main"
+        comment: "FIX: Alert.alert durch window.confirm ersetzt für bessere Web-Kompatibilität. Upload verwendet jetzt JSON statt FormData (Base64 im Request Body). Löschen-Button Farbe zu neon geändert."
+
+  - task: "Worker Rating Screen"
+    implemented: true
+    working: "NA"
+    file: "app/(worker)/rate.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Rating-Screen für Worker um Employer zu bewerten. Verwendet getEmployerProfilePublicView() statt blockiertem Endpoint. Hintergrundfarbe von lila zu dunkel geändert. Alert.alert durch alert() ersetzt. updateJob() Call entfernt (Funktion existiert nicht)."
+
+  - task: "Worker Profile - Reviews Display"
+    implemented: true
+    working: "NA"
+    file: "app/(worker)/profile.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Bewertungen-Sektion im Worker-Profil hinzugefügt. Zeigt Sterne-Rating, Kommentar, und Datum. Reviews werden geladen und in State gespeichert. Dunkles Card-Design mit neon-Sternen."
+
+  - task: "Date/Time Display - Validation Fix"
+    implemented: true
+    working: "NA"
+    file: "utils/date.ts"
+    stuck_count: 1
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "false"
+        agent: "user"
+        comment: "User: Jobs zeigen falsches Datum '01.01.1100' oder kryptische Uhrzeiten."
+      - working: "NA"
+        agent: "main"
+        comment: "FIX: formatDateWithWeekday() prüft jetzt auf valide ISO-Strings (min 10 chars + '-'). Invalide Strings (nur Uhrzeiten wie '1100') werden nicht angezeigt. Console-Warning für Debug."
+
+  - agent: "main"
+    message: |
+      **📋 Test-Anweisungen für umfassende System-Prüfung:**
+      
+      **A. Backend-Tests (deep_testing_backend_v2):**
+      
+      1. **Neue Kategorien:**
+         - POST /api/profiles/worker mit category: "friseur" → 200 OK
+         - POST /api/jobs mit category: "friseur", subcategory: "damenfriseur" → 200 OK
+         - Validierung: Invalid category "xyz123" → 400/422
+      
+      2. **Job CRUD mit ISO-Timestamps:**
+         - POST /api/jobs mit startAt/endAt als ISO-Strings
+         - GET /api/jobs/employer/{id} zeigt neue Jobs
+         - Jobs mit startAt > now werden gefunden
+         - Legacy-Jobs mit date-Feld werden auch gefunden
+      
+      3. **Dokumenten-System:**
+         - POST /api/profiles/worker/{id}/documents - Upload
+         - GET /api/profiles/worker/{id}/documents/{doc_id} - Download
+         - DELETE /api/profiles/worker/{id}/documents/{doc_id} - Löschen
+         - Validierung: Dateigröße > 5MB → 400
+         - Validierung: Falscher Dateityp → 400
+      
+      4. **Bewertungen:**
+         - POST /api/reviews mit rating + comment
+         - GET /api/reviews/worker/{id} - Worker-Bewertungen abrufen
+         - GET /api/profiles/employer/{id}/public-view - Öffentliches Profil
+      
+      5. **Performance:**
+         - Response-Zeiten < 500ms
+         - Keine 500-Fehler
+         - MongoDB-Verbindung stabil
+      
+      **B. Frontend-Tests (expo_frontend_testing_agent) - NUR wenn User zustimmt:**
+      
+      1. Job-Erstellung mit neuen Kategorien
+      2. Job-Anzeige in Employer-Dashboard
+      3. Worker-Profil-Erstellung mit neuen Kategorien
+      4. Dokumenten-Upload/Download/Löschen Flow
+      5. Bewertung erstellen und anzeigen
+      6. Datums-/Uhrzeitanzeige in Matches
+      
+      **WICHTIG:** Erst Backend testen, dann User fragen ob Frontend-Testing gewünscht ist!
+
+
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
