@@ -194,6 +194,8 @@ export default function CreateJob() {
     let startAtISO: string | undefined = undefined;
     let endAtISO: string | undefined = undefined;
     
+    console.log('🔍 Input values:', { date, startAt, endAt });
+    
     if (date && startAt) {
       try {
         // Parsen des deutschen Datums (DD.MM.YYYY) oder ISO-Datums (YYYY-MM-DD)
