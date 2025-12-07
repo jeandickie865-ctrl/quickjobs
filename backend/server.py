@@ -1122,7 +1122,7 @@ async def upload_worker_document(
         {"$push": {"documents": new_document.dict()}}
     )
     
-    logger.info(f"✅ Document uploaded successfully for worker {user_id}: {file.filename} ({file_size_mb:.2f} MB)")
+    logger.info(f"✅ Document uploaded successfully for worker {user_id}: {payload.filename} ({file_size_mb:.2f} MB)")
     
     return {
         "message": "Dokument erfolgreich hochgeladen",
