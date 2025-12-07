@@ -3507,7 +3507,19 @@ def generate_payroll_pdf(
     def format_time(time_str):
         if not time_str:
             return ""
-        return time_str[:5] if len(time_str) >= 5 else time_str
+        try:
+            # Parse ISO timestamp: "2025-12-10T11:00:00.000Z" or "2025-12-10T11:00:00+01:00"
+            if 'T' in time_str:
+                from datetime import datetime
+                # Parse ISO format
+                dt = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+                # Return HH:MM in local time
+                return dt.strftime('%H:%M')
+            # Wenn Format HH:MM:SS, nur HH:MM nehmen
+            return time_str[:5] if len(time_str) >= 5 else time_str
+        except Exception as e:
+            logger.warning(f"Could not parse time '{time_str}': {e}")
+            return time_str[:5] if len(time_str) >= 5 else time_str
     
     # File setup
     contracts_dir = Path("/app/backend/generated_contracts")
