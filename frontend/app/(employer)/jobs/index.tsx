@@ -210,12 +210,14 @@ export default function EmployerJobsScreen() {
                 </View>
 
                 {/* Hourly Rate */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                  <Ionicons name="cash-outline" size={16} color={COLORS.muted} />
-                  <Text style={{ color: COLORS.muted, fontSize: 14, marginLeft: 6 }}>
-                    {euro(job.hourlyRate)}/Std
-                  </Text>
-                </View>
+                {job.workerAmountCents && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                    <Ionicons name="cash-outline" size={16} color={COLORS.muted} />
+                    <Text style={{ color: COLORS.muted, fontSize: 14, marginLeft: 6 }}>
+                      {euro(job.workerAmountCents)}/Std
+                    </Text>
+                  </View>
+                )}
 
                 {/* Registration Warning */}
                 {needsRegistration && (
