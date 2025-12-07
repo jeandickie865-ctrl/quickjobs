@@ -913,7 +913,7 @@ async def get_worker_profile_for_employer(
             "isAcceptedMatch": False
         }
 
-@api_router.put("/profiles/worker/{user_id}", response_model=WorkerProfile)
+@api_router.put("/profiles/worker/{user_id}")
 async def update_worker_profile(
     user_id: str,
     profile_update: WorkerProfileUpdate,
