@@ -65,7 +65,7 @@ export default function EmployerLayout() {
     );
   }
 
-  if (!user || user.role !== 'employer') return <Redirect href="/start" />;
+  if (!user || user.role !== 'employer') return <Redirect href="/auth/start" />;
 
   return (
     <Tabs
