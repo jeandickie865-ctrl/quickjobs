@@ -244,9 +244,19 @@ export default function CreateJob() {
             const [endHour, endMin] = endAt.split(':');
             endDateObj.setHours(parseInt(endHour), parseInt(endMin || '0'), 0, 0);
             
+            // Wenn Endzeit < Startzeit → Job geht über Mitternacht → Tag +1
+            if (endDateObj < dateObj) {
+              endDateObj.setDate(endDateObj.getDate() + 1);
+              console.log('⏰ Endzeit ist früher als Startzeit → Job geht über Mitternacht → +1 Tag');
+            }
+            
+            // Extrahiere Datum und Zeit für Endzeit
+            const endYear = endDateObj.getFullYear();
+            const endMonth = String(endDateObj.getMonth() + 1).padStart(2, '0');
+            const endDay = String(endDateObj.getDate()).padStart(2, '0');
             const endHours = String(endDateObj.getHours()).padStart(2, '0');
             const endMinutes = String(endDateObj.getMinutes()).padStart(2, '0');
-            endAtISO = `${year}-${month}-${day}T${endHours}:${endMinutes}:00${tzString}`;
+            endAtISO = `${endYear}-${endMonth}-${endDay}T${endHours}:${endMinutes}:00${tzString}`;
           }
         }
       } catch (error) {
