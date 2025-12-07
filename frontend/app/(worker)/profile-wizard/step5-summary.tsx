@@ -87,6 +87,8 @@ export default function Step5Summary() {
       const backend = process.env.EXPO_PUBLIC_BACKEND_URL || '';
       const userId = user?.id || '';
 
+      console.log('💾 Saving profile payload:', JSON.stringify(payload, null, 2));
+
       let res = await fetch(`${backend}/api/profiles/worker`, {
         method: 'POST',
         headers: {
@@ -96,7 +98,10 @@ export default function Step5Summary() {
         body: JSON.stringify(payload),
       });
 
+      console.log('📤 POST response status:', res.status);
+
       if (res.status === 400) {
+        console.log('⚠️ Profile exists, trying PUT instead');
         res = await fetch(`${backend}/api/profiles/worker/${userId}`, {
           method: 'PUT',
           headers: {
@@ -105,9 +110,14 @@ export default function Step5Summary() {
           },
           body: JSON.stringify(payload),
         });
+        console.log('📤 PUT response status:', res.status);
       }
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('❌ Save failed:', res.status, errorText);
+        throw new Error(`Fehler ${res.status}: ${errorText}`);
+      }
 
       resetWizard();
       setShowSuccess(true);
