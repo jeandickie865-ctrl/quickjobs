@@ -12,7 +12,8 @@ export type CategoryKey =
   | "nachhilfe_unterricht"
   | "buero_kundenservice"
   | "inventur"
-  | "friseur";
+  | "friseur"
+  | "kosmetik";
 
 export type TaxonomyCategory = {
   key: CategoryKey;
