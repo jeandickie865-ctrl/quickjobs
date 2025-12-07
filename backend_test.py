@@ -17,7 +17,7 @@ import os
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://shift-portal.preview.emergentagent.com') + '/api'
+BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://shiftmatch-2.preview.emergentagent.com') + '/api'
 
 class BackendTester:
     def __init__(self):
