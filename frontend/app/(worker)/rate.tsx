@@ -82,9 +82,9 @@ export default function RateEmployerScreen() {
         console.log('👔 Loading employer:', targetEmployerId);
         
         if (targetEmployerId) {
-          const employerData = await getEmployerProfile(String(targetEmployerId));
+          const employerData = await getEmployerProfilePublicView(String(targetEmployerId));
           setEmployer(employerData);
-          console.log('✅ Employer loaded:', employerData?.firstName);
+          console.log('✅ Employer loaded:', employerData?.companyName);
         } else {
           console.log('❌ No employerId available');
         }
