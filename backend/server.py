@@ -799,7 +799,7 @@ async def create_worker_profile(
     logger.info(f"Worker profile created for user {userId}")
     return WorkerProfile(**created_profile)
 
-@api_router.get("/profiles/worker/{user_id}", response_model=WorkerProfile)
+@api_router.get("/profiles/worker/{user_id}")
 async def get_worker_profile(
     user_id: str,
     authorization: Optional[str] = Header(None)
