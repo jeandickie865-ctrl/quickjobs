@@ -349,13 +349,13 @@ export default function WorkerDocumentsScreen() {
                   <Pressable
                     onPress={() => handleDelete(doc.id, doc.filename)}
                     style={{
-                      backgroundColor: COLORS.error,
+                      backgroundColor: COLORS.neon,
                       paddingVertical: 8,
                       paddingHorizontal: 12,
                       borderRadius: 8
                     }}
                   >
-                    <Text style={{ color: COLORS.white, fontSize: 13, fontWeight: '600' }}>
+                    <Text style={{ color: COLORS.black, fontSize: 13, fontWeight: '700' }}>
                       Löschen
                     </Text>
                   </Pressable>
