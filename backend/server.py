@@ -163,7 +163,7 @@ class WorkerProfile(BaseModel):
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
     # Qualification Documents (Base64 storage)
-    documents: List[dict] = []  # [{id, name, type, data, uploadedAt}]
+    documents: List[WorkerDocument] = []
     pushToken: Optional[str] = None
     createdAt: Optional[str] = None
     updatedAt: Optional[str] = None
