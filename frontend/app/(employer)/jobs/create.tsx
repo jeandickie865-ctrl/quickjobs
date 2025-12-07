@@ -195,19 +195,15 @@ export default function CreateJob() {
     let endAtISO: string | undefined = undefined;
     
     if (date && startAt) {
-      // Parsen des deutschen Datums (DD.MM.YYYY)
-      const dateParts = date.split('.');
-      if (dateParts.length === 3) {
-        const [day, month, year] = dateParts;
-        const [startHour, startMin] = startAt.split(':');
-        const startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(startHour), parseInt(startMin || '0'));
-        startAtISO = startDate.toISOString();
-        
-        if (endAt) {
-          const [endHour, endMin] = endAt.split(':');
-          const endDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(endHour), parseInt(endMin || '0'));
-          endAtISO = endDate.toISOString();
-        }
+      // Parsen des ISO-Datums (YYYY-MM-DD)
+      const [startHour, startMin] = startAt.split(':');
+      const startDate = new Date(`${date}T${startHour.padStart(2, '0')}:${(startMin || '0').padStart(2, '0')}:00`);
+      startAtISO = startDate.toISOString();
+      
+      if (endAt) {
+        const [endHour, endMin] = endAt.split(':');
+        const endDate = new Date(`${date}T${endHour.padStart(2, '0')}:${(endMin || '0').padStart(2, '0')}:00`);
+        endAtISO = endDate.toISOString();
       }
     }
 
