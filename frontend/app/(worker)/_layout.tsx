@@ -103,7 +103,7 @@ export default function WorkerLayout() {
     );
   }
 
-  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
+  if (!user || user.role !== 'worker') return <Redirect href="/auth/start" />;
 
   return (
     <Tabs
