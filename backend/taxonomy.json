@@ -48,7 +48,6 @@
       { "key": "promotion", "label": "Promotion" },
       { "key": "garderobe", "label": "Garderobe" },
       { "key": "auf_abbau", "label": "Auf- und Abbau" },
-      { "key": "stagehand", "label": "Stagehand" },
       { "key": "akkreditierung", "label": "Akkreditierung" },
       { "key": "flyerverteilung", "label": "Flyerverteilung" }
     ],
@@ -266,6 +265,119 @@
     ],
     "qualifications": [
       { "key": "it_grundkenntnisse", "label": "IT-Grundkenntnisse" }
+    ]
+  },
+
+  "friseur": {
+    "label": "Friseur",
+    "subcategories": [
+      { "key": "damenfriseur", "label": "Damenfriseur" },
+      { "key": "herrenfriseur", "label": "Herrenfriseur" },
+      { "key": "colorist", "label": "Colorist" },
+      { "key": "balayage_spezialist", "label": "Balayage Spezialist" },
+      { "key": "blond_experte", "label": "Blond-Experte" },
+      { "key": "extensions_stylist", "label": "Extensions Stylist" },
+      { "key": "brautstyling", "label": "Brautstyling" },
+      { "key": "barbier", "label": "Barbier" }
+    ],
+    "qualifications": [
+      { "key": "ausbildung_friseur", "label": "Ausbildung Friseur" },
+      { "key": "meisterbrief", "label": "Meisterbrief" },
+      { "key": "colorationskenntnisse", "label": "Colorationskenntnisse" },
+      { "key": "schnitttechniken_damen", "label": "Schnitttechniken für Damen" },
+      { "key": "schnitttechniken_herren", "label": "Schnitttechniken für Herren" },
+      { "key": "rasurtechniken", "label": "Rasurtechniken" },
+      { "key": "styling_hochzeiten", "label": "Styling für Hochzeiten" },
+      { "key": "haar_kopfhautpflege", "label": "Kenntnisse in Haar- und Kopfhautpflege" },
+      { "key": "produktschulungen", "label": "Produktschulungen" },
+      { "key": "bonding", "label": "Bonding" },
+      { "key": "tape_in", "label": "Tape-In" },
+      { "key": "tressen", "label": "Tressen" }
+    ]
+  },
+
+  "kosmetik": {
+    "label": "Kosmetik",
+    "subcategories": [
+      { "key": "kosmetik", "label": "Kosmetik" },
+      { "key": "visagist", "label": "Visagist:IN" },
+      { "key": "makeup_artist", "label": "Make-up Artist" },
+      { "key": "permanent_makeup", "label": "Permanent Make-up" },
+      { "key": "wimpernverlaengerung", "label": "Wimpernverlängerung" },
+      { "key": "brow_artist", "label": "Brow Artist" },
+      { "key": "nageldesign", "label": "Nageldesign" },
+      { "key": "fusspflege_medizinisch", "label": "Fußpflege medizinisch" },
+      { "key": "fusspflege_kosmetisch", "label": "Fußpflege kosmetisch" },
+      { "key": "hautpflegeberatung", "label": "Hautpflegeberatung" }
+    ],
+    "qualifications": [
+      { "key": "ausbildung_kosmetikerin", "label": "Ausbildung Kosmetikerin" },
+      { "key": "weiterbildung_visagistik", "label": "Weiterbildung Visagistik" },
+      { "key": "makeup_schulungen", "label": "Make-up Schulungen" },
+      { "key": "permanent_makeup_zertifikat", "label": "Permanent Make-up Zertifikat" },
+      { "key": "microblading_zertifikat", "label": "Microblading Zertifikat" },
+      { "key": "wimpernverlaengerung_1zu1", "label": "Wimpernverlängerung 1:1 Technik" },
+      { "key": "wimpernvolumentechnik", "label": "Wimpernvolumentechnik" },
+      { "key": "brow_lifting", "label": "Brow Lifting" },
+      { "key": "nageldesign_zertifikat", "label": "Nageldesign Zertifikat" },
+      { "key": "hygieneschulung", "label": "Hygieneschulung" },
+      { "key": "hautanalyse_skills", "label": "Hautanalyse Skills" },
+      { "key": "produktwissen_skincare", "label": "Produktwissen Skincare Marken" }
+    ]
+  },
+
+  "dj": {
+    "label": "DJ",
+    "subcategories": [
+      { "key": "club", "label": "Club" },
+      { "key": "hochzeit", "label": "Hochzeit" },
+      { "key": "firmenfeier", "label": "Firmenfeier" },
+      { "key": "open_air", "label": "Open Air" }
+    ],
+    "qualifications": [
+      { "key": "eigener_controller", "label": "eigener Controller" },
+      { "key": "eigene_pa", "label": "eigene PA" },
+      { "key": "house", "label": "House" },
+      { "key": "techno", "label": "Techno" },
+      { "key": "hip_hop", "label": "Hip Hop" },
+      { "key": "charts", "label": "Charts" },
+      { "key": "mixed_styles", "label": "Mixed Styles" }
+    ]
+  },
+
+  "ton": {
+    "label": "Ton",
+    "subcategories": [
+      { "key": "live_ton", "label": "Live Ton" },
+      { "key": "foh", "label": "FOH" },
+      { "key": "monitor", "label": "Monitor" },
+      { "key": "recording", "label": "Recording" }
+    ],
+    "qualifications": [
+      { "key": "x32", "label": "X32" },
+      { "key": "sq5", "label": "SQ5" },
+      { "key": "mikrofonierung", "label": "Mikrofonierung" },
+      { "key": "in_ear", "label": "In Ear" },
+      { "key": "pa_aufbau", "label": "PA Aufbau" },
+      { "key": "line_check", "label": "Line Check" }
+    ]
+  },
+
+  "stage": {
+    "label": "Stage",
+    "subcategories": [
+      { "key": "stagehand", "label": "Stagehand" },
+      { "key": "buehnenaufbau", "label": "Bühnenaufbau" },
+      { "key": "lichtassistenz", "label": "Lichtassistenz" }
+    ],
+    "qualifications": [
+      { "key": "traversen", "label": "Traversen" },
+      { "key": "strom", "label": "Strom" },
+      { "key": "kabel", "label": "Kabel" },
+      { "key": "rigging_grundlagen", "label": "Rigging Grundlagen" },
+      { "key": "cases", "label": "Cases" },
+      { "key": "aufbau", "label": "Aufbau" },
+      { "key": "abbau", "label": "Abbau" }
     ]
   }
 }
