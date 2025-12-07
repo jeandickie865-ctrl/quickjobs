@@ -452,14 +452,14 @@ backend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 2
+  test_sequence: 3
   run_ui: false
 
 test_plan:
   current_focus: 
-    - "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
-  stuck_tasks:
-    - "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
+    - "Worker Document Upload Feature - Backend API Endpoints"
+    - "Worker Document Upload Feature - Frontend UI"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
