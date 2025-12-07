@@ -32,6 +32,7 @@ export default function WorkerProfileScreen() {
   const [avgRating, setAvgRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [matchCount, setMatchCount] = useState(0);
+  const [reviews, setReviews] = useState<any[]>([]);
 
   useEffect(() => {
     if (authLoading || !user) return;
