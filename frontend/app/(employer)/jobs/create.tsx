@@ -190,6 +190,27 @@ export default function CreateJob() {
 
     const fullDescription = description.trim() || undefined;
 
+    // Kombiniere Datum + Uhrzeit zu vollständigen ISO-Timestamps
+    let startAtISO: string | undefined = undefined;
+    let endAtISO: string | undefined = undefined;
+    
+    if (date && startAt) {
+      // Parsen des deutschen Datums (DD.MM.YYYY)
+      const dateParts = date.split('.');
+      if (dateParts.length === 3) {
+        const [day, month, year] = dateParts;
+        const [startHour, startMin] = startAt.split(':');
+        const startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(startHour), parseInt(startMin || '0'));
+        startAtISO = startDate.toISOString();
+        
+        if (endAt) {
+          const [endHour, endMin] = endAt.split(':');
+          const endDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(endHour), parseInt(endMin || '0'));
+          endAtISO = endDate.toISOString();
+        }
+      }
+    }
+
     const jobCreate: JobCreate = {
       employerType: user.accountType === 'business' ? 'business' : 'private',
       title: title.trim(),
@@ -198,9 +219,8 @@ export default function CreateJob() {
       subcategory: subcategory || undefined,
       qualifications: qualifications || [],
       timeMode: 'fixed_time',
-      date,
-      startAt,
-      endAt,
+      startAt: startAtISO,
+      endAt: endAtISO,
       address: location,
       lat,
       lon,
@@ -209,6 +229,8 @@ export default function CreateJob() {
       required_all_tags: [],
       required_any_tags: [],
     };
+
+    console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO });
 
     try {
       setIsSaving(true);
