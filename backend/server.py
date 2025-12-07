@@ -1399,6 +1399,19 @@ async def create_job(
     if job_dict.get("end_at") and not job_dict.get("endAt"):
         job_dict["endAt"] = job_dict["end_at"]
     
+    # EXTRACT DATE FIELD: If date is None but startAt exists, extract YYYY-MM-DD from startAt
+    if not job_dict.get("date") and job_dict.get("startAt"):
+        try:
+            # Parse ISO timestamp (e.g. "2026-01-25T20:00:00+01:00")
+            start_str = job_dict["startAt"]
+            if "T" in start_str:
+                # Extract date part (YYYY-MM-DD)
+                date_part = start_str.split("T")[0]
+                job_dict["date"] = date_part
+                logger.info(f"✅ Extracted date '{date_part}' from startAt")
+        except Exception as e:
+            logger.warning(f"⚠️ Could not extract date from startAt: {e}")
+    
     logger.info(f"📝 Creating job with employerId: {employerId}")
     
     # Convert nested Address to dict if needed
