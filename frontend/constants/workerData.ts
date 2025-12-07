@@ -339,6 +339,61 @@ export const TAXONOMY: TaxonomyCategory[] = [
       "Produktwissen Skincare Marken",
     ],
   },
+  {
+    key: "dj",
+    title: "DJ",
+    activities: [
+      "Club",
+      "Hochzeit",
+      "Firmenfeier",
+      "Open Air",
+    ],
+    qualifications: [
+      "eigener Controller",
+      "eigene PA",
+      "House",
+      "Techno",
+      "Hip Hop",
+      "Charts",
+      "Mixed Styles",
+    ],
+  },
+  {
+    key: "ton",
+    title: "Ton",
+    activities: [
+      "Live Ton",
+      "FOH",
+      "Monitor",
+      "Recording",
+    ],
+    qualifications: [
+      "X32",
+      "SQ5",
+      "Mikrofonierung",
+      "In Ear",
+      "PA Aufbau",
+      "Line Check",
+    ],
+  },
+  {
+    key: "stage",
+    title: "Stage",
+    activities: [
+      "Stagehand",
+      "Bühnenaufbau",
+      "Lichtassistenz",
+    ],
+    qualifications: [
+      "Traversen",
+      "Strom",
+      "Kabel",
+      "Rigging Grundlagen",
+      "Cases",
+      "Aufbau",
+      "Abbau",
+    ],
+  },
 ];
 
 // Helper: Get all category keys
