@@ -1098,6 +1098,97 @@ agent_communication:
       ✅ **App loads correctly** - Shows login screen
       ✅ **Credentials entered successfully** - Email and password fields work
       ❌ **Login FAILS silently** - No error message shown but stays on login page
+
+
+  - agent: "main"
+    message: |
+      **Feature: Worker Document Upload System - IMPLEMENTATION COMPLETE**
+      
+      **Implementierte Änderungen:**
+      
+      **1. Backend API Endpoints (server.py):**
+      - ✅ Base64-Import hinzugefügt
+      - ✅ WorkerDocument Model aktualisiert für Base64-Speicherung:
+        * id: str (auto-generated UUID)
+        * filename: str
+        * content_type: str
+        * data: str (Base64 encoded)
+        * uploaded_at: str (ISO timestamp)
+      - ✅ WorkerProfile.documents Feld: List[dict] → List[WorkerDocument]
+      
+      **2. Neue API Endpoints erstellt:**
+      - ✅ POST /api/profiles/worker/{user_id}/documents
+        * Upload-Datei, konvertiert zu Base64, speichert in MongoDB
+        * Validierung: Max 5MB Dateigröße
+        * Erlaubte Typen: PDF, JPG, PNG, WEBP
+        * Authorization: Bearer Token required
+      - ✅ GET /api/profiles/worker/{user_id}/documents/{document_id}
+        * Abrufen eines spezifischen Dokuments (mit Base64-Daten)
+        * Authorization: Bearer Token required
+      - ✅ DELETE /api/profiles/worker/{user_id}/documents/{document_id}
+        * Löschen eines Dokuments aus MongoDB
+        * Authorization: Bearer Token required
+      
+      **3. Frontend UI (app/(worker)/documents.tsx):**
+      - ✅ Neuer Screen "Qualifikationsnachweise" erstellt
+      - ✅ expo-document-picker installiert und integriert
+      - ✅ Features implementiert:
+        * Dokumente-Liste mit Dateinamen, Datum, Größe
+        * "Dokument hochladen" Button mit Document Picker
+        * Dateigrößen-Validierung (max 5MB)
+        * Dateityp-Validierung (PDF, JPG, PNG, WEBP)
+        * Base64-Konvertierung im Frontend
+        * Löschen-Funktion mit Bestätigungs-Alert
+        * Leerer Zustand ("Noch keine Dokumente")
+        * Hinweis-Box mit Dateiformat-Info
+      
+      **4. Navigation (app/(worker)/profile.tsx):**
+      - ✅ Neuer Button "Qualifikationsnachweise" hinzugefügt
+      - ✅ Navigation zu /(worker)/documents implementiert
+      
+      **Tech Stack:**
+      - Backend: FastAPI, MongoDB (Base64 storage)
+      - Frontend: React Native, expo-document-picker
+      - Dateiformate: PDF, JPG, PNG, WEBP
+      - Max Dateigröße: 5 MB
+      
+      **Erwartetes Verhalten:**
+      1. Worker navigiert zu "Qualifikationsnachweise" vom Profil
+      2. Klickt auf "Dokument hochladen" → Document Picker öffnet sich
+      3. Wählt Datei (PDF/Bild) → wird hochgeladen und in Liste angezeigt
+      4. Kann Dokumente ansehen (mit Dateinamen, Datum, Größe)
+      5. Kann Dokumente löschen (mit Bestätigung)
+      
+      **Nächste Schritte:**
+      - Backend Testing mit deep_testing_backend_v2
+      - Dann User fragen ob Frontend-Testing gewünscht ist
+
+backend:
+  - task: "Worker Document Upload - API Endpoints"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Backend Document Upload System implementiert: POST /api/profiles/worker/{user_id}/documents (Upload mit Base64), GET /api/profiles/worker/{user_id}/documents/{document_id} (Download), DELETE /api/profiles/worker/{user_id}/documents/{document_id} (Löschen). WorkerDocument Model aktualisiert für Base64-Speicherung (filename, content_type, data, uploaded_at). Validierung: Max 5MB, erlaubte Typen: PDF, JPG, PNG, WEBP. Authorization mit Bearer Token."
+
+frontend:
+  - task: "Worker Document Upload - UI Screen"
+    implemented: true
+    working: "NA"
+    file: "app/(worker)/documents.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Frontend Document Management Screen erstellt: Dokumente-Liste mit Namen/Datum/Größe, Upload-Button mit expo-document-picker, Dateigrößen- und Dateityp-Validierung (max 5MB, PDF/JPG/PNG/WEBP), Base64-Konvertierung, Löschen-Funktion mit Confirmation Alert, Hinweis-Box mit Formatinfos. Navigation-Button 'Qualifikationsnachweise' im Worker-Profil hinzugefügt."
+
       📍 **URL after login:** Still at /auth/login (should redirect to /start)
       
       **TEST 2: Profile Navigation**
