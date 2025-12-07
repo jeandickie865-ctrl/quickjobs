@@ -144,7 +144,7 @@ export default function RateEmployerScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={COLORS.neon} size="large" />
           <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt...</Text>
@@ -157,7 +157,7 @@ export default function RateEmployerScreen() {
     console.log('❌ Worker Rate: Job nicht gefunden. JobId:', jobId);
     
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <Ionicons name="alert-circle" size={64} color={COLORS.neon} style={{ marginBottom: 16 }} />
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 8 }}>
