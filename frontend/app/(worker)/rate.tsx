@@ -123,8 +123,7 @@ export default function RateEmployerScreen() {
       const result = await addReview(review);
       console.log('✅ Worker: Review saved successfully:', JSON.stringify(result, null, 2));
       
-      await updateJob(job.id, { status: 'done' });
-      console.log('✅ Job marked as completed after worker review');
+      // Note: Job status will be managed by backend automatically
       
       // Erfolgsmeldung
       alert('Bewertung wurde erfolgreich gespeichert!');
