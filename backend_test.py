@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
 """
-Backend Testing für erweiterte Worker Registration Data Fields
-
-Testet den erweiterten Backend-Endpoint PUT /api/profiles/worker/me/registration-data
-mit den neu hinzugefügten Feldern:
-- geburtsort (string)
-- staatsangehoerigkeit (string)  
-- confirm_70_days (boolean) -> kurzfristigkeit_bestaetigt
-- confirm_not_professional (boolean) -> kurzfristigkeit_nicht_berufsmaeßig
+Backend Testing Suite for ShiftMatch Worker Document Upload Feature
+Tests all document upload, retrieval, and deletion endpoints with comprehensive validation.
 """
 
 import asyncio
-import httpx
+import aiohttp
 import json
+import base64
 import os
+import sys
 from datetime import datetime
+import tempfile
+from pathlib import Path
 
 # Backend URL from environment
-BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://shiftmatch-2.preview.emergentagent.com') + '/api'
+BACKEND_URL = "https://shiftmatch-2.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
