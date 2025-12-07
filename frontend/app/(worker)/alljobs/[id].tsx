@@ -223,10 +223,34 @@ export default function WorkerJobDetailScreen() {
                   }
                 };
 
+                // Extract time from ISO timestamp: "2026-01-24T20:00:00+01:00" → "20:00"
+                const extractTime = (isoString) => {
+                  if (!isoString) return null;
+                  try {
+                    // Handle both ISO format (with T) and simple HH:MM format
+                    if (isoString.includes('T')) {
+                      // Extract time part after T: "2026-01-24T20:00:00+01:00" → "20:00:00+01:00"
+                      const timePart = isoString.split('T')[1];
+                      // Extract HH:MM: "20:00:00+01:00" → "20:00"
+                      const [hours, minutes] = timePart.split(':');
+                      return `${hours}:${minutes}`;
+                    } else if (isoString.includes(':')) {
+                      // Already in HH:MM format
+                      const parts = isoString.split(':');
+                      return `${parts[0]}:${parts[1]}`;
+                    }
+                    return null;
+                  } catch {
+                    return null;
+                  }
+                };
+
                 // Neue Felder: date, start_at, end_at
                 const jobDate = formatDate(job.date);
-                const startTime = job.start_at || job.startAt || null;
-                const endTime = job.end_at || job.endAt || null;
+                const startTimeRaw = job.start_at || job.startAt || null;
+                const endTimeRaw = job.end_at || job.endAt || null;
+                const startTime = extractTime(startTimeRaw);
+                const endTime = extractTime(endTimeRaw);
 
                 // 1. FIXED TIME mit neuen Feldern
                 if (job.timeMode === 'fixed_time' && jobDate && startTime && endTime) {
