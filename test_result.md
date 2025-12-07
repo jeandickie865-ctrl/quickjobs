@@ -452,15 +452,20 @@ backend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 3
+  test_sequence: 4
   run_ui: false
 
 test_plan:
   current_focus: 
-    - "Worker Document Upload Feature - Frontend UI"
+    - "COMPREHENSIVE SYSTEM TEST - All Features"
+    - "New Categories Integration (Friseur, Kosmetik, DJ, Ton, Stage)"
+    - "Job Creation with ISO Timestamps"
+    - "Document Upload System"
+    - "Review/Rating System"
+    - "Date/Time Display Fix"
   stuck_tasks: []
-  test_all: false
-  test_priority: "high_first"
+  test_all: true
+  test_priority: "critical_first"
 
 backend:
   - task: "Backend Infrastructure Check nach UI/UX Redesign"
