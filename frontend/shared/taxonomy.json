@@ -267,5 +267,33 @@
     "qualifications": [
       { "key": "it_grundkenntnisse", "label": "IT-Grundkenntnisse" }
     ]
+  },
+
+  "friseur": {
+    "label": "Friseur",
+    "subcategories": [
+      { "key": "damenfriseur", "label": "Damenfriseur" },
+      { "key": "herrenfriseur", "label": "Herrenfriseur" },
+      { "key": "colorist", "label": "Colorist" },
+      { "key": "balayage_spezialist", "label": "Balayage Spezialist" },
+      { "key": "blond_experte", "label": "Blond-Experte" },
+      { "key": "extensions_stylist", "label": "Extensions Stylist" },
+      { "key": "brautstyling", "label": "Brautstyling" },
+      { "key": "barbier", "label": "Barbier" }
+    ],
+    "qualifications": [
+      { "key": "ausbildung_friseur", "label": "Ausbildung Friseur" },
+      { "key": "meisterbrief", "label": "Meisterbrief" },
+      { "key": "colorationskenntnisse", "label": "Colorationskenntnisse" },
+      { "key": "schnitttechniken_damen", "label": "Schnitttechniken für Damen" },
+      { "key": "schnitttechniken_herren", "label": "Schnitttechniken für Herren" },
+      { "key": "rasurtechniken", "label": "Rasurtechniken" },
+      { "key": "styling_hochzeiten", "label": "Styling für Hochzeiten" },
+      { "key": "haar_kopfhautpflege", "label": "Kenntnisse in Haar- und Kopfhautpflege" },
+      { "key": "produktschulungen", "label": "Produktschulungen" },
+      { "key": "bonding", "label": "Bonding" },
+      { "key": "tape_in", "label": "Tape-In" },
+      { "key": "tressen", "label": "Tressen" }
+    ]
   }
 }
