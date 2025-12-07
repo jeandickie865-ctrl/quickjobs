@@ -820,7 +820,7 @@ async def get_worker_profile(
     profile.pop("_id", None)
     
     logger.info(f"Worker profile found for user {user_id}")
-    return WorkerProfile(**profile)
+    return profile
 
 @api_router.get("/profiles/worker/{user_id}/employer-view")
 async def get_worker_profile_for_employer(
