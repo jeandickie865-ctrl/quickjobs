@@ -526,33 +526,39 @@ backend:
 frontend:
   - task: "Unread Message Badge - Worker Matches"
     implemented: true
-    working: true
+    working: false
     file: "app/(worker)/matches.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "UI wurde angepasst: Roter Badge mit Anzahl ungelesener Nachrichten wird neben 'Zum Chat'-Button angezeigt, wenn unreadCounts[application.id] > 0. Badge ist ein rotes Kreiselement mit weißer Schrift."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL FRONTEND ISSUE: Comprehensive mobile testing (390x844) reveals COMPLETE INACCESSIBILITY of core app functionality. Users cannot access ANY main features due to authentication/navigation breakdown. All screens redirect to start page, no tabs visible, profile completion flow broken. Root cause: Authentication system not properly integrated with frontend routing. ALL user flows from review request are UNTESTABLE due to this fundamental issue."
 
   - task: "Unread Message Badge - Employer Matches"
     implemented: true
-    working: true
+    working: false
     file: "app/(employer)/matches.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Gleiche Implementierung wie Worker-Seite: State, loadUnreadCounts Funktion und UI-Badge wurden hinzugefügt. Badge zeigt Anzahl ungelesener Nachrichten neben dem Chat-Button an."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL FRONTEND ISSUE: Same as Worker Matches - complete inaccessibility due to authentication/routing breakdown. Employer flows also completely broken. Users cannot reach employer dashboard or any employer functionality."
 
   - task: "Worker Registration Data - New Fields (Staatsangehörigkeit, Geburtsort, Legal Confirmations)"
     implemented: true
     working: false
     file: "app/(worker)/registration-data.tsx"
-    stuck_count: 1
+    stuck_count: 2
     priority: "critical"
     needs_retesting: false
     status_history:
@@ -562,6 +568,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL ISSUE: Registration-Data Screen ist vollständig unzugänglich auf Mobile (390x844). Umfassende Tests durchgeführt: Account-Erstellung (testworker_1764964696@test.de), Rolle-Auswahl (Auftragnehmer), aber alle Worker-Routen redirecten zu /auth/start. Direkte Navigation zu /(worker)/registration-data fehlgeschlagen. Alle 8 Felder (Geburtsort, Staatsangehörigkeit, Checkboxen) nicht testbar da Screen nicht erreichbar. Root Cause: Authentication/Authorization System blockiert Zugang zu geschützten Worker-Bereichen. Alle Test-Szenarien aus Review-Anfrage (Navigation, UI-Darstellung, Eingabe, Speichern, Persistenz) unmöglich durchzuführen. PRIORITY UPGRADED TO CRITICAL."
+      - working: false
+        agent: "testing"
+        comment: "❌ CONFIRMED CRITICAL ISSUE PERSISTS: Comprehensive frontend testing confirms complete inaccessibility of registration-data screen and ALL worker functionality. Authentication/routing system fundamentally broken. Users cannot access any protected routes. This blocks ALL features from the German review request including job creation with new categories, worker profile creation, document upload, and rating system. SYSTEM-WIDE AUTHENTICATION FAILURE."
 
 
 
