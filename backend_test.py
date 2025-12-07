@@ -507,7 +507,7 @@ class BackendTester:
             # Create a simple job for review testing
             simple_job = {
                 "title": "Test Job for Review",
-                "category": "sicherheit",
+                "category": "security",
                 "timeMode": "fixed_time",
                 "date": "2025-12-05",
                 "startAt": "2025-12-05T10:00:00Z",
