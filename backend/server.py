@@ -162,8 +162,8 @@ class WorkerProfile(BaseModel):
     activities: Optional[List[str]] = []  # DEPRECATED
     contactPhone: Optional[str] = None
     contactEmail: Optional[str] = None
-    # Qualification Documents (Base64 storage)
-    documents: List[dict] = []  # Using dict for flexibility - managed via dedicated endpoints
+    # Qualification Documents (Base64 storage) - using Any to avoid validation issues
+    documents: Optional[List] = []  # Flexible type - managed via dedicated endpoints
     pushToken: Optional[str] = None
     createdAt: Optional[str] = None
     updatedAt: Optional[str] = None
