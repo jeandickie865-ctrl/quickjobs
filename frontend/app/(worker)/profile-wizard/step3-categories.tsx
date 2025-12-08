@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step3-categories.tsx – Quickjobs STYLE D+ (dark premium)
+// app/(worker)/profile-wizard/step3-categories.tsx – Quickjobs DESIGN
 
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
@@ -11,9 +11,6 @@ import { NavigationButtons } from '../../../components/wizard/NavigationButtons'
 import { useWizard } from '../../../contexts/WizardContext';
 
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
-
-// NEUE 3-STUFEN FARBEN
-
 
 const COLORS = {
   bg: '#FFFFFF',
@@ -128,8 +125,7 @@ export default function Step3Categories() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <AppHeader title="Kategorien" />
-        <AppHeader />
+      <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -241,7 +237,7 @@ export default function Step3Categories() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
-  safeArea: { flex: 1 },
+  safeArea: { flex: 1, backgroundColor: COLORS.bg },
   scrollView: { flex: 1 },
   scrollContent: { padding: 20 },
 
@@ -254,7 +250,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 16,
-    color: COLORS.whiteMuted,
+    color: COLORS.muted,
     marginBottom: 28
   },
 
@@ -305,7 +301,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.white
+    color: COLORS.text
   },
 
   categoryTextSelected: { color: COLORS.neon },
@@ -336,7 +332,7 @@ const styles = StyleSheet.create({
   subcategoryText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.white
+    color: COLORS.text
   },
 
   subcategoryTextSelected: {
@@ -351,8 +347,8 @@ const styles = StyleSheet.create({
 
   validationHint: {
     fontSize: 13,
-    color: COLORS.neon,
-    backgroundColor: 'rgba(200,255,22,0.1)',
+    color: COLORS.error,
+    backgroundColor: 'rgba(239,68,68,0.1)',
     padding: 12,
     borderRadius: 8,
     textAlign: 'center'

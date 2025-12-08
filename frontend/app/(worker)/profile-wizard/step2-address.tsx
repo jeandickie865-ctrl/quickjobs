@@ -11,8 +11,6 @@ import AddressAutocompleteInput from '../../../components/AddressAutocompleteInp
 import Slider from '@react-native-community/slider';
 import { useWizard } from '../../../contexts/WizardContext';
 
-
-
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
@@ -125,8 +123,7 @@ export default function Step2Address() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <AppHeader title="Adresse" />
-        <AppHeader />
+      <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -228,6 +225,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+    backgroundColor: COLORS.bg,
   },
   scrollView: {
     flex: 1,
@@ -288,8 +286,8 @@ const styles = StyleSheet.create({
 
   validationHint: {
     fontSize: 13,
-    color: COLORS.neon,
-    backgroundColor: 'rgba(200,255,22,0.1)',
+    color: COLORS.error,
+    backgroundColor: 'rgba(239,68,68,0.1)',
     padding: 12,
     borderRadius: 8,
     textAlign: 'center',
