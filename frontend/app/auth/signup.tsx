@@ -303,45 +303,36 @@ export default function SignupScreen() {
 
               {/* ACCOUNT TYPE */}
               {selectedRole === 'employer' && (
-                <View style={{ marginBottom: 20 }}>
+                <View style={{ marginBottom: SIZES.sectionGap }}>
                   <Text
                     style={{
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: '600',
-                      color: COLORS.neon,
-                      marginBottom: 8
+                      color: COLORS.white,
+                      marginBottom: SIZES.gap
                     }}
                   >
-                    Wie trittst du auf?
+                    Art des Auftraggebers
                   </Text>
 
-                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                  <View style={{ flexDirection: 'row', gap: SIZES.gap }}>
                     <Pressable
                       onPress={() => setSelectedAccountType('private')}
                       style={{
                         flex: 1,
-                        backgroundColor:
-                          selectedAccountType === 'private'
-                            ? COLORS.neon
-                            : COLORS.card,
-                        borderRadius: 14,
+                        backgroundColor: COLORS.card,
+                        borderRadius: SIZES.radius,
                         paddingVertical: 14,
                         alignItems: 'center',
                         borderWidth: 1,
-                        borderColor:
-                          selectedAccountType === 'private'
-                            ? COLORS.neon
-                            : COLORS.border
+                        borderColor: COLORS.cardBorder
                       }}
                     >
                       <Text
                         style={{
                           fontSize: 16,
-                          fontWeight: '700',
-                          color:
-                            selectedAccountType === 'private'
-                              ? COLORS.bg
-                              : COLORS.white
+                          fontWeight: '500',
+                          color: COLORS.white
                         }}
                       >
                         Privatperson
@@ -352,28 +343,19 @@ export default function SignupScreen() {
                       onPress={() => setSelectedAccountType('business')}
                       style={{
                         flex: 1,
-                        backgroundColor:
-                          selectedAccountType === 'business'
-                            ? COLORS.neon
-                            : COLORS.card,
-                        borderRadius: 14,
+                        backgroundColor: COLORS.card,
+                        borderRadius: SIZES.radius,
                         paddingVertical: 14,
                         alignItems: 'center',
                         borderWidth: 1,
-                        borderColor:
-                          selectedAccountType === 'business'
-                            ? COLORS.neon
-                            : COLORS.border
+                        borderColor: COLORS.cardBorder
                       }}
                     >
                       <Text
                         style={{
                           fontSize: 16,
-                          fontWeight: '700',
-                          color:
-                            selectedAccountType === 'business'
-                              ? COLORS.bg
-                              : COLORS.white
+                          fontWeight: '500',
+                          color: COLORS.white
                         }}
                       >
                         Unternehmen
