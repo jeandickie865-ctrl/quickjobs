@@ -170,7 +170,7 @@ export default function SignupScreen() {
                   letterSpacing: 1
                 }}
               >
-                BACKUP
+                Quickjobs
               </Text>
               <View
                 style={{
