@@ -128,20 +128,20 @@ export default function SignupScreen() {
               
               {/* Role Selection */}
               <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Rolle wählen</Text>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.text, marginBottom: 8 }}>Rolle wählen</Text>
                 <View style={{ flexDirection: 'row', gap: 12 }}>
-                  <Pressable onPress={() => setSelectedRole('worker')} style={{ flex: 1, backgroundColor: selectedRole === 'worker' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'worker' ? COLORS.neon : 'transparent' }}>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Auftragnehmer</Text>
+                  <Pressable onPress={() => setSelectedRole('worker')} style={{ flex: 1, backgroundColor: selectedRole === 'worker' ? COLORS.orange : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'worker' ? COLORS.orange : COLORS.border }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: selectedRole === 'worker' ? COLORS.white : COLORS.text }}>Auftragnehmer</Text>
                   </Pressable>
-                  <Pressable onPress={() => setSelectedRole('employer')} style={{ flex: 1, backgroundColor: selectedRole === 'employer' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'employer' ? COLORS.neon : 'transparent' }}>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Auftraggeber</Text>
+                  <Pressable onPress={() => setSelectedRole('employer')} style={{ flex: 1, backgroundColor: selectedRole === 'employer' ? COLORS.orange : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'employer' ? COLORS.orange : COLORS.border }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: selectedRole === 'employer' ? COLORS.white : COLORS.text }}>Auftraggeber</Text>
                   </Pressable>
                 </View>
               </View>
 
               {/* Email */}
               <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>E-Mail</Text>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.text, marginBottom: 8 }}>E-Mail</Text>
                 <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: emailFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, justifyContent: 'center' }}>
                   <TextInput autoCapitalize="none" keyboardType="email-address" placeholder="name@email.de" placeholderTextColor={COLORS.placeholder} value={email} onChangeText={setEmail} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} style={{ fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
                 </View>
