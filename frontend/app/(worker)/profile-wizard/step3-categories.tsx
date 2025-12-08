@@ -73,8 +73,15 @@ export default function Step3Categories() {
       const cat = TAXONOMY_DATA[catKey];
       const catSubs = cat.subcategories?.map((s: any) => s.key) || [];
       setSelectedSubcategories((prev) => prev.filter((s) => !catSubs.includes(s)));
+      
+      // Wenn die geöffnete Kategorie abgewählt wird, schließen
+      if (expandedCategory === catKey) {
+        setExpandedCategory(null);
+      }
     } else {
       setSelectedCategories((prev) => [...prev, catKey]);
+      // NEU: Automatisch öffnen wenn ausgewählt
+      setExpandedCategory(catKey);
     }
     setErrors({});
   };
