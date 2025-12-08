@@ -174,44 +174,40 @@ export default function WorkerProfileScreen() {
         alignItems: 'center',
         zIndex: 20
       }}>
-        {profile.photoUrl || profile.profilePhotoUri ? (
-          <Image
-            source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
-            style={{
-              width: 140,
-              height: 140,
-              borderRadius: 70,
-              borderWidth: 6,
-              borderColor: '#EFABFF', // Rosa - direkt als Hex
-              backgroundColor: '#FFFFFF',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.15,
-              shadowRadius: 8,
-              elevation: 5,
-            }}
-          />
-        ) : (
-          <View
-            style={{
-              width: 140,
-              height: 140,
-              borderRadius: 70,
-              backgroundColor: '#FFFFFF',
+        <View style={{
+          width: 140,
+          height: 140,
+          borderRadius: 70,
+          borderWidth: 6,
+          borderColor: '#EFABFF', // Rosa
+          backgroundColor: '#FFFFFF',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          elevation: 5,
+          overflow: 'hidden', // WICHTIG: Clippt das Bild
+        }}>
+          {profile.photoUrl || profile.profilePhotoUri ? (
+            <Image
+              source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={{
+              width: '100%',
+              height: '100%',
               justifyContent: 'center',
               alignItems: 'center',
-              borderWidth: 6,
-              borderColor: '#EFABFF', // Rosa - direkt als Hex
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.15,
-              shadowRadius: 8,
-              elevation: 5,
-            }}
-          >
-            <Text style={{ fontSize: 48, fontWeight: '800', color: '#1A1A1A' }}>{getInitials()}</Text>
-          </View>
-        )}
+            }}>
+              <Text style={{ fontSize: 48, fontWeight: '800', color: '#1A1A1A' }}>{getInitials()}</Text>
+            </View>
+          )}
+        </View>
       </View>
 
       {/* SCROLLVIEW MIT CONTENT */}
