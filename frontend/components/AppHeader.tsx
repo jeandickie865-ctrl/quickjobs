@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: 18,
     fontWeight: '700',
-    color: COLORS.primary, // #00A07C (grün)
+    color: '#FF773D', // Orange
     letterSpacing: 0.5,
   },
   screenTitle: {
