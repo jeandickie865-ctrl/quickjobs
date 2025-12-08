@@ -1,6 +1,7 @@
 // app/(worker)/matches.tsx – FINAL iPhone-Version
 
 import React, { useEffect, useState, useRef } from 'react';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import {
   ScrollView,
   View,
@@ -13,19 +14,33 @@ import {
   Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../contexts/AuthContext';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getWorkerApplications } from '../../utils/applicationStore';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getJobById } from '../../utils/jobStore';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Job } from '../../types/job';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { JobApplication } from '../../types/application';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { euro } from '../../utils/pricing';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { formatJobTimeDisplay } from '../../utils/date';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { isWithinLast24Hours } from '../../utils/stringHelpers';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getInitials } from '../../utils/stringHelpers';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Ionicons } from '@expo/vector-icons';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { API_URL } from '../../config';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getAuthHeaders } from '../../utils/api';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const { width } = Dimensions.get('window');
 const BUTTON_WIDTH = width * 0.86; // iPhone-friendly

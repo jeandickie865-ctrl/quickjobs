@@ -1,5 +1,6 @@
 // app/auth/login.tsx
 import React, { useState, useEffect, useRef } from 'react';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import {
   View,
   Text,
@@ -12,9 +13,13 @@ import {
   Image
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../contexts/AuthContext';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Eye, EyeOff } from '../../components/Icons';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {
   bg: '#00A07C',

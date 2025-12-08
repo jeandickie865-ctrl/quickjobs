@@ -1,18 +1,32 @@
 // app/(worker)/jobs/[id].tsx - Job Details für Worker
 import React, { useEffect, useState } from 'react';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getJobById } from '../../../utils/jobStore';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Job } from '../../../types/job';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { euro } from '../../../utils/pricing';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Ionicons } from '@expo/vector-icons';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getReviewsForEmployer, calculateAverageRating } from '../../../utils/reviewStore';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { RatingDisplay } from '../../../components/RatingDisplay';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getTagLabel } from '../../../utils/taxonomy';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { addApplication, getWorkerApplications } from '../../../utils/applicationStore';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getWorkerProfile } from '../../../utils/profileStore';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../../contexts/AuthContext';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 // BACKUP DARK COLORS
 const COLORS = {
