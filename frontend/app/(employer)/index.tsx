@@ -10,16 +10,7 @@ import { euro } from '../../utils/pricing';
 import { formatAddress } from '../../types/address';
 import { getEmployerProfile } from '../../utils/employerProfileStore';
 
-const COLORS = {
-  bg: '#FFFFFF',
-  card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#EFABFF',
-  neon: '#EFABFF',
-};
+import { COLORS } from '../../constants/colors';
 
 // 🚨 Sofortmeldepflichtige Kategorien
 const SOFORTMELDEPFLICHTIG = new Set([
