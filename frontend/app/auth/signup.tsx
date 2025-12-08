@@ -20,7 +20,7 @@ import { z } from 'zod';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {
-  bg: '#EFABFF',
+  bg: '#00A07C',
   white: '#FFFFFF',
   whiteSoft: 'rgba(255,255,255,0.8)',
   card: 'rgba(255,255,255,0.15)',
