@@ -204,6 +204,6 @@ export default function WelcomeScreen() {
           </Pressable>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
