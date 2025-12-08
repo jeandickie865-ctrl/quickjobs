@@ -76,16 +76,15 @@ export default function EmployerLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: COLORS.card,
+          backgroundColor: COLORS.footerBg,
           height: 80,
           paddingBottom: Math.max(insets.bottom, 10),
           paddingTop: 8,
           paddingHorizontal: 8,
-          borderTopWidth: 1,
-          borderTopColor: COLORS.border,
+          borderTopWidth: 0,
         },
         tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: '#1A0F3D',
+        tabBarInactiveTintColor: '#FFFFFF',
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '700',
