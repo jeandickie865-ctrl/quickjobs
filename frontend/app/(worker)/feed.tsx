@@ -382,16 +382,10 @@ export default function WorkerFeedScreen() {
 
   return (
     <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* HEADER */}
-      <View style={{ paddingHorizontal: 24, marginBottom: 24 }}>
-        <Text style={{ color: COLORS.text, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
-          Quickjobs
-        </Text>
-        <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.accent }} />
-      </View>
+      <AppHeader />
 
       {/* SUBTITLE */}
-      <View style={{ paddingHorizontal: 24, marginBottom: 16 }}>
+      <View style={{ paddingHorizontal: 24, marginBottom: 16, marginTop: 8 }}>
         <Text style={{ color: COLORS.text, fontSize: 20, fontWeight: '700' }}>
           Passende Jobs
         </Text>
