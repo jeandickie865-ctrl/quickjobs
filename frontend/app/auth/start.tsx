@@ -41,10 +41,10 @@ export default function WelcomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
-
+      <SafeAreaView style={{ flex: 1 }}>
+        
         {/* LOGO MIT DUNKELLILA HINTERGRUND - VOLLE BREITE */}
-        <View style={{ width: '100%', marginHorizontal: -24, backgroundColor: '#9333EA', paddingVertical: 40, marginTop: 40, marginBottom: 30, alignItems: 'center' }}>
+        <View style={{ width: '100%', backgroundColor: '#9333EA', paddingVertical: 40, marginTop: 40, marginBottom: 30, alignItems: 'center' }}>
           <Animated.View
             style={{
               opacity: fadeLogo,
@@ -55,12 +55,15 @@ export default function WelcomeScreen() {
               source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/vsoiolte_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-11.png' }}
               style={{
                 width: 200,
-                height: 200
+                height: 200,
+                backgroundColor: 'transparent'
               }}
               resizeMode="contain"
             />
           </Animated.View>
         </View>
+
+        <View style={{ paddingHorizontal: 24 }}>
 
         {/* NEON LINE */}
         <Animated.View
