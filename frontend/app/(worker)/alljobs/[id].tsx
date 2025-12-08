@@ -223,12 +223,17 @@ export default function WorkerJobDetailScreen() {
                   }
                 };
 
-                // Extract time from ISO timestamp and convert to local time
-                const extractTime = (isoString) => {
-                  if (!isoString) return null;
+                // Extract time from ISO timestamp or simple time string
+                const extractTime = (timeStr) => {
+                  if (!timeStr) return null;
                   try {
+                    // Check if it's already a simple time format HH:MM
+                    if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
+                      return timeStr; // Already in HH:MM format
+                    }
+                    
                     // Parse ISO timestamp to Date object (handles UTC conversion automatically)
-                    const date = new Date(isoString);
+                    const date = new Date(timeStr);
                     if (isNaN(date.getTime())) return null;
                     
                     // Get local hours and minutes
