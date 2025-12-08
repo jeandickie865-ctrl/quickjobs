@@ -146,6 +146,28 @@ export default function WorkerProfileScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.bg }}>
         <AppHeader />
+        
+        {/* Logout Button oben rechts */}
+        <Pressable
+          onPress={async () => {
+            await signOut();
+            router.replace('/auth/login');
+          }}
+          style={{
+            position: 'absolute',
+            top: 50,
+            right: 16,
+            width: 44,
+            height: 44,
+            borderRadius: 22,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+          }}
+        >
+          <Ionicons name="log-out-outline" size={24} color={COLORS.bg} />
+        </Pressable>
       </SafeAreaView>
 
       {/* PROFILFOTO - zentriert */}
