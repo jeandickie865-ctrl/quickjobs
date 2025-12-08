@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step5-summary.tsx – Quickjobs D+ DESIGN
+// app/(worker)/profile-wizard/step5-summary.tsx – Quickjobs DESIGN
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ScrollView,
@@ -19,8 +19,6 @@ import { ProgressBar } from '../../../components/wizard/ProgressBar';
 import { NavigationButtons } from '../../../components/wizard/NavigationButtons';
 import { useWizard } from '../../../contexts/WizardContext';
 import { useAuth } from '../../../contexts/AuthContext';
-
-
 
 const COLORS = {
   bg: '#FFFFFF',
@@ -152,8 +150,7 @@ export default function Step5Summary() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <AppHeader title="Zusammenfassung" />
-        <AppHeader />
+      <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -304,7 +301,7 @@ export default function Step5Summary() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
-  safeArea: { flex: 1 },
+  safeArea: { flex: 1, backgroundColor: COLORS.bg },
 
   scrollView: { flex: 1 },
   scrollContent: { padding: 24 },
@@ -353,7 +350,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  loadingText: { color: COLORS.text, marginTop: 14, fontSize: 15, fontWeight: '600' },
+  loadingText: { color: COLORS.white, marginTop: 14, fontSize: 15, fontWeight: '600' },
 
   successOverlay: {
     position: 'absolute',

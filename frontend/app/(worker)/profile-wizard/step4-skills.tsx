@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step4-skills.tsx - Quickjobs D+ DESIGN
+// app/(worker)/profile-wizard/step4-skills.tsx - Quickjobs DESIGN
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { AppHeader } from '../../../components/AppHeader';
@@ -10,8 +10,6 @@ import { NavigationButtons } from '../../../components/wizard/NavigationButtons'
 import { useWizard } from '../../../contexts/WizardContext';
 
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
-
-
 
 const COLORS = {
   bg: '#FFFFFF',
@@ -80,8 +78,7 @@ export default function Step4Skills() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <AppHeader title="Qualifikationen" />
-        <AppHeader />
+      <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -168,7 +165,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.bg,
   },
-  safeArea: { flex: 1 },
+  safeArea: { flex: 1, backgroundColor: COLORS.bg },
   scrollView: { flex: 1 },
   scrollContent: { padding: 24 },
 
