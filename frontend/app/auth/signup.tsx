@@ -104,8 +104,8 @@ export default function SignupScreen() {
             <View style={{ width: '100%', marginHorizontal: -24, backgroundColor: '#9333EA', paddingVertical: 40, marginBottom: 40, alignItems: 'center' }}>
               <Animated.View style={{ alignItems: 'center', opacity: logoOpacity }}>
                 <Image
-                  source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/vsoiolte_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-11.png' }}
-                  style={{ width: 180, height: 180 }}
+                  source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/4jtdk7oz_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-12.png' }}
+                  style={{ width: 180, height: 180, backgroundColor: 'transparent' }}
                   resizeMode="contain"
                 />
               </Animated.View>
