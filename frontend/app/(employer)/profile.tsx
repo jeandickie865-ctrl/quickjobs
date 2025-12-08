@@ -9,6 +9,7 @@ import { getReviewsForEmployer, calculateAverageRating } from '../../utils/revie
 import { RatingDisplay } from '../../components/RatingDisplay';
 import { Ionicons } from '@expo/vector-icons';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
+import { AppHeader } from '../../components/AppHeader';
 
 // BACKUP DARK THEME
 const COLORS = {
