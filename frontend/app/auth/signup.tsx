@@ -33,8 +33,8 @@ const COLORS = {
   accent: '#EFABFF',
   purple: '#EFABFF',
   muted: 'rgba(255,255,255,0.8)',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.2)'
+  error: '#EFABFF',
+  errorBg: 'rgba(239,171,255,0.20)'
 };
 
 const SIZES = {

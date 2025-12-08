@@ -219,13 +219,13 @@ export default function WorkerApplicationsScreen() {
               styles.errorContainer,
               {
                 backgroundColor: '#00A07C',
-                borderColor: '#FF4D4D',
+                borderColor: '#EFABFF',
                 padding: spacing.md,
                 marginBottom: spacing.sm,
               },
             ]}
           >
-            <Text style={[styles.errorText, { color: '#FF4D4D' }]}>{error}</Text>
+            <Text style={[styles.errorText, { color: '#EFABFF' }]}>{error}</Text>
           </View>
         )}
 
