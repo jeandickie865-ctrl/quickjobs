@@ -483,13 +483,13 @@ export default function EmployerMatchesScreen() {
                             maxWidth: 300,
                             minWidth: 220,
                             alignSelf: "center",
-                            backgroundColor: COLORS.purpleLight,
+                            backgroundColor: "#FF773D",
                             paddingVertical: 14,
                             borderRadius: 14,
                             alignItems: "center",
                           }}
                         >
-                          <Text style={{ color: COLORS.textWhite, fontSize: 15, fontWeight: "700" }}>
+                          <Text style={{ color: "#FFFFFF", fontSize: 15, fontWeight: "700" }}>
                             Dokumente erstellen
                           </Text>
                         </Pressable>
