@@ -27,7 +27,7 @@ const { width } = Dimensions.get('window');
 const INNER_CARD_PADDING = 18;
 
 import { COLORS } from '../../constants/colors';
-import { AppHeader } from '../../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 
 type Match = {
   job: Job;

@@ -27,7 +27,7 @@ import { getInitials } from '../../utils/stringHelpers';
 import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../../config';
 import { getAuthHeaders } from '../../utils/api';
-import { AppHeader } from '../../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 
 const { width } = Dimensions.get('window');
 const BUTTON_WIDTH = width * 0.86; // iPhone-friendly

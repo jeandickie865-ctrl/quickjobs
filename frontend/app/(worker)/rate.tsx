@@ -10,7 +10,7 @@ import { addReview } from '../../utils/reviewStore';
 import { Job } from '../../types/job';
 import { EmployerProfile } from '../../utils/employerProfileStore';
 import { Ionicons } from '@expo/vector-icons';
-import { AppHeader } from '../../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',

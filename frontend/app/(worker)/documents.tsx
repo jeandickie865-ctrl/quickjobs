@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../contexts/AuthContext';
 import { API_URL } from '../../config';
 import * as DocumentPicker from 'expo-document-picker';
-import { AppHeader } from '../../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',

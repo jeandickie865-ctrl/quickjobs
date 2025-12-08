@@ -7,7 +7,7 @@ import { getMatchedJobs } from "../../utils/jobStore";
 import { useAuth } from "../../contexts/AuthContext";
 import { getTagLabel } from "../../utils/taxonomy";
 import { getWorkerProfile } from "../../utils/profileStore";
-import { AppHeader } from '../../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',
