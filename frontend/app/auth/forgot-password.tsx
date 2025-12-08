@@ -11,7 +11,7 @@ const COLORS = {
   white: '#FFFFFF',
   black: '#000000',
   whiteTransparent: 'rgba(255,255,255,0.6)',
-  error: '#E64A4A',
+  error: '#EFABFF',
   errorBg: 'rgba(230,74,74,0.12)',
   placeholder: '#8A8A8A',
   success: '#00D26A',

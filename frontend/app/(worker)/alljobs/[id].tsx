@@ -18,7 +18,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 // BACKUP DARK COLORS
 const COLORS = {
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   cardSoft: '#181433',
   border: 'rgba(255,255,255,0.08)',
   neon: '#EFABFF',

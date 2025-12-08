@@ -12,13 +12,13 @@ const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 const COLORS = {
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   border: 'rgba(255,255,255,0.25)',
   text: '#FFFFFF',
   muted: 'rgba(255,255,255,0.85)',
   neon: '#EFABFF',
   purple: '#EFABFF',
-  error: '#E64A4A',
+  error: '#EFABFF',
 };
 
 export default function Step4Skills() {

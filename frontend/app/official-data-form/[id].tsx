@@ -14,7 +14,7 @@ const COLORS = {
   black: "#000000",
   gray: "#DDDDDD",
   darkGray: "#333333",
-  error: "#E64A4A",
+  error: '#EFABFF',
 };
 
 export default function OfficialDataFormScreen() {

@@ -12,7 +12,7 @@ import { getApplicationById } from "../../utils/applicationStore";
 
 const COLORS = {
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   border: 'rgba(255,255,255,0.25)',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.85)',

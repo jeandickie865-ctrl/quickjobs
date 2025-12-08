@@ -15,7 +15,7 @@ import taxonomy from '../../../shared/taxonomy.json';
 
 const COLORS = {
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   cardSoft: '#181433',
   border: 'rgba(255,255,255,0.08)',
   inputBorder: 'rgba(255,255,255,0.15)',
@@ -24,7 +24,7 @@ const COLORS = {
   neon: '#EFABFF',
   purple: '#EFABFF',
   muted: 'rgba(255,255,255,0.6)',
-  error: '#E64A4A',
+  error: '#EFABFF',
 };
 
 const SPACING = {

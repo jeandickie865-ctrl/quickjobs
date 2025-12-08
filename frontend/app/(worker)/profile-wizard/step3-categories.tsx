@@ -14,7 +14,7 @@ const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 // D+ PREMIUM COLORS
 const COLORS = {
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   border: 'rgba(255,255,255,0.05)',
   white: '#FFFFFF',
   whiteMuted: 'rgba(255,255,255,0.85)',
@@ -22,7 +22,7 @@ const COLORS = {
   neon: '#EFABFF',
   purple: '#EFABFF',
   purpleLight: '#EFABFF',
-  error: '#E64A4A'
+  error: '#EFABFF'
 };
 
 export default function Step3Categories() {

@@ -30,7 +30,7 @@ const COLORS = {
   darkGray: '#333333',
   neonTransparent20: 'rgba(200,255,22,0.2)',
   neonShadow: 'rgba(200,255,22,0.15)',
-  error: '#E64A4A',
+  error: '#EFABFF',
 };
 
 export default function JobDetailScreen() {
