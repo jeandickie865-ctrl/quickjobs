@@ -1,4 +1,4 @@
-// app/(worker)/edit-profile.tsx – TAB-BASED LAYOUT (BACKUP DARK MODE)
+// app/(worker)/edit-profile.tsx – Quickjobs LIGHT THEME
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ScrollView,
@@ -34,7 +34,7 @@ const COLORS = {
   purple: '#EFABFF',
   neon: '#EFABFF',
   error: '#EF4444',
-  black: '#000000',
+  black: '#1A1A1A',
   inputBg: '#FFFFFF',
   inputBorder: '#E9D5FF'
 };
@@ -47,7 +47,7 @@ const inputStyle = {
   fontSize: 15,
   color: '#1A1A1A',
   borderWidth: 1,
-  borderColor: '#E9D5FF'
+  borderColor: COLORS.border
 };
 
 type TabType = 'basis' | 'adresse' | 'kategorien' | 'kontakt' | 'radius';
@@ -152,19 +152,82 @@ export default function EditWorkerProfileScreen() {
         setSelectedCategories(profile.categories || []);
         setSelectedSubcategories(profile.subcategories || []);
         setSelectedQualifications(profile.qualifications || []);
-        setPhone(profile.phone || (profile as any).contactPhone || '');
-        setEmail(profile.email || (profile as any).contactEmail || '');
         setRadiusKm(String(profile.radiusKm || 20));
-        setIsSelfEmployed(profile.isSelfEmployed ?? false);
+        setPhone(profile.phone || '');
+        setEmail(profile.email || user.email || '');
+        setIsSelfEmployed(profile.isSelfEmployed || false);
+      } else {
+        setEmail(user.email || '');
       }
-    } catch {
-      Alert.alert('Fehler', 'Profil konnte nicht geladen werden');
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      Alert.alert('Fehler', 'Profil konnte nicht geladen werden.');
     } finally {
       setLoading(false);
     }
   }
 
-  async function pickImage() {
+  async function handleSaveProfile() {
+    if (!user) return;
+
+    const validationErrors: Record<string, string> = {};
+
+    if (!firstName.trim()) validationErrors.firstName = 'Vorname ist erforderlich';
+    if (!lastName.trim()) validationErrors.lastName = 'Nachname ist erforderlich';
+    if (!phone.trim()) validationErrors.phone = 'Telefon ist erforderlich';
+    if (!street.trim()) validationErrors.street = 'Straße ist erforderlich';
+    if (!city.trim()) validationErrors.city = 'Stadt ist erforderlich';
+    if (!postalCode.trim()) validationErrors.postalCode = 'PLZ ist erforderlich';
+    if (selectedCategories.length === 0) validationErrors.categories = 'Mindestens 1 Kategorie erforderlich';
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      Alert.alert('Fehlende Angaben', 'Bitte alle Pflichtfelder ausfüllen.');
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const payload: WorkerProfile = {
+        firstName,
+        lastName,
+        phone,
+        email,
+        shortBio: profileText,
+        photoUrl,
+        isSelfEmployed,
+        homeAddress: {
+          street,
+          houseNumber,
+          postalCode,
+          city,
+          country
+        },
+        homeLat: lat,
+        homeLon: lon,
+        categories: selectedCategories,
+        subcategories: selectedSubcategories,
+        qualifications: selectedQualifications,
+        radiusKm: parseInt(radiusKm, 10) || 20
+      };
+
+      await saveWorkerProfile(user.id, payload);
+
+      setSaveSuccess(true);
+      setShowSaved(true);
+      setTimeout(() => setShowSaved(false), 3000);
+
+      Alert.alert('Gespeichert', 'Profil wurde erfolgreich gespeichert.');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      Alert.alert('Fehler', 'Profil konnte nicht gespeichert werden.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const pickImage = async () => {
     try {
       if (Platform.OS === 'web') {
         const input = document.createElement('input');
@@ -182,9 +245,6 @@ export default function EditWorkerProfileScreen() {
         return;
       }
 
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) return;
-
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -195,66 +255,15 @@ export default function EditWorkerProfileScreen() {
       if (!result.canceled && result.assets && result.assets[0]) {
         setPhotoUrl(result.assets[0].uri);
       }
-    } catch {
-      Alert.alert('Fehler', 'Bild konnte nicht ausgewählt werden');
+    } catch (err) {
+      console.error('Error picking image:', err);
     }
-  }
-
-  async function takePhoto() {
-    try {
-      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-      if (!permissionResult.granted) return;
-
-      const result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8
-      });
-
-      if (!result.canceled && result.assets && result.assets[0]) {
-        setPhotoUrl(result.assets[0].uri);
-      }
-    } catch {
-      Alert.alert('Fehler', 'Foto konnte nicht aufgenommen werden');
-    }
-  }
-
-  function showPhotoOptions() {
-    if (Platform.OS === 'web') return pickImage();
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: ['Abbrechen', 'Foto aufnehmen', 'Aus Galerie wählen'],
-          cancelButtonIndex: 0
-        },
-        (i) => {
-          if (i === 1) takePhoto();
-          if (i === 2) pickImage();
-        }
-      );
-      return;
-    }
-
-    Alert.alert('Profilbild ändern', 'Wähle eine Option', [
-      { text: 'Abbrechen', style: 'cancel' },
-      { text: 'Foto aufnehmen', onPress: () => takePhoto() },
-      { text: 'Aus Galerie wählen', onPress: () => pickImage() }
-    ]);
-  }
-
-  const getInitials = () => {
-    const first = firstName.charAt(0) || '';
-    const last = lastName.charAt(0) || '';
-    return (first + last).toUpperCase() || '?';
   };
 
-  // OSM Address Search
   async function searchAddress(query: string) {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 
-    if (!query || query.length < 5) {
+    if (!query || query.length < 3) {
       setAddressSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -262,883 +271,488 @@ export default function EditWorkerProfileScreen() {
 
     searchTimeoutRef.current = setTimeout(async () => {
       try {
-        const API_BASE = process.env.EXPO_PUBLIC_BACKEND_URL || '';
-        const url = `${API_BASE}/api/geocode?query=${encodeURIComponent(query)}`;
-        
-        const response = await fetch(url);
-
-        if (response.status === 429) {
-          Alert.alert('Rate Limit', 'Bitte warte einen Moment und versuche es erneut.');
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setAddressSuggestions(data);
-        setShowSuggestions(data.length > 0);
+        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(query)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        setAddressSuggestions(data || []);
+        setShowSuggestions((data || []).length > 0);
       } catch (error) {
         console.error('Address search error:', error);
         setAddressSuggestions([]);
         setShowSuggestions(false);
       }
-    }, 500);
+    }, 300);
   }
 
-  function selectAddress(suggestion: any) {
-    const addr = suggestion.address || {};
-    
-    setStreet(addr.road || addr.street || '');
+  function selectAddress(item: any) {
+    const addr = item.address || {};
+    setStreet(addr.road || '');
     setHouseNumber(addr.house_number || '');
     setPostalCode(addr.postcode || '');
     setCity(addr.city || addr.town || addr.village || '');
-    setCountry(addr.country || 'Deutschland');
-    
-    setLat(suggestion.lat ? parseFloat(suggestion.lat) : undefined);
-    setLon(suggestion.lon ? parseFloat(suggestion.lon) : undefined);
-    
+    setLat(parseFloat(item.lat));
+    setLon(parseFloat(item.lon));
     setShowSuggestions(false);
     setAddressSuggestions([]);
   }
 
-  function validate(): boolean {
-    const newErrors: Record<string, string> = {};
-
-    if (!firstName.trim()) newErrors.firstName = 'Vorname erforderlich';
-    if (!lastName.trim()) newErrors.lastName = 'Nachname erforderlich';
-    if (!street.trim()) newErrors.street = 'Straße erforderlich';
-    if (!houseNumber.trim()) newErrors.houseNumber = 'Bitte gib eine Hausnummer ein.';
-    if (!postalCode.trim()) newErrors.postalCode = 'PLZ erforderlich';
-    if (!city.trim()) newErrors.city = 'Stadt erforderlich';
-    if (!country.trim()) newErrors.country = 'Land erforderlich';
-    if (!phone.trim()) newErrors.phone = 'Telefonnummer erforderlich';
-    if (selectedCategories.length === 0) newErrors.categories = 'Mind. eine Kategorie';
-    const radius = parseInt(radiusKm);
-    if (isNaN(radius) || radius < 1 || radius > 200) newErrors.radiusKm = '1-200 km';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  function toggleCategory(key: string) {
+    setSelectedCategories(prev => {
+      if (prev.includes(key)) {
+        const cat = TAXONOMY_DATA[key];
+        const catSubs = cat?.subcategories?.map((s: any) => s.key) || [];
+        setSelectedSubcategories(p => p.filter(s => !catSubs.includes(s)));
+        return prev.filter(k => k !== key);
+      }
+      return [...prev, key];
+    });
   }
 
-  async function handleSave() {
-    console.log('🔵 handleSave called!');
-    if (!user) {
-      console.log('❌ No user!');
-      return;
-    }
-
-    const isValid = validate();
-    console.log('🔵 Validation result:', isValid);
-    console.log('🔵 Errors:', errors);
-    
-    if (!isValid) {
-      console.log('❌ Validation failed!');
-      
-      // Show which tabs have missing fields
-      const missingTabs = [];
-      if (errors.firstName || errors.lastName) missingTabs.push('Basis');
-      if (errors.street || errors.houseNumber || errors.postalCode || errors.city || errors.country) missingTabs.push('Adresse');
-      if (errors.categories) missingTabs.push('Kategorien');
-      if (errors.phone) missingTabs.push('Kontakt');
-      if (errors.radiusKm) missingTabs.push('Radius');
-      
-      const message = missingTabs.length > 0 
-        ? `Bitte fülle alle Pflichtfelder in folgenden Tabs aus: ${missingTabs.join(', ')}`
-        : 'Bitte alle Pflichtfelder ausfüllen.';
-      
-      Alert.alert('Fehler', message);
-      return;
-    }
-    
-    console.log('✅ Validation passed, saving...');
-
-    try {
-      setSaving(true);
-
-      const addressPayload = {
-        street: street.trim() || undefined,
-        houseNumber: houseNumber.trim() || undefined,
-        postalCode: postalCode.trim() || undefined,
-        city: city.trim() || undefined,
-        country: country.trim() || 'Deutschland',
-      };
-
-      const updatedProfile: Partial<WorkerProfile> = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        shortBio: profileText.trim() || undefined,
-        photoUrl: photoUrl.trim() || undefined,
-        categories: selectedCategories,
-        subcategories: selectedSubcategories,
-        qualifications: selectedQualifications,
-        homeAddress: addressPayload,
-        homeLat: lat,
-        homeLon: lon,
-        phone: phone.trim(),
-        email: email.trim(),
-        radiusKm: parseInt(radiusKm),
-        isSelfEmployed: isSelfEmployed
-      };
-
-      console.log('💾 Saving profile:', updatedProfile);
-      await saveWorkerProfile(user.id, updatedProfile);
-      setSaveSuccess(true);
-      console.log('✅ Profile saved successfully!');
-      
-      setShowSaved(true);
-      setTimeout(() => {
-        setShowSaved(false);
-        router.replace("/(worker)/profile");
-      }, 1200);
-    } catch (error: any) {
-      console.error('❌ Save failed:', error);
-      Alert.alert('Fehler', `Profil konnte nicht gespeichert werden:\n${error.message || 'Unbekannter Fehler'}`);
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  const isFormValid = () => {
-    return (
-      firstName.trim() &&
-      lastName.trim() &&
-      street.trim() &&
-      postalCode.trim() &&
-      city.trim() &&
-      country.trim() &&
-      phone.trim() &&
-      selectedCategories.length > 0 &&
-      (() => {
-        const n = parseInt(radiusKm);
-        return !isNaN(n) && n >= 1 && n <= 200;
-      })()
+  function toggleSubcategory(key: string) {
+    setSelectedSubcategories(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
     );
-  };
+  }
 
-  if (authLoading) return null;
-  if (!user || user.role !== 'worker') return <Redirect href="/start" />;
+  function toggleQualification(key: string) {
+    setSelectedQualifications(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  }
+
+  if (authLoading || !user) return null;
+  if (user.role !== 'worker') return <Redirect href="/(employer)" />;
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator color={COLORS.neon} size="large" />
-          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt Profil...</Text>
-        </SafeAreaView>
-      </View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
+        <AppHeader />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={COLORS.neon} />
+          <Text style={{ marginTop: 16, color: COLORS.text }}>Lade Profil...</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
-  // Tab Configuration
-  const tabs: { key: TabType; label: string; icon: string }[] = [
-    { key: 'basis', label: 'Basis', icon: 'person-outline' },
-    { key: 'adresse', label: 'Adresse', icon: 'home-outline' },
-    { key: 'kategorien', label: 'Kategorien', icon: 'briefcase-outline' },
-    { key: 'kontakt', label: 'Kontakt', icon: 'call-outline' },
-    { key: 'radius', label: 'Radius', icon: 'locate-outline' }
-  ];
-
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {saveSuccess && (
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(255,255,255,0.85)',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 999,
-            padding: 24,
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: '#00A07C',
-              padding: 24,
-              borderRadius: 16,
-              width: '80%',
-              maxWidth: 360,
-              borderWidth: 1,
-              borderColor: 'rgba(255,255,255,0.25)',
-            }}
-          >
-            <Text
-              style={{
-                color: '#FFFFFF',
-                fontSize: 18,
-                fontWeight: '700',
-                textAlign: 'center',
-                marginBottom: 16,
-              }}
-            >
-              Änderungen wurden gespeichert
-            </Text>
-
-            <Pressable
-              onPress={() => {
-                setSaveSuccess(false);
-                router.push('/(worker)/profile');
-              }}
-              style={{
-                backgroundColor: '#EFABFF',
-                paddingVertical: 12,
-                borderRadius: 12,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: '#000', fontSize: 16, fontWeight: '700' }}>
-                Zum Profil
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      )}
+    <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <AppHeader />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* BACKUP HEADER */}
-        <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.bg }}>
-        <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12 }}>
-          <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900' }}>BACKUP</Text>
-        </View>
-
-        {/* TAB BAR */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
-          style={{ borderBottomWidth: 2, borderBottomColor: COLORS.neon }}
-          keyboardShouldPersistTaps="handled"
-        >
-          {tabs.map(tab => {
-            const isActive = activeTab === tab.key;
-            return (
-              <Pressable
-                key={tab.key}
-                onPress={() => setActiveTab(tab.key)}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 10,
-                  paddingHorizontal: 16,
-                  marginRight: 8,
-                  borderRadius: 12,
-                  backgroundColor: isActive ? COLORS.neon : COLORS.card,
-                  borderWidth: 1,
-                  borderColor: isActive ? COLORS.neon : COLORS.border
-                }}
-              >
-                <Ionicons
-                  name={tab.icon as any}
-                  size={18}
-                  color={isActive ? '#000' : COLORS.white}
-                  style={{ marginRight: 6 }}
-                />
-                <Text
+        <View style={{ flex: 1 }}>
+          {/* TAB BAR */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12, gap: 10 }}
+            style={{ maxHeight: 60, borderBottomWidth: 1, borderBottomColor: COLORS.border }}
+          >
+            {[
+              { key: 'basis', label: 'Basis', icon: 'person' },
+              { key: 'adresse', label: 'Adresse', icon: 'location' },
+              { key: 'kategorien', label: 'Kategorien', icon: 'grid' },
+              { key: 'kontakt', label: 'Kontakt', icon: 'call' },
+              { key: 'radius', label: 'Radius', icon: 'navigate' }
+            ].map(tab => {
+              const isActive = activeTab === tab.key;
+              return (
+                <Pressable
+                  key={tab.key}
+                  onPress={() => setActiveTab(tab.key as TabType)}
                   style={{
-                    color: isActive ? '#000' : COLORS.white,
-                    fontWeight: isActive ? '700' : '600',
-                    fontSize: 14
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 16,
+                    paddingVertical: 10,
+                    borderRadius: 20,
+                    backgroundColor: isActive ? COLORS.neon : COLORS.card,
+                    borderWidth: 1,
+                    borderColor: isActive ? COLORS.neon : COLORS.border
                   }}
                 >
-                  {tab.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-      </SafeAreaView>
-
-      {/* TAB CONTENT */}
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 20, paddingBottom: 260 }}
-        showsVerticalScrollIndicator={false}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
-      >
-        {/* BASIS TAB */}
-        {activeTab === 'basis' && (
-          <View
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 18,
-              padding: 20,
-              borderWidth: 1,
-              borderColor: COLORS.border
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
-              Persönliche Daten
-            </Text>
-
-            {/* Photo */}
-            <View style={{ alignItems: 'center', marginBottom: 24 }}>
-              <View style={{ position: 'relative', marginBottom: 12 }}>
-                {photoUrl ? (
-                  <Image
-                    source={{ uri: photoUrl }}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      borderRadius: 50,
-                      borderWidth: 3,
-                      borderColor: COLORS.neon
-                    }}
+                  <Ionicons
+                    name={tab.icon as any}
+                    size={18}
+                    color={isActive ? COLORS.white : COLORS.text}
+                    style={{ marginRight: 6 }}
                   />
-                ) : (
-                  <View
-                    style={{
-                      width: 100,
-                      height: 100,
-                      borderRadius: 50,
-                      backgroundColor: COLORS.purple,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderWidth: 3,
-                      borderColor: COLORS.neon
+                  <Text style={{ color: isActive ? COLORS.white : COLORS.text, fontWeight: '600', fontSize: 14 }}>
+                    {tab.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 24, paddingBottom: 120 }}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* BASIS */}
+            {activeTab === 'basis' && (
+              <View>
+                <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 6 }}>Basisdaten</Text>
+                <Text style={{ color: COLORS.muted, marginBottom: 24, fontSize: 14 }}>Deine persönlichen Informationen</Text>
+
+                <View style={{ alignItems: 'center', marginBottom: 28 }}>
+                  <View style={{ position: 'relative' }}>
+                    {photoUrl ? (
+                      <Image source={{ uri: photoUrl }} style={{ width: 110, height: 110, borderRadius: 55, borderWidth: 3, borderColor: COLORS.neon }} />
+                    ) : (
+                      <View style={{ width: 110, height: 110, borderRadius: 55, backgroundColor: COLORS.card, borderWidth: 3, borderColor: COLORS.neon, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.text }}>
+                          {firstName.charAt(0)}{lastName.charAt(0)}
+                        </Text>
+                      </View>
+                    )}
+                    <Pressable
+                      onPress={pickImage}
+                      style={{ position: 'absolute', bottom: 0, right: 0, width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.neon, alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <Ionicons name="camera" size={18} color={COLORS.white} />
+                    </Pressable>
+                  </View>
+                  <Pressable onPress={pickImage} style={{ marginTop: 12 }}>
+                    <Text style={{ color: COLORS.neon, fontWeight: '600', fontSize: 14 }}>Foto ändern</Text>
+                  </Pressable>
+                </View>
+
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Vorname *</Text>
+                  <TextInput
+                    value={firstName}
+                    onChangeText={setFirstName}
+                    placeholder="Max"
+                    placeholderTextColor={COLORS.muted}
+                    style={inputStyle}
+                  />
+                  {errors.firstName && <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>{errors.firstName}</Text>}
+                </View>
+
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Nachname *</Text>
+                  <TextInput
+                    value={lastName}
+                    onChangeText={setLastName}
+                    placeholder="Mustermann"
+                    placeholderTextColor={COLORS.muted}
+                    style={inputStyle}
+                  />
+                  {errors.lastName && <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>{errors.lastName}</Text>}
+                </View>
+
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Über mich</Text>
+                  <TextInput
+                    value={profileText}
+                    onChangeText={setProfileText}
+                    placeholder="Erzähl kurz etwas über dich…"
+                    placeholderTextColor={COLORS.muted}
+                    multiline
+                    numberOfLines={4}
+                    style={[inputStyle, { minHeight: 100, textAlignVertical: 'top' }]}
+                  />
+                </View>
+
+                <Pressable
+                  onPress={() => setIsSelfEmployed(!isSelfEmployed)}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 12,
+                    paddingHorizontal: 16,
+                    backgroundColor: COLORS.card,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: COLORS.border
+                  }}
+                >
+                  <View style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 6,
+                    borderWidth: 2,
+                    borderColor: isSelfEmployed ? COLORS.neon : COLORS.border,
+                    backgroundColor: isSelfEmployed ? COLORS.neon : COLORS.card,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 12
+                  }}>
+                    {isSelfEmployed && <Ionicons name="checkmark" size={16} color={COLORS.white} />}
+                  </View>
+                  <Text style={{ color: COLORS.text, fontSize: 15, fontWeight: '500' }}>Ich bin selbstständig</Text>
+                </Pressable>
+              </View>
+            )}
+
+            {/* ADRESSE */}
+            {activeTab === 'adresse' && (
+              <View>
+                <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 6 }}>Wohnadresse</Text>
+                <Text style={{ color: COLORS.muted, marginBottom: 24, fontSize: 14 }}>Wo wohnst du?</Text>
+
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Straße *</Text>
+                  <TextInput
+                    value={street}
+                    onChangeText={(t) => {
+                      setStreet(t);
+                      searchAddress(t);
                     }}
-                  >
-                    <Text style={{ fontSize: 32, fontWeight: '700', color: COLORS.white }}>
-                      {getInitials()}
-                    </Text>
+                    placeholder="Straße"
+                    placeholderTextColor={COLORS.muted}
+                    style={inputStyle}
+                  />
+                  {errors.street && <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>{errors.street}</Text>}
+                </View>
+
+                {showSuggestions && addressSuggestions.length > 0 && (
+                  <View style={{ backgroundColor: COLORS.card, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, maxHeight: 200, marginBottom: 16 }}>
+                    <ScrollView keyboardShouldPersistTaps="handled">
+                      {addressSuggestions.map((s, i) => (
+                        <Pressable
+                          key={i}
+                          onPress={() => selectAddress(s)}
+                          style={({ pressed }) => ({
+                            padding: 14,
+                            borderBottomWidth: i < addressSuggestions.length - 1 ? 1 : 0,
+                            borderBottomColor: COLORS.border,
+                            backgroundColor: pressed ? COLORS.border : COLORS.card
+                          })}
+                        >
+                          <Text style={{ color: COLORS.text, fontSize: 14 }}>{s.display_name}</Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
                   </View>
                 )}
 
-                <Pressable
-                  onPress={showPhotoOptions}
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: 0,
-                    transform: [{ translateY: 12 }],
-                    backgroundColor: COLORS.neon,
-                    width: 36,
-                    height: 36,
-                    borderRadius: 18,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderWidth: 2,
-                    borderColor: COLORS.white
-                  }}
-                >
-                  <Ionicons name="camera" size={18} color="#000" />
-                </Pressable>
-              </View>
-
-              <Pressable
-                onPress={showPhotoOptions}
-                style={{
-                  paddingVertical: 8,
-                  paddingHorizontal: 16,
-                  backgroundColor: COLORS.card,
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: COLORS.border
-                }}
-              >
-                <Text style={{ color: COLORS.white, fontWeight: '600' }}>Foto ändern</Text>
-              </Pressable>
-            </View>
-
-            {/* First Name */}
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Vorname *</Text>
-              <TextInput
-                value={firstName}
-                onChangeText={setFirstName}
-                placeholder="Max"
-                placeholderTextColor={COLORS.muted}
-                style={[inputStyle, errors.firstName && { borderColor: COLORS.error }]}
-              />
-            </View>
-
-            {/* Last Name */}
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Nachname *</Text>
-              <TextInput
-                value={lastName}
-                onChangeText={setLastName}
-                placeholder="Mustermann"
-                placeholderTextColor={COLORS.muted}
-                style={[inputStyle, errors.lastName && { borderColor: COLORS.error }]}
-              />
-            </View>
-
-            {/* Profile Text */}
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Über mich (optional)</Text>
-              <TextInput
-                value={profileText}
-                onChangeText={setProfileText}
-                placeholder="Erzähl etwas über dich..."
-                placeholderTextColor={COLORS.muted}
-                multiline
-                numberOfLines={4}
-                style={[
-                  inputStyle,
-                  { minHeight: 100, textAlignVertical: 'top' }
-                ]}
-              />
-            </View>
-
-            {/* Self-Employed Checkbox */}
-            <Pressable
-              onPress={() => setIsSelfEmployed(!isSelfEmployed)}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 12,
-                paddingHorizontal: 16,
-                backgroundColor: COLORS.card,
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: COLORS.border
-              }}
-            >
-              <View
-                style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 6,
-                  borderWidth: 2,
-                  borderColor: isSelfEmployed ? COLORS.neon : COLORS.border,
-                  backgroundColor: isSelfEmployed ? COLORS.neon : 'transparent',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 12
-                }}
-              >
-                {isSelfEmployed && (
-                  <Ionicons name="checkmark" size={16} color="#000" />
-                )}
-              </View>
-              <Text style={{ color: COLORS.white, fontSize: 15, flex: 1 }}>
-                Ich bin selbstständig
-              </Text>
-            </Pressable>
-          </View>
-        )}
-
-        {/* ADRESSE TAB */}
-        {activeTab === 'adresse' && (
-          <View
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 18,
-              padding: 20,
-              borderWidth: 1,
-              borderColor: COLORS.border
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
-              Wohnadresse
-            </Text>
-
-            {/* Straße mit Autocomplete */}
-            <View style={{ marginBottom: 16, position: 'relative', zIndex: 1000 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Straße *</Text>
-              <TextInput
-                value={street}
-                onChangeText={(text) => {
-                  setStreet(text);
-                  searchAddress(text);
-                }}
-                placeholder="Hauptstraße 123"
-                placeholderTextColor={COLORS.muted}
-                style={[inputStyle, errors.street && { borderColor: COLORS.error }]}
-              />
-              
-              {/* Autocomplete Dropdown */}
-              {showSuggestions && addressSuggestions.length > 0 && (
-                <View style={{
-                  position: 'absolute',
-                  top: 70,
-                  left: 0,
-                  right: 0,
-                  backgroundColor: COLORS.card,
-                  borderRadius: 12,
-                  maxHeight: 200,
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.2,
-                  shadowRadius: 4,
-                  elevation: 4,
-                  zIndex: 1001,
-                  borderWidth: 1,
-                  borderColor: COLORS.border
-                }}>
-                  <ScrollView style={{ maxHeight: 200 }}>
-                    {addressSuggestions.map((suggestion, index) => (
-                      <Pressable
-                        key={index}
-                        onPress={() => selectAddress(suggestion)}
-                        style={({ pressed }) => ({
-                          paddingVertical: 12,
-                          paddingHorizontal: 16,
-                          backgroundColor: pressed ? COLORS.border : COLORS.card,
-                          borderBottomWidth: index < addressSuggestions.length - 1 ? 1 : 0,
-                          borderBottomColor: COLORS.border,
-                        })}
-                      >
-                        <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.white }}>
-                          {suggestion.display_name}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </ScrollView>
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Hausnummer</Text>
+                  <TextInput
+                    value={houseNumber}
+                    onChangeText={setHouseNumber}
+                    placeholder="Nr."
+                    placeholderTextColor={COLORS.muted}
+                    style={inputStyle}
+                  />
                 </View>
-              )}
-            </View>
 
-            {/* Hausnummer */}
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Hausnummer *</Text>
-              <TextInput
-                value={houseNumber}
-                onChangeText={setHouseNumber}
-                placeholder="z. B. 12a"
-                placeholderTextColor={COLORS.muted}
-                style={[inputStyle, errors.houseNumber && { borderColor: COLORS.error }]}
-              />
-              {errors.houseNumber && (
-                <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>
-                  {errors.houseNumber}
-                </Text>
-              )}
-            </View>
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>PLZ *</Text>
+                  <TextInput
+                    value={postalCode}
+                    onChangeText={setPostalCode}
+                    placeholder="PLZ"
+                    placeholderTextColor={COLORS.muted}
+                    keyboardType="numeric"
+                    style={inputStyle}
+                  />
+                  {errors.postalCode && <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>{errors.postalCode}</Text>}
+                </View>
 
-            {/* PLZ + Stadt */}
-            <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>PLZ *</Text>
-                <TextInput
-                  value={postalCode}
-                  onChangeText={setPostalCode}
-                  placeholder="10115"
-                  placeholderTextColor={COLORS.muted}
-                  keyboardType="numeric"
-                  style={[inputStyle, errors.postalCode && { borderColor: COLORS.error }]}
-                />
-              </View>
-
-              <View style={{ flex: 2 }}>
-                <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Stadt *</Text>
-                <TextInput
-                  value={city}
-                  onChangeText={setCity}
-                  placeholder="Berlin"
-                  placeholderTextColor={COLORS.muted}
-                  style={[inputStyle, errors.city && { borderColor: COLORS.error }]}
-                />
-              </View>
-            </View>
-
-            {/* Country */}
-            <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Land *</Text>
-              <TextInput
-                value={country}
-                onChangeText={setCountry}
-                placeholder="Deutschland"
-                placeholderTextColor={COLORS.muted}
-                style={[inputStyle, errors.country && { borderColor: COLORS.error }]}
-              />
-            </View>
-          </View>
-        )}
-
-        {/* KATEGORIEN TAB */}
-        {activeTab === 'kategorien' && (
-          <View
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 18,
-              padding: 20,
-              borderWidth: 1,
-              borderColor: COLORS.border
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 16 }}>
-              Tätigkeiten & Qualifikationen
-            </Text>
-
-            {/* Kategorien */}
-            <View style={{ marginBottom: 20 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14 }}>Kategorien *</Text>
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  gap: 12
-                }}
-              >
-                {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
-                  const isSelected = selectedCategories.includes(key);
-
-                  return (
-                    <Pressable
-                      key={key}
-                      onPress={() => {
-                        if (isSelected) {
-                          const subs = cat.subcategories?.map((s: any) => s.key) || [];
-                          const quals = cat.qualifications?.map((q: any) => q.key) || [];
-                          setSelectedCategories(prev => prev.filter(v => v !== key));
-                          setSelectedSubcategories(prev => prev.filter(s => !subs.includes(s)));
-                          setSelectedQualifications(prev => prev.filter(q => !quals.includes(q)));
-                        } else {
-                          setSelectedCategories(prev => [...prev, key]);
-                        }
-                      }}
-                      style={{
-                        width: '47%',
-                        backgroundColor: isSelected ? COLORS.purple : COLORS.card,
-                        borderWidth: 1,
-                        borderColor: isSelected ? COLORS.neon : COLORS.border,
-                        borderRadius: 14,
-                        paddingVertical: 14,
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Text style={{ color: COLORS.white, fontWeight: '600' }}>{cat.label}</Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
-
-            {/* Subcategories */}
-            {availableSubcategories.length > 0 && (
-              <View style={{ marginBottom: 20 }}>
-                <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14 }}>
-                  Tätigkeiten *
-                </Text>
-
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                  {availableSubcategories.map(sub => {
-                    const isSelected = selectedSubcategories.includes(sub.key);
-
-                    return (
-                      <Pressable
-                        key={sub.key}
-                        onPress={() => {
-                          if (isSelected) {
-                            setSelectedSubcategories(prev => prev.filter(v => v !== sub.key));
-                          } else {
-                            setSelectedSubcategories(prev => [...prev, sub.key]);
-                          }
-                        }}
-                        style={{
-                          backgroundColor: isSelected ? COLORS.neon : COLORS.card,
-                          borderRadius: 14,
-                          paddingVertical: 8,
-                          paddingHorizontal: 14,
-                          borderWidth: 1,
-                          borderColor: isSelected ? COLORS.neon : COLORS.border
-                        }}
-                      >
-                        <Text style={{ color: isSelected ? '#000' : COLORS.white, fontWeight: '600' }}>
-                          {sub.label}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Stadt *</Text>
+                  <TextInput
+                    value={city}
+                    onChangeText={setCity}
+                    placeholder="Stadt"
+                    placeholderTextColor={COLORS.muted}
+                    style={inputStyle}
+                  />
+                  {errors.city && <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>{errors.city}</Text>}
                 </View>
               </View>
             )}
 
-            {/* Qualifications */}
-            {availableQualifications.length > 0 && (
+            {/* KATEGORIEN */}
+            {activeTab === 'kategorien' && (
               <View>
-                <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14 }}>
-                  Qualifikationen (optional)
-                </Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                  {availableQualifications.map(qual => {
-                    const isSelected = selectedQualifications.includes(qual.key);
+                <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 6 }}>Kategorien</Text>
+                <Text style={{ color: COLORS.muted, marginBottom: 24, fontSize: 14 }}>Wähle deine Tätigkeitsfelder</Text>
 
+                <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 12, fontSize: 16 }}>Kategorien *</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 28 }}>
+                  {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
+                    const isSelected = selectedCategories.includes(key);
                     return (
                       <Pressable
-                        key={qual.key}
-                        onPress={() => {
-                          if (isSelected) {
-                            setSelectedQualifications(prev => prev.filter(v => v !== qual.key));
-                          } else {
-                            setSelectedQualifications(prev => [...prev, qual.key]);
-                          }
-                        }}
+                        key={key}
+                        onPress={() => toggleCategory(key)}
                         style={{
+                          paddingVertical: 12,
+                          paddingHorizontal: 18,
+                          borderRadius: 20,
                           backgroundColor: isSelected ? COLORS.purple : COLORS.card,
-                          borderRadius: 14,
-                          paddingVertical: 8,
-                          paddingHorizontal: 14,
                           borderWidth: 1,
                           borderColor: isSelected ? COLORS.purple : COLORS.border
                         }}
                       >
-                        <Text style={{ color: COLORS.white, fontWeight: '600' }}>
-                          {qual.label}
+                        <Text style={{ color: isSelected ? COLORS.white : COLORS.text, fontWeight: '600', fontSize: 14 }}>
+                          {cat.label}
                         </Text>
                       </Pressable>
                     );
                   })}
                 </View>
+                {errors.categories && <Text style={{ color: COLORS.error, fontSize: 12, marginBottom: 16 }}>{errors.categories}</Text>}
+
+                {availableSubcategories.length > 0 && (
+                  <View style={{ marginBottom: 28 }}>
+                    <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 12, fontSize: 16 }}>Tätigkeiten</Text>
+                    <View style={{ gap: 10 }}>
+                      {availableSubcategories.map(sub => {
+                        const isSelected = selectedSubcategories.includes(sub.key);
+                        return (
+                          <Pressable
+                            key={sub.key}
+                            onPress={() => toggleSubcategory(sub.key)}
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              paddingVertical: 14,
+                              paddingHorizontal: 16,
+                              borderRadius: 12,
+                              backgroundColor: isSelected ? COLORS.neon : COLORS.card,
+                              borderWidth: 1,
+                              borderColor: isSelected ? COLORS.neon : COLORS.border
+                            }}
+                          >
+                            <Text style={{ color: isSelected ? COLORS.white : COLORS.text, fontSize: 15, fontWeight: '600' }}>
+                              {sub.label}
+                            </Text>
+                            {isSelected && <Ionicons name="checkmark-circle" size={20} color={COLORS.white} />}
+                          </Pressable>
+                        );
+                      })}
+                    </View>
+                  </View>
+                )}
+
+                {availableQualifications.length > 0 && (
+                  <View>
+                    <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 12, fontSize: 16 }}>Qualifikationen</Text>
+                    <View style={{ gap: 10 }}>
+                      {availableQualifications.map(qual => {
+                        const isSelected = selectedQualifications.includes(qual.key);
+                        return (
+                          <Pressable
+                            key={qual.key}
+                            onPress={() => toggleQualification(qual.key)}
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              paddingVertical: 14,
+                              paddingHorizontal: 16,
+                              borderRadius: 12,
+                              backgroundColor: isSelected ? COLORS.purple : COLORS.card,
+                              borderWidth: 1,
+                              borderColor: isSelected ? COLORS.purple : COLORS.border
+                            }}
+                          >
+                            <Text style={{ color: isSelected ? COLORS.white : COLORS.text, fontSize: 15, fontWeight: '600' }}>
+                              {qual.label}
+                            </Text>
+                            {isSelected && <Ionicons name="checkmark-circle" size={20} color={COLORS.white} />}
+                          </Pressable>
+                        );
+                      })}
+                    </View>
+                  </View>
+                )}
               </View>
             )}
-          </View>
-        )}
 
-        {/* KONTAKT TAB */}
-        {activeTab === 'kontakt' && (
-          <View
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 18,
-              padding: 20,
-              borderWidth: 1,
-              borderColor: COLORS.border
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
-              Kontaktinformationen
-            </Text>
+            {/* KONTAKT */}
+            {activeTab === 'kontakt' && (
+              <View>
+                <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 6 }}>Kontakt</Text>
+                <Text style={{ color: COLORS.muted, marginBottom: 24, fontSize: 14 }}>Wie können wir dich erreichen?</Text>
 
-            {/* Phone */}
-            <View style={{ marginBottom: 16 }}>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Telefonnummer *</Text>
-              <TextInput
-                value={phone}
-                onChangeText={setPhone}
-                placeholder="0176..."
-                placeholderTextColor={COLORS.muted}
-                keyboardType="phone-pad"
-                style={[inputStyle, errors.phone && { borderColor: COLORS.error }]}
-              />
-            </View>
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Telefon *</Text>
+                  <TextInput
+                    value={phone}
+                    onChangeText={setPhone}
+                    placeholder="+49 123 456789"
+                    placeholderTextColor={COLORS.muted}
+                    keyboardType="phone-pad"
+                    style={inputStyle}
+                  />
+                  {errors.phone && <Text style={{ color: COLORS.error, fontSize: 12, marginTop: 4 }}>{errors.phone}</Text>}
+                </View>
 
-            {/* Email */}
-            <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>E-Mail</Text>
-              <View
-                style={{
-                  backgroundColor: COLORS.card,
-                  borderRadius: 12,
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  borderWidth: 1,
-                  borderColor: COLORS.border
-                }}
-              >
-                <Text style={{ color: COLORS.muted }}>{user?.email || email}</Text>
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>E-Mail</Text>
+                  <TextInput
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="mail@example.com"
+                    placeholderTextColor={COLORS.muted}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={inputStyle}
+                    editable={false}
+                  />
+                </View>
               </View>
-            </View>
-          </View>
-        )}
+            )}
 
-        {/* RADIUS TAB */}
-        {activeTab === 'radius' && (
-          <View
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 18,
-              padding: 20,
-              borderWidth: 1,
-              borderColor: COLORS.border
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 20 }}>
-              Arbeitsradius
-            </Text>
+            {/* RADIUS */}
+            {activeTab === 'radius' && (
+              <View>
+                <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 6 }}>Arbeitsradius</Text>
+                <Text style={{ color: COLORS.muted, marginBottom: 24, fontSize: 14 }}>Wie weit möchtest du fahren?</Text>
 
-            <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>Radius in km *</Text>
-              <TextInput
-                value={radiusKm}
-                onChangeText={setRadiusKm}
-                placeholder="20"
-                placeholderTextColor={COLORS.muted}
-                keyboardType="numeric"
-                style={[inputStyle, errors.radiusKm && { borderColor: COLORS.error }]}
-              />
-              <Text style={{ color: COLORS.muted, marginTop: 8, fontSize: 13 }}>
-                Gib an, in welchem Umkreis (in km) du arbeiten möchtest. (1-200 km)
-              </Text>
-            </View>
-          </View>
-        )}
-      </ScrollView>
+                <View style={{ marginBottom: 18 }}>
+                  <Text style={{ color: COLORS.text, fontWeight: '700', marginBottom: 8, fontSize: 14 }}>Radius (km)</Text>
+                  <TextInput
+                    value={radiusKm}
+                    onChangeText={setRadiusKm}
+                    placeholder="20"
+                    placeholderTextColor={COLORS.muted}
+                    keyboardType="numeric"
+                    style={inputStyle}
+                  />
+                </View>
+              </View>
+            )}
+          </ScrollView>
 
-      {/* SAVE BUTTON */}
-      <View style={{ padding: 20, paddingBottom: 40 }}>
-        <Pressable
-          onPress={handleSave}
-          disabled={!isFormValid() || saving}
-          style={{
-            width: '60%',
-            alignSelf: 'center',
-            backgroundColor: isFormValid() && !saving ? COLORS.purple : COLORS.card,
-            paddingVertical: 18,
-            borderRadius: 16,
-            alignItems: 'center',
-            borderWidth: isFormValid() ? 0 : 2,
-            borderColor: COLORS.border,
-          }}
-        >
-          {saving ? (
-            <ActivityIndicator color={COLORS.white} />
-          ) : (
-            <Text style={{ color: isFormValid() ? COLORS.white : COLORS.muted, fontSize: 17, fontWeight: '700' }}>
-              Profil speichern
-            </Text>
-          )}
-        </Pressable>
-      </View>
-      </KeyboardAvoidingView>
-      
-      {showSaved && (
-        <View
-          style={{
-            position: "absolute",
-            bottom: 100,
-            left: 0,
-            right: 0,
-            alignItems: "center",
-            zIndex: 9999,
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "#00A07C",
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 12,
-              borderWidth: 1,
-              borderColor: "#EFABFF",
-              shadowColor: "#EFABFF",
-              shadowOpacity: 0.3,
-              shadowRadius: 6,
-            }}
-          >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 15,
-                fontWeight: "700",
-              }}
+          {/* SPEICHERN BUTTON */}
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 20, backgroundColor: COLORS.bg, borderTopWidth: 1, borderTopColor: COLORS.border }}>
+            <Pressable
+              onPress={handleSaveProfile}
+              disabled={saving}
+              style={({ pressed }) => ({
+                backgroundColor: saving ? COLORS.muted : (pressed ? '#D8A8FF' : COLORS.neon),
+                paddingVertical: 16,
+                borderRadius: 12,
+                alignItems: 'center'
+              })}
             >
-              Änderungen gespeichert
-            </Text>
+              {saving ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={{ color: COLORS.white, fontSize: 16, fontWeight: '700' }}>Profil speichern</Text>
+              )}
+            </Pressable>
           </View>
+
+          {showSaved && (
+            <View style={{ position: 'absolute', top: 20, left: 20, right: 20, backgroundColor: COLORS.neon, padding: 16, borderRadius: 12, alignItems: 'center' }}>
+              <Text style={{ color: COLORS.white, fontWeight: '700', fontSize: 15 }}>✓ Profil gespeichert</Text>
+            </View>
+          )}
         </View>
-      )}
-    </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
