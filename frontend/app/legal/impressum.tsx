@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 const COLORS = {
   purple: '#EFABFF',
   neon: '#EFABFF',
-  white: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
   black: '#000000',
   darkGray: '#333333',

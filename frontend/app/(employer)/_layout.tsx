@@ -10,14 +10,14 @@ const COLORS = {
   activeTabBg: '#D48DFF',
   neon: '#EFABFF',
   accent: '#EFABFF',
-  white: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  text: '#FFFFFF',
+  text: '#1A1A1A',
   inactive: 'rgba(255,255,255,0.5)',
-  muted: 'rgba(255,255,255,0.85)',
-  bg: '#00A07C',
-  card: 'rgba(255,255,255,0.15)',
-  border: 'rgba(255,255,255,0.25)',
+  muted: 'rgba(0,0,0,0.6)',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
 };
 
 // Custom Tab Button Component (Pill-Style)

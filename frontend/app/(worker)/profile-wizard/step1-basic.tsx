@@ -28,13 +28,13 @@ import { useWizard } from '../../../contexts/WizardContext';
 import { getWorkerProfile } from '../../../utils/profileStore';
 
 const COLORS = {
-  bg: '#00A07C',
+  bg: '#FFFFFF',
   card: '#FFFFFF',
   cardText: '#00A07C',
-  border: 'rgba(255,255,255,0.25)',
-  text: '#FFFFFF',
-  white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.85)',
+  border: 'rgba(0,0,0,0.08)',
+  text: '#1A1A1A',
+  white: '#1A1A1A',
+  muted: 'rgba(0,0,0,0.6)',
   neon: '#EFABFF',
   purple: '#EFABFF',
   placeholder: 'rgba(0,160,124,0.60)',

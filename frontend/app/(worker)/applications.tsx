@@ -107,7 +107,7 @@ export default function WorkerApplicationsScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#00A07C' }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: '#FFFFFF' }]}>
         {/* HEADER */}
         <View style={{ backgroundColor: COLORS.primary, padding: 20 }}>
           <Text style={{ color: 'white', fontSize: 22, fontWeight: '700' }}>
@@ -180,7 +180,7 @@ export default function WorkerApplicationsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: '#00A07C' }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: '#FFFFFF' }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[

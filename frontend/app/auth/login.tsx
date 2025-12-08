@@ -18,16 +18,16 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
-  bg: '#00A07C',
-  card: 'rgba(255,255,255,0.15)',
-  white: '#FFFFFF',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  muted: 'rgba(255,255,255,0.85)',
-  placeholder: 'rgba(255,255,255,0.60)',
+  muted: 'rgba(0,0,0,0.6)',
+  placeholder: 'rgba(0,0,0,0.4)',
   purple: '#EFABFF',
   purple2: '#EFABFF',
   neon: '#EFABFF',
-  border: 'rgba(255,255,255,0.25)',
+  border: 'rgba(0,0,0,0.08)',
   error: '#EFABFF',
   errorBg: 'rgba(230,74,74,0.12)'
 };

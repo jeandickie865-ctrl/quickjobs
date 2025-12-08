@@ -12,11 +12,11 @@ import { EmployerProfile } from '../../utils/employerProfileStore';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
-  bg: '#00A07C',  // Dunkler Hintergrund wie überall
+  bg: '#FFFFFF',  // Dunkler Hintergrund wie überall
   card: '#FFFFFF',
   purple: '#EFABFF',
   neon: '#EFABFF',
-  white: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
   black: '#000000',
   darkGray: '#333333',

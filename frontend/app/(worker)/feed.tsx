@@ -9,14 +9,14 @@ import { getTagLabel } from "../../utils/taxonomy";
 import { getWorkerProfile } from "../../utils/profileStore";
 
 const COLORS = {
-  bg: '#00A07C',
-  card: 'rgba(255,255,255,0.15)',
-  white: '#FFFFFF',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  muted: 'rgba(255,255,255,0.85)',
+  muted: 'rgba(0,0,0,0.6)',
   purple: '#EFABFF',
   neon: '#EFABFF',
-  border: 'rgba(255,255,255,0.25)',
+  border: 'rgba(0,0,0,0.08)',
   error: '#EFABFF',
   tagRequired: '#EFABFF',
   tagOptional: '#3A3A3A'

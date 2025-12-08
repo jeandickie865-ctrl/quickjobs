@@ -11,12 +11,12 @@ import { formatAddress } from '../../types/address';
 import { getEmployerProfile } from '../../utils/employerProfileStore';
 
 const COLORS = {
-  bg: '#00A07C',
+  bg: '#FFFFFF',
   card: '#FFFFFF',
-  border: 'rgba(255,255,255,0.25)',
-  white: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  muted: 'rgba(255,255,255,0.85)',
+  muted: 'rgba(0,0,0,0.6)',
   purple: '#EFABFF',
   neon: '#EFABFF',
 };

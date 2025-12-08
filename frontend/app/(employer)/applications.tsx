@@ -15,12 +15,12 @@ import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 const COLORS = {
-  bg: '#00A07C',
-  card: 'rgba(255,255,255,0.15)',
-  border: 'rgba(255,255,255,0.25)',
-  white: '#FFFFFF',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  muted: 'rgba(255,255,255,0.85)',
+  muted: 'rgba(0,0,0,0.6)',
   purple: '#EFABFF',
   purpleLight: '#EFABFF',
   neon: '#EFABFF',

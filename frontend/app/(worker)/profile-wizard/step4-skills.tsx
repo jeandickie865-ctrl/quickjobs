@@ -11,11 +11,11 @@ import { useWizard } from '../../../contexts/WizardContext';
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 const COLORS = {
-  bg: '#00A07C',
-  card: 'rgba(255,255,255,0.15)',
-  border: 'rgba(255,255,255,0.25)',
-  text: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.85)',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
+  text: '#1A1A1A',
+  muted: 'rgba(0,0,0,0.6)',
   neon: '#EFABFF',
   purple: '#EFABFF',
   error: '#EFABFF',

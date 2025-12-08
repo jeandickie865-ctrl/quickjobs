@@ -20,20 +20,20 @@ import { z } from 'zod';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {
-  bg: '#00A07C',
-  white: '#FFFFFF',
+  bg: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
   whiteSoft: 'rgba(255,255,255,0.8)',
-  card: 'rgba(255,255,255,0.15)',
-  cardBorder: 'rgba(255,255,255,0.25)',
-  border: 'rgba(255,255,255,0.25)',
-  text: '#FFFFFF',
-  placeholder: 'rgba(255,255,255,0.6)',
+  card: '#FFFFFF',
+  cardBorder: 'rgba(0,0,0,0.08)',
+  border: 'rgba(0,0,0,0.08)',
+  text: '#1A1A1A',
+  placeholder: 'rgba(0,0,0,0.4)',
   orange: '#EFABFF',
   neon: '#EFABFF',
   accent: '#EFABFF',
   purple: '#EFABFF',
-  muted: 'rgba(255,255,255,0.8)',
+  muted: 'rgba(0,0,0,0.6)',
   error: '#EFABFF',
   errorBg: 'rgba(239,171,255,0.20)'
 };

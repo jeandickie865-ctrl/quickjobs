@@ -23,12 +23,12 @@ import * as ImagePicker from 'expo-image-picker';
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 
 const COLORS = {
-  bg: '#00A07C',
-  card: 'rgba(255,255,255,0.15)',
-  border: 'rgba(255,255,255,0.25)',
-  white: '#FFFFFF',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  muted: 'rgba(255,255,255,0.85)',
+  muted: 'rgba(0,0,0,0.6)',
   purple: '#EFABFF',
   neon: '#EFABFF',
   error: '#EFABFF',

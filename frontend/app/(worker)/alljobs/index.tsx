@@ -7,14 +7,14 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { getWorkerProfile } from "../../../utils/profileStore";
 
 const COLORS = {
-  bg: '#00A07C',
+  bg: '#FFFFFF',
   card: '#FFFFFF',
   purple: '#EFABFF',
   neon: '#EFABFF',
-  white: '#FFFFFF',
+  white: '#1A1A1A',
   cardText: "#00A07C",
-  muted: 'rgba(255,255,255,0.85)',
-  border: 'rgba(255,255,255,0.25)',
+  muted: 'rgba(0,0,0,0.6)',
+  border: 'rgba(0,0,0,0.08)',
 };
 
 // Haversine-Formel zur Berechnung der Distanz zwischen zwei Koordinaten
