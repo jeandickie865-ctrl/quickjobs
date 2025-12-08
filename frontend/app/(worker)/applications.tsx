@@ -182,6 +182,7 @@ export default function WorkerApplicationsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: '#FFFFFF' }]} edges={['top']}>
+      <AppHeader />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -191,12 +192,12 @@ export default function WorkerApplicationsScreen() {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header */}
-        <View style={[styles.header, { marginBottom: spacing.md }]}>
-          <Text style={[styles.title, { color: '#FFFFFF' }]}>
+        {/* Header Subtitle */}
+        <View style={{ marginBottom: spacing.md, paddingHorizontal: 4 }}>
+          <Text style={{ color: '#1A1A1A', fontSize: 22, fontWeight: '800', marginBottom: 4 }}>
             Meine Bewerbungen
           </Text>
-          <Text style={[styles.subtitle, { color: '#A0A0A0', marginTop: 4 }]}>
+          <Text style={{ color: '#6B7280', fontSize: 14 }}>
             Alle Aufträge, für die du dich gemeldet hast
           </Text>
         </View>
