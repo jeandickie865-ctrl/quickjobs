@@ -1,18 +1,32 @@
 // app/(employer)/applications.tsx - ALLE BEWERBUNGEN FÜR ARBEITGEBER (BACKUP DESIGN)
 import React, { useState, useEffect, useRef } from 'react';
+import { AppHeader } from '../../components/AppHeader';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
+import { AppHeader } from '../../components/AppHeader';
 import { ScrollView, View, Text, ActivityIndicator, Pressable, RefreshControl, Image } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppHeader } from '../../components/AppHeader';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
+import { AppHeader } from '../../components/AppHeader';
 import { useAuth } from '../../contexts/AuthContext';
+import { AppHeader } from '../../components/AppHeader';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
+import { AppHeader } from '../../components/AppHeader';
 import { getJobById } from '../../utils/jobStore';
+import { AppHeader } from '../../components/AppHeader';
 import { getWorkerProfile } from '../../utils/profileStore';
+import { AppHeader } from '../../components/AppHeader';
 import { JobApplication } from '../../types/application';
+import { AppHeader } from '../../components/AppHeader';
 import { Job } from '../../types/job';
+import { AppHeader } from '../../components/AppHeader';
 import { WorkerProfile } from '../../types/profile';
+import { AppHeader } from '../../components/AppHeader';
 import { Ionicons } from '@expo/vector-icons';
+import { AppHeader } from '../../components/AppHeader';
 import Constants from 'expo-constants';
+import { AppHeader } from '../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',
