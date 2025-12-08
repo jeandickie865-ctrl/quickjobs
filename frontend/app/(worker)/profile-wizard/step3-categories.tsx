@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
 
   subcategoryCardSelected: {
     borderColor: COLORS.neon,
-    backgroundColor: '#1A172B',
+    backgroundColor: COLORS.card,
     shadowColor: COLORS.neon,
     shadowOpacity: 0.25,
     shadowRadius: 6
