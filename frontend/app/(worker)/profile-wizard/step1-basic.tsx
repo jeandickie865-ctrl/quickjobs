@@ -30,13 +30,14 @@ import { getWorkerProfile } from '../../../utils/profileStore';
 const COLORS = {
   bg: '#00A07C',
   card: '#FFFFFF',
+  cardText: '#00A07C',
   border: 'rgba(255,255,255,0.25)',
   text: '#FFFFFF',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.85)',
   neon: '#EFABFF',
   purple: '#EFABFF',
-  placeholder: 'rgba(255,255,255,0.60)',
+  placeholder: 'rgba(0,160,124,0.60)',
   gray: 'rgba(255,255,255,0.85)',
   lightGray: 'rgba(255,255,255,0.25)',
 };
