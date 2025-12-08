@@ -1,21 +1,29 @@
 export const COLORS = {
-  bg: '#00A07C',
-  text: '#FFFFFF',
-  textOnCard: '#00A07C',
-  textSoft: 'rgba(255,255,255,0.85)',
-  placeholder: 'rgba(255,255,255,0.60)',
-  card: 'rgba(255,255,255,0.15)',
-  cardBorder: 'rgba(255,255,255,0.25)',
-  border: 'rgba(255,255,255,0.25)',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
+  
+  text: '#1A1A1A',
+  textMuted: 'rgba(0,0,0,0.6)',
+  textSoft: 'rgba(0,0,0,0.6)',
+  placeholder: 'rgba(0,0,0,0.4)',
+  
+  primary: '#00A07C',
   accent: '#EFABFF',
   purple: '#EFABFF',
   neon: '#EFABFF',
+  
+  success: '#00A07C',
+  error: '#E64A4A',
+  errorBg: 'rgba(230,74,74,0.12)',
+  
   white: '#FFFFFF',
-  inactive: 'rgba(255,255,255,0.5)',
-  muted: 'rgba(255,255,255,0.85)',
-  error: '#EFABFF',
-  errorBg: 'rgba(239,171,255,0.20)',
-  errorIcon: '#EFABFF',
+  inactive: 'rgba(0,0,0,0.25)',
+  muted: 'rgba(0,0,0,0.6)',
+  divider: 'rgba(0,0,0,0.08)',
+  
+  cardBorder: 'rgba(0,0,0,0.08)',
+  textOnCard: '#1A1A1A',
 };
 
 export const SPACING = {
