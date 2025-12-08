@@ -1,6 +1,7 @@
 export const COLORS = {
   bg: '#00A07C',
   text: '#FFFFFF',
+  textOnCard: '#00A07C',
   textSoft: 'rgba(255,255,255,0.85)',
   placeholder: 'rgba(255,255,255,0.60)',
   card: 'rgba(255,255,255,0.15)',
@@ -12,8 +13,9 @@ export const COLORS = {
   white: '#FFFFFF',
   inactive: 'rgba(255,255,255,0.5)',
   muted: 'rgba(255,255,255,0.85)',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.2)',
+  error: '#EFABFF',
+  errorBg: 'rgba(239,171,255,0.20)',
+  errorIcon: '#EFABFF',
 };
 
 export const SPACING = {
