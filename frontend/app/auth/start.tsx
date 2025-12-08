@@ -48,16 +48,15 @@ export default function WelcomeScreen() {
           style={{
             opacity: fadeLogo,
             alignItems: 'center',
-            marginTop: 100,
-            marginBottom: 20
+            marginTop: 80,
+            marginBottom: 30
           }}
         >
           <Image
-            source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
+            source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/ys53mm61_QuJo%20Logo%20transparent.jpg' }}
             style={{
-              width: 160,
-              height: 160,
-              tintColor: '#6B4BFF'
+              width: 200,
+              height: 200
             }}
             resizeMode="contain"
           />
