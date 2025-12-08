@@ -281,8 +281,9 @@ export default function AllJobsScreen() {
       <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8 }}>
         <Text style={{ color: COLORS.text, fontSize: 22, fontWeight: "bold" }}>
           Alle Jobs
-        <Text style={{ color: COLORS.accent, fontSize: 14, fontWeight: "600" }}>
-          {jobs.length} Jobs
+        </Text>
+        <Text style={{ color: COLORS.textMuted, fontSize: 14, marginTop: 4 }}>
+          {jobs.length} {jobs.length === 1 ? 'Job' : 'Jobs'} gefunden
         </Text>
       </View>
 
