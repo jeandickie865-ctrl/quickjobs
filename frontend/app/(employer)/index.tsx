@@ -126,20 +126,12 @@ export default function EmployerDashboard() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }} edges={['top']}>
-        {/* HEADER */}
-        <View style={{ backgroundColor: COLORS.primary, padding: 20 }}>
-          <Text style={{ color: 'white', fontSize: 22, fontWeight: '700' }}>
-            Dashboard
-          </Text>
-        </View>
-
       <ScrollView 
         contentContainerStyle={{ padding: 20, gap: 20, paddingBottom: 200 }} 
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
       >
-        <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900' }}>Meine Aufträge</Text>
 
         <Pressable
           onPress={() => router.push('/(employer)/jobs/create')}
