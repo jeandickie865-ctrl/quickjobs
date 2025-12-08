@@ -48,7 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
       case 'primary':
         return { 
           ...base, 
-          backgroundColor: colors.accent, // Neon Lime
+          backgroundColor: '#FF773D', // Orange
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.2,
