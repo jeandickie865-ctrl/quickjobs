@@ -176,14 +176,14 @@ export default function SignupScreen() {
             <View style={{ flex: 1, minHeight: 20 }} />
 
             <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
-              <Pressable onPress={handleSignup} disabled={loading} style={({ pressed }) => ({ backgroundColor: loading ? '#B3B3B3' : COLORS.neon, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 16, opacity: pressed ? 0.9 : 1 })}>
-                <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>{loading ? 'Wird erstellt...' : 'Account erstellen'}</Text>
+              <Pressable onPress={handleSignup} disabled={loading} style={({ pressed }) => ({ backgroundColor: loading ? '#B3B3B3' : COLORS.orange, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 16, opacity: pressed ? 0.9 : 1 })}>
+                <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>{loading ? 'Wird erstellt...' : 'Account erstellen'}</Text>
               </Pressable>
 
               <View style={{ alignItems: 'center', marginTop: 16 }}>
-                <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, marginBottom: 8 }}>Schon einen Account?</Text>
+                <Text style={{ fontSize: 15, color: COLORS.textMuted, marginBottom: 8 }}>Schon einen Account?</Text>
                 <Pressable onPress={() => router.push('/auth/login')}>
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>Login</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.orange }}>Login</Text>
                 </Pressable>
               </View>
             </Animated.View>
