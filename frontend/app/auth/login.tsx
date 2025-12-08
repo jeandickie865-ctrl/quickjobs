@@ -101,7 +101,7 @@ export default function LoginScreen() {
             {/* LOGO */}
             <Animated.View style={{ alignItems: 'center', marginBottom: 40, opacity: logoOpacity }}>
               <Image
-                source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/4xee7hw8_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-5.png' }}
+                source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/f08x0hps_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-7.png' }}
                 style={{ width: 180, height: 180 }}
                 resizeMode="contain"
               />
