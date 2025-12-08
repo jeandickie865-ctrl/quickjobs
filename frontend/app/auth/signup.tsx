@@ -36,6 +36,16 @@ const COLORS = {
   errorBg: 'rgba(255,77,77,0.2)'
 };
 
+const SIZES = {
+  buttonHeight: 48,
+  inputHeight: 52,
+  radius: 14,
+  cardRadius: 16,
+  padding: 24,
+  gap: 16,
+  sectionGap: 28,
+};
+
 const signupSchema = z
   .object({
     email: z
