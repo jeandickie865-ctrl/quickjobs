@@ -10,13 +10,13 @@ import { getWorkerProfile } from "../../utils/profileStore";
 
 const COLORS = {
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.85)',
   purple: '#EFABFF',
   neon: '#EFABFF',
   border: 'rgba(255,255,255,0.25)',
-  error: '#E64A4A',
+  error: '#EFABFF',
   tagRequired: '#EFABFF',
   tagOptional: '#3A3A3A'
 };
