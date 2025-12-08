@@ -9,11 +9,11 @@ const COLORS = {
   purple: '#EFABFF',
   lightPurple: 'rgba(255,255,255,0.15)',
   neon: '#EFABFF',
+  accent: '#EFABFF',
   white: '#FFFFFF',
-  inactive: 'rgba(255,255,255,0.65)',
+  text: '#FFFFFF',
+  muted: 'rgba(255,255,255,0.85)',
   bg: '#00A07C',
-  card: '#FFFFFF',
-  border: 'rgba(255,255,255,0.25)',
 };
 
 // Custom Tab Button Component (Pill-Style)
