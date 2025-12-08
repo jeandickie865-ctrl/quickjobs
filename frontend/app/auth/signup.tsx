@@ -605,9 +605,9 @@ export default function SignupScreen() {
                 onPress={handleSignup}
                 disabled={loading}
                 style={({ pressed }) => ({
-                  backgroundColor: loading ? '#999' : COLORS.purple,
+                  backgroundColor: loading ? 'rgba(255,255,255,0.5)' : COLORS.white,
                   height: 56,
-                  borderRadius: 12,
+                  borderRadius: 14,
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: 16,
@@ -620,9 +620,9 @@ export default function SignupScreen() {
               >
                 <Text
                   style={{
-                    fontSize: 17,
+                    fontSize: 18,
                     fontWeight: '700',
-                    color: COLORS.white
+                    color: COLORS.bg
                   }}
                 >
                   {loading ? 'Wird erstellt...' : 'Account erstellen'}
