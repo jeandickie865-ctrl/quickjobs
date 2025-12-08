@@ -167,20 +167,14 @@ export default function Step1Basic() {
 
   const isFormValid = firstName.trim() && lastName.trim() && phone.trim();
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <SafeAreaView edges={['top']} style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
-        <AppHeader />
-          <Text style={{ color: COLORS.text }}>Lade Profil...</Text>
-        </SafeAreaView>
-      </View>
-    );
-  }
-
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <AppHeader />
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: COLORS.text }}>Lade Profil...</Text>
+        </View>
+      ) : (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
