@@ -232,12 +232,12 @@ export default function WorkerMatchesScreen() {
         {/* ARROW DOODLE */}
         <View style={{
           position: "absolute",
-          top: 20,
-          right: 20,
-          opacity: 0.9,
-          zIndex: 20
+          top: 120,
+          right: -20,
+          opacity: 0.8,
+          zIndex: 10
         }}>
-          <ArrowDoodle size={130} />
+          <ArrowDoodle size={200} />
         </View>
 
 
