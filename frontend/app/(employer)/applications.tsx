@@ -11,6 +11,7 @@ import { JobApplication } from '../../types/application';
 import { Job } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 
 const COLORS = {
   bg: '#141126',
