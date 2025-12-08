@@ -402,7 +402,7 @@ export default function WorkerRegistrationDataScreen() {
           >
             <View
               style={{
-                backgroundColor: "#00A07C",
+                backgroundColor: #EFABFF",
                 paddingVertical: 12,
                 paddingHorizontal: 20,
                 borderRadius: 12,

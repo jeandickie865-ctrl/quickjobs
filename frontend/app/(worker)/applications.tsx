@@ -217,7 +217,7 @@ export default function WorkerApplicationsScreen() {
             style={[
               styles.errorContainer,
               {
-                backgroundColor: '#00A07C',
+                backgroundColor: #EFABFF',
                 borderColor: '#EFABFF',
                 padding: spacing.md,
                 marginBottom: spacing.sm,
@@ -234,7 +234,7 @@ export default function WorkerApplicationsScreen() {
             style={[
               styles.emptyContainer,
               {
-                backgroundColor: '#00A07C',
+                backgroundColor: #EFABFF',
                 borderColor: 'rgba(255,255,255,0.08)',
                 padding: spacing.xl,
               },
@@ -280,7 +280,7 @@ export default function WorkerApplicationsScreen() {
               style={({ pressed }) => [
                 styles.applicationCard,
                 {
-                  backgroundColor: '#00A07C',
+                  backgroundColor: #EFABFF',
                   borderColor: isMatched ? '#EFABFF' : 'rgba(255,255,255,0.08)',
                   borderWidth: isMatched ? 2 : 1,
                   padding: spacing.md,
@@ -318,7 +318,7 @@ export default function WorkerApplicationsScreen() {
                 style={[
                   styles.statusContainer,
                   {
-                    backgroundColor: '#00A07C',
+                    backgroundColor: #EFABFF',
                     padding: spacing.sm,
                     marginTop: spacing.sm,
                   },
