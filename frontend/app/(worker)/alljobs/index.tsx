@@ -276,18 +276,11 @@ export default function AllJobsScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* Header */}
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          padding: 16,
-          backgroundColor: COLORS.purple,
-        }}
-      >
-        <Text style={{ color: COLORS.text, fontSize: 24, fontWeight: "bold", flex: 1 }}>
+      <AppHeader />
+      
+      <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8 }}>
+        <Text style={{ color: COLORS.text, fontSize: 22, fontWeight: "bold" }}>
           Alle Jobs
-        </Text>
         <Text style={{ color: COLORS.accent, fontSize: 14, fontWeight: "600" }}>
           {jobs.length} Jobs
         </Text>
