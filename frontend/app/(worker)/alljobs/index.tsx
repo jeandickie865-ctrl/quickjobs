@@ -151,8 +151,8 @@ export default function AllJobsScreen() {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg }}>
-        <ActivityIndicator color={COLORS.neon} size="large" />
-        <Text style={{ marginTop: 16, color: COLORS.muted }}>Lade alle Jobs...</Text>
+        <ActivityIndicator color={COLORS.accent} size="large" />
+        <Text style={{ marginTop: 16, color: COLORS.textMuted }}>Lade alle Jobs...</Text>
       </View>
     );
   }
@@ -161,7 +161,7 @@ export default function AllJobsScreen() {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg, padding: 20 }}>
         <Ionicons name="alert-circle-outline" size={64} color={COLORS.gray} />
-        <Text style={{ marginTop: 16, color: COLORS.muted, fontSize: 16, textAlign: "center" }}>{error}</Text>
+        <Text style={{ marginTop: 16, color: COLORS.textMuted, fontSize: 16, textAlign: "center" }}>{error}</Text>
         <Pressable
           onPress={() => router.back()}
           style={{
@@ -172,7 +172,7 @@ export default function AllJobsScreen() {
             borderRadius: 8,
           }}
         >
-          <Text style={{ color: COLORS.white, fontWeight: "600" }}>Zurück</Text>
+          <Text style={{ color: COLORS.text, fontWeight: "600" }}>Zurück</Text>
         </Pressable>
       </View>
     );
@@ -190,7 +190,7 @@ export default function AllJobsScreen() {
             backgroundColor: COLORS.purple,
           }}
         >
-          <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold", letterSpacing: 0 }}>
+          <Text style={{ color: COLORS.text, fontSize: 24, fontWeight: "bold", letterSpacing: 0 }}>
             Alle Jobs
           </Text>
         </View>
@@ -198,7 +198,7 @@ export default function AllJobsScreen() {
         {/* Leer-Zustand */}
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
           <Ionicons name="briefcase-outline" size={64} color={COLORS.gray} />
-          <Text style={{ marginTop: 16, color: COLORS.muted, fontSize: 16, textAlign: "center" }}>
+          <Text style={{ marginTop: 16, color: COLORS.textMuted, fontSize: 16, textAlign: "center" }}>
             Keine Jobs in deinem Umkreis gefunden
           </Text>
         </View>
@@ -216,8 +216,8 @@ export default function AllJobsScreen() {
         marginHorizontal: 16,
         marginVertical: 10,
         borderWidth: 2,
-        borderColor: COLORS.neon,
-        shadowColor: COLORS.neon,
+        borderColor: COLORS.accent,
+        shadowColor: COLORS.accent,
         shadowOpacity: 0.2,
         shadowOffset: { width: 0, height: 3 },
         shadowRadius: 8,
@@ -228,7 +228,7 @@ export default function AllJobsScreen() {
       {/* Titel */}
       <Text
         style={{
-          color: COLORS.white,
+          color: COLORS.text,
           fontSize: 18,
           fontWeight: "800",
           marginBottom: 6,
@@ -240,7 +240,7 @@ export default function AllJobsScreen() {
       {/* Kategorie Badge */}
       <View
         style={{
-          backgroundColor: COLORS.neon,
+          backgroundColor: COLORS.accent,
           alignSelf: "flex-start",
           paddingVertical: 4,
           paddingHorizontal: 10,
@@ -261,14 +261,14 @@ export default function AllJobsScreen() {
 
       {/* Beschreibung */}
       <View style={{ flexDirection: "row", marginBottom: 10 }}>
-        <Ionicons name="information-circle-outline" size={18} color={COLORS.neon} />
-        <Text style={{ color: COLORS.white, marginLeft: 8, flex: 1 }}>{item.description}</Text>
+        <Ionicons name="information-circle-outline" size={18} color={COLORS.accent} />
+        <Text style={{ color: COLORS.text, marginLeft: 8, flex: 1 }}>{item.description}</Text>
       </View>
 
       {/* Adresse */}
       <View style={{ flexDirection: "row", marginBottom: 10 }}>
-        <Ionicons name="location-outline" size={18} color={COLORS.neon} />
-        <Text style={{ color: COLORS.white, marginLeft: 8 }}>
+        <Ionicons name="location-outline" size={18} color={COLORS.accent} />
+        <Text style={{ color: COLORS.text, marginLeft: 8 }}>
           {item.address?.street} {item.address?.houseNumber},{" "}
           {item.address?.postalCode} {item.address?.city}
         </Text>
@@ -277,8 +277,8 @@ export default function AllJobsScreen() {
       {/* Vergütung */}
       {item.workerAmountCents && (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Ionicons name="cash-outline" size={18} color={COLORS.neon} />
-          <Text style={{ color: COLORS.white, marginLeft: 8, fontWeight: "700" }}>
+          <Ionicons name="cash-outline" size={18} color={COLORS.accent} />
+          <Text style={{ color: COLORS.text, marginLeft: 8, fontWeight: "700" }}>
             {(item.workerAmountCents / 100).toFixed(2)} €
           </Text>
         </View>
@@ -297,10 +297,10 @@ export default function AllJobsScreen() {
           backgroundColor: COLORS.purple,
         }}
       >
-        <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "bold", flex: 1 }}>
+        <Text style={{ color: COLORS.text, fontSize: 24, fontWeight: "bold", flex: 1 }}>
           Alle Jobs
         </Text>
-        <Text style={{ color: COLORS.neon, fontSize: 14, fontWeight: "600" }}>
+        <Text style={{ color: COLORS.accent, fontSize: 14, fontWeight: "600" }}>
           {jobs.length} Jobs
         </Text>
       </View>

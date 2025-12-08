@@ -136,8 +136,8 @@ export default function WorkerFeedScreen() {
   if (isLoading) {
     return (
       <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={COLORS.neon} />
-        <Text style={{ color: COLORS.muted, marginTop: 16, fontSize: 14 }}>Jobs werden geladen...</Text>
+        <ActivityIndicator size="large" color={COLORS.accent} />
+        <Text style={{ color: COLORS.textMuted, marginTop: 16, fontSize: 14 }}>Jobs werden geladen...</Text>
       </SafeAreaView>
     );
   }
@@ -158,7 +158,7 @@ export default function WorkerFeedScreen() {
             alignItems: 'center'
           }}>
             <Ionicons name="alert-circle-outline" size={48} color={COLORS.error} style={{ marginBottom: 16 }} />
-            <Text style={{ color: COLORS.white, fontSize: 16, textAlign: 'center', lineHeight: 24 }}>
+            <Text style={{ color: COLORS.text, fontSize: 16, textAlign: 'center', lineHeight: 24 }}>
               {error}
             </Text>
           </View>
@@ -182,18 +182,18 @@ export default function WorkerFeedScreen() {
             borderColor: COLORS.border,
             alignItems: 'center'
           }}>
-            <Ionicons name="briefcase-outline" size={48} color={COLORS.muted} style={{ marginBottom: 16 }} />
-            <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
+            <Ionicons name="briefcase-outline" size={48} color={COLORS.textMuted} style={{ marginBottom: 16 }} />
+            <Text style={{ color: COLORS.text, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
               Keine passenden Jobs
             </Text>
             {profile && (!profile.category || !profile.radius) ? (
               <Pressable onPress={() => router.push('/(worker)/edit-profile')}>
-                <Text style={{ color: COLORS.neon, fontSize: 14, textAlign: 'center', textDecorationLine: 'underline' }}>
+                <Text style={{ color: COLORS.accent, fontSize: 14, textAlign: 'center', textDecorationLine: 'underline' }}>
                   Vervollständige dein Profil (Kategorie & Radius), um Jobs zu sehen!
                 </Text>
               </Pressable>
             ) : (
-              <Text style={{ color: COLORS.muted, fontSize: 14, textAlign: 'center' }}>
+              <Text style={{ color: COLORS.textMuted, fontSize: 14, textAlign: 'center' }}>
                 Aktuell gibt es keine Jobs, die zu deinem Profil passen.{'\n'}Schau später nochmal vorbei!
               </Text>
             )}
@@ -213,7 +213,7 @@ export default function WorkerFeedScreen() {
         borderColor: COLORS.border
       }}>
         {/* TITEL */}
-        <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '800', marginBottom: 8 }}>
+        <Text style={{ color: COLORS.text, fontSize: 20, fontWeight: '800', marginBottom: 8 }}>
           {item.title}
         </Text>
 
@@ -221,7 +221,7 @@ export default function WorkerFeedScreen() {
         <View style={{ flexDirection: 'row', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
           {/* KATEGORIE BADGE */}
           <View style={{
-            backgroundColor: COLORS.neon,
+            backgroundColor: COLORS.accent,
             paddingVertical: 6,
             paddingHorizontal: 12,
             borderRadius: 8,
@@ -238,7 +238,7 @@ export default function WorkerFeedScreen() {
             paddingHorizontal: 12,
             borderRadius: 8,
           }}>
-            <Text style={{ color: COLORS.white, fontWeight: '700', fontSize: 12 }}>
+            <Text style={{ color: COLORS.text, fontWeight: '700', fontSize: 12 }}>
               {item.employerType === 'business' ? '🏢 Unternehmen' : '👤 Privatperson'}
             </Text>
           </View>
@@ -247,8 +247,8 @@ export default function WorkerFeedScreen() {
         {/* BESCHREIBUNG */}
         {item.description && (
           <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'flex-start' }}>
-            <Ionicons name="information-circle-outline" size={20} color={COLORS.neon} style={{ marginRight: 8, marginTop: 2 }} />
-            <Text style={{ color: COLORS.muted, flex: 1, fontSize: 14, lineHeight: 20 }}>
+            <Ionicons name="information-circle-outline" size={20} color={COLORS.accent} style={{ marginRight: 8, marginTop: 2 }} />
+            <Text style={{ color: COLORS.textMuted, flex: 1, fontSize: 14, lineHeight: 20 }}>
               {item.description}
             </Text>
           </View>
@@ -256,8 +256,8 @@ export default function WorkerFeedScreen() {
 
         {/* ADRESSE */}
         <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'flex-start' }}>
-          <Ionicons name="location-outline" size={20} color={COLORS.neon} style={{ marginRight: 8, marginTop: 2 }} />
-          <Text style={{ color: COLORS.muted, flex: 1, fontSize: 14 }}>
+          <Ionicons name="location-outline" size={20} color={COLORS.accent} style={{ marginRight: 8, marginTop: 2 }} />
+          <Text style={{ color: COLORS.textMuted, flex: 1, fontSize: 14 }}>
             {item.address?.street} {item.address?.houseNumber}, {item.address?.postalCode} {item.address?.city}
           </Text>
         </View>
@@ -270,14 +270,14 @@ export default function WorkerFeedScreen() {
             borderTopWidth: 1,
             borderTopColor: COLORS.border
           }}>
-            <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.neon, marginBottom: 4 }}>
+            <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.accent, marginBottom: 4 }}>
               {(item.workerAmountCents / 100).toFixed(2)} €
             </Text>
-            <Text style={{ fontSize: 13, color: COLORS.muted }}>
+            <Text style={{ fontSize: 13, color: COLORS.textMuted }}>
               Brutto = Netto
             </Text>
             {!profile?.isSelfEmployed && (
-              <Text style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>
+              <Text style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
                 § 40a EStG – keine Abzüge
               </Text>
             )}
@@ -290,7 +290,7 @@ export default function WorkerFeedScreen() {
             {/* Pflicht-Tags */}
             {item.required_all_tags?.length > 0 && (
               <View style={{ marginBottom: item.required_any_tags?.length > 0 ? 12 : 0 }}>
-                <Text style={{ color: COLORS.neon, fontSize: 11, fontWeight: '700', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                <Text style={{ color: COLORS.accent, fontSize: 11, fontWeight: '700', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                   Erforderlich
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -303,10 +303,10 @@ export default function WorkerFeedScreen() {
                         backgroundColor: COLORS.tagRequired,
                         borderRadius: 8,
                         borderWidth: 1,
-                        borderColor: COLORS.neon
+                        borderColor: COLORS.accent
                       }}
                     >
-                      <Text style={{ color: COLORS.white, fontSize: 12, fontWeight: '600' }}>
+                      <Text style={{ color: COLORS.text, fontSize: 12, fontWeight: '600' }}>
                         {getTagLabel(item.category, tag)}
                       </Text>
                     </View>
@@ -318,7 +318,7 @@ export default function WorkerFeedScreen() {
             {/* Optional-Tags */}
             {item.required_any_tags?.length > 0 && (
               <View>
-                <Text style={{ color: COLORS.muted, fontSize: 11, fontWeight: '700', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                <Text style={{ color: COLORS.textMuted, fontSize: 11, fontWeight: '700', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                   Mindestens eine
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -332,7 +332,7 @@ export default function WorkerFeedScreen() {
                         borderRadius: 8
                       }}
                     >
-                      <Text style={{ color: COLORS.muted, fontSize: 12, fontWeight: '600' }}>
+                      <Text style={{ color: COLORS.textMuted, fontSize: 12, fontWeight: '600' }}>
                         {getTagLabel(item.category, tag)}
                       </Text>
                     </View>
@@ -359,7 +359,7 @@ export default function WorkerFeedScreen() {
             opacity: pressed ? 0.9 : 1
           })}
         >
-          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>
             Job ansehen
           </Text>
         </Pressable>
@@ -371,18 +371,18 @@ export default function WorkerFeedScreen() {
     <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
       {/* HEADER */}
       <View style={{ paddingHorizontal: 24, marginBottom: 24 }}>
-        <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
+        <Text style={{ color: COLORS.text, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
           Quickjobs
         </Text>
-        <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
+        <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.accent }} />
       </View>
 
       {/* SUBTITLE */}
       <View style={{ paddingHorizontal: 24, marginBottom: 16 }}>
-        <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '700' }}>
+        <Text style={{ color: COLORS.text, fontSize: 20, fontWeight: '700' }}>
           Passende Jobs
         </Text>
-        <Text style={{ color: COLORS.muted, fontSize: 14, marginTop: 4 }}>
+        <Text style={{ color: COLORS.textMuted, fontSize: 14, marginTop: 4 }}>
           {jobs.length} {jobs.length === 1 ? 'Job gefunden' : 'Jobs gefunden'}
         </Text>
       </View>

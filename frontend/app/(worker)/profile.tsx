@@ -82,8 +82,8 @@ export default function WorkerProfileScreen() {
   if (loading) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator color={COLORS.neon} size="large" />
-        <Text style={{ color: COLORS.white, marginTop: 12 }}>Lädt Profil</Text>
+        <ActivityIndicator color={COLORS.accent} size="large" />
+        <Text style={{ color: COLORS.text, marginTop: 12 }}>Lädt Profil</Text>
       </View>
     );
   }
@@ -102,8 +102,8 @@ export default function WorkerProfileScreen() {
         <ArrowDoodle />
 
 
-          <Ionicons name="person-add" size={64} color={COLORS.neon} />
-          <Text style={{ color: COLORS.white, marginTop: 16, fontSize: 18 }}>Noch kein Profil vorhanden</Text>
+          <Ionicons name="person-add" size={64} color={COLORS.accent} />
+          <Text style={{ color: COLORS.text, marginTop: 16, fontSize: 18 }}>Noch kein Profil vorhanden</Text>
 
           <Pressable
             onPress={() => router.push('/(worker)/profile-wizard/step1-basic')}
@@ -115,7 +115,7 @@ export default function WorkerProfileScreen() {
               marginTop: 24,
             }}
           >
-            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.white }}>Profil erstellen</Text>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>Profil erstellen</Text>
           </Pressable>
         </SafeAreaView>
       </View>
@@ -160,11 +160,11 @@ export default function WorkerProfileScreen() {
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>Mein Profil</Text>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.text }}>Mein Profil</Text>
 
           <View style={{ flexDirection: 'row', gap: 20 }}>
             <Pressable onPress={() => router.push('/(worker)/edit-profile')}>
-              <Ionicons name="create-outline" size={26} color={COLORS.neon} />
+              <Ionicons name="create-outline" size={26} color={COLORS.accent} />
             </Pressable>
 
             <Pressable
@@ -173,7 +173,7 @@ export default function WorkerProfileScreen() {
                 router.replace('/auth/login');
               }}
             >
-              <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
+              <Ionicons name="log-out-outline" size={26} color={COLORS.accent} />
             </Pressable>
           </View>
         </View>
@@ -196,7 +196,7 @@ export default function WorkerProfileScreen() {
                 height: 110,
                 borderRadius: 55,
                 borderWidth: 3,
-                borderColor: COLORS.neon,
+                borderColor: COLORS.accent,
                 marginBottom: 14,
               }}
             />
@@ -210,25 +210,25 @@ export default function WorkerProfileScreen() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderWidth: 3,
-                borderColor: COLORS.neon,
+                borderColor: COLORS.accent,
                 marginBottom: 14,
               }}
             >
-              <Text style={{ fontSize: 36, fontWeight: '800', color: COLORS.white }}>{getInitials()}</Text>
+              <Text style={{ fontSize: 36, fontWeight: '800', color: COLORS.text }}>{getInitials()}</Text>
             </View>
           )}
 
-          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.text }}>
             {profile.firstName} {profile.lastName}
           </Text>
 
           {reviewCount > 0 && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
-              <Ionicons name="star" size={18} color={COLORS.neon} />
-              <Text style={{ color: COLORS.white, marginLeft: 6, fontSize: 16, fontWeight: '700' }}>
+              <Ionicons name="star" size={18} color={COLORS.accent} />
+              <Text style={{ color: COLORS.text, marginLeft: 6, fontSize: 16, fontWeight: '700' }}>
                 {avgRating.toFixed(1)}
               </Text>
-              <Text style={{ color: COLORS.muted, marginLeft: 4, fontSize: 14 }}>
+              <Text style={{ color: COLORS.textMuted, marginLeft: 4, fontSize: 14 }}>
                 ({reviewCount} Bewertungen)
               </Text>
             </View>
@@ -261,17 +261,17 @@ export default function WorkerProfileScreen() {
                   justifyContent: 'center',
                 }}
               >
-                <Ionicons name="people" size={24} color={COLORS.white} />
+                <Ionicons name="people" size={24} color={COLORS.text} />
               </View>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>Meine Matches</Text>
-                <Text style={{ fontSize: 13, color: COLORS.muted }}>Angenommene Aufträge</Text>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text }}>Meine Matches</Text>
+                <Text style={{ fontSize: 13, color: COLORS.textMuted }}>Angenommene Aufträge</Text>
               </View>
             </View>
 
             <View
               style={{
-                backgroundColor: COLORS.neon,
+                backgroundColor: COLORS.accent,
                 paddingHorizontal: 12,
                 paddingVertical: 6,
                 borderRadius: 12,
@@ -292,8 +292,8 @@ export default function WorkerProfileScreen() {
                 marginBottom: 20,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 12 }}>Über mich</Text>
-              <Text style={{ color: COLORS.muted, fontSize: 15, lineHeight: 22 }}>{profile.shortBio}</Text>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 12 }}>Über mich</Text>
+              <Text style={{ color: COLORS.textMuted, fontSize: 15, lineHeight: 22 }}>{profile.shortBio}</Text>
             </View>
           )}
 
@@ -305,7 +305,7 @@ export default function WorkerProfileScreen() {
                 borderRadius: 18,
                 padding: 20,
                 borderWidth: 1,
-                borderColor: COLORS.neon,
+                borderColor: COLORS.accent,
                 marginBottom: 20,
               }}
             >
@@ -315,7 +315,7 @@ export default function WorkerProfileScreen() {
                     width: 40,
                     height: 40,
                     borderRadius: 20,
-                    backgroundColor: COLORS.neon,
+                    backgroundColor: COLORS.accent,
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
@@ -323,10 +323,10 @@ export default function WorkerProfileScreen() {
                   <Ionicons name="briefcase" size={20} color={COLORS.bg} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.accent }}>
                     Selbstständig
                   </Text>
-                  <Text style={{ fontSize: 13, color: COLORS.muted, marginTop: 2 }}>
+                  <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 2 }}>
                     Keine Anmeldung erforderlich
                   </Text>
                 </View>
@@ -346,13 +346,13 @@ export default function WorkerProfileScreen() {
                 marginBottom: 20,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 14 }}>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 14 }}>
                 Tätigkeiten und Qualifikationen
               </Text>
 
               {categoryLabels.length > 0 && (
                 <View style={{ marginBottom: tagLabels.length > 0 ? 16 : 0 }}>
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.muted, marginBottom: 8 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textMuted, marginBottom: 8 }}>
                     Kategorien
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -366,7 +366,7 @@ export default function WorkerProfileScreen() {
                           borderRadius: 20,
                         }}
                       >
-                        <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.white }}>{label}</Text>
+                        <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.text }}>{label}</Text>
                       </View>
                     ))}
                   </View>
@@ -375,7 +375,7 @@ export default function WorkerProfileScreen() {
 
               {tagLabels.length > 0 && (
                 <View>
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.muted, marginBottom: 8 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textMuted, marginBottom: 8 }}>
                     Qualifikationen
                   </Text>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -391,7 +391,7 @@ export default function WorkerProfileScreen() {
                           borderRadius: 16,
                         }}
                       >
-                        <Text style={{ fontSize: 13, color: COLORS.white }}>{label}</Text>
+                        <Text style={{ fontSize: 13, color: COLORS.text }}>{label}</Text>
                       </View>
                     ))}
                   </View>
@@ -412,17 +412,17 @@ export default function WorkerProfileScreen() {
                 marginBottom: 20,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 14 }}>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 14 }}>
                 Kontakt
               </Text>
 
               {profile.email && (
-                <Text style={{ color: COLORS.muted, fontSize: 15, marginBottom: profile.phone ? 8 : 0 }}>
+                <Text style={{ color: COLORS.textMuted, fontSize: 15, marginBottom: profile.phone ? 8 : 0 }}>
                   {profile.email}
                 </Text>
               )}
 
-              {profile.phone && <Text style={{ color: COLORS.muted, fontSize: 15 }}>{profile.phone}</Text>}
+              {profile.phone && <Text style={{ color: COLORS.textMuted, fontSize: 15 }}>{profile.phone}</Text>}
             </View>
           )}
 
@@ -438,11 +438,11 @@ export default function WorkerProfileScreen() {
                 alignItems: 'center',
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 12 }}>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 12 }}>
                 Arbeitsradius
               </Text>
               <Text style={{ fontSize: 44, fontWeight: '900', color: COLORS.purple }}>{profile.radiusKm}</Text>
-              <Text style={{ fontSize: 14, color: COLORS.muted }}>Kilometer</Text>
+              <Text style={{ fontSize: 14, color: COLORS.textMuted }}>Kilometer</Text>
             </View>
           )}
 
@@ -457,7 +457,7 @@ export default function WorkerProfileScreen() {
               width: '100%',
             }}
           >
-            <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>Profil bearbeiten</Text>
+            <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700' }}>Profil bearbeiten</Text>
           </Pressable>
 
           <Pressable
@@ -473,7 +473,7 @@ export default function WorkerProfileScreen() {
               borderColor: COLORS.border,
             }}
           >
-            <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>Offizielle Daten bearbeiten</Text>
+            <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700' }}>Offizielle Daten bearbeiten</Text>
           </Pressable>
 
           <Pressable
@@ -489,7 +489,7 @@ export default function WorkerProfileScreen() {
               borderColor: COLORS.border,
             }}
           >
-            <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700' }}>Qualifikationsnachweise</Text>
+            <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700' }}>Qualifikationsnachweise</Text>
           </Pressable>
 
           {/* Bewertungen Sektion */}
@@ -504,7 +504,7 @@ export default function WorkerProfileScreen() {
                 marginBottom: 40,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, marginBottom: 16 }}>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 16 }}>
                 Bewertungen ({reviews.length})
               </Text>
               
@@ -524,11 +524,11 @@ export default function WorkerProfileScreen() {
                         key={star}
                         name={star <= review.rating ? 'star' : 'star-outline'}
                         size={18}
-                        color={star <= review.rating ? COLORS.neon : COLORS.muted}
+                        color={star <= review.rating ? COLORS.accent : COLORS.textMuted}
                         style={{ marginRight: 4 }}
                       />
                     ))}
-                    <Text style={{ color: COLORS.muted, marginLeft: 8, fontSize: 14 }}>
+                    <Text style={{ color: COLORS.textMuted, marginLeft: 8, fontSize: 14 }}>
                       {new Date(review.createdAt).toLocaleDateString('de-DE', {
                         day: '2-digit',
                         month: '2-digit',
@@ -539,7 +539,7 @@ export default function WorkerProfileScreen() {
 
                   {/* Kommentar */}
                   {review.comment && (
-                    <Text style={{ color: COLORS.white, fontSize: 15, lineHeight: 22 }}>
+                    <Text style={{ color: COLORS.text, fontSize: 15, lineHeight: 22 }}>
                       {review.comment}
                     </Text>
                   )}
