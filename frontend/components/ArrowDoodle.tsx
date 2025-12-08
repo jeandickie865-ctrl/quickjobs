@@ -4,33 +4,31 @@ import Svg, { Path } from "react-native-svg";
 import { COLORS } from "../constants/colors";
 
 export const ArrowDoodle = ({ size = 150 }) => {
-  const scale = size / 220;
-  
   return (
     <View style={{ 
       width: size, 
-      height: size * 0.64, // 140/220 ratio
-      opacity: 0.9,
+      height: size * 1.2,
+      opacity: 0.85,
     }}>
       <Svg 
         width={size} 
-        height={size * 0.64} 
-        viewBox="0 0 220 140"
+        height={size * 1.2} 
+        viewBox="0 0 200 240"
       >
-        {/* Geschwungener Pfeil */}
+        {/* Organischer geschwungener Pfeil - von oben nach unten rechts */}
         <Path
-          d="M15 60 C60 10, 140 10, 180 60 C200 85, 180 110, 150 90"
+          d="M 50,30 C 80,20 120,25 140,50 C 155,70 150,100 135,120 C 125,135 115,145 110,155"
           stroke={COLORS.accent}
-          strokeWidth="7"
+          strokeWidth="8"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
         />
         {/* Pfeilspitze */}
         <Path
-          d="M150 90 L165 95 L155 110"
+          d="M 110,155 L 105,170 L 120,163"
           stroke={COLORS.accent}
-          strokeWidth="7"
+          strokeWidth="8"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
