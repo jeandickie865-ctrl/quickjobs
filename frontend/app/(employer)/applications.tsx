@@ -657,3 +657,126 @@ export default function EmployerApplicationsScreen() {
     </View>
   );
 }
+
+// Worker Ratings Component
+function WorkerRatings({ workerId }: { workerId: string }) {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const apiUrl = Constants.expoConfig?.extra?.apiUrl || process.env.EXPO_PUBLIC_API_URL;
+        const response = await fetch(`${apiUrl}/api/reviews/worker/${workerId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setReviews(data);
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (workerId) {
+      fetchReviews();
+    }
+  }, [workerId]);
+
+  if (loading) {
+    return null; // Show nothing while loading
+  }
+
+  const averageRating = reviews.length > 0
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0;
+
+  return (
+    <View
+      style={{
+        backgroundColor: 'rgba(200,255,22,0.08)',
+        padding: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: COLORS.neon,
+        marginBottom: 12,
+      }}
+    >
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.white }}>
+          Bewertungen
+        </Text>
+        {reviews.length > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.neon }}>
+              {averageRating.toFixed(1)}
+            </Text>
+            <Ionicons name="star" size={16} color={COLORS.neon} />
+          </View>
+        )}
+      </View>
+
+      {reviews.length === 0 ? (
+        <Text style={{ fontSize: 12, color: COLORS.muted, fontStyle: 'italic' }}>
+          Noch keine Bewertungen vorhanden
+        </Text>
+      ) : (
+        <View style={{ gap: 8 }}>
+          <View style={{ flexDirection: 'row', gap: 2 }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Ionicons
+                key={star}
+                name={star <= Math.round(averageRating) ? 'star' : 'star-outline'}
+                size={18}
+                color={star <= Math.round(averageRating) ? COLORS.neon : COLORS.muted}
+              />
+            ))}
+            <Text style={{ fontSize: 12, color: COLORS.muted, marginLeft: 6 }}>
+              ({reviews.length} {reviews.length === 1 ? 'Bewertung' : 'Bewertungen'})
+            </Text>
+          </View>
+
+          {reviews.slice(0, 2).map((review, index) => (
+            <View
+              key={index}
+              style={{
+                backgroundColor: 'rgba(0,0,0,0.2)',
+                padding: 8,
+                borderRadius: 8,
+                marginTop: 4,
+              }}
+            >
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+                <View style={{ flexDirection: 'row', gap: 2 }}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Ionicons
+                      key={star}
+                      name={star <= review.rating ? 'star' : 'star-outline'}
+                      size={12}
+                      color={star <= review.rating ? COLORS.neon : COLORS.muted}
+                    />
+                  ))}
+                </View>
+                <Text style={{ fontSize: 10, color: COLORS.muted }}>
+                  {new Date(review.createdAt).toLocaleDateString('de-DE')}
+                </Text>
+              </View>
+              {review.comment && (
+                <Text style={{ fontSize: 11, color: COLORS.white, lineHeight: 16 }}>
+                  {review.comment}
+                </Text>
+              )}
+            </View>
+          ))}
+
+          {reviews.length > 2 && (
+            <Text style={{ fontSize: 11, color: COLORS.muted, fontStyle: 'italic', marginTop: 4 }}>
+              +{reviews.length - 2} weitere {reviews.length - 2 === 1 ? 'Bewertung' : 'Bewertungen'}
+            </Text>
+          )}
+        </View>
+      )}
+    </View>
+  );
+}
