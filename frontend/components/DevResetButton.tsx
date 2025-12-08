@@ -4,9 +4,9 @@ import { Pressable, Text, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const COLORS = {
-  neon: '#C8FF16',
-  black: '#000000',
-  purple: '#5941FF',
+  neon: '#6A3FFF',
+  black: '#1A1A1A',
+  purple: '#6A3FFF',
 };
 
 export default function DevResetButton() {

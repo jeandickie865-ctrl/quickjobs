@@ -4,10 +4,10 @@ import { View, Text, Modal, Pressable, ScrollView } from 'react-native';
 import { Button } from './ui/Button';
 
 const COLORS = {
-  white: '#FFFFFF',
-  purple: '#5941FF',
-  neon: '#C8FF16',
-  black: '#000000',
+  white: '#1A1A1A',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
+  black: '#1A1A1A',
   gray100: '#F5F5F5',
   gray400: '#9CA3AF',
   gray600: '#6B7280',

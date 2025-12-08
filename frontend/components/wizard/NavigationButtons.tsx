@@ -13,10 +13,10 @@ interface NavigationButtonsProps {
 }
 
 const COLORS = {
-  purple: '#5941FF',
+  purple: '#6A3FFF',
   purpleDark: '#3E2DD9',
-  neon: '#C8FF16',
-  white: '#FFFFFF',
+  neon: '#6A3FFF',
+  white: '#1A1A1A',
   gray: '#999',
 };
 
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   nextText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000000',
+    color: '#1A1A1A',
   },
   nextTextDisabled: {
     color: COLORS.gray,

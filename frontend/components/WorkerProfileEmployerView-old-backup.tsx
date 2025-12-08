@@ -10,10 +10,10 @@ const BACKEND_URL = Constants.expoConfig?.extra?.backendUrl || process.env.EXPO_
 const TAXONOMY_DATA = require('../shared/taxonomy.json');
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
-  white: '#FFFFFF',
-  black: '#000000',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
+  white: '#1A1A1A',
+  black: '#1A1A1A',
   darkGray: '#333333',
   lightGray: '#F5F5F5',
   borderGray: '#E0E0E0',

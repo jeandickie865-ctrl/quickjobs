@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 
 const COLORS = {
-  bg: '#0E0B1F',
-  card: '#141126',
-  border: 'rgba(255,255,255,0.06)',
-  text: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  neon: '#C8FF16',
+  bg: '#F7F7F9',
+  card: '#F7F7F9',
+  border: 'rgba(0,0,0,0.08)',
+  text: '#1A1A1A',
+  muted: 'rgba(0,0,0,0.6)',
+  neon: '#6A3FFF',
 };
 
 // CACHE: Response Caching (max 50 entries, 10 min TTL)
