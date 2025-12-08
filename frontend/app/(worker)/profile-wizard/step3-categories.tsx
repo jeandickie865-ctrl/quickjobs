@@ -14,6 +14,27 @@ const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 // NEUE 3-STUFEN FARBEN
 
+
+const COLORS = {
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  primary: '#9333EA',
+  secondary: '#FF773D',
+  accent: '#EFABFF',
+  border: '#E9D5FF',
+  text: '#1A1A1A',
+  textMuted: '#6B7280',
+  inputBg: '#FFFFFF',
+  inputBorder: '#E9D5FF',
+  error: '#EF4444',
+  purple: '#EFABFF',
+  neon: '#EFABFF',
+  white: '#1A1A1A',
+  muted: '#6B7280',
+  gray: '#6B7280',
+  placeholder: '#9CA3AF',
+};
+
 export default function Step3Categories() {
   const router = useRouter();
   const { wizardData, updateWizardData } = useWizard();
