@@ -169,46 +169,47 @@ export default function WorkerProfileScreen() {
       <View style={{ 
         position: 'absolute', 
         top: 200 - 70, // Halb überlappend
-        alignSelf: 'center',
-        zIndex: 20,
-        alignItems: 'center'
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        zIndex: 20
       }}>
         {profile.photoUrl || profile.profilePhotoUri ? (
           <Image
             source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
             style={{
-              width: 130,
-              height: 130,
-              borderRadius: 65,
-              borderWidth: 4,
-              borderColor: COLORS.accent, // Rosa
-              backgroundColor: 'white',
+              width: 140,
+              height: 140,
+              borderRadius: 70,
+              borderWidth: 6,
+              borderColor: '#EFABFF', // Rosa - direkt als Hex
+              backgroundColor: '#FFFFFF',
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 4,
-              elevation: 3,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.15,
+              shadowRadius: 8,
+              elevation: 5,
             }}
           />
         ) : (
           <View
             style={{
-              width: 130,
-              height: 130,
-              borderRadius: 65,
-              backgroundColor: 'white',
+              width: 140,
+              height: 140,
+              borderRadius: 70,
+              backgroundColor: '#FFFFFF',
               justifyContent: 'center',
               alignItems: 'center',
-              borderWidth: 4,
-              borderColor: COLORS.accent, // Rosa
+              borderWidth: 6,
+              borderColor: '#EFABFF', // Rosa - direkt als Hex
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 4,
-              elevation: 3,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.15,
+              shadowRadius: 8,
+              elevation: 5,
             }}
           >
-            <Text style={{ fontSize: 40, fontWeight: '800', color: COLORS.text }}>{getInitials()}</Text>
+            <Text style={{ fontSize: 48, fontWeight: '800', color: '#1A1A1A' }}>{getInitials()}</Text>
           </View>
         )}
       </View>
