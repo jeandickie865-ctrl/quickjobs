@@ -368,27 +368,11 @@ export default function JobDetailScreen() {
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.white, lineHeight: 22 }}>
             {(() => {
-              // Zuerst prüfen ob job.date und job.start_at/job.end_at existieren (bevorzugt)
-              if (job.date && (job.start_at || job.startAt) && (job.end_at || job.endAt)) {
-                const startTime = job.start_at || job.startAt;
-                const endTime = job.end_at || job.endAt;
-                return `${job.date} von ${startTime} bis ${endTime}`;
-              }
-
-              // Fallback: Versuche startAt/endAt zu parsen
-              const startValue = job.startAt || job.start_at;
-              const endValue = job.endAt || job.end_at;
-
-              if (startValue && endValue && startValue !== 'null' && endValue !== 'null') {
+              // Versuche startAt/endAt zu parsen (ISO Datumsstrings)
+              if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
                 try {
-                  // Wenn es schon eine Uhrzeit ist (HH:MM Format)
-                  if (typeof startValue === 'string' && startValue.includes(':') && startValue.length <= 5) {
-                    return `${job.date || 'Datum unbekannt'} von ${startValue} bis ${endValue}`;
-                  }
-                  
-                  // Wenn es ein ISO Datum ist
-                  const start = new Date(startValue);
-                  const end = new Date(endValue);
+                  const start = new Date(job.startAt);
+                  const end = new Date(job.endAt);
                   if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
                     const dateStr = start.toLocaleDateString('de-DE');
                     const startTimeStr = start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
