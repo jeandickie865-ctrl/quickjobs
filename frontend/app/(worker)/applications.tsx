@@ -1,33 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Redirect, useRouter, useFocusEffect } from 'expo-router';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useTheme } from '../../theme/ThemeProvider';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../contexts/AuthContext';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getWorkerApplications } from '../../utils/applicationStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getJobById } from '../../utils/jobStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Job } from '../../types/job';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { JobApplication } from '../../types/application';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Button } from '../../components/ui/Button';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { formatAddress } from '../../types/address';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { euro } from '../../utils/pricing';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { API_URL } from '../../config';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getAuthHeaders } from '../../utils/api';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 type ApplicationWithJob = {
   app: JobApplication;

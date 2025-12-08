@@ -13,25 +13,15 @@ import {
   Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../contexts/AuthContext';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Job } from '../../types/job';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getEmployerJobs } from '../../utils/jobStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getApplicationsForJob, JobApplication } from '../../utils/applicationStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Ionicons } from '@expo/vector-icons';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { API_URL } from '../../config';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getAuthHeaders } from '../../utils/api';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const { width } = Dimensions.get('window');
 const INNER_CARD_PADDING = 18;

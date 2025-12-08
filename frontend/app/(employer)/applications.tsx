@@ -2,29 +2,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { ScrollView, View, Text, ActivityIndicator, Pressable, RefreshControl, Image } from 'react-native';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../contexts/AuthContext';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getJobById } from '../../utils/jobStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getWorkerProfile } from '../../utils/profileStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { JobApplication } from '../../types/application';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Job } from '../../types/job';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { WorkerProfile } from '../../types/profile';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Ionicons } from '@expo/vector-icons';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import Constants from 'expo-constants';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {
   bg: '#00A07C',

@@ -2,39 +2,22 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { View, Text, ScrollView, ActivityIndicator, Pressable, Image, Alert } from 'react-native';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { useAuth } from '../../../contexts/AuthContext';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getJobById, deleteJob } from '../../../utils/jobStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getApplicationsForJob } from '../../../utils/applicationStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getWorkerProfile } from '../../../utils/profileStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getReviewsForEmployer, getReviewsForWorker, calculateAverageRating } from '../../../utils/reviewStore';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Job } from '../../../types/job';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { JobApplication } from '../../../types/application';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { WorkerProfile } from '../../../types/profile';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { formatAddress } from '../../../types/address';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { getInitials } from '../../../utils/stringHelpers';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { euro } from '../../../utils/pricing';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { Ionicons } from '@expo/vector-icons';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { RatingDisplay } from '../../../components/RatingDisplay';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { WorkerProfileEmployerView } from '../../../components/WorkerProfileEmployerView';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {
   bg: '#00A07C',
