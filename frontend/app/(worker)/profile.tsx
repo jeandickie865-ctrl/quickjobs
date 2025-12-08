@@ -172,7 +172,6 @@ export default function WorkerProfileScreen() {
         alignSelf: 'center',
         zIndex: 20
       }}>
-        <View>
           {profile.photoUrl || profile.profilePhotoUri ? (
             <Image
               source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
