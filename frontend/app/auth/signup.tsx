@@ -19,18 +19,21 @@ import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
 
 const COLORS = {
-  bg: '#F7F7F9',
-  card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  text: '#1A1A1A',
-  white: '#1A1A1A',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#6A3FFF',
-  accent: '#6A3FFF',
+  bg: '#6A3FFF',
+  white: '#FFFFFF',
+  whiteSoft: 'rgba(255,255,255,0.8)',
+  card: 'rgba(255,255,255,0.15)',
+  cardBorder: 'rgba(255,255,255,0.25)',
+  border: 'rgba(255,255,255,0.25)',
+  text: '#FFFFFF',
+  placeholder: 'rgba(255,255,255,0.6)',
+  orange: '#FFB36A',
+  neon: '#FFB36A',
+  accent: '#FFB36A',
   purple: '#6A3FFF',
-  placeholder: 'rgba(0,0,0,0.4)',
-  error: '#E64A4A',
-  errorBg: 'rgba(230,74,74,0.12)'
+  muted: 'rgba(255,255,255,0.8)',
+  error: '#FF4D4D',
+  errorBg: 'rgba(255,77,77,0.2)'
 };
 
 const signupSchema = z
