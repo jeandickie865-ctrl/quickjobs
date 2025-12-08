@@ -8,14 +8,16 @@ import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#9333EA',
+  orange: '#FF773D',
   white: '#FFFFFF',
-  black: '#000000',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.12)',
-  placeholder: '#8A8A8A',
+  black: '#1A1A1A',
+  text: '#1A1A1A',
+  textMuted: '#6B7280',
+  error: '#EF4444',
+  errorBg: 'rgba(239,68,68,0.1)',
+  placeholder: '#9CA3AF',
+  border: '#E9D5FF',
 };
 
 const signupSchema = z.object({
