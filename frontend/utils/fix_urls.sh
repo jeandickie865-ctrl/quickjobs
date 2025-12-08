@@ -2,6 +2,6 @@
 # Fix all hardcoded URLs in store files
 cd /app/frontend/utils
 for file in employerProfileStore.ts jobStore.ts profileStore.ts reviewStore.ts; do
-  sed -i "s|Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://themerework.preview.emergentagent.com'|process.env.EXPO_PUBLIC_BACKEND_URL || Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || ''|g" "$file"
+  sed -i "s|Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 'https://visual-ui-crisis.preview.emergentagent.com'|process.env.EXPO_PUBLIC_BACKEND_URL || Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || ''|g" "$file"
 done
 echo "Fixed all store URLs"

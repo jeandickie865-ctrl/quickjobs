@@ -25,7 +25,7 @@ from typing import Dict, List, Optional, Any
 import uuid
 
 # Backend Configuration
-BACKEND_URL = "https://themerework.preview.emergentagent.com/api"
+BACKEND_URL = "https://visual-ui-crisis.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
