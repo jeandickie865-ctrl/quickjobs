@@ -423,15 +423,13 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 8
   },
-  input: {
-    backgroundColor: COLORS.card,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    input: {
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: COLORS.border,
-    fontSize: 16,
-    color: COLORS.cardText
+    borderColor: 'rgba(239,171,255,0.4)',
+    padding: 14,
+    borderRadius: 12,
+    color: '#1A1A1A',
   },
   textArea: {
     minHeight: 110,
