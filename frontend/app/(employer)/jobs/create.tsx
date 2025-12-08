@@ -16,16 +16,17 @@ import taxonomy from '../../../shared/taxonomy.json';
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  cardSoft: '#181433',
-  border: 'rgba(0,0,0,0.08)',
-  inputBorder: 'rgba(255,255,255,0.15)',
-  inputBg: '#1E1938',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  neon: '#EFABFF',
-  purple: '#EFABFF',
-  muted: 'rgba(0,0,0,0.6)',
-  error: '#EFABFF',
+  primary: '#9333EA',      // Lila
+  primaryLight: '#C084FC', // Helles Lila
+  secondary: '#FF773D',    // Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  inputBg: '#FAF5FF',      // Sehr helles Lila für Inputs
+  inputBorder: '#DDD6FE',  // Lila Border für Inputs
+  text: '#1A1A1A',         // Dunkelgrau für Text
+  textMuted: '#6B7280',    // Grau für sekundären Text
+  error: '#EF4444',        // Rot für Fehler
 };
 
 const SPACING = {
