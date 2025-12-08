@@ -125,6 +125,7 @@ export default function Step2Address() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <AppHeader title="Adresse" />
         <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}

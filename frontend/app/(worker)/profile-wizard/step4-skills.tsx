@@ -80,6 +80,7 @@ export default function Step4Skills() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <AppHeader title="Qualifikationen" />
         <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}

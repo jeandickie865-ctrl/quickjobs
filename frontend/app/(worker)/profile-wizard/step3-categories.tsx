@@ -128,6 +128,7 @@ export default function Step3Categories() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <AppHeader title="Kategorien" />
         <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}

@@ -152,6 +152,7 @@ export default function Step5Summary() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      <AppHeader title="Zusammenfassung" />
         <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
