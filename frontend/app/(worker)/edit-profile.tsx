@@ -26,25 +26,28 @@ const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  muted: 'rgba(0,0,0,0.6)',
+  border: '#E9D5FF',
+  text: '#1A1A1A',
+  white: '#FFFFFF',
+  cardText: '#1A1A1A',
+  muted: '#6B7280',
   purple: '#EFABFF',
   neon: '#EFABFF',
-  error: '#EFABFF',
-  black: '#000000'
+  error: '#EF4444',
+  black: '#000000',
+  inputBg: '#FFFFFF',
+  inputBorder: '#E9D5FF'
 };
 
 const inputStyle = {
-  backgroundColor: '#1C182B',
+  backgroundColor: '#FFFFFF',
   borderRadius: 12,
   paddingHorizontal: 16,
   paddingVertical: 12,
   fontSize: 15,
-  color: COLORS.white,
+  color: '#1A1A1A',
   borderWidth: 1,
-  borderColor: COLORS.border
+  borderColor: '#E9D5FF'
 };
 
 type TabType = 'basis' | 'adresse' | 'kategorien' | 'kontakt' | 'radius';
