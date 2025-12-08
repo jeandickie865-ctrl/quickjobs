@@ -247,37 +247,38 @@ export default function WorkerMatchesScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.bgDark }}>
-      <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: COLORS.bgDark }}>
-        {/* HEADER */}
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
+        <AppHeader />
+        
+        {/* SUBTITLE + ACTIONS */}
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
             paddingHorizontal: 20,
-            paddingVertical: 18,
+            paddingVertical: 12,
           }}
         >
-          <Text
-            style={{
-              fontSize: 26,
-              fontWeight: "800",
-              color: COLORS.textWhite,
-            }}
-          >
-            Meine Matches
-          </Text>
-
-          <View style={{ flexDirection: "row", gap: 16 }}>
-            <Pressable onPress={() => setShowTaxModal(true)}>
-              <Ionicons name="information-circle-outline" size={28} color={COLORS.purple} />
-            </Pressable>
-
-            <Pressable onPress={() => router.push('/(worker)/profile')}>
-              <Ionicons name="person-circle-outline" size={28} color={COLORS.purple} />
-            </Pressable>
+          <View>
+            <Text
+              style={{
+                fontSize: 22,
+                fontWeight: "800",
+                color: COLORS.text,
+              }}
+            >
+              Meine Matches
+            </Text>
+            <Text style={{ fontSize: 14, color: COLORS.textMuted, marginTop: 2 }}>
+              Deine akzeptierten Aufträge
+            </Text>
           </View>
+
+          <Pressable onPress={() => setShowTaxModal(true)}>
+            <Ionicons name="information-circle-outline" size={28} color={COLORS.accent} />
+          </Pressable>
         </View>
 
         <Animated.ScrollView
