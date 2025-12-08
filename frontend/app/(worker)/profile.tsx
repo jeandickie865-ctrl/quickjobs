@@ -144,35 +144,15 @@ export default function WorkerProfileScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      {/* LILA HEADER-BEREICH - 200px */}
-      <View style={{ 
-        height: 200, 
-        backgroundColor: COLORS.primary, // Kräftiges Lila
-        width: '100%',
-        position: 'relative'
-      }}>
-        {/* Logout Button oben rechts */}
-        <SafeAreaView edges={['top']} style={{ position: 'absolute', top: 0, right: 16, zIndex: 10 }}>
-          <Pressable
-            onPress={async () => {
-              await signOut();
-              router.replace('/auth/login');
-            }}
-            style={{ padding: 8 }}
-          >
-            <Ionicons name="log-out-outline" size={26} color="white" />
-          </Pressable>
-        </SafeAreaView>
-      </View>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.bg }}>
+        <AppHeader />
+      </SafeAreaView>
 
-      {/* PROFILFOTO - überlappend am unteren Rand */}
+      {/* PROFILFOTO - zentriert */}
       <View style={{ 
-        position: 'absolute', 
-        top: 200 - 70, // Halb überlappend
-        left: 0,
-        right: 0,
         alignItems: 'center',
-        zIndex: 20
+        marginTop: 24,
+        marginBottom: 16
       }}>
         <View style={{
           width: 140,
