@@ -23,6 +23,7 @@ const COLORS = {
   text: '#1A1A1A',         // Dunkelgrau für Text
   textMuted: '#6B7280',    // Grau für sekundären Text
   error: '#EF4444',        // Rot für Fehler
+  tagRequired: '#FFF4ED',  // Helles Orange für erforderliche Tags
 };
 
 export default function WorkerFeedScreen() {
