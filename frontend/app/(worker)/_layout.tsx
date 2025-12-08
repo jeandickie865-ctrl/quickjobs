@@ -111,7 +111,7 @@ export default function WorkerLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: COLORS.card,
+          backgroundColor: COLORS.footerBg,
           height: 80,
           paddingBottom: Math.max(insets.bottom, 10),
           paddingTop: 8,
