@@ -30,22 +30,19 @@ export function AppHeader({ title, rightElement }: AppHeaderProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 64,
+    height: 80, // Ca. 2cm
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 12,
-    backgroundColor: COLORS.bg,
+    backgroundColor: '#9333EA', // LILA!
     borderBottomWidth: 2,
-    borderBottomColor: COLORS.accent, // #EFABFF
+    borderBottomColor: '#EFABFF', // Rosa Border
   },
-  brandName: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FF773D', // Orange
-    letterSpacing: 0.5,
+  logo: {
+    width: 60,
+    height: 60,
   },
   screenTitle: {
     position: 'absolute',
@@ -54,8 +51,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.text, // #1A1A1A (dunkelgrau)
-    zIndex: -1, // Behind everything so left/right elements don't overlap
+    color: '#FFFFFF', // Weiß auf Lila
+    zIndex: -1,
   },
   rightContainer: {
     minWidth: 30,
