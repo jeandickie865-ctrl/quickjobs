@@ -100,8 +100,8 @@ export default function SignupScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 40 }} keyboardShouldPersistTaps="handled">
             
-            {/* LOGO MIT DUNKELLILA HINTERGRUND */}
-            <View style={{ width: '120%', marginLeft: '-10%', backgroundColor: '#9333EA', paddingVertical: 40, marginBottom: 40, alignItems: 'center' }}>
+            {/* LOGO MIT DUNKELLILA HINTERGRUND - VOLLE BREITE */}
+            <View style={{ width: '100%', marginHorizontal: -24, backgroundColor: '#9333EA', paddingVertical: 40, marginBottom: 40, alignItems: 'center' }}>
               <Animated.View style={{ alignItems: 'center', opacity: logoOpacity }}>
                 <Image
                   source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/vsoiolte_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-11.png' }}
