@@ -217,7 +217,7 @@ export default function SignupScreen() {
                   textAlign: 'center'
                 }}
               >
-                Erstelle deinen{"\n"}BACKUP-Account
+                Erstelle deinen{"\n"}Quickjobs-Account
               </Text>
             </Animated.View>
 
