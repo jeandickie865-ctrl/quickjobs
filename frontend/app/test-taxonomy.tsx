@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { listCategories, getCategory, groupTagsByType } from '../src/taxonomy';
@@ -49,6 +50,7 @@ export default function TestTaxonomy() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.white }]}>
+        <AppHeader />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: spacing.xl }}>
         <Text style={[styles.title, { color: colors.black, marginBottom: spacing.lg }]}>
           Taxonomie Test

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowDoodle } from '../../../components/ArrowDoodle';
 import { View, Text, ScrollView, ActivityIndicator, Pressable, Image, Alert } from 'react-native';
+import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -197,6 +198,7 @@ export default function JobDetailScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <AppHeader />
         <ArrowDoodle />
 
 

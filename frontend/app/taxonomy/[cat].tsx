@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -73,6 +74,7 @@ export default function CategoryDetail() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+        <AppHeader />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: spacing.md }}

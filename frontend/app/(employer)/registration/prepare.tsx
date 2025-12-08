@@ -1,4 +1,5 @@
 import { View, Text, Pressable, TextInput, Modal, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
@@ -88,6 +89,7 @@ export default function RegistrationPrepareScreen() {
 
   return (
     <SafeAreaView edges={['top','bottom']} style={{ flex: 1 }}>
+        <AppHeader />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}

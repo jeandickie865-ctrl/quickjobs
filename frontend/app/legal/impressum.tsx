@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, Pressable } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +22,7 @@ export default function ImpressumScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
       <SafeAreaView style={{ flex: 1 }}>
+        <AppHeader />
         {/* Header */}
         <View style={{
           flexDirection: 'row',

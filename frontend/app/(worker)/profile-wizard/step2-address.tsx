@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
@@ -102,6 +103,7 @@ export default function Step2Address() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+        <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

@@ -115,6 +115,7 @@ export default function ChatScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ padding: 20 }}>
+        <AppHeader />
           <Pressable onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
           </Pressable>

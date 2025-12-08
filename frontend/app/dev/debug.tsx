@@ -1,6 +1,7 @@
 // app/dev/debug.tsx - DEVELOPER DEBUG SCREEN
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, Pressable, Alert, ActivityIndicator } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -166,6 +167,7 @@ export default function DebugScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.black }}>
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        <AppHeader />
         {/* Header */}
         <View style={{
           flexDirection: 'row',

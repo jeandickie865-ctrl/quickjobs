@@ -1,6 +1,7 @@
 // app/(employer)/jobs/rate.tsx - FINAL NEON-TECH DESIGN
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, Alert, Pressable, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Animated, Modal } from 'react-native';
+import { AppHeader } from '../../../components/AppHeader';
 import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -148,6 +149,7 @@ export default function RateWorkerScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <AppHeader />
           <ActivityIndicator color={COLORS.neon} size="large" />
           <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt...</Text>
         </SafeAreaView>

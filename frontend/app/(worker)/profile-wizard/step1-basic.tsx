@@ -14,6 +14,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView
 } from 'react-native';
+import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -150,6 +151,7 @@ export default function Step1Basic() {
     return (
       <View style={styles.container}>
         <SafeAreaView edges={['top']} style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+        <AppHeader />
           <Text style={{ color: COLORS.white }}>Lade Profil...</Text>
         </SafeAreaView>
       </View>

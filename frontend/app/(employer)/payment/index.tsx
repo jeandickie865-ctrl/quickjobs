@@ -1,6 +1,7 @@
 // app/(employer)/payment.tsx – BACKUP DARK DESIGN (Variante C)
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Pressable, ScrollView, Animated, ActivityIndicator } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -121,6 +122,7 @@ export default function PaymentScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+        <AppHeader />
           <Animated.View style={{ transform: [{ scale: successScale }, { rotate: rotation }], marginBottom: 32 }}>
             <View
               style={{

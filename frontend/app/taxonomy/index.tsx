@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList } from 'react-native';
+import { AppHeader } from '../../components/AppHeader';
 import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -12,6 +13,7 @@ export default function TaxonomyList() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.beige50 }}>
+        <AppHeader />
       <FlatList
         data={cats}
         keyExtractor={(i) => i.key}
