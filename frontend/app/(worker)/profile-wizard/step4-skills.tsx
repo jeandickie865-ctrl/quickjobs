@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   itemCardSelected: {
     borderColor: COLORS.neon,
-    backgroundColor: '#1A172A',
+    backgroundColor: COLORS.bg,
   },
   itemText: {
     fontSize: 15,
