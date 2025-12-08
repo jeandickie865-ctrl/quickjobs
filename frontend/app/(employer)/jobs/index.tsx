@@ -105,6 +105,13 @@ export default function EmployerJobsScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }} edges={['top']}>
+        {/* HEADER */}
+        <View style={{ backgroundColor: COLORS.primary, padding: 20 }}>
+          <Text style={{ color: 'white', fontSize: 22, fontWeight: '700' }}>
+            Dashboard
+          </Text>
+        </View>
+
       {/* Header */}
       <View style={{ padding: 16, backgroundColor: COLORS.card, borderBottomWidth: 1, borderBottomColor: COLORS.border }}>
         <Text style={{ fontSize: 28, fontWeight: 'bold', color: COLORS.white }}>

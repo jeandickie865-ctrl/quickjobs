@@ -108,6 +108,13 @@ export default function WorkerApplicationsScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#00A07C' }]}>
+        {/* HEADER */}
+        <View style={{ backgroundColor: COLORS.primary, padding: 20 }}>
+          <Text style={{ color: 'white', fontSize: 22, fontWeight: '700' }}>
+            Dashboard
+          </Text>
+        </View>
+
         {/* ARROW DOODLE */}
         <View style={{
           position: "absolute",
