@@ -389,18 +389,18 @@ export default function SignupScreen() {
                 <View
                   style={{
                     backgroundColor: COLORS.card,
-                    borderRadius: 12,
+                    borderRadius: 14,
                     borderWidth: 1,
-                    borderColor: emailFocused ? COLORS.neon : COLORS.border,
-                    height: 56,
+                    borderColor: emailFocused ? COLORS.orange : COLORS.cardBorder,
                     paddingHorizontal: 16,
+                    paddingVertical: 16,
                     justifyContent: 'center'
                   }}
                 >
                   <TextInput
                     autoCapitalize="none"
                     keyboardType="email-address"
-                    placeholder="name@email.de"
+                    placeholder="deine@mail.de"
                     placeholderTextColor={COLORS.placeholder}
                     value={email}
                     onChangeText={(v) => setEmail(v.trim())}
