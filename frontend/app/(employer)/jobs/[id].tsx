@@ -165,25 +165,9 @@ export default function JobDetailScreen() {
 
     Alert.alert(
       'Auftrag löschen',
-      'Auftrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
+      'Diese Funktion ist noch nicht implementiert.',
       [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Löschen',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setIsDeleting(true);
-              await deleteJob(job.id);
-              console.log('Auftrag gelöscht');
-              router.replace('/(employer)');
-            } catch (e) {
-              console.error('Fehler: Auftrag konnte nicht gelöscht werden.', e);
-            } finally {
-              setIsDeleting(false);
-            }
-          },
-        },
+        { text: 'OK', style: 'cancel' }
       ]
     );
   }
