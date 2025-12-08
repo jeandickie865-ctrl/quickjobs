@@ -1,15 +1,20 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 import { COLORS } from "../constants/colors";
 
 export const ArrowDoodle = ({ size = 150 }) => (
-  <Image
-    source={require("../assets/arrow-purple.png")}
-    style={{
-      width: size,
-      height: size,
-      resizeMode: "contain",
-      tintColor: COLORS.accent,
-    }}
-  />
+  <View style={{ 
+    width: size, 
+    height: size,
+  }}>
+    <Image
+      source={require("../assets/arrow-purple.png")}
+      style={{
+        width: size,
+        height: size,
+        resizeMode: "contain",
+        opacity: 0.9,
+      }}
+    />
+  </View>
 );
