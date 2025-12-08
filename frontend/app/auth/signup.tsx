@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
+import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {
   bg: '#EFABFF',
