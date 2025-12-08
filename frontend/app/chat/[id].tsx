@@ -1,25 +1,27 @@
-// app/chat/[id].tsx – BACKUP DARK DESIGN
+// app/chat/[id].tsx – Quickjobs Modern Chat Design
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, FlatList, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { AppHeader } from "../../components/AppHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import { useIsFocused } from "@react-navigation/native";
 
 import { loadMessages, sendMessage, checkChatUnlocked } from "../../utils/chatStore";
-import { getApplicationById } from "../../utils/applicationStore";
 
 const COLORS = {
   bg: '#FFFFFF',
-  card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#1A1A1A",
-  muted: 'rgba(0,0,0,0.6)',
+  card: '#F9FAFB',
+  border: '#E9D5FF',
+  text: '#1A1A1A',
+  textMuted: '#6B7280',
   purple: '#EFABFF',
-  neon: '#EFABFF',
-  inputBg: '#1C182B',
+  orange: '#FF773D',
+  white: '#FFFFFF',
+  inputBg: '#FFFFFF',
+  myMessageBg: '#EFABFF',
+  theirMessageBg: '#F3F4F6',
 };
 
 export default function ChatScreen() {
@@ -36,7 +38,6 @@ export default function ChatScreen() {
   const [sending, setSending] = useState(false);
   const [text, setText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [inputFocused, setInputFocused] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -83,7 +84,7 @@ export default function ChatScreen() {
   }, [applicationId]);
 
   useEffect(() => {
-    if (flatListRef.current) {
+    if (flatListRef.current && messages.length > 0) {
       setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 120);
     }
   }, [messages]);
@@ -113,149 +114,166 @@ export default function ChatScreen() {
   // LOCKED STATE
   if (locked) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-        <SafeAreaView style={{ padding: 20 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <AppHeader />
-          <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
-          </Pressable>
-        </SafeAreaView>
-
+        
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 20 }}>
-          <Ionicons name="lock-closed" size={48} color={COLORS.neon} />
-          <Text style={{ color: COLORS.white, fontSize: 22, fontWeight: "700", marginTop: 12 }}>
+          <Ionicons name="lock-closed" size={64} color={COLORS.purple} />
+          <Text style={{ color: COLORS.text, fontSize: 24, fontWeight: "700", marginTop: 20 }}>
             Chat gesperrt
           </Text>
-          <Text style={{ color: COLORS.muted, marginTop: 6, textAlign: "center" }}>
+          <Text style={{ color: COLORS.textMuted, marginTop: 12, textAlign: "center", fontSize: 16 }}>
             Du kannst erst schreiben, nachdem die 20% Provision bezahlt wurde.
           </Text>
 
           <Pressable
             onPress={() => router.push(`/payment/${applicationId}`)}
             style={{
-              backgroundColor: COLORS.purple,
-              paddingHorizontal: 24,
-              paddingVertical: 14,
-              borderRadius: 12,
-              marginTop: 24,
+              backgroundColor: COLORS.orange,
+              paddingHorizontal: 32,
+              paddingVertical: 16,
+              borderRadius: 16,
+              marginTop: 32,
               width: '60%',
               maxWidth: 300,
               minWidth: 220,
               alignItems: 'center',
+              shadowColor: COLORS.orange,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
             }}
           >
-            <Text style={{ fontWeight: "700", color: COLORS.white }}>
+            <Text style={{ fontWeight: "700", color: COLORS.white, fontSize: 16 }}>
               Jetzt freischalten
             </Text>
           </Pressable>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   // LOADING
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator color={COLORS.neon} size="large" />
-        <Text style={{ color: COLORS.white, marginTop: 10 }}>Lade Chat...</Text>
-      </View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
+        <AppHeader />
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator color={COLORS.purple} size="large" />
+          <Text style={{ color: COLORS.text, marginTop: 16, fontSize: 16 }}>Lade Chat...</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   // CHAT
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: COLORS.bg }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-    >
-      {/* HEADER */}
-      <SafeAreaView edges={["top"]}>
-        <View style={{ flexDirection: "row", alignItems: "center", padding: 16 }}>
-          <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
-          </Pressable>
-          <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: "700", marginLeft: 12 }}>
-            Chat
-          </Text>
-        </View>
-      </SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
+      <AppHeader />
+      
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
+        {/* MESSAGES */}
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(item, index) => item._id || `msg-${index}`}
+          renderItem={({ item }) => {
+            const isOwn = item.senderId === user?.id;
 
-      {/* MESSAGES */}
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        keyExtractor={(item, index) => item._id || `msg-${index}`}
-        renderItem={({ item }) => {
-          const isOwn = item.senderId === user.id;
-
-          return (
-            <View
-              style={{
-                padding: 12,
-                marginVertical: 4,
-                marginHorizontal: 16,
-                maxWidth: "75%",
-                alignSelf: isOwn ? "flex-end" : "flex-start",
-                backgroundColor: isOwn ? COLORS.neon : COLORS.card,
-                borderRadius: 16,
-                borderWidth: isOwn ? 0 : 1,
-                borderColor: COLORS.border,
-              }}
-            >
-              <Text style={{ color: isOwn ? '#000' : COLORS.white, fontSize: 15 }}>
-                {item.text}
+            return (
+              <View
+                style={{
+                  padding: 12,
+                  marginVertical: 4,
+                  marginHorizontal: 16,
+                  maxWidth: "75%",
+                  alignSelf: isOwn ? "flex-end" : "flex-start",
+                  backgroundColor: isOwn ? COLORS.myMessageBg : COLORS.theirMessageBg,
+                  borderRadius: 16,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 3,
+                }}
+              >
+                <Text style={{ color: COLORS.text, fontSize: 15, lineHeight: 20 }}>
+                  {item.text}
+                </Text>
+                <Text style={{ color: COLORS.textMuted, fontSize: 11, marginTop: 4, textAlign: isOwn ? 'right' : 'left' }}>
+                  {new Date(item.createdAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+                </Text>
+              </View>
+            );
+          }}
+          contentContainerStyle={{ paddingVertical: 16, paddingBottom: 20 }}
+          ListEmptyComponent={
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40 }}>
+              <Ionicons name="chatbubbles-outline" size={48} color={COLORS.textMuted} />
+              <Text style={{ color: COLORS.textMuted, marginTop: 12, textAlign: 'center' }}>
+                Noch keine Nachrichten.
+                Schreib die erste Nachricht!
               </Text>
             </View>
-          );
-        }}
-        contentContainerStyle={{ paddingVertical: 16, paddingBottom: 120 }}
-      />
-
-      {/* INPUT BAR */}
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 14,
-        backgroundColor: COLORS.card,
-        borderTopWidth: 1,
-        borderTopColor: COLORS.border,
-      }}>
-        <TextInput
-          value={text}
-          onChangeText={(t) => {
-            setText(t);
-            setIsTyping(true);
-          }}
-          onFocus={() => setInputFocused(true)}
-          onBlur={() => setInputFocused(false)}
-          placeholder="Nachricht..."
-          placeholderTextColor={COLORS.muted}
-          style={{
-            flex: 1,
-            padding: 14,
-            backgroundColor: COLORS.inputBg,
-            borderRadius: 12,
-            color: COLORS.white,
-            borderWidth: 1,
-            borderColor: COLORS.border,
-          }}
+          }
         />
 
-        <Pressable
-          onPress={handleSend}
-          disabled={sending || !text.trim()}
-          style={{
-            marginLeft: 12,
-            padding: 12,
-            backgroundColor: sending || !text.trim() ? 'rgba(255,255,255,0.15)' : COLORS.neon,
-            borderRadius: 12,
-          }}
-        >
-          <Ionicons name="send" size={22} color={sending || !text.trim() ? COLORS.muted : '#000'} />
-        </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+        {/* INPUT BAR */}
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          padding: 16,
+          backgroundColor: COLORS.white,
+          borderTopWidth: 1,
+          borderTopColor: COLORS.border,
+        }}>
+          <TextInput
+            value={text}
+            onChangeText={(t) => {
+              setText(t);
+              setIsTyping(true);
+            }}
+            placeholder="Nachricht schreiben..."
+            placeholderTextColor={COLORS.textMuted}
+            multiline
+            maxLength={500}
+            style={{
+              flex: 1,
+              padding: 12,
+              backgroundColor: COLORS.card,
+              borderRadius: 20,
+              color: COLORS.text,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+              maxHeight: 100,
+              fontSize: 15,
+            }}
+          />
+
+          <Pressable
+            onPress={handleSend}
+            disabled={sending || !text.trim()}
+            style={{
+              marginLeft: 12,
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: (sending || !text.trim()) ? COLORS.textMuted : COLORS.orange,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {sending ? (
+              <ActivityIndicator color={COLORS.white} size="small" />
+            ) : (
+              <Ionicons name="send" size={22} color={COLORS.white} />
+            )}
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
