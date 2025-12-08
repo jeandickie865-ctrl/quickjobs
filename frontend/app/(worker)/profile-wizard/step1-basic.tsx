@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   headerBackupTitle: {
-    color: COLORS.white,
+    color: COLORS.text,
     fontSize: 26,
     fontWeight: '900'
   },
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '900',
-    color: COLORS.white,
+    color: COLORS.text,
     marginBottom: 6
   },
   subtitle: {
@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border
   },
   changePhotoText: {
-    color: COLORS.white,
+    color: COLORS.text,
     fontWeight: '600',
     fontSize: 14
   },
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '700',
-    color: COLORS.white,
+    color: COLORS.text,
     marginBottom: 8
   },
   input: {
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.neon
   },
   checkboxLabel: {
-    color: COLORS.white,
+    color: COLORS.text,
     fontSize: 16,
     fontWeight: '500'
   },
