@@ -205,6 +205,7 @@ export default function WelcomeScreen() {
             </Text>
           </Pressable>
         </View>
+        </View>
       </SafeAreaView>
     </View>
   );
