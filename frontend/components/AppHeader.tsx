@@ -1,20 +1,24 @@
 import React, { ReactNode } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { COLORS } from '../constants/colors';
 
 interface AppHeaderProps {
-  title: string; // Screen name (z.B. "Meine Aufträge")
+  title?: string; // Screen name (optional)
   rightElement?: ReactNode; // Optional element on the right (e.g. logout button)
 }
 
 export function AppHeader({ title, rightElement }: AppHeaderProps) {
   return (
     <View style={styles.container}>
-      {/* Links: QUICKJOBS */}
-      <Text style={styles.brandName}>QUICKJOBS</Text>
+      {/* Links: LOGO */}
+      <Image
+        source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/4jtdk7oz_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-12.png' }}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       
-      {/* Mitte: Screen-Titel */}
-      <Text style={styles.screenTitle}>{title}</Text>
+      {/* Mitte: Screen-Titel (optional) */}
+      {title && <Text style={styles.screenTitle}>{title}</Text>}
       
       {/* Rechts: Optional (z.B. Profil-Icon) */}
       <View style={styles.rightContainer}>
