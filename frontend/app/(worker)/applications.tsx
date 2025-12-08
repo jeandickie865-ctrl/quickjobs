@@ -326,19 +326,19 @@ export default function WorkerApplicationsScreen() {
                 ]}
               >
                 <View style={styles.statusRow}>
-                  <Text style={[styles.statusLabel, { color: '#A0A0A0' }]}>
+                  <Text style={[styles.statusLabel, { color: '#1A1A1A' }]}>
                     Status:
                   </Text>
-                  <Text style={[styles.statusValue, { color: statusColor === colors.black ? '#EFABFF' : statusColor, fontWeight: '700' }]}>
+                  <Text style={[styles.statusValue, { color: '#1A1A1A', fontWeight: '700' }]}>
                     {statusLabel}
                   </Text>
                 </View>
                 {!!jobStatusLabel && (
-                  <Text style={[styles.jobStatusText, { color: '#888' }]}>
+                  <Text style={[styles.jobStatusText, { color: '#1A1A1A' }]}>
                     Job: {jobStatusLabel}
                   </Text>
                 )}
-                <Text style={[styles.dateText, { color: '#888' }]}>
+                <Text style={[styles.dateText, { color: '#1A1A1A' }]}>
                   Beworben am {formatDate(app.createdAt)}
                 </Text>
               </View>
