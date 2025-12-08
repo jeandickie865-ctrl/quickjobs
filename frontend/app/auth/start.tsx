@@ -43,24 +43,24 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
 
-        {/* LOGO */}
-        <Animated.View
-          style={{
-            opacity: fadeLogo,
-            alignItems: 'center',
-            marginTop: 80,
-            marginBottom: 30
-          }}
-        >
-          <Image
-            source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/xuvkqr0p_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-9.png' }}
+        {/* LOGO MIT DUNKELLILA HINTERGRUND */}
+        <View style={{ width: '100%', backgroundColor: '#9333EA', paddingVertical: 40, marginTop: 40, marginBottom: 30, alignItems: 'center' }}>
+          <Animated.View
             style={{
-              width: 200,
-              height: 200
+              opacity: fadeLogo,
+              alignItems: 'center'
             }}
-            resizeMode="contain"
-          />
-        </Animated.View>
+          >
+            <Image
+              source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/vsoiolte_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-11.png' }}
+              style={{
+                width: 200,
+                height: 200
+              }}
+              resizeMode="contain"
+            />
+          </Animated.View>
+        </View>
 
         {/* NEON LINE */}
         <Animated.View
