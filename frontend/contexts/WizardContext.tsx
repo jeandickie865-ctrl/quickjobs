@@ -61,13 +61,13 @@ const WizardContext = createContext<WizardContextType | undefined>(undefined);
 export const WizardProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [wizardData, setWizardData] = useState<WizardData>(initialData);
 
-  const updateWizardData = (data: Partial<WizardData>) => {
+  const updateWizardData = useCallback((data: Partial<WizardData>) => {
     setWizardData(prev => ({ ...prev, ...data }));
-  };
+  }, []);
 
-  const resetWizard = () => {
+  const resetWizard = useCallback(() => {
     setWizardData(initialData);
-  };
+  }, []);
 
   return (
     <WizardContext.Provider value={{ wizardData, updateWizardData, resetWizard }}>
