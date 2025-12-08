@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     fontSize: 16,
-    color: COLORS.white
+    color: COLORS.cardText
   },
   textArea: {
     minHeight: 110,
