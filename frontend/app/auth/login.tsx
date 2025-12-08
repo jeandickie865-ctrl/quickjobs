@@ -108,7 +108,7 @@ export default function LoginScreen() {
                   letterSpacing: 1
                 }}
               >
-                BACKUP
+                Quickjobs
               </Text>
               <View
                 style={{
