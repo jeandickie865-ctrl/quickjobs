@@ -404,6 +404,9 @@ export default function EmployerApplicationsScreen() {
                     </View>
                   )}
 
+                  {/* Bewertungen */}
+                  {worker && <WorkerRatings workerId={worker.userId} />}
+
                   {/* Beschäftigungsstatus */}
                   {worker && (
                     <View
