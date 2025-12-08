@@ -122,6 +122,18 @@ export default function WorkerApplicationsScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#00A07C' }]}>
+        {/* ARROW DOODLE */}
+        <View style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          opacity: 0.9,
+          zIndex: 20
+        }}>
+          <ArrowDoodle size={130} />
+        </View>
+
+
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color="#EFABFF" />
         </View>

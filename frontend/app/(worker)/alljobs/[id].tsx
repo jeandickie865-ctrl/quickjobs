@@ -132,6 +132,18 @@ export default function WorkerJobDetailScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+        {/* ARROW DOODLE */}
+        <View style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          opacity: 0.9,
+          zIndex: 20
+        }}>
+          <ArrowDoodle size={130} />
+        </View>
+
+
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 20 }}>
             Job nicht gefunden
           </Text>

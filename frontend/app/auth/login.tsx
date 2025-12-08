@@ -84,6 +84,18 @@ export default function LoginScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1 }}>
+        {/* ARROW DOODLE */}
+        <View style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          opacity: 0.9,
+          zIndex: 20
+        }}>
+          <ArrowDoodle size={130} />
+        </View>
+
+
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}

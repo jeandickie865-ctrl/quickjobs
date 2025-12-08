@@ -97,6 +97,18 @@ export default function WorkerProfileScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {/* ARROW DOODLE */}
+        <View style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          opacity: 0.9,
+          zIndex: 20
+        }}>
+          <ArrowDoodle size={130} />
+        </View>
+
+
           <Ionicons name="person-add" size={64} color={COLORS.neon} />
           <Text style={{ color: COLORS.white, marginTop: 16, fontSize: 18 }}>Noch kein Profil vorhanden</Text>
 

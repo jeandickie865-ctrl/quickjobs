@@ -213,6 +213,18 @@ export default function JobDetailScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {/* ARROW DOODLE */}
+        <View style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          opacity: 0.9,
+          zIndex: 20
+        }}>
+          <ArrowDoodle size={130} />
+        </View>
+
+
           <ActivityIndicator color={COLORS.neon} size="large" />
           <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt...</Text>
         </SafeAreaView>
