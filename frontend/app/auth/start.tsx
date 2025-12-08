@@ -182,23 +182,23 @@ export default function WelcomeScreen() {
           }}
         >
           <Pressable onPress={() => router.push('/legal/agb')}>
-            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecorationLine: 'underline' }}>
+            <Text style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)', textDecorationLine: 'underline' }}>
               AGB
             </Text>
           </Pressable>
 
-          <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>•</Text>
+          <Text style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)' }}>•</Text>
 
           <Pressable onPress={() => router.push('/legal/privacy')}>
-            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecorationLine: 'underline' }}>
+            <Text style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)', textDecorationLine: 'underline' }}>
               Datenschutz
             </Text>
           </Pressable>
 
-          <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>•</Text>
+          <Text style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)' }}>•</Text>
 
           <Pressable onPress={() => router.push('/legal/impressum')}>
-            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecorationLine: 'underline' }}>
+            <Text style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)', textDecorationLine: 'underline' }}>
               Impressum
             </Text>
           </Pressable>
