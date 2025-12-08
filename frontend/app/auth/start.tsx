@@ -154,7 +154,7 @@ export default function WelcomeScreen() {
               minWidth: 220
             }}
           >
-            <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>
+            <Text style={{ fontSize: 17, fontWeight: '700', color: '#1A1A1A' }}>
               Anmelden
             </Text>
           </Pressable>
@@ -163,7 +163,7 @@ export default function WelcomeScreen() {
           <Text
             style={{
               fontSize: 13,
-              color: 'rgba(255,255,255,0.5)',
+              color: 'rgba(0,0,0,0.5)',
               marginTop: 22
             }}
           >
