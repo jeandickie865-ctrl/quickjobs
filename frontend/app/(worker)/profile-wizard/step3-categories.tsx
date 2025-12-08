@@ -11,19 +11,32 @@ import { useWizard } from '../../../contexts/WizardContext';
 
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
-// D+ PREMIUM COLORS
+// NEUE 3-STUFEN FARBEN
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  whiteMuted: 'rgba(255,255,255,0.85)',
-  gray: 'rgba(255,255,255,0.55)',
-  neon: '#EFABFF',
-  purple: '#EFABFF',
-  purpleLight: '#EFABFF',
-  error: '#EFABFF'
+  // Hauptkategorie
+  categorySelected: '#FF8A42',      // Orange
+  categorySelectedText: '#FFFFFF',  // Weiß
+  categoryUnselected: '#F2B7FF',    // Rosa
+  categoryUnselectedText: '#1A1A1A', // Schwarz
+  // Unterkategorie
+  subcategorySelected: '#A241FF',   // Lila
+  subcategorySelectedText: '#FFFFFF', // Weiß
+  subcategoryUnselected: '#FFFFFF',  // Weiß
+  subcategoryBorder: '#F2B7FF',      // Rosa Border
+  subcategoryUnselectedText: '#1A1A1A', // Schwarz
+  // Qualifikation (wie Unterkategorie, nur kleiner)
+  qualSelected: '#A241FF',
+  qualSelectedText: '#FFFFFF',
+  qualUnselected: '#FFFFFF',
+  qualBorder: '#F2B7FF',
+  qualUnselectedText: '#1A1A1A',
+  // Allgemein
+  text: '#1A1A1A',
+  textMuted: '#6B7280',
+  error: '#EF4444',
+  buttonOrange: '#FF8A42'
 };
 
 export default function Step3Categories() {
