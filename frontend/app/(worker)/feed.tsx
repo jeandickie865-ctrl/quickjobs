@@ -146,12 +146,7 @@ export default function WorkerFeedScreen() {
     return (
       <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
         {/* HEADER */}
-        <View style={{ paddingHorizontal: 24, marginBottom: 40 }}>
-          <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
-            Quickjobs
-          </Text>
-          <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
-        </View>
+        <AppHeader title="Passende Jobs" rightElement={<Pressable onPress={() => router.push('/(worker)/profile')}><Ionicons name="person-circle-outline" size=26 color={COLORS.accent} /></Pressable>} />
 
         <View style={{ paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
           <View style={{
@@ -176,12 +171,7 @@ export default function WorkerFeedScreen() {
     return (
       <SafeAreaView edges={['top','bottom']} style={{ flex: 1, backgroundColor: COLORS.bg }}>
         {/* HEADER */}
-        <View style={{ paddingHorizontal: 24, marginBottom: 40 }}>
-          <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
-            Quickjobs
-          </Text>
-          <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
-        </View>
+        <AppHeader title="Passende Jobs" rightElement={<Pressable onPress={() => router.push('/(worker)/profile')}><Ionicons name="person-circle-outline" size=26 color={COLORS.accent} /></Pressable>} />
 
         <View style={{ paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
           <View style={{
