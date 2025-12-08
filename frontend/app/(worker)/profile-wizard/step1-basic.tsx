@@ -168,7 +168,7 @@ export default function Step1Basic() {
   const isFormValid = firstName.trim() && lastName.trim() && phone.trim();
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea}>
       <AppHeader />
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

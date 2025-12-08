@@ -124,7 +124,7 @@ export default function Step3Categories() {
     selectedSubcategories.length > 0;
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea}>
       <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
