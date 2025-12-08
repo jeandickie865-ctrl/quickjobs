@@ -239,7 +239,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         <Ionicons 
           name="calendar-outline" 
           size={20} 
-          color="#C8FF16" 
+          color="#EFABFF" 
         />
       </Pressable>
 
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   doneButton: {
     marginTop: 8,
     alignSelf: 'flex-end',
-    backgroundColor: '#C8FF16',
+    backgroundColor: '#EFABFF',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,

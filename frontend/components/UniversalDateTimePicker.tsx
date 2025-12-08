@@ -13,10 +13,10 @@ interface UniversalDateTimePickerProps {
 }
 
 const COLORS = {
-  purple: '#6A3FFF',
-  neon: '#6A3FFF',
-  white: '#1A1A1A',
-  black: '#1A1A1A',
+  purple: '#EFABFF',
+  neon: '#EFABFF',
+  white: '#FFFFFF',
+  black: '#FFFFFF',
   lightGray: '#F5F5F5',
 };
 

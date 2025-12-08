@@ -8,9 +8,9 @@ interface ProgressBarProps {
 }
 
 const COLORS = {
-  purple: '#6A3FFF',
-  neon: '#6A3FFF',
-  white: '#1A1A1A',
+  purple: '#EFABFF',
+  neon: '#EFABFF',
+  white: '#FFFFFF',
   lightGray: '#E0E0E0',
 };
 
