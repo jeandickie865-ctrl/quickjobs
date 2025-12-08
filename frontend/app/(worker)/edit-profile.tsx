@@ -900,7 +900,7 @@ export default function EditWorkerProfileScreen() {
                       }}
                       style={{
                         width: '47%',
-                        backgroundColor: isSelected ? COLORS.purple : '#1C182B',
+                        backgroundColor: isSelected ? COLORS.purple : COLORS.card,
                         borderWidth: 1,
                         borderColor: isSelected ? COLORS.neon : COLORS.border,
                         borderRadius: 14,
@@ -976,7 +976,7 @@ export default function EditWorkerProfileScreen() {
                           }
                         }}
                         style={{
-                          backgroundColor: isSelected ? COLORS.purple : '#1C182B',
+                          backgroundColor: isSelected ? COLORS.purple : COLORS.card,
                           borderRadius: 14,
                           paddingVertical: 8,
                           paddingHorizontal: 14,
