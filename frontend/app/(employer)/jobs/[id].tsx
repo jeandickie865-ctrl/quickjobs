@@ -6,7 +6,7 @@ import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../../contexts/AuthContext';
-import { getJobById, deleteJob } from '../../../utils/jobStore';
+import { getJobById } from '../../../utils/jobStore';
 import { getApplicationsForJob } from '../../../utils/applicationStore';
 import { getWorkerProfile } from '../../../utils/profileStore';
 import { getReviewsForEmployer, getReviewsForWorker, calculateAverageRating } from '../../../utils/reviewStore';
