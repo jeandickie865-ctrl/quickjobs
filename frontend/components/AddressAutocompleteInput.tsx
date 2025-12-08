@@ -1,4 +1,4 @@
-// components/AddressAutocompleteInput.tsx – BACKUP DARK ULTRA CLEAN (OPTIMIZED)
+// components/AddressAutocompleteInput.tsx – Quickjobs LIGHT THEME
 
 import React, { useState, useRef } from 'react';
 import {
@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 
 const COLORS = {
-  bg: '#9333EA',        // Lila statt Grün
-  card: '#9333EA',      // Lila statt Grün
-  border: 'rgba(255,255,255,0.25)',
-  text: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.85)',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: '#E9D5FF',
+  text: '#1A1A1A',
+  muted: '#6B7280',
   neon: '#EFABFF',
+  placeholder: '#9CA3AF',
 };
 
 // CACHE: Response Caching (max 50 entries, 10 min TTL)
@@ -164,7 +165,7 @@ export default function AddressAutocompleteInput({
             search(t);
           }}
           placeholder="Straße"
-          placeholderTextColor={COLORS.muted}
+          placeholderTextColor={COLORS.placeholder}
           style={styles.input}
           autoCapitalize="words"
           autoCorrect={false}
@@ -178,7 +179,7 @@ export default function AddressAutocompleteInput({
           value={houseNumber}
           onChangeText={onHouseNumberChange}
           placeholder="Nr."
-          placeholderTextColor={COLORS.muted}
+          placeholderTextColor={COLORS.placeholder}
           style={styles.input}
           autoCapitalize="none"
           autoCorrect={false}
@@ -192,7 +193,7 @@ export default function AddressAutocompleteInput({
           value={postalCode}
           onChangeText={onPostalCodeChange}
           placeholder="PLZ"
-          placeholderTextColor={COLORS.muted}
+          placeholderTextColor={COLORS.placeholder}
           keyboardType="numeric"
           style={styles.input}
           autoCapitalize="none"
@@ -207,7 +208,7 @@ export default function AddressAutocompleteInput({
           value={city}
           onChangeText={onCityChange}
           placeholder="Stadt"
-          placeholderTextColor={COLORS.muted}
+          placeholderTextColor={COLORS.placeholder}
           style={styles.input}
           autoCapitalize="words"
           autoCorrect={false}
@@ -253,7 +254,7 @@ export default function AddressAutocompleteInput({
           style={({ pressed }) => ({
             width: '60%',
             maxWidth: 380,
-            backgroundColor: pressed ? 'rgba(200,255,22,0.1)' : COLORS.card,
+            backgroundColor: pressed ? 'rgba(239,171,255,0.2)' : COLORS.card,
             borderRadius: 12,
             borderWidth: 1,
             borderColor: COLORS.neon,
@@ -309,7 +310,7 @@ export default function AddressAutocompleteInput({
           style={({ pressed }) => ({
             width: '60%',
             maxWidth: 380,
-            backgroundColor: pressed ? 'rgba(200,255,22,0.1)' : COLORS.card,
+            backgroundColor: pressed ? 'rgba(239,171,255,0.2)' : COLORS.card,
             borderRadius: 12,
             borderWidth: 1,
             borderColor: COLORS.neon,
@@ -339,7 +340,7 @@ export default function AddressAutocompleteInput({
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                 style={({ pressed }) => [
                   styles.item,
-                  { backgroundColor: pressed ? '#1D1A2B' : COLORS.card },
+                  { backgroundColor: pressed ? '#F3E8FF' : COLORS.card },
                 ]}
               >
                 <Text style={styles.itemText}>
@@ -354,7 +355,7 @@ export default function AddressAutocompleteInput({
   );
 }
 
-// BACKUP STYLE
+// Quickjobs LIGHT THEME STYLES
 const styles = StyleSheet.create({
   group: {
     marginBottom: 18,
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     shadowColor: '#000',
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 8,
     elevation: 12,

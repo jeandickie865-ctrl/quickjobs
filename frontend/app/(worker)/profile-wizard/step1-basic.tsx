@@ -172,7 +172,7 @@ export default function Step1Basic() {
       <View style={styles.container}>
         <SafeAreaView edges={['top']} style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
         <AppHeader />
-          <Text style={{ color: COLORS.white }}>Lade Profil...</Text>
+          <Text style={{ color: COLORS.text }}>Lade Profil...</Text>
         </SafeAreaView>
       </View>
     );
@@ -180,17 +180,12 @@ export default function Step1Basic() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <AppHeader title="Profil erstellen" />
+      <AppHeader />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
       >
         <View style={styles.container}>
-          
-          {/* Quickjobs HEADER */}
-          <View style={styles.backupHeader}>
-            <Text style={styles.headerBackupTitle}>Quickjobs</Text>
-          </View>
 
           <ProgressBar currentStep={1} totalSteps={5} />
 
@@ -216,7 +211,7 @@ export default function Step1Basic() {
                 )}
 
                 <Pressable onPress={pickImage} style={styles.photoButton}>
-                  <Ionicons name="camera" size={20} color={COLORS.bg} />
+                  <Ionicons name="camera" size={20} color={COLORS.white} />
                 </Pressable>
               </View>
 
@@ -253,7 +248,7 @@ export default function Step1Basic() {
               {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
             </View>
 
-            {/* SELF EMPLOYED - Moved here for easy access */}
+            {/* SELF EMPLOYED */}
             <Pressable 
               onPress={() => {
                 console.log('Checkbox clicked!');
@@ -262,7 +257,7 @@ export default function Step1Basic() {
               style={styles.checkboxContainer}
             >
               <View style={[styles.checkbox, isSelfEmployed && styles.checkboxChecked]}>
-                {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.bg} />}
+                {isSelfEmployed && <Ionicons name="checkmark" size={18} color={COLORS.white} />}
               </View>
               <Text style={styles.checkboxLabel}>Ich bin selbstständig</Text>
             </Pressable>
@@ -321,25 +316,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg
   },
   safeArea: {
-    flex: 1
-  },
-
-  /* Quickjobs HEADER */
-  backupHeader: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 10
-  },
-  headerBackupTitle: {
-    color: COLORS.text,
-    fontSize: 26,
-    fontWeight: '900'
-  },
-  headerNeonLine: {
-    height: 2,
-    backgroundColor: COLORS.neon,
-    marginTop: 8,
-    width: '100%'
+    flex: 1,
+    backgroundColor: COLORS.bg
   },
 
   scrollView: { flex: 1 },
@@ -386,7 +364,7 @@ const styles = StyleSheet.create({
   photoInitials: {
     fontSize: 40,
     fontWeight: '800',
-    color: COLORS.white
+    color: COLORS.text
   },
   photoButton: {
     position: 'absolute',
@@ -423,7 +401,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 8
   },
-    input: {
+  input: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: 'rgba(239,171,255,0.4)',
@@ -437,7 +415,7 @@ const styles = StyleSheet.create({
   },
 
   errorText: {
-    color: '#EFABFF',
+    color: COLORS.error,
     fontSize: 12,
     marginTop: 6
   },
@@ -453,7 +431,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: COLORS.white,
+    borderColor: COLORS.border,
     marginRight: 12,
     alignItems: 'center',
     justifyContent: 'center'
@@ -469,8 +447,8 @@ const styles = StyleSheet.create({
   },
 
   validationHint: {
-    color: COLORS.neon,
-    backgroundColor: 'rgba(200,255,22,0.1)',
+    color: COLORS.error,
+    backgroundColor: 'rgba(239,68,68,0.1)',
     padding: 12,
     borderRadius: 8,
     textAlign: 'center',
