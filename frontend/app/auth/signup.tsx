@@ -149,12 +149,13 @@ export default function SignupScreen() {
         {/* ARROW DOODLE */}
         <View style={{
           position: "absolute",
-          top: 20,
-          right: 20,
-          opacity: 0.9,
+          top: 60,
+          right: 10,
+          transform: [{ rotate: '-30deg' }, { scaleX: -1 }],
+          opacity: 0.85,
           zIndex: 20
         }}>
-          <ArrowDoodle size={130} />
+          <ArrowDoodle size={180} />
         </View>
 
         <KeyboardAvoidingView
