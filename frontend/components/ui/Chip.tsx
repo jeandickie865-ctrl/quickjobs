@@ -1,7 +1,18 @@
-// components/ui/Chip.tsx - VIVID BLUE-PURPLE & NEON LIME
+// components/ui/Chip.tsx - LILA ORANGE ROSA
 import React from 'react';
 import { Pressable, Text } from 'react-native';
-import { useTheme } from '../../theme/ThemeProvider';
+
+const CHIP_COLORS = {
+  primary: '#9333EA',      // Lila
+  primaryLight: '#F3E8FF', // Sehr helles Lila
+  secondary: '#FF773D',    // Orange
+  secondaryLight: '#FFF4ED', // Sehr helles Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  text: '#1A1A1A',         // Dunkelgrau
+  textLight: '#6B7280',    // Grau
+};
 
 export default function Chip({ 
   label, 
@@ -14,26 +25,24 @@ export default function Chip({
   tone?: 'solid' | 'outline'; 
   onPress: () => void;
 }) {
-  const { colors } = useTheme();
-  
-  // Neon Lime Style
-  const bg = selected ? colors.accent : (tone === 'solid' ? colors.gray100 : 'transparent');
-  const fg = selected ? '#111111' : colors.black;
-  const border = selected ? colors.accent : (tone === 'outline' ? colors.accent : colors.gray300);
+  // Barrierefreies Design mit gutem Kontrast
+  const bg = selected ? CHIP_COLORS.primary : CHIP_COLORS.primaryLight;
+  const fg = selected ? '#FFFFFF' : CHIP_COLORS.text;
+  const border = selected ? CHIP_COLORS.primary : CHIP_COLORS.border;
   
   return (
     <Pressable 
       onPress={onPress}
       style={{ 
-        paddingVertical: 8, 
-        paddingHorizontal: 12, 
-        borderRadius: 14, 
-        borderWidth: tone === 'outline' || selected ? 2 : 1, 
+        paddingVertical: 10, 
+        paddingHorizontal: 16, 
+        borderRadius: 20, 
+        borderWidth: 2, 
         borderColor: border, 
         backgroundColor: bg 
       }}
     >
-      <Text style={{ color: fg, fontSize: 13, fontWeight: selected ? '700' : '500' }}>{label}</Text>
+      <Text style={{ color: fg, fontSize: 14, fontWeight: selected ? '700' : '600' }}>{label}</Text>
     </Pressable>
   );
 }
