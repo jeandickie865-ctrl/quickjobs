@@ -181,28 +181,14 @@ export default function EmployerApplicationsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={['top']}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingHorizontal: 20,
-            paddingVertical: 16,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 24,
-              fontWeight: '900',
-              color: COLORS.white,
-            }}
-          >
-            Bewerbungen
-          </Text>
-          <Pressable onPress={() => router.push('/(employer)/profile')}>
-            <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
-          </Pressable>
-        </View>
+        <AppHeader 
+          title="Bewerbungen"
+          rightElement={
+            <Pressable onPress={() => router.push('/(employer)/profile')}>
+              <Ionicons name="person-circle-outline" size={26} color={COLORS.neon} />
+            </Pressable>
+          }
+        />
       </SafeAreaView>
 
       <ScrollView
