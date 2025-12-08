@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
 
   return (
     <LinearGradient
-      colors={['#141126', '#141126']}
+      colors={['#00A07C', '#00A07C']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
@@ -78,7 +78,7 @@ export default function WelcomeScreen() {
             style={{
               width: 55,
               height: 3,
-              backgroundColor: '#7C5CFF',
+              backgroundColor: '#EFABFF',
               borderRadius: 2
             }}
           />
@@ -148,7 +148,7 @@ export default function WelcomeScreen() {
           <Pressable
             onPress={() => router.push('/auth/login')}
             style={{
-              backgroundColor: '#7C5CFF',
+              backgroundColor: '#EFABFF',
               paddingVertical: 16,
               borderRadius: 20,
               alignItems: 'center',

@@ -33,15 +33,15 @@ const INNER_CARD_PADDING = 18;
 
 // Colors
 const COLORS = {
-  bgDark: "#F7F7F9",
-  cardDark: "#F7F7F9",
-  purple: "#6A3FFF",
-  purpleLight: "#6A3FFF",
+  bgDark: "#00A07C",
+  cardDark: "#00A07C",
+  purple: "#EFABFF",
+  purpleLight: "#EFABFF",
   textWhite: "#FFFFFF",
   textMuted: "rgba(255,255,255,0.75)",
-  accent: "#6A3FFF",
+  accent: "#EFABFF",
   red: "#E64A4A",
-  dim: "rgba(0,0,0,0.6)"
+  dim: "rgba(255,255,255,0.85)"
 };
 
 type Match = {
@@ -351,7 +351,7 @@ export default function WorkerMatchesScreen() {
                       borderRadius: 18,
                       padding: 20,
                       borderWidth: 1,
-                      borderColor: "rgba(0,0,0,0.08)",
+                      borderColor: "rgba(255,255,255,0.25)",
                       shadowColor: COLORS.purple,
                       shadowOffset: { width: 0, height: 4 },
                       shadowOpacity: 0.15,
@@ -409,7 +409,7 @@ export default function WorkerMatchesScreen() {
                           </Text>
                           {/* BADGE: Privatperson/Unternehmen */}
                           <View style={{ 
-                            backgroundColor: job.employerType === 'business' ? '#6A3FFF' : '#FFFFFF',
+                            backgroundColor: job.employerType === 'business' ? '#EFABFF' : '#FFFFFF',
                             paddingHorizontal: 8,
                             paddingVertical: 3,
                             borderRadius: 5,
@@ -519,7 +519,7 @@ export default function WorkerMatchesScreen() {
                             color:
                               application.paymentStatus === "paid"
                                 ? COLORS.textWhite
-                                : "rgba(0,0,0,0.4)",
+                                : "rgba(255,255,255,0.60)",
                             fontSize: 16,
                             fontWeight: "700",
                           }}
@@ -613,7 +613,7 @@ export default function WorkerMatchesScreen() {
                 width: "90%",
                 maxWidth: 420,
                 borderWidth: 1,
-                borderColor: "rgba(0,0,0,0.08)",
+                borderColor: "rgba(255,255,255,0.25)",
               }}
             >
               {/* HEADER */}
@@ -736,7 +736,7 @@ export default function WorkerMatchesScreen() {
                 width: "90%",
                 maxWidth: 420,
                 borderWidth: 1,
-                borderColor: "rgba(0,0,0,0.08)",
+                borderColor: "rgba(255,255,255,0.25)",
               }}
             >
               {/* HEADER */}

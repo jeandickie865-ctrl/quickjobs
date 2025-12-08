@@ -17,15 +17,15 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
   white: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  placeholder: 'rgba(0,0,0,0.4)',
-  purple: '#6A3FFF',
-  purple2: '#6A3FFF',
-  neon: '#6A3FFF',
-  border: 'rgba(0,0,0,0.08)',
+  muted: 'rgba(255,255,255,0.85)',
+  placeholder: 'rgba(255,255,255,0.60)',
+  purple: '#EFABFF',
+  purple2: '#EFABFF',
+  neon: '#EFABFF',
+  border: 'rgba(255,255,255,0.25)',
   error: '#E64A4A',
   errorBg: 'rgba(230,74,74,0.12)'
 };

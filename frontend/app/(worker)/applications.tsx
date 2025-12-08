@@ -106,9 +106,9 @@ export default function WorkerApplicationsScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#141126' }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: '#00A07C' }]}>
         <View style={styles.centerContent}>
-          <ActivityIndicator size="large" color="#C8FF16" />
+          <ActivityIndicator size="large" color="#EFABFF" />
         </View>
       </SafeAreaView>
     );
@@ -169,7 +169,7 @@ export default function WorkerApplicationsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: '#141126' }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: '#00A07C' }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -192,7 +192,7 @@ export default function WorkerApplicationsScreen() {
         {/* Loading State */}
         {loading && (
           <View style={styles.centerContent}>
-            <ActivityIndicator size="large" color="#C8FF16" />
+            <ActivityIndicator size="large" color="#EFABFF" />
             <Text style={[styles.loadingText, { color: '#A0A0A0', marginTop: spacing.sm }]}>
               Lade Bewerbungen…
             </Text>
@@ -205,7 +205,7 @@ export default function WorkerApplicationsScreen() {
             style={[
               styles.errorContainer,
               {
-                backgroundColor: '#141126',
+                backgroundColor: '#00A07C',
                 borderColor: '#FF4D4D',
                 padding: spacing.md,
                 marginBottom: spacing.sm,
@@ -222,7 +222,7 @@ export default function WorkerApplicationsScreen() {
             style={[
               styles.emptyContainer,
               {
-                backgroundColor: '#141126',
+                backgroundColor: '#00A07C',
                 borderColor: 'rgba(255,255,255,0.08)',
                 padding: spacing.xl,
               },
@@ -268,8 +268,8 @@ export default function WorkerApplicationsScreen() {
               style={({ pressed }) => [
                 styles.applicationCard,
                 {
-                  backgroundColor: '#141126',
-                  borderColor: isMatched ? '#C8FF16' : 'rgba(255,255,255,0.08)',
+                  backgroundColor: '#00A07C',
+                  borderColor: isMatched ? '#EFABFF' : 'rgba(255,255,255,0.08)',
                   borderWidth: isMatched ? 2 : 1,
                   padding: spacing.md,
                   marginBottom: spacing.sm,
@@ -306,7 +306,7 @@ export default function WorkerApplicationsScreen() {
                 style={[
                   styles.statusContainer,
                   {
-                    backgroundColor: '#141126',
+                    backgroundColor: '#00A07C',
                     padding: spacing.sm,
                     marginTop: spacing.sm,
                   },
@@ -316,7 +316,7 @@ export default function WorkerApplicationsScreen() {
                   <Text style={[styles.statusLabel, { color: '#A0A0A0' }]}>
                     Status:
                   </Text>
-                  <Text style={[styles.statusValue, { color: statusColor === colors.black ? '#C8FF16' : statusColor, fontWeight: '700' }]}>
+                  <Text style={[styles.statusValue, { color: statusColor === colors.black ? '#EFABFF' : statusColor, fontWeight: '700' }]}>
                     {statusLabel}
                   </Text>
                 </View>
@@ -382,12 +382,12 @@ export default function WorkerApplicationsScreen() {
                       styles.matchedInfo,
                       {
                         backgroundColor: 'rgba(200,255,22,0.1)',
-                        borderLeftColor: '#C8FF16',
+                        borderLeftColor: '#EFABFF',
                         padding: spacing.sm,
                       },
                     ]}
                   >
-                    <Text style={[styles.matchedText, { color: '#C8FF16' }]}>
+                    <Text style={[styles.matchedText, { color: '#EFABFF' }]}>
                       ✓ Du wurdest ausgewählt!{'\n'}
                       Nutze den Chat, um Details zu besprechen.
                     </Text>
@@ -402,7 +402,7 @@ export default function WorkerApplicationsScreen() {
                         params: { applicationId: app.id },
                       })
                     }
-                    style={{ backgroundColor: '#C8FF16' }}
+                    style={{ backgroundColor: '#EFABFF' }}
                     textStyle={{ color: '#000000', fontWeight: '700' }}
                   />
                 </View>
@@ -425,7 +425,7 @@ export default function WorkerApplicationsScreen() {
                       title="Jobdetails ansehen"
                       variant="primary"
                       onPress={() => router.push(`/(worker)/alljobs/${job.id}`)}
-                      style={{ backgroundColor: '#C8FF16' }}
+                      style={{ backgroundColor: '#EFABFF' }}
                       textStyle={{ color: '#000000', fontWeight: '700' }}
                     />
                   </View>

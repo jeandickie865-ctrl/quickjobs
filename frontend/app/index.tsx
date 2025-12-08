@@ -30,8 +30,8 @@ export default function Index() {
   }, [isReady, user]);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#5941FF' }}>
-      <ActivityIndicator size="large" color="#C8FF16" />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#EFABFF' }}>
+      <ActivityIndicator size="large" color="#EFABFF" />
     </View>
   );
 }

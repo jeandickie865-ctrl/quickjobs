@@ -6,14 +6,14 @@ import { getWorkerApplications } from '../../utils/applicationStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const COLORS = {
-  purple: '#6A3FFF',
-  lightPurple: 'rgba(106,63,255,0.15)',
-  neon: '#6A3FFF',
+  purple: '#EFABFF',
+  lightPurple: 'rgba(255,255,255,0.15)',
+  neon: '#EFABFF',
   white: '#FFFFFF',
   inactive: 'rgba(255,255,255,0.65)',
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
 };
 
 // Custom Tab Button Component (Pill-Style)

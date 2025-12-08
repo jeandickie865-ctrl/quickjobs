@@ -27,13 +27,13 @@ import { getApplicationsForEmployer } from '../../utils/applicationStore';
 
 // BACKUP DARK THEME
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
   white: '#FFFFFF',
   text: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#6A3FFF',
+  muted: 'rgba(255,255,255,0.85)',
+  neon: '#EFABFF',
   black: '#000000',
 };
 

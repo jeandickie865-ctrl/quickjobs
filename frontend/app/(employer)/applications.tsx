@@ -14,14 +14,14 @@ import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
   white: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#6A3FFF',
-  purpleLight: '#6A3FFF',
-  neon: '#6A3FFF',
+  muted: 'rgba(255,255,255,0.85)',
+  purple: '#EFABFF',
+  purpleLight: '#EFABFF',
+  neon: '#EFABFF',
   error: '#E64A4A',
 };
 

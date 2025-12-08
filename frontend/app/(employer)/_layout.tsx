@@ -5,14 +5,14 @@ import { View, ActivityIndicator, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const COLORS = {
-  purple: '#6A3FFF',
-  lightPurple: 'rgba(106,63,255,0.15)',
-  neon: '#6A3FFF',
-  white: '#1A1A1A',
-  inactive: 'rgba(0,0,0,0.4)',
-  bg: '#F7F7F9',
+  purple: '#EFABFF',
+  lightPurple: 'rgba(255,255,255,0.15)',
+  neon: '#EFABFF',
+  white: '#FFFFFF',
+  inactive: 'rgba(255,255,255,0.60)',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
 };
 
 // Custom Tab Button Component (Pill-Style)

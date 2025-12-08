@@ -22,9 +22,9 @@ import { WorkerProfileEmployerView } from '../../../components/WorkerProfileEmpl
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
-  purple: '#6A3FFF',
+  purple: '#EFABFF',
   purpleDark: '#3E2DD9',
-  neon: '#6A3FFF',
+  neon: '#EFABFF',
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',

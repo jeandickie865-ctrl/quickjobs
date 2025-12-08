@@ -20,13 +20,13 @@ import { useWizard } from '../../../contexts/WizardContext';
 import { useAuth } from '../../../contexts/AuthContext';
 
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
   text: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#6A3FFF',
-  purple: '#6A3FFF',
+  muted: 'rgba(255,255,255,0.85)',
+  neon: '#EFABFF',
+  purple: '#EFABFF',
 };
 
 export default function Step5Summary() {

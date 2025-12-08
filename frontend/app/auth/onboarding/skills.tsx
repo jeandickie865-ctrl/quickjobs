@@ -6,12 +6,12 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = {
-  bgDark: '#F7F7F9',
-  bgCard: '#F7F7F9',
-  purple: '#6A3FFF',
+  bgDark: '#00A07C',
+  bgCard: '#00A07C',
+  purple: '#EFABFF',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.6)',
-  neon: '#6A3FFF'
+  neon: '#EFABFF'
 };
 
 export default function OnboardingSkills() {
@@ -92,7 +92,7 @@ export default function OnboardingSkills() {
           <Pressable
             onPress={() => router.push('/auth/onboarding/done')}
             style={{
-              backgroundColor: skills.length > 0 ? COLORS.purple : 'rgba(0,0,0,0.08)',
+              backgroundColor: skills.length > 0 ? COLORS.purple : 'rgba(255,255,255,0.25)',
               paddingVertical: 16,
               borderRadius: 20,
               alignItems: 'center',

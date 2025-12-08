@@ -11,13 +11,13 @@ import { formatAddress } from '../../types/address';
 import { getEmployerProfile } from '../../utils/employerProfileStore';
 
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
   white: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#6A3FFF',
-  neon: '#6A3FFF',
+  muted: 'rgba(255,255,255,0.85)',
+  purple: '#EFABFF',
+  neon: '#EFABFF',
 };
 
 // 🚨 Sofortmeldepflichtige Kategorien

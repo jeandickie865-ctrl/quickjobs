@@ -28,17 +28,17 @@ import { useWizard } from '../../../contexts/WizardContext';
 import { getWorkerProfile } from '../../../utils/profileStore';
 
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
   text: '#FFFFFF',
   white: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#6A3FFF',
-  purple: '#6A3FFF',
-  placeholder: 'rgba(0,0,0,0.4)',
-  gray: 'rgba(0,0,0,0.6)',
-  lightGray: 'rgba(0,0,0,0.08)',
+  muted: 'rgba(255,255,255,0.85)',
+  neon: '#EFABFF',
+  purple: '#EFABFF',
+  placeholder: 'rgba(255,255,255,0.60)',
+  gray: 'rgba(255,255,255,0.85)',
+  lightGray: 'rgba(255,255,255,0.25)',
 };
 
 export default function Step1Basic() {

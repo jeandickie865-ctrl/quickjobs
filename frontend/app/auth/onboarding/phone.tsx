@@ -6,12 +6,12 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = {
-  bgDark: '#F7F7F9',
-  bgCard: '#F7F7F9',
-  purple: '#6A3FFF',
+  bgDark: '#00A07C',
+  bgCard: '#00A07C',
+  purple: '#EFABFF',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.6)',
-  neon: '#6A3FFF'
+  neon: '#EFABFF'
 };
 
 export default function OnboardingPhone() {
@@ -54,7 +54,7 @@ export default function OnboardingPhone() {
           <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Telefonnummer</Text>
           <TextInput
             placeholder="z.B. 0151 23456789"
-            placeholderTextColor="rgba(0,0,0,0.4)"
+            placeholderTextColor="rgba(255,255,255,0.60)"
             keyboardType="phone-pad"
             style={{
               backgroundColor: COLORS.bgCard,

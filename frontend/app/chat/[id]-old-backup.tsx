@@ -11,8 +11,8 @@ import { loadMessages, sendMessage, checkChatUnlocked } from "../../utils/chatSt
 import { getApplicationById } from "../../utils/applicationStore";
 
 const COLORS = {
-  purple: "#6A3FFF",
-  neon: "#6A3FFF",
+  purple: "#EFABFF",
+  neon: "#EFABFF",
   white: "#FFFFFF",
   black: "#000000",
   gray: "#DDDDDD",

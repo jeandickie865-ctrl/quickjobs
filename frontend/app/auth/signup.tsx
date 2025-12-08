@@ -19,7 +19,7 @@ import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
 
 const COLORS = {
-  bg: '#6A3FFF',
+  bg: '#EFABFF',
   white: '#FFFFFF',
   whiteSoft: 'rgba(255,255,255,0.8)',
   card: 'rgba(255,255,255,0.15)',
@@ -27,10 +27,10 @@ const COLORS = {
   border: 'rgba(255,255,255,0.25)',
   text: '#FFFFFF',
   placeholder: 'rgba(255,255,255,0.6)',
-  orange: '#FFB36A',
-  neon: '#FFB36A',
-  accent: '#FFB36A',
-  purple: '#6A3FFF',
+  orange: '#EFABFF',
+  neon: '#EFABFF',
+  accent: '#EFABFF',
+  purple: '#EFABFF',
   muted: 'rgba(255,255,255,0.8)',
   error: '#FF4D4D',
   errorBg: 'rgba(255,77,77,0.2)'

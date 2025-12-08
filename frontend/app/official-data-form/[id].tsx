@@ -8,8 +8,8 @@ import { API_URL } from "../../config";
 import { getAuthHeaders } from "../../utils/api";
 
 const COLORS = {
-  purple: "#6A3FFF",
-  neon: "#6A3FFF",
+  purple: "#EFABFF",
+  neon: "#EFABFF",
   white: "#FFFFFF",
   black: "#000000",
   gray: "#DDDDDD",
@@ -334,7 +334,7 @@ export default function OfficialDataFormScreen() {
               alignItems: "center",
               marginBottom: 16,
               padding: 14,
-              backgroundColor: "rgba(0,0,0,0.08)",
+              backgroundColor: "rgba(255,255,255,0.25)",
               borderRadius: 12,
             }}
           >

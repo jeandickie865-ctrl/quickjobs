@@ -23,13 +23,13 @@ import * as ImagePicker from 'expo-image-picker';
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
+  border: 'rgba(255,255,255,0.25)',
   white: '#FFFFFF',
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#6A3FFF',
-  neon: '#6A3FFF',
+  muted: 'rgba(255,255,255,0.85)',
+  purple: '#EFABFF',
+  neon: '#EFABFF',
   error: '#E64A4A',
   black: '#000000'
 };
@@ -445,7 +445,7 @@ export default function EditWorkerProfileScreen() {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.6)',
+            backgroundColor: 'rgba(255,255,255,0.85)',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 999,
@@ -454,13 +454,13 @@ export default function EditWorkerProfileScreen() {
         >
           <View
             style={{
-              backgroundColor: '#F7F7F9',
+              backgroundColor: '#00A07C',
               padding: 24,
               borderRadius: 16,
               width: '80%',
               maxWidth: 360,
               borderWidth: 1,
-              borderColor: 'rgba(0,0,0,0.08)',
+              borderColor: 'rgba(255,255,255,0.25)',
             }}
           >
             <Text
@@ -481,7 +481,7 @@ export default function EditWorkerProfileScreen() {
                 router.push('/(worker)/profile');
               }}
               style={{
-                backgroundColor: '#6A3FFF',
+                backgroundColor: '#EFABFF',
                 paddingVertical: 12,
                 borderRadius: 12,
                 alignItems: 'center',
@@ -1111,13 +1111,13 @@ export default function EditWorkerProfileScreen() {
         >
           <View
             style={{
-              backgroundColor: "#F7F7F9",
+              backgroundColor: "#00A07C",
               paddingVertical: 12,
               paddingHorizontal: 20,
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: "#6A3FFF",
-              shadowColor: "#6A3FFF",
+              borderColor: "#EFABFF",
+              shadowColor: "#EFABFF",
               shadowOpacity: 0.3,
               shadowRadius: 6,
             }}

@@ -8,10 +8,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   black: '#000000',
-  neon: '#6A3FFF',
+  neon: '#EFABFF',
   white: '#FFFFFF',
-  purple: '#6A3FFF',
-  darkGray: '#1A1A1A',
+  purple: '#EFABFF',
+  darkGray: '#FFFFFF',
   neonTransparent: 'rgba(200,255,22,0.1)',
 };
 

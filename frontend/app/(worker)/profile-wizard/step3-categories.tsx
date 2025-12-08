@@ -13,15 +13,15 @@ const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 // D+ PREMIUM COLORS
 const COLORS = {
-  bg: '#F7F7F9',
+  bg: '#00A07C',
   card: '#FFFFFF',
   border: 'rgba(255,255,255,0.05)',
   white: '#FFFFFF',
-  whiteMuted: 'rgba(0,0,0,0.6)',
+  whiteMuted: 'rgba(255,255,255,0.85)',
   gray: 'rgba(255,255,255,0.55)',
-  neon: '#6A3FFF',
-  purple: '#6A3FFF',
-  purpleLight: '#6A3FFF',
+  neon: '#EFABFF',
+  purple: '#EFABFF',
+  purpleLight: '#EFABFF',
   error: '#E64A4A'
 };
 
