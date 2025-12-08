@@ -436,7 +436,7 @@ export default function JobDetailScreen() {
         <View style={{ height: 1, backgroundColor: COLORS.border }} />
 
         {/* Anforderungen Card */}
-        {job.requiredTags && job.requiredTags.length > 0 && (
+        {((job.required_all_tags && job.required_all_tags.length > 0) || (job.required_any_tags && job.required_any_tags.length > 0)) && (
           <>
             <View
               style={{
@@ -459,9 +459,9 @@ export default function JobDetailScreen() {
                 ANFORDERUNGEN
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {job.requiredTags.map((tag, idx) => (
+                {job.required_all_tags?.map((tag, idx) => (
                   <View
-                    key={idx}
+                    key={`all-${idx}`}
                     style={{
                       paddingHorizontal: 10,
                       paddingVertical: 6,
@@ -472,7 +472,24 @@ export default function JobDetailScreen() {
                     }}
                   >
                     <Text style={{ fontSize: 13, color: COLORS.white, fontWeight: '600' }}>
-                      {tag}
+                      {tag} (erforderlich)
+                    </Text>
+                  </View>
+                ))}
+                {job.required_any_tags?.map((tag, idx) => (
+                  <View
+                    key={`any-${idx}`}
+                    style={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 6,
+                      backgroundColor: 'rgba(107,75,255,0.1)',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: COLORS.purple,
+                    }}
+                  >
+                    <Text style={{ fontSize: 13, color: COLORS.white, fontWeight: '600' }}>
+                      {tag} (optional)
                     </Text>
                   </View>
                 ))}
