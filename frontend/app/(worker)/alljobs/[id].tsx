@@ -24,7 +24,7 @@ const COLORS = {
   border: 'rgba(0,0,0,0.08)',
   neon: '#EFABFF',
   white: '#1A1A1A',
-  cardText: "#00A07C",
+  cardText: "#1A1A1A",
   lightText: '#E8E8E8',
   dimText: '#A0A0A0',
   darkGray: '#666666',

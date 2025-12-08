@@ -10,7 +10,7 @@ const COLORS = {
   bgCard: '#00A07C',
   purple: '#EFABFF',
   white: '#1A1A1A',
-  cardText: "#00A07C",
+  cardText: "#1A1A1A",
   muted: 'rgba(0,0,0,0.6)',
   neon: '#EFABFF'
 };

@@ -13,7 +13,7 @@ const COLORS = {
   card: "#00A07C",
   neon: "#EFABFF",
   white: '#1A1A1A',
-  cardText: "#00A07C",
+  cardText: "#1A1A1A",
   lightText: "#E8E8E8",
   dimText: "#A0A0A0",
   border: "#2A2738",

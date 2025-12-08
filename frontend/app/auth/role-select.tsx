@@ -9,7 +9,7 @@ const COLORS = {
   purple: '#EFABFF',
   neon: '#EFABFF',
   white: '#1A1A1A',
-  cardText: "#00A07C",
+  cardText: "#1A1A1A",
   black: '#000000',
 };
 
