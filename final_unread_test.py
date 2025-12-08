@@ -8,7 +8,7 @@ import asyncio
 import httpx
 from datetime import datetime
 
-BACKEND_URL = "https://shiftmatch-dev.preview.emergentagent.com/api"
+BACKEND_URL = "https://themerework.preview.emergentagent.com/api"
 
 async def test_unread_message_flow():
     """Test the complete unread message flow"""
