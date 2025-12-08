@@ -21,6 +21,7 @@ const COLORS = {
   inputBorder: 'rgba(255,255,255,0.15)',
   inputBg: '#1E1938',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   neon: '#EFABFF',
   purple: '#EFABFF',
   muted: 'rgba(255,255,255,0.6)',

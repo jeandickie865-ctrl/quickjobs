@@ -26,6 +26,7 @@ const COLORS = {
   purpleDark: '#3E2DD9',
   neon: '#EFABFF',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   black: '#000000',
   darkGray: '#333333',
   neonTransparent20: 'rgba(200,255,22,0.2)',

@@ -21,6 +21,7 @@ const COLORS = {
   bg: '#00A07C',
   card: 'rgba(255,255,255,0.15)',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   muted: 'rgba(255,255,255,0.85)',
   placeholder: 'rgba(255,255,255,0.60)',
   purple: '#EFABFF',

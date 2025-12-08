@@ -12,6 +12,7 @@ const COLORS = {
   neon: '#EFABFF',
   accent: '#EFABFF',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   text: '#FFFFFF',
   muted: 'rgba(255,255,255,0.85)',
   bg: '#00A07C',

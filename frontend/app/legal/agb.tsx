@@ -8,6 +8,7 @@ const COLORS = {
   purple: '#EFABFF',
   neon: '#EFABFF',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   black: '#000000',
   darkGray: '#333333',
   gray: '#666666',

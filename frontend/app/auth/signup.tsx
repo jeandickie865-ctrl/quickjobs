@@ -22,6 +22,7 @@ import { ArrowDoodle } from '../../components/ArrowDoodle';
 const COLORS = {
   bg: '#00A07C',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   whiteSoft: 'rgba(255,255,255,0.8)',
   card: 'rgba(255,255,255,0.15)',
   cardBorder: 'rgba(255,255,255,0.25)',

@@ -17,6 +17,7 @@ const COLORS = {
   card: '#FFFFFF',
   border: 'rgba(255,255,255,0.25)',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   muted: 'rgba(255,255,255,0.85)',
   purple: '#EFABFF',
   purpleLight: '#EFABFF',

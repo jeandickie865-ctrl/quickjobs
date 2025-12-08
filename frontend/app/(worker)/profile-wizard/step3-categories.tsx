@@ -17,6 +17,7 @@ const COLORS = {
   card: 'rgba(255,255,255,0.15)',
   border: 'rgba(255,255,255,0.05)',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   whiteMuted: 'rgba(255,255,255,0.85)',
   gray: 'rgba(255,255,255,0.55)',
   neon: '#EFABFF',

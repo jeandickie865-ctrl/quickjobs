@@ -9,6 +9,7 @@ const COLORS = {
   purple: '#EFABFF',
   neon: '#EFABFF',
   white: '#FFFFFF',
+  cardText: "#00A07C",
   black: '#000000',
   whiteTransparent: 'rgba(255,255,255,0.6)',
   error: '#EFABFF',
