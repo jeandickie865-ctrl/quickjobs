@@ -530,7 +530,7 @@ export default function EditWorkerProfileScreen() {
                   paddingHorizontal: 16,
                   marginRight: 8,
                   borderRadius: 12,
-                  backgroundColor: isActive ? COLORS.neon : '#1C182B',
+                  backgroundColor: isActive ? COLORS.neon : COLORS.card,
                   borderWidth: 1,
                   borderColor: isActive ? COLORS.neon : COLORS.border
                 }}
