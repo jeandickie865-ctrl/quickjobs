@@ -300,6 +300,7 @@ export default function Step1Basic() {
 
         </View>
       </KeyboardAvoidingView>
+      )}
     </SafeAreaView>
   );
 }
