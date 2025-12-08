@@ -638,7 +638,7 @@ export default function EditWorkerProfileScreen() {
                 style={{
                   paddingVertical: 8,
                   paddingHorizontal: 16,
-                  backgroundColor: '#1C182B',
+                  backgroundColor: COLORS.card,
                   borderRadius: 12,
                   borderWidth: 1,
                   borderColor: COLORS.border
@@ -1029,7 +1029,7 @@ export default function EditWorkerProfileScreen() {
               <Text style={{ color: COLORS.muted, marginBottom: 6, fontSize: 14 }}>E-Mail</Text>
               <View
                 style={{
-                  backgroundColor: '#1C182B',
+                  backgroundColor: COLORS.card,
                   borderRadius: 12,
                   paddingHorizontal: 16,
                   paddingVertical: 12,
