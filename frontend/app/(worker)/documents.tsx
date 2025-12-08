@@ -1,17 +1,10 @@
 import { View, Text, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppHeader } from '../../components/AppHeader';
 import { useRouter } from 'expo-router';
-import { AppHeader } from '../../components/AppHeader';
 import { useState, useEffect } from 'react';
-import { AppHeader } from '../../components/AppHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AppHeader } from '../../components/AppHeader';
 import { useAuth } from '../../contexts/AuthContext';
-import { AppHeader } from '../../components/AppHeader';
 import { API_URL } from '../../config';
-import { AppHeader } from '../../components/AppHeader';
 import * as DocumentPicker from 'expo-document-picker';
 import { AppHeader } from '../../components/AppHeader';
 

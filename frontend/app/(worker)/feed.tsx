@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { AppHeader } from '../../components/AppHeader';
 import { View, Text, ActivityIndicator, FlatList, Pressable } from "react-native";
-import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AppHeader } from '../../components/AppHeader';
 import { Ionicons } from "@expo/vector-icons";
-import { AppHeader } from '../../components/AppHeader';
 import { useRouter, useFocusEffect } from "expo-router";
-import { AppHeader } from '../../components/AppHeader';
 import { getMatchedJobs } from "../../utils/jobStore";
-import { AppHeader } from '../../components/AppHeader';
 import { useAuth } from "../../contexts/AuthContext";
-import { AppHeader } from '../../components/AppHeader';
 import { getTagLabel } from "../../utils/taxonomy";
-import { AppHeader } from '../../components/AppHeader';
 import { getWorkerProfile } from "../../utils/profileStore";
 import { AppHeader } from '../../components/AppHeader';
 

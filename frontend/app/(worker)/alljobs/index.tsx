@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { AppHeader } from '../../../components/AppHeader';
 import { View, Text, ActivityIndicator, FlatList, Pressable } from "react-native";
-import { AppHeader } from '../../../components/AppHeader';
 import { Ionicons } from "@expo/vector-icons";
-import { AppHeader } from '../../../components/AppHeader';
 import { useRouter } from "expo-router";
-import { AppHeader } from '../../../components/AppHeader';
 import { getJobs } from "../../../utils/jobStore";
-import { AppHeader } from '../../../components/AppHeader';
 import { useAuth } from "../../../contexts/AuthContext";
-import { AppHeader } from '../../../components/AppHeader';
 import { getWorkerProfile } from "../../../utils/profileStore";
 import { AppHeader } from '../../../components/AppHeader';
 

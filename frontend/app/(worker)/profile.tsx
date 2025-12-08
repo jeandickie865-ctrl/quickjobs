@@ -1,26 +1,15 @@
 // app/(worker)/profile.tsx – DARK BACKUP DESIGN
 import React, { useState, useEffect } from 'react';
-import { AppHeader } from '../../components/AppHeader';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
-import { AppHeader } from '../../components/AppHeader';
 import { ScrollView, View, Text, Pressable, ActivityIndicator, Image } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppHeader } from '../../components/AppHeader';
 import { useRouter, Redirect, useFocusEffect } from 'expo-router';
-import { AppHeader } from '../../components/AppHeader';
 import { useAuth } from '../../contexts/AuthContext';
-import { AppHeader } from '../../components/AppHeader';
 import { getWorkerProfile, WorkerProfile } from '../../utils/profileStore';
-import { AppHeader } from '../../components/AppHeader';
 import { getReviewsForWorker, calculateAverageRating } from '../../utils/reviewStore';
-import { AppHeader } from '../../components/AppHeader';
 import { getWorkerApplications } from '../../utils/applicationStore';
-import { AppHeader } from '../../components/AppHeader';
 import { Ionicons } from '@expo/vector-icons';
-import { AppHeader } from '../../components/AppHeader';
 import taxonomy from '../../shared/taxonomy.json';
-import { AppHeader } from '../../components/AppHeader';
 import { getTagLabel } from '../../utils/taxonomy';
 import { AppHeader } from '../../components/AppHeader';
 
