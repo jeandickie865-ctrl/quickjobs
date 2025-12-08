@@ -245,21 +245,20 @@ export default function SignupScreen() {
                     onPress={() => setSelectedRole('worker')}
                     style={{
                       flex: 1,
-                      backgroundColor:
-                        selectedRole === 'worker' ? COLORS.neon : COLORS.card,
-                      borderRadius: 12,
-                      paddingVertical: 14,
+                      backgroundColor: COLORS.card,
+                      borderRadius: 14,
+                      paddingVertical: 18,
                       alignItems: 'center',
-                      borderWidth: 1,
+                      borderWidth: 2,
                       borderColor:
-                        selectedRole === 'worker' ? COLORS.neon : COLORS.border
+                        selectedRole === 'worker' ? COLORS.orange : COLORS.cardBorder
                     }}
                   >
                     <Text
                       style={{
                         fontSize: 16,
-                        fontWeight: '700',
-                        color: selectedRole === 'worker' ? COLORS.bg : COLORS.white
+                        fontWeight: '600',
+                        color: COLORS.white
                       }}
                     >
                       Auftragnehmer
@@ -270,21 +269,20 @@ export default function SignupScreen() {
                     onPress={() => setSelectedRole('employer')}
                     style={{
                       flex: 1,
-                      backgroundColor:
-                        selectedRole === 'employer' ? COLORS.neon : COLORS.card,
-                      borderRadius: 12,
-                      paddingVertical: 14,
+                      backgroundColor: COLORS.card,
+                      borderRadius: 14,
+                      paddingVertical: 18,
                       alignItems: 'center',
-                      borderWidth: 1,
+                      borderWidth: 2,
                       borderColor:
-                        selectedRole === 'employer' ? COLORS.neon : COLORS.border
+                        selectedRole === 'employer' ? COLORS.orange : COLORS.cardBorder
                     }}
                   >
                     <Text
                       style={{
                         fontSize: 16,
-                        fontWeight: '700',
-                        color: selectedRole === 'employer' ? COLORS.bg : COLORS.white
+                        fontWeight: '600',
+                        color: COLORS.white
                       }}
                     >
                       Auftraggeber
