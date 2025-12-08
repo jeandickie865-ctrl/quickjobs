@@ -783,7 +783,7 @@ export default function EditWorkerProfileScreen() {
                         style={({ pressed }) => ({
                           paddingVertical: 12,
                           paddingHorizontal: 16,
-                          backgroundColor: pressed ? '#1C182B' : COLORS.card,
+                          backgroundColor: pressed ? COLORS.border : COLORS.card,
                           borderBottomWidth: index < addressSuggestions.length - 1 ? 1 : 0,
                           borderBottomColor: COLORS.border,
                         })}
