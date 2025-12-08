@@ -8,10 +8,13 @@ const COLORS = {
   purple: '#EFABFF',
   lightPurple: 'rgba(255,255,255,0.15)',
   neon: '#EFABFF',
+  accent: '#EFABFF',
   white: '#FFFFFF',
-  inactive: 'rgba(255,255,255,0.60)',
+  text: '#FFFFFF',
+  inactive: 'rgba(255,255,255,0.5)',
+  muted: 'rgba(255,255,255,0.85)',
   bg: '#00A07C',
-  card: '#FFFFFF',
+  card: 'rgba(255,255,255,0.15)',
   border: 'rgba(255,255,255,0.25)',
 };
 
