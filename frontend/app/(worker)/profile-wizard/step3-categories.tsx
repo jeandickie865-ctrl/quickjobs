@@ -46,6 +46,11 @@ export default function Step3Categories() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(wizardData.categories || []);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(wizardData.subcategories || []);
   const [errors, setErrors] = useState<{ category?: string; subcategories?: string }>({});
+  
+  // NEU: Track welche Kategorie für Unterkategorien geöffnet ist
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(
+    selectedCategories.length > 0 ? selectedCategories[0] : null
+  );
 
   // Build available subcategories
   const availableSubcategories: { key: string; label: string }[] = [];
