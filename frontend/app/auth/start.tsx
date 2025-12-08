@@ -43,8 +43,8 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
 
-        {/* LOGO MIT DUNKELLILA HINTERGRUND */}
-        <View style={{ width: '100%', backgroundColor: '#9333EA', paddingVertical: 40, marginTop: 40, marginBottom: 30, alignItems: 'center' }}>
+        {/* LOGO MIT DUNKELLILA HINTERGRUND - VOLLE BREITE */}
+        <View style={{ width: '100%', marginHorizontal: -24, backgroundColor: '#9333EA', paddingVertical: 40, marginTop: 40, marginBottom: 30, alignItems: 'center' }}>
           <Animated.View
             style={{
               opacity: fadeLogo,
