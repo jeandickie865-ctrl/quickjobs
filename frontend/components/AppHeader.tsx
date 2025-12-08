@@ -41,14 +41,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '600',
-    color: COLORS.text, // #1A1A1A
+    color: COLORS.primary, // #00A07C (grün)
     textAlign: 'left',
+    textTransform: 'uppercase',
   },
   titleCentered: {
     fontSize: 20,
     fontWeight: '600',
-    color: COLORS.text,
+    color: COLORS.primary, // #00A07C (grün)
     textAlign: 'center',
     flex: 1,
+    textTransform: 'uppercase',
   },
 });
