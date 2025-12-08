@@ -26,18 +26,8 @@ import { getAuthHeaders } from '../../utils/api';
 const { width } = Dimensions.get('window');
 const INNER_CARD_PADDING = 18;
 
-// Colors (EXAKT wie Worker)
-const COLORS = {
-  bgDark: "#00A07C",
-  cardDark: "#00A07C",
-  purple: "#EFABFF",
-  purpleLight: "#EFABFF",
-  textWhite: "#FFFFFF",
-  textMuted: "rgba(255,255,255,0.85)",
-  accent: "#EFABFF",
-  red: "#E64A4A",
-  dim: "rgba(255,255,255,0.85)"
-};
+import { COLORS } from '../../constants/colors';
+import { AppHeader } from '../../components/AppHeader';
 
 type Match = {
   job: Job;
