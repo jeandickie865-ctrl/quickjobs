@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step3-categories.tsx – BACKUP STYLE D+ (dark premium)
+// app/(worker)/profile-wizard/step3-categories.tsx – Quickjobs STYLE D+ (dark premium)
 
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';

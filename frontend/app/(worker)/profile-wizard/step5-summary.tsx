@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step5-summary.tsx – BACKUP D+ DESIGN
+// app/(worker)/profile-wizard/step5-summary.tsx – Quickjobs D+ DESIGN
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ScrollView,

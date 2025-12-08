@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step2-address.tsx – BACKUP DESIGN
+// app/(worker)/profile-wizard/step2-address.tsx – Quickjobs DESIGN
 
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
@@ -204,7 +204,7 @@ export default function Step2Address() {
   );
 }
 
-// STYLES — BACKUP DESIGN
+// STYLES — Quickjobs DESIGN
 const styles = StyleSheet.create({
   container: {
     flex: 1,

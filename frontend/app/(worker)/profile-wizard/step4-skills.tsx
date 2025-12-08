@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step4-skills.tsx - BACKUP D+ DESIGN
+// app/(worker)/profile-wizard/step4-skills.tsx - Quickjobs D+ DESIGN
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

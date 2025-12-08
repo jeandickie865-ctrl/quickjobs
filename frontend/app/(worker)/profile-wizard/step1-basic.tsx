@@ -1,5 +1,5 @@
 // app/(worker)/profile-wizard/step1-basic.tsx
-// BASISDATEN + FOTO - BACKUP DESIGN
+// BASISDATEN + FOTO - Quickjobs DESIGN
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -178,9 +178,9 @@ export default function Step1Basic() {
       >
         <View style={styles.container}>
           
-          {/* BACKUP HEADER */}
+          {/* Quickjobs HEADER */}
           <View style={styles.backupHeader}>
-            <Text style={styles.headerBackupTitle}>BACKUP</Text>
+            <Text style={styles.headerBackupTitle}>Quickjobs</Text>
           </View>
 
           <ProgressBar currentStep={1} totalSteps={5} />
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
-  /* BACKUP HEADER */
+  /* Quickjobs HEADER */
   backupHeader: {
     paddingHorizontal: 24,
     paddingTop: 16,
