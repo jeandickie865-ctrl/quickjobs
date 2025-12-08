@@ -100,10 +100,13 @@ export default function SignupScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 40 }} keyboardShouldPersistTaps="handled">
             
-            <Animated.View style={{ alignItems: 'center', marginBottom: 32, opacity: logoOpacity }}>
-              <View style={{ width: 100, height: 100, backgroundColor: COLORS.neon, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <Image source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} style={{ width: 70, height: 70 }} resizeMode="contain" />
-              </View>
+            {/* LOGO */}
+            <Animated.View style={{ alignItems: 'center', marginBottom: 40, opacity: logoOpacity }}>
+              <Image
+                source={{ uri: 'https://customer-assets.emergentagent.com/job_129a3665-288c-42bb-9ab2-25aee1dfc3eb/artifacts/xuvkqr0p_Black%20White%20Minimal%20Simple%20Modern%20Letter%20A%20%20Arts%20Gallery%20%20Logo-9.png' }}
+                style={{ width: 180, height: 180 }}
+                resizeMode="contain"
+              />
             </Animated.View>
 
             <Animated.View style={{ marginBottom: 8, opacity: logoOpacity }}>
