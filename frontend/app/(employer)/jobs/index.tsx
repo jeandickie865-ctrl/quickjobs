@@ -178,7 +178,7 @@ export default function EmployerJobsScreen() {
                     {job.title}
                   </Text>
                   <View style={{ backgroundColor: statusColor, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
-                    <Text style={{ color: COLORS.bg, fontSize: 12, fontWeight: '600' }}>
+                    <Text style={{ color: COLORS.text, fontSize: 12, fontWeight: '600' }}>
                       {job.status === 'matched' ? 'Vergeben' : 
                        job.status === 'open' ? 'Offen' : 
                        job.status}
