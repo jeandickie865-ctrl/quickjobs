@@ -291,24 +291,24 @@ export default function WorkerApplicationsScreen() {
               ]}
             >
               {/* Auftrag Title */}
-              <Text style={[styles.jobTitle, { color: '#FFFFFF' }]}>
+              <Text style={[styles.jobTitle, { color: '#1A1A1A' }]}>
                 {title}
               </Text>
 
               {/* Auftrag Details */}
               <View style={{ gap: 4, marginTop: spacing.xs }}>
                 {!!category && (
-                  <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
+                  <Text style={[styles.jobDetail, { color: '#1A1A1A' }]}>
                     {category}
                   </Text>
                 )}
                 {!!address && (
-                  <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
+                  <Text style={[styles.jobDetail, { color: '#1A1A1A' }]}>
                     {address}
                   </Text>
                 )}
                 {!!workerAmount && (
-                  <Text style={[styles.jobDetail, { color: '#A0A0A0' }]}>
+                  <Text style={[styles.jobDetail, { color: '#1A1A1A' }]}>
                     {workerAmount}
                   </Text>
                 )}
