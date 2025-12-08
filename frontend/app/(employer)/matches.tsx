@@ -190,13 +190,10 @@ export default function EmployerMatchesScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.bgDark }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ArrowDoodle />
-
-
           <ActivityIndicator color={COLORS.accent} size="large" />
-          <Text style={{ color: COLORS.textWhite, marginTop: 16, fontSize: 16 }}>
+          <Text style={{ color: COLORS.text, marginTop: 16, fontSize: 16 }}>
             Lädt Matches...
           </Text>
         </SafeAreaView>
@@ -205,33 +202,16 @@ export default function EmployerMatchesScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.bgDark }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={['top','bottom']} style={{ flex: 1 }}>
-        {/* HEADER */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: 20,
-            paddingVertical: 18,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 26,
-              fontWeight: "900",
-              color: COLORS.textWhite,
-              letterSpacing: 0.3,
-            }}
-          >
-            Meine Matches
-          </Text>
-
-          <Pressable onPress={() => router.push('/(employer)/profile')}>
-            <Ionicons name="person-circle-outline" size={28} color={COLORS.purple} />
-          </Pressable>
-        </View>
+        <AppHeader 
+          title="Matches"
+          rightElement={
+            <Pressable onPress={() => router.push('/(employer)/profile')}>
+              <Ionicons name="person-circle-outline" size={28} color={COLORS.accent} />
+            </Pressable>
+          }
+        />
 
         <Animated.ScrollView
           style={{ flex: 1, opacity: fadeAnim }}
