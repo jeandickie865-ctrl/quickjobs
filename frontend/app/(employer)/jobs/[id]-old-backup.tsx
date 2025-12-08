@@ -3,7 +3,7 @@
 // app/(employer)/jobs/[id].tsx - FINAL NEON-TECH DESIGN
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Alert, ActivityIndicator, Pressable, Image } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Redirect } from 'expo-router';
 import { useAuth } from '../../../contexts/AuthContext';

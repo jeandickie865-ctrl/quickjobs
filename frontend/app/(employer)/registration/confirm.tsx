@@ -1,5 +1,5 @@
 import { View, Text, Pressable, Modal, ActivityIndicator, ScrollView } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';

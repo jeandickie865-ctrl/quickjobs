@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { getJobs } from "../../../utils/jobStore";
 import { useAuth } from "../../../contexts/AuthContext";
 import { getWorkerProfile } from "../../../utils/profileStore";
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',

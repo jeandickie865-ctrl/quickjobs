@@ -8,7 +8,7 @@ import { getEmployerJobs } from '../../../utils/jobStore';
 import { euro } from '../../../utils/pricing';
 import { formatAddress } from '../../../types/address';
 import { Ionicons } from '@expo/vector-icons';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',
