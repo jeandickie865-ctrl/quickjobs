@@ -1,45 +1,31 @@
-// app/auth/signup.tsx - VIVID BLUE-PURPLE & NEON LIME
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
+// app/auth/signup.tsx
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Animated, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 import { z } from 'zod';
 
-// VIVID BLUE-PURPLE & NEON LIME Colors
 const COLORS = {
-  primary: '#5941FF',
-  accent: '#C8FF16',
-  accentDark: '#B3E612',
-  background: '#F8F8F8',
-  text: '#111111',
-  textSecondary: '#666666',
-  border: '#D0D0D0',
-  placeholder: '#999999',
+  purple: '#5941FF',
+  neon: '#C8FF16',
   white: '#FFFFFF',
-  errorBg: '#FBECEC',
-  errorBorder: '#E34242',
-  errorText: '#A62828',
+  black: '#000000',
+  whiteTransparent: 'rgba(255,255,255,0.7)',
+  error: '#FF4D4D',
+  errorBg: 'rgba(255,77,77,0.12)',
+  placeholder: '#8A8A8A',
 };
 
-const signupSchema = z
-  .object({
-    email: z
-      .string()
-      .min(1, 'E-Mail erforderlich')
-      .email('Ungültige E-Mail-Adresse'),
-    password: z
-      .string()
-      .min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
-    confirm: z
-      .string()
-      .min(1, 'Passwort-Bestätigung erforderlich'),
-  })
-  .refine((data) => data.password === data.confirm, {
-    message: 'Die Passwörter stimmen nicht überein',
-    path: ['confirm'],
-  });
+const signupSchema = z.object({
+  email: z.string().min(1, 'E-Mail erforderlich').email('Ungültige E-Mail-Adresse'),
+  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
+  confirm: z.string().min(1, 'Passwort-Bestätigung erforderlich'),
+}).refine((data) => data.password === data.confirm, {
+  message: 'Die Passwörter stimmen nicht überein',
+  path: ['confirm'],
+});
 
 export default function SignupScreen() {
   const { signUp } = useAuth();
@@ -52,22 +38,46 @@ export default function SignupScreen() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<'worker' | 'employer' | null>(null);
+
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [confirmFocused, setConfirmFocused] = useState(false);
+
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const inputTranslateY = useRef(new Animated.Value(30)).current;
+  const inputOpacity = useRef(new Animated.Value(0)).current;
+  const buttonTranslateY = useRef(new Animated.Value(20)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(logoOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+      Animated.parallel([
+        Animated.timing(inputTranslateY, { toValue: 0, duration: 400, useNativeDriver: true }),
+        Animated.timing(inputOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+      ]),
+      Animated.parallel([
+        Animated.timing(buttonTranslateY, { toValue: 0, duration: 300, useNativeDriver: true }),
+        Animated.timing(buttonOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+      ]),
+    ]).start();
+  }, []);
 
   const handleSignup = async () => {
     setErrors({});
 
-    const result = signupSchema.safeParse({ 
-      email: email.trim(), 
-      password, 
-      confirm 
-    });
+    if (!selectedRole) {
+      Alert.alert('Fehler', 'Bitte wähle eine Rolle (Worker oder Employer)');
+      return;
+    }
+
+    const result = signupSchema.safeParse({ email: email.trim(), password, confirm });
     
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
-        if (issue.path[0]) {
-          fieldErrors[issue.path[0] as string] = issue.message;
-        }
+        if (issue.path[0]) fieldErrors[issue.path[0] as string] = issue.message;
       });
       setErrors(fieldErrors);
       return;
@@ -75,201 +85,103 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      await signUp(result.data.email, result.data.password);
+      await signUp(result.data.email, result.data.password, selectedRole);
       router.replace('/start');
     } catch (error: any) {
       setErrors({ email: error.message || 'Registrierung fehlgeschlagen' });
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-      >
-        <ScrollView 
-          contentContainerStyle={{ flexGrow: 1, padding: 24 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Top Spacer */}
-          <View style={{ height: 60 }} />
+    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 40 }} keyboardShouldPersistTaps="handled">
+            
+            <Animated.View style={{ alignItems: 'center', marginBottom: 32, opacity: logoOpacity }}>
+              <View style={{ width: 100, height: 100, backgroundColor: COLORS.neon, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <Image source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }} style={{ width: 70, height: 70 }} resizeMode="contain" />
+              </View>
+            </Animated.View>
 
-          {/* Headline */}
-          <View style={{ marginBottom: 8 }}>
-            <Text style={{ fontSize: 26, fontWeight: '800', color: COLORS.text }}>
-              Account erstellen
-            </Text>
-          </View>
+            <Animated.View style={{ marginBottom: 8, opacity: logoOpacity }}>
+              <Text style={{ fontSize: 30, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>Erstelle deinen{"\n"}BACKUP-Account</Text>
+            </Animated.View>
 
-          {/* Subtitle */}
-          <View style={{ marginBottom: 40 }}>
-            <Text style={{ fontSize: 15, fontWeight: '400', color: COLORS.textSecondary }}>
-              Beginne in weniger als 1 Minute.
-            </Text>
-          </View>
+            <Animated.View style={{ marginBottom: 40, opacity: logoOpacity }}>
+              <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, textAlign: 'center', fontWeight: '500' }}>Schnell. Sicher. Sofort einsatzbereit.</Text>
+            </Animated.View>
 
-          {/* Email Input */}
-          <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 13, fontWeight: '500', color: COLORS.text, marginBottom: 8 }}>
-              E-Mail
-            </Text>
-            <TextInput
-              autoCapitalize="none"
-              keyboardType="email-address"
-              placeholder="name@email.de"
-              placeholderTextColor={COLORS.placeholder}
-              value={email}
-              onChangeText={setEmail}
-              style={{
-                backgroundColor: COLORS.white,
-                borderWidth: 1,
-                borderColor: errors.email ? COLORS.errorBorder : COLORS.border,
-                borderRadius: 14,
-                paddingVertical: 14,
-                paddingHorizontal: 16,
-                fontSize: 16,
-                color: COLORS.text,
-              }}
-            />
-            {errors.email && (
-              <Text style={{ fontSize: 12, color: COLORS.errorText, marginTop: 6 }}>
-                {errors.email}
-              </Text>
-            )}
-          </View>
+            <Animated.View style={{ opacity: inputOpacity, transform: [{ translateY: inputTranslateY }] }}>
+              
+              {/* Role Selection */}
+              <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Rolle wählen</Text>
+                <View style={{ flexDirection: 'row', gap: 12 }}>
+                  <Pressable onPress={() => setSelectedRole('worker')} style={{ flex: 1, backgroundColor: selectedRole === 'worker' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'worker' ? COLORS.neon : 'transparent' }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Auftragnehmer</Text>
+                  </Pressable>
+                  <Pressable onPress={() => setSelectedRole('employer')} style={{ flex: 1, backgroundColor: selectedRole === 'employer' ? COLORS.neon : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: selectedRole === 'employer' ? COLORS.neon : 'transparent' }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Auftraggeber</Text>
+                  </Pressable>
+                </View>
+              </View>
 
-          {/* Password Input */}
-          <View style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 13, fontWeight: '500', color: COLORS.text, marginBottom: 8 }}>
-              Passwort
-            </Text>
-            <View style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              backgroundColor: COLORS.white,
-              borderWidth: 1,
-              borderColor: errors.password ? COLORS.errorBorder : COLORS.border,
-              borderRadius: 14,
-            }}>
-              <TextInput
-                placeholder="Mindestens 6 Zeichen"
-                placeholderTextColor={COLORS.placeholder}
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={setPassword}
-                style={{
-                  flex: 1,
-                  paddingVertical: 14,
-                  paddingHorizontal: 16,
-                  fontSize: 16,
-                  color: COLORS.text,
-                }}
-              />
-              <Pressable 
-                onPress={() => setShowPassword(!showPassword)}
-                style={{ paddingHorizontal: 16 }}
-              >
-                {showPassword ? (
-                  <EyeOff size={20} color={COLORS.textSecondary} />
-                ) : (
-                  <Eye size={20} color={COLORS.textSecondary} />
-                )}
+              {/* Email */}
+              <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>E-Mail</Text>
+                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: emailFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, justifyContent: 'center' }}>
+                  <TextInput autoCapitalize="none" keyboardType="email-address" placeholder="name@email.de" placeholderTextColor={COLORS.placeholder} value={email} onChangeText={setEmail} onFocus={() => setEmailFocused(true)} onBlur={() => setEmailFocused(false)} style={{ fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
+                </View>
+                {errors.email && <View style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: COLORS.errorBg, borderRadius: 8 }}><Text style={{ fontSize: 13, color: COLORS.error, fontWeight: '600' }}>{errors.email}</Text></View>}
+              </View>
+
+              {/* Password */}
+              <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Passwort</Text>
+                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: passwordFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                  <TextInput placeholder="Mindestens 6 Zeichen" placeholderTextColor={COLORS.placeholder} secureTextEntry={!showPassword} value={password} onChangeText={setPassword} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} style={{ flex: 1, fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
+                  <Pressable onPress={() => setShowPassword(!showPassword)} style={{ paddingLeft: 12 }}>
+                    {showPassword ? <EyeOff size={22} color={COLORS.placeholder} /> : <Eye size={22} color={COLORS.placeholder} />}
+                  </Pressable>
+                </View>
+                {errors.password && <View style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: COLORS.errorBg, borderRadius: 8 }}><Text style={{ fontSize: 13, color: COLORS.error, fontWeight: '600' }}>{errors.password}</Text></View>}
+              </View>
+
+              {/* Confirm Password */}
+              <View style={{ marginBottom: 32 }}>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.neon, marginBottom: 8 }}>Passwort bestätigen</Text>
+                <View style={{ backgroundColor: COLORS.white, borderRadius: 16, borderWidth: 2, borderColor: confirmFocused ? COLORS.neon : 'transparent', minHeight: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                  <TextInput placeholder="Passwort wiederholen" placeholderTextColor={COLORS.placeholder} secureTextEntry={!showConfirm} value={confirm} onChangeText={setConfirm} onFocus={() => setConfirmFocused(true)} onBlur={() => setConfirmFocused(false)} style={{ flex: 1, fontSize: 16, color: COLORS.black, fontWeight: '500' }} />
+                  <Pressable onPress={() => setShowConfirm(!showConfirm)} style={{ paddingLeft: 12 }}>
+                    {showConfirm ? <EyeOff size={22} color={COLORS.placeholder} /> : <Eye size={22} color={COLORS.placeholder} />}
+                  </Pressable>
+                </View>
+                {errors.confirm && <View style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: COLORS.errorBg, borderRadius: 8 }}><Text style={{ fontSize: 13, color: COLORS.error, fontWeight: '600' }}>{errors.confirm}</Text></View>}
+              </View>
+            </Animated.View>
+
+            <View style={{ flex: 1, minHeight: 20 }} />
+
+            <Animated.View style={{ opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }}>
+              <Pressable onPress={handleSignup} disabled={loading} style={({ pressed }) => ({ backgroundColor: loading ? '#B3B3B3' : COLORS.neon, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 16, opacity: pressed ? 0.9 : 1 })}>
+                <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.black }}>{loading ? 'Wird erstellt...' : 'Account erstellen'}</Text>
               </Pressable>
-            </View>
-            {errors.password && (
-              <Text style={{ fontSize: 12, color: COLORS.errorText, marginTop: 6 }}>
-                {errors.password}
-              </Text>
-            )}
-          </View>
 
-          {/* Confirm Password Input */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ fontSize: 13, fontWeight: '500', color: COLORS.text, marginBottom: 8 }}>
-              Passwort bestätigen
-            </Text>
-            <View style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              backgroundColor: COLORS.white,
-              borderWidth: 1,
-              borderColor: errors.confirm ? COLORS.errorBorder : COLORS.border,
-              borderRadius: 14,
-            }}>
-              <TextInput
-                placeholder="Passwort wiederholen"
-                placeholderTextColor={COLORS.placeholder}
-                secureTextEntry={!showConfirm}
-                value={confirm}
-                onChangeText={setConfirm}
-                style={{
-                  flex: 1,
-                  paddingVertical: 14,
-                  paddingHorizontal: 16,
-                  fontSize: 16,
-                  color: COLORS.text,
-                }}
-              />
-              <Pressable 
-                onPress={() => setShowConfirm(!showConfirm)}
-                style={{ paddingHorizontal: 16 }}
-              >
-                {showConfirm ? (
-                  <EyeOff size={20} color={COLORS.textSecondary} />
-                ) : (
-                  <Eye size={20} color={COLORS.textSecondary} />
-                )}
-              </Pressable>
-            </View>
-            {errors.confirm && (
-              <Text style={{ fontSize: 12, color: COLORS.errorText, marginTop: 6 }}>
-                {errors.confirm}
-              </Text>
-            )}
-          </View>
+              <View style={{ alignItems: 'center', marginTop: 16 }}>
+                <Text style={{ fontSize: 15, color: COLORS.whiteTransparent, marginBottom: 8 }}>Schon einen Account?</Text>
+                <Pressable onPress={() => router.push('/auth/login')}>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.neon }}>Login</Text>
+                </Pressable>
+              </View>
+            </Animated.View>
 
-          {/* Spacer */}
-          <View style={{ flex: 1 }} />
-
-          {/* Buttons - 90% Breite */}
-          <View style={{ alignItems: 'center', gap: 16 }}>
-            <TouchableOpacity 
-              style={{
-                backgroundColor: COLORS.accent,
-                width: '90%',
-                paddingVertical: 16,
-                borderRadius: 14,
-                alignItems: 'center',
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.15,
-                shadowRadius: 6,
-                elevation: 3,
-              }}
-              onPress={handleSignup}
-              disabled={loading}
-              activeOpacity={0.85}
-            >
-              <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>
-                {loading ? 'Wird erstellt...' : 'Registrieren'}
-              </Text>
-            </TouchableOpacity>
-
-            <Pressable onPress={() => router.push('/auth/login')} style={{ marginTop: 8 }}>
-              <Text style={{ fontSize: 14, color: COLORS.textSecondary }}>
-                Schon einen Account?{' '}
-                <Text style={{ fontWeight: '600', color: COLORS.primary }}>Einloggen</Text>
-              </Text>
-            </Pressable>
-          </View>
-
-          {/* Bottom Padding */}
-          <View style={{ height: 32 }} />
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <View style={{ height: 40 }} />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }
