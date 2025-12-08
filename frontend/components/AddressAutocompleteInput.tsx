@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 
 const COLORS = {
-  bg: '#00A07C',
-  card: '#00A07C',
+  bg: '#9333EA',        // Lila statt Grün
+  card: '#9333EA',      // Lila statt Grün
   border: 'rgba(255,255,255,0.25)',
   text: '#FFFFFF',
   muted: 'rgba(255,255,255,0.85)',
