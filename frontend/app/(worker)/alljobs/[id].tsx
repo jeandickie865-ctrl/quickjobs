@@ -1,6 +1,6 @@
 // app/(worker)/jobs/[id].tsx - Job Details für Worker
 import React, { useEffect, useState } from 'react';
-import { ArrowDoodle } from '../../components/ArrowDoodle';
+import { ArrowDoodle } from '../../../components/ArrowDoodle';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
