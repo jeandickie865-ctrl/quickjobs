@@ -8,14 +8,14 @@ import { getWorkerProfile } from '../../utils/profileStore';
 import { API_URL } from '../../config';
 
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
-  border: 'rgba(255,255,255,0.06)',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
   white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  purple: '#6B4BFF',
-  neon: '#C8FF16',
-  error: '#FF4D4D',
+  muted: 'rgba(0,0,0,0.6)',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
+  error: '#E64A4A',
   black: '#000000'
 };
 
@@ -399,13 +399,13 @@ export default function WorkerRegistrationDataScreen() {
           >
             <View
               style={{
-                backgroundColor: "#141126",
+                backgroundColor: "#F7F7F9",
                 paddingVertical: 12,
                 paddingHorizontal: 20,
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: "#6B4BFF",
-                shadowColor: "#6B4BFF",
+                borderColor: "#6A3FFF",
+                shadowColor: "#6A3FFF",
                 shadowOpacity: 0.3,
                 shadowRadius: 6
               }}

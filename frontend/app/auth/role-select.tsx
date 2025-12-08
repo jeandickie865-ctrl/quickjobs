@@ -6,8 +6,8 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
 };

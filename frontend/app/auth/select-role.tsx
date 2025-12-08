@@ -6,13 +6,13 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = {
-  bgDark: '#141126',
-  bgCard: '#141126',
-  purple: '#6B4BFF',
-  purpleLight: '#7C5CFF',
+  bgDark: '#F7F7F9',
+  bgCard: '#F7F7F9',
+  purple: '#6A3FFF',
+  purpleLight: '#6A3FFF',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.6)',
-  neon: '#C8FF16'
+  neon: '#6A3FFF'
 };
 
 export default function SelectRoleScreen() {
@@ -82,7 +82,7 @@ export default function SelectRoleScreen() {
               padding: 22,
               borderRadius: 20,
               borderWidth: 2,
-              borderColor: role === 'auftragnehmer' ? COLORS.purple : 'rgba(255,255,255,0.06)'
+              borderColor: role === 'auftragnehmer' ? COLORS.purple : 'rgba(0,0,0,0.08)'
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 6 }}>
@@ -101,7 +101,7 @@ export default function SelectRoleScreen() {
               padding: 22,
               borderRadius: 20,
               borderWidth: 2,
-              borderColor: role === 'auftraggeber' ? COLORS.purple : 'rgba(255,255,255,0.06)'
+              borderColor: role === 'auftraggeber' ? COLORS.purple : 'rgba(0,0,0,0.08)'
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.white, marginBottom: 6 }}>
@@ -126,7 +126,7 @@ export default function SelectRoleScreen() {
             disabled={!role}
             onPress={() => router.push('/auth/onboarding/name')}
             style={{
-              backgroundColor: role ? COLORS.purple : 'rgba(255,255,255,0.1)',
+              backgroundColor: role ? COLORS.purple : 'rgba(0,0,0,0.08)',
               paddingVertical: 16,
               borderRadius: 20,
               alignItems: 'center',

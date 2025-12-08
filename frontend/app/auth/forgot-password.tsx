@@ -6,13 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
   whiteTransparent: 'rgba(255,255,255,0.6)',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.12)',
+  error: '#E64A4A',
+  errorBg: 'rgba(230,74,74,0.12)',
   placeholder: '#8A8A8A',
   success: '#00D26A',
   successBg: 'rgba(0,210,106,0.12)',

@@ -8,11 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
-  whiteTransparent: 'rgba(255,255,255,0.7)',
+  whiteTransparent: 'rgba(0,0,0,0.6)',
   neonShadow: 'rgba(200,255,22,0.1)',
 };
 

@@ -16,8 +16,8 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://backup.dickie.app/ap
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
@@ -280,7 +280,7 @@ export default function RateWorkerScreen() {
                   <Ionicons
                     name={star <= rating ? 'star' : 'star-outline'}
                     size={56}
-                    color={star <= rating ? '#C8FF16' : '#CCCCCC'}
+                    color={star <= rating ? '#6A3FFF' : '#CCCCCC'}
                   />
                 </Pressable>
               ))}

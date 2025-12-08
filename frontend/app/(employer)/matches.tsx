@@ -27,14 +27,14 @@ const INNER_CARD_PADDING = 18;
 
 // Colors (EXAKT wie Worker)
 const COLORS = {
-  bgDark: "#141126",
-  cardDark: "#141126",
-  purple: "#6B4BFF",
-  purpleLight: "#7C5CFF",
+  bgDark: "#F7F7F9",
+  cardDark: "#F7F7F9",
+  purple: "#6A3FFF",
+  purpleLight: "#6A3FFF",
   textWhite: "#FFFFFF",
-  textMuted: "rgba(255,255,255,0.7)",
-  accent: "#C8FF16",
-  red: "#FF4D4D",
+  textMuted: "rgba(0,0,0,0.6)",
+  accent: "#6A3FFF",
+  red: "#E64A4A",
   dim: "rgba(0,0,0,0.6)"
 };
 
@@ -290,7 +290,7 @@ export default function EmployerMatchesScreen() {
                     borderRadius: 18,
                     padding: INNER_CARD_PADDING,
                     borderWidth: 1,
-                    borderColor: "rgba(255,255,255,0.06)",
+                    borderColor: "rgba(0,0,0,0.08)",
                   }}
                 >
                   {/* Card Header */}
@@ -378,7 +378,7 @@ export default function EmployerMatchesScreen() {
                           </Text>
                           {/* BADGE: Selbstständig/Angestellt */}
                           <View style={{ 
-                            backgroundColor: match.workerProfile.isSelfEmployed ? '#7C5CFF' : '#1C1838',
+                            backgroundColor: match.workerProfile.isSelfEmployed ? '#6A3FFF' : '#FFFFFF',
                             paddingHorizontal: 10,
                             paddingVertical: 4,
                             borderRadius: 6,
@@ -534,7 +534,7 @@ export default function EmployerMatchesScreen() {
                             borderRadius: 14,
                             alignItems: "center",
                             borderWidth: 1,
-                            borderColor: "rgba(255,255,255,0.1)",
+                            borderColor: "rgba(0,0,0,0.08)",
                             opacity: 0.7,
                           }}
                         >

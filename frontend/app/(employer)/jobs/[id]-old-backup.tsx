@@ -22,15 +22,15 @@ import { WorkerProfileEmployerView } from '../../../components/WorkerProfileEmpl
 
 // BACKUP NEON-TECH COLORS
 const COLORS = {
-  purple: '#5941FF',
+  purple: '#6A3FFF',
   purpleDark: '#3E2DD9',
-  neon: '#C8FF16',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
   neonTransparent20: 'rgba(200,255,22,0.2)',
   neonShadow: 'rgba(200,255,22,0.15)',
-  error: '#FF4D4D',
+  error: '#E64A4A',
 };
 
 export default function JobDetailScreen() {

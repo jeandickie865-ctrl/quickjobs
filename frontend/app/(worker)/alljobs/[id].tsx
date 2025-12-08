@@ -16,11 +16,11 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 // BACKUP DARK COLORS
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
   cardSoft: '#181433',
   border: 'rgba(255,255,255,0.08)',
-  neon: '#C8FF16',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   lightText: '#E8E8E8',
   dimText: '#A0A0A0',
@@ -349,7 +349,7 @@ export default function WorkerJobDetailScreen() {
                           style={{
                             paddingHorizontal: 10,
                             paddingVertical: 6,
-                            backgroundColor: '#5941FF',
+                            backgroundColor: '#6A3FFF',
                             borderRadius: 6,
                             marginRight: 6,
                             marginBottom: 6,
@@ -455,7 +455,7 @@ export default function WorkerJobDetailScreen() {
                 }}
                 style={{
                   width: '60%',
-                  backgroundColor: '#7C5CFF',
+                  backgroundColor: '#6A3FFF',
                   paddingVertical: 20,
                   borderRadius: 16,
                   alignItems: 'center',

@@ -9,15 +9,15 @@ import { getTagLabel } from "../../utils/taxonomy";
 import { getWorkerProfile } from "../../utils/profileStore";
 
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
   white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  purple: '#6B4BFF',
-  neon: '#C8FF16',
-  border: 'rgba(255,255,255,0.06)',
-  error: '#FF4D4D',
-  tagRequired: '#5941FF',
+  muted: 'rgba(0,0,0,0.6)',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
+  border: 'rgba(0,0,0,0.08)',
+  error: '#E64A4A',
+  tagRequired: '#6A3FFF',
   tagOptional: '#3A3A3A'
 };
 
@@ -239,7 +239,7 @@ export default function WorkerFeedScreen() {
           
           {/* EMPLOYER TYPE BADGE */}
           <View style={{
-            backgroundColor: item.employerType === 'business' ? '#7C5CFF' : '#1C1838',
+            backgroundColor: item.employerType === 'business' ? '#6A3FFF' : '#FFFFFF',
             paddingVertical: 6,
             paddingHorizontal: 12,
             borderRadius: 8,

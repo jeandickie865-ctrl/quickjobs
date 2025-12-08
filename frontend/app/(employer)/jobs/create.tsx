@@ -14,17 +14,17 @@ import AddressAutocompleteInput from '../../../components/AddressAutocompleteInp
 import taxonomy from '../../../shared/taxonomy.json';
 
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
   cardSoft: '#181433',
   border: 'rgba(255,255,255,0.08)',
   inputBorder: 'rgba(255,255,255,0.15)',
   inputBg: '#1E1938',
   white: '#FFFFFF',
-  neon: '#C8FF16',
-  purple: '#6B4BFF',
+  neon: '#6A3FFF',
+  purple: '#6A3FFF',
   muted: 'rgba(255,255,255,0.6)',
-  error: '#FF4D4D',
+  error: '#E64A4A',
 };
 
 const SPACING = {

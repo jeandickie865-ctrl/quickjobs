@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
   red: '#FF4444',

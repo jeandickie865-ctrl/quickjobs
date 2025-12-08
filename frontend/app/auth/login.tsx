@@ -17,17 +17,17 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff } from '../../components/Icons';
 
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
   white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  placeholder: 'rgba(255,255,255,0.4)',
-  purple: '#6B4BFF',
-  purple2: '#7C5CFF',
-  neon: '#C8FF16',
-  border: 'rgba(255,255,255,0.06)',
-  error: '#FF4D4D',
-  errorBg: 'rgba(255,77,77,0.12)'
+  muted: 'rgba(0,0,0,0.6)',
+  placeholder: 'rgba(0,0,0,0.4)',
+  purple: '#6A3FFF',
+  purple2: '#6A3FFF',
+  neon: '#6A3FFF',
+  border: 'rgba(0,0,0,0.08)',
+  error: '#E64A4A',
+  errorBg: 'rgba(230,74,74,0.12)'
 };
 
 export default function LoginScreen() {

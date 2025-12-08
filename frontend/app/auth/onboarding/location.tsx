@@ -6,12 +6,12 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = {
-  bgDark: '#141126',
-  bgCard: '#141126',
-  purple: '#6B4BFF',
+  bgDark: '#F7F7F9',
+  bgCard: '#F7F7F9',
+  purple: '#6A3FFF',
   white: '#FFFFFF',
   muted: 'rgba(255,255,255,0.6)',
-  neon: '#C8FF16'
+  neon: '#6A3FFF'
 };
 
 export default function OnboardingLocation() {
@@ -54,7 +54,7 @@ export default function OnboardingLocation() {
           <Text style={{ color: COLORS.muted, marginBottom: 6 }}>Stadt</Text>
           <TextInput
             placeholder="z.B. Berlin"
-            placeholderTextColor="rgba(255,255,255,0.4)"
+            placeholderTextColor="rgba(0,0,0,0.4)"
             style={{
               backgroundColor: COLORS.bgCard,
               padding: 14,

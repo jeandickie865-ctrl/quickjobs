@@ -11,13 +11,13 @@ import Slider from '@react-native-community/slider';
 import { useWizard } from '../../../contexts/WizardContext';
 
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
-  border: 'rgba(255,255,255,0.06)',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
   text: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  neon: '#C8FF16',
-  error: '#FF4D4D',
+  muted: 'rgba(0,0,0,0.6)',
+  neon: '#6A3FFF',
+  error: '#E64A4A',
 };
 
 export default function Step2Address() {

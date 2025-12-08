@@ -13,16 +13,16 @@ const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 // D+ PREMIUM COLORS
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
   border: 'rgba(255,255,255,0.05)',
   white: '#FFFFFF',
-  whiteMuted: 'rgba(255,255,255,0.7)',
+  whiteMuted: 'rgba(0,0,0,0.6)',
   gray: 'rgba(255,255,255,0.55)',
-  neon: '#C8FF16',
-  purple: '#6B4BFF',
-  purpleLight: '#7C5CFF',
-  error: '#FF4D4D'
+  neon: '#6A3FFF',
+  purple: '#6A3FFF',
+  purpleLight: '#6A3FFF',
+  error: '#E64A4A'
 };
 
 export default function Step3Categories() {

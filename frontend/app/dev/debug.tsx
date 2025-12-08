@@ -8,9 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   black: '#000000',
-  neon: '#C8FF16',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
-  purple: '#5941FF',
+  purple: '#6A3FFF',
   darkGray: '#1A1A1A',
   neonTransparent: 'rgba(200,255,22,0.1)',
 };
@@ -392,7 +392,7 @@ function DebugButton({
       style={({ pressed }) => ({
         backgroundColor: danger ? 'rgba(255,77,77,0.1)' : COLORS.neonTransparent,
         borderWidth: 2,
-        borderColor: danger ? '#FF4D4D' : COLORS.neon,
+        borderColor: danger ? '#E64A4A' : COLORS.neon,
         borderRadius: 12,
         padding: 16,
         flexDirection: 'row',
@@ -404,12 +404,12 @@ function DebugButton({
       <Ionicons 
         name={icon} 
         size={20} 
-        color={danger ? '#FF4D4D' : COLORS.neon} 
+        color={danger ? '#E64A4A' : COLORS.neon} 
       />
       <Text style={{ 
         fontSize: 15, 
         fontWeight: '600', 
-        color: danger ? '#FF4D4D' : COLORS.neon,
+        color: danger ? '#E64A4A' : COLORS.neon,
         flex: 1,
       }}>
         {label}

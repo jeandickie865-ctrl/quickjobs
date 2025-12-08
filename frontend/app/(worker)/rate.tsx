@@ -12,10 +12,10 @@ import { EmployerProfile } from '../../utils/employerProfileStore';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
-  bg: '#141126',  // Dunkler Hintergrund wie überall
-  card: '#1C1838',
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  bg: '#F7F7F9',  // Dunkler Hintergrund wie überall
+  card: '#FFFFFF',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
@@ -233,7 +233,7 @@ export default function RateEmployerScreen() {
             paddingHorizontal: 20,
             paddingVertical: 16,
             borderBottomWidth: 1,
-            borderBottomColor: 'rgba(255,255,255,0.1)',
+            borderBottomColor: 'rgba(0,0,0,0.08)',
           }}>
             <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 16 }}>
               <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
@@ -253,7 +253,7 @@ export default function RateEmployerScreen() {
             >
               {/* Job Info */}
               <View style={{
-                backgroundColor: 'rgba(255,255,255,0.1)',
+                backgroundColor: 'rgba(0,0,0,0.08)',
                 borderRadius: 16,
                 padding: 16,
                 marginBottom: 24,
@@ -268,7 +268,7 @@ export default function RateEmployerScreen() {
 
               {/* Employer Info */}
               <View style={{
-                backgroundColor: 'rgba(255,255,255,0.1)',
+                backgroundColor: 'rgba(0,0,0,0.08)',
                 borderRadius: 16,
                 padding: 16,
                 marginBottom: 32,
@@ -314,11 +314,11 @@ export default function RateEmployerScreen() {
                   value={comment}
                   onChangeText={setComment}
                   placeholder="Teile deine Erfahrung..."
-                  placeholderTextColor="rgba(255,255,255,0.4)"
+                  placeholderTextColor="rgba(0,0,0,0.4)"
                   multiline
                   numberOfLines={4}
                   style={{
-                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(0,0,0,0.08)',
                     borderRadius: 12,
                     padding: 16,
                     color: COLORS.white,

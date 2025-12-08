@@ -14,15 +14,15 @@ import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 const COLORS = {
-  bg: '#141126',
-  card: '#1C1838',
-  border: 'rgba(255,255,255,0.06)',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
   white: '#FFFFFF',
-  muted: 'rgba(255,255,255,0.7)',
-  purple: '#6B4BFF',
-  purpleLight: '#7C5CFF',
-  neon: '#C8FF16',
-  error: '#FF4D4D',
+  muted: 'rgba(0,0,0,0.6)',
+  purple: '#6A3FFF',
+  purpleLight: '#6A3FFF',
+  neon: '#6A3FFF',
+  error: '#E64A4A',
 };
 
 type ApplicationWithDetails = {
@@ -207,7 +207,7 @@ export default function EmployerApplicationsScreen() {
           <View
             style={{
               padding: 16,
-              backgroundColor: 'rgba(255,77,77,0.12)',
+              backgroundColor: 'rgba(230,74,74,0.12)',
               borderRadius: 12,
               borderWidth: 1,
               borderColor: COLORS.error,

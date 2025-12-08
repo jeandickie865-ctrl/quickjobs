@@ -5,8 +5,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
-  purple: '#5941FF',
-  neon: '#C8FF16',
+  purple: '#6A3FFF',
+  neon: '#6A3FFF',
   white: '#FFFFFF',
   black: '#000000',
   darkGray: '#333333',
@@ -27,7 +27,7 @@ export default function AGBScreen() {
           paddingHorizontal: 20,
           paddingVertical: 16,
           borderBottomWidth: 1,
-          borderBottomColor: 'rgba(255,255,255,0.1)',
+          borderBottomColor: 'rgba(0,0,0,0.08)',
         }}>
           <Pressable onPress={() => router.back()} style={{ marginRight: 16 }}>
             <Ionicons name="arrow-back" size={24} color={COLORS.neon} />
