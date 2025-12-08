@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
   },
 
   errorText: {
-    color: '#E64A4A',
+    color: '#EFABFF',
     fontSize: 12,
     marginTop: 6
   },
