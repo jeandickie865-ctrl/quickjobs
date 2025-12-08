@@ -107,7 +107,7 @@ export default function SignupScreen() {
             </Animated.View>
 
             <Animated.View style={{ marginBottom: 8, opacity: logoOpacity }}>
-              <Text style={{ fontSize: 30, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>Erstelle deinen{"\n"}BACKUP-Account</Text>
+              <Text style={{ fontSize: 30, fontWeight: '900', color: COLORS.white, textAlign: 'center' }}>Erstelle deinen{"\n"}Quickjobs-Account</Text>
             </Animated.View>
 
             <Animated.View style={{ marginBottom: 40, opacity: logoOpacity }}>
