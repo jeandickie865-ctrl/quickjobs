@@ -421,51 +421,65 @@ export default function WorkerProfileScreen() {
             </View>
           )}
 
-          <Pressable
-            onPress={() => router.push('/(worker)/edit-profile')}
-            style={{
-              backgroundColor: COLORS.purple,
-              borderRadius: 14,
-              paddingVertical: 16,
-              alignItems: 'center',
-              marginBottom: 16,
-              width: '100%',
-            }}
-          >
-            <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700' }}>Profil bearbeiten</Text>
-          </Pressable>
+          {/* Orange Buttons Container - zentriert */}
+          <View style={{ alignItems: 'center', gap: 16, marginBottom: 24 }}>
+            <Pressable
+              onPress={() => router.push('/(worker)/edit-profile')}
+              style={{
+                backgroundColor: COLORS.secondary, // Orange
+                borderRadius: 16,
+                paddingVertical: 18,
+                paddingHorizontal: 24,
+                alignItems: 'center',
+                width: '60%',
+                shadowColor: COLORS.secondary,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Text style={{ fontSize: 16, color: COLORS.bg, fontWeight: '700' }}>Profil bearbeiten</Text>
+            </Pressable>
 
-          <Pressable
-            onPress={() => router.push('/(worker)/registration-data')}
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 14,
-              paddingVertical: 16,
-              alignItems: 'center',
-              marginBottom: 16,
-              width: '100%',
-              borderWidth: 1,
-              borderColor: COLORS.border,
-            }}
-          >
-            <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700' }}>Offizielle Daten bearbeiten</Text>
-          </Pressable>
+            <Pressable
+              onPress={() => router.push('/(worker)/registration-data')}
+              style={{
+                backgroundColor: COLORS.secondary, // Orange
+                borderRadius: 16,
+                paddingVertical: 18,
+                paddingHorizontal: 24,
+                alignItems: 'center',
+                width: '60%',
+                shadowColor: COLORS.secondary,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Text style={{ fontSize: 16, color: COLORS.bg, fontWeight: '700' }}>Offizielle Daten bearbeiten</Text>
+            </Pressable>
 
-          <Pressable
-            onPress={() => router.push('/(worker)/documents')}
-            style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 14,
-              paddingVertical: 16,
-              alignItems: 'center',
-              marginBottom: 24,
-              width: '100%',
-              borderWidth: 1,
-              borderColor: COLORS.border,
-            }}
-          >
-            <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700' }}>Qualifikationsnachweise</Text>
-          </Pressable>
+            <Pressable
+              onPress={() => router.push('/(worker)/documents')}
+              style={{
+                backgroundColor: COLORS.secondary, // Orange
+                borderRadius: 16,
+                paddingVertical: 18,
+                paddingHorizontal: 24,
+                alignItems: 'center',
+                width: '60%',
+                shadowColor: COLORS.secondary,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Text style={{ fontSize: 16, color: COLORS.bg, fontWeight: '700' }}>Qualifikationsnachweise</Text>
+            </Pressable>
+          </View>
 
           {/* Bewertungen Sektion */}
           {reviews.length > 0 && (
