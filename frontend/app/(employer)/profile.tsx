@@ -106,27 +106,19 @@ export default function EmployerProfileViewScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={['top','bottom']} style={{ flex: 1 }}>
-        {/* Header */}
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: 20,
-          paddingVertical: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: COLORS.border,
-        }}>
-          <View style={{ width: 30 }} />
-          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.white }}>Mein Profil</Text>
-          <Pressable 
-            onPress={async () => {
-              await signOut();
-              router.replace('/auth/login');
-            }}
-          >
-            <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
-          </Pressable>
-        </View>
+        <AppHeader 
+          title="Mein Profil"
+          rightElement={
+            <Pressable 
+              onPress={async () => {
+                await signOut();
+                router.replace('/auth/login');
+              }}
+            >
+              <Ionicons name="log-out-outline" size={26} color={COLORS.neon} />
+            </Pressable>
+          }
+        />
 
         <ScrollView 
           contentContainerStyle={{ padding: 20 }}
