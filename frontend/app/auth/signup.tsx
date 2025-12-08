@@ -314,7 +314,7 @@ export default function SignupScreen() {
                           selectedAccountType === 'private'
                             ? COLORS.neon
                             : COLORS.card,
-                        borderRadius: 12,
+                        borderRadius: 14,
                         paddingVertical: 14,
                         alignItems: 'center',
                         borderWidth: 1,
@@ -346,7 +346,7 @@ export default function SignupScreen() {
                           selectedAccountType === 'business'
                             ? COLORS.neon
                             : COLORS.card,
-                        borderRadius: 12,
+                        borderRadius: 14,
                         paddingVertical: 14,
                         alignItems: 'center',
                         borderWidth: 1,
@@ -453,10 +453,10 @@ export default function SignupScreen() {
                 <View
                   style={{
                     backgroundColor: COLORS.card,
-                    borderRadius: 12,
+                    borderRadius: 14,
                     borderWidth: 1,
-                    borderColor: passwordFocused ? COLORS.neon : COLORS.border,
-                    height: 56,
+                    borderColor: passwordFocused ? COLORS.orange : COLORS.cardBorder,
+                    paddingVertical: 16,
                     paddingHorizontal: 16,
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -529,10 +529,10 @@ export default function SignupScreen() {
                 <View
                   style={{
                     backgroundColor: COLORS.card,
-                    borderRadius: 12,
+                    borderRadius: 14,
                     borderWidth: 1,
-                    borderColor: confirmFocused ? COLORS.neon : COLORS.border,
-                    height: 56,
+                    borderColor: confirmFocused ? COLORS.orange : COLORS.cardBorder,
+                    paddingVertical: 16,
                     paddingHorizontal: 16,
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -604,7 +604,7 @@ export default function SignupScreen() {
                 disabled={loading}
                 style={({ pressed }) => ({
                   backgroundColor: loading ? 'rgba(255,255,255,0.5)' : COLORS.white,
-                  height: 56,
+                  paddingVertical: 16,
                   borderRadius: 14,
                   alignItems: 'center',
                   justifyContent: 'center',
