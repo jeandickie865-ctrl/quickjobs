@@ -40,10 +40,7 @@ export default function WelcomeScreen() {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['#00A07C', '#00A07C']}
-      style={{ flex: 1 }}
-    >
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 24 }}>
 
         {/* LOGO */}
