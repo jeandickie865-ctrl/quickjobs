@@ -11,7 +11,7 @@ export default function RegistrationStartScreen() {
   const applicationId = params.applicationId;
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: #EFABFF' }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
         <AppHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
