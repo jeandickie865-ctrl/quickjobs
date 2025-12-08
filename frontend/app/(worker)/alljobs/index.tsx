@@ -181,23 +181,11 @@ export default function AllJobsScreen() {
   if (jobs.length === 0) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-        {/* Header */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            padding: 16,
-            backgroundColor: COLORS.purple,
-          }}
-        >
-          <Text style={{ color: COLORS.text, fontSize: 24, fontWeight: "bold", letterSpacing: 0 }}>
-            Alle Jobs
-          </Text>
-        </View>
+        <AppHeader />
 
         {/* Leer-Zustand */}
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
-          <Ionicons name="briefcase-outline" size={64} color={COLORS.gray} />
+          <Ionicons name="briefcase-outline" size={64} color={COLORS.textMuted} />
           <Text style={{ marginTop: 16, color: COLORS.textMuted, fontSize: 16, textAlign: "center" }}>
             Keine Jobs in deinem Umkreis gefunden
           </Text>
