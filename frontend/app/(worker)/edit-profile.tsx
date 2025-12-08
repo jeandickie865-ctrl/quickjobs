@@ -937,7 +937,7 @@ export default function EditWorkerProfileScreen() {
                           }
                         }}
                         style={{
-                          backgroundColor: isSelected ? COLORS.neon : '#1C182B',
+                          backgroundColor: isSelected ? COLORS.neon : COLORS.card,
                           borderRadius: 14,
                           paddingVertical: 8,
                           paddingHorizontal: 14,
