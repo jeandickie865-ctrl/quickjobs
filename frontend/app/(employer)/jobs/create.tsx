@@ -323,7 +323,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
+              color: COLORS.text,
               fontSize: 28,
               fontWeight: '900',
             }}
@@ -332,7 +332,7 @@ export default function CreateJob() {
           </Text>
           <Text
             style={{
-              color: COLORS.muted,
+              color: COLORS.textMuted,
               marginTop: 4,
               fontSize: 14,
             }}
