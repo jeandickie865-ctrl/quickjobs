@@ -11,7 +11,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <Head>
         <meta name="google" content="notranslate" />
+        <meta name="googlebot" content="notranslate" />
         <meta httpEquiv="Content-Language" content="de" />
+        <html translate="no" />
       </Head>
       <ThemeProvider>
         <AuthProvider>
