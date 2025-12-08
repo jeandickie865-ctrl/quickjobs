@@ -97,7 +97,7 @@ export default function WelcomeScreen() {
             style={{
               fontSize: 26,
               fontWeight: '800',
-              color: '#FFFFFF',
+              color: '#1A1A1A',
               textAlign: 'center',
               marginBottom: 6
             }}
@@ -108,7 +108,7 @@ export default function WelcomeScreen() {
           <Text
             style={{
               fontSize: 15,
-              color: 'rgba(255,255,255,0.7)',
+              color: 'rgba(0,0,0,0.6)',
               textAlign: 'center'
             }}
           >
