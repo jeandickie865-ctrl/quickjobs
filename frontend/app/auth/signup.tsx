@@ -385,7 +385,7 @@ export default function SignupScreen() {
                     borderWidth: 1,
                     borderColor: emailFocused ? COLORS.orange : COLORS.cardBorder,
                     paddingHorizontal: 16,
-                    paddingVertical: 16,
+                    height: 52,
                     justifyContent: 'center'
                   }}
                 >
@@ -448,7 +448,7 @@ export default function SignupScreen() {
                     borderRadius: 14,
                     borderWidth: 1,
                     borderColor: passwordFocused ? COLORS.orange : COLORS.cardBorder,
-                    paddingVertical: 16,
+                    height: 52,
                     paddingHorizontal: 16,
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -524,7 +524,7 @@ export default function SignupScreen() {
                     borderRadius: 14,
                     borderWidth: 1,
                     borderColor: confirmFocused ? COLORS.orange : COLORS.cardBorder,
-                    paddingVertical: 16,
+                    height: 52,
                     paddingHorizontal: 16,
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -596,7 +596,7 @@ export default function SignupScreen() {
                 disabled={loading}
                 style={({ pressed }) => ({
                   backgroundColor: loading ? 'rgba(255,255,255,0.5)' : COLORS.white,
-                  paddingVertical: 16,
+                  height: 52,
                   borderRadius: 14,
                   alignItems: 'center',
                   justifyContent: 'center',
