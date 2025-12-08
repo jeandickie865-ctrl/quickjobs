@@ -697,7 +697,7 @@ export default function EditWorkerProfileScreen() {
                 alignItems: 'center',
                 paddingVertical: 12,
                 paddingHorizontal: 16,
-                backgroundColor: '#1C182B',
+                backgroundColor: COLORS.card,
                 borderRadius: 12,
                 borderWidth: 1,
                 borderColor: COLORS.border
