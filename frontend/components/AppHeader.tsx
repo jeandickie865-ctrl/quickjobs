@@ -3,24 +3,23 @@ import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../constants/colors';
 
 interface AppHeaderProps {
-  title: string;
+  title: string; // Screen name (z.B. "Meine Aufträge")
   rightElement?: ReactNode; // Optional element on the right (e.g. logout button)
 }
 
 export function AppHeader({ title, rightElement }: AppHeaderProps) {
   return (
     <View style={styles.container}>
-      {rightElement ? (
-        // Header with right element (e.g. profile page with logout)
-        <>
-          <View style={{ width: 30 }} />
-          <Text style={styles.titleCentered}>{title}</Text>
-          <View>{rightElement}</View>
-        </>
-      ) : (
-        // Simple header with just title
-        <Text style={styles.title}>{title}</Text>
-      )}
+      {/* Links: QUICKJOBS */}
+      <Text style={styles.brandName}>QUICKJOBS</Text>
+      
+      {/* Mitte: Screen-Titel */}
+      <Text style={styles.screenTitle}>{title}</Text>
+      
+      {/* Rechts: Optional (z.B. Profil-Icon) */}
+      <View style={styles.rightContainer}>
+        {rightElement || <View style={{ width: 30 }} />}
+      </View>
     </View>
   );
 }
@@ -38,19 +37,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: COLORS.accent, // #EFABFF
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
+  brandName: {
+    fontSize: 18,
+    fontWeight: '700',
     color: COLORS.primary, // #00A07C (grün)
-    textAlign: 'left',
-    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
-  titleCentered: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: COLORS.primary, // #00A07C (grün)
+  screenTitle: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
     textAlign: 'center',
-    flex: 1,
-    textTransform: 'uppercase',
+    fontSize: 16,
+    fontWeight: '600',
+    color: COLORS.text, // #1A1A1A (dunkelgrau)
+    zIndex: -1, // Behind everything so left/right elements don't overlap
+  },
+  rightContainer: {
+    minWidth: 30,
+    alignItems: 'flex-end',
   },
 });
