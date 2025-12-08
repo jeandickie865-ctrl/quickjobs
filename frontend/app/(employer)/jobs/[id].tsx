@@ -558,7 +558,7 @@ export default function JobDetailScreen() {
             })()}
           </View>
           <Text style={{ fontSize: 13, color: COLORS.muted, marginTop: 4 }}>
-            {job.timeMode === 'hours' ? 'pro Stunde' : 'Gesamt'}
+            {job.timeMode === 'hour_package' ? 'pro Stunde' : 'Gesamt'}
           </Text>
         </View>
 
