@@ -120,16 +120,7 @@ export default function WorkerJobDetailScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-        {/* ARROW DOODLE */}
-        <View style={{
-          position: "absolute",
-          top: 120,
-          right: -20,
-          opacity: 0.8,
-          zIndex: 10
-        }}>
-          <ArrowDoodle size={200} />
-        </View>
+        <ArrowDoodle />
 
 
           <Text style={{ color: COLORS.white, fontSize: 18, textAlign: 'center', marginBottom: 20 }}>

@@ -167,16 +167,7 @@ export default function EmployerApplicationsScreen() {
           </Text>
         </View>
 
-        {/* ARROW DOODLE */}
-        <View style={{
-          position: "absolute",
-          top: 120,
-          right: -20,
-          opacity: 0.8,
-          zIndex: 10
-        }}>
-          <ArrowDoodle size={200} />
-        </View>
+        <ArrowDoodle />
 
 
           <ActivityIndicator color={COLORS.neon} size="large" />

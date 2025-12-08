@@ -95,16 +95,7 @@ export default function WorkerProfileScreen() {
           </Text>
         </View>
 
-        {/* ARROW DOODLE */}
-        <View style={{
-          position: "absolute",
-          top: 120,
-          right: -20,
-          opacity: 0.8,
-          zIndex: 10
-        }}>
-          <ArrowDoodle size={200} />
-        </View>
+        <ArrowDoodle />
 
 
           <Ionicons name="person-add" size={64} color={COLORS.neon} />

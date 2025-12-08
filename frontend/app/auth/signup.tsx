@@ -146,16 +146,7 @@ export default function SignupScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView style={{ flex: 1 }}>
-        {/* ARROW DOODLE */}
-        <View style={{
-          position: "absolute",
-          top: 120,
-          right: -20,
-          opacity: 0.8,
-          zIndex: 10
-        }}>
-          <ArrowDoodle size={200} />
-        </View>
+        <ArrowDoodle />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
