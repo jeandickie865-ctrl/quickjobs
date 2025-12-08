@@ -105,7 +105,7 @@ export default function WelcomeScreen() {
               marginBottom: 6
             }}
           >
-            BACKUP. Für Jobs, die jetzt zählen.
+            Quickjobs. Für Jobs, die jetzt zählen.
           </Text>
 
           <Text
