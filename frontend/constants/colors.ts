@@ -1,12 +1,17 @@
 export const COLORS = {
-  bg: '#141126',
-  card: '#252041',
-  border: 'rgba(255,255,255,0.1)',
-  purple: '#7C5CFF',
-  neon: '#C8FF16',
-  white: '#FFFFFF',
-  inactive: 'rgba(255,255,255,0.5)',
-  muted: 'rgba(255,255,255,0.7)',
+  bg: '#F7F7F9',
+  card: '#FFFFFF',
+  border: 'rgba(0,0,0,0.08)',
+  text: '#1A1A1A',
+  purple: '#6A3FFF',
+  accent: '#6A3FFF',
+  neon: '#6A3FFF',
+  white: '#1A1A1A',
+  inactive: 'rgba(0,0,0,0.4)',
+  muted: 'rgba(0,0,0,0.6)',
+  placeholder: 'rgba(0,0,0,0.4)',
+  error: '#E64A4A',
+  errorBg: 'rgba(230,74,74,0.12)',
 };
 
 // Legacy export for backwards compatibility
