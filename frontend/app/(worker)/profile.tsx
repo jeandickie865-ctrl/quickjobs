@@ -493,6 +493,7 @@ export default function WorkerProfileScreen() {
                 paddingVertical: 18,
                 paddingHorizontal: 24,
                 alignItems: 'center',
+                justifyContent: 'center',
                 width: '60%',
                 shadowColor: COLORS.secondary,
                 shadowOffset: { width: 0, height: 4 },
@@ -501,7 +502,7 @@ export default function WorkerProfileScreen() {
                 elevation: 4,
               }}
             >
-              <Text style={{ fontSize: 16, color: COLORS.bg, fontWeight: '700' }}>Qualifikationsnachweise</Text>
+              <Text style={{ fontSize: 16, color: COLORS.bg, fontWeight: '700', textAlign: 'center' }}>Qualifikationsnachweise</Text>
             </Pressable>
           </View>
 
