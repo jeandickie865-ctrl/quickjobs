@@ -170,54 +170,68 @@ export default function WorkerProfileScreen() {
         position: 'absolute', 
         top: 200 - 70, // Halb überlappend
         alignSelf: 'center',
-        zIndex: 20
+        zIndex: 20,
+        alignItems: 'center'
       }}>
-          {profile.photoUrl || profile.profilePhotoUri ? (
-            <Image
-              source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
-              style={{
-                width: 110,
-                height: 110,
-                borderRadius: 55,
-                borderWidth: 3,
-                borderColor: COLORS.accent,
-                marginBottom: 14,
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                width: 110,
-                height: 110,
-                borderRadius: 55,
-                backgroundColor: COLORS.card,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 3,
-                borderColor: COLORS.accent,
-                marginBottom: 14,
-              }}
-            >
-              <Text style={{ fontSize: 36, fontWeight: '800', color: COLORS.text }}>{getInitials()}</Text>
-            </View>
-          )}
+        {profile.photoUrl || profile.profilePhotoUri ? (
+          <Image
+            source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
+            style={{
+              width: 130,
+              height: 130,
+              borderRadius: 65,
+              borderWidth: 4,
+              borderColor: COLORS.accent, // Rosa
+              backgroundColor: 'white',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 3,
+            }}
+          />
+        ) : (
+          <View
+            style={{
+              width: 130,
+              height: 130,
+              borderRadius: 65,
+              backgroundColor: 'white',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 4,
+              borderColor: COLORS.accent, // Rosa
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 3,
+            }}
+          >
+            <Text style={{ fontSize: 40, fontWeight: '800', color: COLORS.text }}>{getInitials()}</Text>
+          </View>
+        )}
+      </View>
 
-          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.text }}>
-            {profile.firstName} {profile.lastName}
-          </Text>
+      {/* SCROLLVIEW MIT CONTENT */}
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: 80, paddingBottom: 40 }}>
+        {/* NAME */}
+        <Text style={{ fontSize: 22, fontWeight: '600', color: COLORS.text, textAlign: 'center', marginTop: 8, marginBottom: 4 }}>
+          {profile.firstName} {profile.lastName}
+        </Text>
 
-          {reviewCount > 0 && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
-              <Ionicons name="star" size={18} color={COLORS.accent} />
-              <Text style={{ color: COLORS.text, marginLeft: 6, fontSize: 16, fontWeight: '700' }}>
-                {avgRating.toFixed(1)}
-              </Text>
-              <Text style={{ color: COLORS.textMuted, marginLeft: 4, fontSize: 14 }}>
-                ({reviewCount} Bewertungen)
-              </Text>
-            </View>
-          )}
-        </View>
+        {/* RATING */}
+        {reviewCount > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+            <Ionicons name="star" size={18} color={COLORS.accent} />
+            <Text style={{ color: COLORS.text, marginLeft: 6, fontSize: 16, fontWeight: '700' }}>
+              {avgRating.toFixed(1)}
+            </Text>
+            <Text style={{ color: COLORS.textMuted, marginLeft: 4, fontSize: 14 }}>
+              ({reviewCount} Bewertungen)
+            </Text>
+          </View>
+        )}
 
         <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
           <Pressable
