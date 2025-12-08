@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     gap: 12,
-    backgroundColor: '#0A0816',
+    backgroundColor: '#FFFFFF', // WEISS statt schwarz!
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.05)',
+    borderTopColor: 'rgba(0,0,0,0.08)',
   },
   backButton: {
     flexDirection: 'row',
