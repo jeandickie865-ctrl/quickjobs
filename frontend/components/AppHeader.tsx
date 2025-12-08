@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../constants/colors';
 
 interface AppHeaderProps {
   title: string;
+  rightElement?: ReactNode; // Optional element on the right (e.g. logout button)
 }
 
-export function AppHeader({ title }: AppHeaderProps) {
+export function AppHeader({ title, rightElement }: AppHeaderProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      {rightElement ? (
+        // Header with right element (e.g. profile page with logout)
+        <>
+          <View style={{ width: 30 }} />
+          <Text style={styles.titleCentered}>{title}</Text>
+          <View>{rightElement}</View>
+        </>
+      ) : (
+        // Simple header with just title
+        <Text style={styles.title}>{title}</Text>
+      )}
     </View>
   );
 }
@@ -17,8 +28,11 @@ export function AppHeader({ title }: AppHeaderProps) {
 const styles = StyleSheet.create({
   container: {
     height: 64,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingLeft: 16,
+    paddingRight: 16,
     paddingTop: 12,
     backgroundColor: COLORS.bg,
     borderBottomWidth: 2,
@@ -26,9 +40,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: 'Inter-SemiBold',
     fontWeight: '600',
     color: COLORS.text, // #1A1A1A
     textAlign: 'left',
+  },
+  titleCentered: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: COLORS.text,
+    textAlign: 'center',
+    flex: 1,
   },
 });
