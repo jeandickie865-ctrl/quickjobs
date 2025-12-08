@@ -368,26 +368,39 @@ export default function JobDetailScreen() {
           </Text>
           <Text style={{ fontSize: 15, color: COLORS.white, lineHeight: 22 }}>
             {(() => {
-              const start = job.start_at || job.startAt || null;
-              const end = job.end_at || job.endAt || null;
-
-              if (job.date && start && end) {
-                return `${job.date} von ${start} bis ${end}`;
+              // Zuerst prüfen ob job.date und job.start_at/job.end_at existieren (bevorzugt)
+              if (job.date && (job.start_at || job.startAt) && (job.end_at || job.endAt)) {
+                const startTime = job.start_at || job.startAt;
+                const endTime = job.end_at || job.endAt;
+                return `${job.date} von ${startTime} bis ${endTime}`;
               }
 
-              if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
+              // Fallback: Versuche startAt/endAt zu parsen
+              const startValue = job.startAt || job.start_at;
+              const endValue = job.endAt || job.end_at;
+
+              if (startValue && endValue && startValue !== 'null' && endValue !== 'null') {
                 try {
-                  if (job.startAt.includes(':') && job.startAt.length <= 5) {
-                    return `${job.date || 'Datum unbekannt'} von ${job.startAt} bis ${job.endAt}`;
+                  // Wenn es schon eine Uhrzeit ist (HH:MM Format)
+                  if (typeof startValue === 'string' && startValue.includes(':') && startValue.length <= 5) {
+                    return `${job.date || 'Datum unbekannt'} von ${startValue} bis ${endValue}`;
                   }
-                  const start = new Date(job.startAt);
-                  const end = new Date(job.endAt);
+                  
+                  // Wenn es ein ISO Datum ist
+                  const start = new Date(startValue);
+                  const end = new Date(endValue);
                   if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
-                    return `${start.toLocaleString('de-DE')} - ${end.toLocaleString('de-DE')}`;
+                    const dateStr = start.toLocaleDateString('de-DE');
+                    const startTimeStr = start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                    const endTimeStr = end.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                    return `${dateStr} von ${startTimeStr} bis ${endTimeStr}`;
                   }
-                } catch (e) {}
+                } catch (e) {
+                  console.error('Fehler beim Parsen der Zeiten:', e);
+                }
               }
 
+              // Fallback für andere Zeitangaben
               if (job.dueAt && job.dueAt !== 'null') {
                 try {
                   const due = new Date(job.dueAt);
@@ -401,7 +414,7 @@ export default function JobDetailScreen() {
                 return `Stundenpaket: ${job.hours} Stunden`;
               }
 
-              return 'Keine Zeitangaben';
+              return 'Zeitraum unbekannt';
             })()}
           </Text>
         </View>
