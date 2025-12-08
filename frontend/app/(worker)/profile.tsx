@@ -144,44 +144,35 @@ export default function WorkerProfileScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <SafeAreaView edges={['top', 'bottom']} style={{ backgroundColor: COLORS.bg }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 20,
-            paddingVertical: 16,
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 24, fontWeight: '900', color: COLORS.text }}>Mein Profil</Text>
+      {/* LILA HEADER-BEREICH - 200px */}
+      <View style={{ 
+        height: 200, 
+        backgroundColor: COLORS.primary, // Kräftiges Lila
+        width: '100%',
+        position: 'relative'
+      }}>
+        {/* Logout Button oben rechts */}
+        <SafeAreaView edges={['top']} style={{ position: 'absolute', top: 0, right: 16, zIndex: 10 }}>
+          <Pressable
+            onPress={async () => {
+              await signOut();
+              router.replace('/auth/login');
+            }}
+            style={{ padding: 8 }}
+          >
+            <Ionicons name="log-out-outline" size={26} color="white" />
+          </Pressable>
+        </SafeAreaView>
+      </View>
 
-          <View style={{ flexDirection: 'row', gap: 20 }}>
-            <Pressable onPress={() => router.push('/(worker)/edit-profile')}>
-              <Ionicons name="create-outline" size={26} color={COLORS.accent} />
-            </Pressable>
-
-            <Pressable
-              onPress={async () => {
-                await signOut();
-                router.replace('/auth/login');
-              }}
-            >
-              <Ionicons name="log-out-outline" size={26} color={COLORS.accent} />
-            </Pressable>
-          </View>
-        </View>
-      </SafeAreaView>
-
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            backgroundColor: COLORS.bg,
-            paddingHorizontal: 20,
-            paddingTop: 20,
-            alignItems: 'center',
-          }}
-        >
+      {/* PROFILFOTO - überlappend am unteren Rand */}
+      <View style={{ 
+        position: 'absolute', 
+        top: 200 - 70, // Halb überlappend
+        alignSelf: 'center',
+        zIndex: 20
+      }}>
+        <View>
           {profile.photoUrl || profile.profilePhotoUri ? (
             <Image
               source={{ uri: profile.photoUrl || profile.profilePhotoUri }}
