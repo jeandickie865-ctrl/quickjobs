@@ -92,12 +92,6 @@ export default function WorkerProfileScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* HEADER */}
-        <View style={{ backgroundColor: COLORS.primary, padding: 20 }}>
-          <Text style={{ color: 'white', fontSize: 22, fontWeight: '700' }}>
-            Dashboard
-          </Text>
-        </View>
 
         <ArrowDoodle />
 
