@@ -27,6 +27,7 @@ import { getInitials } from '../../utils/stringHelpers';
 import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../../config';
 import { getAuthHeaders } from '../../utils/api';
+import { AppHeader } from '../../components/AppHeader';
 
 const { width } = Dimensions.get('window');
 const BUTTON_WIDTH = width * 0.86; // iPhone-friendly
@@ -34,15 +35,19 @@ const INNER_CARD_PADDING = 18;
 
 // Colors
 const COLORS = {
-  bgDark: "#00A07C",
-  cardDark: "#00A07C",
-  purple: "#EFABFF",
-  purpleLight: "#EFABFF",
-  textWhite: "#FFFFFF",
-  textMuted: "rgba(255,255,255,0.75)",
-  accent: "#EFABFF",
-  red: "#E64A4A",
-  dim: "rgba(255,255,255,0.85)"
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  primary: '#9333EA',      // Lila
+  primaryLight: '#C084FC', // Helles Lila
+  secondary: '#FF773D',    // Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  inputBg: '#FAF5FF',      // Sehr helles Lila für Inputs
+  inputBorder: '#DDD6FE',  // Lila Border für Inputs
+  text: '#1A1A1A',         // Dunkelgrau für Text
+  textMuted: '#6B7280',    // Grau für sekundären Text
+  error: '#EF4444',        // Rot für Fehler
 };
 
 type Match = {

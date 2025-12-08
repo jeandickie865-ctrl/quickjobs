@@ -12,15 +12,17 @@ import { AppHeader } from '../../components/AppHeader';
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#EFABFF',
-  neon: '#EFABFF',
-  border: 'rgba(0,0,0,0.08)',
-  error: '#EFABFF',
-  tagRequired: '#EFABFF',
-  tagOptional: '#3A3A3A'
+  primary: '#9333EA',      // Lila
+  primaryLight: '#C084FC', // Helles Lila
+  secondary: '#FF773D',    // Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  inputBg: '#FAF5FF',      // Sehr helles Lila für Inputs
+  inputBorder: '#DDD6FE',  // Lila Border für Inputs
+  text: '#1A1A1A',         // Dunkelgrau für Text
+  textMuted: '#6B7280',    // Grau für sekundären Text
+  error: '#EF4444',        // Rot für Fehler
 };
 
 export default function WorkerFeedScreen() {
@@ -146,7 +148,7 @@ export default function WorkerFeedScreen() {
         {/* HEADER */}
         <View style={{ paddingHorizontal: 24, marginBottom: 40 }}>
           <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
-            BACKUP
+            Quickjobs
           </Text>
           <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
         </View>
@@ -176,7 +178,7 @@ export default function WorkerFeedScreen() {
         {/* HEADER */}
         <View style={{ paddingHorizontal: 24, marginBottom: 40 }}>
           <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
-            BACKUP
+            Quickjobs
           </Text>
           <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
         </View>
@@ -380,7 +382,7 @@ export default function WorkerFeedScreen() {
       {/* HEADER */}
       <View style={{ paddingHorizontal: 24, marginBottom: 24 }}>
         <Text style={{ color: COLORS.white, fontWeight: '900', fontSize: 28, letterSpacing: 1 }}>
-          BACKUP
+          Quickjobs
         </Text>
         <View style={{ marginTop: 8, height: 4, width: '100%', backgroundColor: COLORS.neon }} />
       </View>

@@ -1,4 +1,4 @@
-// app/(worker)/profile.tsx – DARK BACKUP DESIGN
+// app/(worker)/profile.tsx – DARK Quickjobs DESIGN
 import React, { useState, useEffect } from 'react';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 import { ScrollView, View, Text, Pressable, ActivityIndicator, Image } from 'react-native';
@@ -16,14 +16,17 @@ import { AppHeader } from '../../components/AppHeader';
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#EFABFF',
-  purpleLight: '#EFABFF',
-  neon: '#EFABFF',
-  red: '#E64A4A',
+  primary: '#9333EA',      // Lila
+  primaryLight: '#C084FC', // Helles Lila
+  secondary: '#FF773D',    // Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  inputBg: '#FAF5FF',      // Sehr helles Lila für Inputs
+  inputBorder: '#DDD6FE',  // Lila Border für Inputs
+  text: '#1A1A1A',         // Dunkelgrau für Text
+  textMuted: '#6B7280',    // Grau für sekundären Text
+  error: '#EF4444',        // Rot für Fehler
 };
 
 export default function WorkerProfileScreen() {

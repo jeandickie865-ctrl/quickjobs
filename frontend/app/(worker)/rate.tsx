@@ -10,16 +10,22 @@ import { addReview } from '../../utils/reviewStore';
 import { Job } from '../../types/job';
 import { EmployerProfile } from '../../utils/employerProfileStore';
 import { Ionicons } from '@expo/vector-icons';
+import { AppHeader } from '../../components/AppHeader';
 
 const COLORS = {
-  bg: '#FFFFFF',  // Dunkler Hintergrund wie überall
+  bg: '#FFFFFF',
   card: '#FFFFFF',
-  purple: '#EFABFF',
-  neon: '#EFABFF',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  black: '#000000',
-  darkGray: '#333333',
+  primary: '#9333EA',      // Lila
+  primaryLight: '#C084FC', // Helles Lila
+  secondary: '#FF773D',    // Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  inputBg: '#FAF5FF',      // Sehr helles Lila für Inputs
+  inputBorder: '#DDD6FE',  // Lila Border für Inputs
+  text: '#1A1A1A',         // Dunkelgrau für Text
+  textMuted: '#6B7280',    // Grau für sekundären Text
+  error: '#EF4444',        // Rot für Fehler
 };
 
 export default function RateEmployerScreen() {

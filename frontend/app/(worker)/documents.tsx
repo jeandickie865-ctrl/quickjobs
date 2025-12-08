@@ -11,15 +11,17 @@ import { AppHeader } from '../../components/AppHeader';
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#00A07C",
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#EFABFF',
-  neon: '#EFABFF',
-  error: '#EFABFF',
-  success: '#4ADE80',
-  black: '#000000'
+  primary: '#9333EA',      // Lila
+  primaryLight: '#C084FC', // Helles Lila
+  secondary: '#FF773D',    // Orange
+  accent: '#EFABFF',       // Rosa
+  accentLight: '#FCE7FF',  // Sehr helles Rosa
+  border: '#E9D5FF',       // Lila Border
+  inputBg: '#FAF5FF',      // Sehr helles Lila für Inputs
+  inputBorder: '#DDD6FE',  // Lila Border für Inputs
+  text: '#1A1A1A',         // Dunkelgrau für Text
+  textMuted: '#6B7280',    // Grau für sekundären Text
+  error: '#EF4444',        // Rot für Fehler
 };
 
 interface Document {
