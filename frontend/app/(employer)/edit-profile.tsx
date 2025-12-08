@@ -1,6 +1,5 @@
 // app/(employer)/profile.tsx - CLEAN & FIXED VERSION
 import React, { useState, useEffect, useRef } from 'react';
-import { AppHeader } from '../../components/AppHeader';
 import {
   ScrollView,
   View,
@@ -15,21 +14,16 @@ import {
   Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppHeader } from '../../components/AppHeader';
 import { useRouter, Redirect } from 'expo-router';
-import { AppHeader } from '../../components/AppHeader';
 import { useAuth } from '../../contexts/AuthContext';
-import { AppHeader } from '../../components/AppHeader';
 import {
   getEmployerProfile,
   saveEmployerProfile,
   EmployerProfile
 } from '../../utils/employerProfileStore';
-import AddressAutocompleteInput from '../../components/AddressAutocompleteInput';
-import { AppHeader } from '../../components/AppHeader';
 import { Ionicons } from '@expo/vector-icons';
-import { AppHeader } from '../../components/AppHeader';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
+import AddressAutocompleteInput from '../../components/AddressAutocompleteInput';
 import { AppHeader } from '../../components/AppHeader';
 
 // BACKUP DARK THEME
