@@ -355,7 +355,7 @@ export default function CreateJob() {
 
         {/* === GRUNDINFO === */}
         <View style={{ marginTop: SPACING.sm }}>
-          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+          <Text style={{ color: COLORS.primary, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
             GRUNDINFO
           </Text>
         </View>
@@ -372,8 +372,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: SPACING.sm,
               fontSize: 15,
             }}
@@ -384,7 +383,7 @@ export default function CreateJob() {
             value={title}
             onChangeText={setTitle}
             placeholder="z. B. Fahrer für Event"
-            placeholderTextColor={COLORS.muted}
+            placeholderTextColor={COLORS.textMuted}
             style={{
               borderWidth: 1,
               borderColor: COLORS.inputBorder,
@@ -392,8 +391,7 @@ export default function CreateJob() {
               paddingHorizontal: 14,
               paddingVertical: 10,
               backgroundColor: COLORS.inputBg,
-              color: COLORS.white,
-              fontSize: 15,
+              color: COLORS.text, fontSize: 15,
             }}
           />
         </View>
@@ -410,8 +408,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: SPACING.sm,
               fontSize: 15,
             }}
@@ -422,7 +419,7 @@ export default function CreateJob() {
             value={description}
             onChangeText={setDescription}
             placeholder="Was ist zu tun?"
-            placeholderTextColor={COLORS.muted}
+            placeholderTextColor={COLORS.textMuted}
             multiline
             numberOfLines={3}
             style={{
@@ -433,8 +430,7 @@ export default function CreateJob() {
               paddingVertical: 10,
               minHeight: 100,
               backgroundColor: COLORS.inputBg,
-              color: COLORS.white,
-              fontSize: 14,
+              color: COLORS.text, fontSize: 14,
               textAlignVertical: 'top',
             }}
           />
@@ -452,8 +448,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: SPACING.sm,
               fontSize: 15,
             }}
@@ -506,8 +501,7 @@ export default function CreateJob() {
           >
             <Text
               style={{
-                color: COLORS.white,
-                fontWeight: '600',
+                color: COLORS.text, fontWeight: '600',
                 marginBottom: 6,
               }}
             >
@@ -540,8 +534,7 @@ export default function CreateJob() {
           >
             <Text
               style={{
-                color: COLORS.white,
-                fontWeight: '600',
+                color: COLORS.text, fontWeight: '600',
                 marginBottom: 6,
               }}
             >
@@ -569,7 +562,7 @@ export default function CreateJob() {
 
         {/* === ORT & ZEIT === */}
         <View style={{ marginTop: SPACING.lg }}>
-          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+          <Text style={{ color: COLORS.primary, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
             ORT & ZEIT
           </Text>
         </View>
@@ -586,8 +579,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: SPACING.sm,
               fontSize: 15,
             }}
@@ -621,7 +613,7 @@ export default function CreateJob() {
                 value={date}
                 onChangeText={setDate}
                 placeholder="YYYY-MM-DD"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 style={{
                   borderWidth: 1,
                   borderColor: COLORS.inputBorder,
@@ -629,8 +621,7 @@ export default function CreateJob() {
                   paddingHorizontal: 12,
                   paddingVertical: 10,
                   backgroundColor: COLORS.inputBg,
-                  color: COLORS.white,
-                  fontSize: 14,
+                  color: COLORS.text, fontSize: 14,
                 }}
               />
             )}
@@ -645,7 +636,7 @@ export default function CreateJob() {
               value={startAt}
               onChangeText={setStartAt}
               placeholder="HH:MM"
-              placeholderTextColor={COLORS.muted}
+              placeholderTextColor={COLORS.textMuted}
               keyboardType="numeric"
               style={{
                 borderWidth: 1,
@@ -654,8 +645,7 @@ export default function CreateJob() {
                 paddingHorizontal: 12,
                 paddingVertical: 10,
                 backgroundColor: COLORS.inputBg,
-                color: COLORS.white,
-                fontSize: 14,
+                color: COLORS.text, fontSize: 14,
               }}
             />
           </View>
@@ -669,7 +659,7 @@ export default function CreateJob() {
               value={endAt}
               onChangeText={setEndAt}
               placeholder="HH:MM"
-              placeholderTextColor={COLORS.muted}
+              placeholderTextColor={COLORS.textMuted}
               keyboardType="numeric"
               style={{
                 borderWidth: 1,
@@ -678,8 +668,7 @@ export default function CreateJob() {
                 paddingHorizontal: 12,
                 paddingVertical: 10,
                 backgroundColor: COLORS.inputBg,
-                color: COLORS.white,
-                fontSize: 14,
+                color: COLORS.text, fontSize: 14,
               }}
             />
           </View>
@@ -697,8 +686,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: 4,
               fontSize: 15,
             }}
@@ -722,7 +710,7 @@ export default function CreateJob() {
 
         {/* === BEZAHLUNG === */}
         <View style={{ marginTop: SPACING.lg }}>
-          <Text style={{ color: COLORS.neon, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
+          <Text style={{ color: COLORS.primary, fontSize: 13, fontWeight: '700', marginBottom: SPACING.sm, letterSpacing: 1 }}>
             BEZAHLUNG
           </Text>
         </View>
@@ -739,8 +727,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: 4,
             }}
           >
@@ -750,7 +737,7 @@ export default function CreateJob() {
             value={workerAmountInput}
             onChangeText={handleWorkerAmountChange}
             placeholder="100"
-            placeholderTextColor={COLORS.muted}
+            placeholderTextColor={COLORS.textMuted}
             keyboardType="decimal-pad"
             style={{
               borderWidth: 1,
@@ -759,8 +746,7 @@ export default function CreateJob() {
               paddingHorizontal: 12,
               paddingVertical: 10,
               backgroundColor: COLORS.inputBg,
-              color: COLORS.white,
-              fontSize: 15,
+              color: COLORS.text, fontSize: 15,
             }}
           />
         </View>
@@ -791,8 +777,7 @@ export default function CreateJob() {
         >
           <Text
             style={{
-              color: COLORS.white,
-              fontWeight: '600',
+              color: COLORS.text, fontWeight: '600',
               marginBottom: SPACING.sm,
             }}
           >
@@ -815,7 +800,7 @@ export default function CreateJob() {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ color: COLORS.white, fontWeight: '600', fontSize: 13 }}>
+                <Text style={{ color: COLORS.text, fontWeight: '600', fontSize: 13 }}>
                   {method === 'cash' ? 'Bar' : method === 'bank' ? 'Überweisung' : 'PayPal'}
                 </Text>
               </Pressable>
