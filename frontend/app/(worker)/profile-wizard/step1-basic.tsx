@@ -27,20 +27,6 @@ import { useWizard } from '../../../contexts/WizardContext';
 
 import { getWorkerProfile } from '../../../utils/profileStore';
 
-const COLORS = {
-  bg: '#FFFFFF',
-  card: '#FFFFFF',
-  cardText: '#00A07C',
-  border: 'rgba(0,0,0,0.08)',
-  text: '#1A1A1A',
-  white: '#1A1A1A',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#EFABFF',
-  purple: '#EFABFF',
-  placeholder: 'rgba(0,160,124,0.60)',
-  gray: 'rgba(255,255,255,0.85)',
-  lightGray: 'rgba(255,255,255,0.25)',
-};
 
 export default function Step1Basic() {
   const router = useRouter();

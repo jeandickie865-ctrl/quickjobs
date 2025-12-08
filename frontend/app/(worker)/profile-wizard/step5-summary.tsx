@@ -19,15 +19,6 @@ import { NavigationButtons } from '../../../components/wizard/NavigationButtons'
 import { useWizard } from '../../../contexts/WizardContext';
 import { useAuth } from '../../../contexts/AuthContext';
 
-const COLORS = {
-  bg: '#FFFFFF',
-  card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  text: '#1A1A1A',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#EFABFF',
-  purple: '#EFABFF',
-};
 
 export default function Step5Summary() {
   const router = useRouter();

@@ -12,32 +12,6 @@ import { useWizard } from '../../../contexts/WizardContext';
 const TAXONOMY_DATA = require('../../../shared/taxonomy.json');
 
 // NEUE 3-STUFEN FARBEN
-const COLORS = {
-  bg: '#FFFFFF',
-  card: '#FFFFFF',
-  // Hauptkategorie
-  categorySelected: '#FF8A42',      // Orange
-  categorySelectedText: '#FFFFFF',  // Weiß
-  categoryUnselected: '#F2B7FF',    // Rosa
-  categoryUnselectedText: '#1A1A1A', // Schwarz
-  // Unterkategorie
-  subcategorySelected: '#A241FF',   // Lila
-  subcategorySelectedText: '#FFFFFF', // Weiß
-  subcategoryUnselected: '#FFFFFF',  // Weiß
-  subcategoryBorder: '#F2B7FF',      // Rosa Border
-  subcategoryUnselectedText: '#1A1A1A', // Schwarz
-  // Qualifikation (wie Unterkategorie, nur kleiner)
-  qualSelected: '#A241FF',
-  qualSelectedText: '#FFFFFF',
-  qualUnselected: '#FFFFFF',
-  qualBorder: '#F2B7FF',
-  qualUnselectedText: '#1A1A1A',
-  // Allgemein
-  text: '#1A1A1A',
-  textMuted: '#6B7280',
-  error: '#EF4444',
-  buttonOrange: '#FF8A42'
-};
 
 export default function Step3Categories() {
   const router = useRouter();

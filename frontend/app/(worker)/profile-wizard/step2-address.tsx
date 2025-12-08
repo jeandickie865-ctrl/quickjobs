@@ -10,15 +10,6 @@ import AddressAutocompleteInput from '../../../components/AddressAutocompleteInp
 import Slider from '@react-native-community/slider';
 import { useWizard } from '../../../contexts/WizardContext';
 
-const COLORS = {
-  bg: '#FFFFFF',
-  card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  text: '#1A1A1A',
-  muted: 'rgba(0,0,0,0.6)',
-  neon: '#EFABFF',
-  error: '#EFABFF',
-};
 
 export default function Step2Address() {
   const router = useRouter();
