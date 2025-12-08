@@ -14,7 +14,7 @@ import { formatAddress } from '../../types/address';
 import { euro } from '../../utils/pricing';
 import { API_URL } from '../../config';
 import { getAuthHeaders } from '../../utils/api';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 
 type ApplicationWithJob = {
   app: JobApplication;

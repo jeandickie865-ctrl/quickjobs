@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, Pressable, Alert, Platform } from 'react-native';
-import { AppHeader } from '../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useTheme } from '../../../theme/ThemeProvider';

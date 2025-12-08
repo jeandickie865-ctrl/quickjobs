@@ -12,7 +12,7 @@ import { Job } from '../../types/job';
 import { WorkerProfile } from '../../types/profile';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 import { ArrowDoodle } from '../../components/ArrowDoodle';
 
 const COLORS = {

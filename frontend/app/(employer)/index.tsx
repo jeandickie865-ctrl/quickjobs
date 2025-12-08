@@ -1,7 +1,7 @@
 // app/(employer)/index.tsx – BACKUP DARK DESIGN
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowDoodle } from '../../../components/ArrowDoodle';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
-import { AppHeader } from '../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getJobById } from '../../../utils/jobStore';

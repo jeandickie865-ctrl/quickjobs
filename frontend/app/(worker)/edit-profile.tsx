@@ -19,7 +19,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { getWorkerProfile, saveWorkerProfile, WorkerProfile } from '../../utils/profileStore';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 
 const TAXONOMY_DATA = require('../../shared/taxonomy.json');
 

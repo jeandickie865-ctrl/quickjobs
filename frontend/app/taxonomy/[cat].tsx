@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';

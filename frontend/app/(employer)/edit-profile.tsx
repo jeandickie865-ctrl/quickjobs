@@ -24,7 +24,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { getApplicationsForEmployer } from '../../utils/applicationStore';
 import AddressAutocompleteInput from '../../components/AddressAutocompleteInput';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 
 // BACKUP DARK THEME
 const COLORS = {

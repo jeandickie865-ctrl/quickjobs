@@ -11,7 +11,7 @@ import { getWorkerApplications } from '../../utils/applicationStore';
 import { Ionicons } from '@expo/vector-icons';
 import taxonomy from '../../shared/taxonomy.json';
 import { getTagLabel } from '../../utils/taxonomy';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../../components/AppHeader';
 
 const COLORS = {
   bg: '#FFFFFF',

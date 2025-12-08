@@ -1,7 +1,7 @@
 // app/(employer)/jobs/rate.tsx - FINAL NEON-TECH DESIGN
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, Alert, Pressable, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Animated, Modal } from 'react-native';
-import { AppHeader } from '../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 import { useRouter, useLocalSearchParams, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../../contexts/AuthContext';

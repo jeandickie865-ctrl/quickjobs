@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { listCategories, getCategory, groupTagsByType } from '../src/taxonomy';

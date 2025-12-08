@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import { AppHeader } from '../../../components/AppHeader';
+import { AppHeader } from '../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ProgressBar } from '../../../components/wizard/ProgressBar';
