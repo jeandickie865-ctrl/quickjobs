@@ -483,9 +483,16 @@ export default function WorkerMatchesScreen() {
                         fontSize: 14,
                       }}
                     >
-                      {job.address?.street} {job.address?.houseNumber || job.address?.house_number},{" "}
-                      {job.address?.postalCode || job.address?.postal_code} {job.address?.city}
+                      {job.address?.street && (
+                        <>
+                          {job.address.street} {job.address.houseNumber || job.address.house_number || ''},{" "}
+                          {job.address.postalCode || job.address.postal_code} {job.address.city}
+                        </>
+                      )}
+                      {!job.address?.street && 'Adresse nicht verfügbar'}
                     </Text>
+                    {/* Debug Info */}
+                    {console.log('Worker Match - Job Address:', job.address)}
 
                     <Text
                       style={{
