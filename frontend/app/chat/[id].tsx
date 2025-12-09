@@ -67,13 +67,6 @@ export default function ChatScreen() {
         console.log('🔍 First message text:', msgs[0]?.text);
         console.log('🔍 First message keys:', msgs[0] ? Object.keys(msgs[0]) : 'no messages');
         if (mounted) {
-          // Prüfe, ob neue Nachrichten da sind
-          if (msgs && msgs.length > previousMessageCount.current && !isFirstLoad) {
-            setHasNewMessages(true);
-            // Automatisch nach 3 Sekunden ausblenden
-            setTimeout(() => setHasNewMessages(false), 3000);
-          }
-          previousMessageCount.current = msgs?.length || 0;
           setMessages(msgs || []);
         }
       } catch (err) {
