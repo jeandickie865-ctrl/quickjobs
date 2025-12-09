@@ -229,36 +229,30 @@ export default function RateWorkerScreen() {
         >
           {/* Worker Info Card */}
           <View style={{
-            backgroundColor: COLORS.text,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            shadowColor: COLORS.accent,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.15,
-            shadowRadius: 12,
-            elevation: 4,
+            borderWidth: 1,
+            borderColor: COLORS.border,
           }}>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.accent, marginBottom: 12, letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.primary, marginBottom: 12, letterSpacing: 0.5 }}>
               AUFTRAGNEHMER
             </Text>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.bg, marginBottom: 4 }}>
+            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 4 }}>
               {worker.name || 'Auftragnehmer'}
             </Text>
-            <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
+            <Text style={{ fontSize: 14, color: COLORS.textMuted }}>
               für Job: {job.title}
             </Text>
           </View>
 
           {/* Rating Card */}
           <View style={{
-            backgroundColor: COLORS.text,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 24,
-            shadowColor: COLORS.accent,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.15,
-            shadowRadius: 12,
-            elevation: 4,
+            borderWidth: 1,
+            borderColor: COLORS.border,
           }}>
             <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.accent, marginBottom: 16, letterSpacing: 0.5 }}>
               STERNE-BEWERTUNG
