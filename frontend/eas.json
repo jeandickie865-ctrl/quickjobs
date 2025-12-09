@@ -1,15 +1,34 @@
 {
   "cli": {
-    "version": ">= 3.19.0"
+    "version": ">= 3.19.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "production": {
       "node": "22.12.0",
       "ios": {
-        "simulator": false
+        "simulator": false,
+        "bundleIdentifier": "de.dickie.backup"
       },
       "android": {
         "buildType": "app-bundle"
+      }
+    },
+    "preview": {
+      "node": "22.12.0",
+      "distribution": "internal",
+      "ios": {
+        "simulator": false,
+        "bundleIdentifier": "de.dickie.backup"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "m.dickie@gmx.de",
+        "ascAppId": "6756327012",
+        "appleTeamId": ""
       }
     }
   }
