@@ -258,6 +258,7 @@ export default function ChatScreen() {
         <FlatList
           ref={flatListRef}
           data={messages}
+          style={{ flex: 1 }}
           keyExtractor={(item, index) => item._id || `msg-${index}`}
           renderItem={({ item }) => {
             const isOwn = item.senderId === user?.id;
@@ -287,7 +288,7 @@ export default function ChatScreen() {
               </View>
             );
           }}
-          contentContainerStyle={{ paddingVertical: 16, paddingBottom: 20 }}
+          contentContainerStyle={{ paddingVertical: 16, paddingBottom: 20, flexGrow: 1 }}
           ListEmptyComponent={
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40 }}>
               <Ionicons name="chatbubbles-outline" size={48} color={COLORS.textMuted} />
