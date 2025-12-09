@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthContext";
 import { API_URL } from "../../config";
 import { getAuthHeaders } from "../../utils/api";
+import { AppHeader } from "../../components/AppHeader";
 
 const COLORS = {
   background: "#00A07C",
