@@ -62,6 +62,7 @@ export default function Step5Summary() {
     phone: wizardData.phone,
     email: user?.email || '',
     street: wizardData.street,
+    houseNumber: wizardData.houseNumber,
     postalCode: wizardData.postalCode,
     city: wizardData.city,
     radius: wizardData.radiusKm,
@@ -213,7 +214,7 @@ export default function Step5Summary() {
             <View style={styles.infoRow}>
               <Ionicons name="location" size={20} color={COLORS.neon} />
               <Text style={styles.infoText}>
-                {profileData.street}, {profileData.postalCode} {profileData.city}
+                {profileData.street} {profileData.houseNumber}, {profileData.postalCode} {profileData.city}
               </Text>
             </View>
 
