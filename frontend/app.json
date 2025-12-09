@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Quickjobs",
-    "slug": "quickjobs-app",
+    "slug": "backup-app",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/store-icons/app-icon.png",
