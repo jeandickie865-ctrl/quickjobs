@@ -80,11 +80,13 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
 export default function WorkerLayout() {
   const { user, loading } = useAuth();
   const [matchesCount, setMatchesCount] = useState(0);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const insets = useSafeAreaInsets();
 
   useFocusEffect(
     React.useCallback(() => {
       if (!user) return;
+      
       async function loadMatchesCount() {
         try {
           const apps = await getWorkerApplications();
@@ -94,7 +96,40 @@ export default function WorkerLayout() {
           console.error('Matches count error:', err);
         }
       }
+      
+      async function loadUnreadChatCount() {
+        try {
+          const apps = await getWorkerApplications();
+          const accepted = apps.filter(a => a.status === 'accepted');
+          
+          let totalUnread = 0;
+          for (const app of accepted) {
+            try {
+              const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/chat/unread-count/${app.id}`, {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`,
+                }
+              });
+              if (response.ok) {
+                const data = await response.json();
+                totalUnread += data.unreadCount || 0;
+              }
+            } catch (err) {
+              console.error('Error fetching unread for app:', app.id, err);
+            }
+          }
+          setUnreadChatCount(totalUnread);
+        } catch (err) {
+          console.error('Unread chat count error:', err);
+        }
+      }
+      
       loadMatchesCount();
+      loadUnreadChatCount();
+      
+      // Poll für ungelesene Nachrichten alle 10 Sekunden
+      const interval = setInterval(loadUnreadChatCount, 10000);
+      return () => clearInterval(interval);
     }, [user])
   );
 
