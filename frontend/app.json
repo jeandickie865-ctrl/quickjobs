@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "de.quickjobsneu.app",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/app/id6756327012",
       "infoPlist": {
