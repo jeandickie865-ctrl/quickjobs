@@ -115,7 +115,19 @@ export default function ChatScreen() {
   if (locked) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-        <AppHeader />
+        <View style={{ 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          padding: 16, 
+          backgroundColor: COLORS.purple,
+          borderBottomWidth: 1,
+          borderBottomColor: COLORS.border
+        }}>
+          <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 12 }}>
+            <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
+          </Pressable>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF' }}>Chat</Text>
+        </View>
         
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 20 }}>
           <Ionicons name="lock-closed" size={64} color={COLORS.purple} />
@@ -157,7 +169,19 @@ export default function ChatScreen() {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-        <AppHeader />
+        <View style={{ 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          padding: 16, 
+          backgroundColor: COLORS.purple,
+          borderBottomWidth: 1,
+          borderBottomColor: COLORS.border
+        }}>
+          <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 12 }}>
+            <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
+          </Pressable>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF' }}>Chat</Text>
+        </View>
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator color={COLORS.purple} size="large" />
           <Text style={{ color: COLORS.text, marginTop: 16, fontSize: 16 }}>Lade Chat...</Text>
@@ -169,7 +193,25 @@ export default function ChatScreen() {
   // CHAT
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <AppHeader />
+      {/* Custom Header mit Zurück-Button */}
+      <View style={{ 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        padding: 16, 
+        backgroundColor: COLORS.purple,
+        borderBottomWidth: 1,
+        borderBottomColor: COLORS.border
+      }}>
+        <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 12 }}>
+          <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
+        </Pressable>
+        <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF', flex: 1 }}>Chat</Text>
+        {messages.length > 0 && (
+          <Text style={{ fontSize: 12, color: '#FFFFFF', opacity: 0.8 }}>
+            {messages.length} Nachricht{messages.length !== 1 ? 'en' : ''}
+          </Text>
+        )}
+      </View>
       
       <KeyboardAvoidingView
         style={{ flex: 1 }}
