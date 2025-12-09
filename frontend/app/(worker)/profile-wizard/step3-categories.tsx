@@ -64,17 +64,16 @@ export default function Step3Categories() {
       setSelectedSubcategories((prev) => prev.filter((s) => !catSubs.includes(s)));
       setSelectedQualifications((prev) => prev.filter((q) => !catQuals.includes(q)));
       
-      // Wenn die geöffnete Kategorie abgewählt wird, schließen
-      if (expandedCategory === catKey) {
-        setExpandedCategory(null);
-      }
-      if (showQualificationsFor === catKey) {
-        setShowQualificationsFor(null);
+      // Wenn die aktive Kategorie abgewählt wird, zur nächsten wechseln
+      if (activeCategory === catKey) {
+        const remaining = selectedCategories.filter(k => k !== catKey);
+        setActiveCategory(remaining.length > 0 ? remaining[0] : null);
       }
     } else {
-      // Auswählen: Kategorie hinzufügen + Accordion öffnen
+      // Auswählen: Kategorie hinzufügen + aktiv setzen
       setSelectedCategories((prev) => [...prev, catKey]);
-      setExpandedCategory(catKey); // Automatisch öffnen
+      setActiveCategory(catKey);
+      setShowQualifications(false); // Qualifikationen zurücksetzen
     }
     setErrors({});
   };
