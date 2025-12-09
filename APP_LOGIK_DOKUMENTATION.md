@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://visual-ui-crisis.preview.emergentagent.com`
-- Backend: `https://visual-ui-crisis.preview.emergentagent.com/api`
+- Frontend: `https://rebranding-dash.preview.emergentagent.com`
+- Backend: `https://rebranding-dash.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)

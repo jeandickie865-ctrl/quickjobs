@@ -4377,7 +4377,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://visual-ui-crisis.preview.emergentagent.com",
+        "https://rebranding-dash.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
