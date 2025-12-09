@@ -216,39 +216,39 @@ export default function PaymentScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator color={COLORS.neon} size="large" />
-        <Text style={{ color: COLORS.lightText, marginTop: 10 }}>Lädt...</Text>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator color={COLORS.accent} size="large" />
+        <Text style={{ color: COLORS.textMuted, marginTop: 10 }}>Lädt...</Text>
       </View>
     );
   }
 
   if (!application) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: "center", alignItems: "center", padding: 20 }}>
-        <Ionicons name="alert-circle" size={48} color={COLORS.neon} />
-        <Text style={{ color: COLORS.white, fontSize: 18, marginTop: 12, textAlign: "center" }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: "center", alignItems: "center", padding: 20 }}>
+        <Ionicons name="alert-circle" size={48} color={COLORS.accent} />
+        <Text style={{ color: COLORS.text, fontSize: 18, marginTop: 12, textAlign: "center" }}>
           Application nicht gefunden
         </Text>
         <Pressable
           onPress={() => router.back()}
-          style={{ backgroundColor: COLORS.neon, paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12, marginTop: 24 }}
+          style={{ backgroundColor: COLORS.accent, paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12, marginTop: 24 }}
         >
-          <Text style={{ fontWeight: "700", color: COLORS.background }}>Zurück</Text>
+          <Text style={{ fontWeight: "700", color: COLORS.bg }}>Zurück</Text>
         </Pressable>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <SafeAreaView edges={["top","bottom"]}>
         <AppHeader />
         <View style={{ padding: 16, flexDirection: "row", alignItems: "center" }}>
           <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+            <Ionicons name="arrow-back" size={26} color={COLORS.accent} />
           </Pressable>
-          <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: "700", marginLeft: 12 }}>
+          <Text style={{ color: COLORS.text, fontSize: 20, fontWeight: "700", marginLeft: 12 }}>
             Zahlung
           </Text>
         </View>
@@ -257,18 +257,18 @@ export default function PaymentScreen() {
       <View style={{ flex: 1, padding: 20 }}>
         {/* Header */}
         <View style={{ alignItems: "center", marginBottom: 40 }}>
-          <Ionicons name="card" size={64} color={COLORS.neon} />
-          <Text style={{ color: COLORS.white, fontSize: 24, fontWeight: "900", marginTop: 16 }}>
+          <Ionicons name="card" size={64} color={COLORS.accent} />
+          <Text style={{ color: COLORS.text, fontSize: 24, fontWeight: "900", marginTop: 16 }}>
             20% Provision
           </Text>
-          <Text style={{ color: COLORS.white, fontSize: 16, marginTop: 8, textAlign: "center" }}>
+          <Text style={{ color: COLORS.text, fontSize: 16, marginTop: 8, textAlign: "center" }}>
             Zahle die Provision, um den Chat mit dem Worker freizuschalten
           </Text>
         </View>
 
         {/* Payment Methods */}
         <View style={{ marginBottom: 32, alignItems: "center" }}>
-          <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: "700", marginBottom: 16, alignSelf: "flex-start" }}>
+          <Text style={{ color: COLORS.text, fontSize: 18, fontWeight: "700", marginBottom: 16, alignSelf: "flex-start" }}>
             Zahlungsart wählen
           </Text>
 
@@ -280,9 +280,9 @@ export default function PaymentScreen() {
               alignItems: "center",
               padding: 16,
               borderRadius: 12,
-              backgroundColor: paymentMethod === "card" ? COLORS.neon : COLORS.card,
+              backgroundColor: paymentMethod === "card" ? COLORS.accent : COLORS.card,
               borderWidth: 1,
-              borderColor: paymentMethod === "card" ? COLORS.neon : COLORS.border,
+              borderColor: paymentMethod === "card" ? COLORS.accent : COLORS.border,
               marginBottom: 12,
               width: "60%",
               maxWidth: 300,
@@ -294,18 +294,18 @@ export default function PaymentScreen() {
               height: 24,
               borderRadius: 12,
               borderWidth: 2,
-              borderColor: paymentMethod === "card" ? COLORS.background : COLORS.neon,
-              backgroundColor: paymentMethod === "card" ? COLORS.background : "transparent",
+              borderColor: paymentMethod === "card" ? COLORS.bg : COLORS.accent,
+              backgroundColor: paymentMethod === "card" ? COLORS.bg : "transparent",
               marginRight: 12,
               alignItems: "center",
               justifyContent: "center",
             }}>
               {paymentMethod === "card" && (
-                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.neon }} />
+                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.accent }} />
               )}
             </View>
-            <Ionicons name="card-outline" size={24} color={paymentMethod === "card" ? COLORS.background : COLORS.lightText} style={{ marginRight: 12 }} />
-            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "card" ? "700" : "600", color: paymentMethod === "card" ? COLORS.background : COLORS.lightText }}>
+            <Ionicons name="card-outline" size={24} color={paymentMethod === "card" ? COLORS.bg : COLORS.textMuted} style={{ marginRight: 12 }} />
+            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "card" ? "700" : "600", color: paymentMethod === "card" ? COLORS.bg : COLORS.textMuted }}>
               Kreditkarte
             </Text>
           </Pressable>
@@ -318,9 +318,9 @@ export default function PaymentScreen() {
               alignItems: "center",
               padding: 16,
               borderRadius: 12,
-              backgroundColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.card,
+              backgroundColor: paymentMethod === "paypal" ? COLORS.accent : COLORS.card,
               borderWidth: 1,
-              borderColor: paymentMethod === "paypal" ? COLORS.neon : COLORS.border,
+              borderColor: paymentMethod === "paypal" ? COLORS.accent : COLORS.border,
               width: "60%",
               maxWidth: 300,
               minWidth: 220,
@@ -331,18 +331,18 @@ export default function PaymentScreen() {
               height: 24,
               borderRadius: 12,
               borderWidth: 2,
-              borderColor: paymentMethod === "paypal" ? COLORS.background : COLORS.neon,
-              backgroundColor: paymentMethod === "paypal" ? COLORS.background : "transparent",
+              borderColor: paymentMethod === "paypal" ? COLORS.bg : COLORS.accent,
+              backgroundColor: paymentMethod === "paypal" ? COLORS.bg : "transparent",
               marginRight: 12,
               alignItems: "center",
               justifyContent: "center",
             }}>
               {paymentMethod === "paypal" && (
-                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.neon }} />
+                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.accent }} />
               )}
             </View>
-            <Ionicons name="logo-paypal" size={24} color={paymentMethod === "paypal" ? COLORS.background : COLORS.lightText} style={{ marginRight: 12 }} />
-            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "paypal" ? "700" : "600", color: paymentMethod === "paypal" ? COLORS.background : COLORS.lightText }}>
+            <Ionicons name="logo-paypal" size={24} color={paymentMethod === "paypal" ? COLORS.bg : COLORS.textMuted} style={{ marginRight: 12 }} />
+            <Text style={{ fontSize: 16, fontWeight: paymentMethod === "paypal" ? "700" : "600", color: paymentMethod === "paypal" ? COLORS.bg : COLORS.textMuted }}>
               PayPal
             </Text>
           </Pressable>
@@ -357,11 +357,11 @@ export default function PaymentScreen() {
           }}
           disabled={processing}
           style={{
-            backgroundColor: processing ? COLORS.dimText : COLORS.neon,
+            backgroundColor: processing ? COLORS.textMuted : COLORS.accent,
             paddingVertical: 18,
             borderRadius: 16,
             alignItems: "center",
-            shadowColor: COLORS.neon,
+            shadowColor: COLORS.accent,
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 8,
@@ -373,9 +373,9 @@ export default function PaymentScreen() {
           }}
         >
           {processing ? (
-            <ActivityIndicator color={COLORS.background} />
+            <ActivityIndicator color={COLORS.bg} />
           ) : (
-            <Text style={{ fontSize: 17, fontWeight: "700", color: COLORS.background }}>
+            <Text style={{ fontSize: 17, fontWeight: "700", color: COLORS.bg }}>
               Jetzt bezahlen
             </Text>
           )}
@@ -383,7 +383,7 @@ export default function PaymentScreen() {
 
         {/* Info */}
         <View style={{ marginTop: 32, padding: 16, backgroundColor: COLORS.card, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border }}>
-          <Text style={{ color: COLORS.lightText, fontSize: 14, lineHeight: 20 }}>
+          <Text style={{ color: COLORS.textMuted, fontSize: 14, lineHeight: 20 }}>
             ℹ️ Nach der Zahlung wird der Chat automatisch freigeschaltet und du kannst mit dem Worker kommunizieren.
           </Text>
         </View>
@@ -412,11 +412,11 @@ export default function PaymentScreen() {
             width: "100%",
             maxWidth: 400,
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.white, marginBottom: 16, textAlign: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.text, marginBottom: 16, textAlign: "center" }}>
               Anmeldung des Workers
             </Text>
             
-            <Text style={{ fontSize: 14, color: COLORS.lightText, marginBottom: 24, textAlign: "center" }}>
+            <Text style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 24, textAlign: "center" }}>
               Der Worker ist nicht selbstständig. Möchten Sie Hilfe bei der offiziellen Anmeldung?
             </Text>
 
@@ -426,7 +426,7 @@ export default function PaymentScreen() {
                 requestOfficialRegistration(applicationId);
               }}
               style={({ pressed }) => ({
-                backgroundColor: COLORS.neon,
+                backgroundColor: COLORS.accent,
                 borderRadius: 14,
                 paddingVertical: 14,
                 paddingHorizontal: 16,
@@ -435,7 +435,7 @@ export default function PaymentScreen() {
                 opacity: pressed ? 0.9 : 1,
               })}
             >
-              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.background }}>
+              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.bg }}>
                 📋 Ja, Hilfe bei der Anmeldung
               </Text>
             </Pressable>
@@ -447,7 +447,7 @@ export default function PaymentScreen() {
               }}
               style={({ pressed }) => ({
                 borderWidth: 2,
-                borderColor: COLORS.neon,
+                borderColor: COLORS.accent,
                 borderRadius: 14,
                 paddingVertical: 12,
                 paddingHorizontal: 16,
@@ -455,7 +455,7 @@ export default function PaymentScreen() {
                 opacity: pressed ? 0.9 : 1,
               })}
             >
-              <Text style={{ fontSize: 14, fontWeight: "700", color: COLORS.neon }}>
+              <Text style={{ fontSize: 14, fontWeight: "700", color: COLORS.accent }}>
                 Ich kümmere mich selbst um die Anmeldung
               </Text>
             </Pressable>
@@ -486,11 +486,11 @@ export default function PaymentScreen() {
             width: "100%",
             maxWidth: 400,
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.white, marginBottom: 16, textAlign: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "700", color: COLORS.text, marginBottom: 16, textAlign: "center" }}>
               Hinweis für private Auftraggeber
             </Text>
             
-            <Text style={{ fontSize: 14, color: COLORS.lightText, marginBottom: 24, textAlign: "center", lineHeight: 20 }}>
+            <Text style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 24, textAlign: "center", lineHeight: 20 }}>
               Wenn du jemanden gegen Bezahlung beschäftigst, kann eine Anmeldung bei der Minijob-Zentrale erforderlich sein.{'\n\n'}
               Die App erzeugt alle notwendigen Unterlagen. Du reichst sie bei Bedarf selbst ein.{'\n\n'}
               Wir haben alle Unterlagen unter 'Meine Matches' für dich hinterlegt. Du kannst sie einfach an die Minijob-Zentrale weiterleiten.
@@ -502,7 +502,7 @@ export default function PaymentScreen() {
                 router.replace(`/(employer)/matches`);
               }}
               style={({ pressed }) => ({
-                backgroundColor: COLORS.neon,
+                backgroundColor: COLORS.accent,
                 borderRadius: 14,
                 paddingVertical: 14,
                 paddingHorizontal: 16,
@@ -510,7 +510,7 @@ export default function PaymentScreen() {
                 opacity: pressed ? 0.9 : 1,
               })}
             >
-              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.background }}>
+              <Text style={{ fontSize: 16, fontWeight: "700", color: COLORS.bg }}>
                 ✓ Verstanden
               </Text>
             </Pressable>
