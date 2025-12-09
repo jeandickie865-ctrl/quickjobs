@@ -43,6 +43,7 @@ export default function SignupScreen() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'worker' | 'employer' | null>(null);
+  const [employerType, setEmployerType] = useState<'private' | 'company' | null>(null);
 
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -138,6 +139,21 @@ export default function SignupScreen() {
                   </Pressable>
                 </View>
               </View>
+
+              {/* Employer Type Selection - nur wenn Employer gewählt */}
+              {selectedRole === 'employer' && (
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.text, marginBottom: 8 }}>Ich bin</Text>
+                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                    <Pressable onPress={() => setEmployerType('private')} style={{ flex: 1, backgroundColor: employerType === 'private' ? COLORS.purple : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: employerType === 'private' ? COLORS.purple : COLORS.border }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: employerType === 'private' ? COLORS.white : COLORS.text }}>Privat</Text>
+                    </Pressable>
+                    <Pressable onPress={() => setEmployerType('company')} style={{ flex: 1, backgroundColor: employerType === 'company' ? COLORS.purple : COLORS.white, borderRadius: 12, paddingVertical: 14, alignItems: 'center', borderWidth: 2, borderColor: employerType === 'company' ? COLORS.purple : COLORS.border }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: employerType === 'company' ? COLORS.white : COLORS.text }}>Unternehmen</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              )}
 
               {/* Email */}
               <View style={{ marginBottom: 20 }}>
