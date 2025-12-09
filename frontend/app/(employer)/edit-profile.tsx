@@ -237,12 +237,12 @@ export default function EmployerProfileScreen() {
 
           {/* Logo */}
           <View style={{ alignItems: 'center', marginBottom: 10 }}>
-            <View style={{ width: 60, height: 60, backgroundColor: COLORS.neon, borderRadius: 12, alignItems: 'center', justifyContent: 'center' }}>
-              <Image
-                source={{ uri: 'https://customer-assets.emergentagent.com/job_worklink-staging/artifacts/ojjtt4kg_Design%20ohne%20Titel.png' }}
-                style={{ width: 42, height: 42 }}
-              />
+            <View style={{ width: 80, height: 80, backgroundColor: COLORS.neon, borderRadius: 40, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFFFFF' }}>QJ</Text>
             </View>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.muted, marginTop: 8 }}>
+              Quickjobs
+            </Text>
           </View>
 
           {/* Matches Button */}
