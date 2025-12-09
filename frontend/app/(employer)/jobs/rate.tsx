@@ -287,7 +287,7 @@ export default function RateWorkerScreen() {
 
             {/* Rating Text */}
             {rating > 0 && (
-              <Text style={{ fontSize: 15, color: COLORS.darkGray, textAlign: 'center', fontWeight: '600' }}>
+              <Text style={{ fontSize: 15, color: COLORS.text, textAlign: 'center', fontWeight: '600' }}>
                 {rating === 1 && 'Schlecht'}
                 {rating === 2 && 'Nicht so gut'}
                 {rating === 3 && 'Okay'}
