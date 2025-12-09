@@ -38,9 +38,11 @@ export default function ChatScreen() {
   const [sending, setSending] = useState(false);
   const [text, setText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const previousMessageCount = useRef(0);
 
   useEffect(() => {
     let mounted = true;
@@ -61,7 +63,16 @@ export default function ChatScreen() {
         }
 
         const msgs = await loadMessages(applicationId);
-        if (mounted) setMessages(msgs || []);
+        if (mounted) {
+          // Prüfe, ob neue Nachrichten da sind
+          if (msgs && msgs.length > previousMessageCount.current && !isFirstLoad) {
+            setHasNewMessages(true);
+            // Automatisch nach 3 Sekunden ausblenden
+            setTimeout(() => setHasNewMessages(false), 3000);
+          }
+          previousMessageCount.current = msgs?.length || 0;
+          setMessages(msgs || []);
+        }
       } catch (err) {
         console.log("CHAT ERROR:", err);
       } finally {
