@@ -106,7 +106,7 @@ export default function WorkerRegistrationDataScreen() {
           {/* Header */}
           <View style={{ marginBottom: 24 }}>
             <Text style={{ color: COLORS.text, fontSize: 28, fontWeight: '900', marginBottom: 8 }}>
-              BACKUP
+              Quickjobs
             </Text>
             <Text style={{ color: COLORS.text, fontSize: 20, fontWeight: '700', marginBottom: 8 }}>
               Deine Daten für offizielle Einsätze
