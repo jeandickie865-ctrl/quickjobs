@@ -206,7 +206,7 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Matches',
           tabBarLabel: 'Matches',
-          tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
+          tabBarBadge: unreadChatCount > 0 ? unreadChatCount : undefined,
         }} 
       />
       <Tabs.Screen 
