@@ -156,7 +156,10 @@ export default function AddressAutocompleteInput({
     <View style={{ marginBottom: 8 }}>
       {/* STREET */}
       <View style={styles.group}>
-        <Text style={styles.label}>Straße *</Text>
+        <Text style={styles.label}>Adresse eingeben *</Text>
+        <Text style={{ fontSize: 12, color: COLORS.muted, marginBottom: 8, fontStyle: 'italic' }}>
+          💡 Tipp: Gib deine komplette Adresse ein (z.B. "Hauptstraße 45, Berlin") und wähle aus den Vorschlägen
+        </Text>
 
         <TextInput
           value={street}
@@ -164,7 +167,7 @@ export default function AddressAutocompleteInput({
             onStreetChange(t);
             search(t);
           }}
-          placeholder="Straße"
+          placeholder="z.B. Hauptstraße 45, 10115 Berlin"
           placeholderTextColor={COLORS.placeholder}
           style={styles.input}
           autoCapitalize="words"
