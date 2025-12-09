@@ -43,6 +43,7 @@ export default function WorkerJobDetailScreen() {
   const [buttonClickCount, setButtonClickCount] = useState(0);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
   const [hasApplied, setHasApplied] = useState(false);
+  const [isMatched, setIsMatched] = useState(false); // Neuer State: Ist gematcht?
 
   const loadWorkerProfile = async () => {
     try {
