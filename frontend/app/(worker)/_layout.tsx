@@ -132,10 +132,10 @@ export default function WorkerLayout() {
           justifyContent: 'center',
           alignItems: 'center',
         },
-        tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: '#FFFFFF',
+        tabBarActiveTintColor: '#1A1A1A',
+        tabBarInactiveTintColor: '#1A1A1A',
         tabBarLabelStyle: {
-          fontSize: 9,
+          fontSize: 11,
           fontWeight: '700',
           marginTop: 0,
           marginBottom: 0,
