@@ -146,8 +146,8 @@ export default function Step3Categories() {
             contentContainerStyle={{ ...styles.scrollContent, paddingBottom: 160 }}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
-            <Text style={styles.subtitle}>Wähle deine Kategorien und öffne sie, um Tätigkeiten auszuwählen</Text>
+            <Text style={styles.title}>🔥 TEST VERSION 2.0 🔥</Text>
+            <Text style={styles.subtitle}>Wenn du diesen Text siehst, funktionieren Updates!</Text>
 
             {/* KATEGORIEN LISTE */}
             <View style={styles.section}>
