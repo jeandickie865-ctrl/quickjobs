@@ -19,9 +19,6 @@ export default function TestTaxonomy() {
     
     // Test 3: Group tags by type
     const grouped = groupTagsByType('sicherheit');
-      qual: grouped.qual.length,
-      doc: grouped.doc.length,
-    });
     
     // Test 4: Check radius options
     
