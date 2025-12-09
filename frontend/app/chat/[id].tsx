@@ -134,7 +134,13 @@ export default function ChatScreen() {
           borderBottomWidth: 1,
           borderBottomColor: COLORS.border
         }}>
-          <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 12 }}>
+          <Pressable onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace('/(worker)/applications');
+            }
+          }} style={{ padding: 4, marginRight: 12 }}>
             <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
           </Pressable>
           <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF' }}>Chat</Text>
@@ -188,7 +194,13 @@ export default function ChatScreen() {
           borderBottomWidth: 1,
           borderBottomColor: COLORS.border
         }}>
-          <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 12 }}>
+          <Pressable onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace('/(worker)/applications');
+            }
+          }} style={{ padding: 4, marginRight: 12 }}>
             <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
           </Pressable>
           <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF' }}>Chat</Text>
