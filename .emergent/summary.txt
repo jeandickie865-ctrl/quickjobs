@@ -1,205 +1,246 @@
 <analysis>
+**original_problem_statement:** The initial problem was a catastrophic platform failure where no code changes were being reflected for the user, causing extreme frustration. This blocked all progress on a major UI overhaul and rebranding of the app from Backup to Quickjobs.
 
-**original_problem_statement:** The initial problem was to resolve a critical and persistent bug where job creation resulted in incorrect dates and times being saved to the database, making the core feature unusable. The user also reported a login failure for the account . The ultimate goal was to fix all outstanding issues to prepare the application for an iOS TestFlight release.
-
-Throughout the session, the user's requests evolved significantly, shifting focus from bug fixing to a series of complete, rapid UI/theme redesigns of the entire application. This included multiple major color palette changes and the integration of specific design elements like a decorative arrow. The final request was to implement a light (white) theme with green headers, purple buttons, and a specific decorative arrow.
+Throughout this session, numerous bugs and feature requests were addressed, including:
+1.  **Platform/Environment:** Fix the core issue preventing UI updates from being visible.
+2.  **Footer Layout:** Fix the bottom tab bar in the worker layout so icons are evenly distributed.
+3.  **Category Selection UI:** Redesign the  screen from a long list to a more user-friendly interface, first as an accordion, then as a chip-based design.
+4.  **Routing:** Fix Unmatched Route errors when navigating to job details.
+5.  **UI Redesigns & Branding:** Fix various UI issues like black backgrounds, incorrect colors, and old BACKUP branding on multiple screens (, , , ).
+6.  **Review System Logic:** Fix a critical bug where workers saw their own reviews instead of reviews written about them by employers.
+7.  **Chat Functionality:** Add a back button, remove an in-chat notification banner, and re-implement the unread message count badge on the main layout.
+8.  **Data Consistency:** Ensure house numbers are displayed correctly (only after a match) and fix an issue where a company was being incorrectly treated as a private employer.
+9.  **New Feature Request:** At the end of the session, the user requested the implementation of a feature for employers to view qualification documents uploaded by workers.
 
 **User's preferred language**: German
 
 **what currently exists?**
-The application is a ShiftMatch marketplace for employers and workers. The codebase consists of a FastAPI backend and an Expo (React Native) frontend.
+The application is now largely functional and the critical platform issue ( disabling Metro's file watcher) has been resolved, allowing for a more stable development feedback loop. A significant number of UI bugs, branding inconsistencies, and critical logic flaws (especially in the review system) have been fixed. The UI reflects the new Quickjobs branding (lila/orange/pink theme) across many screens. The category selection for workers has been completely redesigned into a modern, chip-based interface.
 
-Functionally, the app supports user registration/login for both roles, profile management, job creation, job matching, and document uploads. Key bugs related to job matching, date/time handling (including a midnight bug and timezone issues), and PDF generation have been addressed, and the database was reset (clearing transactional data like jobs and applications) to start from a clean slate.
+However, the session was fraught with caching issues, and some bugs were only fixed after multiple failed attempts and significant user frustration. A few issues remain unresolved.
 
-Visually, the entire application has just undergone a massive UI overhaul to a **light (white) theme**. This theme uses a white background (), dark grey text, a primary green color () for headers, and a purple accent () for buttons and decorative elements. A decorative arrow element has been integrated into the top-right corner of 9 key screens.
-
-**Last working item**: (The agent was implementing a final, comprehensive UI redesign based on user-provided specifications.)
-    - Last item agent was working: Applying a global UI redesign to a light (white) theme. This included:
-        1. Updating the central color palette in .
-        2. Running a script to overwrite all local color definitions in 49 separate files to enforce the new white theme.
-        3. Adding specific green headers with white text to key screens.
-        4. Changing all primary buttons to be purple with dark text.
-        5. Updating a decorative arrow component () with a specific image and styling provided by the user.
-    - Status: IN PROGRESS
+**Last working item**:
+    - Last item agent was working: The user requested the implementation of a feature to allow employers to see the qualification documents that workers have uploaded. The agent investigated and confirmed that while workers can upload documents, there is no UI for employers to view them. The agent was about to begin implementation.
+    - Status: NOT STARTED
     - Agent Testing Done: N
-    - Which testing method agent to use? Frontend testing agent. The massive, scripted changes to the UI across ~50 files require a thorough visual and functional regression test to catch any introduced anomalies, layout issues, or broken components.
+    - Which testing method agent to use? Frontend testing agent
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - Issue 1: UI/Theme Verification and Consistency (P0)
-  - Issue 2: Date/Time Bug End-to-End Confirmation (P1)
-  - Issue 3: Login Failure for  (P2)
-  - Issue 4: Black/Dark UI Remnants (P2)
-  - Issue 5: Arrow Visibility and Placement (P3)
+  - Issue 1: Chat notification badge is not working (P1)
+  - Issue 2: Original  login bug remains unaddressed (P2)
   
   **Issues Detail:**
-  - **Issue 1: UI/Theme Verification and Consistency (P0)**
-     - **Description**: The app underwent multiple, rapid, full-scale UI redesigns. The latest is a light (white) theme with green/purple accents. It is highly likely that some components or screens still have incorrect styling (e.g., white text on white backgrounds, wrong colors, inconsistent spacing) despite the global scripts that were run.
+  - **Issue 1: Chat notification badge is not working (P1)**
+     - **Description**: The agent implemented a feature to show a badge with a count of unread messages on the Matches tab for both workers and employers. The user reported that this badge does not appear.
+     - **Attempted fixes**: The agent investigated the API call to  and received an  error. This indicates the frontend is not sending a valid authentication token when making this specific API call. The agent identified the error but did not fix the underlying token issue.
      - **Next debug checklist**:
-       - Use the  to systematically navigate through every screen of the application.
-       - Verify text readability, color consistency (white background, green headers, purple buttons), and correct asset display (especially the arrow).
-       - Specifically check input fields, empty-state components, and list items for styling regressions.
-     - **Why fix this issue and what will be achieved with the fix?**: To ensure the application has a consistent, professional, and usable user interface as per the user's final design request.
-     - **Status**: TESTING PENDING
-     - **Is recurring issue?**: Y (Multiple white-on-white and inconsistent color issues were reported and fixed in isolated places).
-     - **Should Test frontend/backend/both after fix?**: Frontend
-
-  - **Issue 2: Date/Time Bug End-to-End Confirmation (P1)**
-     - **Description**: A critical bug caused jobs to be saved with wildly incorrect dates (e.g., 3 months off). While the logic in  was completely refactored and the database was reset, a new job has not been created and verified end-to-end since the reset.
-     - **Next debug checklist**:
-        1. As an employer, create a new job with a specific date and time (e.g., tomorrow, 11:00-18:00).
-        2. As a worker, find that job in the All Jobs list and the job details screen.
-        3. Verify that the date and time are displayed correctly in all locations (job list, job details) for both the employer and the worker.
-        4. Check the job entry directly in the MongoDB database to confirm the  and  ISO strings are correct.
-     - **Why fix this issue and what will be achieved with the fix?**: This is a core functionality of the app. Confirming the fix is crucial for the app to be usable.
-     - **Status**: USER VERIFICATION PENDING
-     - **Is recurring issue?**: Y
-     - **Should Test frontend/backend/both after fix?**: Both
-
-  - **Issue 3: Login Failure for  (P2)**
-     - **Description**: This was mentioned in the initial problem statement from the previous fork but was never investigated or addressed. The focus shifted immediately to the matching and date/time bugs.
-     - **Attempted fixes**: None.
-     - **Next debug checklist**:
-        1. Attempt to log in with the credentials for .
-        2. Check backend logs (error: <class 'xml.parsers.expat.ExpatError'>, not well-formed (invalid token): line 24, column 0: file: /usr/lib/python3.11/xmlrpc/client.py line: 451) for any authentication errors.
-        3. Check the  collection in MongoDB to ensure the account exists and is not locked or corrupted.
-     - **Why fix this issue and what will be achieved with the fix?**: To resolve a potentially critical user-facing issue and ensure all test accounts are functional.
-     - **Status**: NOT STARTED
-     - **Is recurring issue?**: N
-     - **Should Test frontend/backend/both after fix?**: Backend
-
-  - **Issue 4: Black/Dark UI Remnants (P2)**
-     - **Description**: The user pointed out a dark background area in the profile wizard category selection screen. While this was fixed in , it indicates that other hardcoded dark colors might exist elsewhere, missed by the global update scripts.
-     - **Next debug checklist**:
-        - Perform a full  search for any hardcoded hex color codes that are not part of the new  palette (e.g., , , ).
-        - Pay special attention to  styles.
-     - **Why fix this issue and what will be achieved with the fix?**: To ensure complete adherence to the new light theme and eliminate jarring inconsistencies.
+        1.  Inspect the code in  and  where the  function is defined.
+        2.  Verify how the  is being retrieved from  and included in the  request headers.
+        3.  Compare this with other working API calls in the app to identify any discrepancy in how the auth header is constructed or sent.
+        4.  Fix the token retrieval/sending logic for the  endpoint.
+     - **Why fix this issue and what will be achieved with the fix?**: This is a critical UX feature. Without the badge, users are not notified of new messages unless they are actively looking at their matches, leading to missed communication.
      - **Status**: IN PROGRESS
-     - **Is recurring issue?**: Y
+     - **Is recurring issue?**: N
      - **Should Test frontend/backend/both after fix?**: Frontend
+     - **Blocked on other issue**: None
 
-  - **Issue 5: Arrow Visibility and Placement (P3)**
-     - **Description**: The user repeatedly reported the decorative arrow was invisible, misshapen, or poorly positioned. The agent's last fix involved creating a new component  and updating its placement. The final visibility and positioning across all 9 screens need confirmation.
-     - **Attempted fixes**: Replaced PNG with SVG, removed , repositioned multiple times.
-     - **Next debug checklist**:
-        - Navigate to all 9 screens where the arrow is supposed to appear (Login, Signup, Profiles, etc.).
-        - Verify the arrow is visible, has the correct appearance (lila doodle), and is positioned appropriately in the top-right without overlapping critical UI elements.
-     - **Why fix this issue and what will be achieved with the fix?**: To fulfill a specific and repeated user design request.
-     - **Status**: USER VERIFICATION PENDING
+  - **Issue 2: Original  login bug remains unaddressed (P2)**
+     - **Description**: The bug from the initial handover where user  cannot log in was never investigated or fixed during this session.
+     - **Status**: NOT STARTED
      - **Is recurring issue?**: Y
      - **Should Test frontend/backend/both after fix?**: Frontend
+     - **Blocked on other issue**: None
 
 **In progress Task List**:
-- **Task 1: Global UI Redesign to Light Theme**
-    - **Description**: The agent was in the middle of a complete UI overhaul to a white background theme with green and purple accents. Global scripts were run, but verification and cleanup are pending.
-    - **Where to resume**: Begin verifying the UI on all screens. Start with the screens the user has reported issues on (profile wizard, empty states) and then expand to all others.
-    - **What will be achieved with this?**: A visually consistent and modern application that meets the user's latest design specification.
-    - **Status**: IN PROGRESS
-    - **Should Test frontend/backend/both after fix?**: Frontend
+  - Task 1: Implement UI for Employers to View Worker Qualification Documents (P0)
+
+  **Task Detail:**
+  - **Task 1: Implement UI for Employers to View Worker Qualification Documents (P0)**
+     - **Where to resume**: 
+        1. Open .
+        2. In the  component, after the worker's details, add a new section titled Qualifikationsnachweise.
+        3. The worker's profile data, available in the  object, should contain a  array.
+        4. Map through the  array. For each document, display the  and a Download or View button/link.
+        5. The link should point to the document's .
+     - **What will be achieved with this?**: Employers will be able to see and access the proof of qualification that workers have uploaded, fulfilling a key business requirement.
+     - **Status**: NOT STARTED
+     - **Should Test frontend/backend/both after fix?**: Frontend
+     - **Blocked on something**: None
 
 **Upcoming and Future Tasks**
-- **P0: Prepare for iOS TestFlight Build**: The user's primary goal. This involves configuring  with the provided  (),  (), and . The next agent must then guide the user on how to use Expo Application Services (EAS) to perform the build externally, as Emergent does not provide direct iOS build services.
-- **P1: Full End-to-End Regression Testing**: After the UI is approved and the date bug is confirmed fixed, a full test of the application flow (signup -> create job -> apply -> match -> review) is necessary.
-- **P2: Refactor backend time fields to camelCase**: An outstanding technical debt task from the initial handover to improve code consistency in .
+- There are no other upcoming tasks defined. The priority is to complete the in-progress task and fix the pending issues.
 
 **Completed work in this session**
+- **Platform/Environment:**
+  - **FIXED THE ROOT CAUSE OF ALL CACHING ISSUES:** Identified and removed  from the supervisor configuration, which was disabling Metro's file watcher and preventing any changes from being detected automatically.
+- **UI/UX & Feature Implementation:**
+  - **Footer Layout:** Correctly implemented a full-width, evenly-distributed tab bar in .
+  - **Category Selection Redesign:** Completely rebuilt  to use a modern, chip-based selection UI as per user's request.
+  - **Review System Overhaul:** Fixed a critical logic flaw by adding a  to the review schema, ensuring workers and employers see reviews written *about* them, not *by* them. Updated , , and the backend API.
+  - **Rate Screen Redesign:** Redesigned both the worker and employer rating screens (, ) from an old black/pink theme to the new neutral white/lila branding.
+  - **Payment Screen Redesign:** Redesigned  from an old turquoise theme to the new branding.
+  - **Address Display Logic:** Added house numbers to the post-match view () and REMOVED them from the pre-match view () for privacy.
 - **Bug Fixes:**
-  - Fixed critical job matching bug by auto-generating the Mon Dec  8 12:22:03 UTC 2025 field in .
-  - Resolved multiple date/time display and formatting issues across the frontend.
-  - Fixed the midnight bug in  to correctly handle jobs spanning two days.
-  - Completely refactored the timezone and date creation logic in  to be more robust.
-  - Fixed PDF generation in  to display correct times.
-  - Made the Alle Jobs tab visible for workers in .
-- **Feature/UI Enhancements:**
-  - Implemented a worker reviews and ratings section in .
-- **Database:**
-  - Performed a database reset at user's request, clearing all transactional data (jobs, applications, reviews) while preserving users and profiles.
-- **Major UI Overhauls:**
-  - Executed three separate, full-scale UI redesigns of the entire application based on evolving user requests, culminating in the current light (white) theme.
-  - Created and integrated a decorative arrow component () into 9 key screens.
+  - **Services Started:** Fixed the initial problem where 
+  Usage: expo [command] [options]
+
+  Options:
+  
+    -V, --version                     output the version number
+    --non-interactive                 Fail, if an interactive prompt would be required to continue.
+    -h, --help                        output usage information
+  
+  Commands:
+
+    init [name]                       Create a new Expo project
+    start [path]                      Start a local dev server for the app
+    start:web [path]                  Start a Webpack dev server for the web app
+    export [path]                     Export the static files of the app for hosting it on a web server
+    install [packages...]             Install a module or other package to a project
+    run:android [path]                Run the Android app binary locally
+    run:ios [path]                    Run the iOS app binary locally
+    send [path]                       Share the project's URL to an email address
+
+    login                             Login to an Expo account
+    logout                            Logout of an Expo account
+    register                          Sign up for a new Expo account
+    whoami                            Return the currently authenticated account
+
+    client:install:ios                Install Expo Go for iOS on the simulator
+    client:install:android            Install Expo Go for Android on a connected device or emulator
+
+    config [path]                     Show the project config
+    doctor [path]                     Diagnose issues with the project
+    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
+
+    customize:web [path]              Eject the default web files for customization
+    prebuild [path]                   Create native iOS and Android project files before building natively.
+                                      Learn more: https://docs.expo.dev/workflow/customizing/
+
+    build:web [path]                  Build the web app for production
+
+    credentials:manager [path]        Superseded by eas credentials in eas-cli
+
+    url [path]                        Log a URL for opening the project in Expo Go
+    url:ipa [path]                    Log the download URL for the standalone iOS binary
+    url:apk [path]                    Log the download URL for the standalone Android binary
+
+    webhooks [path]                   List all webhooks for a project
+    webhooks:add [path]               Add a webhook to a project
+    webhooks:remove [path]            Delete a webhook
+    webhooks:update [path]            Update an existing webhook
+
+    build:ios [path]                  Superseded by eas build in eas-cli
+    build:android [path]              Superseded by eas build in eas-cli
+    build:status [path]               Superseded by eas build:list in eas-cli
+    eject [path]                      Superseded by expo prebuild
+    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
+    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
+    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
+    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
+    publish [path]                    Superseded by eas update in eas-cli
+    publish:set [path]                Superseded by eas update:republish in eas-cli
+    publish:rollback [path]           Superseded by eas update:republish in eas-cli
+    publish:history [path]            Superseded by eas update:list in eas-cli
+    publish:details [path]            Superseded by eas update:view in eas-cli
+    push:android:upload [path]        Superseded by eas credentials in eas-cli
+    push:android:show [path]          Superseded by eas credentials in eas-cli
+    push:android:clear [path]         Superseded by eas credentials in eas-cli
+    upload:android [path]             Superseded by eas submit in eas-cli
+    upload:ios [path]                 Superseded by eas submit in eas-cli
+    client:ios [path]                 Superseded by Expo Dev Clients
+
+[16:01:03]   Run a command with --help for more info 💡
+[16:01:03]     $ expo start --help
+[16:01:03] and  services were stopped.
+  - **Routing Fixed:** Corrected a  call in  to fix an Unmatched Route error.
+  - **Save Functionality:** Fixed the Save button on the employer rating screen by switching from a non-functional local storage implementation to a backend API call.
+  - **Branding/UI Consistency:** Replaced old BACKUP text and logos with Quickjobs branding on multiple screens (, , ).
+  - **Data Fix:** Corrected an employer's  in the database to prevent an incorrect modal from appearing.
+  - **Chat:** Added a working back button, removed an unwanted in-chat notification banner, and fixed an Invalid Date display bug in .
 
 **Earlier issues found/mentioned but not fixed**
-   - **Issue 1: Login failure for **
-     - **Debug checklist**: Attempt login, check backend logs for auth errors, verify user in MongoDB  collection.
-     - **Why to solve this issue and what will be achieved with this?**: Ensures all test accounts are functional for end-to-end testing.
-     - **Should Test frontend/backend/both after fix**: Backend
+   - **Issue 1: Chat notification badge token error**
+     - **Debug checklist**: Check auth token handling in the  request inside  in both  and .
+     - **Why to solve this issue and what will be achieved with this?**: Users need to be notified of new chat messages to ensure timely communication.
+     - **Should Test frontend/backend/both after fix?**: Frontend
      - **Is recurring issue?**: N
+   - **Issue 2:  login bug**
+     - **Debug checklist**: Attempt to log in as this user, check console for errors, check backend logs for reasons for login failure (e.g., wrong password, non-existent user).
+     - **Why to solve this issue and what will be achieved with this?**: To resolve an outstanding user-reported bug from a previous session.
+     - **Should Test frontend/backend/both after fix?**: Frontend
+     - **Is recurring issue?**: Y
 
 **Known issue recurrence from previous fork**
-  - **Issue recurrence in previous fork**: The date/time handling bug in the job creation form was the central, recurring issue from the previous fork.
-  - **Recurrence count**: This issue was the focus of at least 4-5 separate debugging and fixing cycles during this session.
-  - **Status**: IN PROGRESS (Fixes have been implemented, but a full end-to-end test after the DB reset is still pending).
+  - **Platform Caching / Stale UI:** This was the main theme of the entire session. It recurred constantly, first due to stopped services, then due to the  flag disabling the file watcher, and finally due to aggressive browser caching. The root platform cause is fixed, but browser caching remains a potential friction point.
+  - **Recurrence count**: High (dozens of instances)
+  - **Status**: RESOLVED (platform-side), User-side awareness needed (browser cache).
 
 **Code Architecture**
-
+reviewerRole
 
 **Key Technical Concepts**
-- **Frameworks**: Expo (React Native), FastAPI (Python).
-- **Database**: MongoDB.
-- **UI/Theme**: The application underwent multiple rapid redesigns. The final state is a **light (white) theme** managed via a central  file. However, many components had local  objects that caused inconsistencies and required global, scripted updates.
-- **Componentization**: A new reusable component  was created for a decorative UI element.
-- **Date/Time Handling**: A major pain point. The final, stable approach uses native Javascript  objects on the frontend and converts them to UTC ISO strings () for storage in the backend. Display logic then converts these back to local time.
-- **Scripting**: The agent heavily relied on  and  scripts to perform mass updates across the codebase, especially for the UI redesigns.
-
-**key DB schema**
-  - **jobs**:  and  are stored as UTC ISO strings. A Mon Dec  8 12:22:03 UTC 2025 field (YYYY-MM-DD) is now automatically generated on creation for filtering.
-
-**changes in tech stack**
-  - No fundamental changes to the tech stack.
+- **Metro File Watcher ():** The discovery that  in the environment disables Metro's file watcher was the critical breakthrough, solving dozens of stale UI complaints.
+- **Expo Router Layouts:** Deep debugging of 's tab generation, including auto-registration of all files in a directory and the difference between  (removes from router) and  (hides button but reserves space).
+- **Schema Evolution for Disambiguation:** The solution to the wrong reviews problem was to add a  field to the  model. This is a robust way to fix ambiguous data relationships.
+- **API-Driven vs. Local Storage:** Refactored the employer review saving mechanism from a broken local storage implementation to use the backend API, a crucial step for data persistence.
+- **Browser Caching:** A persistent secondary problem. Even with the server-side issues fixed, aggressive browser caching frequently required the user to perform hard reloads or use incognito mode.
 
 **All files of reference**
-- : Fixed matching logic and PDF time formatting.
-- : The source of most date/time bugs; has been completely refactored.
-- : The new central source of truth for the application's color scheme.
-- : The new component for the decorative arrow.
-- , : Both were modified to fix hidden tabs and apply new tab bar styling.
-- : Modified to add the worker reviews feature.
-- **Globally Updated Files**: Nearly every  file in  was modified by scripts to apply the new light theme, making the entire frontend a critical area for regression testing.
+- : This is where the new view documents feature needs to be added.
+- : Contains the broken chat badge logic (token issue).
+- : Contains the broken chat badge logic (token issue).
+- : Was a major source of bugs (UI, save logic) that are now fixed.
+- : Contains the new chip-based UI.
+
+**Areas that need refactoring**:
+- The API calls for chat badges in the two layout files ( and ) are duplicated. This logic could be extracted into a shared hook () for better code reuse and easier debugging of the token issue.
+
+**key api endpoints**
+- : Used for saving worker/employer ratings. The payload now includes .
+- : Used for fetching the number of unread messages for the notification badge. Currently failing due to an auth token issue.
+- : Used to fix an employer's  from  to .
 
 **Critical Info for New Agent**
-- **The user frequently and drastically changes UI requirements.** Be prepared to perform full-scale, app-wide design changes. Use global constants () and avoid local style definitions.
-- **The Date/Time bug was severe and complex.** The database has been reset. The very first task after UI verification should be to create a new job and test the entire date/time flow from creation to display.
-- **The user's ultimate goal is an iOS TestFlight build.** You cannot perform the build. Your task is to prepare the  configuration and guide the user on using EAS Build.
-- **Communicate exclusively in German.**
-- **Massive scripted changes have been made.** The codebase is potentially fragile. A full frontend regression test is essential.
+- **The user has been through extreme frustration with caching.** Always assume the user might be seeing a stale version. Proactively recommend using a **new incognito window** for testing to bypass browser cache issues.
+- **The platform's file-watching is now fixed ( removed).** Changes you make to files *should* be picked up by Metro automatically. If they aren't, suspect browser caching first.
+- **There are often parallel files for worker and employer.** When a user reports a bug (e.g., on the rate screen), double-check if you need to edit  or  or both. This was a source of repeated errors.
+- **The review system was significantly changed.** It now relies on a  field ( or ) to determine who wrote the review. All new reviews must include this field, and all profile pages filter based on it.
 
 **documents created in this job**
-  - 
-  - 
-  - Various temporary shell and python scripts for bulk file editing.
+- None.
 
 **Last 10 User Messages and any pending user messages**
-1. User provides final code for the lila button. (Implemented)
-2. User provides final code for the decorative arrow component and asset name. (Implemented)
-3. User asks why the app is not on the white theme yet. (Agent realizes local overrides, fixes this)
-4. User asks for the login/registration design files. (Provided)
-5. User provides a green header snippet. (Implemented)
-6. User provides a lila button snippet. (Implemented)
-7. User provides a new  image and code. (Implemented)
-8. User states they still see no changes and want the white background. (Agent runs global script to fix)
-9. User asks for the login/registration design files again. (Agent provides)
-10. The last message is the user providing the final  code again. (Agent had already implemented this).
+1.  **User:** Asks how qualification documents are shared with employers. (Agent confirms it's not implemented).
+2.  **User:** Reports Invalid Date in chat and that buttons on the matches screen need a redesign. (Agent fixed both).
+3.  **User:** Confirms the agent should start implementing the document viewing feature for employers. (This is the current task).
+4.  **User:** (from earlier) Reports that the employer rate screen is black and saving doesn't work. (This was a recurring issue, fixed by editing the correct file and switching to an API call).
+5.  **User:** (from earlier) Reports missing house number in the profile summary. (Fixed).
+6.  **User:** (from earlier) Reports old BCKP logo on employer edit profile. (Fixed).
+7.  **User:** (from earlier) Reports seeing reviews they wrote in their own profile, instead of reviews about them. (Critical logic error, now fixed with ).
+8.  **User:** (from earlier) Reports an incorrect private employer modal. (Fixed via a DB update).
+9.  **User:** (from earlier) Reports black fields and BACKUP text on the registration data screen. (Fixed).
+10. **User:** (from earlier) Clarifies that house numbers should NOT appear in the job feed, only after a match. (Logic was corrected).
 
 **Project Health Check:**
-- **Broken**:
-  - The entire UI is potentially in a fragile state due to multiple, rapid, scripted redesigns. It requires full verification.
-  - The core job creation feature's date/time handling is unverified since the database reset.
-- **Mocked**:
-  - None.
+- **Broken:** The chat notification badge feature is broken due to an API token error.
+- **Mocked:** The review saving functionality was previously mocked/using local storage but has now been fixed to use the real backend API.
 
 **3rd Party Integrations**
-- None identified in the provided history.
+- None identified.
 
 **Testing status**
   - Testing agent used after significant changes: NO
-  - Troubleshoot agent used after agent stuck in loop: YES (implicitly, through self-correction and analysis of recurring bugs)
-  - Test files created: None
-  - Known regressions: Multiple UI regressions (e.g., white-on-white text) occurred during the redesigns and were subsequently fixed. The risk of further regressions is high.
+  - Troubleshoot agent used after agent stuck in loop: YES (Used multiple times, critically identifying the  root cause and other caching issues).
+  - Test files created: None.
+  - Known regressions: The chat notification badge was implemented but is not working.
 
 **Credentials to test flow:**
-- User accounts like  (employer) and  (worker) exist, but transactional data is gone. New jobs/applications will be needed for testing.
+- A worker account ( / password ) was created via API and can be used for testing worker flows.
+- An employer account is needed to test employer flows. If credentials are unknown, one can be created via the signup page.
 
 **What agent forgot to execute**
-- The agent never investigated the login failure for  that was mentioned in the very first problem statement.
-
+- The agent never investigated or fixed the  login bug mentioned in the initial handover summary.
+- The agent identified the Invalid or expired token error for the chat badge API call but did not proceed to fix the root cause of the token issue.
 </analysis>

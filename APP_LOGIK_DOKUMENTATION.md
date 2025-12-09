@@ -427,8 +427,8 @@ Die App verbindet zwei Benutzergruppen:
 ## 🚀 Deployment
 
 **URLs:**
-- Frontend: `https://rebranding-dash.preview.emergentagent.com`
-- Backend: `https://rebranding-dash.preview.emergentagent.com/api`
+- Frontend: `https://quickview-redesign.preview.emergentagent.com`
+- Backend: `https://quickview-redesign.preview.emergentagent.com/api`
 
 **Services:**
 - Backend: Port 8001 (FastAPI/Uvicorn)
