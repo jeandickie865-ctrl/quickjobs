@@ -267,11 +267,11 @@ export default function WorkerFeedScreen() {
           </View>
         )}
 
-        {/* ADRESSE */}
+        {/* ADRESSE (OHNE Hausnummer - nur nach Match sichtbar) */}
         <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'flex-start' }}>
           <Ionicons name="location-outline" size={20} color={COLORS.accent} style={{ marginRight: 8, marginTop: 2 }} />
           <Text style={{ color: COLORS.textMuted, flex: 1, fontSize: 14 }}>
-            {item.address?.street} {item.address?.houseNumber}, {item.address?.postalCode} {item.address?.city}
+            {item.address?.street}, {item.address?.postalCode} {item.address?.city}
           </Text>
         </View>
 
