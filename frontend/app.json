@@ -62,9 +62,7 @@
       "router": {
         "origin": false
       },
-      "eas": {
-        "projectId": "quickjobsneu"
-      }
+      "eas": {}
     },
     "owner": "backupkj"
   }
