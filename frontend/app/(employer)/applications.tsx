@@ -438,7 +438,7 @@ export default function EmployerApplicationsScreen() {
                       >
                         {worker.isSelfEmployed
                           ? 'Kann nach der Provision an BACKUP direkt starten.'
-                          : 'BACKUP unterstützt bei der Anmeldung.'}
+                          : 'Quickjobs unterstützt bei der Anmeldung.'}
                       </Text>
                     </View>
                   )}
