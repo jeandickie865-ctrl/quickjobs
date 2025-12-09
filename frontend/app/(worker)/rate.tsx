@@ -71,34 +71,26 @@ export default function RateEmployerScreen() {
 
   async function loadData() {
     if (!jobId) {
-      console.log('❌ No jobId provided for Worker Rate');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('📋 Worker Rate: Loading job:', jobId);
-      console.log('📋 Worker Rate: EmployerId from params:', employerId);
       
       const jobData = await getJobById(String(jobId));
       
       if (jobData) {
-        console.log('✅ Job loaded:', jobData.title);
         setJob(jobData);
         
         // Use employerId from params OR from job
         const targetEmployerId = employerId || jobData.employerId;
-        console.log('👔 Loading employer:', targetEmployerId);
         
         if (targetEmployerId) {
           const employerData = await getEmployerProfilePublicView(String(targetEmployerId));
           setEmployer(employerData);
-          console.log('✅ Employer loaded:', employerData?.companyName);
         } else {
-          console.log('❌ No employerId available');
         }
       } else {
-        console.log('❌ Job not found:', jobId);
       }
     } catch (error) {
       console.error('❌ Error loading data for Worker Rate:', error);
@@ -127,9 +119,7 @@ export default function RateEmployerScreen() {
         createdAt: new Date().toISOString(),
       };
 
-      console.log('💾 Worker: Saving review:', JSON.stringify(review, null, 2));
       const result = await addReview(review);
-      console.log('✅ Worker: Review saved successfully:', JSON.stringify(result, null, 2));
       
       // Note: Job status will be managed by backend automatically
       
@@ -161,7 +151,6 @@ export default function RateEmployerScreen() {
   }
 
   if (!job) {
-    console.log('❌ Worker Rate: Job nicht gefunden. JobId:', jobId);
     
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
@@ -196,7 +185,6 @@ export default function RateEmployerScreen() {
   }
 
   if (!employer) {
-    console.log('❌ Employer not found for rating.');
     
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.purple }}>

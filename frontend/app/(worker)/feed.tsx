@@ -72,7 +72,6 @@ export default function WorkerFeedScreen() {
 
   const loadJobs = async () => {
     if (!token || !user) {
-      console.log("⏳ Waiting for auth to load...");
       return;
     }
 
@@ -80,9 +79,7 @@ export default function WorkerFeedScreen() {
     setError(null);
 
     try {
-      console.log("📋 Loading matched jobs...");
       const data = await getMatchedJobs();
-      console.log("✅ Matched jobs loaded:", data.length);
       
       let filtered = data.filter(isUpcomingJob);
       filtered = filtered.filter(hideMatchedJobs);
@@ -110,7 +107,6 @@ export default function WorkerFeedScreen() {
       const data = await getWorkerProfile();
       setProfile(data);
     } catch (err) {
-      console.log('Profile load error:', err);
     }
   };
 
@@ -125,7 +121,6 @@ export default function WorkerFeedScreen() {
     React.useCallback(() => {
       if (!loading && token && user) {
         const timer = setTimeout(() => {
-          console.log("🔄 Feed screen focused - reloading jobs after delay");
           loadJobs();
         }, 1000);
         

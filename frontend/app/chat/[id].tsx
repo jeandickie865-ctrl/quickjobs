@@ -74,7 +74,6 @@ export default function ChatScreen() {
           setMessages(msgs || []);
         }
       } catch (err) {
-        console.log("CHAT ERROR:", err);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -115,7 +114,6 @@ export default function ChatScreen() {
       setMessages((prev) => [...prev, msg]);
       setText("");
     } catch (err) {
-      console.log("Send error:", err);
       if (String(err).includes("CHAT_LOCKED")) setLocked(true);
     } finally {
       setSending(false);

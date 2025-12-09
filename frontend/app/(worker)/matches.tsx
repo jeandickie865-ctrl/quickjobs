@@ -492,7 +492,6 @@ export default function WorkerMatchesScreen() {
                       {!job.address?.street && 'Adresse nicht verfügbar'}
                     </Text>
                     {/* Debug Info */}
-                    {console.log('Worker Match - Job Address:', job.address)}
 
                     <Text
                       style={{

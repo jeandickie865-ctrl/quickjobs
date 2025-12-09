@@ -151,11 +151,6 @@ export default function JobDetailScreen() {
       return;
     }
 
-    console.log('handleAcceptApplication:');
-    console.log('   - Application ID:', appId);
-    console.log('   - Worker ID:', workerId);
-    console.log('   - Worker Name:', workerName);
-    console.log('Navigating to /payment/' + appId);
 
     router.push(`/payment/${appId}`);
   }
