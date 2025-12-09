@@ -592,7 +592,7 @@ export default function JobDetailScreen() {
                       key={app.id}
                       style={{
                         padding: 16,
-                        backgroundColor: '#1C182B',
+                        backgroundColor: COLORS.card,
                         borderRadius: 12,
                         gap: 12,
                         borderWidth: 1,
