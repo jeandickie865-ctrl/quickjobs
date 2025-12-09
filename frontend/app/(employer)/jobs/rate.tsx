@@ -415,7 +415,7 @@ export default function RateWorkerScreen() {
 
             <Text style={{
               fontSize: 15,
-              color: COLORS.darkGray,
+              color: COLORS.textMuted,
               textAlign: 'center',
               lineHeight: 22,
             }}>
