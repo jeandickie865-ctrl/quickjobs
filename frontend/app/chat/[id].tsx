@@ -229,6 +229,29 @@ export default function ChatScreen() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
+        {/* Neue Nachrichten Benachrichtigung */}
+        {hasNewMessages && (
+          <View style={{
+            position: 'absolute',
+            top: 10,
+            left: '50%',
+            transform: [{ translateX: -75 }],
+            backgroundColor: COLORS.orange,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 20,
+            zIndex: 100,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
+          }}>
+            <Text style={{ color: '#FFFFFF', fontSize: 13, fontWeight: '700' }}>
+              📬 Neue Nachricht
+            </Text>
+          </View>
+        )}
+        
         {/* MESSAGES */}
         <FlatList
           ref={flatListRef}
