@@ -175,46 +175,55 @@ export default function AddressAutocompleteInput({
         />
       </View>
 
+      {/* DIVIDER */}
+      <View style={{ height: 1, backgroundColor: COLORS.border, marginVertical: 12 }} />
+      <Text style={{ fontSize: 11, color: COLORS.muted, marginBottom: 8, textAlign: 'center', fontStyle: 'italic' }}>
+        ⬇️ Diese Felder werden automatisch ausgefüllt, nachdem du eine Adresse aus den Vorschlägen gewählt hast
+      </Text>
+
       {/* HOUSE NUMBER */}
       <View style={styles.group}>
-        <Text style={styles.label}>Hausnummer</Text>
+        <Text style={styles.label}>Hausnummer (automatisch)</Text>
         <TextInput
           value={houseNumber}
           onChangeText={onHouseNumberChange}
-          placeholder="Nr."
+          placeholder="Wird automatisch ausgefüllt"
           placeholderTextColor={COLORS.placeholder}
-          style={styles.input}
+          style={[styles.input, { backgroundColor: '#F9FAFB' }]}
           autoCapitalize="none"
           autoCorrect={false}
+          editable={true}
         />
       </View>
 
       {/* POSTAL CODE */}
       <View style={styles.group}>
-        <Text style={styles.label}>PLZ *</Text>
+        <Text style={styles.label}>PLZ * (automatisch)</Text>
         <TextInput
           value={postalCode}
           onChangeText={onPostalCodeChange}
-          placeholder="PLZ"
+          placeholder="Wird automatisch ausgefüllt"
           placeholderTextColor={COLORS.placeholder}
           keyboardType="numeric"
-          style={styles.input}
+          style={[styles.input, { backgroundColor: '#F9FAFB' }]}
           autoCapitalize="none"
           autoCorrect={false}
+          editable={true}
         />
       </View>
 
       {/* CITY */}
       <View style={styles.group}>
-        <Text style={styles.label}>Stadt *</Text>
+        <Text style={styles.label}>Stadt * (automatisch)</Text>
         <TextInput
           value={city}
           onChangeText={onCityChange}
-          placeholder="Stadt"
+          placeholder="Wird automatisch ausgefüllt"
           placeholderTextColor={COLORS.placeholder}
-          style={styles.input}
+          style={[styles.input, { backgroundColor: '#F9FAFB' }]}
           autoCapitalize="words"
           autoCorrect={false}
+          editable={true}
         />
       </View>
 
