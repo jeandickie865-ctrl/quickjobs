@@ -15,17 +15,19 @@ import { Ionicons } from '@expo/vector-icons';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://backup.dickie.app/api';
 
-// BACKUP NEON-TECH COLORS
+// QUICKJOBS COLORS
 const COLORS = {
-  purple: '#EFABFF',
-  neon: '#EFABFF',
-  white: '#1A1A1A',
-  cardText: "#1A1A1A",
-  black: '#000000',
-  darkGray: '#333333',
-  whiteTransparent30: 'rgba(255,255,255,0.3)',
-  neonShadow: 'rgba(200,255,22,0.15)',
-  dimmed: 'rgba(0,0,0,0.7)',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  primary: '#9333EA',
+  secondary: '#FF773D',
+  accent: '#EFABFF',
+  border: '#E9D5FF',
+  inputBg: '#FAF5FF',
+  inputBorder: '#DDD6FE',
+  text: '#1A1A1A',
+  textMuted: '#6B7280',
+  error: '#EF4444',
 };
 
 export default function RateWorkerScreen() {
@@ -147,11 +149,11 @@ export default function RateWorkerScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <AppHeader />
-          <ActivityIndicator color={COLORS.neon} size="large" />
-          <Text style={{ color: COLORS.white, marginTop: 16 }}>Lädt...</Text>
+          <ActivityIndicator color={COLORS.accent} size="large" />
+          <Text style={{ color: COLORS.text, marginTop: 16 }}>Lädt...</Text>
         </SafeAreaView>
       </View>
     );
@@ -160,10 +162,10 @@ export default function RateWorkerScreen() {
   if (!job) {
     console.error('❌ Job not found:', jobId);
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-        <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Job nicht gefunden</Text>
-        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', shadowColor: 'rgba(200,255,22,0.2)', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.8, shadowRadius: 6 }}>
-          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Zurück</Text>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+        <Text style={{ color: COLORS.text, fontSize: 18, marginBottom: 16 }}>Job nicht gefunden</Text>
+        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.accent, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', shadowColor: 'rgba(200,255,22,0.2)', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.8, shadowRadius: 6 }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>Zurück</Text>
         </Pressable>
       </View>
     );
@@ -172,18 +174,18 @@ export default function RateWorkerScreen() {
   if (!worker) {
     console.error('❌ Worker not found:', workerId);
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.purple, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-        <Text style={{ color: COLORS.white, fontSize: 18, marginBottom: 16 }}>Worker-Profil nicht gefunden</Text>
-        <Text style={{ color: COLORS.whiteTransparent30, fontSize: 14, marginBottom: 16 }}>WorkerId: {params.workerId}</Text>
-        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.neon, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', shadowColor: 'rgba(200,255,22,0.2)', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.8, shadowRadius: 6 }}>
-          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>Zurück</Text>
+      <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+        <Text style={{ color: COLORS.text, fontSize: 18, marginBottom: 16 }}>Worker-Profil nicht gefunden</Text>
+        <Text style={{ color: COLORS.textTransparent30, fontSize: 14, marginBottom: 16 }}>WorkerId: {params.workerId}</Text>
+        <Pressable onPress={() => router.back()} style={{ backgroundColor: COLORS.accent, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', shadowColor: 'rgba(200,255,22,0.2)', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.8, shadowRadius: 6 }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>Zurück</Text>
         </Pressable>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.purple }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
       {/* Glow Effect */}
       <View style={{
         position: 'absolute',
@@ -193,7 +195,7 @@ export default function RateWorkerScreen() {
         width: 200,
         height: 200,
         borderRadius: 100,
-        backgroundColor: COLORS.neon,
+        backgroundColor: COLORS.accent,
         opacity: 0.12,
         blur: 60,
       }} />
@@ -208,9 +210,9 @@ export default function RateWorkerScreen() {
           paddingVertical: 16,
         }}>
           <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
+            <Ionicons name="arrow-back" size={26} color={COLORS.accent} />
           </Pressable>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text }}>
             Bewertung abgeben
           </Text>
           <View style={{ width: 26 }} />
@@ -227,19 +229,19 @@ export default function RateWorkerScreen() {
         >
           {/* Worker Info Card */}
           <View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.text,
             borderRadius: 18,
             padding: 20,
-            shadowColor: COLORS.neon,
+            shadowColor: COLORS.accent,
             shadowOffset: { width: 0, height: 6 },
             shadowOpacity: 0.15,
             shadowRadius: 12,
             elevation: 4,
           }}>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.accent, marginBottom: 12, letterSpacing: 0.5 }}>
               AUFTRAGNEHMER
             </Text>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.purple, marginBottom: 4 }}>
+            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.bg, marginBottom: 4 }}>
               {worker.name || 'Auftragnehmer'}
             </Text>
             <Text style={{ fontSize: 14, color: COLORS.darkGray }}>
@@ -249,16 +251,16 @@ export default function RateWorkerScreen() {
 
           {/* Rating Card */}
           <View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.text,
             borderRadius: 18,
             padding: 24,
-            shadowColor: COLORS.neon,
+            shadowColor: COLORS.accent,
             shadowOffset: { width: 0, height: 6 },
             shadowOpacity: 0.15,
             shadowRadius: 12,
             elevation: 4,
           }}>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 16, letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.accent, marginBottom: 16, letterSpacing: 0.5 }}>
               STERNE-BEWERTUNG
             </Text>
 
@@ -303,16 +305,16 @@ export default function RateWorkerScreen() {
 
           {/* Comment Card */}
           <View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.text,
             borderRadius: 18,
             padding: 20,
-            shadowColor: COLORS.neon,
+            shadowColor: COLORS.accent,
             shadowOffset: { width: 0, height: 6 },
             shadowOpacity: 0.15,
             shadowRadius: 12,
             elevation: 4,
           }}>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.neon, marginBottom: 12, letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.accent, marginBottom: 12, letterSpacing: 0.5 }}>
               KOMMENTAR (OPTIONAL)
             </Text>
             <TextInput
@@ -324,7 +326,7 @@ export default function RateWorkerScreen() {
               numberOfLines={4}
               style={{
                 fontSize: 15,
-                color: COLORS.black,
+                color: COLORS.text,
                 backgroundColor: '#F8F8F8',
                 borderRadius: 12,
                 padding: 16,
@@ -339,7 +341,7 @@ export default function RateWorkerScreen() {
             onPress={handleSave}
             disabled={rating === 0 || saving}
             style={({ pressed }) => ({
-              backgroundColor: rating === 0 || saving ? '#E8E8E8' : COLORS.neon,
+              backgroundColor: rating === 0 || saving ? '#E8E8E8' : COLORS.accent,
               borderRadius: 14,
               paddingVertical: 14,
               paddingHorizontal: 16,
@@ -355,7 +357,7 @@ export default function RateWorkerScreen() {
             <Text style={{ 
               fontSize: 16, 
               fontWeight: '700', 
-              color: rating === 0 || saving ? COLORS.darkGray : COLORS.black,
+              color: rating === 0 || saving ? COLORS.darkGray : COLORS.text,
             }}>
               {saving ? 'Speichert...' : 'Bewertung speichern'}
             </Text>
@@ -381,13 +383,13 @@ export default function RateWorkerScreen() {
           padding: 24,
         }}>
           <Animated.View style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: COLORS.text,
             borderRadius: 20,
             padding: 32,
             alignItems: 'center',
             width: '100%',
             maxWidth: 340,
-            shadowColor: COLORS.neon,
+            shadowColor: COLORS.accent,
             shadowOffset: { width: 0, height: 8 },
             shadowOpacity: 0.3,
             shadowRadius: 20,
@@ -399,19 +401,19 @@ export default function RateWorkerScreen() {
               width: 80,
               height: 80,
               borderRadius: 40,
-              backgroundColor: COLORS.neon,
+              backgroundColor: COLORS.accent,
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: 24,
             }}>
-              <Ionicons name="checkmark" size={50} color={COLORS.black} />
+              <Ionicons name="checkmark" size={50} color={COLORS.text} />
             </View>
 
             {/* Success Text */}
             <Text style={{
               fontSize: 24,
               fontWeight: '900',
-              color: COLORS.purple,
+              color: COLORS.bg,
               textAlign: 'center',
               marginBottom: 12,
             }}>
