@@ -1,6 +1,6 @@
 // app/(employer)/jobs/create.tsx – BACKUP DARK DESIGN
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, Pressable, Platform, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { ScrollView, View, Text, TextInput, Pressable, Platform, ActivityIndicator, KeyboardAvoidingView, Modal, Animated } from 'react-native';
 import { AppHeader } from '../../../components/AppHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -13,6 +13,7 @@ import { Address } from '../../../types/address';
 import { addJob } from '../../../utils/jobStore';
 import AddressAutocompleteInput from '../../../components/AddressAutocompleteInput';
 import taxonomy from '../../../shared/taxonomy.json';
+import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   bg: '#FFFFFF',
