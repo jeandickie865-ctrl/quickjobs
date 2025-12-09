@@ -394,20 +394,23 @@ export default function EmployerMatchesScreen() {
                   )}
 
                   {/* QUALIFIKATIONSNACHWEISE SECTION */}
-                  {match.application.paymentStatus === "paid" && match.workerProfile?.documents && match.workerProfile.documents.length > 0 && (
-                    <View
-                      style={{
-                        marginTop: 14,
-                        backgroundColor: "rgba(255,119,61,0.1)",
-                        padding: 12,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: "rgba(255,119,61,0.3)",
-                      }}
-                    >
-                      <Text style={{ color: COLORS.orange, fontWeight: "700", marginBottom: 10, fontSize: 14 }}>
-                        📄 QUALIFIKATIONSNACHWEISE
-                      </Text>
+                  {match.application.paymentStatus === "paid" && (
+                    <>
+                      {/* Debug: Zeige immer die Sektion an, auch wenn keine Dokumente da sind */}
+                      {match.workerProfile?.documents && match.workerProfile.documents.length > 0 ? (
+                        <View
+                          style={{
+                            marginTop: 14,
+                            backgroundColor: "rgba(255,119,61,0.1)",
+                            padding: 12,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderColor: "rgba(255,119,61,0.3)",
+                          }}
+                        >
+                          <Text style={{ color: COLORS.orange, fontWeight: "700", marginBottom: 10, fontSize: 14 }}>
+                            📄 QUALIFIKATIONSNACHWEISE ({match.workerProfile.documents.length})
+                          </Text>
                       
                       {match.workerProfile.documents.map((doc, index) => (
                         <View 
