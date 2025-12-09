@@ -508,7 +508,7 @@ export default function WorkerMatchesScreen() {
                     {/* BUTTONS SECTION – iPhone-Optimiert */}
                     <View style={{ gap: 14, marginTop: 22, alignItems: "center" }}>
                       
-                      {/* CHAT BUTTON */}
+                      {/* CHAT BUTTON - Rosa, gleiche Größe wie Rate Button */}
                       <Pressable
                         onPress={() => {
                           if (application.paymentStatus === "paid") {
@@ -523,22 +523,20 @@ export default function WorkerMatchesScreen() {
                           alignSelf: "center",
                           backgroundColor:
                             application.paymentStatus === "paid"
-                              ? COLORS.purple
+                              ? COLORS.accent
                               : "#3A3A3A",
-                          paddingVertical: 14,
-                          borderRadius: 14,
+                          paddingVertical: 10,
+                          borderRadius: 8,
                           alignItems: "center",
-                          borderWidth: 3,
-                          borderColor: application.paymentStatus === "paid" ? "#FF69B4" : "#666666",
                         }}
                       >
                         <Text
                           style={{
                             color:
                               application.paymentStatus === "paid"
-                                ? COLORS.textWhite
+                                ? '#FFFFFF'
                                 : "rgba(255,255,255,0.60)",
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: "700",
                           }}
                         >
