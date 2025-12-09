@@ -60,9 +60,11 @@
     "extra": {
       "backendUrl": "",
       "router": {
-        "origin": false
+        "origin": "https://backup.dickie.app"
       },
-      "eas": {}
+      "eas": {
+        "projectId": "ba3d79dc-7a43-4c98-9229-98233344aba9"
+      }
     },
     "owner": "backupkj"
   }
