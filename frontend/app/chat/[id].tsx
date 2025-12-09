@@ -259,13 +259,11 @@ export default function ChatScreen() {
                   alignSelf: isOwn ? "flex-end" : "flex-start",
                   backgroundColor: isOwn ? COLORS.myMessageBg : COLORS.theirMessageBg,
                   borderRadius: 16,
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 3,
+                  borderWidth: 1,
+                  borderColor: isOwn ? '#E9D5FF' : '#E5E7EB',
                 }}
               >
-                <Text style={{ color: COLORS.text, fontSize: 15, lineHeight: 20 }}>
+                <Text style={{ color: isOwn ? COLORS.myMessageText : COLORS.theirMessageText, fontSize: 15, lineHeight: 20, fontWeight: '500' }}>
                   {item.text}
                 </Text>
                 <Text style={{ color: COLORS.textMuted, fontSize: 11, marginTop: 4, textAlign: isOwn ? 'right' : 'left' }}>
