@@ -323,6 +323,16 @@ export default function EmployerMatchesScreen() {
                     {match.job.category}
                   </Text>
 
+                  {/* Job-Adresse */}
+                  {(match.job.street || match.job.city) && (
+                    <View style={{ marginTop: 8, flexDirection: 'row', alignItems: 'flex-start' }}>
+                      <Ionicons name="location" size={16} color={COLORS.purple} style={{ marginTop: 2, marginRight: 6 }} />
+                      <Text style={{ color: COLORS.textWhite, fontSize: 14, flex: 1 }}>
+                        {match.job.street} {match.job.houseNumber}, {match.job.postalCode} {match.job.city}
+                      </Text>
+                    </View>
+                  )}
+
                   {/* CONTACT BOX (nur bei paid) */}
                   {match.workerProfile && match.application.paymentStatus === "paid" && (
                     <View
