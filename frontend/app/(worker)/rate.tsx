@@ -121,6 +121,7 @@ export default function RateEmployerScreen() {
         jobId: String(jobId),
         workerId: user.id,
         employerId: job.employerId,
+        reviewerRole: 'worker', // Worker bewertet Employer
         rating,
         comment: comment.trim() || undefined,
         createdAt: new Date().toISOString(),

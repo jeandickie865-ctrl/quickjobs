@@ -119,6 +119,7 @@ export default function RateWorkerScreen() {
           jobId: String(jobId),
           workerId: worker.userId,
           employerId: user.id,
+          reviewerRole: 'employer', // Employer bewertet Worker
           rating,
           comment: comment.trim() || undefined,
         }),
