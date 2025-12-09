@@ -231,25 +231,9 @@ export default function RateEmployerScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <SafeAreaView style={{ flex: 1 }} edges={['top','bottom']}>
+      <AppHeader />
+      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
         <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
-          {/* Header */}
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 20,
-            paddingVertical: 16,
-            borderBottomWidth: 1,
-            borderBottomColor: 'rgba(255,255,255,0.25)',
-          }}>
-            <Pressable onPress={() => router.back()} style={{ padding: 4, marginRight: 16 }}>
-              <Ionicons name="arrow-back" size={26} color={COLORS.neon} />
-            </Pressable>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.white, flex: 1 }}>
-              Auftraggeber bewerten
-            </Text>
-          </View>
-
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             style={{ flex: 1 }}
@@ -258,39 +242,48 @@ export default function RateEmployerScreen() {
               style={{ flex: 1 }}
               contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
             >
+              {/* Titel */}
+              <Text style={{ fontSize: 24, fontWeight: '700', color: COLORS.text, marginBottom: 24 }}>
+                Auftraggeber bewerten
+              </Text>
+
               {/* Job Info */}
               <View style={{
-                backgroundColor: 'rgba(255,255,255,0.25)',
-                borderRadius: 16,
+                backgroundColor: COLORS.card,
+                borderRadius: 12,
                 padding: 16,
-                marginBottom: 24,
+                marginBottom: 16,
+                borderWidth: 1,
+                borderColor: COLORS.border,
               }}>
-                <Text style={{ fontSize: 14, color: COLORS.neon, fontWeight: '700', marginBottom: 8 }}>
-                  JOB
+                <Text style={{ fontSize: 12, color: COLORS.textMuted, fontWeight: '600', marginBottom: 6, textTransform: 'uppercase' }}>
+                  Job
                 </Text>
-                <Text style={{ fontSize: 18, color: COLORS.white, fontWeight: '700' }}>
+                <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '600' }}>
                   {job.title}
                 </Text>
               </View>
 
               {/* Employer Info */}
               <View style={{
-                backgroundColor: 'rgba(255,255,255,0.25)',
-                borderRadius: 16,
+                backgroundColor: COLORS.card,
+                borderRadius: 12,
                 padding: 16,
                 marginBottom: 32,
+                borderWidth: 1,
+                borderColor: COLORS.border,
               }}>
-                <Text style={{ fontSize: 14, color: COLORS.neon, fontWeight: '700', marginBottom: 8 }}>
-                  AUFTRAGGEBER
+                <Text style={{ fontSize: 12, color: COLORS.textMuted, fontWeight: '600', marginBottom: 6, textTransform: 'uppercase' }}>
+                  Auftraggeber
                 </Text>
-                <Text style={{ fontSize: 18, color: COLORS.white, fontWeight: '700' }}>
+                <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '600' }}>
                   {employer?.companyName || employer?.company || employer?.firstName || employer?.lastName || 'Auftraggeber'}
                 </Text>
               </View>
 
               {/* Rating */}
               <View style={{ marginBottom: 32 }}>
-                <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700', marginBottom: 16 }}>
+                <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700', marginBottom: 16 }}>
                   Wie war deine Erfahrung?
                 </Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12 }}>
@@ -305,7 +298,7 @@ export default function RateEmployerScreen() {
                       <Ionicons
                         name={rating >= star ? 'star' : 'star-outline'}
                         size={40}
-                        color={rating >= star ? COLORS.neon : 'rgba(255,255,255,0.3)'}
+                        color={rating >= star ? '#FF773D' : COLORS.border}
                       />
                     </Pressable>
                   ))}
@@ -314,24 +307,26 @@ export default function RateEmployerScreen() {
 
               {/* Comment */}
               <View style={{ marginBottom: 32 }}>
-                <Text style={{ fontSize: 16, color: COLORS.white, fontWeight: '700', marginBottom: 12 }}>
+                <Text style={{ fontSize: 16, color: COLORS.text, fontWeight: '700', marginBottom: 12 }}>
                   Kommentar (optional)
                 </Text>
                 <TextInput
                   value={comment}
                   onChangeText={setComment}
                   placeholder="Teile deine Erfahrung..."
-                  placeholderTextColor="rgba(255,255,255,0.60)"
+                  placeholderTextColor={COLORS.textMuted}
                   multiline
                   numberOfLines={4}
                   style={{
-                    backgroundColor: 'rgba(255,255,255,0.25)',
+                    backgroundColor: COLORS.inputBg,
                     borderRadius: 12,
                     padding: 16,
-                    color: COLORS.white,
+                    color: COLORS.text,
                     fontSize: 15,
                     minHeight: 100,
                     textAlignVertical: 'top',
+                    borderWidth: 1,
+                    borderColor: COLORS.inputBorder,
                   }}
                 />
               </View>
@@ -341,22 +336,18 @@ export default function RateEmployerScreen() {
                 onPress={handleSave}
                 disabled={saving || rating === 0}
                 style={({ pressed }) => ({
-                  backgroundColor: rating === 0 ? 'rgba(200,255,22,0.3)' : COLORS.neon,
-                  borderRadius: 14,
-                  paddingVertical: 14,
+                  backgroundColor: rating === 0 ? COLORS.border : COLORS.secondary,
+                  borderRadius: 12,
+                  paddingVertical: 16,
                   paddingHorizontal: 16,
                   alignItems: 'center',
-                  shadowColor: rating === 0 ? 'transparent' : 'rgba(200,255,22,0.2)',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.8,
-                  shadowRadius: 6,
                   opacity: pressed ? 0.8 : 1,
                 })}
               >
                 {saving ? (
-                  <ActivityIndicator color={COLORS.black} />
+                  <ActivityIndicator color="#FFFFFF" />
                 ) : (
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.black }}>
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: '#FFFFFF' }}>
                     Bewertung abgeben
                   </Text>
                 )}
