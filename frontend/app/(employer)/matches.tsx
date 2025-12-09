@@ -393,6 +393,90 @@ export default function EmployerMatchesScreen() {
                     </View>
                   )}
 
+                  {/* QUALIFIKATIONSNACHWEISE SECTION */}
+                  {match.application.paymentStatus === "paid" && match.workerProfile?.documents && match.workerProfile.documents.length > 0 && (
+                    <View
+                      style={{
+                        marginTop: 14,
+                        backgroundColor: "rgba(255,119,61,0.1)",
+                        padding: 12,
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: "rgba(255,119,61,0.3)",
+                      }}
+                    >
+                      <Text style={{ color: COLORS.orange, fontWeight: "700", marginBottom: 10, fontSize: 14 }}>
+                        📄 QUALIFIKATIONSNACHWEISE
+                      </Text>
+                      
+                      {match.workerProfile.documents.map((doc, index) => (
+                        <View 
+                          key={doc.id || `doc-${index}`}
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.05)",
+                            padding: 10,
+                            borderRadius: 8,
+                            marginBottom: 8,
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <View style={{ flex: 1, marginRight: 8 }}>
+                            <Text style={{ color: COLORS.textWhite, fontSize: 14, fontWeight: "600" }}>
+                              {doc.filename}
+                            </Text>
+                            <Text style={{ color: COLORS.textMuted, fontSize: 12, marginTop: 2 }}>
+                              {new Date(doc.uploaded_at).toLocaleDateString('de-DE', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                              })}
+                            </Text>
+                          </View>
+                          
+                          <Pressable
+                            onPress={() => {
+                              // Download document - create blob URL and open
+                              const base64Data = doc.data;
+                              const mimeType = doc.content_type || 'application/pdf';
+                              
+                              // For web - create download link
+                              if (typeof window !== 'undefined') {
+                                const byteCharacters = atob(base64Data);
+                                const byteNumbers = new Array(byteCharacters.length);
+                                for (let i = 0; i < byteCharacters.length; i++) {
+                                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                }
+                                const byteArray = new Uint8Array(byteNumbers);
+                                const blob = new Blob([byteArray], { type: mimeType });
+                                const url = URL.createObjectURL(blob);
+                                
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.download = doc.filename;
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                URL.revokeObjectURL(url);
+                              }
+                            }}
+                            style={{
+                              backgroundColor: COLORS.orange,
+                              paddingVertical: 8,
+                              paddingHorizontal: 12,
+                              borderRadius: 8,
+                            }}
+                          >
+                            <Text style={{ color: COLORS.textWhite, fontSize: 13, fontWeight: "700" }}>
+                              Download
+                            </Text>
+                          </Pressable>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+
                   {/* BUTTONS SECTION – iPhone-Optimiert */}
                   <View style={{ gap: 14, marginTop: 22, alignItems: "center" }}>
                     {/* CHAT BUTTON */}
