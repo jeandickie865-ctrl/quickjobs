@@ -9,9 +9,10 @@ export type Address = {
  * Formatiert eine Address als lesbaren String
  * @param address - Die zu formatierende Adresse
  * @param compact - Wenn true, kurzes Format (nur PLZ + Stadt)
+ * @param hideHouseNumber - Wenn true, wird die Hausnummer NICHT angezeigt (Datenschutz vor Match)
  * @returns Formatierter String oder leerer String
  */
-export function formatAddress(address?: Address, compact: boolean = false): string {
+export function formatAddress(address?: Address, compact: boolean = false, hideHouseNumber: boolean = false): string {
   if (!address) return '';
   
   if (compact) {
@@ -22,10 +23,10 @@ export function formatAddress(address?: Address, compact: boolean = false): stri
     return parts.join(' ');
   }
   
-  // Vollständig: "Musterstraße 5, 40210 Düsseldorf"
+  // Vollständig: "Musterstraße 5, 40210 Düsseldorf" ODER "Musterstraße, 40210 Düsseldorf" (ohne Hausnummer)
   const parts = [];
   if (address.street) {
-    const streetPart = address.houseNumber 
+    const streetPart = (!hideHouseNumber && address.houseNumber)
       ? `${address.street} ${address.houseNumber}` 
       : address.street;
     parts.push(streetPart);
