@@ -267,7 +267,9 @@ export default function ChatScreen() {
                   {item.text}
                 </Text>
                 <Text style={{ color: COLORS.textMuted, fontSize: 11, marginTop: 4, textAlign: isOwn ? 'right' : 'left' }}>
-                  {new Date(item.createdAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+                  {item.createdAt && !isNaN(new Date(item.createdAt).getTime()) 
+                    ? new Date(item.createdAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
+                    : ''}
                 </Text>
               </View>
             );
