@@ -138,7 +138,7 @@ export default function ChatScreen() {
             if (router.canGoBack()) {
               router.back();
             } else {
-              router.replace('/(worker)/applications');
+              router.replace('/(worker)/matches');
             }
           }} style={{ padding: 4, marginRight: 12 }}>
             <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
@@ -198,7 +198,7 @@ export default function ChatScreen() {
             if (router.canGoBack()) {
               router.back();
             } else {
-              router.replace('/(worker)/applications');
+              router.replace('/(worker)/matches');
             }
           }} style={{ padding: 4, marginRight: 12 }}>
             <Ionicons name="arrow-back" size={26} color="#FFFFFF" />
