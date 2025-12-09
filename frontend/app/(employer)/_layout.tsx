@@ -3,6 +3,8 @@ import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { View, ActivityIndicator, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getAuthHeaders } from '../../utils/api';
+import { API_URL } from '../../config';
 
 const COLORS = {
   purple: '#EFABFF',
