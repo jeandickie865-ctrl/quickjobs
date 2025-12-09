@@ -105,12 +105,12 @@ export default function WorkerLayout() {
           const accepted = apps.filter(a => a.status === 'accepted');
           
           let totalUnread = 0;
+          const headers = await getAuthHeaders();
+          
           for (const app of accepted) {
             try {
-              const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/chat/unread-count/${app.id}`, {
-                headers: {
-                  'Authorization': `Bearer ${user.token}`,
-                }
+              const response = await fetch(`${API_URL}/chat/unread-count/${app.id}`, {
+                headers
               });
               if (response.ok) {
                 const data = await response.json();
