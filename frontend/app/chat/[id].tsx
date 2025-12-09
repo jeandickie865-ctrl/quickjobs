@@ -77,6 +77,7 @@ export default function ChatScreen() {
           setMessages(msgs || []);
         }
       } catch (err) {
+        console.error('💥 Load messages error:', err);
       } finally {
         if (mounted) setLoading(false);
       }
