@@ -859,6 +859,64 @@ export default function CreateJob() {
           </Text>
         )}
       </View>
+
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent
+        animationType="fade"
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 20,
+        }}>
+          <Animated.View style={{
+            backgroundColor: COLORS.bg,
+            borderRadius: 24,
+            padding: 32,
+            alignItems: 'center',
+            maxWidth: 400,
+            width: '100%',
+            transform: [{ scale: successScale }],
+          }}>
+            {/* Success Icon */}
+            <View style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              backgroundColor: COLORS.accent,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 24,
+            }}>
+              <Ionicons name="checkmark-circle" size={50} color={COLORS.primary} />
+            </View>
+
+            {/* Success Text */}
+            <Text style={{
+              fontSize: 24,
+              fontWeight: '900',
+              color: COLORS.text,
+              textAlign: 'center',
+              marginBottom: 12,
+            }}>
+              Jobangebot ist online!
+            </Text>
+
+            <Text style={{
+              fontSize: 15,
+              color: COLORS.textMuted,
+              textAlign: 'center',
+              lineHeight: 22,
+            }}>
+              Dein Auftrag wurde erfolgreich erstellt und ist ab sofort für Worker sichtbar.
+            </Text>
+          </Animated.View>
+        </View>
+      </Modal>
     </View>
   );
 }
