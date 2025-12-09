@@ -21,7 +21,7 @@ const COLORS = {
 };
 
 // Custom Tab Button Component (Pill-Style)
-function PillTabButton({ label, isFocused, onPress }: any) {
+function PillTabButton({ label, isFocused, onPress, badge }: any) {
   return (
     <Pressable
       onPress={onPress}
