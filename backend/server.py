@@ -2766,6 +2766,11 @@ async def get_messages(
         if "message" in msg and "text" not in msg:
             msg["text"] = msg.get("message")
         
+        # CRITICAL FIX: Ensure text field is never None
+        if "text" not in msg or msg["text"] is None:
+            msg["text"] = ""
+            logger.warning(f"⚠️ Message without text field! Setting to empty string. MessageID: {msg.get('id', 'unknown')}")
+        
         # DEBUG: Log what we're returning
         logger.info(f"📩 Message text field: '{msg.get('text', 'MISSING')}' (length: {len(msg.get('text', ''))})")
         result_messages.append(ChatMessage(**msg))
