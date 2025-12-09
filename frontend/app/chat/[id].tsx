@@ -63,6 +63,9 @@ export default function ChatScreen() {
         }
 
         const msgs = await loadMessages(applicationId);
+        console.log('🔍 Raw messages from API:', JSON.stringify(msgs, null, 2));
+        console.log('🔍 First message text:', msgs[0]?.text);
+        console.log('🔍 First message keys:', msgs[0] ? Object.keys(msgs[0]) : 'no messages');
         if (mounted) {
           // Prüfe, ob neue Nachrichten da sind
           if (msgs && msgs.length > previousMessageCount.current && !isFirstLoad) {
