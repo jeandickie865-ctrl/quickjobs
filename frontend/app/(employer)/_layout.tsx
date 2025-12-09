@@ -230,6 +230,7 @@ export default function EmployerLayout() {
         name="matches" 
         options={{ 
           title: 'Matches',
+          tabBarBadge: unreadChatCount > 0 ? unreadChatCount : undefined,
           tabBarItemStyle: {
             flex: 1,
             backgroundColor: COLORS.lightPurple,
