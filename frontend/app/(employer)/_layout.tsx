@@ -90,10 +90,9 @@ export default function EmployerLayout() {
     
     async function loadUnreadChatCount() {
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/jobs/employer/${user.id}`, {
-          headers: {
-            'Authorization': `Bearer ${user.token}`,
-          }
+        const headers = await getAuthHeaders();
+        const response = await fetch(`${API_URL}/jobs/employer/${user.id}`, {
+          headers
         });
         
         if (response.ok) {
@@ -102,10 +101,8 @@ export default function EmployerLayout() {
           
           for (const job of jobs) {
             try {
-              const appsResponse = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/applications/job/${job.id}`, {
-                headers: {
-                  'Authorization': `Bearer ${user.token}`,
-                }
+              const appsResponse = await fetch(`${API_URL}/applications/job/${job.id}`, {
+                headers
               });
               
               if (appsResponse.ok) {
@@ -114,10 +111,8 @@ export default function EmployerLayout() {
                 
                 for (const app of acceptedApps) {
                   try {
-                    const unreadResponse = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/chat/unread-count/${app.id}`, {
-                      headers: {
-                        'Authorization': `Bearer ${user.token}`,
-                      }
+                    const unreadResponse = await fetch(`${API_URL}/chat/unread-count/${app.id}`, {
+                      headers
                     });
                     if (unreadResponse.ok) {
                       const data = await unreadResponse.json();
