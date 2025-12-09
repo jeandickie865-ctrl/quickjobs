@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "de.dickie.backup",
+      "bundleIdentifier": "de.quickjobsneu.app",
       "buildNumber": "2",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/app/id6756327012",
