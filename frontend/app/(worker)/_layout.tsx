@@ -147,13 +147,6 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Aktuelle Jobs',
           tabBarLabel: 'Aktuelle Jobs',
-          tabBarItemStyle: {
-            flex: 1,
-            backgroundColor: COLORS.lightPurple,
-            borderRadius: 18,
-            marginHorizontal: 3,
-            height: 36,
-          }
         }} 
       />
       <Tabs.Screen 
@@ -161,31 +154,12 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Alle Jobs',
           tabBarLabel: 'Alle Jobs',
-          tabBarLabelStyle: {
-            color: '#FFFFFF',
-            fontSize: 11,
-            fontWeight: '700',
-          },
-          tabBarItemStyle: {
-            flex: 1,
-            backgroundColor: COLORS.lightPurple,
-            borderRadius: 18,
-            marginHorizontal: 3,
-            height: 36,
-          }
         }} 
       />
       <Tabs.Screen 
         name="applications" 
         options={{ 
           title: 'Bewerbungen',
-          tabBarItemStyle: {
-            flex: 1,
-            backgroundColor: COLORS.lightPurple,
-            borderRadius: 18,
-            marginHorizontal: 3,
-            height: 36,
-          }
         }} 
       />
       <Tabs.Screen 
@@ -193,26 +167,12 @@ export default function WorkerLayout() {
         options={{ 
           title: 'Matches',
           tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
-          tabBarItemStyle: {
-            flex: 1,
-            backgroundColor: COLORS.lightPurple,
-            borderRadius: 18,
-            marginHorizontal: 3,
-            height: 36,
-          }
         }} 
       />
       <Tabs.Screen 
         name="profile" 
         options={{ 
           title: 'Profil',
-          tabBarItemStyle: {
-            flex: 1,
-            backgroundColor: COLORS.lightPurple,
-            borderRadius: 18,
-            marginHorizontal: 3,
-            height: 36,
-          }
         }} 
       />
 
