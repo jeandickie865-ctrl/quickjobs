@@ -528,6 +528,8 @@ export default function WorkerMatchesScreen() {
                           paddingVertical: 14,
                           borderRadius: 14,
                           alignItems: "center",
+                          borderWidth: 3,
+                          borderColor: application.paymentStatus === "paid" ? "#FF69B4" : "#666666",
                         }}
                       >
                         <Text
