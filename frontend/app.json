@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Quickjobs",
+    "name": "QuickjobsNEU",
     "slug": "quickjobsneu",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/store-icons/app-icon.png",
-    "scheme": "backup",
+    "scheme": "quickjobsneu",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
