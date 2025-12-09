@@ -117,8 +117,12 @@ export default function WorkerLayout() {
           height: 80,
           paddingBottom: Math.max(insets.bottom, 10),
           paddingTop: 8,
-          paddingHorizontal: 8,
+          paddingHorizontal: 0,
           borderTopWidth: 0,
+        },
+        tabBarItemStyle: {
+          flex: 1,
+          justifyContent: 'center',
         },
         tabBarActiveTintColor: '#FFFFFF',
         tabBarInactiveTintColor: '#FFFFFF',
