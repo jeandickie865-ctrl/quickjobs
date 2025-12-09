@@ -104,32 +104,31 @@ export default function RateWorkerScreen() {
       return;
     }
 
-    if (job.status !== "matched" && job.status !== "done") {
-      Alert.alert("Nicht möglich", "Du kannst den Worker erst nach dem Job bewerten.");
-      return;
-    }
-
     setSaving(true);
     try {
-      const reviews = await getReviewsForWorker(worker.userId);
-      const alreadyRated = reviews.some(r => r.jobId === jobId && r.employerId === user.id);
-
-      if (alreadyRated) {
-        Alert.alert("Hinweis", "Du hast diesen Worker für diesen Job bereits bewertet.");
-        setSaving(false);
-        return;
-      }
-      const review = {
-        jobId: String(jobId),
-        workerId: worker.userId,
-        employerId: user.id,
-        rating,
-        comment: comment.trim() || undefined,
-        createdAt: new Date().toISOString(),
-      };
-
-      await addReview(review);
+      const headers = await getAuthHeaders();
       
+      // POST zur Backend-API
+      const response = await fetch(`${API_URL}/reviews`, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jobId: String(jobId),
+          workerId: worker.userId,
+          employerId: user.id,
+          rating,
+          comment: comment.trim() || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Fehler beim Speichern');
+      }
+
       setShowSuccessModal(true);
 
       // Auto-redirect nach 2.5 Sekunden
