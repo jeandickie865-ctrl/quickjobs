@@ -299,33 +299,32 @@ export default function RateWorkerScreen() {
 
           {/* Comment Card */}
           <View style={{
-            backgroundColor: COLORS.text,
+            backgroundColor: COLORS.card,
             borderRadius: 18,
             padding: 20,
-            shadowColor: COLORS.accent,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.15,
-            shadowRadius: 12,
-            elevation: 4,
+            borderWidth: 1,
+            borderColor: COLORS.border,
           }}>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.accent, marginBottom: 12, letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.primary, marginBottom: 12, letterSpacing: 0.5 }}>
               KOMMENTAR (OPTIONAL)
             </Text>
             <TextInput
               value={comment}
               onChangeText={setComment}
               placeholder="Wie war deine Erfahrung mit diesem Worker?"
-              placeholderTextColor="#999"
+              placeholderTextColor={COLORS.textMuted}
               multiline
               numberOfLines={4}
               style={{
                 fontSize: 15,
                 color: COLORS.text,
-                backgroundColor: '#F8F8F8',
+                backgroundColor: COLORS.inputBg,
                 borderRadius: 12,
                 padding: 16,
                 minHeight: 120,
                 textAlignVertical: 'top',
+                borderWidth: 1,
+                borderColor: COLORS.inputBorder,
               }}
             />
           </View>
