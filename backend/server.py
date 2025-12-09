@@ -2765,6 +2765,9 @@ async def get_messages(
         # Ensure text field exists (some old messages might have "message" instead)
         if "message" in msg and "text" not in msg:
             msg["text"] = msg.get("message")
+        
+        # DEBUG: Log what we're returning
+        logger.info(f"📩 Message text field: '{msg.get('text', 'MISSING')}' (length: {len(msg.get('text', ''))})")
         result_messages.append(ChatMessage(**msg))
     
     logger.info(f"Found {len(messages)} messages for application {application_id}")
