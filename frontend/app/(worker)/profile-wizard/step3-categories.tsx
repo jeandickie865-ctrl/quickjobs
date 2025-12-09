@@ -496,6 +496,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  qualTextSelected: {
+    color: COLORS.secondary,
+    fontWeight: '600',
+  },
+
   qualificationTextSelected: {
     color: COLORS.secondary,
     fontWeight: '600',
