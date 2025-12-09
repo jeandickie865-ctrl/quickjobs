@@ -262,7 +262,8 @@ export default function WorkerApplicationsScreen() {
           const statusColor = getStatusColor(app.status);
           const jobStatusLabel = getJobStatusLabel(job?.status);
           const title = job?.title ?? 'Auftrag nicht mehr verfügbar';
-          const address = job?.address ? formatAddress(job.address) : 'Adresse nicht verfügbar';
+          // WICHTIG: Hausnummer NICHT anzeigen vor Match (Datenschutz - verhindert Umgehung der Plattform)
+          const address = job?.address ? formatAddress(job.address, false, true) : 'Adresse nicht verfügbar';
           const category = job?.category ?? '';
           const workerAmount = job?.workerAmountCents ? euro(job.workerAmountCents) : '';
 
