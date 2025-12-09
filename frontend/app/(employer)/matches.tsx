@@ -477,7 +477,24 @@ export default function EmployerMatchesScreen() {
                           </Pressable>
                         </View>
                       ))}
-                    </View>
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            marginTop: 14,
+                            backgroundColor: "rgba(200,200,200,0.1)",
+                            padding: 12,
+                            borderRadius: 12,
+                            borderWidth: 1,
+                            borderColor: "rgba(200,200,200,0.3)",
+                          }}
+                        >
+                          <Text style={{ color: COLORS.textMuted, fontSize: 13, fontStyle: "italic" }}>
+                            ℹ️ Dieser Worker hat noch keine Qualifikationsnachweise hochgeladen
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )}
 
                   {/* BUTTONS SECTION – iPhone-Optimiert */}
