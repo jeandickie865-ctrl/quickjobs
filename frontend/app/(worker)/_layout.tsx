@@ -148,15 +148,15 @@ export default function WorkerLayout() {
       <Tabs.Screen 
         name="feed" 
         options={{ 
-          title: 'Feed',
-          tabBarLabel: 'Feed',
+          title: 'Aktuelle Jobs',
+          tabBarLabel: 'Aktuelle Jobs',
         }} 
       />
       <Tabs.Screen 
         name="alljobs/index" 
         options={{ 
           title: 'Alle Jobs',
-          tabBarLabel: 'Alle',
+          tabBarLabel: 'Alle Jobs',
         }} 
       />
       <Tabs.Screen 
