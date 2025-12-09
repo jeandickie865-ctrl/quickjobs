@@ -540,7 +540,7 @@ export default function WorkerMatchesScreen() {
                         </Text>
                       </Pressable>
 
-                      {/* RATE BUTTON */}
+                      {/* RATE BUTTON - Orange & schmal */}
                       <Pressable
                         onPress={() =>
                           router.push(`/(worker)/rate?jobId=${job.id}&employerId=${job.employerId}`)
@@ -550,16 +550,16 @@ export default function WorkerMatchesScreen() {
                           maxWidth: 340,
                           minWidth: 240,
                           alignSelf: "center",
-                          backgroundColor: COLORS.purpleLight,
-                          paddingVertical: 14,
-                          borderRadius: 14,
+                          backgroundColor: COLORS.secondary,
+                          paddingVertical: 10,
+                          borderRadius: 8,
                           alignItems: "center",
                         }}
                       >
                         <Text
                           style={{
-                            color: COLORS.textWhite,
-                            fontSize: 15,
+                            color: '#FFFFFF',
+                            fontSize: 14,
                             fontWeight: "700",
                           }}
                         >
@@ -567,7 +567,7 @@ export default function WorkerMatchesScreen() {
                         </Text>
                       </Pressable>
 
-                      {/* DETAILS BUTTON */}
+                      {/* DETAILS BUTTON - Orange & schmal */}
                       <Pressable
                         onPress={() => router.push(`/(worker)/alljobs/${job.id}`)}
                         style={{
@@ -575,16 +575,16 @@ export default function WorkerMatchesScreen() {
                           maxWidth: 340,
                           minWidth: 240,
                           alignSelf: "center",
-                          backgroundColor: COLORS.purpleLight,
-                          paddingVertical: 14,
-                          borderRadius: 14,
+                          backgroundColor: COLORS.secondary,
+                          paddingVertical: 10,
+                          borderRadius: 8,
                           alignItems: "center",
                         }}
                       >
                         <Text
                           style={{
-                            color: COLORS.textWhite,
-                            fontSize: 15,
+                            color: '#FFFFFF',
+                            fontSize: 14,
                             fontWeight: "700",
                           }}
                         >
