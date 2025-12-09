@@ -182,6 +182,63 @@ export default function WorkerLayout() {
         }} 
       />
 
+      {/* Hidden Screens - no tab bar button */}
+      <Tabs.Screen 
+        name="index" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
+      <Tabs.Screen 
+        name="edit-profile" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
+      <Tabs.Screen 
+        name="rate" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
+      <Tabs.Screen 
+        name="profile-wizard" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
+      <Tabs.Screen 
+        name="registration-data" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
+      <Tabs.Screen 
+        name="documents" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
+      <Tabs.Screen 
+        name="alljobs/[id]" 
+        options={{ 
+          href: null,
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: 'none', width: 0, height: 0 },
+        }} 
+      />
     </Tabs>
   );
 }
