@@ -81,6 +81,11 @@ export default function CreateJob() {
 
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [createdJobId, setCreatedJobId] = useState<string | null>(null);
+  
+  // Animation
+  const successScale = useRef(new Animated.Value(0)).current;
 
   const subcategoryOptions =
     category && taxonomy[category]
