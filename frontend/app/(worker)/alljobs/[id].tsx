@@ -69,8 +69,11 @@ export default function WorkerJobDetailScreen() {
       if (!id) return;
       const applications = await getWorkerApplications();
       const applied = applications.some(app => app.jobId === String(id));
+      const matched = applications.some(app => app.jobId === String(id) && app.status === 'accepted');
       setHasApplied(applied);
+      setIsMatched(matched);
       console.log('Has applied to this job:', applied);
+      console.log('Is matched (accepted) for this job:', matched);
     } catch (err) {
       console.error('Error checking applications:', err);
     }
