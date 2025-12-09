@@ -483,8 +483,8 @@ export default function WorkerMatchesScreen() {
                         fontSize: 14,
                       }}
                     >
-                      {job.address?.street} {job.address?.house_number},{" "}
-                      {job.address?.postal_code} {job.address?.city}
+                      {job.address?.street} {job.address?.houseNumber || job.address?.house_number},{" "}
+                      {job.address?.postalCode || job.address?.postal_code} {job.address?.city}
                     </Text>
 
                     <Text
