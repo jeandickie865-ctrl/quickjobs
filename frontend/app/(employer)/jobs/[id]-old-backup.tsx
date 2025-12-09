@@ -169,11 +169,6 @@ export default function JobDetailScreen() {
       return;
     }
 
-    console.log('💳 handleAcceptApplication called:');
-    console.log('   - Application ID:', appId);
-    console.log('   - Worker ID:', workerId);
-    console.log('   - Worker Name:', workerName);
-    console.log('🔄 Navigating to /payment/' + appId);
     
     // Weiterleitung zur Payment-Seite (Zahlung BEVOR Match)
     router.push(`/payment/${appId}`);
@@ -189,7 +184,6 @@ export default function JobDetailScreen() {
       try {
         setIsDeleting(true);
         await deleteJob(job.id);
-        console.log('✅ Auftrag gelöscht');
         router.replace('/(employer)');
       } catch (e) {
         console.error('❌ Fehler: Auftrag konnte nicht gelöscht werden.', e);
@@ -362,21 +356,17 @@ export default function JobDetailScreen() {
           <Text style={{ fontSize: 15, color: COLORS.black, lineHeight: 22 }}>
             {(() => {
               // DEBUG: Log ALL job fields
-              console.log('JOB FULL DEBUG:', JSON.stringify(job, null, 2));
               
               // Format 1: date + start_at + end_at (snake_case)
               if (job.date && job.start_at && job.end_at) {
-                console.log('✅ Match: date + start_at + end_at');
                 return `${job.date} von ${job.start_at} bis ${job.end_at}`;
               }
               
               // Format 2: date + startAt + endAt (camelCase)
               if (job.date && job.startAt && job.endAt) {
-                console.log('✅ Match: date + startAt + endAt');
                 return `${job.date} von ${job.startAt} bis ${job.endAt}`;
               }
               
-              console.log('❌ No time format matched');
               // Legacy Format 2: startAt, endAt (ISO datetime strings)
               if (job.startAt && job.endAt && job.startAt !== 'null' && job.endAt !== 'null') {
                 try {

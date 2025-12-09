@@ -117,7 +117,6 @@ function ConfirmContent() {
       });
 
       const data = await response.json();
-      console.log('Registration created:', data);
 
       router.push(
         `/(employer)/registration/done?applicationId=${applicationId}`

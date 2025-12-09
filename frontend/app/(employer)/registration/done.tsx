@@ -44,7 +44,6 @@ export default function RegistrationDoneScreen() {
       });
 
       const data = await response.json();
-      console.log(`${endpoint} generated:`, data);
 
       if (data[urlKey]) {
         const fullUrl = `${process.env.EXPO_PUBLIC_BACKEND_URL}${data[urlKey]}`;
@@ -71,7 +70,6 @@ export default function RegistrationDoneScreen() {
       });
 
       const data = await response.json();
-      console.log('Registration completed:', data);
 
       router.push('/(employer)/matches');
     } catch (err) {

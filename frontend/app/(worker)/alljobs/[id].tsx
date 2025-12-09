@@ -52,15 +52,8 @@ export default function WorkerJobDetailScreen() {
         return;
       }
       const profile = await getWorkerProfile(user.id);
-      console.log('========== WORKER PROFILE LOADED ==========');
-      console.log('profile:', profile);
-      console.log('profile.categories:', profile?.categories);
-      console.log('profile.radiusKm:', profile?.radiusKm);
-      console.log('profile.isSelfEmployed:', profile?.isSelfEmployed);
-      console.log('==========================================');
       setWorker(profile);
     } catch (err) {
-      console.log('Worker profile load error:', err);
     }
   };
 
@@ -72,8 +65,6 @@ export default function WorkerJobDetailScreen() {
       const matched = applications.some(app => app.jobId === String(id) && app.status === 'accepted');
       setHasApplied(applied);
       setIsMatched(matched);
-      console.log('Has applied to this job:', applied);
-      console.log('Is matched (accepted) for this job:', matched);
     } catch (err) {
       console.error('Error checking applications:', err);
     }
@@ -84,13 +75,6 @@ export default function WorkerJobDetailScreen() {
       if (!id) return;
       const data = await getJobById(String(id));
 
-      console.log("========== JOB DATA ==========");
-      console.log("job:", data);
-      console.log("job.address:", data?.address);
-      console.log("job.address.street:", data?.address?.street);
-      console.log("job.address.house_number:", data?.address?.house_number);
-      console.log("job.address.houseNumber:", data?.address?.houseNumber);
-      console.log("================================");
 
       setJob(data);
       
@@ -101,7 +85,6 @@ export default function WorkerJobDetailScreen() {
         setEmployerRating(calculateAverageRating(reviews));
       }
     } catch (err) {
-      console.log('Job load error:', err);
     } finally {
       setLoading(false);
     }
@@ -438,13 +421,6 @@ export default function WorkerJobDetailScreen() {
             <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
               <Pressable
                 onPress={async () => {
-                  console.log('======== BEWERBUNG VALIDATION ========');
-                  console.log('worker object:', worker);
-                  console.log('worker.categories:', worker?.categories);
-                  console.log('worker.categories.length:', worker?.categories?.length);
-                  console.log('worker.radiusKm:', worker?.radiusKm);
-                  console.log('worker.isSelfEmployed:', worker?.isSelfEmployed);
-                  console.log('======================================');
                   
                   if (!worker?.categories || worker?.categories.length === 0 || !worker?.radiusKm || worker?.isSelfEmployed === undefined) {
                     console.error('❌ VALIDATION FAILED!');

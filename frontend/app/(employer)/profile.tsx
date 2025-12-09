@@ -44,7 +44,6 @@ export default function EmployerProfileViewScreen() {
   useFocusEffect(
     React.useCallback(() => {
       if (!authLoading && user) {
-        console.log('🔄 Employer profile screen focused - reloading data');
         loadProfile();
       }
     }, [user, authLoading])

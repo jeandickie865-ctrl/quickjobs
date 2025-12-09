@@ -213,12 +213,9 @@ export default function CreateJob() {
 
     try {
       setIsSaving(true);
-      console.log('📝 createJob: Sending JobCreate', { title: jobCreate.title, category: jobCreate.category });
       await addJob(jobCreate);
-      console.log('✅ createJob: Auftrag saved successfully');
       router.replace('/(employer)');
     } catch (e) {
-      console.log('❌ createJob: Auftrag publish error:', e);
       setError('Auftrag konnte nicht gespeichert werden.');
     } finally {
       setIsSaving(false);
@@ -495,27 +492,21 @@ export default function CreateJob() {
             postalCode={address.postalCode}
             city={address.city}
             onStreetChange={(value) => {
-              console.log('🏠 Street changed:', value);
               setAddress(prev => ({ ...prev, street: value }));
             }}
             onHouseNumberChange={(value) => {
-              console.log('🏠 House number changed:', value);
               setAddress(prev => ({ ...prev, houseNumber: value }));
             }}
             onPostalCodeChange={(value) => {
-              console.log('📮 PostalCode changed:', value);
               setAddress(prev => ({ ...prev, postalCode: value }));
             }}
             onCityChange={(value) => {
-              console.log('🏙️ City changed:', value);
               setAddress(prev => ({ ...prev, city: value }));
             }}
             onLatChange={(value) => {
-              console.log('📍 Lat changed:', value);
               setLat(value);
             }}
             onLonChange={(value) => {
-              console.log('📍 Lon changed:', value);
               setLon(value);
             }}
           />

@@ -69,21 +69,15 @@ export default function PaymentScreen() {
       }
 
       // Worker-Profil laden
-      console.log("🔍 [LOAD] Fetching worker profile for:", data.workerId);
       const workerRes = await fetch(`${API_URL}/profiles/worker/${data.workerId}`, { headers });
       let workerData = null;
       if (workerRes.ok) {
         workerData = await workerRes.json();
-        console.log("🔍 [LOAD] Worker profile received:", workerData);
-        console.log("🔍 [LOAD] isSelfEmployed VALUE:", workerData.isSelfEmployed);
-        console.log("🔍 [LOAD] isSelfEmployed TYPE:", typeof workerData.isSelfEmployed);
         setWorkerProfile(workerData);
       } else {
-        console.log("❌ [LOAD] Worker profile fetch FAILED:", workerRes.status);
       }
 
       // Auto-Redirect deaktiviert, Modal-Logik übernimmt nach Zahlung
-      console.log("🔍 [LOAD] paymentStatus:", data.paymentStatus);
       
       // Return the worker profile data for immediate use
       return workerData;
@@ -125,27 +119,19 @@ export default function PaymentScreen() {
   }
 
   const handleRegistrationCheck = async (profileData?: any) => {
-    console.log("🔍 [MODAL CHECK] START");
-    console.log("🔍 [MODAL CHECK] user.accountType:", user?.accountType);
     
     // Verwende entweder das übergebene Profil oder das State-Profil
     const currentProfile = profileData || workerProfile;
-    console.log("🔍 [MODAL CHECK] currentProfile:", currentProfile);
-    console.log("🔍 [MODAL CHECK] currentProfile.isSelfEmployed:", currentProfile?.isSelfEmployed);
-    console.log("🔍 [MODAL CHECK] currentProfile.isSelfEmployed TYPE:", typeof currentProfile?.isSelfEmployed);
 
     if (!currentProfile) {
-      console.log("❌ [MODAL CHECK] NO currentProfile - showing error");
       Alert.alert("Fehler", "Worker-Daten fehlen.");
       return;
     }
 
     const isSelf = currentProfile.isSelfEmployed === true;
-    console.log("🔍 [MODAL CHECK] isSelf (=== true):", isSelf);
 
     // Wenn selbstständig → KEIN Modal
     if (isSelf) {
-      console.log("✅ [MODAL CHECK] Worker is self-employed, no registration modal needed");
       // Payment ist bereits abgeschlossen, keine weitere Aktion nötig
       router.replace("/(employer)/matches");
       return;
@@ -153,29 +139,23 @@ export default function PaymentScreen() {
 
     // PRIVATE + NICHT selbstständig → Private Modal
     if (user?.accountType === "private" && !isSelf) {
-      console.log("✅ [MODAL CHECK] Showing PRIVATE EMPLOYER MODAL");
       setShowPrivateEmployerModal(true);
       return;
     }
 
     // BUSINESS + NICHT selbstständig → Business Modal
-    console.log("✅ [MODAL CHECK] Showing BUSINESS REGISTRATION MODAL");
     setShowRegistrationModal(true);
   };
 
   async function handlePayment() {
-    console.log("💳 handlePayment called - paymentMethod:", paymentMethod);
-    console.log("💳 processing:", processing);
     
     // Double-Clicks verhindern
     if (processing) {
-      console.log("⚠️ Already processing payment, ignoring click");
       return;
     }
 
     try {
       setProcessing(true);
-      console.log("🔄 Starting payment process...");
       
       const headers = await getAuthHeaders();
 
@@ -184,26 +164,16 @@ export default function PaymentScreen() {
         headers,
       });
 
-      console.log("📡 Payment response status:", res.status);
 
       if (!res.ok) {
         throw new Error("Zahlung fehlgeschlagen");
       }
 
-      console.log("✅ Payment successful!");
       setProcessing(false);
 
-      console.log("🔍 [PAYMENT] BEFORE RELOAD:");
-      console.log("🔍 [PAYMENT] USER accountType:", user?.accountType);
-      console.log("🔍 [PAYMENT] WORKER isSelfEmployed:", workerProfile?.isSelfEmployed);
-      console.log("🔍 [PAYMENT] JOB:", job);
 
-      console.log("🔍 [PAYMENT] Re-loading application after payment…");
       const freshWorkerProfile = await loadApplication(); // Daten refreshen
       
-      console.log("🔍 [PAYMENT] AFTER RELOAD:");
-      console.log("🔍 [PAYMENT] FRESH WORKER isSelfEmployed:", freshWorkerProfile?.isSelfEmployed);
-      console.log("🔍 [PAYMENT] Calling handleRegistrationCheck with fresh data...");
       
       await handleRegistrationCheck(freshWorkerProfile);
       
@@ -351,8 +321,6 @@ export default function PaymentScreen() {
         {/* Pay Button */}
         <Pressable
           onPress={() => {
-            console.log("🔔 Pay button clicked! Payment method:", paymentMethod);
-            console.log("🔔 Processing:", processing);
             handlePayment();
           }}
           disabled={processing}

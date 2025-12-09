@@ -245,7 +245,6 @@ export default function Step1Basic() {
             {/* SELF EMPLOYED */}
             <Pressable 
               onPress={() => {
-                console.log('Checkbox clicked!');
                 setIsSelfEmployed(!isSelfEmployed);
               }} 
               style={styles.checkboxContainer}

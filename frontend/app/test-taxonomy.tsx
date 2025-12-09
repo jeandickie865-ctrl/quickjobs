@@ -10,39 +10,28 @@ export default function TestTaxonomy() {
   const { colors, spacing } = useTheme();
 
   useEffect(() => {
-    console.log('=== TAXONOMY TEST ===');
     
     // Test 1: List all categories
     const categories = listCategories();
-    console.log('Total categories:', categories.length);
-    console.log('First category:', categories[0]);
     
     // Test 2: Get specific category
     const sicherheit = getCategory('sicherheit');
-    console.log('Sicherheit tags:', sicherheit.tags.length);
     
     // Test 3: Group tags by type
     const grouped = groupTagsByType('sicherheit');
-    console.log('Sicherheit grouped:', {
       qual: grouped.qual.length,
       doc: grouped.doc.length,
     });
     
     // Test 4: Check radius options
-    console.log('Radius options:', RADIUS_OPTIONS_KM);
-    console.log('Default radius:', DEFAULT_RADIUS_KM);
     
     // Test 5: Check for duplicate tag keys
     const allTags = categories.flatMap(c => getCategory(c.key).tags);
     const tagKeys = allTags.map(t => t.key);
     const uniqueKeys = new Set(tagKeys);
-    console.log('Total tags:', tagKeys.length);
-    console.log('Unique tags:', uniqueKeys.size);
-    console.log('Has duplicates:', tagKeys.length !== uniqueKeys.size);
     
     if (tagKeys.length !== uniqueKeys.size) {
       const duplicates = tagKeys.filter((key, index) => tagKeys.indexOf(key) !== index);
-      console.log('Duplicate keys:', [...new Set(duplicates)]);
     }
   }, []);
 

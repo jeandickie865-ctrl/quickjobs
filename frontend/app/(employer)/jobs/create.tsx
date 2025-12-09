@@ -197,7 +197,6 @@ export default function CreateJob() {
     let startAtISO: string | undefined = undefined;
     let endAtISO: string | undefined = undefined;
     
-    console.log('🔍 Input values:', { date, startAt, endAt });
     
     if (date && startAt && endAt) {
       try {
@@ -244,14 +243,12 @@ export default function CreateJob() {
         if (endDate <= startDate) {
           // Job goes over midnight - add one day
           endDate.setDate(endDate.getDate() + 1);
-          console.log('⏰ Job goes over midnight - end date +1 day');
         }
         
         // Convert to ISO strings (includes timezone offset automatically)
         startAtISO = startDate.toISOString();
         endAtISO = endDate.toISOString();
         
-        console.log('✅ Created timestamps:', { 
           startAtISO, 
           endAtISO,
           startLocal: startDate.toLocaleString('de-DE'),
@@ -281,8 +278,6 @@ export default function CreateJob() {
       required_any_tags: [],
     };
 
-    console.log('🕒 Creating job with timestamps:', { date, startAt, endAt, startAtISO, endAtISO });
-    console.log('💾 Full job payload:', JSON.stringify(jobCreate, null, 2));
 
     // Validiere, dass startAtISO und endAtISO gesetzt wurden
     if (!startAtISO || !endAtISO) {
@@ -293,9 +288,7 @@ export default function CreateJob() {
 
     try {
       setIsSaving(true);
-      console.log('📤 Sending job to backend...');
       await addJob(jobCreate);
-      console.log('✅ Job created successfully!');
       // Navigate zu Aufträge-Tab nach erfolgreicher Erstellung
       router.push('/(employer)/jobs');
     } catch (e) {

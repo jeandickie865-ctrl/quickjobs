@@ -172,17 +172,14 @@ export default function WorkerDocumentsScreen() {
 
   // Dokument löschen
   const handleDelete = async (documentId: string, filename: string) => {
-    console.log('🗑️ Delete button clicked for:', documentId, filename);
     
     // Use native confirm for better web compatibility
     const confirmed = window.confirm(`Möchten Sie "${filename}" wirklich löschen?`);
     
     if (!confirmed) {
-      console.log('❌ User cancelled deletion');
       return;
     }
 
-    console.log('🗑️ User confirmed deletion');
     
     try {
       const token = await AsyncStorage.getItem("token");
@@ -193,7 +190,6 @@ export default function WorkerDocumentsScreen() {
       }
 
       const deleteUrl = `${API_URL}/profiles/worker/${user?.id}/documents/${documentId}`;
-      console.log('🗑️ Sending DELETE request to:', deleteUrl);
 
       const response = await fetch(deleteUrl, {
         method: 'DELETE',
@@ -202,10 +198,8 @@ export default function WorkerDocumentsScreen() {
         }
       });
 
-      console.log('🗑️ DELETE response status:', response.status);
 
       if (response.ok) {
-        console.log('✅ Document deleted successfully');
         // Lade Dokumente neu
         await loadDocuments();
         alert('Dokument wurde gelöscht');

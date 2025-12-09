@@ -56,7 +56,6 @@ export default function EmployerApplicationsScreen() {
       setError(null);
 
       const apps = await getApplicationsForEmployer();
-      console.log(`📋 Gefunden: ${apps.length} Bewerbungen für Employer ${user.id}`);
 
       const withDetails: ApplicationWithDetails[] = [];
       for (const app of apps) {

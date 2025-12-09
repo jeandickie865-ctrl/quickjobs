@@ -71,7 +71,6 @@ export default function RegistrationPrepareScreen() {
     
     if (hasAllData) {
       // Fall A: Alle Daten vorhanden → Automatisch zu confirm weiterleiten
-      console.log('✅ Alle Worker-Daten vorhanden, überspringe prepare.tsx');
       router.push(
         `/(employer)/registration/confirm?applicationId=${applicationId}` +
         `&type=${registrationType}` +
@@ -82,7 +81,6 @@ export default function RegistrationPrepareScreen() {
       );
     } else {
       // Fall B: Daten fehlen → Modal anzeigen
-      console.log('⚠️ Worker-Daten fehlen, zeige Modal');
       setShowMissingDataModal(true);
     }
   }, [worker, steuerId, krankenkasse, geburtsdatum, sozialversicherungsnummer, dataChecked]);

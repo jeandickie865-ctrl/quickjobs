@@ -48,7 +48,6 @@ export default function AllJobsScreen() {
   const loadAllJobsInRadius = async () => {
     // Warten bis Auth geladen ist
     if (!token || !user) {
-      console.log("⏳ [ALL JOBS] Waiting for auth to load...");
       return;
     }
 
@@ -56,7 +55,6 @@ export default function AllJobsScreen() {
     setError(null);
 
     try {
-      console.log("📍 [ALL JOBS] Step 1: Loading worker profile for user:", user.userId);
       // 1. Worker-Profil laden (für Radius und Position)
       const profile = await getWorkerProfile(user.userId);
       
@@ -66,7 +64,6 @@ export default function AllJobsScreen() {
         setIsLoading(false);
         return;
       }
-      console.log("✅ [ALL JOBS] Profile loaded:", { homeLat: profile.homeLat, homeLon: profile.homeLon, radiusKm: profile.radiusKm });
 
       const { homeLat, homeLon, radiusKm } = profile;
 
@@ -77,10 +74,8 @@ export default function AllJobsScreen() {
         return;
       }
 
-      console.log("📍 [ALL JOBS] Step 2: Loading all jobs...");
       // 2. Alle Jobs laden
       const allJobs = await getJobs();
-      console.log("✅ [ALL JOBS] Loaded", allJobs.length, "jobs from backend");
 
       // 3. Nur Jobs im Radius filtern (KEINE Kategorie oder Tags)
       const today = new Date();
@@ -120,7 +115,6 @@ export default function AllJobsScreen() {
         return distanceKm <= radiusKm;
       });
 
-      console.log("✅ [ALL JOBS] Filtered", jobsInRadius.length, "jobs within", radiusKm, "km radius");
 
       // Nach Distanz sortieren (nächste zuerst)
       jobsInRadius.sort((a, b) => {
