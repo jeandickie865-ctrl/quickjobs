@@ -288,9 +288,24 @@ export default function CreateJob() {
 
     try {
       setIsSaving(true);
-      await addJob(jobCreate);
-      // Navigate zu Aufträge-Tab nach erfolgreicher Erstellung
-      router.push('/(employer)/jobs');
+      const newJob = await addJob(jobCreate);
+      setCreatedJobId(newJob.id);
+      
+      // Zeige Success Modal
+      setShowSuccessModal(true);
+      
+      // Animation
+      Animated.spring(successScale, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 50,
+        friction: 7,
+      }).start();
+      
+      // Auto-redirect nach 2.5 Sekunden
+      setTimeout(() => {
+        router.replace('/(employer)/jobs');
+      }, 2500);
     } catch (e) {
       console.error('❌ Error creating job:', e);
       setError('Der Auftrag wurde nicht gespeichert: ' + (e instanceof Error ? e.message : 'Unbekannter Fehler'));
