@@ -20,8 +20,10 @@ const COLORS = {
   orange: '#FF773D',
   white: '#FFFFFF',
   inputBg: '#FFFFFF',
-  myMessageBg: '#EFABFF',
-  theirMessageBg: '#F3F4F6',
+  myMessageBg: '#EFABFF',       // Lila für eigene Nachrichten
+  myMessageText: '#1A1A1A',      // Dunkel für eigene Nachrichten
+  theirMessageBg: '#F3F4F6',     // Hellgrau für fremde Nachrichten
+  theirMessageText: '#1A1A1A',   // Dunkel für fremde Nachrichten
 };
 
 export default function ChatScreen() {
