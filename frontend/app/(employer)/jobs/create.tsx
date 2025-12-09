@@ -248,12 +248,6 @@ export default function CreateJob() {
         // Convert to ISO strings (includes timezone offset automatically)
         startAtISO = startDate.toISOString();
         endAtISO = endDate.toISOString();
-        
-          startAtISO, 
-          endAtISO,
-          startLocal: startDate.toLocaleString('de-DE'),
-          endLocal: endDate.toLocaleString('de-DE')
-        });
       } catch (error) {
         console.error('❌ Error parsing date/time:', error, { date, startAt, endAt });
       }
