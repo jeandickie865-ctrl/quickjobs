@@ -145,161 +145,168 @@ export default function Step3Categories() {
             contentContainerStyle={{ ...styles.scrollContent, paddingBottom: 160 }}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.title}>🔥 TEST VERSION 2.0 🔥</Text>
-            <Text style={styles.subtitle}>Wenn du diesen Text siehst, funktionieren Updates!</Text>
+            <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
+            <Text style={styles.subtitle}>Wähle deine Bereiche aus</Text>
 
-            {/* KATEGORIEN LISTE */}
+            {/* SCHRITT 1: KATEGORIEN ALS HORIZONTAL SCROLLABLE CHIPS */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Kategorien *</Text>
+              <Text style={styles.sectionTitle}>1. Wähle Kategorien *</Text>
               {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
-
-              {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
-                const isSelected = selectedCategories.includes(key);
-                const isExpanded = expandedCategory === key;
-                const showQuals = showQualificationsFor === key;
-                
-                // Zähle ausgewählte Tätigkeiten für diese Kategorie
-                const catSubs = cat.subcategories?.map((s: any) => s.key) || [];
-                const selectedCount = catSubs.filter((s: string) => selectedSubcategories.includes(s)).length;
-
-                return (
-                  <View key={key} style={{ marginBottom: 12 }}>
-                    {/* KATEGORIE CARD */}
+              
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingVertical: 8 }}
+              >
+                {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
+                  const isSelected = selectedCategories.includes(key);
+                  return (
                     <Pressable
+                      key={key}
                       onPress={() => handleCategoryToggle(key)}
                       style={[
-                        styles.categoryCard,
-                        isSelected && styles.categoryCardSelected
+                        styles.chip,
+                        isSelected && styles.chipSelected
                       ]}
                     >
-                      <View style={{ flex: 1 }}>
+                      <Text style={[
+                        styles.chipText,
+                        isSelected && styles.chipTextSelected
+                      ]}>
+                        {cat.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+
+              {/* Ausgewählte Kategorien anzeigen */}
+              {selectedCategories.length > 0 && (
+                <View style={{ marginTop: 12 }}>
+                  <Text style={{ fontSize: 13, color: COLORS.muted, marginBottom: 8 }}>
+                    Ausgewählt: {selectedCategories.map(k => TAXONOMY_DATA[k].label).join(', ')}
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {/* SCHRITT 2: TÄTIGKEITEN FÜR AKTIVE KATEGORIE */}
+            {selectedCategories.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>2. Wähle Tätigkeiten *</Text>
+                {errors.subcategories && <Text style={styles.errorText}>{errors.subcategories}</Text>}
+                
+                {/* Tabs für ausgewählte Kategorien */}
+                <ScrollView 
+                  horizontal 
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ paddingVertical: 8, marginBottom: 12 }}
+                >
+                  {selectedCategories.map((catKey) => {
+                    const cat = TAXONOMY_DATA[catKey];
+                    const isActive = activeCategory === catKey;
+                    const catSubs = cat.subcategories?.map((s: any) => s.key) || [];
+                    const selectedCount = catSubs.filter((s: string) => selectedSubcategories.includes(s)).length;
+                    
+                    return (
+                      <Pressable
+                        key={catKey}
+                        onPress={() => {
+                          setActiveCategory(catKey);
+                          setShowQualifications(false);
+                        }}
+                        style={[
+                          styles.categoryTab,
+                          isActive && styles.categoryTabActive
+                        ]}
+                      >
                         <Text style={[
-                          styles.categoryText,
-                          isSelected && styles.categoryTextSelected
+                          styles.categoryTabText,
+                          isActive && styles.categoryTabTextActive
                         ]}>
                           {cat.label}
                         </Text>
-                        {isSelected && selectedCount > 0 && (
-                          <Text style={{ fontSize: 12, color: COLORS.neon, marginTop: 4 }}>
-                            {selectedCount} Tätigkeit{selectedCount !== 1 ? 'en' : ''} ausgewählt
-                          </Text>
-                        )}
-                      </View>
-                      
-                      {isSelected && (
-                        <Pressable 
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            setExpandedCategory(isExpanded ? null : key);
-                          }}
-                          style={{ padding: 8 }}
-                        >
-                          <Ionicons 
-                            name={isExpanded ? "chevron-up" : "chevron-down"} 
-                            size={24} 
-                            color={COLORS.neon} 
-                          />
-                        </Pressable>
-                      )}
-                    </Pressable>
-
-                    {/* ACCORDION: TÄTIGKEITEN */}
-                    {isSelected && isExpanded && (
-                      <View style={styles.accordionContent}>
-                        <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.text, marginBottom: 12 }}>
-                          Tätigkeiten:
-                        </Text>
-
-                        {cat.subcategories?.map((sub: any) => {
-                          const isSubSelected = selectedSubcategories.includes(sub.key);
-                          return (
-                            <Pressable
-                              key={sub.key}
-                              onPress={() => toggleSubcategory(sub.key)}
-                              style={[
-                                styles.subcategoryCard,
-                                isSubSelected && styles.subcategoryCardSelected
-                              ]}
-                            >
-                              <Text
-                                style={[
-                                  styles.subcategoryText,
-                                  isSubSelected && styles.subcategoryTextSelected
-                                ]}
-                              >
-                                {sub.label}
-                              </Text>
-                              {isSubSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
-                            </Pressable>
-                          );
-                        })}
-
-                        {errors.subcategories && (
-                          <Text style={styles.errorText}>{errors.subcategories}</Text>
-                        )}
-
-                        {/* QUALIFIKATIONEN BUTTON */}
-                        {cat.qualifications && cat.qualifications.length > 0 && (
-                          <View style={{ marginTop: 16 }}>
-                            <Pressable
-                              onPress={() => setShowQualificationsFor(showQuals ? null : key)}
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                backgroundColor: COLORS.card,
-                                padding: 12,
-                                borderRadius: 12,
-                                borderWidth: 1,
-                                borderColor: COLORS.border,
-                              }}
-                            >
-                              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.text }}>
-                                Qualifikationen {showQuals ? 'ausblenden' : 'anzeigen'}
-                              </Text>
-                              <Ionicons 
-                                name={showQuals ? "chevron-up" : "chevron-down"} 
-                                size={20} 
-                                color={COLORS.neon} 
-                              />
-                            </Pressable>
-
-                            {/* QUALIFIKATIONEN LISTE */}
-                            {showQuals && (
-                              <View style={{ marginTop: 12, gap: 10 }}>
-                                {cat.qualifications.map((qual: any) => {
-                                  const isQualSelected = selectedQualifications.includes(qual.key);
-                                  return (
-                                    <Pressable
-                                      key={qual.key}
-                                      onPress={() => toggleQualification(qual.key)}
-                                      style={[
-                                        styles.qualificationCard,
-                                        isQualSelected && styles.qualificationCardSelected
-                                      ]}
-                                    >
-                                      <Text
-                                        style={[
-                                          styles.qualificationText,
-                                          isQualSelected && styles.qualificationTextSelected
-                                        ]}
-                                      >
-                                        {qual.label}
-                                      </Text>
-                                      {isQualSelected && <Ionicons name="checkmark-circle" size={20} color={COLORS.secondary} />}
-                                    </Pressable>
-                                  );
-                                })}
-                              </View>
-                            )}
+                        {selectedCount > 0 && (
+                          <View style={styles.badge}>
+                            <Text style={styles.badgeText}>{selectedCount}</Text>
                           </View>
                         )}
-                      </View>
-                    )}
+                      </Pressable>
+                    );
+                  })}
+                </ScrollView>
+
+                {/* Tätigkeiten für aktive Kategorie */}
+                {activeCategory && TAXONOMY_DATA[activeCategory] && (
+                  <View>
+                    {TAXONOMY_DATA[activeCategory].subcategories?.map((sub: any) => {
+                      const isSubSelected = selectedSubcategories.includes(sub.key);
+                      return (
+                        <Pressable
+                          key={sub.key}
+                          onPress={() => toggleSubcategory(sub.key)}
+                          style={[
+                            styles.activityCard,
+                            isSubSelected && styles.activityCardSelected
+                          ]}
+                        >
+                          <Text style={[
+                            styles.activityText,
+                            isSubSelected && styles.activityTextSelected
+                          ]}>
+                            {sub.label}
+                          </Text>
+                          {isSubSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
+                        </Pressable>
+                      );
+                    })}
                   </View>
-                );
-              })}
-            </View>
+                )}
+              </View>
+            )}
+
+            {/* SCHRITT 3: QUALIFIKATIONEN (OPTIONAL) */}
+            {activeCategory && TAXONOMY_DATA[activeCategory]?.qualifications?.length > 0 && (
+              <View style={styles.section}>
+                <Pressable
+                  onPress={() => setShowQualifications(!showQualifications)}
+                  style={styles.qualificationToggle}
+                >
+                  <Text style={styles.sectionTitle}>3. Qualifikationen (optional)</Text>
+                  <Ionicons 
+                    name={showQualifications ? "chevron-up" : "chevron-down"} 
+                    size={24} 
+                    color={COLORS.neon} 
+                  />
+                </Pressable>
+                
+                {showQualifications && (
+                  <View style={{ marginTop: 12 }}>
+                    {TAXONOMY_DATA[activeCategory].qualifications.map((qual: any) => {
+                      const isQualSelected = selectedQualifications.includes(qual.key);
+                      return (
+                        <Pressable
+                          key={qual.key}
+                          onPress={() => toggleQualification(qual.key)}
+                          style={[
+                            styles.qualCard,
+                            isQualSelected && styles.qualCardSelected
+                          ]}
+                        >
+                          <Text style={[
+                            styles.qualText,
+                            isQualSelected && styles.qualTextSelected
+                          ]}>
+                            {qual.label}
+                          </Text>
+                          {isQualSelected && <Ionicons name="checkmark-circle" size={20} color={COLORS.secondary} />}
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+                )}
+              </View>
+            )}
           </ScrollView>
 
           {!isFormValid && (
