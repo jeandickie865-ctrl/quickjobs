@@ -148,27 +148,29 @@ export default function WorkerLayout() {
       <Tabs.Screen 
         name="feed" 
         options={{ 
-          title: 'Aktuelle Jobs',
-          tabBarLabel: 'Aktuelle Jobs',
+          title: 'Feed',
+          tabBarLabel: 'Feed',
         }} 
       />
       <Tabs.Screen 
         name="alljobs/index" 
         options={{ 
           title: 'Alle Jobs',
-          tabBarLabel: 'Alle Jobs',
+          tabBarLabel: 'Alle',
         }} 
       />
       <Tabs.Screen 
         name="applications" 
         options={{ 
           title: 'Bewerbungen',
+          tabBarLabel: 'Bewerb.',
         }} 
       />
       <Tabs.Screen 
         name="matches" 
         options={{ 
           title: 'Matches',
+          tabBarLabel: 'Matches',
           tabBarBadge: matchesCount > 0 ? matchesCount : undefined,
         }} 
       />
@@ -176,6 +178,7 @@ export default function WorkerLayout() {
         name="profile" 
         options={{ 
           title: 'Profil',
+          tabBarLabel: 'Profil',
         }} 
       />
 
