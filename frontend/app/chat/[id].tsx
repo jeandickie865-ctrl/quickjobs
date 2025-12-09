@@ -277,10 +277,10 @@ export default function ChatScreen() {
                   borderColor: isOwn ? '#E9D5FF' : '#E5E7EB',
                 }}
               >
-                <Text style={{ color: isOwn ? COLORS.myMessageText : COLORS.theirMessageText, fontSize: 15, lineHeight: 20, fontWeight: '500' }}>
-                  {item.text}
+                <Text style={{ color: '#000000', fontSize: 15, lineHeight: 20, fontWeight: '600' }}>
+                  {item.text || '[Keine Nachricht]'}
                 </Text>
-                <Text style={{ color: COLORS.textMuted, fontSize: 11, marginTop: 4, textAlign: isOwn ? 'right' : 'left' }}>
+                <Text style={{ color: '#666666', fontSize: 11, marginTop: 4, textAlign: isOwn ? 'right' : 'left' }}>
                   {item.createdAt && !isNaN(new Date(item.createdAt).getTime()) 
                     ? new Date(item.createdAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
                     : ''}
