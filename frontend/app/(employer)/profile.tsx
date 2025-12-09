@@ -64,10 +64,11 @@ export default function EmployerProfileViewScreen() {
       setMatchesCount(acceptedApps.length);
       setApplicationsCount(pendingApps.length);
 
-      // Load reviews
+      // Load reviews (nur Bewertungen von Workers über diesen Employer)
       const reviews = await getReviewsForEmployer(user.id);
-      setAvgRating(calculateAverageRating(reviews));
-      setReviewCount(reviews.length);
+      const employerReviews = reviews.filter((r: any) => r.reviewerRole === 'worker');
+      setAvgRating(calculateAverageRating(employerReviews));
+      setReviewCount(employerReviews.length);
     } catch (error) {
       console.error('Error loading profile:', error);
     } finally {
