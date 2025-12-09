@@ -276,7 +276,7 @@ export default function ChatScreen() {
               >
                 {console.log('💬 Chat item:', JSON.stringify(item, null, 2))}
                 <Text style={{ color: '#000000', fontSize: 15, lineHeight: 20, fontWeight: '600' }}>
-                  {item.text || item.message || item.body || item.content || item.textBody || '[Keine Nachricht]'}
+                  {item.text || item.message || ''}
                 </Text>
                 <Text style={{ color: '#666666', fontSize: 11, marginTop: 4, textAlign: isOwn ? 'right' : 'left' }}>
                   {item.createdAt && !isNaN(new Date(item.createdAt).getTime()) 
