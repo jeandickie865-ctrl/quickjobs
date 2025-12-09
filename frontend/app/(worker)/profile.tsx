@@ -63,10 +63,13 @@ export default function WorkerProfileScreen() {
 
       setProfile(data);
 
+      // Hole Bewertungen ÜBER diesen Worker (geschrieben von Employers)
       const reviewsData = await getReviewsForWorker(user.id);
-      setReviews(reviewsData);
-      setAvgRating(calculateAverageRating(reviewsData));
-      setReviewCount(reviewsData.length);
+      // Filtere nur Bewertungen, wo reviewerRole === 'employer' (Employers bewerten Worker)
+      const workerReviews = reviewsData.filter((r: any) => r.reviewerRole === 'employer');
+      setReviews(workerReviews);
+      setAvgRating(calculateAverageRating(workerReviews));
+      setReviewCount(workerReviews.length);
 
       const apps = await getWorkerApplications();
       const accepted = apps.filter(a => a.status === 'accepted');
