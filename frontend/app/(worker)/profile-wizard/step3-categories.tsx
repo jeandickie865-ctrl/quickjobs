@@ -1,4 +1,4 @@
-// app/(worker)/profile-wizard/step3-categories.tsx – Quickjobs DESIGN
+// app/(worker)/profile-wizard/step3-categories.tsx – Quickjobs Accordion Design
 
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
@@ -39,43 +39,42 @@ export default function Step3Categories() {
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(wizardData.categories || []);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(wizardData.subcategories || []);
+  const [selectedQualifications, setSelectedQualifications] = useState<string[]>(wizardData.qualifications || []);
   const [errors, setErrors] = useState<{ category?: string; subcategories?: string }>({});
   
-  // NEU: Track welche Kategorie für Unterkategorien geöffnet ist
+  // Track welche Kategorie geöffnet ist (Accordion)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(
     selectedCategories.length > 0 ? selectedCategories[0] : null
   );
-
-  // Build available subcategories
-  const availableSubcategories: { key: string; label: string }[] = [];
-  selectedCategories.forEach((catKey) => {
-    const category = TAXONOMY_DATA[catKey];
-    if (category) {
-      category.subcategories?.forEach((sub: any) => {
-        if (!availableSubcategories.find((s) => s.key === sub.key)) {
-          availableSubcategories.push({ key: sub.key, label: sub.label });
-        }
-      });
-    }
-  });
+  
+  // Track welche Kategorie ihre Qualifikationen zeigt
+  const [showQualificationsFor, setShowQualificationsFor] = useState<string | null>(null);
 
   const handleCategoryToggle = (catKey: string) => {
     const isSelected = selectedCategories.includes(catKey);
+    
     if (isSelected) {
+      // Abwählen: Kategorie entfernen + zugehörige Tätigkeiten/Qualifikationen entfernen
       setSelectedCategories((prev) => prev.filter((k) => k !== catKey));
 
       const cat = TAXONOMY_DATA[catKey];
       const catSubs = cat.subcategories?.map((s: any) => s.key) || [];
+      const catQuals = cat.qualifications?.map((q: any) => q.key) || [];
+      
       setSelectedSubcategories((prev) => prev.filter((s) => !catSubs.includes(s)));
+      setSelectedQualifications((prev) => prev.filter((q) => !catQuals.includes(q)));
       
       // Wenn die geöffnete Kategorie abgewählt wird, schließen
       if (expandedCategory === catKey) {
         setExpandedCategory(null);
       }
+      if (showQualificationsFor === catKey) {
+        setShowQualificationsFor(null);
+      }
     } else {
+      // Auswählen: Kategorie hinzufügen + Accordion öffnen
       setSelectedCategories((prev) => [...prev, catKey]);
-      // NEU: Automatisch öffnen wenn ausgewählt
-      setExpandedCategory(catKey);
+      setExpandedCategory(catKey); // Automatisch öffnen
     }
     setErrors({});
   };
@@ -85,6 +84,12 @@ export default function Step3Categories() {
       prev.includes(subKey) ? prev.filter((s) => s !== subKey) : [...prev, subKey]
     );
     setErrors((prev) => ({ ...prev, subcategories: undefined }));
+  };
+
+  const toggleQualification = (qualKey: string) => {
+    setSelectedQualifications((prev) =>
+      prev.includes(qualKey) ? prev.filter((q) => q !== qualKey) : [...prev, qualKey]
+    );
   };
 
   const handleNext = () => {
@@ -106,6 +111,7 @@ export default function Step3Categories() {
     updateWizardData({
       categories: selectedCategories,
       subcategories: selectedSubcategories,
+      qualifications: selectedQualifications,
     });
 
     router.push('/(worker)/profile-wizard/step4-skills');
@@ -114,7 +120,8 @@ export default function Step3Categories() {
   const handleBack = () => {
     updateWizardData({
       categories: selectedCategories,
-      subcategories: selectedSubcategories
+      subcategories: selectedSubcategories,
+      qualifications: selectedQualifications,
     });
     router.push('/(worker)/profile-wizard/step2-address');
   };
@@ -140,78 +147,160 @@ export default function Step3Categories() {
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.title}>Kategorien & Tätigkeiten</Text>
-            <Text style={styles.subtitle}>Wähle deine Kategorien und Tätigkeiten</Text>
+            <Text style={styles.subtitle}>Wähle deine Kategorien und öffne sie, um Tätigkeiten auszuwählen</Text>
 
-            {/* CATEGORY SECTION */}
+            {/* KATEGORIEN LISTE */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>1. Kategorien auswählen *</Text>
-              <Text style={styles.helperText}>Wähle eine oder mehrere Kategorien</Text>
+              <Text style={styles.sectionTitle}>Kategorien *</Text>
+              {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
 
-              <View style={styles.categoriesGrid}>
-                {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
-                  const isSelected = selectedCategories.includes(key);
-                  return (
+              {Object.entries(TAXONOMY_DATA).map(([key, cat]: [string, any]) => {
+                const isSelected = selectedCategories.includes(key);
+                const isExpanded = expandedCategory === key;
+                const showQuals = showQualificationsFor === key;
+                
+                // Zähle ausgewählte Tätigkeiten für diese Kategorie
+                const catSubs = cat.subcategories?.map((s: any) => s.key) || [];
+                const selectedCount = catSubs.filter((s: string) => selectedSubcategories.includes(s)).length;
+
+                return (
+                  <View key={key} style={{ marginBottom: 12 }}>
+                    {/* KATEGORIE CARD */}
                     <Pressable
-                      key={key}
                       onPress={() => handleCategoryToggle(key)}
                       style={[
                         styles.categoryCard,
                         isSelected && styles.categoryCardSelected
                       ]}
                     >
-                      <Text
-                        style={[
+                      <View style={{ flex: 1 }}>
+                        <Text style={[
                           styles.categoryText,
                           isSelected && styles.categoryTextSelected
-                        ]}
-                      >
-                        {cat.label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-
-              {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
-            </View>
-
-            {/* SUBCATEGORY SECTION */}
-            {selectedCategories.length > 0 && availableSubcategories.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>2. Tätigkeiten auswählen *</Text>
-                <Text style={styles.helperText}>Wähle mindestens eine Tätigkeit aus</Text>
-
-                <View style={styles.subcategoriesList}>
-                  {availableSubcategories.map((sub: any) => {
-                    const isSelected = selectedSubcategories.includes(sub.key);
-                    return (
-                      <Pressable
-                        key={sub.key}
-                        onPress={() => toggleSubcategory(sub.key)}
-                        style={[
-                          styles.subcategoryCard,
-                          isSelected && styles.subcategoryCardSelected
-                        ]}
-                      >
-                        <Text
-                          style={[
-                            styles.subcategoryText,
-                            isSelected && styles.subcategoryTextSelected
-                          ]}
-                        >
-                          {sub.label}
+                        ]}>
+                          {cat.label}
                         </Text>
-                        {isSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
-                      </Pressable>
-                    );
-                  })}
-                </View>
+                        {isSelected && selectedCount > 0 && (
+                          <Text style={{ fontSize: 12, color: COLORS.neon, marginTop: 4 }}>
+                            {selectedCount} Tätigkeit{selectedCount !== 1 ? 'en' : ''} ausgewählt
+                          </Text>
+                        )}
+                      </View>
+                      
+                      {isSelected && (
+                        <Pressable 
+                          onPress={(e) => {
+                            e.stopPropagation();
+                            setExpandedCategory(isExpanded ? null : key);
+                          }}
+                          style={{ padding: 8 }}
+                        >
+                          <Ionicons 
+                            name={isExpanded ? "chevron-up" : "chevron-down"} 
+                            size={24} 
+                            color={COLORS.neon} 
+                          />
+                        </Pressable>
+                      )}
+                    </Pressable>
 
-                {errors.subcategories && (
-                  <Text style={styles.errorText}>{errors.subcategories}</Text>
-                )}
-              </View>
-            )}
+                    {/* ACCORDION: TÄTIGKEITEN */}
+                    {isSelected && isExpanded && (
+                      <View style={styles.accordionContent}>
+                        <Text style={{ fontSize: 14, fontWeight: '700', color: COLORS.text, marginBottom: 12 }}>
+                          Tätigkeiten:
+                        </Text>
+
+                        {cat.subcategories?.map((sub: any) => {
+                          const isSubSelected = selectedSubcategories.includes(sub.key);
+                          return (
+                            <Pressable
+                              key={sub.key}
+                              onPress={() => toggleSubcategory(sub.key)}
+                              style={[
+                                styles.subcategoryCard,
+                                isSubSelected && styles.subcategoryCardSelected
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.subcategoryText,
+                                  isSubSelected && styles.subcategoryTextSelected
+                                ]}
+                              >
+                                {sub.label}
+                              </Text>
+                              {isSubSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.neon} />}
+                            </Pressable>
+                          );
+                        })}
+
+                        {errors.subcategories && (
+                          <Text style={styles.errorText}>{errors.subcategories}</Text>
+                        )}
+
+                        {/* QUALIFIKATIONEN BUTTON */}
+                        {cat.qualifications && cat.qualifications.length > 0 && (
+                          <View style={{ marginTop: 16 }}>
+                            <Pressable
+                              onPress={() => setShowQualificationsFor(showQuals ? null : key)}
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                backgroundColor: COLORS.card,
+                                padding: 12,
+                                borderRadius: 12,
+                                borderWidth: 1,
+                                borderColor: COLORS.border,
+                              }}
+                            >
+                              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.text }}>
+                                Qualifikationen {showQuals ? 'ausblenden' : 'anzeigen'}
+                              </Text>
+                              <Ionicons 
+                                name={showQuals ? "chevron-up" : "chevron-down"} 
+                                size={20} 
+                                color={COLORS.neon} 
+                              />
+                            </Pressable>
+
+                            {/* QUALIFIKATIONEN LISTE */}
+                            {showQuals && (
+                              <View style={{ marginTop: 12, gap: 10 }}>
+                                {cat.qualifications.map((qual: any) => {
+                                  const isQualSelected = selectedQualifications.includes(qual.key);
+                                  return (
+                                    <Pressable
+                                      key={qual.key}
+                                      onPress={() => toggleQualification(qual.key)}
+                                      style={[
+                                        styles.qualificationCard,
+                                        isQualSelected && styles.qualificationCardSelected
+                                      ]}
+                                    >
+                                      <Text
+                                        style={[
+                                          styles.qualificationText,
+                                          isQualSelected && styles.qualificationTextSelected
+                                        ]}
+                                      >
+                                        {qual.label}
+                                      </Text>
+                                      {isQualSelected && <Ionicons name="checkmark-circle" size={20} color={COLORS.secondary} />}
+                                    </Pressable>
+                                  );
+                                })}
+                              </View>
+                            )}
+                          </View>
+                        )}
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
           </ScrollView>
 
           {!isFormValid && (
@@ -262,32 +351,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: COLORS.neon,
-    marginBottom: 8
+    marginBottom: 12
   },
 
-  helperText: {
-    fontSize: 12,
-    color: COLORS.gray,
-    marginBottom: 16
-  },
-
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    columnGap: 12,
-    rowGap: 12,
-  },
-
+  // Kategorie Card
   categoryCard: {
-    width: '48%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: COLORS.card,
     borderRadius: 14,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    borderWidth: 1,
+    padding: 16,
+    borderWidth: 2,
     borderColor: COLORS.border,
-    alignItems: 'center'
   },
 
   categoryCardSelected: {
@@ -299,24 +375,36 @@ const styles = StyleSheet.create({
   },
 
   categoryText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: COLORS.text
   },
 
-  categoryTextSelected: { color: COLORS.neon },
+  categoryTextSelected: { 
+    color: COLORS.neon,
+    fontWeight: '700',
+  },
 
-  subcategoriesList: { flexDirection: 'column', gap: 12 },
+  // Accordion Content
+  accordionContent: {
+    marginTop: 8,
+    padding: 16,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
 
+  // Tätigkeit Card
   subcategoryCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: COLORS.card,
-    borderRadius: 12,
-    paddingVertical: 14,
+    borderRadius: 10,
+    paddingVertical: 12,
     paddingHorizontal: 12,
-    minHeight: 52,
+    marginBottom: 8,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
@@ -324,19 +412,47 @@ const styles = StyleSheet.create({
   subcategoryCardSelected: {
     borderColor: COLORS.neon,
     backgroundColor: COLORS.card,
-    shadowColor: COLORS.neon,
-    shadowOpacity: 0.25,
-    shadowRadius: 6
   },
 
   subcategoryText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.text
+    color: COLORS.text,
+    flex: 1,
   },
 
   subcategoryTextSelected: {
     color: COLORS.neon
+  },
+
+  // Qualifikation Card
+  qualificationCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.card,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  qualificationCardSelected: {
+    borderColor: COLORS.secondary,
+    backgroundColor: COLORS.card,
+  },
+
+  qualificationText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: COLORS.text,
+    flex: 1,
+  },
+
+  qualificationTextSelected: {
+    color: COLORS.secondary,
+    fontWeight: '600',
   },
 
   errorText: {
