@@ -53,6 +53,26 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
         >
           {label}
         </Text>
+        {badge !== undefined && badge > 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              top: -4,
+              right: -4,
+              backgroundColor: COLORS.neon,
+              borderRadius: 10,
+              minWidth: 20,
+              height: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 6,
+            }}
+          >
+            <Text style={{ color: COLORS.bg, fontSize: 11, fontWeight: 'bold' }}>
+              {badge}
+            </Text>
+          </View>
+        )}
       </View>
     </Pressable>
   );
@@ -60,7 +80,69 @@ function PillTabButton({ label, isFocused, onPress, badge }: any) {
 
 export default function EmployerLayout() {
   const { user, loading } = useAuth();
+  const [unreadChatCount, setUnreadChatCount] = React.useState(0);
   const insets = useSafeAreaInsets();
+  
+  React.useEffect(() => {
+    if (!user) return;
+    
+    async function loadUnreadChatCount() {
+      try {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/jobs/employer/${user.id}`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+          }
+        });
+        
+        if (response.ok) {
+          const jobs = await response.json();
+          let totalUnread = 0;
+          
+          for (const job of jobs) {
+            try {
+              const appsResponse = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/applications/job/${job.id}`, {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`,
+                }
+              });
+              
+              if (appsResponse.ok) {
+                const applications = await appsResponse.json();
+                const acceptedApps = applications.filter((app: any) => app.status === 'accepted');
+                
+                for (const app of acceptedApps) {
+                  try {
+                    const unreadResponse = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/chat/unread-count/${app.id}`, {
+                      headers: {
+                        'Authorization': `Bearer ${user.token}`,
+                      }
+                    });
+                    if (unreadResponse.ok) {
+                      const data = await unreadResponse.json();
+                      totalUnread += data.unreadCount || 0;
+                    }
+                  } catch (err) {
+                    console.error('Error fetching unread for app:', app.id, err);
+                  }
+                }
+              }
+            } catch (err) {
+              console.error('Error fetching applications for job:', job.id, err);
+            }
+          }
+          setUnreadChatCount(totalUnread);
+        }
+      } catch (err) {
+        console.error('Unread chat count error:', err);
+      }
+    }
+    
+    loadUnreadChatCount();
+    
+    // Poll alle 10 Sekunden
+    const interval = setInterval(loadUnreadChatCount, 10000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   if (loading) {
     return (
