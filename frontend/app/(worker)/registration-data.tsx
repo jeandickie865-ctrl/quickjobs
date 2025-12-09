@@ -11,25 +11,26 @@ import { API_URL } from '../../config';
 const COLORS = {
   bg: '#FFFFFF',
   card: '#FFFFFF',
-  border: 'rgba(0,0,0,0.08)',
-  white: '#1A1A1A',
-  cardText: "#1A1A1A",
-  muted: 'rgba(0,0,0,0.6)',
-  purple: '#EFABFF',
-  neon: '#EFABFF',
-  error: '#EFABFF',
-  black: '#000000'
+  border: '#E9D5FF',
+  inputBg: '#FAF5FF',
+  inputBorder: '#DDD6FE',
+  text: '#1A1A1A',
+  textMuted: '#6B7280',
+  primary: '#9333EA',
+  secondary: '#FF773D',
+  accent: '#EFABFF',
+  error: '#EF4444'
 };
 
 const inputStyle = {
-  backgroundColor: '#1C182B',
+  backgroundColor: COLORS.inputBg,
   borderRadius: 12,
   paddingHorizontal: 16,
   paddingVertical: 14,
   fontSize: 15,
-  color: COLORS.white,
+  color: COLORS.text,
   borderWidth: 1,
-  borderColor: COLORS.border
+  borderColor: COLORS.inputBorder
 };
 
 export default function WorkerRegistrationDataScreen() {
@@ -81,8 +82,8 @@ export default function WorkerRegistrationDataScreen() {
   if (loading) {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={COLORS.neon} />
-        <Text style={{ color: COLORS.white, marginTop: 12 }}>Lädt Daten...</Text>
+        <ActivityIndicator size="large" color={COLORS.accent} />
+        <Text style={{ color: COLORS.text, marginTop: 12 }}>Lädt Daten...</Text>
       </View>
     );
   }
@@ -104,13 +105,13 @@ export default function WorkerRegistrationDataScreen() {
         >
           {/* Header */}
           <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: COLORS.white, fontSize: 28, fontWeight: '900', marginBottom: 8 }}>
+            <Text style={{ color: COLORS.text, fontSize: 28, fontWeight: '900', marginBottom: 8 }}>
               BACKUP
             </Text>
-            <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: '700', marginBottom: 8 }}>
+            <Text style={{ color: COLORS.text, fontSize: 20, fontWeight: '700', marginBottom: 8 }}>
               Deine Daten für offizielle Einsätze
             </Text>
-            <Text style={{ color: COLORS.muted, fontSize: 14, lineHeight: 20 }}>
+            <Text style={{ color: COLORS.textMuted, fontSize: 14, lineHeight: 20 }}>
               Für offizielle Einsätze braucht dein Arbeitgeber ein paar Angaben von dir. 
               Du gibst diese Daten nur ein einziges Mal ein. Danach sind sie gespeichert.
             </Text>
@@ -129,28 +130,28 @@ export default function WorkerRegistrationDataScreen() {
           >
             {/* Geburtsdatum */}
             <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: COLORS.textMuted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
                 Geburtsdatum *
               </Text>
               <TextInput
                 value={geburtsdatum}
                 onChangeText={setGeburtsdatum}
                 placeholder="TT.MM.JJJJ"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 style={inputStyle}
               />
             </View>
 
             {/* Steuer-ID */}
             <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: COLORS.textMuted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
                 Steuer-ID *
               </Text>
               <TextInput
                 value={steuerId}
                 onChangeText={setSteuerId}
                 placeholder="Steuer-ID"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 keyboardType="numeric"
                 style={inputStyle}
               />
@@ -158,14 +159,14 @@ export default function WorkerRegistrationDataScreen() {
 
             {/* Sozialversicherungsnummer */}
             <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: COLORS.textMuted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
                 Sozialversicherungsnummer *
               </Text>
               <TextInput
                 value={sozialversicherungsnummer}
                 onChangeText={setSozialversicherungsnummer}
                 placeholder="SV-Nummer"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 keyboardType="numeric"
                 style={inputStyle}
               />
@@ -173,14 +174,14 @@ export default function WorkerRegistrationDataScreen() {
 
             {/* Krankenkasse */}
             <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: COLORS.textMuted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
                 Krankenkasse *
               </Text>
               <TextInput
                 value={krankenkasse}
                 onChangeText={setKrankenkasse}
                 placeholder="Name der Krankenkasse"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 style={inputStyle}
               />
             </View>
@@ -188,7 +189,7 @@ export default function WorkerRegistrationDataScreen() {
             {/* Kirchensteuer - nur für Angestellte, nicht für Selbstständige */}
             {!isSelfEmployed && (
               <View>
-                <Text style={{ color: COLORS.muted, marginBottom: 12, fontSize: 14, fontWeight: '600' }}>
+                <Text style={{ color: COLORS.textMuted, marginBottom: 12, fontSize: 14, fontWeight: '600' }}>
                   Kirchenzugehörigkeit *
                 </Text>
                 <View style={{ flexDirection: 'row', gap: 12 }}>
@@ -196,15 +197,15 @@ export default function WorkerRegistrationDataScreen() {
                     onPress={() => setKirchensteuerpflichtig(true)}
                     style={{
                       flex: 1,
-                      backgroundColor: kirchensteuerpflichtig ? COLORS.purple : 'transparent',
+                      backgroundColor: kirchensteuerpflichtig ? COLORS.primary : 'transparent',
                       borderWidth: 1,
-                      borderColor: kirchensteuerpflichtig ? COLORS.purple : COLORS.border,
+                      borderColor: kirchensteuerpflichtig ? COLORS.primary : COLORS.border,
                       borderRadius: 12,
                       paddingVertical: 14,
                       alignItems: 'center',
                     }}
                   >
-                    <Text style={{ color: COLORS.white, fontSize: 14, fontWeight: '600' }}>
+                    <Text style={{ color: COLORS.text, fontSize: 14, fontWeight: '600' }}>
                       In der Kirche
                     </Text>
                   </Pressable>
@@ -212,20 +213,20 @@ export default function WorkerRegistrationDataScreen() {
                     onPress={() => setKirchensteuerpflichtig(false)}
                     style={{
                       flex: 1,
-                      backgroundColor: !kirchensteuerpflichtig ? COLORS.purple : 'transparent',
+                      backgroundColor: !kirchensteuerpflichtig ? COLORS.primary : 'transparent',
                       borderWidth: 1,
-                      borderColor: !kirchensteuerpflichtig ? COLORS.purple : COLORS.border,
+                      borderColor: !kirchensteuerpflichtig ? COLORS.primary : COLORS.border,
                       borderRadius: 12,
                       paddingVertical: 14,
                       alignItems: 'center',
                     }}
                   >
-                    <Text style={{ color: COLORS.white, fontSize: 14, fontWeight: '600' }}>
+                    <Text style={{ color: COLORS.text, fontSize: 14, fontWeight: '600' }}>
                       Nicht in der Kirche
                     </Text>
                   </Pressable>
                 </View>
-                <Text style={{ color: COLORS.muted, fontSize: 12, marginTop: 8, lineHeight: 16 }}>
+                <Text style={{ color: COLORS.textMuted, fontSize: 12, marginTop: 8, lineHeight: 16 }}>
                   Diese Information wird für die korrekte Berechnung der Lohnsteuer benötigt.
                 </Text>
               </View>
@@ -233,28 +234,28 @@ export default function WorkerRegistrationDataScreen() {
 
             {/* Geburtsort */}
             <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: COLORS.textMuted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
                 Geburtsort *
               </Text>
               <TextInput
                 value={geburtsort}
                 onChangeText={setGeburtsort}
                 placeholder="Geburtsort"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 style={inputStyle}
               />
             </View>
 
             {/* Staatsangehörigkeit */}
             <View>
-              <Text style={{ color: COLORS.muted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
+              <Text style={{ color: COLORS.textMuted, marginBottom: 8, fontSize: 14, fontWeight: '600' }}>
                 Staatsangehörigkeit *
               </Text>
               <TextInput
                 value={staatsangehoerigkeit}
                 onChangeText={setStaatsangehoerigkeit}
                 placeholder="Staatsangehörigkeit"
-                placeholderTextColor={COLORS.muted}
+                placeholderTextColor={COLORS.textMuted}
                 style={inputStyle}
               />
             </View>
@@ -275,18 +276,18 @@ export default function WorkerRegistrationDataScreen() {
                   height: 24,
                   borderRadius: 6,
                   borderWidth: 2,
-                  borderColor: confirm70Days ? COLORS.neon : COLORS.border,
-                  backgroundColor: confirm70Days ? COLORS.neon : 'transparent',
+                  borderColor: confirm70Days ? COLORS.accent : COLORS.border,
+                  backgroundColor: confirm70Days ? COLORS.accent : 'transparent',
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginTop: 2
                 }}
               >
                 {confirm70Days && (
-                  <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '900' }}>✓</Text>
+                  <Text style={{ color: COLORS.text, fontSize: 16, fontWeight: '900' }}>✓</Text>
                 )}
               </View>
-              <Text style={{ color: COLORS.white, fontSize: 14, lineHeight: 20, flex: 1 }}>
+              <Text style={{ color: COLORS.text, fontSize: 14, lineHeight: 20, flex: 1 }}>
                 Ich bestätige, dass ich nicht mehr als 70 Arbeitstage pro Jahr arbeite *
               </Text>
             </Pressable>
@@ -307,18 +308,18 @@ export default function WorkerRegistrationDataScreen() {
                   height: 24,
                   borderRadius: 6,
                   borderWidth: 2,
-                  borderColor: confirmNotProfessional ? COLORS.neon : COLORS.border,
-                  backgroundColor: confirmNotProfessional ? COLORS.neon : 'transparent',
+                  borderColor: confirmNotProfessional ? COLORS.accent : COLORS.border,
+                  backgroundColor: confirmNotProfessional ? COLORS.accent : 'transparent',
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginTop: 2
                 }}
               >
                 {confirmNotProfessional && (
-                  <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '900' }}>✓</Text>
+                  <Text style={{ color: COLORS.text, fontSize: 16, fontWeight: '900' }}>✓</Text>
                 )}
               </View>
-              <Text style={{ color: COLORS.white, fontSize: 14, lineHeight: 20, flex: 1 }}>
+              <Text style={{ color: COLORS.text, fontSize: 14, lineHeight: 20, flex: 1 }}>
                 Ich bestätige, dass diese Art von Arbeit nicht meine Hauptbeschäftigung ist *
               </Text>
             </Pressable>
@@ -371,7 +372,7 @@ export default function WorkerRegistrationDataScreen() {
             }}
             disabled={saving}
             style={{
-              backgroundColor: saving ? COLORS.card : COLORS.purple,
+              backgroundColor: saving ? COLORS.card : COLORS.primary,
               paddingVertical: 18,
               borderRadius: 16,
               alignItems: "center",
@@ -380,9 +381,9 @@ export default function WorkerRegistrationDataScreen() {
             }}
           >
             {saving ? (
-              <ActivityIndicator color={COLORS.white} />
+              <ActivityIndicator color={COLORS.text} />
             ) : (
-              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.white }}>
+              <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.text }}>
                 Daten speichern und weiter
               </Text>
             )}
