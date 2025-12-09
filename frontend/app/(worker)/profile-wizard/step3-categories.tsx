@@ -42,13 +42,13 @@ export default function Step3Categories() {
   const [selectedQualifications, setSelectedQualifications] = useState<string[]>(wizardData.qualifications || []);
   const [errors, setErrors] = useState<{ category?: string; subcategories?: string }>({});
   
-  // Track welche Kategorie geöffnet ist (Accordion)
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(
+  // Track aktive Kategorie (für Chip-UI)
+  const [activeCategory, setActiveCategory] = useState<string | null>(
     selectedCategories.length > 0 ? selectedCategories[0] : null
   );
   
-  // Track welche Kategorie ihre Qualifikationen zeigt
-  const [showQualificationsFor, setShowQualificationsFor] = useState<string | null>(null);
+  // Track ob Qualifikationen angezeigt werden
+  const [showQualifications, setShowQualifications] = useState<boolean>(false);
 
   const handleCategoryToggle = (catKey: string) => {
     const isSelected = selectedCategories.includes(catKey);
