@@ -360,19 +360,18 @@ export default function WorkerFeedScreen() {
         <Pressable
           onPress={() => router.push(`/alljobs/${item.id}`)}
           style={({ pressed }) => ({
-            backgroundColor: COLORS.purple,
-            height: 48,
-            borderRadius: 12,
+            backgroundColor: COLORS.secondary,
+            height: 40,
+            borderRadius: 10,
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 20,
-            width: '60%',
-            maxWidth: 250,
+            paddingHorizontal: 24,
             alignSelf: 'center',
             opacity: pressed ? 0.9 : 1
           })}
         >
-          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.text }}>
+          <Text style={{ fontSize: 15, fontWeight: '700', color: '#FFFFFF' }}>
             Job ansehen
           </Text>
         </Pressable>
