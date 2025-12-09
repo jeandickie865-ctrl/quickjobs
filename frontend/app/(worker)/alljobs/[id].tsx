@@ -309,10 +309,15 @@ export default function WorkerJobDetailScreen() {
               </Text>
               <Text style={{ fontSize: 16, color: COLORS.white }}>
                 {job.address
-                  ? `${job.address.street || ''} ${job.address.houseNumber || job.address.house_number || ''}, ${job.address.postalCode || job.address.postal_code || ''} ${job.address.city || ''}`.trim()
+                  ? `${job.address.street || ''} ${isMatched ? (job.address.houseNumber || job.address.house_number || '') : ''}, ${job.address.postalCode || job.address.postal_code || ''} ${job.address.city || ''}`.trim()
                   : 'Adresse nicht angegeben'
                 }
               </Text>
+              {!isMatched && job.address && (
+                <Text style={{ fontSize: 12, color: COLORS.dimText, marginTop: 4, fontStyle: 'italic' }}>
+                  📍 Genaue Hausnummer nach Match sichtbar
+                </Text>
+              )}
             </View>
 
             {/* Kategorie */}
