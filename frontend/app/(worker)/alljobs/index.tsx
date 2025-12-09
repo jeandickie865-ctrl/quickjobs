@@ -257,8 +257,7 @@ export default function AllJobsScreen() {
       <View style={{ flexDirection: "row", marginBottom: 10 }}>
         <Ionicons name="location-outline" size={18} color={COLORS.accent} />
         <Text style={{ color: COLORS.text, marginLeft: 8 }}>
-          {item.address?.street} {item.address?.houseNumber},{" "}
-          {item.address?.postalCode} {item.address?.city}
+          {item.address?.street}, {item.address?.postalCode} {item.address?.city}
         </Text>
       </View>
 
