@@ -360,79 +360,118 @@ const styles = StyleSheet.create({
     marginBottom: 12
   },
 
-  // Kategorie Card
-  categoryCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  // Chips (Kategorien horizontal)
+  chip: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
     backgroundColor: COLORS.card,
-    borderRadius: 14,
-    padding: 16,
     borderWidth: 2,
     borderColor: COLORS.border,
+    marginRight: 10,
   },
 
-  categoryCardSelected: {
+  chipSelected: {
+    backgroundColor: COLORS.neon,
     borderColor: COLORS.neon,
-    backgroundColor: COLORS.card,
-    shadowColor: COLORS.neon,
-    shadowOpacity: 0.25,
-    shadowRadius: 6
   },
 
-  categoryText: {
-    fontSize: 16,
+  chipText: {
+    fontSize: 14,
     fontWeight: '600',
-    color: COLORS.text
+    color: COLORS.text,
   },
 
-  categoryTextSelected: { 
-    color: COLORS.neon,
+  chipTextSelected: {
+    color: '#FFFFFF',
     fontWeight: '700',
   },
 
-  // Accordion Content
-  accordionContent: {
-    marginTop: 8,
-    padding: 16,
-    backgroundColor: '#F9FAFB',
+  // Category Tabs (für Tätigkeiten)
+  categoryTab: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 12,
+    backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: COLORS.border,
+    marginRight: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
 
-  // Tätigkeit Card
-  subcategoryCard: {
+  categoryTabActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+
+  categoryTabText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+
+  categoryTabTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+
+  badge: {
+    backgroundColor: COLORS.neon,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    minWidth: 20,
+    alignItems: 'center',
+  },
+
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+
+  // Activity Cards (Tätigkeiten)
+  activityCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: COLORS.card,
     borderRadius: 10,
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     marginBottom: 8,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: COLORS.border,
   },
 
-  subcategoryCardSelected: {
+  activityCardSelected: {
     borderColor: COLORS.neon,
-    backgroundColor: COLORS.card,
+    backgroundColor: '#F5F0FF',
   },
 
-  subcategoryText: {
+  activityText: {
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
     flex: 1,
   },
 
-  subcategoryTextSelected: {
-    color: COLORS.neon
+  activityTextSelected: {
+    color: COLORS.neon,
+    fontWeight: '700',
   },
 
-  // Qualifikation Card
-  qualificationCard: {
+  // Qualifikationen Toggle
+  qualificationToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  // Qualification Cards
+  qualCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -440,16 +479,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
+    marginBottom: 8,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
 
-  qualificationCardSelected: {
+  qualCardSelected: {
     borderColor: COLORS.secondary,
-    backgroundColor: COLORS.card,
+    backgroundColor: '#FFF5F0',
   },
 
-  qualificationText: {
+  qualText: {
     fontSize: 13,
     fontWeight: '500',
     color: COLORS.text,
