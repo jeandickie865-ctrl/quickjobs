@@ -350,7 +350,7 @@ export default function RateWorkerScreen() {
             <Text style={{ 
               fontSize: 16, 
               fontWeight: '700', 
-              color: rating === 0 || saving ? COLORS.darkGray : COLORS.text,
+              color: rating === 0 || saving ? COLORS.textMuted : COLORS.text,
             }}>
               {saving ? 'Speichert...' : 'Bewertung speichern'}
             </Text>
