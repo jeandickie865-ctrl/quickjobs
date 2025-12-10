@@ -12,7 +12,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "de.dickie.backup",
+      "bundleIdentifier": "com.quickjobs.app",
       "buildNumber": "5",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/app/id6756327012",
