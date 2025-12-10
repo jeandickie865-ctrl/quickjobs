@@ -13,7 +13,7 @@
     ],
     "ios": {
       "bundleIdentifier": "de.dickie.backup",
-      "buildNumber": "4",
+      "buildNumber": "5",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/app/id6756327012",
       "infoPlist": {
