@@ -8,6 +8,9 @@
     "scheme": "quickjobsneu",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "de.dickie.backup",
       "buildNumber": "4",
