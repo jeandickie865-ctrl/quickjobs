@@ -1,246 +1,229 @@
 <analysis>
-**original_problem_statement:** The initial problem was a catastrophic platform failure where no code changes were being reflected for the user, causing extreme frustration. This blocked all progress on a major UI overhaul and rebranding of the app from Backup to Quickjobs.
+**original_problem_statement:** The user initially requested two main features:
+1.  Allow employers to see the qualification documents uploaded by workers after a match.
+2.  Fix chat-related issues, which were initially described as invalid date but turned out to be a non-functional unread message badge due to a token error.
 
-Throughout this session, numerous bugs and feature requests were addressed, including:
-1.  **Platform/Environment:** Fix the core issue preventing UI updates from being visible.
-2.  **Footer Layout:** Fix the bottom tab bar in the worker layout so icons are evenly distributed.
-3.  **Category Selection UI:** Redesign the  screen from a long list to a more user-friendly interface, first as an accordion, then as a chip-based design.
-4.  **Routing:** Fix Unmatched Route errors when navigating to job details.
-5.  **UI Redesigns & Branding:** Fix various UI issues like black backgrounds, incorrect colors, and old BACKUP branding on multiple screens (, , , ).
-6.  **Review System Logic:** Fix a critical bug where workers saw their own reviews instead of reviews written about them by employers.
-7.  **Chat Functionality:** Add a back button, remove an in-chat notification banner, and re-implement the unread message count badge on the main layout.
-8.  **Data Consistency:** Ensure house numbers are displayed correctly (only after a match) and fix an issue where a company was being incorrectly treated as a private employer.
-9.  **New Feature Request:** At the end of the session, the user requested the implementation of a feature for employers to view qualification documents uploaded by workers.
+Over the course of the session, this evolved into a massive bug-fixing and app-stabilization effort, culminating in a complex and fraught attempt to create a stable iOS build for TestFlight. Numerous critical issues were discovered and addressed, including a major security flaw, multiple UI bugs, a broken API URL configuration, and persistent environment instability. The final goal became producing a correctly configured, functional build that could be submitted to the App Store.
+
+PRODUCT REQUIREMENTS:
+1.  **Feature**: Employers must be able to view and download qualification documents of workers they have matched with.
+2.  **Feature**: A modal popup confirming Dein Jobangebot ist jetzt online should appear after an employer successfully creates a job.
+3.  **UX Improvement**: The address input component must be made more intuitive, guiding the user to enter the full address in the first line for autocomplete to work.
+4.  **Bugfix**: The chat unread message count badge must function correctly for both workers and employers.
+5.  **Bugfix**: Chat messages must be visible and correctly styled. The user reported transparent bubbles and later, bubbles with no text content.
+6.  **Security**: The worker must NOT see the employer's house number on any screen before a successful match is made and paid for. This is to prevent workers from bypassing the platform.
+7.  **UI/Branding**: Various screens with old BACKUP branding and dark/black themes must be updated to the new white/lila/orange Quickjobs design.
+8.  **Build & Deployment**: The app must be correctly configured to produce a valid iOS build for TestFlight, including the correct logos, bundle ID, and project settings.
 
 **User's preferred language**: German
 
 **what currently exists?**
-The application is now largely functional and the critical platform issue ( disabling Metro's file watcher) has been resolved, allowing for a more stable development feedback loop. A significant number of UI bugs, branding inconsistencies, and critical logic flaws (especially in the review system) have been fixed. The UI reflects the new Quickjobs branding (lila/orange/pink theme) across many screens. The category selection for workers has been completely redesigned into a modern, chip-based interface.
+The application is in a highly volatile state. While a tremendous number of critical bugs and features have been addressed, the local development environment is unstable, and the iOS build process is failing.
 
-However, the session was fraught with caching issues, and some bugs were only fixed after multiple failed attempts and significant user frustration. A few issues remain unresolved.
+**Functionality:**
+*   The feature for employers to view worker documents is implemented.
+*   The critical security flaw of exposing house numbers pre-match has been fixed across multiple screens.
+*   The chat is now functional after a major debugging effort, fixing both frontend rendering issues and a backend data mapping error.
+*   Multiple UI screens have been redesigned to match the new Quickjobs branding.
+*   The core API URL has been corrected in the environment configuration.
+
+**Build/Environment:**
+*   The  and  files have been repeatedly modified to resolve build errors related to project slug, bundle identifier, and Apple-specific IDs.
+*   The application's icon and splash screen have been updated to the new qu.Jo logo, with a white background to prevent black boxes in the App Store.
+*   A critical fix for a font loading error () has been added to .
+*   The local development environment (Expo Go via ngrok tunnel) is extremely unstable and frequently crashes or shows a white screen due to  tunnel conflicts.
 
 **Last working item**:
-    - Last item agent was working: The user requested the implementation of a feature to allow employers to see the qualification documents that workers have uploaded. The agent investigated and confirmed that while workers can upload documents, there is no UI for employers to view them. The agent was about to begin implementation.
-    - Status: NOT STARTED
+    - Last item agent was working: The user reported that the correct Bundle ID in their App Store Connect account is . The previous build failed because the agent had set it to . The agent was in the process of correcting the  in  to match the user's latest instruction, in preparation for creating a new, hopefully successful, build (Build 5).
+    - Status: IN PROGRESS
     - Agent Testing Done: N
-    - Which testing method agent to use? Frontend testing agent
+    - Which testing method agent to use? The only valid test is for the user to attempt a new iOS build (The field "cli.appVersionSource" is not set, but it will be required in the future. Learn more: https://docs.expo.dev/build-reference/app-versions/
+Resolved "production" environment for the build. Learn more: https://docs.expo.dev/eas/environment-variables/#setting-the-environment-for-your-builds
+No environment variables with visibility "Plain text" and "Sensitive" found for the "production" environment on EAS.
+
+
+
+The field "cli.appVersionSource" is not set, but it will be required in the future. Learn more: https://docs.expo.dev/build-reference/app-versions/
+✔ Using remote iOS credentials (Expo server)
+
+If you provide your Apple account credentials we will be able to generate all necessary build credentials and fully validate them.
+This is optional, but without Apple account access you will need to provide all the missing values manually and we can only run minimal validation on them.
+Input is required, but stdin is not readable. Failed to display prompt: Do you want to log in to your Apple account?) after the configuration change.
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - Issue 1: Chat notification badge is not working (P1)
-  - Issue 2: Original  login bug remains unaddressed (P2)
+  - Issue 1: Create a successful iOS build for TestFlight (P0)
+  - Issue 2: Persistent Ngrok Tunnel Instability (P1)
+  - Issue 3: Original  login bug (P2)
   
   **Issues Detail:**
-  - **Issue 1: Chat notification badge is not working (P1)**
-     - **Description**: The agent implemented a feature to show a badge with a count of unread messages on the Matches tab for both workers and employers. The user reported that this badge does not appear.
-     - **Attempted fixes**: The agent investigated the API call to  and received an  error. This indicates the frontend is not sending a valid authentication token when making this specific API call. The agent identified the error but did not fix the underlying token issue.
+  - **Issue 1: Create a successful iOS build for TestFlight (P0)**
+     - **Attempted fixes**: This has been a long and painful process with multiple failed builds.
+        1.  Fixed slug/projectId mismatches in  and .
+        2.  Updated app icons to a new logo with a white background.
+        3.  Added  to  to fix a native font loading crash ().
+        4.  Corrected  structure based on user feedback.
+        5.  Attempted multiple  values (, ). The last instruction from the user was to use .
      - **Next debug checklist**:
-        1.  Inspect the code in  and  where the  function is defined.
-        2.  Verify how the  is being retrieved from  and included in the  request headers.
-        3.  Compare this with other working API calls in the app to identify any discrepancy in how the auth header is constructed or sent.
-        4.  Fix the token retrieval/sending logic for the  endpoint.
-     - **Why fix this issue and what will be achieved with the fix?**: This is a critical UX feature. Without the badge, users are not notified of new messages unless they are actively looking at their matches, leading to missed communication.
+        1.  Verify that  now contains .
+        2.  Confirm with the user that this is the absolute, final, correct Bundle ID from their App Store Connect account.
+        3.  Instruct the user to run The field "cli.appVersionSource" is not set, but it will be required in the future. Learn more: https://docs.expo.dev/build-reference/app-versions/
+Resolved "production" environment for the build. Learn more: https://docs.expo.dev/eas/environment-variables/#setting-the-environment-for-your-builds
+No environment variables with visibility "Plain text" and "Sensitive" found for the "production" environment on EAS.
+
+
+
+The field "cli.appVersionSource" is not set, but it will be required in the future. Learn more: https://docs.expo.dev/build-reference/app-versions/
+✔ Using remote iOS credentials (Expo server)
+
+If you provide your Apple account credentials we will be able to generate all necessary build credentials and fully validate them.
+This is optional, but without Apple account access you will need to provide all the missing values manually and we can only run minimal validation on them.
+Input is required, but stdin is not readable. Failed to display prompt: Do you want to log in to your Apple account? to create Build 5.
+        4.  If this fails, the user MUST provide a screenshot of the App Information page in App Store Connect to eliminate any ambiguity.
+     - **Why fix this issue and what will be achieved with the fix?**: This is the ultimate goal of the entire session. Without a successful build, the app cannot be tested or released.
      - **Status**: IN PROGRESS
-     - **Is recurring issue?**: N
-     - **Should Test frontend/backend/both after fix?**: Frontend
+     - **Is recurring issue?**: Y
+     - **Should Test frontend/backend/both after fix?**: User will test the resulting build on TestFlight.
      - **Blocked on other issue**: None
 
-  - **Issue 2: Original  login bug remains unaddressed (P2)**
-     - **Description**: The bug from the initial handover where user  cannot log in was never investigated or fixed during this session.
-     - **Status**: NOT STARTED
+  - **Issue 2: Persistent Ngrok Tunnel Instability (P1)**
+     - **Attempted fixes**:
+        1.  Killed orphaned  and  processes. This worked temporarily.
+        2.  Changed the tunnel subdomain name in . This did not work.
+        3.  Called the , which confirmed orphaned processes but couldn't provide a permanent solution.
+     - **Next debug checklist**:
+        1.  This appears to be an environment-level issue, possibly related to how ngrok sessions are managed in the container.
+        2.  A potential next step is to try running Expo without the tunnel ([08:30:31] Starting project at /app/frontend) if a local development setup with a connected device is possible, though this may not be supported by the environment.
+        3.  Given the priority of the iOS build, it may be best to IGNORE the local Expo Go instability and focus solely on getting a working TestFlight build.
+     - **Why fix this issue and what will be achieved with the fix?**: A stable local development environment would allow for much faster testing and debugging, preventing the build and pray cycle currently happening.
+     - **Status**: IN PROGRESS
      - **Is recurring issue?**: Y
      - **Should Test frontend/backend/both after fix?**: Frontend
      - **Blocked on other issue**: None
 
-**In progress Task List**:
-  - Task 1: Implement UI for Employers to View Worker Qualification Documents (P0)
-
-  **Task Detail:**
-  - **Task 1: Implement UI for Employers to View Worker Qualification Documents (P0)**
-     - **Where to resume**: 
-        1. Open .
-        2. In the  component, after the worker's details, add a new section titled Qualifikationsnachweise.
-        3. The worker's profile data, available in the  object, should contain a  array.
-        4. Map through the  array. For each document, display the  and a Download or View button/link.
-        5. The link should point to the document's .
-     - **What will be achieved with this?**: Employers will be able to see and access the proof of qualification that workers have uploaded, fulfilling a key business requirement.
+  - **Issue 3: Original  login bug (P2)**
+     - **Attempted fixes**: None. This issue was mentioned in the initial handover but was never prioritized.
+     - **Next debug checklist**:
+        1.  Attempt to log in as .
+        2.  Check frontend console for errors.
+        3.  Check backend logs (==> Press Ctrl-C to exit <==
+obs/job_08a174e4-01f7-4c23-895f-7ed1f607413c HTTP/1.1" 200 OK
+INFO:     10.64.162.77:59790 - "GET /api/chat/unread-count/app_25f6b16f32be HTTP/1.1" 200 OK
+INFO:     10.64.162.77:59790 - "GET /api/profiles/worker/user_effi_gmail_com HTTP/1.1" 200 OK
+INFO:     10.64.162.106:43714 - "GET /api/profiles/worker/user_effi_gmail_com/registration-status HTTP/1.1" 200 OK
+INFO:     10.64.128.62:60956 - "GET /api/applications/worker/me HTTP/1.1" 200 OK
+INFO:     10.64.128.62:60956 - "GET /api/applications/worker/me HTTP/1.1" 200 OK
+INFO:     10.64.162.106:44282 - "GET /api/jobs/job_08a174e4-01f7-4c23-895f-7ed1f607413c HTTP/1.1" 200 OK
+INFO:     10.64.128.9:34160 - "GET /api/chat/unread-count/app_25f6b16f32be HTTP/1.1" 200 OK
+INFO:     10.64.162.77:48616 - "GET /api/profiles/worker/user_effi_gmail_com HTTP/1.1" 200 OK
+INFO:     10.64.162.77:48616 - "GET /api/chat/unread-count/app_25f6b16f32be HTTP/1.1" 200 OK
+INFO:     10.64.128.62:60956 - "GET /api/profiles/worker/user_effi_gmail_com/registration-status HTTP/1.1" 200 OK) for authentication failures or other errors related to this user.
+     - **Why fix this issue and what will be achieved with the fix?**: Resolves a long-standing bug reported in a previous session.
      - **Status**: NOT STARTED
+     - **Is recurring issue?**: Y
      - **Should Test frontend/backend/both after fix?**: Frontend
-     - **Blocked on something**: None
+     - **Blocked on other issue**: Blocked by P0 and P1.
+
+**In progress Task List**:
+- There are no in-progress feature development tasks. All work is focused on fixing the critical build and environment issues.
 
 **Upcoming and Future Tasks**
-- There are no other upcoming tasks defined. The priority is to complete the in-progress task and fix the pending issues.
+- There are no other upcoming tasks defined. The priority is to complete the iOS build and fix the pending issues.
 
 **Completed work in this session**
-- **Platform/Environment:**
-  - **FIXED THE ROOT CAUSE OF ALL CACHING ISSUES:** Identified and removed  from the supervisor configuration, which was disabling Metro's file watcher and preventing any changes from being detected automatically.
-- **UI/UX & Feature Implementation:**
-  - **Footer Layout:** Correctly implemented a full-width, evenly-distributed tab bar in .
-  - **Category Selection Redesign:** Completely rebuilt  to use a modern, chip-based selection UI as per user's request.
-  - **Review System Overhaul:** Fixed a critical logic flaw by adding a  to the review schema, ensuring workers and employers see reviews written *about* them, not *by* them. Updated , , and the backend API.
-  - **Rate Screen Redesign:** Redesigned both the worker and employer rating screens (, ) from an old black/pink theme to the new neutral white/lila branding.
-  - **Payment Screen Redesign:** Redesigned  from an old turquoise theme to the new branding.
-  - **Address Display Logic:** Added house numbers to the post-match view () and REMOVED them from the pre-match view () for privacy.
-- **Bug Fixes:**
-  - **Services Started:** Fixed the initial problem where 
-  Usage: expo [command] [options]
-
-  Options:
-  
-    -V, --version                     output the version number
-    --non-interactive                 Fail, if an interactive prompt would be required to continue.
-    -h, --help                        output usage information
-  
-  Commands:
-
-    init [name]                       Create a new Expo project
-    start [path]                      Start a local dev server for the app
-    start:web [path]                  Start a Webpack dev server for the web app
-    export [path]                     Export the static files of the app for hosting it on a web server
-    install [packages...]             Install a module or other package to a project
-    run:android [path]                Run the Android app binary locally
-    run:ios [path]                    Run the iOS app binary locally
-    send [path]                       Share the project's URL to an email address
-
-    login                             Login to an Expo account
-    logout                            Logout of an Expo account
-    register                          Sign up for a new Expo account
-    whoami                            Return the currently authenticated account
-
-    client:install:ios                Install Expo Go for iOS on the simulator
-    client:install:android            Install Expo Go for Android on a connected device or emulator
-
-    config [path]                     Show the project config
-    doctor [path]                     Diagnose issues with the project
-    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
-
-    customize:web [path]              Eject the default web files for customization
-    prebuild [path]                   Create native iOS and Android project files before building natively.
-                                      Learn more: https://docs.expo.dev/workflow/customizing/
-
-    build:web [path]                  Build the web app for production
-
-    credentials:manager [path]        Superseded by eas credentials in eas-cli
-
-    url [path]                        Log a URL for opening the project in Expo Go
-    url:ipa [path]                    Log the download URL for the standalone iOS binary
-    url:apk [path]                    Log the download URL for the standalone Android binary
-
-    webhooks [path]                   List all webhooks for a project
-    webhooks:add [path]               Add a webhook to a project
-    webhooks:remove [path]            Delete a webhook
-    webhooks:update [path]            Update an existing webhook
-
-    build:ios [path]                  Superseded by eas build in eas-cli
-    build:android [path]              Superseded by eas build in eas-cli
-    build:status [path]               Superseded by eas build:list in eas-cli
-    eject [path]                      Superseded by expo prebuild
-    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
-    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
-    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
-    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
-    publish [path]                    Superseded by eas update in eas-cli
-    publish:set [path]                Superseded by eas update:republish in eas-cli
-    publish:rollback [path]           Superseded by eas update:republish in eas-cli
-    publish:history [path]            Superseded by eas update:list in eas-cli
-    publish:details [path]            Superseded by eas update:view in eas-cli
-    push:android:upload [path]        Superseded by eas credentials in eas-cli
-    push:android:show [path]          Superseded by eas credentials in eas-cli
-    push:android:clear [path]         Superseded by eas credentials in eas-cli
-    upload:android [path]             Superseded by eas submit in eas-cli
-    upload:ios [path]                 Superseded by eas submit in eas-cli
-    client:ios [path]                 Superseded by Expo Dev Clients
-
-[16:01:03]   Run a command with --help for more info 💡
-[16:01:03]     $ expo start --help
-[16:01:03] and  services were stopped.
-  - **Routing Fixed:** Corrected a  call in  to fix an Unmatched Route error.
-  - **Save Functionality:** Fixed the Save button on the employer rating screen by switching from a non-functional local storage implementation to a backend API call.
-  - **Branding/UI Consistency:** Replaced old BACKUP text and logos with Quickjobs branding on multiple screens (, , ).
-  - **Data Fix:** Corrected an employer's  in the database to prevent an incorrect modal from appearing.
-  - **Chat:** Added a working back button, removed an unwanted in-chat notification banner, and fixed an Invalid Date display bug in .
+- **Feature Implementation**:
+  - Implemented the UI for employers to view worker qualification documents in .
+  - Added a Job Created success modal in .
+- **Critical Fixes**:
+  - **Security**: Prevented house numbers from being displayed before a match in , , and  by modifying the  utility and adding conditional logic.
+  - **Chat Functionality**: Fixed the no text in messages bug by normalizing data in  and removing buggy code from .
+  - **Environment**: Corrected the  in  from a dead backup.dickie.app URL to the correct preview URL.
+  - **Build**: Fixed a native iOS build crash by adding  to  to ensure  is included in the build.
+  - **Build**: Replaced the old BACKUP app icon with the new qu.Jo logo and added a white background to prevent it from appearing black in the App Store.
+- **Bug Fixes & UI/UX**:
+  - Fixed the chat unread message badge by using  in  and .
+  - Fixed transparent/unreadable chat bubbles in .
+  - Fixed black backgrounds on employer screens ( and ).
+  - Implemented a robust back button in the chat screen that falls back to the matches screen to prevent  errors.
+  - Improved the UX of the  component with better placeholder text and instructions.
+  - Restyled the Zum Chat button on the worker matches screen to be a solid pink button.
+- **App Health & Cleanup**:
+  - Generated and set a secure  in .
+  - Ran  to resolve dependency mismatches.
+  - Removed numerous old  files.
+  - Reduced  statements from over 200 to ~80.
 
 **Earlier issues found/mentioned but not fixed**
-   - **Issue 1: Chat notification badge token error**
-     - **Debug checklist**: Check auth token handling in the  request inside  in both  and .
-     - **Why to solve this issue and what will be achieved with this?**: Users need to be notified of new chat messages to ensure timely communication.
-     - **Should Test frontend/backend/both after fix?**: Frontend
-     - **Is recurring issue?**: N
-   - **Issue 2:  login bug**
-     - **Debug checklist**: Attempt to log in as this user, check console for errors, check backend logs for reasons for login failure (e.g., wrong password, non-existent user).
+   - **Issue 1:  login bug**
+     - **Debug checklist**: Attempt login, check frontend console and backend logs for auth errors.
      - **Why to solve this issue and what will be achieved with this?**: To resolve an outstanding user-reported bug from a previous session.
      - **Should Test frontend/backend/both after fix?**: Frontend
      - **Is recurring issue?**: Y
 
 **Known issue recurrence from previous fork**
-  - **Platform Caching / Stale UI:** This was the main theme of the entire session. It recurred constantly, first due to stopped services, then due to the  flag disabling the file watcher, and finally due to aggressive browser caching. The root platform cause is fixed, but browser caching remains a potential friction point.
-  - **Recurrence count**: High (dozens of instances)
-  - **Status**: RESOLVED (platform-side), User-side awareness needed (browser cache).
+  - **Issue recurrence in previous fork**: The original handover mentioned a  login bug.
+  - **Recurrence count**: 1 (it has persisted through this entire session without being addressed).
+  - **Status**: NOT STARTED
 
 **Code Architecture**
-reviewerRole
+hideHouseNumber
 
 **Key Technical Concepts**
-- **Metro File Watcher ():** The discovery that  in the environment disables Metro's file watcher was the critical breakthrough, solving dozens of stale UI complaints.
-- **Expo Router Layouts:** Deep debugging of 's tab generation, including auto-registration of all files in a directory and the difference between  (removes from router) and  (hides button but reserves space).
-- **Schema Evolution for Disambiguation:** The solution to the wrong reviews problem was to add a  field to the  model. This is a robust way to fix ambiguous data relationships.
-- **API-Driven vs. Local Storage:** Refactored the employer review saving mechanism from a broken local storage implementation to use the backend API, a crucial step for data persistence.
-- **Browser Caching:** A persistent secondary problem. Even with the server-side issues fixed, aggressive browser caching frequently required the user to perform hard reloads or use incognito mode.
+- **EAS Build System**: The core of the final part of the session. Deeply involved  and  configuration, including wrestling with , , , , and .
+- **iOS Native Build Errors**: Encountered and fixed critical native build issues that don't appear in Expo Go, such as the  font failing to be bundled, which was solved with .
+- **Ngrok Tunnel Conflicts**: A persistent environmental issue () causing the Expo development server to hang. This highlights the difference between the local dev environment and the production build.
+- **Data Normalization**: The clean fix for the chat was to normalize the data structure in the data layer () rather than adding defensive checks in the UI layer. This is a key architectural pattern.
+- **Conditional Logic for Security**: The solution to the house number security flaw involved adding conditional logic to show/hide data based on the user's state (i.e., ), a critical pattern for sensitive information.
 
 **All files of reference**
-- : This is where the new view documents feature needs to be added.
-- : Contains the broken chat badge logic (token issue).
-- : Contains the broken chat badge logic (token issue).
-- : Was a major source of bugs (UI, save logic) that are now fixed.
-- : Contains the new chip-based UI.
-
-**Areas that need refactoring**:
-- The API calls for chat badges in the two layout files ( and ) are duplicated. This logic could be extracted into a shared hook () for better code reuse and easier debugging of the token issue.
-
-**key api endpoints**
-- : Used for saving worker/employer ratings. The payload now includes .
-- : Used for fetching the number of unread messages for the notification badge. Currently failing due to an auth token issue.
-- : Used to fix an employer's  from  to .
+- : The most critical file for the next build attempt. Must be 100% correct.
+- : The second most critical file, defining the build and submit process.
+- : Source of API URLs and the ngrok tunnel name, which is a source of instability.
+- : The site of the most persistent and difficult-to-debug bug of the session.
+- : Contains the correct architectural fix for the chat data issue.
 
 **Critical Info for New Agent**
-- **The user has been through extreme frustration with caching.** Always assume the user might be seeing a stale version. Proactively recommend using a **new incognito window** for testing to bypass browser cache issues.
-- **The platform's file-watching is now fixed ( removed).** Changes you make to files *should* be picked up by Metro automatically. If they aren't, suspect browser caching first.
-- **There are often parallel files for worker and employer.** When a user reports a bug (e.g., on the rate screen), double-check if you need to edit  or  or both. This was a source of repeated errors.
-- **The review system was significantly changed.** It now relies on a  field ( or ) to determine who wrote the review. All new reviews must include this field, and all profile pages filter based on it.
+- **DO NOT TRUST THE LOCAL PREVIEW (WHITE SCREEN)**. The ngrok tunnel is extremely unstable. A white screen locally does NOT necessarily mean the build is broken. The  font error, however, was a real issue that appeared in both local preview and the TestFlight build.
+- **BUILD CONFIGURATION IS THE MAIN ENEMY**. The user is providing build parameters (like bundle ID) that have been changing. You must get explicit confirmation of the **EXACT**  from their App Store Connect account before starting a new build. The last given value was .
+- **THE USER IS BUILDING THE APP**. Your role is to provide the correct code and configuration, and then instruct the user on the terminal commands to run (Unexpected argument: ...
+See more help with --help). You will need to debug the output of these commands.
+- **Builds are expensive (time-wise)**. Double and triple-check all configurations before instructing the user to start a build. Each attempt takes a long time.
+- **The  bug is still pending**. Do not forget it once the app is successfully deployed to TestFlight.
 
 **documents created in this job**
 - None.
 
 **Last 10 User Messages and any pending user messages**
-1.  **User:** Asks how qualification documents are shared with employers. (Agent confirms it's not implemented).
-2.  **User:** Reports Invalid Date in chat and that buttons on the matches screen need a redesign. (Agent fixed both).
-3.  **User:** Confirms the agent should start implementing the document viewing feature for employers. (This is the current task).
-4.  **User:** (from earlier) Reports that the employer rate screen is black and saving doesn't work. (This was a recurring issue, fixed by editing the correct file and switching to an API call).
-5.  **User:** (from earlier) Reports missing house number in the profile summary. (Fixed).
-6.  **User:** (from earlier) Reports old BCKP logo on employer edit profile. (Fixed).
-7.  **User:** (from earlier) Reports seeing reviews they wrote in their own profile, instead of reviews about them. (Critical logic error, now fixed with ).
-8.  **User:** (from earlier) Reports an incorrect private employer modal. (Fixed via a DB update).
-9.  **User:** (from earlier) Reports black fields and BACKUP text on the registration data screen. (Fixed).
-10. **User:** (from earlier) Clarifies that house numbers should NOT appear in the job feed, only after a match. (Logic was corrected).
+1.  **User**: Confirms the build is queued for ~40 minutes.
+2.  **User**: Reports the build failed with a  error.
+3.  **Agent**: Correctly diagnoses the bundle ID mismatch and changes it back to .
+4.  **User**: Warns the agent to stop before building, as the local preview URL shows a white screen.
+5.  **User**: Uploads a screenshot from Expo Go showing a critical  error.
+6.  **Agent**: Acknowledges this is a critical error in the build itself and prepares a fix (Build 5).
+7.  **User**: Reports a new local error: .
+8.  **User**: Asks for confirmation that all IDs and configurations match before starting the next build.
+9.  **User**: States the bundle ID in the App Store is . This contradicts previous info.
+10. **User**: Shows a new screenshot of the build failing, this time saying  doesn't exist. This is the current point of confusion.
 
 **Project Health Check:**
-- **Broken:** The chat notification badge feature is broken due to an API token error.
-- **Mocked:** The review saving functionality was previously mocked/using local storage but has now been fixed to use the real backend API.
+- **Broken**:
+  - The local development environment (Expo Go via ngrok tunnel) is fundamentally broken and unreliable.
+  - The iOS build pipeline is broken due to a misconfiguration of the .
+- **Mocked**: None.
 
 **3rd Party Integrations**
 - None identified.
 
 **Testing status**
   - Testing agent used after significant changes: NO
-  - Troubleshoot agent used after agent stuck in loop: YES (Used multiple times, critically identifying the  root cause and other caching issues).
+  - Troubleshoot agent used after agent stuck in loop: YES (Used multiple times for the ngrok tunnel issue).
   - Test files created: None.
-  - Known regressions: The chat notification badge was implemented but is not working.
+  - Known regressions: Several UI bugs (black screens) and the chat functionality broke and were fixed multiple times. The ngrok tunnel instability is a recurring regression.
 
 **Credentials to test flow:**
-- A worker account ( / password ) was created via API and can be used for testing worker flows.
-- An employer account is needed to test employer flows. If credentials are unknown, one can be created via the signup page.
+- Worker:  / 
+- Employer: The user has an account  which is a private employer. Other employer accounts exist but credentials are not explicitly stated.
 
 **What agent forgot to execute**
-- The agent never investigated or fixed the  login bug mentioned in the initial handover summary.
-- The agent identified the Invalid or expired token error for the chat badge API call but did not proceed to fix the root cause of the token issue.
+- The agent never investigated or attempted to fix the  login bug mentioned in the initial handover summary. It has been carried over as a pending task for two full sessions.
 </analysis>

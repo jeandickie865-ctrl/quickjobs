@@ -4385,7 +4385,7 @@ app.mount(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://quickview-redesign.preview.emergentagent.com",
+        "https://stablebuild.preview.emergentagent.com",
         "http://localhost:19006",
         "http://localhost:3000",
         "*"
