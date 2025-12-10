@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "de.dickie.backup",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/app/id6756327012",
       "infoPlist": {
