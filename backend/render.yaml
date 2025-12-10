@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: quickjobs-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: shiftmatch
+      - key: SECRET_KEY
+        value: f65f5b9f1e1ab44b0fc89453c57f7aacda569ce90e8bb5a4df1b876601dde623d0810e4b9bb2f831c9ce2eb30957dce47a02da424388a35a93d4876856e7a13b
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 10080
